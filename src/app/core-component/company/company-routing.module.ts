@@ -29,6 +29,13 @@ const routes: Routes = [
         (m) => m.EditcompanyModule
       ),
   },
+  {
+    path: 'company-details/:id',
+    loadChildren: () =>
+      import('./company-details/company-details.module').then(
+        (m) => m.CompanyDetailsModule
+      ),
+  },
 ];
 
 @NgModule({

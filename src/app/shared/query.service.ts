@@ -1,10 +1,25 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { CompanyService } from '../Services/Companyservice/company.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QueryService {
-  constructor() {}
+  constructor(private companyService: CompanyService, private http:HttpClient) { 
+    this.companyService.getCompany().subscribe(res=>{
+  
+      localStorage.setItem('companyList', JSON.stringify(res));
+    })
+  }
+  apiUrl = `${environment.api}`;
+
+ 
+   company = new BehaviorSubject(JSON.parse(localStorage.getItem('companyList')!));
+  
+  public companyList:any=this.company.value
 
   filterToggle(): void {
     // $(document).on('click', '#filter_search', function() {

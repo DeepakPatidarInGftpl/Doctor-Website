@@ -16,7 +16,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptor/token.interceptor';
 import { ToastrModule } from 'ngx-toastr';
 
-
 const icons = {
   Layers
 };
@@ -25,6 +24,7 @@ const icons = {
   declarations: [
     AppComponent,
     LayoutComponent,
+   
   ],
   imports: [
     BrowserModule,
@@ -34,6 +34,7 @@ const icons = {
     BrowserAnimationsModule,
     FeatherModule.pick(icons),
     ToastrModule.forRoot(),
+    
   ],
   exports: [
     FeatherModule

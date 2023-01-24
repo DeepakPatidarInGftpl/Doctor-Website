@@ -1,15 +1,16 @@
 
         <div class="page-header">
             <div class="page-title">
-                <h4>COMPANY LIST</h4>
-                <h6>Manage your Company</h6>
+                <h4>Company list</h4>
+                <h6>View/Search Company</h6>
             </div>
             <div class="page-btn">
                 <a routerLink="//company/addcompany" class="btn btn-added">
-                    <img src="assets/img/icons/plus.svg" alt="img">Add New Company
+                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add  Company
                 </a>
             </div>
         </div>
+
 
         <!-- /product list -->
         <div class="card">
@@ -44,41 +45,31 @@
                 <div class="card" id="filter_inputs">
                     <div class="card-body pb-0">
                         <div class="row">
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <ngx-datepicker [(ngModel)]="date"></ngx-datepicker>
-                                </div>
-                            </div>
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <input type="text" placeholder="Enter Reference">
-                                </div>
-                            </div>
-                            <div class="col-lg col-sm-6 col-12">
+                            <div class="col-lg-2 col-sm-6 col-12">
                                 <div class="form-group">
                                     <select class="form-select">
-                                        <option>Choose Supplier</option>
-                                        <option>Supplier</option>
+                                        <option>Choose Category</option>
+                                        <option>Computers</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg col-sm-6 col-12">
+                            <div class="col-lg-2 col-sm-6 col-12">
                                 <div class="form-group">
                                     <select class="form-select">
-                                        <option>Choose Status</option>
-                                        <option>Inprogress</option>
+                                        <option>Choose Sub Category</option>
+                                        <option>Fruits</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg col-sm-6 col-12">
+                            <div class="col-lg-2 col-sm-6 col-12">
                                 <div class="form-group">
                                     <select class="form-select">
-                                        <option>Choose Payment Status</option>
-                                        <option>Payment Status</option>
+                                        <option>Choose Sub Brand</option>
+                                        <option>Iphone</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-1 col-sm-6 col-12">
+                            <div class="col-lg-1 col-sm-6 col-12 ms-auto">
                                 <div class="form-group">
                                     <a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
                                 </div>
@@ -88,7 +79,7 @@
                 </div>
                 <!-- /Filter -->
                 <div class="table-responsive">
-                    <table   datatable [dtOptions]="dtOptions" class="table datanew">
+                    <table datatable [dtOptions]="dtOptions" class="table  datanew">
                         <thead>
                             <tr>
                                 <th>
@@ -97,44 +88,56 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </th>
-                                <th>Supplier Name</th>
-                                <th>Reference</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Grand Total</th>
-                                <th>Paid</th>
-                                <th>Due</th>
-                                <th>Payment Status</th>
+                                <th>Name </th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                                <th>Country</th>
+                                <th>State</th>
+                                <th>Pincode</th>
+                                <th>Financial Year</th>
+                                <th>GST</th>
+                                <th>Currency</th>
+                                <th>Is_active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr  *ngFor="let purchase of tableData; let i = index">
+                            <tr *ngFor="let products of tableData; let i = index">
                                 <td>
                                     <label class="checkboxs">
-                                        <input type="checkbox" [(ngModel)]="purchase.isSelected">
+                                        <input type="checkbox" [(ngModel)]="products.is_active">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-                                <td class="text-bolds">{{purchase.SupplierName}}</td>
-                                <td>{{purchase.Reference}}</td>
-                                <td>{{purchase.Date}}</td>
-                                <td><span [ngClass]="{'bg-lightgreen': purchase.Status === 'Received', 'bg-lightred' : purchase.Status === 'Pending','bg-lightyellow' : purchase.Status === 'Ordered'}" class="badges">{{purchase.Status}}</span></td>
-                                <td>{{purchase.GrandTotal}}</td>
-                                <td>{{purchase.Paid}}</td>
-                                <td>{{purchase.Due}}</td>
-                                <td><span [ngClass]="{'bg-lightgreen': purchase.PaymentStatus === 'Paid', 'bg-lightred' : purchase.PaymentStatus === 'UnPaid','bg-lightyellow' : purchase.PaymentStatus === 'Partial' }"class="badges">{{purchase.PaymentStatus}}</span></td>
+                                <td class="productimgname">
+                                    <!-- <a href="javascript:void(0);" class="product-img">
+                                        <img [src]="products.img" alt="product">
+                                    </a> -->
+                                    <a href="javascript:void(0);">{{products.name}}</a>
+                                </td>
+                                <td>{{products.phone}}</td>
+                                <td>{{products.email}}</td>
+                                <td>{{products.country}}</td>
+                                <td>{{products.state}}</td>
+                                <td>{{products.pincode}}</td>
+                                <td>{{products.financial_year}}</td>
+                                <td>{{products.gst}}</td>
+                                <td>{{products.currency}}</td>
+                                <td><span
+                                    [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                                    class="badges">{{products.is_active}}</span></td>
                                 <td>
-
-                                    <a class="me-3" routerLink="//company/editcompany/{{purchase.id}}">
+                                    <a class="me-3"  routerLink="//company/company-details/{{products.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-3" routerLink="//company/editcompany/{{products.id}}">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i)" class="me-3 confirm-text" href="javascript:void(0);">
+                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text" href="javascript:void(0);">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
                             </tr>
-
                         </tbody>
                     </table>
                 </div>

@@ -16,13 +16,13 @@ export class AuthServiceService {
   apiurl = `${environment.api}`
 
   login(data: Auth): Observable<Auth> {
-    let url = this.apiurl + '/login/';
+    let url = this.apiurl + '/pv-api/login/';
     return this.httpService.post(url, data, this.httpService.headers)
   }
 
 
   logout() {
-    let url = this.apiurl + '/logout/';
+    let url = this.apiurl + '/pv-api/logout/';
     return this.httpService.get(url, this.httpService.headers)
   }
 

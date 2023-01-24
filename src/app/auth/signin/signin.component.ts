@@ -58,10 +58,14 @@ export class SigninComponent implements OnInit {
     this.authService.login(this.form.value).subscribe(res => {
       console.log(res);
       this.loginRes = res;
+      console.log(this.loginRes.token);
+      
       if (this.loginRes.token) {
         this.toastr.success('Login Successfull');
         this.router.navigate(['//dashboard']);
         localStorage.setItem('token', this.loginRes.token)
+        console.log(this.loginRes.token);
+        
       }
     }, err => {
       this.toastr.error(err.error.status);
