@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ThemeService } from 'ng2-charts';
 
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
@@ -39,7 +40,7 @@ export class AddcompanyComponent implements OnInit {
   get f() {
     return this.companyForm.controls;
   }
-  constructor(private fb: FormBuilder, private copmpanyService: CompanyService, private toastr: ToastrService, private router:Router) { }
+  constructor(private fb: FormBuilder, private copmpanyService: CompanyService, private toastr: ToastrService, private router: Router) { }
   date = new Date();
   ngOnInit(): void {
     this.companyForm = this.fb.group({
@@ -48,12 +49,11 @@ export class AddcompanyComponent implements OnInit {
       phone: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]*$/),]),
       financial_year: new FormControl('', [Validators.required]),
       currency: new FormControl('', [Validators.required]),
-      gst: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
+      gst: new FormControl('', [Validators.required, Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       address: new FormControl('', [Validators.required]),
       pincode: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]),
       state: new FormControl('', [Validators.required]),
       country: new FormControl('', [Validators.required]),
-
     })
 
     this.getCountry();
@@ -69,7 +69,6 @@ export class AddcompanyComponent implements OnInit {
       this.country = res;
     })
   }
-
   state: any
   getState() {
     this.copmpanyService.stateList().subscribe(res => {
@@ -77,7 +76,6 @@ export class AddcompanyComponent implements OnInit {
       console.log(this.state);
     })
   }
-
   selectState(val: any) {
     console.log(val);
     this.copmpanyService.stateList().subscribe(res => {
@@ -87,18 +85,18 @@ export class AddcompanyComponent implements OnInit {
   }
   submit() {
     console.log(this.companyForm.value);
-    // if(this.companyForm.valid){
+    if (this.companyForm.valid) {
       this.copmpanyService.postCompany(this.companyForm.value).subscribe(res => {
         console.log(res);
         if (res.msg == "Successfuly Added") {
           this.toastr.success(res.msg)
           this.companyForm.reset()
-          this.router.navigate(['//company/companylist']).then(()=>{
+          this.router.navigate(['//company/companylist']).then(() => {
             window.location.reload()
           })
         }
-      },err=>{
-        // console.log(err.error.gst);
+      }, err => {
+        console.log(err.error.gst);
         // this.toastr.error(err.error.gst)
         // this.toastr.error(err.error.email)
         // this.toastr.error(err.error.state)
@@ -108,8 +106,41 @@ export class AddcompanyComponent implements OnInit {
         // this.toastr.error(err.error.financial_year)
         // this.toastr.error(err.error.currency)
       })
-    // }else{
+    } else {
+      this.companyForm.markAllAsTouched()
+      console.log('hhhhhh');
 
-    // } 
+    }
+  }
+
+  get name() {
+    return this.companyForm.get('name')
+  }
+  get gst() {
+    return this.companyForm.get('gst');
+  }
+  get phone() {
+    return this.companyForm.get('phone');
+  }
+  get pincode() {
+    return this.companyForm.get('pincode')
+  }
+  get financial_year() {
+    return this.companyForm.get('financial_year')
+  }
+  get email() {
+    return this.companyForm.get('email')
+  }
+  get currency() {
+    return this.companyForm.get('currency')
+  }
+  get address() {
+    return this.companyForm.get('address')
+  } 
+  get countryy() {
+    return this.companyForm.get('country')
+  }
+  get statee() {
+    return this.companyForm.get('state')
   }
 }

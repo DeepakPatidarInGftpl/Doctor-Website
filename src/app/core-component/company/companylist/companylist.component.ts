@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { company } from 'src/app/interfaces/company';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
@@ -14,12 +15,13 @@ export class CompanylistComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any
+  public tableData: any|company
 
 
   constructor(private QueryService: QueryService, private companyService: CompanyService, private router: Router) {
     this.QueryService.filterToggle()
     this.tableData = this.QueryService.companyList;
+
   }
 
   confirmText(index: any, id: any) {
@@ -98,5 +100,14 @@ export class CompanylistComponent implements OnInit {
       }
 
     })
+  }
+
+  delete(i:any, id:any) {
+    this.tableData.splice(id, 1)
+
+    this.companyService.deleteC('/pv-api/company/', i.id).subscribe(res => {
+  
+    })
+
   }
 }

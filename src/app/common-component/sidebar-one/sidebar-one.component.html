@@ -46,6 +46,30 @@
                   
                 </ul>
             </li>
+        
+            <li class="submenu" >
+                <a  [ngClass]="{'active': activePath === 'employee'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Employee</span> <span
+                        class="menu-arrow"></span></a>
+                <ul>
+                    <li><a routerLink="/employee/employeelist" routerLinkActive="active">Employee
+                            List</a></li>
+                    <li><a routerLink="/employee/addemployee" routerLinkActive="active">Add
+                            Employee</a></li>
+                  
+                </ul>
+            </li>
+            <li class="submenu" >
+                <a  [ngClass]="{'active': activePath === 'account'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Account</span> <span
+                        class="menu-arrow"></span></a>
+                <ul>
+                    <li><a routerLink="/account/accountlist" routerLinkActive="active">Account
+                            List</a></li>
+                    <li><a routerLink="/account/addaccount" routerLinkActive="active">Add
+                            Account</a></li>
+                  
+                </ul>
+            </li>
+            
               <li class="submenu" >
                   <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span
                           class="menu-arrow"></span></a>

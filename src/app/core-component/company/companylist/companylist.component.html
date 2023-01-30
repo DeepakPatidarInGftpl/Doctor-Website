@@ -133,7 +133,7 @@
                                     <a class="me-3" routerLink="//company/editcompany/{{products.id}}">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text" href="javascript:void(0);">
+                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text" href="javascript:void(0);" (click)="delete(products,i)">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>

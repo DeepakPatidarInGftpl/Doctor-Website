@@ -8,12 +8,11 @@ import { DataTablesModule } from 'angular-datatables';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { DatepickerModule } from 'ng2-datepicker';
-import { SearchPipe } from 'src/app/Pipes/search.pipe';
 
 @NgModule({
   declarations: [
     CompanylistComponent,
-    SearchPipe
+  
   ],
   imports: [
     CommonModule,

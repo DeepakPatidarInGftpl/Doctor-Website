@@ -8,6 +8,7 @@ const routes: Routes = [
   {
     path: '',
     component:CoreComponentComponent,
+    canActivate:[AuthGuard],
    
     children: [
       {
@@ -133,8 +134,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./activities/activities.module').then((m) => m.ActivitiesModule),
       },
-      //17-1
-      {path:'company', loadChildren:()=>import('./company/company.module').then((m)=>m.CompanyModule)}
+   
+      {path:'company', loadChildren:()=>import('./company/company.module').then((m)=>m.CompanyModule)},
+
+      {path:'employee',loadChildren:()=>import('./employee/employee.module').then((m)=>m.EmployeeModule)},
+      {path:'account',loadChildren:()=>import('./account/account.module').then((m)=>m.AccountModule)}
     ],
   },
   

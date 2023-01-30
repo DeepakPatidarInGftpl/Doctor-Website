@@ -1,31 +1,51 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CompanyService } from '../Services/Companyservice/company.service';
+import { CoreService } from '../Services/CoreService/core.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QueryService {
-  constructor(private companyService: CompanyService, private http:HttpClient) { 
-    this.companyService.getCompany().subscribe(res=>{
-  
+  constructor(private companyService: CompanyService, private coreService: CoreService, private http: HttpClient,) {
+    this.companyService.getCompany().subscribe(res => {
       localStorage.setItem('companyList', JSON.stringify(res));
     })
   }
   apiUrl = `${environment.api}`;
 
- 
-   company = new BehaviorSubject(JSON.parse(localStorage.getItem('companyList')!));
+  company = new BehaviorSubject(JSON.parse(localStorage.getItem('companyList')!));
+  public companyList: any = this.company.value
+// companylist accountList
+  employee=new BehaviorSubject(JSON.parse(localStorage.getItem('employeeList')!));
+  public employeeList:any=this.employee.value;
+  // accountList 
+  account=new BehaviorSubject(JSON.parse(localStorage.getItem('accountList')!));
+  public accountList:any=this.account.value;
   
-  public companyList:any=this.company.value
-
   filterToggle(): void {
     // $(document).on('click', '#filter_search', function() {
     //   $('#filter_search').toggleClass("setclose");
     // });
   }
+
+
+  // public employeeList:any // search functionlity not working using this
+  // getEmploye(){
+  //   console.log('Called service');
+    
+  //   let url = this.apiUrl + '/pv-api/employee/';
+  //  this.http.get(url, {
+  //     headers: new HttpHeaders({
+  //       'Authorization': 'token ' + `${localStorage.getItem('token')}`
+  //     })   
+  //   }).subscribe((res)=>{
+  //     // this.employeeList=res
+  //     // console.log(this.employeeList);
+  //   })
+  // }
 
   public countryList = [
     {
@@ -2409,7 +2429,7 @@ export class QueryService {
       Username: '504Benjamin',
       Phone: '123-456-888',
       isSelected: false,
-     isStatus: false,
+      isStatus: false,
       email: 'customer@example.com',
     },
     {
@@ -2417,7 +2437,7 @@ export class QueryService {
       Username: 'James 524',
       Phone: '+12163547758',
       isSelected: false,
-     isStatus: false,
+      isStatus: false,
       email: 'james@example.com',
     },
     {
@@ -2425,7 +2445,7 @@ export class QueryService {
       Username: ' Bruklin2022',
       Phone: '123-456-888	',
       isSelected: false,
-     isStatus: false,
+      isStatus: false,
       email: 'bruklin@example.com',
     },
     {
@@ -2433,7 +2453,7 @@ export class QueryService {
       Username: ' BeverlyWIN25',
       Phone: '+12163547758',
       isSelected: false,
-     isStatus: false,
+      isStatus: false,
       email: 'Beverly@example.com',
     },
     {
@@ -2441,7 +2461,7 @@ export class QueryService {
       Username: ' BeverlyWIN25',
       Phone: '+12163547758',
       isSelected: false,
-     isStatus: true,
+      isStatus: true,
       email: 'Huber@example.com',
     },
     {
@@ -2449,7 +2469,7 @@ export class QueryService {
       Username: ' Alwin243',
       Phone: '+12163547758	',
       isSelected: false,
-     isStatus: true,
+      isStatus: true,
       email: 'customer@example.com	',
     },
     {
@@ -2457,7 +2477,7 @@ export class QueryService {
       Username: ' FredJ25',
       Phone: '+12163547758',
       isSelected: false,
-     isStatus: false,
+      isStatus: false,
       email: 'john@example.com',
     },
     {
@@ -2465,7 +2485,7 @@ export class QueryService {
       Username: ' Cras56',
       Phone: '+12163547758	',
       isSelected: false,
-     isStatus: false,
+      isStatus: false,
       email: 'Rasmussen@example.com',
     },
     {
@@ -2473,7 +2493,7 @@ export class QueryService {
       Username: ' Grace2022',
       Phone: '+12163547758',
       isSelected: false,
-     isStatus: false,
+      isStatus: false,
       email: 'customer@example.com',
     },
     {
@@ -2481,7 +2501,7 @@ export class QueryService {
       Username: ' Cras56',
       Phone: '+12163547758	',
       isSelected: false,
-     isStatus: true,
+      isStatus: true,
       email: 'Rasmussen@example.com',
     },
     {
@@ -2489,7 +2509,7 @@ export class QueryService {
       Username: ' Grace2022',
       Phone: '+12163547758',
       isSelected: false,
-     isStatus: true,
+      isStatus: true,
       email: 'customer@example.com',
     },
   ];
@@ -2498,85 +2518,85 @@ export class QueryService {
       StateName: 'Beijing',
       CountryName: 'China',
       isSelected: false,
-      isStatus:true
+      isStatus: true
     },
     {
       StateName: 'Newyork',
       CountryName: 'USA',
       isSelected: false,
-      isStatus:false
+      isStatus: false
     },
     {
       StateName: 'Athens',
       CountryName: 'Greece',
       isSelected: false,
-      isStatus:true
+      isStatus: true
     },
     {
       StateName: 'Thailand',
       CountryName: 'Bangkok',
       isSelected: false,
-      isStatus:false
+      isStatus: false
     },
     {
       StateName: 'Phuket island	',
       CountryName: 'Mueang Phuket',
       isSelected: false,
-      isStatus:true
+      isStatus: true
     },
     {
       StateName: 'Germany',
       CountryName: 'Berlin',
       isSelected: false,
-      isStatus:false
+      isStatus: false
     },
     {
       StateName: 'Angola',
       CountryName: 'Luanda',
       isSelected: false,
-      isStatus:true
+      isStatus: true
     },
     {
       StateName: 'Albania',
       CountryName: 'Albania',
       isSelected: false,
-      isStatus:false
+      isStatus: false
     },
     {
       StateName: 'Turkey',
       CountryName: 'Ankara',
       isSelected: false,
-      isStatus:false
+      isStatus: false
     },
     {
       StateName: 'Phuket island',
       CountryName: 'Mueang Phuket',
       isSelected: false,
-      isStatus:false
+      isStatus: false
     },
     {
       StateName: 'Germany',
       CountryName: 'Berlin',
       isSelected: false,
-      isStatus:false
+      isStatus: false
     },
     {
       StateName: 'Angola',
       CountryName: 'Luanda',
       isSelected: false,
-      isStatus:false
+      isStatus: false
     },
     {
       StateName: 'Albania',
       CountryName: 'Albania',
       isSelected: false,
-      isStatus:false
+      isStatus: false
     },
     {
       StateName: 'Turkey',
       CountryName: 'Ankara',
       isSelected: false,
-      isStatus:false
+      isStatus: false
     },
   ];
   public purchaseOrderReport = [
@@ -3857,7 +3877,7 @@ export class QueryService {
     {
       Name: 'Users Mangement',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3874,7 +3894,7 @@ export class QueryService {
     {
       Name: 'User Permission',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3883,7 +3903,7 @@ export class QueryService {
     {
       Name: 'Products',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3902,7 +3922,7 @@ export class QueryService {
     {
       Name: 'Adjustment',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3913,7 +3933,7 @@ export class QueryService {
     {
       Name: 'Transfer',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3924,7 +3944,7 @@ export class QueryService {
     {
       Name: 'Expenses',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3935,7 +3955,7 @@ export class QueryService {
     {
       Name: 'Sales',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3946,7 +3966,7 @@ export class QueryService {
     {
       Name: 'Purchase',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3957,7 +3977,7 @@ export class QueryService {
     {
       Name: 'Quotations',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3968,7 +3988,7 @@ export class QueryService {
     {
       Name: 'Sales Return',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3979,7 +3999,7 @@ export class QueryService {
     {
       Name: 'Purchase Return',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -3990,7 +4010,7 @@ export class QueryService {
     {
       Name: 'Payment Sales',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -4001,7 +4021,7 @@ export class QueryService {
     {
       Name: 'Payments purchase',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -4012,7 +4032,7 @@ export class QueryService {
     {
       Name: 'Payments Return',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -4023,7 +4043,7 @@ export class QueryService {
     {
       Name: 'Customer list',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -4034,7 +4054,7 @@ export class QueryService {
     {
       Name: 'Supplier List',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
@@ -4045,7 +4065,7 @@ export class QueryService {
     {
       Name: 'Reports',
       View: false,
-      SelectAll:false,
+      SelectAll: false,
       Create: false,
       Edit: false,
       Delete: false,
