@@ -1,27 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
-
-import { Router } from '@angular/router';
 import { QueryService } from 'src/app/shared/query.service';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
-import { employee } from 'src/app/interfaces/employee';
-@Component({
-  selector: 'app-accountlist',
-  templateUrl: './accountlist.component.html',
-  styleUrls: ['./accountlist.component.scss']
-})
-export class AccountlistComponent implements OnInit {
+import Swal from 'sweetalert2';
 
- 
+@Component({
+  selector: 'app-warehouselist',
+  templateUrl: './warehouselist.component.html',
+  styleUrls: ['./warehouselist.component.scss']
+})
+export class WarehouselistComponent implements OnInit {
+
+  
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any | employee
+  public tableData: any 
 
  
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
-    this.tableData = this.QueryService.accountList;
- 
+    this.tableData = this.QueryService.warehouseList;
+
   }
 
   delRes: any
@@ -40,9 +38,9 @@ export class AccountlistComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.deleteAccount(id).subscribe(res => {
+        this.coreService.deleteWarehouse(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Account Deleted successfully") {
+          if (this.delRes.msg == "Warehouse Deleted successfully") {
             this.tableData
           }
         })
@@ -70,12 +68,7 @@ export class AccountlistComponent implements OnInit {
       },
 
     };
-   
-    // console.log(this.QueryService.accountList);
-    // this.coreService.getEmployee().subscribe(res => {
-    //   console.log(res);
-    //   this.tableData = res
-    // })
+    this.coreService.getWarehouse()
   }
 
   selectAll(initChecked: boolean) {
@@ -90,9 +83,9 @@ export class AccountlistComponent implements OnInit {
     }
   }
   deleteId(id: number) {
-    this.coreService.deleteEmployee(id).subscribe(res => {
+    this.coreService.deleteWarehouse(id).subscribe(res => {
       this.delRes = res
-      if (this.delRes.msg == "Company Deleted successfully") {
+      if (this.delRes.msg == "Warehouse Deleted successfully") {
         // this.getcompanyList()
       }
 

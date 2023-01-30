@@ -138,7 +138,8 @@ const routes: Routes = [
       {path:'company', loadChildren:()=>import('./company/company.module').then((m)=>m.CompanyModule)},
 
       {path:'employee',loadChildren:()=>import('./employee/employee.module').then((m)=>m.EmployeeModule)},
-      {path:'account',loadChildren:()=>import('./account/account.module').then((m)=>m.AccountModule)}
+      {path:'account',loadChildren:()=>import('./account/account.module').then((m)=>m.AccountModule)},
+      {path:'warehouse',loadChildren:()=>import('./warehouse/warehouse.module').then((m)=>m.WarehouseModule)}
     ],
   },
   

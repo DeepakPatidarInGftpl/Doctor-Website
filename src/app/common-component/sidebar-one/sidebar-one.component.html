@@ -69,6 +69,17 @@
                   
                 </ul>
             </li>
+            <li class="submenu" >
+                <a  [ngClass]="{'active': activePath === 'warehouse'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Warehouse</span> <span
+                        class="menu-arrow"></span></a>
+                <ul>
+                    <li><a routerLink="/warehouse/warehouselist" routerLinkActive="active">Warehouse
+                            List</a></li>
+                    <li><a routerLink="/warehouse/addwarehouse" routerLinkActive="active">Add
+                            Warehouse</a></li>
+                  
+                </ul>
+            </li>
             
               <li class="submenu" >
                   <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span

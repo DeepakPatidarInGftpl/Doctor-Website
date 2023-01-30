@@ -24,6 +24,9 @@ export class QueryService {
   // accountList 
   account=new BehaviorSubject(JSON.parse(localStorage.getItem('accountList')!));
   public accountList:any=this.account.value;
+    // accountList 
+    warehouse=new BehaviorSubject(JSON.parse(localStorage.getItem('warehouseList')!));
+    public warehouseList:any=this.warehouse.value;
   
   filterToggle(): void {
     // $(document).on('click', '#filter_search', function() {

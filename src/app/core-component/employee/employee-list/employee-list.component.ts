@@ -42,7 +42,7 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
       if (t.isConfirmed) {
         this.coreService.deleteEmployee(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Company Deleted successfully") {
+          if (this.delRes.msg == "Employee Deleted successfully") {
             this.tableData
           }
         })
@@ -106,7 +106,7 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
   deleteId(id: number) {
     this.coreService.deleteEmployee(id).subscribe(res => {
       this.delRes = res
-      if (this.delRes.msg == "Company Deleted successfully") {
+      if (this.delRes.msg == "Employee Deleted successfully") {
         // this.getcompanyList()
       }
 

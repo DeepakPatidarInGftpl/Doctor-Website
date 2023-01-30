@@ -104,6 +104,17 @@
           </ul>
           </li>
           <li class="submenu">
+            <a (click)="showSubMenu('Warehouse')" [class.subdrop]="opendSubMenu[1] === 'Warehouse'" href="javascript:void(0);"><span> Warehouse</span> <span class="menu-arrow"></span></a>
+            <ul [ngClass]="{
+              show: opendSubMenu[1] == 'Warehouse',
+              hide: opendSubMenu[1] != 'Warehouse'
+            }">
+            <li><a routerLink="/warehouse/warehouselist">warehouse List</a></li>
+            <li><a routerLink="/warehouse/addwarehouse">Add warehouse</a></li>
+          
+          </ul>
+          </li>
+          <li class="submenu">
             <a (click)="showSubMenu('Sales')" [class.subdrop]="opendSubMenu[1] === 'Sales'" href="javascript:void(0);"><span> Sales</span> <span class="menu-arrow"></span></a>
             <ul [ngClass]="{
               show: opendSubMenu[1] == 'Sales',

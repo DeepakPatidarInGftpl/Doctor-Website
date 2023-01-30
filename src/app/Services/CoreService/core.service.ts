@@ -122,4 +122,58 @@ export class CoreService {
       }) 
     })
   }
+  deleteAccount(id: number) {
+    let url = this.apiUrl + '/pv-api/account/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  //warehouse section
+  getWarehouse(){
+    let url = this.apiUrl+'/pv-api/warehouse/';
+    return this.http.get(url,{
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res)=>{
+      console.log(res);
+      localStorage.setItem('warehouseList', JSON.stringify(res));
+    })
+  }
+
+  getWareouseById(id:number):Observable<any>{
+    let url = this.apiUrl+'/pv-api/warehouse/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addWarehouse(data:any){
+    let url = this.apiUrl+'/pv-api/warehouse/';
+    return this.http.post(url,data,{
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updateWarehouse(data:any,id:number){
+    let url = this.apiUrl+'/pv-api/warehouse/?id=';
+    return this.http.put(`${url}${id}`,data,{
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }) 
+    })
+  }
+  deleteWarehouse(id: number) {
+    let url = this.apiUrl + '/pv-api/warehouse/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
 }

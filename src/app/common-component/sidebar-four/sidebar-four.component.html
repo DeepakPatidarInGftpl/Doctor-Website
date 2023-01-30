@@ -131,6 +131,29 @@
             </li>
             <li class="submenu">
               <a
+                (click)="showSubMenu('Warehouse')"
+                [class.subdrop]="opendSubMenu[1] === 'Warehouse'"
+                href="javascript:void(0);"
+                ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
+                  Warehouse</span
+                >
+                <span class="menu-arrow"></span
+              ></a>
+              <ul
+                [ngClass]="{
+                  show: opendSubMenu[1] == 'Warehouse',
+                  hide: opendSubMenu[1] != 'Warehouse'
+                }"
+              >
+                <li>
+                  <a routerLink="/warehouse/warehouselist">Warehouse List</a>
+                </li>
+                <li><a routerLink="/warehouse/addwarehouse">Add Warehouse</a></li>
+              
+              </ul>
+            </li>
+            <li class="submenu">
+              <a
                 (click)="showSubMenu('Sales')"
                 [class.subdrop]="opendSubMenu[1] === 'Sales'"
                 href="javascript:void(0);"
