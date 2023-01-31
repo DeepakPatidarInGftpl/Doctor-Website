@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { QueryService } from 'src/app/shared/query.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-unit-conversion',
@@ -7,9 +13,167 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UnitConversionComponent implements OnInit {
 
-  constructor() { }
 
+  dtOptions: DataTables.Settings = {};
+  initChecked: boolean = false
+  public tableData: any
+
+  unitConversionForm!: FormGroup;
+  get f() {
+    return this.unitConversionForm.controls;
+  }
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
+    this.QueryService.filterToggle();
+  }
+
+  delRes: any
+  confirmText(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.deleteUnitConversion(id).subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Unit Conversion Deleted successfully") {
+            this.tableData
+            window.location.reload()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Your file has been deleted.',
+        });
+        this.tableData.splice(index, 1);
+      }
+    });
+  }
   ngOnInit(): void {
+    this.unitConversionForm = this.fb.group({
+      title: new FormControl('', [Validators.required]),
+      quantity: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      unit: new FormControl('', [Validators.required])
+    })
+    this.dtOptions = {
+      dom: 'Btlpif',
+      pagingType: 'numbers',
+      language: {
+        search: ' ',
+        searchPlaceholder: "Search...",
+        info: "_START_ - _END_ of _TOTAL_ items",
+      },
+      initComplete: (settings, json) => {
+        $('.dt-buttons').appendTo('.wordset');
+        $('.dataTables_filter').appendTo('.search-input');
+      },
+
+    };
+    this.coreService.getUnitConversion();
+    this.tableData = this.QueryService.unitconservationList;
+    console.log(this.tableData);
+    this.getUnits();
+  }
+
+  selectAll(initChecked: boolean) {
+    if (!initChecked) {
+      this.tableData.forEach((f: any) => {
+        f.isSelected = true
+      })
+    } else {
+      this.tableData.forEach((f: any) => {
+        f.isSelected = false
+      })
+    }
+  }
+  deleteId(id: number) {
+    this.coreService.deleteUnitConversion(id).subscribe(res => {
+      this.delRes = res
+      if (this.delRes.msg == "Unit Conversion Deleted successfully") {
+        window.location.reload()
+      }
+
+    })
+  }
+  //form submit
+  unitList: any
+  getUnits() {
+    this.coreService.getUnit().subscribe(res => {
+      this.unitList = res;
+    })
+  }
+  addRes: any
+  submit() {
+    console.log(this.unitConversionForm.value);
+    console.log(this.id);
+
+    if (this.unitConversionForm.valid) {
+      if (this.id) {
+        this.coreService.updateUnitConversion(this.unitConversionForm.value, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "Unit Conversion updated successfully") {
+            this.toastr.success(this.addRes.msg)
+            this.unitConversionForm.reset()
+            window.location.reload()
+          }
+        }, err => {
+          console.log(err.error.gst);
+        })
+      } else {
+        this.coreService.addUnitConversion(this.unitConversionForm.value).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "Data Created") {
+            this.toastr.success(this.addRes.msg)
+            this.unitConversionForm.reset()
+            window.location.reload();
+          }
+        }, err => {
+          console.log(err.error.gst);
+        })
+      }
+    } else {
+      this.unitConversionForm.markAllAsTouched()
+      console.log('forms invalid');
+    }
+  }
+
+  get title() {
+    return this.unitConversionForm.get('title')
+  }
+  get quantity() {
+    return this.unitConversionForm.get('quantity')
+  }
+  get unit() {
+    return this.unitConversionForm.get('unit')
+  }
+  addForm = true
+  id: any
+  editFormdata: any
+  editForm(id: number) {
+    this.id = id
+    this.coreService.getUnitConversionById(id).subscribe(res => {
+      console.log(res);
+      res.map((data: any) => {
+        console.log(data);
+        if (id == data.id) {
+          this.unitConversionForm.patchValue(data);
+          this.editFormdata = res
+          this.unitConversionForm.get('unit')?.setValue(data.id)
+        }
+      })
+    })
   }
 
 }
+

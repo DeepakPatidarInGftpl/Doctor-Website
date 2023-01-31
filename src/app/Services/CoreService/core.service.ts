@@ -248,7 +248,14 @@ export class CoreService {
       localStorage.setItem('unitList', JSON.stringify(res));
     })
   }
-
+  getUnit():Observable<any>{
+    let url = this.apiUrl+'/pv-api/unit/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
   getUnitsById(id:number):Observable<any>{
     let url = this.apiUrl+'/pv-api/unit/?id='
     return this.http.get<any>(`${url}${id}`, {
@@ -275,6 +282,54 @@ export class CoreService {
   }
   deleteUnits(id: number) {
     let url = this.apiUrl + '/pv-api/unit/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+
+  // unitconservation section
+
+  getUnitConversion(){
+    let url = this.apiUrl+'/pv-api/unitconservation/';
+    return this.http.get(url,{
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res)=>{
+      console.log(res);
+      localStorage.setItem('unitconservationList', JSON.stringify(res));
+    })
+  }
+
+  getUnitConversionById(id:number):Observable<any>{
+    let url = this.apiUrl+'/pv-api/unitconservation/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addUnitConversion(data:any):Observable<any>{
+    let url = this.apiUrl+'/pv-api/unitconservation/';
+    return this.http.post<any>(url,data,{
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updateUnitConversion(data:any,id:number):Observable<any>{
+    let url = this.apiUrl+'/pv-api/unitconservation/?id=';
+    return this.http.put<any>(`${url}${id}`,data,{
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }) 
+    })
+  }
+  deleteUnitConversion(id: number) {
+    let url = this.apiUrl + '/pv-api/unitconservation/?id=';
     return this.http.delete(`${url}${id}`, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`

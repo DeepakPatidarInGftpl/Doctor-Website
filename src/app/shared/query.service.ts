@@ -31,8 +31,11 @@ export class QueryService {
   hsncode = new BehaviorSubject(JSON.parse(localStorage.getItem('hsncodeList')!));
   public hsncodeList: any = this.hsncode.value;
   unit = new BehaviorSubject(JSON.parse(localStorage.getItem('unitList')!));
-  public unitList: any = this.unit.value;
+  public unitList: any = this.unit.value; 
 
+  unitconservation = new BehaviorSubject(JSON.parse(localStorage.getItem('unitconservationList')!));
+  public unitconservationList: any = this.unitconservation.value; 
+  
   filterToggle(): void {
     // $(document).on('click', '#filter_search', function() {
     //   $('#filter_search').toggleClass("setclose");

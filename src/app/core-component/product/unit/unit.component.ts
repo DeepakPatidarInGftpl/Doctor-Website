@@ -126,7 +126,7 @@ export class UnitComponent implements OnInit {
         if (this.addRes.msg == "Data Created") {
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()
-          this.ngOnInit()
+          window.location.reload()
         }
       }, err => {
         console.log(err.error.gst);
