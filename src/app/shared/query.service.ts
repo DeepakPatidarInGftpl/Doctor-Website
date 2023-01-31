@@ -18,16 +18,21 @@ export class QueryService {
 
   company = new BehaviorSubject(JSON.parse(localStorage.getItem('companyList')!));
   public companyList: any = this.company.value
-// companylist accountList
-  employee=new BehaviorSubject(JSON.parse(localStorage.getItem('employeeList')!));
-  public employeeList:any=this.employee.value;
+  // companylist accountList
+  employee = new BehaviorSubject(JSON.parse(localStorage.getItem('employeeList')!));
+  public employeeList: any = this.employee.value;
   // accountList 
-  account=new BehaviorSubject(JSON.parse(localStorage.getItem('accountList')!));
-  public accountList:any=this.account.value;
-    // accountList 
-    warehouse=new BehaviorSubject(JSON.parse(localStorage.getItem('warehouseList')!));
-    public warehouseList:any=this.warehouse.value;
-  
+  account = new BehaviorSubject(JSON.parse(localStorage.getItem('accountList')!));
+  public accountList: any = this.account.value;
+  // accountList 
+  warehouse = new BehaviorSubject(JSON.parse(localStorage.getItem('warehouseList')!));
+  public warehouseList: any = this.warehouse.value;
+  // HSNcodeList
+  hsncode = new BehaviorSubject(JSON.parse(localStorage.getItem('hsncodeList')!));
+  public hsncodeList: any = this.hsncode.value;
+  unit = new BehaviorSubject(JSON.parse(localStorage.getItem('unitList')!));
+  public unitList: any = this.unit.value;
+
   filterToggle(): void {
     // $(document).on('click', '#filter_search', function() {
     //   $('#filter_search').toggleClass("setclose");
@@ -38,7 +43,7 @@ export class QueryService {
   // public employeeList:any // search functionlity not working using this
   // getEmploye(){
   //   console.log('Called service');
-    
+
   //   let url = this.apiUrl + '/pv-api/employee/';
   //  this.http.get(url, {
   //     headers: new HttpHeaders({

@@ -29,8 +29,8 @@ export class AddemployeeComponent implements OnInit {
       anniversary: new FormControl('', [Validators.required]),
       address: new FormControl('', [Validators.required]),
       pincode: new FormControl('', [Validators.required,Validators.maxLength(6), Validators.minLength(6),Validators.pattern(/^[0-9]*$/)]),
-      attendance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
-      employee_id: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      // attendance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      // employee_id: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
     })

@@ -78,10 +78,10 @@ export class EditwarehouseComponent implements OnInit {
         if (this.addRes.msg == "Warehouse updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.warehouseForm.reset()
-          // this.router.navigate(['//warehouse/warehouselist']).then(() => {
-          //   window.location.reload()
-          // })
-          window.location.href='//warehouse/warehouselist'
+          this.router.navigate(['//warehouse/warehouselist']).then(() => {
+            window.location.reload()
+          })
+          // window.loca  tion.href='//warehouse/warehouselist'
         }
       }, err => {
         console.log(err.error.gst);

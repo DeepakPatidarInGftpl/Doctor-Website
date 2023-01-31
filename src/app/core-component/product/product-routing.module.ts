@@ -100,6 +100,27 @@ const routes: Routes = [
             (m) => m.ProductDetailsModule
           ),
       },
+      {
+        path: 'hsncode',
+        loadChildren: () =>
+          import('./hsncode/hsncode.module').then(
+            (m) => m.HsncodeModule
+          ),
+      },
+      {
+        path: 'units',
+        loadChildren: () =>
+          import('./unit/unit.module').then(
+            (m) => m.UnitModule
+          ),
+      },
+      {
+        path: 'unitconversion',
+        loadChildren: () =>
+          import('./unit-conversion/unit-conversion.module').then(
+            (m) => m.UnitConversionModule
+          ),
+      },
     ],
   },
   {

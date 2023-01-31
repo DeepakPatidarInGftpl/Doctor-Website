@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { employee } from 'src/app/interfaces/employee';
+import { Account } from 'src/app/interfaces/account';
 @Component({
   selector: 'app-accountlist',
   templateUrl: './accountlist.component.html',
@@ -15,7 +16,7 @@ export class AccountlistComponent implements OnInit {
  
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any | employee
+  public tableData: any | Account
 
  
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
@@ -72,10 +73,8 @@ export class AccountlistComponent implements OnInit {
     };
    
     // console.log(this.QueryService.accountList);
-    // this.coreService.getEmployee().subscribe(res => {
-    //   console.log(res);
-    //   this.tableData = res
-    // })
+    this.coreService.getAccount()
+
   }
 
   selectAll(initChecked: boolean) {

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Warehouse } from 'src/app/interfaces/warehouse';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2';
@@ -13,7 +14,7 @@ export class WarehouselistComponent implements OnInit {
   
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any 
+  public tableData: any |Warehouse
 
  
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
