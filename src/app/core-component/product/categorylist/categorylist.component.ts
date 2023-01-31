@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
+import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 @Component({
@@ -12,11 +14,15 @@ export class CategorylistComponent implements OnInit {
   initChecked:boolean=false
   public tableData:any =[]
 
-  constructor(private QueryService:QueryService) {
+  apiUrl = environment.api
+
+  constructor(private QueryService:QueryService, private coreServ: CoreService) {
     this.QueryService.filterToggle()
-    this.tableData=this.QueryService.categoryList
+    this.coreServ.getProductCategory().subscribe( res => {
+      this.tableData = res
+    })
   }
- 
+
 
   confirmText(index:any) {
     Swal.fire({
@@ -41,15 +47,15 @@ export class CategorylistComponent implements OnInit {
         this.tableData.splice(index, 1);
       }
     });
-    
+
   }
-     
-     
- 
+
+
+
   ngOnInit(): void {
     this.dtOptions = {
       dom: 'Btlpif',
-      pagingType: 'numbers', 
+      pagingType: 'numbers',
 			language: {
 				search: ' ',
 				searchPlaceholder: "Search...",
@@ -58,8 +64,8 @@ export class CategorylistComponent implements OnInit {
 			initComplete: (settings, json)=>{
 				$('.dt-buttons').appendTo('.wordset');
 				$('.dataTables_filter').appendTo('.search-input');
-			},	
-      
+			},
+
     };
   }
   selectAll(initChecked:boolean){

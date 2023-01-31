@@ -9,6 +9,13 @@ import { employee } from 'src/app/interfaces/employee';
 export class CoreService {
 
   constructor(private http: HttpClient) { }
+
+
+  public headerswithimage = new HttpHeaders({
+    'Content-Type': 'multipart/form-data'
+  });
+
+
   apiUrl = `${environment.api}`;
   public data:any
   empoyee={}
@@ -26,7 +33,7 @@ export class CoreService {
    this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })   
+      })
     }).subscribe((res)=>{
       localStorage.setItem('employeeList', JSON.stringify(res));
       this.data=res
@@ -54,7 +61,7 @@ export class CoreService {
     return this.http.put(`${url}${id}`,data,{
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      }) 
+      })
     })
   }
   deleteEmployee(id: number) {
@@ -65,7 +72,7 @@ export class CoreService {
       })
     })
   }
-  
+
   countryList() {
     let url = this.apiUrl + '/country/';
     return this.http.get(url)
@@ -119,7 +126,17 @@ export class CoreService {
     return this.http.put(`${url}${id}`,data,{
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      }) 
+      })
     })
+  }
+
+  getProductCategory() {
+    let url = this.apiUrl+'/pv-api/product-category/';
+    return this.http.get(url)
+  }
+
+  addCategory(data, headers) {
+    let url = this.apiUrl+'/pv-api/product-category/';
+    return this.http.post(url, data, {headers})
   }
 }

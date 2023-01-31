@@ -15,7 +15,7 @@ export class CompanylistComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any|company
+  public tableData: any | company
 
 
   constructor(private QueryService: QueryService, private companyService: CompanyService, private router: Router) {
@@ -90,7 +90,7 @@ export class CompanylistComponent implements OnInit {
   //     this.companyList = res;
   //   })
   // }
- 
+
   delRes: any
   deleteId(id: number) {
     this.companyService.deleteCompany(id).subscribe(res => {
@@ -102,11 +102,12 @@ export class CompanylistComponent implements OnInit {
     })
   }
 
-  delete(i:any, id:any) {
+  delete(i: any, id: any) {
     this.tableData.splice(id, 1)
 
     this.companyService.deleteC('/pv-api/company/', i.id).subscribe(res => {
-  
+      console.log(res);
+
     })
 
   }
