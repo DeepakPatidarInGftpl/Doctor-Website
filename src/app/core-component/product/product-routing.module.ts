@@ -29,18 +29,17 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'addcategory',
-        loadChildren: () =>
-          import('./addcategory/addcategory.module').then(
-            (m) => m.AddcategoryModule
-          ),
-      },
-
-      {
         path: 'subcategorylist',
         loadChildren: () =>
           import('./subcategorylist/subcategorylist.module').then(
             (m) => m.SubcategorylistModule
+          ),
+      },
+      {
+        path: 'subCategoryGroup',
+        loadChildren: () =>
+          import('./subcategory-group/subcategory.gr.module').then(
+            (m) => m.subcatModule
           ),
       },
       {
@@ -49,6 +48,11 @@ const routes: Routes = [
           import('./subaddcategory/subaddcategory.module').then(
             (m) => m.SubaddcategoryModule
           ),
+      },
+      {
+        path: 'warehouse',
+        loadChildren: () =>
+          import('./warehouse-list/warehouseList.module').then((m) => m.WarehouselistModule),
       },
       {
         path: 'addbrand',

@@ -17,7 +17,7 @@
                         <div class="form-group">
                             <label>	Product Image</label>
                             <div class="image-upload mb-2">
-                                <input type="file" formControlName="image">
+                                <input type="file" name="image" (change)="onFileChange($event)">
                                 <div class="image-uploads">
                                     <img src="assets/img/icons/upload.svg" alt="img">
                                     <h4>Drag and drop a file to upload</h4>
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <a (click)="submitForm()" class="btn btn-submit me-2">Submit</a>
+                        <a (click)="submitForm()" class="btn btn-submit me-2">{{this.editRoute? 'Save Changes': 'Submit'}}</a>
                     </div>
                 </div>
             </div>

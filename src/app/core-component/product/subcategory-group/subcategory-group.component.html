@@ -90,8 +90,10 @@
                       <span class="checkmarks"></span>
                     </label>
                   </th>
-                  <th>Category name</th>
-                  <th>Action</th>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Subcategories- Multiple</th>
+                  <th>Feature Group- Many to many</th>
                 </tr>
               </thead>
               <tbody>
@@ -109,7 +111,7 @@
                     <a href="javascript:void(0);">{{products.title}}</a>
                   </td>
                   <td>
-                    <a class="me-3" (click)="editThis(products, i)">
+                    <a class="me-3" (click)="editThis(products)">
                       <img src="assets/img/icons/edit.svg" alt="img">
                     </a>
                     <a (click)="confirmText(i)" class="me-3 confirm-text" href="javascript:void(0);">
@@ -126,12 +128,43 @@
     </div>
     <div class="col-5">
       <div class="page-btn d-flex justify-content-between">
-      <div class="page-title pe-4">
-        <h4>{{editMode? ' Edit Category': 'Product Add Category'}}</h4>
-        <h6>{{editMode? 'Edit Product Category': 'Create new product Category'}}</h6>
+        <div class="page-title pe-4">
+          <h4>{{editMode? ' Edit Category': 'Product Add Category'}}</h4>
+          <h6>{{editMode? 'Edit Product Category': 'Create new product Category'}}</h6>
+        </div>
       </div>
+
+
+      <!-- /add -->
+      <div class="card">
+        <div class="card-body">
+          <div [formGroup]="form" enctype="multipart/form-data" class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label>Sub Category Name</label>
+                <input type="text" formControlName="subcategories">
+                <span class="text-danger">Fill The Details</span>
+              </div>
+            </div>
+
+
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label>Feature Group</label>
+                <div class="image-upload mb-2">
+                  <input type="text" formControlName="feature_group">
+                </div>
+                <span class="text-danger">Upload an image</span>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <!-- <a (click)="submitForm()" class="btn btn-submit me-2">{{this.editRoute? 'Save Changes': 'Submit'}}</a> -->
+            </div>
+          </div>
+        </div>
       </div>
-      <app-addcategory></app-addcategory>
+      <!-- /add -->
+
     </div>
   </div>
 </div>

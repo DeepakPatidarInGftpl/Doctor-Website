@@ -13,7 +13,7 @@ export class AuthServiceService {
 
   constructor(private http: HttpClient, private httpService: HttpClientService) { }
 
-  token = localStorage.getItem('token')
+
 
   apiurl = `${environment.api}`
 
@@ -25,10 +25,9 @@ export class AuthServiceService {
 
   logout() {
     let url = this.apiurl + '/pv-api/logout/';
-    this.doLogout();
     return this.httpService.post(url, null, new HttpHeaders({
-        'Authorization': 'token ' + this.token
-    }))
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }))
   }
 
   // get the token value when loged in

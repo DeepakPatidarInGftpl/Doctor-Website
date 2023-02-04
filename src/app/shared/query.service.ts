@@ -21,10 +21,13 @@ export class QueryService {
 // companylist accountList
   employee=new BehaviorSubject(JSON.parse(localStorage.getItem('employeeList')!));
   public employeeList:any=this.employee.value;
-  // accountList 
+  // accountList
   account=new BehaviorSubject(JSON.parse(localStorage.getItem('accountList')!));
   public accountList:any=this.account.value;
-  
+
+   warehouse = new BehaviorSubject(JSON.parse(localStorage.getItem('warehouseList')!));
+  public warehouseList: any = this.warehouse.value;
+
   filterToggle(): void {
     // $(document).on('click', '#filter_search', function() {
     //   $('#filter_search').toggleClass("setclose");
@@ -35,12 +38,12 @@ export class QueryService {
   // public employeeList:any // search functionlity not working using this
   // getEmploye(){
   //   console.log('Called service');
-    
+
   //   let url = this.apiUrl + '/pv-api/employee/';
   //  this.http.get(url, {
   //     headers: new HttpHeaders({
   //       'Authorization': 'token ' + `${localStorage.getItem('token')}`
-  //     })   
+  //     })
   //   }).subscribe((res)=>{
   //     // this.employeeList=res
   //     // console.log(this.employeeList);

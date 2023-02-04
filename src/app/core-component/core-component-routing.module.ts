@@ -4,11 +4,11 @@ import { AuthGuard } from '../guards/auth.guard';
 import { CoreComponentComponent } from './core-component.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full'},
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: '',
-    component:CoreComponentComponent,
-    canActivate:[AuthGuard],
+    component: CoreComponentComponent,
+    canActivate: [AuthGuard],
 
     children: [
       {
@@ -35,6 +35,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('./product/product.module').then((m) => m.ProductModule),
       },
+
       {
         path: 'sales',
         loadChildren: () =>
@@ -135,10 +136,10 @@ const routes: Routes = [
           import('./activities/activities.module').then((m) => m.ActivitiesModule),
       },
 
-      {path:'company', loadChildren:()=>import('./company/company.module').then((m)=>m.CompanyModule)},
+      { path: 'company', loadChildren: () => import('./company/company.module').then((m) => m.CompanyModule) },
 
-      {path:'employee',loadChildren:()=>import('./employee/employee.module').then((m)=>m.EmployeeModule)},
-      {path:'account',loadChildren:()=>import('./account/account.module').then((m)=>m.AccountModule)}
+      { path: 'employee', loadChildren: () => import('./employee/employee.module').then((m) => m.EmployeeModule) },
+      { path: 'account', loadChildren: () => import('./account/account.module').then((m) => m.AccountModule) }
     ],
   },
 
@@ -148,4 +149,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CoreComponentRoutingModule {}
+export class CoreComponentRoutingModule { }

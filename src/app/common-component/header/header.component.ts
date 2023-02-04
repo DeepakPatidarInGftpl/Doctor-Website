@@ -48,6 +48,7 @@ export class HeaderComponent implements OnInit {
       console.log(res);
       this.toastr.success('LogOut Successfull');
       this.Router.navigate(['/auth/signin'])
+      this.authServ.doLogout()
     })
   }
 
