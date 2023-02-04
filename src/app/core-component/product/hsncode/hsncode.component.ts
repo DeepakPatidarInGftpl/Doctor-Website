@@ -46,7 +46,7 @@ export class HsncodeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteWarehouse(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Warehouse Deleted successfully") {
+          if (this.delRes.msg == "HSNCode Deleted successfully") {
             this.tableData
           }
         })
@@ -140,7 +140,38 @@ export class HsncodeComponent implements OnInit {
     })
   }
 
+  // addRes: any
+  // submit() {
+  //   console.log(this.hsncodeForm.value);
+  //   var formdata: any = new FormData()
+
+  //   formdata.append('title', this.hsncodeForm.get('title')?.value);
+  //   formdata.append('tax', this.hsncodeForm.get('tax')?.value);
+  //   formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
+  //   formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
+
+  //   if (this.hsncodeForm.valid) {
+  //     this.coreService.addHSNcode(formdata).subscribe(res => {
+  //       console.log(res);
+  //       this.addRes = res
+  //       if (this.addRes.msg == "Data Created") {
+  //         this.toastr.success(this.addRes.msg)
+  //         this.hsncodeForm.reset()
+  //         this.router.navigate(['product/hsncode']).then(() => {
+  //           window.location.reload()
+  //         })
+  //       }
+  //     }, err => {
+  //       console.log(err.error.gst);
+  //     })
+  //   } else {
+  //     this.hsncodeForm.markAllAsTouched()
+  //     console.log('forms invalid');
+  //   }
+  // }
+
   addRes: any
+  data: any
   submit() {
     console.log(this.hsncodeForm.value);
     var formdata: any = new FormData()
@@ -151,24 +182,38 @@ export class HsncodeComponent implements OnInit {
     formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
 
     if (this.hsncodeForm.valid) {
-      this.coreService.addHSNcode(formdata).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        if (this.addRes.msg == "Data Created") {
-          this.toastr.success(this.addRes.msg)
-          this.hsncodeForm.reset()
-          this.router.navigate(['product/hsncode']).then(() => {
+      if (this.id) {
+        this.coreService.updateHSNcode(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "HSNCode updated successfully") {
+            this.toastr.success(this.addRes.msg)
+            this.hsncodeForm.reset()
             window.location.reload()
-          })
-        }
-      }, err => {
-        console.log(err.error.gst);
-      })
+          }
+        }, err => {
+          console.log(err.error.gst);
+        })
+      } else {
+        this.coreService.addHSNcode(formdata).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "HSNCode Successfuly Added") {
+            this.toastr.success(this.addRes.msg)
+            this.hsncodeForm.reset()
+            window.location.reload()
+          }
+        }, err => {
+          console.log(err.error.gst);
+        })
+      }
     } else {
       this.hsncodeForm.markAllAsTouched()
       console.log('forms invalid');
     }
   }
+
+
 
   get hsn_code() {
     return this.hsncodeForm.get('hsn_code')
@@ -187,5 +232,28 @@ export class HsncodeComponent implements OnInit {
     this.coreService.gettaxd().subscribe(res => {
       this.taxdata = res
     })
+  }
+
+  addForm = true
+  id: any
+  brandEdit: any
+  editForm(id: number) {
+    this.id = id
+    this.coreService.getHSNcodeById(id).subscribe(res => {
+      console.log(res);
+
+      if (id == res.id) {
+        this.addForm = false;
+        this.brandEdit = res.brand_id;
+        console.log(this.brandEdit);
+
+        this.hsncodeForm.patchValue({
+          title: res.title,
+          tax: res.tax,
+          hsn_code:res.hsn_code
+        });
+      }
+    })
+
   }
 }

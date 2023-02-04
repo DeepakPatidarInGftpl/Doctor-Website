@@ -81,7 +81,7 @@
                                     <!-- <a class="me-3"  routerLink="//warehouse/warehouse-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a> -->
-                                    <a class="me-3" routerLink="//warehouse/editwarehouse/{{products.id}}">
+                                    <a class="me-3" (click)="editForm(products.id)">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
@@ -100,9 +100,13 @@
     </div>
     <div class="col-lg-5 col-sm-5 col-12">
         <div class="page-header">
-            <div class="page-title">
+            <div class="page-title" *ngIf="addForm">
                 <h4> Add HSN Code</h4>
                 <h6>Create new HSN Code </h6>
+            </div>
+            <div class="page-title" *ngIf="!addForm">
+                <h4>HSN Code Edit</h4>
+                <h6>Update HSN Code </h6>
             </div>
         </div>
         <div class="card">
