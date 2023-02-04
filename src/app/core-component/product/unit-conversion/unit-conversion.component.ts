@@ -167,6 +167,7 @@ export class UnitConversionComponent implements OnInit {
       res.map((data: any) => {
         console.log(data);
         if (id == data.id) {
+          this.addForm=false
           this.unitConversionForm.patchValue(data);
           this.editFormdata = res
           this.unitConversionForm.get('unit')?.setValue(data.id)

@@ -24,17 +24,45 @@ export class QueryService {
   // accountList 
   account = new BehaviorSubject(JSON.parse(localStorage.getItem('accountList')!));
   public accountList: any = this.account.value;
-  // accountList 
+  // warehouseList 
   warehouse = new BehaviorSubject(JSON.parse(localStorage.getItem('warehouseList')!));
   public warehouseList: any = this.warehouse.value;
   // HSNcodeList
   hsncode = new BehaviorSubject(JSON.parse(localStorage.getItem('hsncodeList')!));
   public hsncodeList: any = this.hsncode.value;
+  //unitList
   unit = new BehaviorSubject(JSON.parse(localStorage.getItem('unitList')!));
-  public unitList: any = this.unit.value; 
-
+  public unitList: any = this.unit.value;
+  // unit conversion
   unitconservation = new BehaviorSubject(JSON.parse(localStorage.getItem('unitconservationList')!));
-  public unitconservationList: any = this.unitconservation.value; 
+  public unitconservationList: any = this.unitconservation.value;
+  //productsubcategroyList
+  productsubcategory = new BehaviorSubject(JSON.parse(localStorage.getItem('productsubcategroyList')!));
+  public productsubcategoryList: any = this.productsubcategory.value;
+  //brandsList
+  brands = new BehaviorSubject(JSON.parse(localStorage.getItem('brandsList')!));
+  public brandsList: any = this.brands.value;
+  //colorsList
+  colors = new BehaviorSubject(JSON.parse(localStorage.getItem('colorsList')!));
+  public colorsList: any = this.colors.value;
+  //sizeList
+  size = new BehaviorSubject(JSON.parse(localStorage.getItem('sizesList')!));
+  public sizeList: any = this.size.value;
+  //sizeList
+  tax = new BehaviorSubject(JSON.parse(localStorage.getItem('taxList')!));
+  public taxList: any = this.tax.value;
+  //fuature_groupList
+  fuature_group = new BehaviorSubject(JSON.parse(localStorage.getItem('fuature_groupList')!));
+  public fuature_groupList: any = this.fuature_group.value;
+  // featureList 
+  fuature = new BehaviorSubject(JSON.parse(localStorage.getItem('featureList')!));
+  public fuatureList: any = this.fuature.value;
+  //variantList
+  variant = new BehaviorSubject(JSON.parse(localStorage.getItem('variantList')!));
+  public variantList: any = this.variant.value;
+  //subcategorygroupList
+  subcategorygroup = new BehaviorSubject(JSON.parse(localStorage.getItem('subcategorygroupList')!));
+  public subcategorygroupList: any = this.subcategorygroup.value;
   
   filterToggle(): void {
     // $(document).on('click', '#filter_search', function() {

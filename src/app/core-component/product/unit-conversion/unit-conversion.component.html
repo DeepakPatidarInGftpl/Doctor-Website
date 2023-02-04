@@ -97,9 +97,12 @@
     </div>
     <div class="col-lg-5 col-sm-5 col-12">
         <div class="page-header">
-            <div class="page-title">
+            <div class="page-title" *ngIf="addForm">
                 <h4> Add Unit Conversion </h4>
                 <h6>Create new Unit Conversion</h6>
+            </div>
+            <div class="page-title" *ngIf="!addForm">
+                <h4> Update Unit Conversion </h4>
             </div>
         </div>
         <div class="card">

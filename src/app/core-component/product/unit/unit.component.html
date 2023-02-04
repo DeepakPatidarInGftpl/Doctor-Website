@@ -93,9 +93,13 @@
     </div>
     <div class="col-lg-5 col-sm-5 col-12">
         <div class="page-header">
-            <div class="page-title">
+            <div class="page-title" *ngIf="addForm">
                 <h4> Add Unit </h4>
                 <h6>Create new Unit </h6>
+            </div>
+            <div class="page-title" *ngIf="!addForm">
+                <h4> Update Unit </h4>
+       
             </div>
         </div>
         <div class="card">

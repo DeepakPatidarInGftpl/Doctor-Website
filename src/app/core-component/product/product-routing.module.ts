@@ -121,6 +121,50 @@ const routes: Routes = [
             (m) => m.UnitConversionModule
           ),
       },
+      {
+        path: 'colors',
+        loadChildren: () =>
+          import('./colors/colors.module').then(
+            (m) => m.ColorsModule
+          ),
+      },
+      {
+        path: 'size',
+        loadChildren: () =>
+          import('./size/size.module').then(
+            (m) => m.SizeModule
+          ),
+      },
+      {
+        path: 'tax',
+        loadChildren: () =>
+          import('./tax/tax.module').then(
+            (m) => m.TaxModule
+          ),
+      },
+      {
+        path: 'feature',
+        loadChildren: () =>
+          import('./feature/feature.module').then(
+            (m) => m.FeatureModule
+          ),
+      },
+      {
+        path: 'feature_group',
+        loadChildren: () =>
+          import('./feature-group/feature-group.module').then(
+            (m) => m.FeatureGroupModule
+          ),
+      },
+      {
+        path: 'variant',
+        loadChildren: () =>
+          import('./variant/variant.module').then(
+            (m) => m.VariantModule
+          ),
+      },
+      
+
     ],
   },
   {
@@ -128,10 +172,12 @@ const routes: Routes = [
     loadChildren: () =>
       import('./brandlist/brandlist.module').then((m) => m.BrandlistModule),
   },
+  { path: 'subcategory-details/:id', loadChildren: () => import('./subcategorydetails/subcategorydetails.module').then((m) => m.SubcategorydetailsModule) },
+
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ProductRoutingModule {}
+export class ProductRoutingModule { }

@@ -150,6 +150,7 @@ id:any
       res.map((data: any) => {
         console.log(data);
         if (id == data.id) {
+          this.addForm=false
           this.unitsForm.patchValue(data);
           
         }

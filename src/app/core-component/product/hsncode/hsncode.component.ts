@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -24,6 +24,7 @@ export class HsncodeComponent implements OnInit {
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle()
     this.tableData = this.QueryService.hsncodeList;
+    console.log(this.tableData);
 
   }
 
@@ -63,7 +64,7 @@ export class HsncodeComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       hsn_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       tax: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      subcategory: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      subcategory:new FormArray([], [Validators.required]),
     })
     this.dtOptions = {
       dom: 'Btlpif',
@@ -80,7 +81,8 @@ export class HsncodeComponent implements OnInit {
 
     };
     this.coreService.getHSNcode();
-    this.getSubcategory()
+    this.getSubcategory();
+    this.getTax();
   }
 
   selectAll(initChecked: boolean) {
@@ -105,6 +107,31 @@ export class HsncodeComponent implements OnInit {
   }
 
   // form submit
+  check: any
+  onCheckChange(event: any) {
+    const formArray: any = this.hsncodeForm.get('subcategory') as FormArray;
+
+    /* Selected */
+    if (event.target.checked) {
+      // Add a new control in the arrayForm
+      formArray.push(new FormControl(parseInt(event.target.value)));
+      // parseInt(formArray.push(new FormControl(event.target.value)))
+      this.check = formArray
+    }
+    /* unselected */
+    else {
+      // find the unselected element
+      let i: number = 0;
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
+  }
   subcategoryList: any
   getSubcategory() {
     this.coreService.getSubcategory().subscribe(res => {
@@ -116,8 +143,15 @@ export class HsncodeComponent implements OnInit {
   addRes: any
   submit() {
     console.log(this.hsncodeForm.value);
+    var formdata: any = new FormData()
+
+    formdata.append('title', this.hsncodeForm.get('title')?.value);
+    formdata.append('tax', this.hsncodeForm.get('tax')?.value);
+    formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
+    formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
+
     if (this.hsncodeForm.valid) {
-      this.coreService.addHSNcode(this.hsncodeForm.value).subscribe(res => {
+      this.coreService.addHSNcode(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
@@ -147,5 +181,11 @@ export class HsncodeComponent implements OnInit {
   }
   get subcategory() {
     return this.hsncodeForm.get('subcategory');
+  }
+  taxdata: any
+  getTax() {
+    this.coreService.gettaxd().subscribe(res => {
+      this.taxdata = res
+    })
   }
 }

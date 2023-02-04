@@ -12,8 +12,8 @@ export class CoreService {
 
   constructor(private http: HttpClient) { }
   apiUrl = `${environment.api}`;
-  public data:any
-  empoyee={}
+  public data: any
+  empoyee = {}
   getEmployee(): Observable<employee> {
     let url = this.apiUrl + '/pv-api/employee/';
     return this.http.get<employee>(url, {
@@ -23,40 +23,40 @@ export class CoreService {
     })
   }
 
-  getEmploye(){
+  getEmploye() {
     let url = this.apiUrl + '/pv-api/employee/';
-   this.http.get(url, {
+    this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })   
-    }).subscribe((res)=>{
+      })
+    }).subscribe((res) => {
       localStorage.setItem('employeeList', JSON.stringify(res));
-      this.data=res
+      this.data = res
       console.log(this.data);
     })
   }
-  getEmployeeById(id:number):Observable<employee>{
-    let url = this.apiUrl+'/pv-api/employee/?id='
+  getEmployeeById(id: number): Observable<employee> {
+    let url = this.apiUrl + '/pv-api/employee/?id='
     return this.http.get<employee>(`${url}${id}`, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  addEmployee(data:employee){
-    let url = this.apiUrl+'/pv-api/employee/';
-    return this.http.post(url,data,{
+  addEmployee(data: employee) {
+    let url = this.apiUrl + '/pv-api/employee/';
+    return this.http.post(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  updateEmployee(data:employee,id:number){
-    let url = this.apiUrl+'/pv-api/employee/?id=';
-    return this.http.put(`${url}${id}`,data,{
+  updateEmployee(data: employee, id: number) {
+    let url = this.apiUrl + '/pv-api/employee/?id=';
+    return this.http.put(`${url}${id}`, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      }) 
+      })
     })
   }
   deleteEmployee(id: number) {
@@ -67,7 +67,7 @@ export class CoreService {
       })
     })
   }
-  
+
   countryList() {
     let url = this.apiUrl + '/country/';
     return this.http.get(url)
@@ -77,51 +77,51 @@ export class CoreService {
     return this.http.get(url)
   }
   // Acount section
-  accountType(){
-    let url = this.apiUrl+'/pv-api/account_type/';
+  accountType() {
+    let url = this.apiUrl + '/pv-api/account_type/';
     return this.http.get(url)
   }
-  getAccount(){
-    let url = this.apiUrl+'/pv-api/account/';
-    return this.http.get(url,{
+  getAccount() {
+    let url = this.apiUrl + '/pv-api/account/';
+    return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
-    }).subscribe((res)=>{
+    }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('accountList', JSON.stringify(res));
     })
   }
-  getAccountD():Observable<Account>{
-    let url = this.apiUrl+'/pv-api/account/';
-    return this.http.get<Account>(url,{
+  getAccountD(): Observable<Account> {
+    let url = this.apiUrl + '/pv-api/account/';
+    return this.http.get<Account>(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  getAccountById(id:number):Observable<Account>{
-    let url = this.apiUrl+'/pv-api/account/?id='
+  getAccountById(id: number): Observable<Account> {
+    let url = this.apiUrl + '/pv-api/account/?id='
     return this.http.get<Account>(`${url}${id}`, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  addAccount(data:Account):Observable<Account>{
-    let url = this.apiUrl+'/pv-api/account/';
-    return this.http.post<Account>(url,data,{
+  addAccount(data: Account): Observable<Account> {
+    let url = this.apiUrl + '/pv-api/account/';
+    return this.http.post<Account>(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  updateAccount(data:Account,id:number):Observable<Account>{
-    let url = this.apiUrl+'/pv-api/account/?id=';
-    return this.http.put<Account>(`${url}${id}`,data,{
+  updateAccount(data: Account, id: number): Observable<Account> {
+    let url = this.apiUrl + '/pv-api/account/?id=';
+    return this.http.put<Account>(`${url}${id}`, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      }) 
+      })
     })
   }
   deleteAccount(id: number) {
@@ -134,40 +134,40 @@ export class CoreService {
   }
 
   //warehouse section
-  getWarehouse(){
-    let url = this.apiUrl+'/pv-api/warehouse/';
-    return this.http.get(url,{
+  getWarehouse() {
+    let url = this.apiUrl + '/pv-api/warehouse/';
+    return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
-    }).subscribe((res)=>{
+    }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('warehouseList', JSON.stringify(res));
     })
   }
 
-  getWareouseById(id:number):Observable<any>{
-    let url = this.apiUrl+'/pv-api/warehouse/?id='
+  getWareouseById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/warehouse/?id='
     return this.http.get<any>(`${url}${id}`, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  addWarehouse(data:Warehouse):Observable<Warehouse>{
-    let url = this.apiUrl+'/pv-api/warehouse/';
-    return this.http.post<Warehouse>(url,data,{
+  addWarehouse(data: Warehouse): Observable<Warehouse> {
+    let url = this.apiUrl + '/pv-api/warehouse/';
+    return this.http.post<Warehouse>(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  updateWarehouse(data:Warehouse,id:number):Observable<Warehouse>{
-    let url = this.apiUrl+'/pv-api/warehouse/?id=';
-    return this.http.put<Warehouse>(`${url}${id}`,data,{
+  updateWarehouse(data: Warehouse, id: number): Observable<Warehouse> {
+    let url = this.apiUrl + '/pv-api/warehouse/?id=';
+    return this.http.put<Warehouse>(`${url}${id}`, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      }) 
+      })
     })
   }
   deleteWarehouse(id: number) {
@@ -179,41 +179,41 @@ export class CoreService {
     })
   }
 
-   //HSNCODE section
-   getHSNcode(){
-    let url = this.apiUrl+'/pv-api/hsn_code/';
-    return this.http.get(url,{
+  //HSNCODE section
+  getHSNcode() {
+    let url = this.apiUrl + '/pv-api/hsn_code/';
+    return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
-    }).subscribe((res)=>{
+    }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('hsncodeList', JSON.stringify(res));
     })
   }
 
-  getHSNcodeById(id:number):Observable<any>{
-    let url = this.apiUrl+'/pv-api/hsn_code/?id='
+  getHSNcodeById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/hsn_code/?id='
     return this.http.get<any>(`${url}${id}`, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  addHSNcode(data:any):Observable<any>{
-    let url = this.apiUrl+'/pv-api/hsn_code/';
-    return this.http.post<any>(url,data,{
+  addHSNcode(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/hsn_code/';
+    return this.http.post<any>(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  updateHSNcode(data:any,id:number):Observable<any>{
-    let url = this.apiUrl+'/pv-api/hsn_code/?id=';
-    return this.http.put<any>(`${url}${id}`,data,{
+  updateHSNcode(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/hsn_code/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      }) 
+      })
     })
   }
   deleteHSNcode(id: number) {
@@ -226,9 +226,9 @@ export class CoreService {
   }
 
   //product   
-  getSubcategory():Observable<any>{
-    let url = this.apiUrl+'/pv-api/product_subcategroy/';
-    return this.http.get<any>(url,{
+  getSubcategory(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/product_subcategroy/';
+    return this.http.get<any>(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
@@ -237,47 +237,47 @@ export class CoreService {
 
   //units section
 
-  getUnits(){
-    let url = this.apiUrl+'/pv-api/unit/';
-    return this.http.get(url,{
+  getUnits() {
+    let url = this.apiUrl + '/pv-api/unit/';
+    return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
-    }).subscribe((res)=>{
+    }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('unitList', JSON.stringify(res));
     })
   }
-  getUnit():Observable<any>{
-    let url = this.apiUrl+'/pv-api/unit/'
+  getUnit(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/unit/'
     return this.http.get<any>(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  getUnitsById(id:number):Observable<any>{
-    let url = this.apiUrl+'/pv-api/unit/?id='
+  getUnitsById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/unit/?id='
     return this.http.get<any>(`${url}${id}`, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  addUnits(data:any):Observable<any>{
-    let url = this.apiUrl+'/pv-api/unit/';
-    return this.http.post<any>(url,data,{
+  addUnits(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/unit/';
+    return this.http.post<any>(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  updateUnits(data:any,id:number):Observable<any>{
-    let url = this.apiUrl+'/pv-api/unit/?id=';
-    return this.http.put<any>(`${url}${id}`,data,{
+  updateUnits(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/unit/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      }) 
+      })
     })
   }
   deleteUnits(id: number) {
@@ -292,45 +292,486 @@ export class CoreService {
 
   // unitconservation section
 
-  getUnitConversion(){
-    let url = this.apiUrl+'/pv-api/unitconservation/';
-    return this.http.get(url,{
+  getUnitConversion() {
+    let url = this.apiUrl + '/pv-api/unitconservation/';
+    return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
-    }).subscribe((res)=>{
+    }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('unitconservationList', JSON.stringify(res));
     })
   }
 
-  getUnitConversionById(id:number):Observable<any>{
-    let url = this.apiUrl+'/pv-api/unitconservation/?id='
+  getUnitConversionById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/unitconservation/?id='
     return this.http.get<any>(`${url}${id}`, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  addUnitConversion(data:any):Observable<any>{
-    let url = this.apiUrl+'/pv-api/unitconservation/';
-    return this.http.post<any>(url,data,{
+  addUnitConversion(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/unitconservation/';
+    return this.http.post<any>(url, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  updateUnitConversion(data:any,id:number):Observable<any>{
-    let url = this.apiUrl+'/pv-api/unitconservation/?id=';
-    return this.http.put<any>(`${url}${id}`,data,{
+  updateUnitConversion(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/unitconservation/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      }) 
+      })
     })
   }
   deleteUnitConversion(id: number) {
     let url = this.apiUrl + '/pv-api/unitconservation/?id=';
     return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  // product_subcategroy
+  getProductSubcategory() {
+    let url = this.apiUrl + '/pv-api/product_subcategroy/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('productsubcategroyList', JSON.stringify(res));
+    })
+  }
+
+  getProductSubcategoryById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/product_subcategroy/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addProductSubcategory(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/product_subcategroy/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updateProductSubcategory(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/product_subcategroy/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deleteProductSubcategory(id: number) {
+    let url = this.apiUrl + '/pv-api/product_subcategroy/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  // brands
+  getbrand() {
+    let url = this.apiUrl + '/pv-api/brands/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('brandsList', JSON.stringify(res));
+    })
+  }
+  getBrand(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/brands/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  getbrandById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/brands/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addbrand(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/brands/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updatebrand(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/brands/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deletebrand(id: number) {
+    let url = this.apiUrl + '/pv-api/brands/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  // sizes
+  getcolor() {
+    let url = this.apiUrl + '/pv-api/colour/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('colorsList', JSON.stringify(res));
+    })
+  }
+
+  getcolorById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/colour/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addcolor(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/colour/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updatecolor(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/colour/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deletecolor(id: number) {
+    let url = this.apiUrl + '/pv-api/colour/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+
+  // size section
+  getsize() {
+    let url = this.apiUrl + '/pv-api/size/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('sizesList', JSON.stringify(res));
+    })
+  }
+  getsizeById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addsize(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updatesize(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deletesize(id: number) {
+    let url = this.apiUrl + '/pv-api/size/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  //tax section
+  gettax() {
+    let url = this.apiUrl + '/pv-api/tax/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('taxList', JSON.stringify(res));
+    })
+  }
+  gettaxd(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/tax/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  gettaxById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/tax/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addtax(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/tax/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updatetax(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/tax/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deletetax(id: number) {
+    let url = this.apiUrl + '/pv-api/tax/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  //fuature_group section
+  getFuature_group() {
+    let url = this.apiUrl + '/pv-api/fuature_group/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('fuature_groupList', JSON.stringify(res));
+    })
+  }
+  getFuature_groupD(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/fuature_group/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  getFuature_groupById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/fuature_group/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addFuature_group(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/fuature_group/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updateFuature_group(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/fuature_group/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deleteFuature_group(id: number) {
+    let url = this.apiUrl + '/pv-api/fuature_group/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+
+  //fuature section
+  getFeature() {
+    let url = this.apiUrl + '/pv-api/feature/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('featureList', JSON.stringify(res));
+    })
+  }
+  getFeatureById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/feature/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addFeature(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/feature/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updateFeature(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/feature/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deleteFeature(id: number) {
+    let url = this.apiUrl + '/pv-api/feature/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  // variant
+  getVariant() {
+    let url = this.apiUrl + '/pv-api/variant/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('variantList', JSON.stringify(res));
+    })
+  }
+  getVariantById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/variant/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addVariant(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/variant/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updateVariant(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/variant/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deleteVariant(id: number) {
+    let url = this.apiUrl + '/pv-api/variant/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  //subcategory_group section
+
+  getSubcategoryGroup() {
+    let url = this.apiUrl + '/pv-api/subcategory_group/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('subcategorygroupList', JSON.stringify(res));
+    })
+  }
+  getSubcategoryGroupById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/subcategory_group/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addSubcategoryGroup(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/subcategory_group/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updateSubcategoryGroup(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/subcategory_group/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deleteSubcategoryGroup(id: number) {
+    let url = this.apiUrl + '/pv-api/subcategory_group/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  //product-category
+  getProductcategory(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/product-category/'
+    return this.http.get<any>(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
