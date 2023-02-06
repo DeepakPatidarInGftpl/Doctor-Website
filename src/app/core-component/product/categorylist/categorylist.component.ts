@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
@@ -10,7 +10,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
   templateUrl: './categorylist.component.html',
   styleUrls: ['./categorylist.component.scss']
 })
-export class CategorylistComponent implements OnInit {
+export class CategorylistComponent implements OnInit, OnDestroy {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any = []
@@ -19,9 +19,6 @@ export class CategorylistComponent implements OnInit {
 
   constructor(private QueryService: QueryService, private coreServ: CoreService, private router: Router) {
     this.QueryService.filterToggle()
-    this.coreServ.getProductCategory().subscribe(res => {
-      this.tableData = res
-    })
   }
 
 
@@ -53,7 +50,16 @@ export class CategorylistComponent implements OnInit {
 
 
 
-  ngOnInit(): void {
+  ngOnInit() {
+
+    this.coreServ.getProductCategory()
+    this.coreServ.ProdCategBehaveSub.subscribe(() => {
+      if (localStorage.getItem("prodCategories")) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("prodCategories")))
+      }
+    })
+
+
     this.dtOptions = {
       dom: 'Btlpif',
       pagingType: 'numbers',
@@ -89,4 +95,9 @@ export class CategorylistComponent implements OnInit {
       })
     }
   }
+
+  
+  ngOnDestroy() {
+    this.coreServ.editThisData(null)
+}
 }

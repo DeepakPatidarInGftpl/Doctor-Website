@@ -26,7 +26,13 @@ export class QueryService {
   public accountList:any=this.account.value;
 
    warehouse = new BehaviorSubject(JSON.parse(localStorage.getItem('warehouseList')!));
-  public warehouseList: any = this.warehouse.value;
+
+   public warehouseList: any = this.warehouse.value;
+
+   productCategories = new BehaviorSubject(JSON.parse(localStorage.getItem('prodCategories')))
+
+   subCategoriesGroup = new BehaviorSubject(JSON.parse(localStorage.getItem('subCategories')))
+
 
   filterToggle(): void {
     // $(document).on('click', '#filter_search', function() {

@@ -142,8 +142,8 @@
   <div class="col-5">
     <div class="page-header">
       <div class="page-title">
-          <h4> Add Warehouse</h4>
-          <h6>Create new Warehouse </h6>
+          <h4> {{this.editMode? 'Edit Warehouse': 'Add Warehouse'}}</h4>
+          <h6>{{this.editMode? 'Edit Warehouse List': 'Create new Warehouse' }}</h6>
       </div>
   </div>
   <!-- /add -->
@@ -200,8 +200,8 @@
               </div>
 
               <div class="col-lg-12">
-                  <button class="btn btn-submit me-2">Submit</button>
-                  <a routerLink="//warehouse/warehouselist" class="btn btn-cancel">Cancel</a>
+                  <button class="btn btn-submit me-2" type="submit">{{this.editMode? 'Save Changes':'Submit'}}</button>
+                  <a routerLink="//warehouse/warehouselist" class="btn btn-cancel" *ngIf="!this.editMode">Cancel</a>
               </div>
 
         </div>

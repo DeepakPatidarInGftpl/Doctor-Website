@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
   templateUrl: './warehouse-list.component.html',
   styleUrls: ['./warehouse-list.component.scss']
 })
-export class WarehouseListComponent implements OnInit {
+export class WarehouseListComponent implements OnInit, OnDestroy {
 
 
   dtOptions: DataTables.Settings = {};
@@ -28,9 +28,6 @@ export class WarehouseListComponent implements OnInit {
     private toastr: ToastrService
   ) {
     this.queryService.filterToggle()
-    // this.tableData = this.queryService.warehouseList;
-
-
 
   }
 
@@ -71,21 +68,17 @@ export class WarehouseListComponent implements OnInit {
   }
 
   editRoute
+
+
+
+
   ngOnInit() {
 
-
-    this.queryService.warehouse.subscribe(() => {
-      this.coreService.getWarehouse().subscribe( res => {
-
+    this.coreService.getWarehouse()
+    this.coreService.wareHouseSubject.subscribe(() => {
+      if (localStorage.getItem('warehouseList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("warehouseList")))
       }
-      )
-        if (localStorage.getItem('warehouseList')) {
-          this.tableData = Object.values(JSON.parse(localStorage.getItem("warehouseList")))
-          console.log(this.tableData);
-          console.log(Object.values(JSON.parse(localStorage.getItem("warehouseList"))));
-
-        }
-
     })
 
 
@@ -158,22 +151,13 @@ export class WarehouseListComponent implements OnInit {
   submit() {
     if (this.warehouseForm.valid) {
       if (this.editMode) {
-
+        
         this.coreService.updateWarehouse(this.warehouseForm.value, this.editRoute.id).subscribe((res: any) => {
           if (res.msg == 'Warehouse updated successfully') {
             this.toastr.success(res.msg)
-            // window.location.reload()
-
-
             this.ngOnInit()
-
-
-
             this.warehouseForm.reset()
             this.editMode = false
-            console.log(res);
-            console.log(this.tableData);
-            console.log(Object.values(JSON.parse(localStorage.getItem('warehouseList'))));
           }
         })
 
@@ -202,6 +186,9 @@ export class WarehouseListComponent implements OnInit {
     this.editMode = true
   }
 
+  ngOnDestroy() {
+      this.coreService.editThisData(null)
+  }
 
 
   get accounts_type() {

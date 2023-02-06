@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import { environment } from 'src/environments/environment';
@@ -11,14 +11,14 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
   templateUrl: './subcategory-group.component.html',
   styleUrls: ['./subcategory-group.component.scss']
 })
-export class SubcategoryGroupComponent implements OnInit {
+export class SubcategoryGroupComponent implements OnInit, OnDestroy {
 
   dtOptions: DataTables.Settings = {};
-  initChecked:boolean=false
+  initChecked: boolean = false
 
   apiUrl = environment.api
 
-  public tableData:any =[]
+  public tableData: any = []
 
   form: FormGroup
 
@@ -26,12 +26,9 @@ export class SubcategoryGroupComponent implements OnInit {
   constructor(private QueryService: QueryService, private coreServ: CoreService) {
     this.QueryService.filterToggle()
 
-    this.coreServ.subCategoryGroupGet().subscribe( res => {
-      this.tableData = res
-    })
 
   }
-  confirmText(index:any) {
+  confirmText(index: any) {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -41,11 +38,11 @@ export class SubcategoryGroupComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
       buttonsStyling: true,
       customClass: {
-      confirmButton: 'btn btn-primary',
-      cancelButton: 'btn btn-danger ml-1',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
       },
-    }).then( (t) => {
-      if(t.isConfirmed) {
+    }).then((t) => {
+      if (t.isConfirmed) {
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',
@@ -56,7 +53,42 @@ export class SubcategoryGroupComponent implements OnInit {
     });
   }
   editMode
-  ngOnInit(): void {
+  ngOnInit() {
+
+    this.coreServ.subCategoryGroupGet()
+
+    this.coreServ.subCategoriesGroup.subscribe(() => {
+      if (localStorage.getItem("subCategories")) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("subCategories")))
+      }
+    })
+
+
+    let eTitle = ''
+    let eCategory = ''
+    let subCategory = ''
+    let featureCategory = ''
+
+    this.coreServ.editThings.subscribe((res: any) => {
+
+      this.editMode = res
+      console.log(res);
+
+      if (this.editMode != null) {
+        eTitle = res.title
+        eCategory = res.category?.title
+        subCategory = res.subcategories[0]?.title
+        featureCategory = res.feature_group[0]?.title
+      }
+      this.form = new FormGroup({
+        title: new FormControl(eTitle, Validators.required),
+        category: new FormControl(eCategory, Validators.required),
+        subcategories: new FormControl(subCategory, Validators.required),
+        feature_group: new FormControl(featureCategory, Validators.required),
+      })
+    })
+
+
     this.dtOptions = {
       dom: 'Btlpif',
       pagingType: 'numbers',
@@ -72,21 +104,57 @@ export class SubcategoryGroupComponent implements OnInit {
     };
   }
 
+  submitForm() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched()
+      console.log('forms invalid');
+    } else {
+      if (this.editMode) {
+      } else {
 
-  editThis(prod) {
-
+        this.coreServ.postCategoriesGroup(this.form.value).subscribe(res => {
+          console.log(res);
+        })
+      }
+    }
   }
 
 
-  selectAll(initChecked:boolean){
-    if(!initChecked){
-      this.tableData.forEach((f:any)=>{
-        f.isSelected=true
+  editThis(prod) {
+    this.coreServ.editThisData(prod)
+    this.editMode = true
+  }
+
+  ngOnDestroy() {
+    this.coreServ.editThisData(null)
+  }
+
+  selectAll(initChecked: boolean) {
+    if (!initChecked) {
+      this.tableData.forEach((f: any) => {
+        f.isSelected = true
       })
-    }else{
-      this.tableData.forEach((f:any)=>{
-        f.isSelected=false
+    } else {
+      this.tableData.forEach((f: any) => {
+        f.isSelected = false
       })
     }
   }
+
+  get title() {
+    return this.form.get('title')
+  }
+
+  get category() {
+    return this.form.get('category')
+  }
+
+  get subcategories() {
+    return this.form.get('subcategories')
+  }
+
+  get feature_group() {
+    return this.form.get('feature_group')
+  }
+
 }

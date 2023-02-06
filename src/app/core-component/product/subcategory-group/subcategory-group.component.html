@@ -92,8 +92,10 @@
                   </th>
                   <th>Title</th>
                   <th>Category</th>
+                  <th>Is active</th>
                   <th>Subcategories- Multiple</th>
                   <th>Feature Group- Many to many</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -105,11 +107,16 @@
                     </label>
                   </td>
                   <td class="productimgname">
-                    <a href="javascript:void(0);" class="product-img">
-                      <img [src]="apiUrl+products.image" alt="product">
-                    </a>
                     <a href="javascript:void(0);">{{products.title}}</a>
                   </td>
+
+                  <td>{{products.category.title}}</td>
+                  <td><span
+                    [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                    class="badges">{{products.is_active}}</span></td>
+                    <td>{{products.subcategories[0]?.title}}</td>
+                    <td>{{products.feature_group[0]?.title}}</td>
+                 
                   <td>
                     <a class="me-3" (click)="editThis(products)">
                       <img src="assets/img/icons/edit.svg" alt="img">
@@ -129,8 +136,8 @@
     <div class="col-5">
       <div class="page-btn d-flex justify-content-between">
         <div class="page-title pe-4">
-          <h4>{{editMode? ' Edit Category': 'Product Add Category'}}</h4>
-          <h6>{{editMode? 'Edit Product Category': 'Create new product Category'}}</h6>
+          <h4>{{editMode? ' Edit Sub Category': 'Add Sub Category'}}</h4>
+          <h6>{{editMode? 'Edit Sub Category Group': 'Create new Edit Sub Category'}}</h6>
         </div>
       </div>
 
@@ -138,29 +145,45 @@
       <!-- /add -->
       <div class="card">
         <div class="card-body">
-          <div [formGroup]="form" enctype="multipart/form-data" class="row">
+          <form [formGroup]="form" class="row">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label>Title</label>
+                <div class="image-upload mb-2">
+                  <input type="text" formControlName="title">
+                </div>
+                <span class="text-danger"*ngIf="title && title.invalid && title.touched">Enter The Title</span>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label>Category</label>
+                <div class="image-upload mb-2">
+                  <input type="text" formControlName="category">
+                </div>
+                <span class="text-danger" *ngIf="category && category.invalid && category.touched">Enter The Category</span>
+              </div>
+            </div>
             <div class="col-12">
               <div class="form-group">
                 <label>Sub Category Name</label>
                 <input type="text" formControlName="subcategories">
-                <span class="text-danger">Fill The Details</span>
+                <span class="text-danger" *ngIf="subcategories && subcategories.invalid && subcategories.touched">Fill The Sub Category</span>
               </div>
             </div>
-
-
             <div class="col-lg-12">
               <div class="form-group">
                 <label>Feature Group</label>
                 <div class="image-upload mb-2">
                   <input type="text" formControlName="feature_group">
                 </div>
-                <span class="text-danger">Upload an image</span>
+                <span class="text-danger" *ngIf="feature_group && feature_group.invalid && feature_group.touched">Enter Feature Group Name</span>
               </div>
             </div>
             <div class="col-lg-12">
-              <!-- <a (click)="submitForm()" class="btn btn-submit me-2">{{this.editRoute? 'Save Changes': 'Submit'}}</a> -->
+              <a (click)="submitForm()" class="btn btn-submit me-2">{{this.editMode? 'Save Changes': 'Submit'}}</a>
             </div>
-          </div>
+          </form>
         </div>
       </div>
       <!-- /add -->
