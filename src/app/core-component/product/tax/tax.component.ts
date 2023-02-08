@@ -77,8 +77,14 @@ export class TaxComponent implements OnInit {
 
     };
     this.coreService.gettax();
-    this.tableData = this.QueryService.taxList;
-    console.log(this.tableData);
+    // this.tableData = this.QueryService.taxList;
+    // console.log(this.tableData);
+
+    this.coreService.taxBehavior.subscribe(() => {
+      if (localStorage.getItem('taxList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("taxList")!))
+      }
+    })
   
   }
 
@@ -104,41 +110,89 @@ export class TaxComponent implements OnInit {
   }
 
   addRes: any
-  submit() {
-    console.log(this.taxForm.value);
-    console.log(this.id);
+  // submit() {
+  //   console.log(this.taxForm.value);
+  //   console.log(this.id);
 
-    if (this.taxForm.valid) {
-      if (this.id) {
-        this.coreService.updatetax(this.taxForm.value, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Tax updated successfully") {
-            this.toastr.success(this.addRes.msg)
-            this.taxForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      } else {
-        this.coreService.addtax(this.taxForm.value).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Data Created") {
-            this.toastr.success(this.addRes.msg)
-            this.taxForm.reset()
-            window.location.reload();
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
+  //   if (this.taxForm.valid) {
+  //     if (this.id) {
+  //       this.coreService.updatetax(this.taxForm.value, this.id).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Tax updated successfully") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.taxForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     } else {
+  //       this.coreService.addtax(this.taxForm.value).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Data Created") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.taxForm.reset()
+  //           window.location.reload();
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     }
+  //   } else {
+  //     this.taxForm.markAllAsTouched()
+  //     console.log('forms invalid');
+  //   }
+  // }
+
+  
+ submit() {
+  console.log(this.taxForm.value);
+  console.log(this.id);
+
+  if (this.taxForm.valid) {
+  
+    this.coreService.addtax(this.taxForm.value).subscribe(res => {
+      console.log(res);
+      this.addRes = res
+      if (this.addRes.msg == "Data Created") {
+        this.toastr.success(this.addRes.msg)
+        this.taxForm.reset()
+        // window.location.reload();
+        this.ngOnInit()
       }
-    } else {
-      this.taxForm.markAllAsTouched()
-      console.log('forms invalid');
-    }
+    }, err => {
+      console.log(err.error.gst);
+    })
+    
+  } else {
+    this.taxForm.markAllAsTouched()
+    console.log('forms invalid');
   }
+}
+
+update(){
+  if (this.taxForm.valid) {
+    this.coreService.updatetax(this.taxForm.value, this.id).subscribe(res => {
+      console.log(res);
+      this.addRes = res
+      if (this.addRes.msg == "Tax updated successfully") {
+        this.toastr.success(this.addRes.msg)
+        this.taxForm.reset()
+        this.addForm=false
+        // window.location.reload()
+        this.ngOnInit()
+      }
+    }, err => {
+      console.log(err.error.gst);
+    })
+   
+  } else {
+    this.taxForm.markAllAsTouched()
+    console.log('forms invalid');
+  }
+}
 
   get title() {
     return this.taxForm.get('title')
@@ -164,4 +218,9 @@ export class TaxComponent implements OnInit {
       })
     })
   }
+  openaddForm() {
+    this.addForm = true;
+    this.taxForm.reset();
+  }
+
 }

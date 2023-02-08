@@ -112,36 +112,85 @@ export class UnitConversionComponent implements OnInit {
     })
   }
   addRes: any
-  submit() {
+  // submit() {
+  //   console.log(this.unitConversionForm.value);
+  //   console.log(this.id);
+
+  //   if (this.unitConversionForm.valid) {
+  //     if (this.id) {
+  //       this.coreService.updateUnitConversion(this.unitConversionForm.value, this.id).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Unit Conversion updated successfully") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.unitConversionForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     } else {
+  //       this.coreService.addUnitConversion(this.unitConversionForm.value).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Data Created") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.unitConversionForm.reset()
+  //           window.location.reload();
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     }
+  //   } else {
+  //     this.unitConversionForm.markAllAsTouched()
+  //     console.log('forms invalid');
+  //   }
+  // }
+
+
+  openaddForm() {
+    this.addForm = true;
+    this.unitConversionForm.reset();
+  }
+
+
+ submit() {
     console.log(this.unitConversionForm.value);
     console.log(this.id);
 
     if (this.unitConversionForm.valid) {
-      if (this.id) {
-        this.coreService.updateUnitConversion(this.unitConversionForm.value, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Unit Conversion updated successfully") {
-            this.toastr.success(this.addRes.msg)
-            this.unitConversionForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      } else {
-        this.coreService.addUnitConversion(this.unitConversionForm.value).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Data Created") {
-            this.toastr.success(this.addRes.msg)
-            this.unitConversionForm.reset()
-            window.location.reload();
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      }
+      this.coreService.addUnitConversion(this.unitConversionForm.value).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "Data Created") {
+          this.toastr.success(this.addRes.msg)
+          this.unitConversionForm.reset()
+          window.location.reload();
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
+    } else {
+      this.unitConversionForm.markAllAsTouched()
+      console.log('forms invalid');
+    }
+  }
+
+  update(){
+    if (this.unitConversionForm.valid) {
+      this.coreService.updateUnitConversion(this.unitConversionForm.value, this.id).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "Unit Conversion updated successfully") {
+          this.toastr.success(this.addRes.msg)
+          this.unitConversionForm.reset()
+          this.addForm=true
+          window.location.reload()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
     } else {
       this.unitConversionForm.markAllAsTouched()
       console.log('forms invalid');

@@ -78,8 +78,14 @@ export class ColorsComponent implements OnInit {
 
     };
     this.coreService.getcolor();
-    this.tableData = this.QueryService.colorsList;
-    console.log(this.tableData);
+    // this.tableData = this.QueryService.colorsList;
+    // console.log(this.tableData);
+
+    this.coreService.colorBehavior.subscribe(() => {
+      if (localStorage.getItem('colorsList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("colorsList")!))
+      }
+    })
   
   }
 
@@ -105,41 +111,89 @@ export class ColorsComponent implements OnInit {
   }
 
   addRes: any
-  submit() {
-    console.log(this.colorForm.value);
-    console.log(this.id);
+  // submit() {
+  //   console.log(this.colorForm.value);
+  //   console.log(this.id);
 
-    if (this.colorForm.valid) {
-      if (this.id) {
-        this.coreService.updatecolor(this.colorForm.value, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Colour updated successfully") {
-            this.toastr.success(this.addRes.msg)
-            this.colorForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      } else {
-        this.coreService.addcolor(this.colorForm.value).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Data Created") {
-            this.toastr.success(this.addRes.msg)
-            this.colorForm.reset()
-            window.location.reload();
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
+  //   if (this.colorForm.valid) {
+  //     if (this.id) {
+  //       this.coreService.updatecolor(this.colorForm.value, this.id).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Colour updated successfully") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.colorForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     } else {
+  //       this.coreService.addcolor(this.colorForm.value).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Data Created") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.colorForm.reset()
+  //           window.location.reload();
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     }
+  //   } else {
+  //     this.colorForm.markAllAsTouched()
+  //     console.log('forms invalid');
+  //   }
+  // }
+
+  
+ submit() {
+  console.log(this.colorForm.value);
+  console.log(this.id);
+
+  if (this.colorForm.valid) {
+    this.coreService.addcolor(this.colorForm.value).subscribe(res => {
+      console.log(res);
+      this.addRes = res
+      if (this.addRes.msg == "Data Created") {
+        this.toastr.success(this.addRes.msg)
+        this.colorForm.reset()
+        // window.location.reload();
+        this.ngOnInit()
       }
-    } else {
-      this.colorForm.markAllAsTouched()
-      console.log('forms invalid');
-    }
+    }, err => {
+      console.log(err.error.gst);
+    })
+    
+    
+  } else {
+    this.colorForm.markAllAsTouched()
+    console.log('forms invalid');
   }
+}
+
+update(){
+  if (this.colorForm.valid) {
+    this.coreService.updatecolor(this.colorForm.value, this.id).subscribe(res => {
+      console.log(res);
+      this.addRes = res
+      if (this.addRes.msg == "Colour updated successfully") {
+        this.toastr.success(this.addRes.msg)
+        this.colorForm.reset()
+        this.addForm=true
+        // window.location.reload()
+        this.ngOnInit()
+      }
+    }, err => {
+      console.log(err.error.gst);
+    })
+   
+  } else {
+    this.colorForm.markAllAsTouched()
+    console.log('forms invalid');
+  }
+}
 
   get title() {
     return this.colorForm.get('title')
@@ -164,5 +218,9 @@ export class ColorsComponent implements OnInit {
         }
       })
     })
+  }
+  openaddForm() {
+    this.addForm = true;
+    this.colorForm.reset();
   }
 }

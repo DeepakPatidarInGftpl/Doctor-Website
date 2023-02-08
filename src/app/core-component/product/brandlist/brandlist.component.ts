@@ -80,9 +80,14 @@ export class BrandlistComponent implements OnInit {
 
     };
     this.coreService.getbrand();
-    this.tableData = this.QueryService.brandsList;
-    console.log(this.tableData);
+    // this.tableData = this.QueryService.brandsList;
+    // console.log(this.tableData);
 
+    this.coreService.brandBehavior.subscribe(() => {
+      if (localStorage.getItem('brandsList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("brandsList")!))
+      }
+    })
   }
 
   selectAll(initChecked: boolean) {
@@ -118,10 +123,55 @@ export class BrandlistComponent implements OnInit {
   }
 
   addRes: any
+  // submit() {
+  //   console.log(this.brandForm.value);
+  //   console.log(this.id);
+
+  //   var formData: any = new FormData();
+    
+  
+  //   formData.append("title",this.brandForm.get('title')?.value);
+  //   formData.append("image",this.brandForm.get('image')?.value);
+  //   formData.append("code",this.brandForm.get('code')?.value);
+
+  //   console.log(formData);
+
+  //   if (this.brandForm.valid) {
+  //     if (this.id) {
+  //       this.coreService.updatebrand(formData, this.id).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Brands updated successfully") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.brandForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     } else {
+  //       this.coreService.addbrand(formData).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Data Created") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.brandForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     }
+  //   } else {
+  //     this.brandForm.markAllAsTouched()
+  //     console.log('forms invalid');
+  //   }
+  // }
+
+
   submit() {
     console.log(this.brandForm.value);
     console.log(this.id);
-
     var formData: any = new FormData();
     
   
@@ -129,34 +179,48 @@ export class BrandlistComponent implements OnInit {
     formData.append("image",this.brandForm.get('image')?.value);
     formData.append("code",this.brandForm.get('code')?.value);
 
-    console.log(formData);
+    if (this.brandForm.valid) {
+    
+      this.coreService.addbrand(formData).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "Data Created") {
+          this.toastr.success(this.addRes.msg)
+          this.brandForm.reset()
+          // window.location.reload()
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
+      
+    } else {
+      this.brandForm.markAllAsTouched()
+      console.log('forms invalid');
+    }
+  }
+
+  update(){
+    var formData: any = new FormData();
+    formData.append("title",this.brandForm.get('title')?.value);
+    formData.append("image",this.brandForm.get('image')?.value);
+    formData.append("code",this.brandForm.get('code')?.value);
 
     if (this.brandForm.valid) {
-      if (this.id) {
-        this.coreService.updatebrand(formData, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Brands updated successfully") {
-            this.toastr.success(this.addRes.msg)
-            this.brandForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      } else {
-        this.coreService.addbrand(formData).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Data Created") {
-            this.toastr.success(this.addRes.msg)
-            this.brandForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      }
+      this.coreService.updatebrand(formData, this.id).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "Brands updated successfully") {
+          this.toastr.success(this.addRes.msg)
+          this.brandForm.reset()
+          this.addForm=true
+          // window.location.reload()
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
+     
     } else {
       this.brandForm.markAllAsTouched()
       console.log('forms invalid');
@@ -179,7 +243,6 @@ export class BrandlistComponent implements OnInit {
     this.coreService.getbrandById(id).subscribe(res => {
       console.log(res);
       res.map((data: any) => {
-
         if (id == data.id) {
           console.log(data);
           // this.brandForm.patchValue(data);
@@ -187,12 +250,14 @@ export class BrandlistComponent implements OnInit {
           this.brandForm.patchValue({
             title: data.title,
             code: data.code,
-            image: data.image
+            // image: data.image
           })
-
         }
       })
     })
   }
-
+  openaddForm() {
+    this.addForm = true;
+    this.brandForm.reset();
+  }
 }

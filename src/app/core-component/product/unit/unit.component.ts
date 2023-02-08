@@ -75,8 +75,14 @@ export class UnitComponent implements OnInit {
 
     };
     this.coreService.getUnits();
-    this.tableData = this.QueryService.unitList;
-    console.log(this.tableData);
+    // this.tableData = this.QueryService.unitList;
+    // console.log(this.tableData);
+
+    this.coreService.unitBehavior.subscribe(() => {
+      if (localStorage.getItem('unitList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("unitList")!))
+      }
+    })
 
   }
 
@@ -102,42 +108,90 @@ export class UnitComponent implements OnInit {
   }
 
   addRes: any
-  submit() {
+  // submit() {
+  //   console.log(this.unitsForm.value);
+  //   console.log(this.id);
+    
+  //   if (this.unitsForm.valid) {
+  //     if(this.id){
+  //       this.coreService.updateUnits(this.unitsForm.value, this.id).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Unit updated successfully") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.unitsForm.reset()
+  //          window.location.reload()
+  // }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     }else{
+  //     this.coreService.addUnits(this.unitsForm.value).subscribe(res => {
+  //       console.log(res);
+  //       this.addRes = res
+  //       if (this.addRes.msg == "Data Created") {
+  //         this.toastr.success(this.addRes.msg)
+  //         this.unitsForm.reset()
+  //         window.location.reload()
+  //       }
+  //     }, err => {
+  //       console.log(err.error.gst);
+  //     })
+  //   }
+  //   } else {
+  //     this.unitsForm.markAllAsTouched()
+  //     console.log('forms invalid');
+  //   }
+  // }
+
+  openaddForm() {
+    this.addForm = true;
+    this.unitsForm.reset();
+  }
+
+
+ submit() {
     console.log(this.unitsForm.value);
     console.log(this.id);
-    
+
     if (this.unitsForm.valid) {
-      if(this.id){
-        this.coreService.updateUnits(this.unitsForm.value, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Unit updated successfully") {
-            this.toastr.success(this.addRes.msg)
-            this.unitsForm.reset()
-           window.location.reload()
-  }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      }else{
       this.coreService.addUnits(this.unitsForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()
-          window.location.reload()
+          // window.location.reload()
+          this.ngOnInit()
         }
       }, err => {
         console.log(err.error.gst);
       })
-    }
     } else {
       this.unitsForm.markAllAsTouched()
       console.log('forms invalid');
     }
   }
 
+  update(){
+    if (this.unitsForm.valid) {
+      this.coreService.updateUnits(this.unitsForm.value, this.id).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "Unit updated successfully") {
+          this.toastr.success(this.addRes.msg)
+          this.unitsForm.reset()
+        //  window.location.reload()
+        this.ngOnInit()
+}
+      }, err => {
+        console.log(err.error.gst);
+      })
+    } else {
+      this.unitsForm.markAllAsTouched()
+      console.log('forms invalid');
+    }
+  }
   get title() {
     return this.unitsForm.get('title')
   }

@@ -5,6 +5,11 @@
                 <h4>Feature Group list</h4>
                 <h6>Manage your Feature Group</h6>
             </div>
+            <div class="page-btn" *ngIf="!addForm">
+                <a class="btn btn-added" (click)="openaddForm()">
+                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Feature Group
+                </a>
+            </div>
         </div>
         <div class="card">
             <div class="card-body">
@@ -105,8 +110,54 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-body">
+            <div class="card-body" *ngIf="addForm">
                 <form [formGroup]="featureForm" (ngSubmit)="submit()">
+                    <div class="row">
+
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Title*</label>
+                                <input type="text" formControlName="title" id="title" [ngClass]="{
+                                    'is-invalid': f['title'].touched && f['title'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Feature Group*</label>
+                                <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
+                                    'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
+                                  }"> -->
+                                <select formControlName="feature_group" class="w-100 h-100 border" required
+                                    #feature_groupValue id="feature_group" [ngClass]="{
+                            'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
+                          }">
+                                    <option value="" selected disabled>Feature Group</option>
+                                    <option value="{{feature.id}}" *ngFor="let feature of featureGroup">
+                                        {{feature.title}}
+                                    </option>
+                                </select>
+
+                                <span class="text-danger"
+                                    *ngIf="feature_group && feature_group.invalid && feature_group.touched">Select
+                                    Feature Group
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2">Submit</button>
+                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="card-body" *ngIf="!addForm">
+                <form [formGroup]="featureForm" (ngSubmit)="update()">
                     <div class="row">
 
                         <div class="col-lg-6 col-sm-6 col-12">

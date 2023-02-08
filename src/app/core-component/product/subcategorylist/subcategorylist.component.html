@@ -6,6 +6,11 @@
                 <h4>Product Sub Category list</h4>
                 <h6>View/Search product Category</h6>
             </div>
+            <div class="page-btn" *ngIf="!addForm">
+                <a class="btn btn-added" (click)="openaddForm()">
+                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Product Sub Category
+                </a>
+            </div>
         </div>
 
 
@@ -93,8 +98,7 @@
                                 <td>{{products.title}}</td>
                                 <td>{{products.category_id}}</td>
                                 <td>
-                                    <!-- routerLink="/product/subcategory-details/{{products.id}}" -->
-                                    <a class="me-3" routerLink="/product/subcategory-details/{{products.id}}">
+                                  <a class="me-3" routerLink="/product/subcategory-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
                                     
@@ -125,7 +129,7 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-body">
+            <div class="card-body" *ngIf="addForm">
                 <form [formGroup]="subcategoryForm" (ngSubmit)="submit()">
                     <div class="row">
                         <div class="col-lg-10 col-sm-10 col-12">
@@ -160,11 +164,96 @@
                             <div class="form-group">
                                 <label>Brand*</label>
                                 <div class="dropdown">
-                                    <!-- <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">Select Brand</button> -->
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Select Brand</button>
 
-                                        <input type="button" value="Select Brand" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
+                                        <!-- <input type="button" value="Select Brand" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false"> -->
+                                    <ul class="dropdown-menu" style="width: 100%;">
+                                        <li><a class="dropdown-item" *ngFor="let brand of brandList; let i=index" >
+                                                <input type="checkbox" [value]="brand.id"
+                                                    (change)="onCheckChange($event)" formArrayName="brand_id" style="margin-right: 5px;"
+                                                    [ngClass]="{
+                                                        'is-invalid': f['brand_id'].touched && f['brand_id'].invalid
+                                                      }" >
+                                                {{brand.title}}
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <span class="text-danger" *ngIf="brand_id && brand_id.invalid && brand_id.touched">Select Brand
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label> Product Image</label>
+
+                                <div class="image-upload">
+
+
+
+                                    <input type="file" formControlName="image" (change)="selectImg($event)">
+                                    <div class="image-uploads">
+                                        <img src="assets/img/icons/upload.svg" alt="img">
+                                        <h4>Drag and drop a file to upload</h4>
+                                    </div>
+                                    <span class="text-danger" *ngIf="image && image.invalid && image.touched">Select
+                                        image
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                           <button class="btn btn-submit me-2">Submit<span class="spinner-border  text-secondary spinner-border-sm" role="status" aria-hidden="true" *ngIf="loader"></span>
+                           </button>
+                          <a routerLink="/product/subcategorylist" class="btn btn-cancel">Cancel</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="card-body" *ngIf="!addForm">
+                <form [formGroup]="subcategoryForm" (ngSubmit)="update()">
+                    <div class="row">
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Title*</label>
+                                <input type="text" formControlName="title" id="title" [ngClass]="{
+                                    'is-invalid': f['title'].touched && f['title'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Category*</label>
+                                <select formControlName="category_id" class="w-100 h-100 border" required
+                                    #category_idValue id="category_id" [ngClass]="{
+                              'is-invalid': f['category_id'].touched && f['category_id'].invalid
+                            }">
+                                    <option value="" selected disabled>category</option>
+                                    <option value="{{category.id}}" *ngFor="let category of categoryList">
+                                        {{category.title}}
+                                    </option>
+                                </select>
+                                <span class="text-danger"
+                                    *ngIf="category_id && category_id.invalid && category_id.touched">Select Category
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Brand*</label>
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Select Brand</button>
+
+                                        <!-- <input type="button" value="Select Brand" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false"> -->
                                     <ul class="dropdown-menu" style="width: 100%;">
                                         <li><a class="dropdown-item" *ngFor="let brand of brandList; let i=index" >
                                                 <input type="checkbox" [value]="brand.id"

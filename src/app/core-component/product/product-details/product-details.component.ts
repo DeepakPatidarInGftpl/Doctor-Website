@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-product-details',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProductDetailsComponent implements OnInit {
 
-  constructor() { }
-
+  constructor(private Arout: ActivatedRoute, private coreService: CoreService) { }
+  id: any
   ngOnInit(): void {
+    this.id = this.Arout.snapshot.paramMap.get('id');
+    this.getdata();
   }
 
   ngAfterViewInit() {
@@ -28,5 +32,16 @@ export class ProductDetailsComponent implements OnInit {
     script.async = false;
     document.body.appendChild(script);
   }
-
+  productDetail: any
+  getdata() {
+    this.coreService.getProductById(this.id).subscribe(res => {
+      res.map((data:any)=>{
+        if(this.id==data.id){
+          this.productDetail = data
+          console.log(data);
+          
+        }
+      })
+    })
+  }
 }

@@ -77,8 +77,14 @@ export class FeatureComponent implements OnInit {
 
     };
     this.coreService.getFeature();
-    this.tableData = this.QueryService.fuatureList;
-    console.log(this.tableData);
+    // this.tableData = this.QueryService.fuatureList;
+    // console.log(this.tableData);
+
+    this.coreService.featureBehavior.subscribe(() => {
+      if (localStorage.getItem('featureList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("featureList")!))
+      }
+    })
     this.getFeatureGroup();
   }
 
@@ -109,41 +115,86 @@ export class FeatureComponent implements OnInit {
     })
   }
   addRes: any
-  submit() {
-    console.log(this.featureForm.value);
-    console.log(this.id);
+  // submit() {
+  //   console.log(this.featureForm.value);
+  //   console.log(this.id);
 
-    if (this.featureForm.valid) {
-      if (this.id) {
-        this.coreService.updateFeature(this.featureForm.value, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Feature updated successfully") {
-            this.toastr.success(this.addRes.msg)
-            this.featureForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      } else {
-        this.coreService.addFeature(this.featureForm.value).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Feature Successfuly Added") {
-            this.toastr.success(this.addRes.msg)
-            this.featureForm.reset()
-            window.location.reload();
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
+  //   if (this.featureForm.valid) {
+  //     if (this.id) {
+  //       this.coreService.updateFeature(this.featureForm.value, this.id).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Feature updated successfully") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.featureForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     } else {
+  //       this.coreService.addFeature(this.featureForm.value).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Feature Successfuly Added") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.featureForm.reset()
+  //           window.location.reload();
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     }
+  //   } else {
+  //     this.featureForm.markAllAsTouched()
+  //     console.log('forms invalid');
+  //   }
+  // }
+
+  
+ submit() {
+  console.log(this.featureForm.value);
+  console.log(this.id);
+
+  if (this.featureForm.valid) {
+    this.coreService.addFeature(this.featureForm.value).subscribe(res => {
+      console.log(res);
+      this.addRes = res
+      if (this.addRes.msg == "Feature Successfuly Added") {
+        this.toastr.success(this.addRes.msg)
+        this.featureForm.reset()
+        // window.location.reload();
+        this.ngOnInit()
       }
-    } else {
-      this.featureForm.markAllAsTouched()
-      console.log('forms invalid');
-    }
+    }, err => {
+      console.log(err.error.gst);
+    })
+  } else {
+    this.featureForm.markAllAsTouched()
+    console.log('forms invalid');
   }
+}
+
+update(){
+  if (this.featureForm.valid) {
+    this.coreService.updateFeature(this.featureForm.value, this.id).subscribe(res => {
+      console.log(res);
+      this.addRes = res
+      if (this.addRes.msg == "Feature updated successfully") {
+        this.toastr.success(this.addRes.msg)
+        this.featureForm.reset()
+        this.addForm=true;
+        // window.location.reload()
+        this.ngOnInit()
+      }
+    }, err => {
+      console.log(err.error.gst);
+    })
+  } else {
+    this.featureForm.markAllAsTouched()
+    console.log('forms invalid');
+  }
+}
 
   get title() {
     return this.featureForm.get('title')
@@ -166,6 +217,9 @@ export class FeatureComponent implements OnInit {
       }
     })
   }
-
+  openaddForm() {
+    this.addForm = true;
+    this.featureForm.reset();
+  }
 }
 

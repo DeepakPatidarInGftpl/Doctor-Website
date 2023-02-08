@@ -5,6 +5,11 @@
                 <h4>HSN Code list</h4>
                 <h6>View/Search HSN Code</h6>
             </div>
+            <div class="page-btn" *ngIf="!addForm">
+                <a class="btn btn-added" (click)="openaddForm()">
+                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add HSN Code
+                </a>
+            </div>
         </div>
         <div class="card">
             <div class="card-body">
@@ -78,9 +83,9 @@
                                         [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span></td>
                                 <td>
-                                    <!-- <a class="me-3"  routerLink="//warehouse/warehouse-details/{{products.id}}">
+                                    <a class="me-3" routerLink="/product/hsncode-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
-                                    </a> -->
+                                    </a>
                                     <a class="me-3" (click)="editForm(products.id)">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
@@ -110,7 +115,7 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-body">
+            <div class="card-body"*ngIf="addForm" >
                 <form [formGroup]="hsncodeForm" (ngSubmit)="submit()">
                     <div class="row">
 
@@ -153,8 +158,8 @@
                                       {{tax.title}}
                                   </option>
                               </select>
-                                <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter tax
-                                    (example-1)</span>
+                                <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Select tax
+                                  </span>
 
                             </div>
                         </div>
@@ -177,11 +182,11 @@
 
 
                                 <div class="dropdown">
-                                    <!-- <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">Select Brand</button> -->
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Select Subcategory</button>
 
-                                        <input type="button" value="Select Subcategory" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
+                                        <!-- <input type="button" value="Select Subcategory" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false"> -->
                                     <ul class="dropdown-menu" style="width: 100%;">
                                         <li><a class="dropdown-item" *ngFor="let subcategory of subcategoryList; let i=index" >
                                                 <input type="checkbox" [value]="subcategory.id"
@@ -198,8 +203,109 @@
 
 
                                 <span class="text-danger"
-                                    *ngIf="subcategory && subcategory.invalid && subcategory.touched">Enter subcategory
-                                    (example-1) </span>
+                                    *ngIf="subcategory && subcategory.invalid && subcategory.touched">Select subcategory
+                                   </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2">Submit</button>
+                            <a routerLink="//warehouse/warehouselist" class="btn btn-cancel">Cancel</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="card-body"*ngIf="!addForm" >
+                <form [formGroup]="hsncodeForm" (ngSubmit)="update()">
+                    <div class="row">
+
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Title*</label>
+                                <input type="text" formControlName="title" id="title" [ngClass]="{
+                                    'is-invalid': f['title'].touched && f['title'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
+                                    name </span>
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label> HSN Code*</label>
+                                <input type="text" formControlName="hsn_code" id="hsn_code" [ngClass]="{
+                                    'is-invalid': f['hsn_code'].touched && f['hsn_code'].invalid
+                                  }">
+                                
+                                <span class="text-danger" *ngIf="hsn_code && hsn_code.invalid && hsn_code.touched">Enter
+                                    HSN Code (example-12345)</span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Tax*</label>
+                                <!-- <input class="form-control" formControlName="tax" id="tax" [ngClass]="{
+                                    'is-invalid': f['tax'].touched && f['tax'].invalid
+                                  }"> -->
+                                  <select formControlName="tax" class="w-100 h-100 border" required
+                                  #taxValue id="tax" [ngClass]="{
+                            'is-invalid': f['tax'].touched && f['tax'].invalid
+                          }">
+                                  <option value="" selected disabled>HSN code</option>
+                                  <option value="{{tax.id}}" *ngFor="let tax of taxdata">
+                                      {{tax.title}}
+                                  </option>
+                              </select>
+                                <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Select tax
+                                    </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>SubCategory*</label>
+                                <!-- <input type="number" formControlName="subcategory" id="subcategory" [ngClass]="{
+                                    'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
+                                  }"> -->
+                                <!-- <select formControlName="subcategory" class="w-100 h-100 border" required
+                                    #subcategoryValue id="subcategory" [ngClass]="{
+                              'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
+                            }">
+                                    <option value="" selected disabled>subcategory</option>
+                                    <option value="{{subcategory.id}}" *ngFor="let subcategory of subcategoryList">
+                                        {{subcategory.title}}
+                                    </option>
+                                </select> -->
+
+
+
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Select Subcategory</button>
+
+                                        <!-- <input type="button" value="Select Subcategory" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false"> -->
+                                    <ul class="dropdown-menu" style="width: 100%;">
+                                        <li><a class="dropdown-item" *ngFor="let subcategory of subcategoryList; let i=index" >
+                                                <input type="checkbox" [value]="subcategory.id"
+                                                    (change)="onCheckChange($event)" formArrayName="subcategory" style="margin-right: 5px;"
+                                                    [ngClass]="{
+                                                        'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
+                                                      }" >
+                                                {{subcategory.title}}
+                                            </a></li>
+                                    </ul>
+                                </div>
+
+
+
+
+                                <span class="text-danger"
+                                    *ngIf="subcategory && subcategory.invalid && subcategory.touched">Select subcategory
+                                 </span>
 
                             </div>
                         </div>

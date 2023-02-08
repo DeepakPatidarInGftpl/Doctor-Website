@@ -68,7 +68,7 @@ const routes: Routes = [
           import('./barcode/barcode.module').then((m) => m.BarcodeModule),
       },
       {
-        path: 'editproduct',
+        path: 'editproduct/:id',
         loadChildren: () =>
           import('./editproduct/editproduct.module').then(
             (m) => m.EditproductModule
@@ -94,7 +94,7 @@ const routes: Routes = [
           import('./editbrand/editbrand.module').then((m) => m.EditbrandModule),
       },
       {
-        path: 'product-details',
+        path: 'product-details/:id',
         loadChildren: () =>
           import('./product-details/product-details.module').then(
             (m) => m.ProductDetailsModule
@@ -163,7 +163,27 @@ const routes: Routes = [
             (m) => m.VariantModule
           ),
       },
-      
+      {
+        path: 'country',
+        loadChildren: () =>
+          import('./country/country.module').then(
+            (m) => m.CountryModule
+          ),
+      },
+      {
+        path: 'state',
+        loadChildren: () =>
+          import('./state/state.module').then(
+            (m) => m.StateModule
+          ),
+      },
+      {
+        path: 'city',
+        loadChildren: () =>
+          import('./city/city.module').then(
+            (m) => m.CityModule
+          ),
+      },
 
     ],
   },
@@ -173,6 +193,7 @@ const routes: Routes = [
       import('./brandlist/brandlist.module').then((m) => m.BrandlistModule),
   },
   { path: 'subcategory-details/:id', loadChildren: () => import('./subcategorydetails/subcategorydetails.module').then((m) => m.SubcategorydetailsModule) },
+  { path: 'hsncode-details/:id', loadChildren: () => import('./hsncodedetails/hsncodedetails.module').then((m) => m.HsncodedetailsModule) },
 
 ];
 

@@ -6,6 +6,11 @@
                 <h4>Unit Conversion list</h4>
                 <h6>View/Search Unit Conversion</h6>
             </div>
+            <div class="page-btn" *ngIf="!addForm">
+                <a class="btn btn-added" (click)="openaddForm()">
+                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add State
+                </a>
+            </div>
         </div>
         <div class="card">
             <div class="card-body">
@@ -106,8 +111,61 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-body">
+            <div class="card-body" *ngIf="addForm">
                 <form [formGroup]="unitConversionForm" (ngSubmit)="submit()">
+                    <div class="row">
+
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Title*</label>
+                                <input type="text" formControlName="title" id="title" [ngClass]="{
+                                    'is-invalid': f['title'].touched && f['title'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Quantity*</label>
+                                <input type="number" formControlName="quantity" id="quantity" [ngClass]="{
+                                    'is-invalid': f['quantity'].touched && f['quantity'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="quantity && quantity.invalid && quantity.touched">Enter Quantity
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Units*</label>
+                                <select formControlName="unit" class="w-100 h-100 border" required
+                                    #unitValue id="unit" [ngClass]="{
+                              'is-invalid': f['unit'].touched && f['unit'].invalid
+                            }">
+                                    <option value="" selected disabled>Unit</option>
+                                    <option value="{{unit.id}}" *ngFor="let unit of unitList">
+                                        {{unit.title}}
+                                    </option>
+                                </select>
+                                <span class="text-danger" *ngIf="unit && unit.invalid && unit.touched">Select unit
+                                </span>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2">Submit</button>
+                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="card-body" *ngIf="!addForm">
+                <form [formGroup]="unitConversionForm" (ngSubmit)="update()">
                     <div class="row">
 
                         <div class="col-lg-10 col-sm-10 col-12">

@@ -23,9 +23,13 @@ export class HsncodeComponent implements OnInit {
   }
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle()
-    this.tableData = this.QueryService.hsncodeList;
-    console.log(this.tableData);
-
+    // this.tableData = this.QueryService.hsncodeList;
+    // console.log(this.tableData);
+    this.coreService.hsncodeBehavior.subscribe(() => {
+      if (localStorage.getItem('hsncodeList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("hsncodeList")!))
+      }
+    })
   }
 
   delRes: any
@@ -172,6 +176,49 @@ export class HsncodeComponent implements OnInit {
 
   addRes: any
   data: any
+  // submit() {
+  //   console.log(this.hsncodeForm.value);
+  //   var formdata: any = new FormData()
+
+  //   formdata.append('title', this.hsncodeForm.get('title')?.value);
+  //   formdata.append('tax', this.hsncodeForm.get('tax')?.value);
+  //   formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
+  //   formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
+
+  //   if (this.hsncodeForm.valid) {
+  //     if (this.id) {
+  //       this.coreService.updateHSNcode(formdata, this.id).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "HSNCode updated successfully") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.hsncodeForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     } else {
+  //       this.coreService.addHSNcode(formdata).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "HSNCode Successfuly Added") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.hsncodeForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     }
+  //   } else {
+  //     this.hsncodeForm.markAllAsTouched()
+  //     console.log('forms invalid');
+  //   }
+  // }
+
+
+
   submit() {
     console.log(this.hsncodeForm.value);
     var formdata: any = new FormData()
@@ -181,40 +228,54 @@ export class HsncodeComponent implements OnInit {
     formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
     formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
 
+
     if (this.hsncodeForm.valid) {
-      if (this.id) {
-        this.coreService.updateHSNcode(formdata, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "HSNCode updated successfully") {
-            this.toastr.success(this.addRes.msg)
-            this.hsncodeForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      } else {
-        this.coreService.addHSNcode(formdata).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "HSNCode Successfuly Added") {
-            this.toastr.success(this.addRes.msg)
-            this.hsncodeForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      }
+      this.coreService.addHSNcode(formdata).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "HSNCode Successfuly Added") {
+          this.toastr.success(this.addRes.msg)
+          this.hsncodeForm.reset()
+          this.addForm=true
+          // window.location.reload()
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      }) 
     } else {
       this.hsncodeForm.markAllAsTouched()
       console.log('forms invalid');
     }
   }
 
+  update(){
+    console.log(this.hsncodeForm.value);
+    var formdata: any = new FormData()
 
+    formdata.append('title', this.hsncodeForm.get('title')?.value);
+    formdata.append('tax', this.hsncodeForm.get('tax')?.value);
+    formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
+    formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
 
+    if (this.hsncodeForm.valid) {
+      this.coreService.updateHSNcode(formdata, this.id).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "HSNCode updated successfully") {
+          this.toastr.success(this.addRes.msg)
+          this.hsncodeForm.reset()
+          // window.location.reload()
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
+    } else {
+      this.hsncodeForm.markAllAsTouched()
+      console.log('forms invalid');
+    }
+  }
   get hsn_code() {
     return this.hsncodeForm.get('hsn_code')
   }
@@ -255,5 +316,10 @@ export class HsncodeComponent implements OnInit {
       }
     })
 
+  }
+
+  openaddForm() {
+    this.addForm = true;
+    this.hsncodeForm.reset();
   }
 }

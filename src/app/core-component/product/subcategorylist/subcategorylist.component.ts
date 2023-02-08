@@ -45,7 +45,7 @@ export class SubcategorylistComponent implements OnInit {
         this.coreService.deleteProductSubcategory(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Warehouse Deleted successfully") {
-            this.tableData
+            this.ngOnInit()
           }
         })
         Swal.fire({
@@ -80,9 +80,13 @@ export class SubcategorylistComponent implements OnInit {
     })
 
     this.coreService.getProductSubcategory();
-    this.tableData = this.QueryService.productsubcategoryList;
-    console.log(this.tableData);
-
+    // this.tableData = this.QueryService.productsubcategoryList;
+    // console.log(this.tableData);
+    this.coreService.subcategoryBehavior.subscribe(() => {
+      if (localStorage.getItem('productsubcategroyList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("productsubcategroyList")!))
+      }
+    })
     this.productCategory();
     this.getbrand()
 
@@ -158,6 +162,52 @@ export class SubcategorylistComponent implements OnInit {
   }
   addRes: any
   data: any
+  // submit() {
+  //   console.log(this.subcategoryForm.value);
+  //   console.log(this.id);
+  //   console.log(this.check);
+  //   console.log(this.subcategoryForm.get('brand_id')?.value);
+  //   this.data = this.subcategoryForm.get('brand_id')?.value
+  //   var formdata: any = new FormData()
+
+  //   formdata.append('title', this.subcategoryForm.get('title')?.value);
+  //   formdata.append('image', this.subcategoryForm.get('image')?.value);
+  //   formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
+  //   formdata.append('brand_id', JSON.stringify(this.subcategoryForm.get('brand_id')?.value));
+
+  //   if (this.subcategoryForm.valid) {
+  //     if (this.id) {
+  //       this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Account updated successfully") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.subcategoryForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     } else {
+  //       this.coreService.addProductSubcategory(formdata).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Data Created") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.subcategoryForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     }
+  //   } else {
+  //     this.subcategoryForm.markAllAsTouched()
+  //     console.log('forms invalid');
+  //   }
+  // }
+
+  loader = false
   submit() {
     console.log(this.subcategoryForm.value);
     console.log(this.id);
@@ -171,32 +221,55 @@ export class SubcategorylistComponent implements OnInit {
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
     formdata.append('brand_id', JSON.stringify(this.subcategoryForm.get('brand_id')?.value));
 
+
     if (this.subcategoryForm.valid) {
-      if (this.id) {
-        this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Account updated successfully") {
-            this.toastr.success(this.addRes.msg)
-            this.subcategoryForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      } else {
-        this.coreService.addProductSubcategory(formdata).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Data Created") {
-            this.toastr.success(this.addRes.msg)
-            this.subcategoryForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      }
+
+      this.coreService.addProductSubcategory(formdata).subscribe(res => {
+        console.log(res);
+        this.loader=true;
+        this.addRes = res
+        if (this.addRes.msg == "Successfuly Added") {
+          this.toastr.success(this.addRes.msg)
+          this.subcategoryForm.reset()
+          // window.location.reload()
+          this.loader=false
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
+
+    } else {
+      this.subcategoryForm.markAllAsTouched()
+      console.log('forms invalid');
+    }
+  }
+
+  update() {
+    var formdata: any = new FormData()
+
+    formdata.append('title', this.subcategoryForm.get('title')?.value);
+    formdata.append('image', this.subcategoryForm.get('image')?.value);
+    formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
+    formdata.append('brand_id', JSON.stringify(this.subcategoryForm.get('brand_id')?.value));
+
+    if (this.subcategoryForm.valid) {
+      this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        this.loader=true
+        if (this.addRes.msg == "Account updated successfully") {
+          this.toastr.success(this.addRes.msg)
+          this.subcategoryForm.reset()
+          this.addForm = true
+          this.loader=false
+          // window.location.reload()
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
+
     } else {
       this.subcategoryForm.markAllAsTouched()
       console.log('forms invalid');
@@ -237,5 +310,9 @@ export class SubcategorylistComponent implements OnInit {
       }
     })
 
+  }
+  openaddForm() {
+    this.addForm = true;
+    this.subcategoryForm.reset();
   }
 }

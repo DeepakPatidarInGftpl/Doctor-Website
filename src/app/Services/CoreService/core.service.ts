@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { employee } from 'src/app/interfaces/employee';
 import { Warehouse } from 'src/app/interfaces/warehouse';
@@ -9,7 +9,23 @@ import { Account } from 'src/app/interfaces/account';
   providedIn: 'root'
 })
 export class CoreService {
-
+  employeeBehavior=new BehaviorSubject(null);
+  accountBehavior=new BehaviorSubject(null);
+  companyBehavior=new BehaviorSubject(null);
+  subcategoryBehavior = new BehaviorSubject(null);
+  brandBehavior = new BehaviorSubject(null);
+  colorBehavior = new BehaviorSubject(null);
+  sizeBehavior = new BehaviorSubject(null);
+  taxBehavior = new BehaviorSubject(null);
+  hsncodeBehavior = new BehaviorSubject(null);
+  unitBehavior = new BehaviorSubject(null);
+  unitConversionBehavior = new BehaviorSubject(null);
+  variantBehavior = new BehaviorSubject(null);
+  countryBehavior = new BehaviorSubject(null);
+  stateBehavior = new BehaviorSubject(null);
+  cityBehavior = new BehaviorSubject(null);
+  featureBehavior = new BehaviorSubject(null);
+  featureGroupBehavior = new BehaviorSubject(null);
   constructor(private http: HttpClient) { }
   apiUrl = `${environment.api}`;
   public data: any
@@ -33,6 +49,7 @@ export class CoreService {
       localStorage.setItem('employeeList', JSON.stringify(res));
       this.data = res
       console.log(this.data);
+      this.employeeBehavior.next(null)
     })
   }
   getEmployeeById(id: number): Observable<employee> {
@@ -69,12 +86,20 @@ export class CoreService {
   }
 
   countryList() {
-    let url = this.apiUrl + '/country/';
+    let url = this.apiUrl + '/country';
     return this.http.get(url)
   }
   stateList() {
     let url = this.apiUrl + '/state/';
     return this.http.get(url)
+  }
+  getCategory(){
+    let url =this.apiUrl+'/pv-api/product-category/';
+    return this.http.get<Account>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
   }
   // Acount section
   accountType() {
@@ -90,6 +115,7 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('accountList', JSON.stringify(res));
+      this.accountBehavior.next(null)
     })
   }
   getAccountD(): Observable<Account> {
@@ -143,6 +169,7 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('warehouseList', JSON.stringify(res));
+
     })
   }
 
@@ -189,6 +216,7 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('hsncodeList', JSON.stringify(res));
+      this.hsncodeBehavior.next(null)
     })
   }
 
@@ -225,7 +253,7 @@ export class CoreService {
     })
   }
 
-  //product   
+  //productSubcategory   
   getSubcategory(): Observable<any> {
     let url = this.apiUrl + '/pv-api/product_subcategroy/';
     return this.http.get<any>(url, {
@@ -246,6 +274,7 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('unitList', JSON.stringify(res));
+      this.unitBehavior.next(null)
     })
   }
   getUnit(): Observable<any> {
@@ -301,9 +330,17 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('unitconservationList', JSON.stringify(res));
+      this.unitConversionBehavior.next(null)
     })
   }
-
+  getunitconversion(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/unitconservation/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
   getUnitConversionById(id: number): Observable<any> {
     let url = this.apiUrl + '/pv-api/unitconservation/?id='
     return this.http.get<any>(`${url}${id}`, {
@@ -347,6 +384,7 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('productsubcategroyList', JSON.stringify(res));
+      this.subcategoryBehavior.next(null)
     })
   }
 
@@ -393,6 +431,7 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('brandsList', JSON.stringify(res));
+      this.brandBehavior.next(null)
     })
   }
   getBrand(): Observable<any> {
@@ -435,7 +474,7 @@ export class CoreService {
       })
     })
   }
-  // sizes
+  // color
   getcolor() {
     let url = this.apiUrl + '/pv-api/colour/';
     return this.http.get(url, {
@@ -445,9 +484,17 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('colorsList', JSON.stringify(res));
+      this.colorBehavior.next(null)
     })
   }
-
+  getColor(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/colour/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
   getcolorById(id: number): Observable<any> {
     let url = this.apiUrl + '/pv-api/colour/?id='
     return this.http.get<any>(`${url}${id}`, {
@@ -492,6 +539,15 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('sizesList', JSON.stringify(res));
+      this.sizeBehavior.next(null)
+    })
+  }
+  getSize(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/size/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
     })
   }
   getsizeById(id: number): Observable<any> {
@@ -536,6 +592,7 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('taxList', JSON.stringify(res));
+      this.taxBehavior.next(null)
     })
   }
   gettaxd(): Observable<any> {
@@ -588,6 +645,7 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('fuature_groupList', JSON.stringify(res));
+      this.featureGroupBehavior.next(null)
     })
   }
   getFuature_groupD(): Observable<any> {
@@ -642,6 +700,7 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('featureList', JSON.stringify(res));
+      this.featureBehavior.next(null)
     })
   }
   getFeatureById(id: number): Observable<any> {
@@ -687,6 +746,15 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('variantList', JSON.stringify(res));
+      this.variantBehavior.next(null)
+    })
+  }
+  getVariantd(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/variant/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
     })
   }
   getVariantById(id: number): Observable<any> {
@@ -730,9 +798,6 @@ export class CoreService {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
-    }).subscribe((res) => {
-      console.log(res);
-      localStorage.setItem('subcategorygroupList', JSON.stringify(res));
     })
   }
   getSubcategoryGroupById(id: number): Observable<any> {
@@ -772,6 +837,196 @@ export class CoreService {
   getProductcategory(): Observable<any> {
     let url = this.apiUrl + '/pv-api/product-category/'
     return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  //country section
+
+  getCountry() {
+    let url = this.apiUrl + '/country/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('countryList', JSON.stringify(res));
+      this.countryBehavior.next(null)
+    })
+  }
+  getCountryById(id: number): Observable<any> {
+    let url = this.apiUrl + '/country/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addCountry(data: any): Observable<any> {
+    let url = this.apiUrl + '/country/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updateCountry(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/country/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deleteCountry(id: number) {
+    let url = this.apiUrl + '/country/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  // state section
+  getstate() {
+    let url = this.apiUrl + '/state/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('stateList', JSON.stringify(res));
+      this.stateBehavior.next(null)
+    })
+  }
+  getstateD(): Observable<any> {
+    let url = this.apiUrl + '/state/'
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  getstateById(id: number): Observable<any> {
+    let url = this.apiUrl + '/state/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addstate(data: any): Observable<any> {
+    let url = this.apiUrl + '/state/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updatestate(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/state/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deletestate(id: number) {
+    let url = this.apiUrl + '/state/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  // city section
+  getcity() {
+    let url = this.apiUrl + '/city/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('cityList', JSON.stringify(res));
+      this.cityBehavior.next(null)
+    })
+  }
+  getcityById(id: number): Observable<any> {
+    let url = this.apiUrl + '/city/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addcity(data: any): Observable<any> {
+    let url = this.apiUrl + '/city/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updatecity(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/city/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deletecity(id: number) {
+    let url = this.apiUrl + '/city/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  // /pv-api/product/
+  getProduct() {
+    let url = this.apiUrl + '/pv-api/product/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe((res) => {
+      console.log(res);
+      localStorage.setItem('productList', JSON.stringify(res));
+    })
+  }
+  getProductById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/product/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  addProduct(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/product/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updateProduct(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/product/?id=';
+    return this.http.put<any>(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deleteProduct(id: number) {
+    let url = this.apiUrl + '/pv-api/product/?id=';
+    return this.http.delete(`${url}${id}`, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })

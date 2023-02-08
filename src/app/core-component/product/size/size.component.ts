@@ -77,9 +77,13 @@ export class SizeComponent implements OnInit {
 
     };
     this.coreService.getsize();
-    this.tableData = this.QueryService.sizeList;
-    console.log(this.tableData);
-  
+    // this.tableData = this.QueryService.sizeList;
+    // console.log(this.tableData);
+    this.coreService.sizeBehavior.subscribe(() => {
+      if (localStorage.getItem('sizesList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("sizesList")!))
+      }
+    })
   }
 
   selectAll(initChecked: boolean) {
@@ -104,41 +108,86 @@ export class SizeComponent implements OnInit {
   }
 
   addRes: any
-  submit() {
-    console.log(this.sizeForm.value);
-    console.log(this.id);
+  // submit() {
+  //   console.log(this.sizeForm.value);
+  //   console.log(this.id);
 
-    if (this.sizeForm.valid) {
-      if (this.id) {
-        this.coreService.updatesize(this.sizeForm.value, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Size updated successfully") {
-            this.toastr.success(this.addRes.msg)
-            this.sizeForm.reset()
-            window.location.reload()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      } else {
-        this.coreService.addsize(this.sizeForm.value).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Data Created") {
-            this.toastr.success(this.addRes.msg)
-            this.sizeForm.reset()
-            window.location.reload();
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
+  //   if (this.sizeForm.valid) {
+  //     if (this.id) {
+  //       this.coreService.updatesize(this.sizeForm.value, this.id).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Size updated successfully") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.sizeForm.reset()
+  //           window.location.reload()
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     } else {
+  //       this.coreService.addsize(this.sizeForm.value).subscribe(res => {
+  //         console.log(res);
+  //         this.addRes = res
+  //         if (this.addRes.msg == "Data Created") {
+  //           this.toastr.success(this.addRes.msg)
+  //           this.sizeForm.reset()
+  //           window.location.reload();
+  //         }
+  //       }, err => {
+  //         console.log(err.error.gst);
+  //       })
+  //     }
+  //   } else {
+  //     this.sizeForm.markAllAsTouched()
+  //     console.log('forms invalid');
+  //   }
+  // }
+
+  
+ submit() {
+  console.log(this.sizeForm.value);
+  console.log(this.id);
+
+  if (this.sizeForm.valid) {
+    this.coreService.addsize(this.sizeForm.value).subscribe(res => {
+      console.log(res);
+      this.addRes = res
+      if (this.addRes.msg == "Data Created") {
+        this.toastr.success(this.addRes.msg)
+        this.sizeForm.reset()
+        // window.location.reload();
+        this.ngOnInit()
       }
-    } else {
-      this.sizeForm.markAllAsTouched()
-      console.log('forms invalid');
-    }
+    }, err => {
+      console.log(err.error.gst);
+    })
+  } else {
+    this.sizeForm.markAllAsTouched()
+    console.log('forms invalid');
   }
+}
+
+update(){
+  if (this.sizeForm.valid) {
+    this.coreService.updatesize(this.sizeForm.value, this.id).subscribe(res => {
+      console.log(res);
+      this.addRes = res
+      if (this.addRes.msg == "Size updated successfully") {
+        this.toastr.success(this.addRes.msg)
+        this.sizeForm.reset()
+        this.addForm=true
+        // window.location.reload()
+        this.ngOnInit()
+      }
+    }, err => {
+      console.log(err.error.gst);
+    })
+  } else {
+    this.sizeForm.markAllAsTouched()
+    console.log('forms invalid');
+  }
+}
 
   get title() {
     return this.sizeForm.get('title')
@@ -164,4 +213,9 @@ export class SizeComponent implements OnInit {
       })
     })
   }
+  openaddForm() {
+    this.addForm = true;
+    this.sizeForm.reset();
+  }
+
 }

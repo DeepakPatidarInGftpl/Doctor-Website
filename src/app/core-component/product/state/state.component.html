@@ -1,0 +1,229 @@
+<div class="row">
+    <div class="col-lg-7 col-sm-7 col-12">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>State list</h4>
+                <h6>Manage your State</h6>
+            </div>
+            <div class="page-btn" *ngIf="!addForm">
+                <a class="btn btn-added" (click)="openaddForm()">
+                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add State
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="assets/img/icons/filter.svg" alt="img">
+                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+                        </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                                        src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                                        src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                                        src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table datatable [dtOptions]="dtOptions" class="table  datanew">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label class="checkboxs" (click)="selectAll(initChecked)">
+                                        <input type="checkbox" [(ngModel)]="initChecked">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </th>
+                                <th>State</th>
+                                <th>State Code</th>
+                                <th>Country</th>
+                                <th>Is_active</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let products of tableData; let i = index">
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox" [(ngModel)]="products.is_active">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td class="productimgname">
+
+                                    <a href="javascript:void(0);">{{products.state}}</a>
+                                </td>
+                                <td>{{products.state_code}}</td>
+                                <td>{{products.country}}</td>
+                                <td><span
+                                        [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                                        class="badges">{{products.is_active}}</span></td>
+                                <td>
+                                    <a class="me-3" (click)="editForm(products.id)">
+                                        <img src="assets/img/icons/edit.svg" alt="img">
+                                    </a>
+
+                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
+                                        href="javascript:void(0);">
+                                        <img src="assets/img/icons/delete.svg" alt="img">
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-lg-5 col-sm-5 col-12">
+        <div class="page-header">
+            <div class="page-title" *ngIf="addForm">
+                <h4> State </h4>
+                <h6>Create new State </h6>
+            </div>
+            <div class="page-title" *ngIf="!addForm">
+                <h4> State Edit</h4>
+                <h6> Update State </h6>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body" *ngIf="addForm">
+                <form [formGroup]="stateForm" (ngSubmit)="submit()">
+                    <div class="row">
+
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>State*</label>
+                                <input type="text" formControlName="state" id="state" [ngClass]="{
+                                    'is-invalid': f['state'].touched && f['state'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="state && state.invalid && state.touched">Enter state
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>State Code*</label>
+                                <input type="text" formControlName="state_code" id="state_code" [ngClass]="{
+                                    'is-invalid': f['state_code'].touched && f['state_code'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="state_code && state_code.invalid && state_code.touched">Enter State Code
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Country*</label>
+                                <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
+                                    'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
+                                  }"> -->
+                                <select formControlName="country" class="w-100 h-100 border" required
+                                    #countryValue id="country" [ngClass]="{
+                            'is-invalid': f['country'].touched && f['country'].invalid
+                          }">
+                                    <option value="" selected disabled>country</option>
+                                    <option value="{{feature.id}}" *ngFor="let feature of featureGroup">
+                                        {{feature.title}}
+                                    </option>
+                                </select>
+
+                                <span class="text-danger"
+                                    *ngIf="country && country.invalid && country.touched">Select
+                                    Feature Group
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2">Submit</button>
+                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="card-body" *ngIf="!addForm">
+                <form [formGroup]="stateForm" (ngSubmit)="update()">
+                    <div class="row">
+
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>State*</label>
+                                <input type="text" formControlName="state" id="state" [ngClass]="{
+                                    'is-invalid': f['state'].touched && f['state'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="state && state.invalid && state.touched">Enter state
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>State Code*</label>
+                                <input type="text" formControlName="state_code" id="state_code" [ngClass]="{
+                                    'is-invalid': f['state_code'].touched && f['state_code'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="state_code && state_code.invalid && state_code.touched">Enter State Code
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Country*</label>
+                                <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
+                                    'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
+                                  }"> -->
+                                <select formControlName="country" class="w-100 h-100 border" required
+                                    #countryValue id="country" [ngClass]="{
+                            'is-invalid': f['country'].touched && f['country'].invalid
+                          }">
+                                    <option value="" selected disabled>country</option>
+                                    <option value="{{feature.id}}" *ngFor="let feature of featureGroup">
+                                        {{feature.title}}
+                                    </option>
+                                </select>
+
+                                <span class="text-danger"
+                                    *ngIf="country && country.invalid && country.touched">Select
+                                    Feature Group
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2">Submit</button>
+                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
