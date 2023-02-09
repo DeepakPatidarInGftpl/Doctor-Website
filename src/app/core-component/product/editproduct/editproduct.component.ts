@@ -214,9 +214,10 @@ export class EditproductComponent implements OnInit {
     formdata.append('unit_conversion', this.productForm.get('unit_conversion')?.value);
     formdata.append('description', this.productForm.get('description')?.value);
     formdata.append('product_store', this.productForm.get('product_store')?.value);
-    formdata.append('color', this.productForm.get('color')?.value);
-    formdata.append('size', this.productForm.get('size')?.value);
-    formdata.append('variant', this.productForm.get('variant')?.value);
+    formdata.append('color', JSON.stringify(this.productForm.get('color')?.value));
+    formdata.append('size', JSON.stringify(this.productForm.get('size')?.value));
+    formdata.append('variant', JSON.stringify(this.productForm.get('variant')?.value));
+
 
     if (this.productForm.valid) {
       this.coreService.updateProduct(formdata, this.id).subscribe(res => {

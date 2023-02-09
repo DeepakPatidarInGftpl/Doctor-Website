@@ -62,7 +62,9 @@ export class SigninComponent implements OnInit {
       
       if (this.loginRes.token) {
         this.toastr.success('Login Successfull');
-        this.router.navigate(['//dashboard']);
+        this.router.navigate(['//dashboard']).then(()=>{
+          window.location.reload();
+        })
         localStorage.setItem('token', this.loginRes.token)
         console.log(this.loginRes.token);
         
