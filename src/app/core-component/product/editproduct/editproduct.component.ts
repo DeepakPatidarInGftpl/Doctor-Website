@@ -54,13 +54,13 @@ export class EditproductComponent implements OnInit {
 
           // this.colors = data.color
           this.colors = data.color.map((res: any) => res.id);
-          console.log(this.colors, 'thiscolors');
+          // console.log(this.colors, 'thiscolors');
 
           this.variants = data.variant.map((res: any) => res.id);
-          console.log(this.variants, 'thisVariant');
+          // console.log(this.variants, 'thisVariant');
 
           this.sizes = data.size.map((res: any) => res.id)
-          console.log(this.variants, 'thisSize');
+          // console.log(this.variants, 'thisSize');
 
           this.productForm.patchValue({
             title: data.title,
