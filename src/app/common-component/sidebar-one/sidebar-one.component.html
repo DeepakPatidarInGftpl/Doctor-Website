@@ -42,9 +42,9 @@
                               Products</a></li>
                       <li><a routerLink="/product/barcode" routerLinkActive="active">Print
                               Barcode</a></li>
-                              <li><a routerLink="/product/country" routerLinkActive="active">Country</a></li>
+                              <!-- <li><a routerLink="/product/country" routerLinkActive="active">Country</a></li>
                               <li><a routerLink="/product/state" routerLinkActive="active">State</a></li>
-                              <li><a routerLink="/product/city" routerLinkActive="active">City</a></li>
+                              <li><a routerLink="/product/city" routerLinkActive="active">City</a></li> -->
                   </ul>
               </li>
 
@@ -82,17 +82,7 @@
                   
                 </ul>
             </li>
-            <li class="submenu" >
-                <a  [ngClass]="{'active': activePath === 'warehouse'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Warehouse</span> <span
-                        class="menu-arrow"></span></a>
-                <ul>
-                    <li><a routerLink="/warehouse/warehouselist" routerLinkActive="active">Warehouse
-                            List</a></li>
-                    <li><a routerLink="/warehouse/addwarehouse" routerLinkActive="active">Add
-                            Warehouse</a></li>
-                  
-                </ul>
-            </li>
+          
             
               <li class="submenu" >
                   <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span
@@ -195,14 +185,15 @@
                   <a  [ngClass]="{'active': activePath === 'places'}"><img src="assets/img/icons/places.svg" alt="img"><span> Places</span> <span
                           class="menu-arrow"></span></a>
                   <ul >
-                      <li><a routerLink="/places/newcountry" routerLinkActive="active">New
-                              Country</a></li>
+                      <!-- <li><a routerLink="/places/newcountry" routerLinkActive="active">New
+                              Country</a></li> -->
                       <li><a routerLink="/places/countrieslist" routerLinkActive="active">Countries
                               list </a></li>
-                      <li><a routerLink="/places/newstate" routerLinkActive="active">New State </a>
-                      </li>
+                      <!-- <li><a routerLink="/places/newstate" routerLinkActive="active">New State </a>
+                      </li> -->
                       <li><a routerLink="/places/statelist" routerLinkActive="active">State list</a>
                       </li>
+                      <li><a routerLink="/places/citylist" routerLinkActive="active">City list</a></li>
                   </ul>
               </li>
               <li>

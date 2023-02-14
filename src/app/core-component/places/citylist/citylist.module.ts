@@ -1,25 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { StatelistRoutingModule } from './statelist-routing.module';
-import { StatelistComponent } from './statelist.component';
+import { CitylistRoutingModule } from './citylist-routing.module';
+import { CitylistComponent } from './citylist.component';
+
+
 import { DataTablesModule } from 'angular-datatables';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { DatepickerModule } from 'ng2-datepicker';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    StatelistComponent
-  ],
+  declarations: [CitylistComponent],
   imports: [
     CommonModule,
-    StatelistRoutingModule,
+    CitylistRoutingModule,
     DataTablesModule,
-    FormsModule,
     SweetAlert2Module.forRoot(),
-    ReactiveFormsModule,
-    DatepickerModule
+    DatepickerModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
-export class StatelistModule { }
+export class CitylistModule { }

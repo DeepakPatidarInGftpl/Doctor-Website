@@ -1,18 +1,16 @@
-
+<div class="row">
+    <div class="col-lg-7 col-sm-7 col-12">
         <div class="page-header">
             <div class="page-title">
-                <h4>Country List</h4>
-                <h6>Manage your Countries</h6>
+                <h4>Country list</h4>
+                <h6>Manage your Country</h6>
             </div>
-            <div class="page-btn">
-                <a routerLink="//places/newcountry" class="btn btn-added">
-                    <img src="assets/img/icons/plus.svg" alt="img" class="me-2">Add Country
+            <div class="page-btn" *ngIf="!addForm">
+                <a class="btn btn-added" (click)="openaddForm()">
+                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Country
                 </a>
             </div>
         </div>
-
-
-        <!-- /product list -->
         <div class="card">
             <div class="card-body">
                 <div class="table-top">
@@ -30,93 +28,62 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                                        src="assets/img/icons/pdf.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                                        src="assets/img/icons/excel.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                                        src="assets/img/icons/printer.svg" alt="img"></a>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <!-- /Filter -->
-                <div class="card" id="filter_inputs">
-                    <div class="card-body pb-0">
-                        <div class="row">
-                            <div class="col-lg-2 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <select class="form-select">
-                                        <option>Choose Country</option>
-                                        <option>USA</option>
-                                        <option>India</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <select class="form-select">
-                                        <option>Choose Region</option>
-                                        <option>Region</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <select class="form-select">
-                                        <option>Choose Status</option>
-                                        <option>Disable</option>
-                                        <option>Enable</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-1 col-sm-6 col-12 ms-auto">
-                                <div class="form-group">
-                                    <a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /Filter -->
+
                 <div class="table-responsive">
                     <table datatable [dtOptions]="dtOptions" class="table  datanew">
                         <thead>
                             <tr>
                                 <th>
-                                    <label class="checkboxs"  (click)="selectAll(initChecked)">
+                                    <label class="checkboxs" (click)="selectAll(initChecked)">
                                         <input type="checkbox" [(ngModel)]="initChecked">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </th>
                                 <th>Country Name</th>
-                                <th>Region</th>
-                                <th>Status</th>
+                                <th>Country Code</th>
+                                <th>Is_active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let places of countryList; let i = index">
+                            <tr *ngFor="let products of tableData; let i = index">
+
                                 <td>
                                     <label class="checkboxs">
-                                        <input type="checkbox" [(ngModel)]="places.isSelected">
+                                        <input type="checkbox" [(ngModel)]="products.is_active">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-                                <td>{{places.CountryName}}</td>
-                                <td>{{places.Region}} </td>
-                                <td>
-                                    <div class="status-toggle d-flex justify-content-between align-items-center">
-                                        <input type="checkbox" id="{{'places.CountryName' + i}}" class="check" [(ngModel)]="places.isStatus">
-                                        <label for="{{'places.CountryName' + i}}" class="checktoggle">checkbox</label>
-                                    </div>
+                                <td class="productimgname">
+
+                                    <a href="javascript:void(0);">{{products.country_name}}</a>
                                 </td>
+                                <td>{{products.country_code}}</td>
+                                <td><span
+                                        [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                                        class="badges">{{products.is_active}}</span></td>
                                 <td>
-                                    <a class="me-3" routerLink="//places/editcountry">
+
+                                    <a class="me-3" (click)="editForm(products.id)">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i)" class="me-3 confirm-text" href="javascript:void(0);">
+
+                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
+                                        href="javascript:void(0);">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -124,6 +91,91 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
-        <!-- /product list -->
+
+    </div>
+    <div class="col-lg-5 col-sm-5 col-12">
+        <div class="page-header">
+            <div class="page-title" *ngIf="addForm">
+                <h4> Country </h4>
+                <h6>Create new Country </h6>
+            </div>
+            <div class="page-title" *ngIf="!addForm">
+                <h4> Country Edit</h4>
+                <h6> Update Country </h6>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body" *ngIf="addForm">
+                <form [formGroup]="countryForm" (ngSubmit)="submit()">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Country Name*</label>
+                                <input type="text" formControlName="country_name" id="country_name" [ngClass]="{
+                                    'is-invalid': f['country_name'].touched && f['country_name'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="country_name && country_name.invalid && country_name.touched">Enter Country Name
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Country Code*</label>
+                                <input type="text" formControlName="country_code" id="country_code" [ngClass]="{
+                                    'is-invalid': f['country_code'].touched && f['country_code'].invalid
+                                  }">
+
+                                <span class="text-danger"
+                                    *ngIf="country_code && country_code.invalid && country_code.touched">Enter
+                                    Country Code
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2">Submit</button>
+                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body" *ngIf="!addForm">
+                <form [formGroup]="countryForm" (ngSubmit)="update()">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Country Name*</label>
+                                <input type="text" formControlName="country_name" id="country_name" [ngClass]="{
+                                    'is-invalid': f['country_name'].touched && f['country_name'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="country_name && country_name.invalid && country_name.touched">Enter Country Name
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Country Code*</label>
+                                <input type="text" formControlName="country_code" id="country_code" [ngClass]="{
+                                    'is-invalid': f['country_code'].touched && f['country_code'].invalid
+                                  }">
+
+                                <span class="text-danger"
+                                    *ngIf="country_code && country_code.invalid && country_code.touched">Enter
+                                    Country Code
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2">Submit</button>
+                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,12 +2,12 @@
     <div class="col-lg-7 col-sm-7 col-12">
         <div class="page-header">
             <div class="page-title">
-                <h4>State list</h4>
-                <h6>Manage your State</h6>
+                <h4>City list</h4>
+                <h6>Manage your City</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
                 <a class="btn btn-added" (click)="openaddForm()">
-                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add State
+                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add City
                 </a>
             </div>
         </div>
@@ -54,15 +54,16 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </th>
+                                <th>City</th>
+                                <th>City Code</th>
                                 <th>State</th>
-                                <th>State Code</th>
-                                <th>Country</th>
                                 <th>Is_active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let products of tableData; let i = index">
+
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="products.is_active">
@@ -71,14 +72,15 @@
                                 </td>
                                 <td class="productimgname">
 
-                                    <a href="javascript:void(0);">{{products.state}}</a>
+                                    <a href="javascript:void(0);">{{products.city}}</a>
                                 </td>
-                                <td>{{products.state_code}}</td>
-                                <td>{{products.country}}</td>
+                                <td>{{products.city_code}}</td>
+                                <td>{{products.state}}</td>
                                 <td><span
                                         [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span></td>
                                 <td>
+
                                     <a class="me-3" (click)="editForm(products.id)">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
@@ -101,60 +103,61 @@
     <div class="col-lg-5 col-sm-5 col-12">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
-                <h4> State </h4>
-                <h6>Create new State </h6>
+                <h4>City </h4>
+                <h6>Create new City </h6>
             </div>
             <div class="page-title" *ngIf="!addForm">
-                <h4> State Edit</h4>
-                <h6> Update State </h6>
+                <h4> City Edit</h4>
+                <h6> Update City </h6>
             </div>
         </div>
         <div class="card">
             <div class="card-body" *ngIf="addForm">
-                <form [formGroup]="stateForm" (ngSubmit)="submit()">
+                <form [formGroup]="cityForm" (ngSubmit)="submit()">
                     <div class="row">
 
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>State*</label>
-                                <input type="text" formControlName="state" id="state" [ngClass]="{
-                                    'is-invalid': f['state'].touched && f['state'].invalid
+                                <label>City*</label>
+                                <input type="text" formControlName="city" id="city" [ngClass]="{
+                                    'is-invalid': f['city'].touched && f['city'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="state && state.invalid && state.touched">Enter state
+                                <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter city
                                 </span>
 
                             </div>
                         </div>
+
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>State Code*</label>
-                                <input type="text" formControlName="state_code" id="state_code" [ngClass]="{
-                                    'is-invalid': f['state_code'].touched && f['state_code'].invalid
+                                <label>City Code*</label>
+                                <input type="text" formControlName="city_code" id="city_code" [ngClass]="{
+                                    'is-invalid': f['city_code'].touched && f['city_code'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="state_code && state_code.invalid && state_code.touched">Enter State Code
+                                <span class="text-danger" *ngIf="city_code && city_code.invalid && city_code.touched">Enter City Code
                                 </span>
-
                             </div>
                         </div>
+
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Country*</label>
+                                <label>Select State*</label>
                                 <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
                                     'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
                                   }"> -->
-                                <select formControlName="country" class="w-100 h-100 border" required
-                                    #countryValue id="country" [ngClass]="{
-                            'is-invalid': f['country'].touched && f['country'].invalid
+                                <select formControlName="state" class="w-100 h-100 border" required
+                                    #stateValue id="state" [ngClass]="{
+                            'is-invalid': f['state'].touched && f['state'].invalid
                           }">
-                                    <option value="" selected disabled>country</option>
-                                    <option value="{{feature.id}}" *ngFor="let feature of featureGroup">
-                                        {{feature.title}}
+                                    <option value="" selected disabled>State</option>
+                                    <option value="{{state.id}}" *ngFor="let state of stateList">
+                                        {{state.state}}
                                     </option>
                                 </select>
 
                                 <span class="text-danger"
-                                    *ngIf="country && country.invalid && country.touched">Select
-                                    Feature Group
+                                    *ngIf="state && state.invalid && state.touched">Select
+                                    state
                                 </span>
 
                             </div>
@@ -168,50 +171,51 @@
                 </form>
             </div>
             <div class="card-body" *ngIf="!addForm">
-                <form [formGroup]="stateForm" (ngSubmit)="update()">
+                <form [formGroup]="cityForm" (ngSubmit)="update()">
                     <div class="row">
 
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>State*</label>
-                                <input type="text" formControlName="state" id="state" [ngClass]="{
-                                    'is-invalid': f['state'].touched && f['state'].invalid
+                                <label>City*</label>
+                                <input type="text" formControlName="city" id="city" [ngClass]="{
+                                    'is-invalid': f['city'].touched && f['city'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="state && state.invalid && state.touched">Enter state
+                                <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter city
                                 </span>
 
                             </div>
                         </div>
+
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>State Code*</label>
-                                <input type="text" formControlName="state_code" id="state_code" [ngClass]="{
-                                    'is-invalid': f['state_code'].touched && f['state_code'].invalid
+                                <label>City Code*</label>
+                                <input type="text" formControlName="city_code" id="city_code" [ngClass]="{
+                                    'is-invalid': f['city_code'].touched && f['city_code'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="state_code && state_code.invalid && state_code.touched">Enter State Code
+                                <span class="text-danger" *ngIf="city_code && city_code.invalid && city_code.touched">Enter City Code
                                 </span>
-
                             </div>
                         </div>
+
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Country*</label>
+                                <label>Select State*</label>
                                 <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
                                     'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
                                   }"> -->
-                                <select formControlName="country" class="w-100 h-100 border" required
-                                    #countryValue id="country" [ngClass]="{
-                            'is-invalid': f['country'].touched && f['country'].invalid
+                                <select formControlName="state" class="w-100 h-100 border" required
+                                    #stateValue id="state" [ngClass]="{
+                            'is-invalid': f['state'].touched && f['state'].invalid
                           }">
-                                    <option value="" selected disabled>country</option>
-                                    <option value="{{feature.id}}" *ngFor="let feature of featureGroup">
-                                        {{feature.title}}
+                                    <option value="" selected disabled>State</option>
+                                    <option value="{{state.id}}" *ngFor="let state of stateList">
+                                        {{state.state}}
                                     </option>
                                 </select>
 
                                 <span class="text-danger"
-                                    *ngIf="country && country.invalid && country.touched">Select
-                                    Feature Group
+                                    *ngIf="state && state.invalid && state.touched">Select
+                                    state
                                 </span>
 
                             </div>

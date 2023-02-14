@@ -106,7 +106,7 @@ export class SubcategorylistComponent implements OnInit {
   deleteId(id: number) {
     this.coreService.deleteUnits(id).subscribe(res => {
       this.delRes = res
-      if (this.delRes.msg == "Warehouse Deleted successfully") {
+      if (this.delRes.msg == "Subactegory Deleted successfully") {
         // this.getcompanyList()
       }
     })
@@ -124,6 +124,21 @@ export class SubcategorylistComponent implements OnInit {
     this.coreService.getBrand().subscribe(res => {
       console.log(res);
       this.brandList = res;
+      if(this.addForm){
+    
+      }else{
+        this.brandList.map((map:any)=>{
+          console.log(this.brands.includes(map.id));
+          
+          if(this.brands.includes(map.id)){
+            console.log(map.id,'map.id');
+            
+            let formArray:any=this.subcategoryForm.get('brand_id') as FormArray;
+            formArray.push(new FormControl(map.id))
+          }
+        })
+      }
+    
     })
   }
   check: any
@@ -226,13 +241,13 @@ export class SubcategorylistComponent implements OnInit {
 
       this.coreService.addProductSubcategory(formdata).subscribe(res => {
         console.log(res);
-        this.loader=true;
+        this.loader = true;
         this.addRes = res
         if (this.addRes.msg == "Successfuly Added") {
           this.toastr.success(this.addRes.msg)
           this.subcategoryForm.reset()
           // window.location.reload()
-          this.loader=false
+          this.loader = false
           this.ngOnInit()
         }
       }, err => {
@@ -246,6 +261,8 @@ export class SubcategorylistComponent implements OnInit {
   }
 
   update() {
+    console.log(this.subcategoryForm.value);
+    
     var formdata: any = new FormData()
 
     formdata.append('title', this.subcategoryForm.get('title')?.value);
@@ -257,12 +274,12 @@ export class SubcategorylistComponent implements OnInit {
       this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
-        this.loader=true
+        this.loader = true
         if (this.addRes.msg == "Account updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.subcategoryForm.reset()
           this.addForm = true
-          this.loader=false
+          this.loader = false
           // window.location.reload()
           this.ngOnInit()
         }
@@ -291,7 +308,8 @@ export class SubcategorylistComponent implements OnInit {
 
   addForm = true
   id: any
-  brandEdit: any
+  brandEdit: any;
+  brands: any = []
   editForm(id: number) {
     this.id = id
     this.coreService.getProductSubcategoryById(id).subscribe(res => {
@@ -299,13 +317,17 @@ export class SubcategorylistComponent implements OnInit {
 
       if (id == res.id) {
         this.addForm = false;
+        this.getbrand()
         this.brandEdit = res.brand_id;
         console.log(this.brandEdit);
-
+        console.log(res);
+        this.brands=res.brand_id.map((res: any) => res.id);
+        console.log(this.brands,'this.brands');
+        
         this.subcategoryForm.patchValue({
           title: res.title,
           // image:res.image,
-          category_id: res.category_id,
+          // category_id: res.category_id,
         });
       }
     })

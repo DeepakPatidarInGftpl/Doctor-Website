@@ -67,9 +67,9 @@
                   <a routerLink="/product/importproduct">Import Products</a>
                 </li>
                 <li><a routerLink="/product/barcode">Print Barcode</a></li>
-                <li><a routerLink="/product/country">Country</a></li>
+                <!-- <li><a routerLink="/product/country">Country</a></li>
                 <li><a routerLink="/product/state">State</a></li>
-                <li><a routerLink="/product/city">City</a></li>
+                <li><a routerLink="/product/city">City</a></li> -->
               </ul>
             </li>
             <li class="submenu">
@@ -142,29 +142,7 @@
               
               </ul>
             </li>
-            <li class="submenu">
-              <a
-                (click)="showSubMenu('Warehouse')"
-                [class.subdrop]="opendSubMenu[1] === 'Warehouse'"
-                href="javascript:void(0);"
-                ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
-                  Warehouse</span
-                >
-                <span class="menu-arrow"></span
-              ></a>
-              <ul
-                [ngClass]="{
-                  show: opendSubMenu[1] == 'Warehouse',
-                  hide: opendSubMenu[1] != 'Warehouse'
-                }"
-              >
-                <li>
-                  <a routerLink="/warehouse/warehouselist">Warehouse List</a>
-                </li>
-                <li><a routerLink="/warehouse/addwarehouse">Add Warehouse</a></li>
-              
-              </ul>
-            </li>
+        
             <li class="submenu">
               <a
                 (click)="showSubMenu('Sales')"
@@ -367,12 +345,13 @@
                   hide: opendSubMenu[1] != 'Places'
                 }"
               >
-                <li><a routerLink="/places/newcountry">New Country</a></li>
+                <!-- <li><a routerLink="/places/newcountry">New Country</a></li> -->
                 <li>
                   <a routerLink="/places/countrieslist">Countries list</a>
                 </li>
-                <li><a routerLink="/places/newstate">New State </a></li>
+                <!-- <li><a routerLink="/places/newstate">New State </a></li> -->
                 <li><a routerLink="/places/statelist">State list</a></li>
+                <li><a routerLink="/places/citylist">City list</a></li>
               </ul>
             </li>
           </ul>

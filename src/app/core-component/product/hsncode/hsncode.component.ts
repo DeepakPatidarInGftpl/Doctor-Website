@@ -68,7 +68,7 @@ export class HsncodeComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       hsn_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       tax: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      subcategory:new FormArray([], [Validators.required]),
+      subcategory: new FormArray([], [Validators.required]),
     })
     this.dtOptions = {
       dom: 'Btlpif',
@@ -141,6 +141,16 @@ export class HsncodeComponent implements OnInit {
     this.coreService.getSubcategory().subscribe(res => {
       console.log(res);
       this.subcategoryList = res
+      if(!this.addForm){
+      this.subcategoryList.map((map:any)=>{
+        console.log(this.subcategories.includes(map.id));
+        
+        if(this.subcategories.includes(map.id)){
+          let formArray:any=this.hsncodeForm.get('subcategory') as FormArray;
+          formArray.push(new FormControl(map.id))
+        }
+      })
+    }
     })
   }
 
@@ -236,20 +246,20 @@ export class HsncodeComponent implements OnInit {
         if (this.addRes.msg == "HSNCode Successfuly Added") {
           this.toastr.success(this.addRes.msg)
           this.hsncodeForm.reset()
-          this.addForm=true
+          this.addForm = true
           // window.location.reload()
           this.ngOnInit()
         }
       }, err => {
         console.log(err.error.gst);
-      }) 
+      })
     } else {
       this.hsncodeForm.markAllAsTouched()
       console.log('forms invalid');
     }
   }
 
-  update(){
+  update() {
     console.log(this.hsncodeForm.value);
     var formdata: any = new FormData()
 
@@ -265,6 +275,7 @@ export class HsncodeComponent implements OnInit {
         if (this.addRes.msg == "HSNCode updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.hsncodeForm.reset()
+          this.addForm=true;
           // window.location.reload()
           this.ngOnInit()
         }
@@ -298,6 +309,8 @@ export class HsncodeComponent implements OnInit {
   addForm = true
   id: any
   brandEdit: any
+  subcategories: any = [];
+
   editForm(id: number) {
     this.id = id
     this.coreService.getHSNcodeById(id).subscribe(res => {
@@ -305,13 +318,16 @@ export class HsncodeComponent implements OnInit {
 
       if (id == res.id) {
         this.addForm = false;
+        this.getSubcategory();
         this.brandEdit = res.brand_id;
-        console.log(this.brandEdit);
-
+        console.log(res);
+        this.subcategories = res.subcategory
+        console.log(this.subcategories);
+        
         this.hsncodeForm.patchValue({
           title: res.title,
           tax: res.tax,
-          hsn_code:res.hsn_code
+          hsn_code: res.hsn_code
         });
       }
     })

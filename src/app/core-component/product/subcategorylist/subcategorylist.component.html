@@ -256,7 +256,7 @@
                                         aria-expanded="false"> -->
                                     <ul class="dropdown-menu" style="width: 100%;">
                                         <li><a class="dropdown-item" *ngFor="let brand of brandList; let i=index" >
-                                                <input type="checkbox" [value]="brand.id"
+                                                <input type="checkbox" [value]="brand.id" [checked]="brands.includes(brand.id)"
                                                     (change)="onCheckChange($event)" formArrayName="brand_id" style="margin-right: 5px;"
                                                     [ngClass]="{
                                                         'is-invalid': f['brand_id'].touched && f['brand_id'].invalid
