@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnChanges, OnDestroy, OnInit, SimpleChanges }
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2';
@@ -71,11 +70,10 @@ export class WarehouseListComponent implements OnInit, OnDestroy {
 
 
 
-
   ngOnInit() {
 
-    this.coreService.getWarehouse()
-    this.coreService.wareHouseSubject.subscribe(() => {
+    this.queryService.getWarehouse()
+    this.queryService.warehouse.subscribe((res) => {
       if (localStorage.getItem('warehouseList')) {
         this.tableData = Object.values(JSON.parse(localStorage.getItem("warehouseList")))
       }
@@ -151,7 +149,7 @@ export class WarehouseListComponent implements OnInit, OnDestroy {
   submit() {
     if (this.warehouseForm.valid) {
       if (this.editMode) {
-        
+
         this.coreService.updateWarehouse(this.warehouseForm.value, this.editRoute.id).subscribe((res: any) => {
           if (res.msg == 'Warehouse updated successfully') {
             this.toastr.success(res.msg)

@@ -207,20 +207,20 @@ export class CoreService {
   }
 
 
-  getWarehouse() {
-    let url = this.apiUrl + '/pv-api/warehouse/';
-    return this.http.get(url, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
-      .subscribe((res) => {
-        console.log(res);
-        localStorage.setItem('warehouseList', JSON.stringify(res));
-        this.wareHouseSubject.next(null)
-      })
+  // getWarehouse() {
+  //   let url = this.apiUrl + '/pv-api/warehouse/';
+  //   return this.http.get(url, {
+  //     headers: new HttpHeaders({
+  //       'Authorization': 'token ' + `${localStorage.getItem('token')}`
+  //     })
+  //   })
+  //     .subscribe((res) => {
+  //       console.log(res);
+  //       localStorage.setItem('warehouseList', JSON.stringify(res));
+  //       this.wareHouseSubject.next(null)
+  //     })
 
-  }
+  // }
 
   subCategoryGroupGet() {
     let url = this.apiUrl + '/pv-api/subcategory_group/';
@@ -242,5 +242,47 @@ export class CoreService {
       })
     })
   }
+
+
+  editSubCategoryGroup(data, id) {
+    let url = this.apiUrl + '/pv-api/subcategory_group/?id='
+    return this.http.put(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+
+
+  subCategory() {
+    let url = this.apiUrl + '/pv-api/product_subcategroy/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'Token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getFeatureGroup() {
+    let url = this.apiUrl + '/pv-api/fuature_group/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'Token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getCategory() {
+    let url = this.apiUrl + '/pv-api/product-category/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'Token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+
+  // /pv-api/subcategory_group/?id=2
 
 }

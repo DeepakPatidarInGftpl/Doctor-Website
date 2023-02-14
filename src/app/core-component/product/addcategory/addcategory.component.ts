@@ -67,6 +67,7 @@ export class AddcategoryComponent implements OnInit {
         formData.append("image", this.formaddCateg.get('image')?.value);
 
         this.CoreServ.editHttp(formData, this.editRoute.id).subscribe((res: any) => {
+          this.toastr.success(res.msg)
           if (res.msg == 'Product Category updated successfully') {
             this.formaddCateg.reset()
             window.location.reload()

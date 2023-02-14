@@ -112,11 +112,11 @@
 
                   <td>{{products.category.title}}</td>
                   <td><span
-                    [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
-                    class="badges">{{products.is_active}}</span></td>
-                    <td>{{products.subcategories[0]?.title}}</td>
-                    <td>{{products.feature_group[0]?.title}}</td>
-                 
+                      [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                      class="badges">{{products.is_active}}</span></td>
+                  <td>{{products.subcategories[0]?.title}}</td>
+                  <td>{{products.feature_group[0]?.title}}</td>
+
                   <td>
                     <a class="me-3" (click)="editThis(products)">
                       <img src="assets/img/icons/edit.svg" alt="img">
@@ -152,33 +152,44 @@
                 <div class="image-upload mb-2">
                   <input type="text" formControlName="title">
                 </div>
-                <span class="text-danger"*ngIf="title && title.invalid && title.touched">Enter The Title</span>
+                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter The Title</span>
               </div>
             </div>
             <div class="col-lg-12">
               <div class="form-group">
                 <label>Category</label>
                 <div class="image-upload mb-2">
-                  <input type="text" formControlName="category">
+                  <select class="w-100" formControlName="category" (change)="selectCate($event)">
+                    <option value="" [selected]="!editMode" disabled>Category Type</option>
+                    <option *ngFor="let cate of categories" id="{{cate.id}}" [value]="cate.id">{{ cate.title }}</option>
+                  </select>
                 </div>
-                <span class="text-danger" *ngIf="category && category.invalid && category.touched">Enter The Category</span>
+                <span class="text-danger" *ngIf="category && category.invalid && category.touched">Enter The
+                  Category</span>
               </div>
             </div>
             <div class="col-12">
-              <div class="form-group">
-                <label>Sub Category Name</label>
-                <input type="text" formControlName="subcategories">
-                <span class="text-danger" *ngIf="subcategories && subcategories.invalid && subcategories.touched">Fill The Sub Category</span>
+              <label class="form-control">Sub Category Name</label>
+
+              <div class="" *ngFor="let subCat of subCategory">
+                <label for="{{subCat.id}}">{{subCat.title}}
+                  <input type="checkbox" [checked]="selectedSubCats.includes(subCat.id)"
+                    (change)="onSelectionChange(subCat, $event.target)" id="{{subCat.id}}">
+                </label>
               </div>
+
+              <span class="text-danger" *ngIf="errormessFSubC">{{errormessFSubC}}</span>
             </div>
-            <div class="col-lg-12">
-              <div class="form-group">
-                <label>Feature Group</label>
-                <div class="image-upload mb-2">
-                  <input type="text" formControlName="feature_group">
-                </div>
-                <span class="text-danger" *ngIf="feature_group && feature_group.invalid && feature_group.touched">Enter Feature Group Name</span>
+            <div class="col-lg-12 my-4">
+              <label class="form-control">Feature Group</label>
+              <div class="my-2" *ngFor="let fGroup of featureGroup">
+                <label for="{{fGroup.id}}">{{fGroup.title}}
+                  <input type="checkbox" [checked]="selectedFeature.includes(fGroup.id)"
+                   (change)="selectFeatureGroup(fGroup, $event.target)"
+                    id="{{fGroup.id}}">
+                </label>
               </div>
+              <span class="text-danger" *ngIf="errormessFFG">{{ errormessFFG }}</span>
             </div>
             <div class="col-lg-12">
               <a (click)="submitForm()" class="btn btn-submit me-2">{{this.editMode? 'Save Changes': 'Submit'}}</a>
