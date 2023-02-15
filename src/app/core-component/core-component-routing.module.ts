@@ -4,12 +4,12 @@ import { AuthGuard } from '../guards/auth.guard';
 import { CoreComponentComponent } from './core-component.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full'},
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: '',
-    component:CoreComponentComponent,
-    canActivate:[AuthGuard],
-   
+    component: CoreComponentComponent,
+    canActivate: [AuthGuard],
+
     children: [
       {
         path: 'dashboard',
@@ -35,6 +35,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('./product/product.module').then((m) => m.ProductModule),
       },
+
       {
         path: 'sales',
         loadChildren: () =>
@@ -75,7 +76,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('./places/places.module').then((m) => m.PlacesModule),
       },
-      
+
       {
         path: 'element',
         loadChildren: () =>
@@ -96,7 +97,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('./forms/forms.module').then((m) => m.FormsModule),
       },
-      { 
+      {
         path: 'table',
         loadChildren: () =>
           import('./table/table.module').then((m) => m.TableModule),
@@ -128,24 +129,24 @@ const routes: Routes = [
         loadChildren: () =>
           import('./profile/profile.module').then((m) => m.ProfileModule),
       },
-      
+
       {
         path: 'activities',
         loadChildren: () =>
           import('./activities/activities.module').then((m) => m.ActivitiesModule),
       },
-   
-      {path:'company', loadChildren:()=>import('./company/company.module').then((m)=>m.CompanyModule)},
 
-      {path:'employee',loadChildren:()=>import('./employee/employee.module').then((m)=>m.EmployeeModule)},
-      {path:'account',loadChildren:()=>import('./account/account.module').then((m)=>m.AccountModule)}
+      { path: 'company', loadChildren: () => import('./company/company.module').then((m) => m.CompanyModule) },
+
+      { path: 'employee', loadChildren: () => import('./employee/employee.module').then((m) => m.EmployeeModule) },
+      { path: 'account', loadChildren: () => import('./account/account.module').then((m) => m.AccountModule) }
     ],
   },
-  
+
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CoreComponentRoutingModule {}
+export class CoreComponentRoutingModule { }

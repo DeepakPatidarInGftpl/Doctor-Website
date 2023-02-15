@@ -15,6 +15,7 @@ import {
   PerfectScrollbarModule,
   PERFECT_SCROLLBAR_CONFIG,
 } from 'ngx-perfect-scrollbar';
+import { WarehouseListComponent } from './product/warehouse-list/warehouse-list.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -29,7 +30,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SidebarThreeComponent,
     SidebarFourComponent,
     SidebarFiveComponent,
-   
   ],
   imports: [
     CommonModule,

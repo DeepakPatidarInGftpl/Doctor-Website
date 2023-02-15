@@ -22,11 +22,11 @@ const icons = {
     DashboardRoutingModule,
     DataTablesModule,
     FeatherModule.pick(icons),
-    
+
   ],
   exports: [
     FeatherModule
   ]
-  
+
 })
 export class DashboardModule { }

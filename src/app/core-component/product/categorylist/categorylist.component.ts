@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
+import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 @Component({
@@ -7,18 +10,19 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
   templateUrl: './categorylist.component.html',
   styleUrls: ['./categorylist.component.scss']
 })
-export class CategorylistComponent implements OnInit {
+export class CategorylistComponent implements OnInit, OnDestroy {
   dtOptions: DataTables.Settings = {};
-  initChecked:boolean=false
-  public tableData:any =[]
+  initChecked: boolean = false
+  public tableData: any = []
 
-  constructor(private QueryService:QueryService) {
+  apiUrl = environment.api
+
+  constructor(private QueryService: QueryService, private coreServ: CoreService, private router: Router) {
     this.QueryService.filterToggle()
-    this.tableData=this.QueryService.categoryList
   }
- 
 
-  confirmText(index:any) {
+
+  confirmText(index: any) {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -28,11 +32,11 @@ export class CategorylistComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
       buttonsStyling: true,
       customClass: {
-      confirmButton: 'btn btn-primary',
-      cancelButton: 'btn btn-danger ml-1',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
       },
-    }).then( (t) => {
-      if(t.isConfirmed) {
+    }).then((t) => {
+      if (t.isConfirmed) {
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',
@@ -41,36 +45,59 @@ export class CategorylistComponent implements OnInit {
         this.tableData.splice(index, 1);
       }
     });
-    
+
   }
-     
-     
- 
-  ngOnInit(): void {
+
+
+
+  ngOnInit() {
+
+    this.coreServ.getProductCategory()
+    this.coreServ.ProdCategBehaveSub.subscribe(() => {
+      if (localStorage.getItem("prodCategories")) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("prodCategories")))
+      }
+    })
+
+
     this.dtOptions = {
       dom: 'Btlpif',
-      pagingType: 'numbers', 
-			language: {
-				search: ' ',
-				searchPlaceholder: "Search...",
-				info: "_START_ - _END_ of _TOTAL_ items",
-			 },
-			initComplete: (settings, json)=>{
-				$('.dt-buttons').appendTo('.wordset');
-				$('.dataTables_filter').appendTo('.search-input');
-			},	
-      
+      pagingType: 'numbers',
+      language: {
+        search: ' ',
+        searchPlaceholder: "Search...",
+        info: "_START_ - _END_ of _TOTAL_ items",
+      },
+      initComplete: (settings, json) => {
+        $('.dt-buttons').appendTo('.wordset');
+        $('.dataTables_filter').appendTo('.search-input');
+      },
+
     };
   }
-  selectAll(initChecked:boolean){
-    if(!initChecked){
-      this.tableData.forEach((f:any)=>{
-        f.isSelected=true
+
+  editMode = false
+  editThis(prod, index) {
+    this.coreServ.editThisData(prod)
+    this.editMode = true
+    // this.router.navigate(['product/categorylist/'+`${prod.id}`])
+  }
+
+
+  selectAll(initChecked: boolean) {
+    if (!initChecked) {
+      this.tableData.forEach((f: any) => {
+        f.isSelected = true
       })
-    }else{
-      this.tableData.forEach((f:any)=>{
-        f.isSelected=false
+    } else {
+      this.tableData.forEach((f: any) => {
+        f.isSelected = false
       })
     }
   }
+
+  
+  ngOnDestroy() {
+    this.coreServ.editThisData(null)
+}
 }

@@ -13,18 +13,58 @@ export class QueryService {
     this.companyService.getCompany().subscribe(res => {
       localStorage.setItem('companyList', JSON.stringify(res));
     })
+    this.getWarehouse()
   }
   apiUrl = `${environment.api}`;
 
   company = new BehaviorSubject(JSON.parse(localStorage.getItem('companyList')!));
   public companyList: any = this.company.value
-// companylist accountList
-  employee=new BehaviorSubject(JSON.parse(localStorage.getItem('employeeList')!));
-  public employeeList:any=this.employee.value;
-  // accountList 
-  account=new BehaviorSubject(JSON.parse(localStorage.getItem('accountList')!));
-  public accountList:any=this.account.value;
-  
+  // companylist accountList
+  employee = new BehaviorSubject(JSON.parse(localStorage.getItem('employeeList')!));
+  public employeeList: any = this.employee.value;
+  // accountList
+  account = new BehaviorSubject(JSON.parse(localStorage.getItem('accountList')!));
+  public accountList: any = this.account.value;
+
+
+
+
+
+
+
+  warehouse = new BehaviorSubject(null);
+  // public warehouseList: any = this.warehouse.value;
+
+
+  getWarehouse() {
+    let url = this.apiUrl + '/pv-api/warehouse/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+      .subscribe((res) => {
+        localStorage.removeItem('warehouseList')
+        localStorage.setItem('warehouseList', JSON.stringify(res));
+        // this.warehouse.next(JSON.parse(localStorage.getItem('warehouseList')!))
+        console.log(res);
+        this.warehouse.next(res)
+      })
+
+  }
+
+
+
+
+
+
+
+
+  productCategories = new BehaviorSubject(JSON.parse(localStorage.getItem('prodCategories')))
+
+  subCategoriesGroup = new BehaviorSubject(JSON.parse(localStorage.getItem('subCategories')))
+
+
   filterToggle(): void {
     // $(document).on('click', '#filter_search', function() {
     //   $('#filter_search').toggleClass("setclose");
@@ -35,12 +75,12 @@ export class QueryService {
   // public employeeList:any // search functionlity not working using this
   // getEmploye(){
   //   console.log('Called service');
-    
+
   //   let url = this.apiUrl + '/pv-api/employee/';
   //  this.http.get(url, {
   //     headers: new HttpHeaders({
   //       'Authorization': 'token ' + `${localStorage.getItem('token')}`
-  //     })   
+  //     })
   //   }).subscribe((res)=>{
   //     // this.employeeList=res
   //     // console.log(this.employeeList);

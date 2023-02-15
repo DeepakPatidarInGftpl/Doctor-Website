@@ -1,5 +1,5 @@
 
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { HttpClientService } from './http-client.service';
@@ -13,6 +13,8 @@ export class AuthServiceService {
 
   constructor(private http: HttpClient, private httpService: HttpClientService) { }
 
+
+
   apiurl = `${environment.api}`
 
   login(data: Auth): Observable<Auth> {
@@ -23,7 +25,9 @@ export class AuthServiceService {
 
   logout() {
     let url = this.apiurl + '/pv-api/logout/';
-    return this.httpService.get(url, this.httpService.headers)
+    return this.httpService.post(url, null, new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      }))
   }
 
   // get the token value when loged in
@@ -34,7 +38,7 @@ export class AuthServiceService {
   get isLoggedIn(): boolean {
     let authToken = localStorage.getItem('token');
     console.log(authToken);
-    
+
     return authToken !== null ? true : false;
   }
 

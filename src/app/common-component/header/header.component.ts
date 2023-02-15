@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { AuthServiceService } from 'src/app/Services/auth-service.service';
 import { SettingsService } from 'src/app/shared/settings/settings.service';
 
 @Component({
@@ -14,7 +16,7 @@ export class HeaderComponent implements OnInit {
   public darkTheme: boolean = false;
   public logoPath: string = '';
 
-  constructor(private Router: Router, private settings: SettingsService) {
+  constructor(private Router: Router, private settings: SettingsService, private authServ: AuthServiceService, private toastr: ToastrService) {
     this.activePath = this.Router.url.split('/')[2];
     this.Router.events.subscribe((data: any) => {
       if (data instanceof NavigationStart) {
@@ -27,10 +29,10 @@ export class HeaderComponent implements OnInit {
     this.settings.changeTheme.subscribe((res: any) => {
       if (res == 'Dark') {
         this.darkTheme = true;
-        this.logoPath='assets/img/logo-white.png'
+        this.logoPath = 'assets/img/logo-white.png'
       } else {
         this.darkTheme = false;
-        this.logoPath='assets/img/logo.png'
+        this.logoPath = 'assets/img/logo.png'
 
       }
     });
@@ -38,6 +40,16 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.LoadScript('assets/js/header.js');
+  }
+
+
+  logOut() {
+    this.authServ.logout().subscribe(res => {
+      console.log(res);
+      this.toastr.success('LogOut Successfull');
+      this.Router.navigate(['/auth/signin'])
+      this.authServ.doLogout()
+    })
   }
 
   LoadScript(js: string) {

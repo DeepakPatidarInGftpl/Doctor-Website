@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { SettingsService } from './shared/settings/settings.service';
 
 @Component({
@@ -21,7 +20,7 @@ export class AppComponent {
 
     login() {
     return !!localStorage.getItem('token');
-    
-    
+
+
   }
 }
