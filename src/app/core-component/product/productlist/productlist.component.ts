@@ -34,7 +34,7 @@ export class ProductlistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteProduct(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Product Deleted successfully") {
+          if (this.delRes.msg == "Prodct Deleted successfully") {
            this.ngOnInit()
           }
         })

@@ -41,11 +41,10 @@ export class VariantComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.deleteUnitConversion(id).subscribe(res => {
+        this.coreService.deleteVariant(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Variant Deleted successfully") {
-            this.tableData
-            window.location.reload()
+           this.ngOnInit()
           }
         })
         Swal.fire({
@@ -103,7 +102,7 @@ export class VariantComponent implements OnInit {
     this.coreService.deleteVariant(id).subscribe(res => {
       this.delRes = res
       if (this.delRes.msg == "Variant Deleted successfully") {
-        window.location.reload()
+       this.ngOnInit()
       }
 
     })

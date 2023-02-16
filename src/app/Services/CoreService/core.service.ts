@@ -87,11 +87,19 @@ export class CoreService {
 
   countryList() {
     let url = this.apiUrl + '/country';
-    return this.http.get(url)
+    return this.http.get(url,{
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
   }
   stateList() {
     let url = this.apiUrl + '/state/';
-    return this.http.get(url)
+    return this.http.get(url,{
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
   }
   getCategory(){
     let url =this.apiUrl+'/pv-api/product-category/';

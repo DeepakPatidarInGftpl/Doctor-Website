@@ -45,7 +45,7 @@ export class SizeComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Size Deleted successfully") {
             this.tableData
-            window.location.reload()
+            this.ngOnInit();
           }
         })
         Swal.fire({

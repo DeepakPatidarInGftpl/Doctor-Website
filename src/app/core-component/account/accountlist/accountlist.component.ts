@@ -21,7 +21,6 @@ export class AccountlistComponent implements OnInit {
  
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
-    this.tableData = this.QueryService.accountList;
  
   }
 
@@ -44,7 +43,7 @@ export class AccountlistComponent implements OnInit {
         this.coreService.deleteAccount(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Account Deleted successfully") {
-            this.tableData
+            this.ngOnInit()
           }
         })
         Swal.fire({
@@ -71,7 +70,7 @@ export class AccountlistComponent implements OnInit {
       },
 
     };
-   
+    this.tableData = this.QueryService.accountList;
     // console.log(this.QueryService.accountList);
     this.coreService.getAccount()
 

@@ -20,7 +20,7 @@ export class CompanylistComponent implements OnInit {
 
   constructor(private QueryService: QueryService, private companyService: CompanyService, private router: Router) {
     this.QueryService.filterToggle()
-    this.tableData = this.QueryService.companyList;
+    
 
   }
 
@@ -42,7 +42,7 @@ export class CompanylistComponent implements OnInit {
         this.companyService.deleteCompany(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Company Deleted successfully") {
-            this.tableData
+            this.ngOnInit()
           }
         })
         Swal.fire({
@@ -70,6 +70,7 @@ export class CompanylistComponent implements OnInit {
       },
 
     };
+    this.tableData = this.QueryService.companyList;
   }
   selectAll(initChecked: boolean) {
     if (!initChecked) {

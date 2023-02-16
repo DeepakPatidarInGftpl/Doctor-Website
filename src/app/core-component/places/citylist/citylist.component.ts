@@ -45,9 +45,7 @@ export class CitylistComponent implements OnInit {
         this.coreService.deletecity(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "City Deleted successfully") {
-            this.tableData
-            // window.location.reload()
-            this.ngOnInit()
+           this.ngOnInit()
           }
         })
         Swal.fire({
@@ -117,7 +115,6 @@ export class CitylistComponent implements OnInit {
     console.log(this.id);
 
     if (this.cityForm.valid) {
-    
         this.coreService.addcity(this.cityForm.value).subscribe(res => {
           console.log(res);
           this.addRes = res
@@ -129,7 +126,6 @@ export class CitylistComponent implements OnInit {
         }, err => {
           console.log(err.error.gst);
         })
-      
     } else {
       this.cityForm.markAllAsTouched()
       console.log('forms invalid');
