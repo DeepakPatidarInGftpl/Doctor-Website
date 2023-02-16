@@ -99,7 +99,6 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     }
   }
 
-
   ngOnDestroy() {
     this.coreServ.editThisData(null)
 }

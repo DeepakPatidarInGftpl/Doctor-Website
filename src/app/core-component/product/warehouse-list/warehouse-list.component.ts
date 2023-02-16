@@ -52,6 +52,9 @@ export class WarehouseListComponent implements OnInit, OnDestroy {
           // if (this.delRes.msg == "Warehouse Deleted successfully") {
           //   this.tableData
           // }
+          if (this.delRes.msg == "Warehouse Deleted successfully") {
+            this.tableData
+          }
         })
         Swal.fire({
           icon: 'success',
