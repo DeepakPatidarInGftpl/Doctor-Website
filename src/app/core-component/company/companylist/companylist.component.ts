@@ -20,7 +20,7 @@ export class CompanylistComponent implements OnInit {
 
   constructor(private QueryService: QueryService, private companyService: CompanyService, private router: Router) {
     this.QueryService.filterToggle()
-    
+
 
   }
 
@@ -70,7 +70,13 @@ export class CompanylistComponent implements OnInit {
       },
 
     };
-    this.tableData = this.QueryService.companyList;
+    this.companyService.getCompany()
+    this.companyService.companyBehaviour.subscribe( () => {
+
+      this.tableData = JSON.parse(localStorage.getItem('companyList')!);
+
+    })
+
   }
   selectAll(initChecked: boolean) {
     if (!initChecked) {

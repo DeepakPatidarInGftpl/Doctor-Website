@@ -69,9 +69,10 @@ export class AddemployeeComponent implements OnInit {
         if (this.addRes.msg == "Successfuly Added") {
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
-          this.router.navigate(['//employee/employeelist']).then(() => {
-            window.location.reload()
-          })
+          this.router.navigate(['//employee/employeelist'])
+          // .then(() => {
+          // window.location.reload()
+          // })
         }
       }, err => {
         console.log(err.error.gst);
@@ -127,5 +128,5 @@ export class AddemployeeComponent implements OnInit {
   get statee() {
     return this.employeeForm.get('state')
   }
-  
+
 }

@@ -12,7 +12,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
   styleUrls: ['./countrieslist.component.scss'],
 })
 export class CountrieslistComponent implements OnInit {
-  
+
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any
@@ -76,7 +76,9 @@ export class CountrieslistComponent implements OnInit {
 
     };
     this.coreService.getCountry();
-    this.tableData = this.QueryService.countryList;
+    this.coreService.countryBehavior.subscribe( () => {
+      this.tableData = JSON.parse(localStorage.getItem('countryList')!);
+    })
     console.log(this.tableData);
     this.getFeatureGroup();
   }
@@ -113,19 +115,19 @@ export class CountrieslistComponent implements OnInit {
     console.log(this.id);
 
     if (this.countryForm.valid) {
-    
+
         this.coreService.addCountry(this.countryForm.value).subscribe(res => {
           console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Data Created") {
             this.toastr.success(this.addRes.msg)
             this.countryForm.reset()
-            window.location.reload();
+            this.ngOnInit()
           }
         }, err => {
           console.log(err.error.gst);
         })
-      
+
     } else {
       this.countryForm.markAllAsTouched()
       console.log('forms invalid');
@@ -141,12 +143,12 @@ export class CountrieslistComponent implements OnInit {
             this.toastr.success(this.addRes.msg)
             this.countryForm.reset();
             this.addForm = true;
-            window.location.reload()
+            this.ngOnInit()
           }
         }, err => {
           console.log(err.error);
         })
-     
+
     } else {
       this.countryForm.markAllAsTouched()
       console.log('forms invalid');

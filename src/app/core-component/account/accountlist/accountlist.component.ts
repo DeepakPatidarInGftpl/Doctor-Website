@@ -13,15 +13,15 @@ import { Account } from 'src/app/interfaces/account';
 })
 export class AccountlistComponent implements OnInit {
 
- 
+
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any | Account
 
- 
+
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
- 
+
   }
 
   delRes: any
@@ -70,9 +70,10 @@ export class AccountlistComponent implements OnInit {
       },
 
     };
-    this.tableData = this.QueryService.accountList;
-    // console.log(this.QueryService.accountList);
     this.coreService.getAccount()
+    this.coreService.accountBehavior.subscribe( () => {
+      this.tableData = JSON.parse(localStorage.getItem('accountList')!);
+    })
 
   }
 

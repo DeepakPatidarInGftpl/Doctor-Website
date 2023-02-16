@@ -91,9 +91,10 @@ export class AddcompanyComponent implements OnInit {
         if (res.msg == "Successfuly Added") {
           this.toastr.success(res.msg)
           this.companyForm.reset()
-          this.router.navigate(['//company/companylist']).then(() => {
-            window.location.reload()
-          })
+          this.router.navigate(['//company/companylist'])
+          // .then(() => {
+          //   window.location.reload()
+          // })
         }
       }, err => {
         console.log(err.error.gst);
@@ -136,7 +137,7 @@ export class AddcompanyComponent implements OnInit {
   }
   get address() {
     return this.companyForm.get('address')
-  } 
+  }
   get countryy() {
     return this.companyForm.get('country')
   }
