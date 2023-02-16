@@ -10,72 +10,129 @@
             <div class="col-lg-8 col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="bar-code-view">
+                        <!-- <div class="bar-code-view">
                             <img src="assets/img/barcode1.png" alt="barcode">
                             <a class="printimg">
                                 <img src="assets/img/icons/printer.svg" alt="print">
                             </a>
-                        </div>
+                        </div> -->
                         <div class="productdetails">
-                            <ul class="product-bar">
+                            <ul class="product-bar" *ngIf="productDetail">
                                 <li>
-                                    <h4>Product</h4>
-                                    <h6>Macbook pro	</h6>
+                                    <h4>Title</h4>
+                                    <h6>{{productDetail.title}}</h6>
                                 </li>
                                 <li>
                                     <h4>Category</h4>
-                                    <h6>Computers</h6>
+                                    <h6>{{productDetail.category}}</h6>
                                 </li>
                                 <li>
                                     <h4>Sub Category</h4>
-                                    <h6>None</h6>
+                                    <h6>{{productDetail.subcategory}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Sub Category Group</h4>
+                                    <h6>{{productDetail.subcategory_group}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Features Subcategory</h4>
+                                    <h6>{{productDetail.features_subcategory}}</h6>
                                 </li>
                                 <li>
                                     <h4>Brand</h4>
-                                    <h6>None</h6>
+                                    <h6>{{productDetail.brand}}</h6>
                                 </li>
                                 <li>
                                     <h4>Unit</h4>
-                                    <h6>Piece</h6>
+                                    <h6>{{productDetail.unit}}</h6>
                                 </li>
                                 <li>
-                                    <h4>SKU</h4>
-                                    <h6>PT0001</h6>
+                                    <h4>Unit Conversion</h4>
+                                    <h6>{{productDetail.unit_conversion}}</h6>
                                 </li>
                                 <li>
-                                    <h4>Minimum Qty</h4>
-                                    <h6>5</h6>
+                                    <h4>Product Store</h4>
+                                    <h6>{{productDetail.product_store}}</h6>
                                 </li>
                                 <li>
-                                    <h4>Quantity</h4>
-                                    <h6>50</h6>
+                                    <h4>Is Approved</h4>
+                                    <h6>{{productDetail.is_approved}}</h6>
                                 </li>
                                 <li>
-                                    <h4>Tax</h4>
-                                    <h6>0.00 %</h6>
+                                    <h4>Is Measurable</h4>
+                                    <h6>{{productDetail.is_measurable}}</h6>
                                 </li>
                                 <li>
-                                    <h4>Discount Type</h4>
-                                    <h6>Percentage</h6>
+                                    <h4>Is Active</h4>
+                                    <h6>{{productDetail.is_active}}</h6>
                                 </li>
                                 <li>
-                                    <h4>Price</h4>
-                                    <h6>1500.00</h6>
+                                    <h4>Color</h4>
+                                    <div class="second-list">
+                                        <ul *ngFor="let color of productDetail.color">
+                                            <li>
+                                                <h4>Title</h4>
+                                                <h6>{{color.title}}</h6>
+                                            </li>
+                                            <li>
+                                                <h4>Code</h4>
+                                                <h6>{{color.color_code}}</h6>
+                                            </li>
+                                            <li>
+                                                <h4>Is Active</h4>
+                                                <h6>{{color.is_active}}</h6>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </li>
                                 <li>
-                                    <h4>Status</h4>
-                                    <h6>Active</h6>
+                                    <h4>Size</h4>
+                                    <div class="second-list">
+                                        <ul *ngFor="let size of productDetail.size">
+                                            <li>
+                                                <h4>Title</h4>
+                                                <h6>{{size.title}}</h6>
+                                            </li>
+                                            <li>
+                                                <h4>Tode</h4>
+                                                <h6>{{size.code}}</h6>
+                                            </li>
+                                            <li>
+                                                <h4>Is Active</h4>
+                                                <h6>{{size.is_active}}</h6>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <h4>Variant</h4>
+                                    <div class="second-list">
+                                        <ul *ngFor="let variant of productDetail.variant">
+                                            <li>
+                                                <h4>SKU</h4>
+                                                <h6>{{variant.sku}}</h6>
+                                            </li>
+                                            <li>
+                                                <h4>Code</h4>
+                                                <h6>{{variant.minimum_stock_threshold}}</h6>
+                                            </li>
+                                            <li>
+                                                <h4>Is Active</h4>
+                                                <h6>{{variant.is_active}}</h6>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </li>
                                 <li>
                                     <h4>Description</h4>
-                                    <h6>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</h6>
+                                    <h6>{{productDetail.description}}</h6>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-sm-12">
+            <!-- <div class="col-lg-4 col-sm-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="slider-product-details">
@@ -94,7 +151,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <!-- /add -->

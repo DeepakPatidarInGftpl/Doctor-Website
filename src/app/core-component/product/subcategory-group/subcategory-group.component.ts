@@ -27,7 +27,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   constructor(private QueryService: QueryService, private coreServ: CoreService, private toastr: ToastrService) {
     this.QueryService.filterToggle()
   }
-  confirmText(index: any) {
+  confirmText(index: any, id) {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -42,6 +42,9 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
       },
     }).then((t) => {
       if (t.isConfirmed) {
+        this.coreServ.deleteSubCategGroup(id).subscribe( res => {
+          console.log(res)
+        })
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',

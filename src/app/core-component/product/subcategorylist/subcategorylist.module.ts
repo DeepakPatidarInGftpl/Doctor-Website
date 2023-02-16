@@ -5,7 +5,10 @@ import { SubcategorylistRoutingModule } from './subcategorylist-routing.module';
 import { SubcategorylistComponent } from './subcategorylist.component';
 import { DataTablesModule } from 'angular-datatables';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { FormsModule } from '@angular/forms';
+
+import { DatepickerModule } from 'ng2-datepicker';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -16,7 +19,9 @@ import { FormsModule } from '@angular/forms';
     SubcategorylistRoutingModule,
     DataTablesModule,
     FormsModule,
-    SweetAlert2Module.forRoot()
+    ReactiveFormsModule,
+    DatepickerModule,
+   
   ]
 })
 export class SubcategorylistModule { }

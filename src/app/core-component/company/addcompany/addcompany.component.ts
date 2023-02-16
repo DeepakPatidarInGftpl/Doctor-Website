@@ -83,6 +83,7 @@ export class AddcompanyComponent implements OnInit {
       console.log(this.state);
     })
   }
+  dateError = null
   submit() {
     console.log(this.companyForm.value);
     if (this.companyForm.valid) {
@@ -91,12 +92,20 @@ export class AddcompanyComponent implements OnInit {
         if (res.msg == "Successfuly Added") {
           this.toastr.success(res.msg)
           this.companyForm.reset()
-          this.router.navigate(['//company/companylist']).then(() => {
-            window.location.reload()
-          })
+          this.router.navigate(['//company/companylist'])
+          // .then(() => {
+          //   window.location.reload()
+          // })
         }
       }, err => {
         console.log(err.error.gst);
+ 
+        if (err.error.financial_year) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }
         // this.toastr.error(err.error.gst)
         // this.toastr.error(err.error.email)
         // this.toastr.error(err.error.state)
@@ -136,7 +145,7 @@ export class AddcompanyComponent implements OnInit {
   }
   get address() {
     return this.companyForm.get('address')
-  } 
+  }
   get countryy() {
     return this.companyForm.get('country')
   }

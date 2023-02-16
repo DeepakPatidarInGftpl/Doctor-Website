@@ -13,24 +13,32 @@ export class CompanyService {
   constructor(private http: HttpClient, private HttpService: HttpClientService) { }
   edit = new BehaviorSubject<any>('')
 
+  companyBehaviour = new BehaviorSubject(null)
+
   apiUrl = `${environment.api}`;
 
   editData(data: company) {
     this.edit.next(data);
     console.log(data);
-    
+
     localStorage.setItem('editCompany', JSON.stringify(data))
     // localStorage.setItem('editCompany', JSON.stringify([data]))
   }
 
-  getCompany(): Observable<company> {
+
+
+  getCompany() {
     let url = this.apiUrl + '/pv-api/company/';
     return this.http.get<company>(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
+    }).subscribe(res => {
+      localStorage.setItem('companyList', JSON.stringify(res));
+      this.companyBehaviour.next(null)
     })
   }
+
   getCompanyById(id: number):Observable<company>{
     let url = this.apiUrl + '/pv-api/company/?id=';
     return this.http.get<company>(`${url}${id}`, {
@@ -68,11 +76,19 @@ export class CompanyService {
 
   countryList() {
     let url = this.apiUrl + '/country/';
-    return this.HttpService.get(url, this.HttpService.headers)
+    return this.http.get(url,{
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
   }
   stateList() {
     let url = this.apiUrl + '/state/';
-    return this.HttpService.get(url, this.HttpService.headers)
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
   }
 
   deleteC(route: string, data:any) {
@@ -82,7 +98,7 @@ export class CompanyService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     };
-  
+
     return this.http.request('delete', `${this.apiUrl}${route}`, options)
-  } 
+  }
 }

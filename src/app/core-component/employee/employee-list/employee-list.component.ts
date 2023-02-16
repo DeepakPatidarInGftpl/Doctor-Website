@@ -18,10 +18,9 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
   initChecked: boolean = false
   public tableData: any | employee
 
- 
+
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
-    this.tableData = this.QueryService.employeeList;
   }
 
   delRes: any
@@ -42,8 +41,8 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
       if (t.isConfirmed) {
         this.coreService.deleteEmployee(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Company Deleted successfully") {
-            this.tableData
+          if (this.delRes.msg == "Employee Deleted successfully") {
+           this.ngOnInit()
           }
         })
         Swal.fire({
@@ -70,14 +69,19 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
       },
 
     };
-    let i = this.coreService.getEmploye();
-    console.log(i);
+     this.coreService.getEmploye();
+
+     this.coreService.employeeBehavior.subscribe( () => {
+     this.tableData = JSON.parse(localStorage.getItem('employeeList')!);
+     })
+
     console.log(this.coreService.data);
 
     // this.coreService.getEmployee().subscribe(res => {
     //   console.log(res);
     //   this.tableData = res
     // })
+
   }
 
 
@@ -88,8 +92,8 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
     // console.log('ngAfterViewChecked');
     // this.tableData=this.QueryService.employeeList
     // console.log(this.tableData);
-    
-    //search sorting filtering not wroking when direct getting variable data 
+
+    //search sorting filtering not wroking when direct getting variable data
   }
 
   selectAll(initChecked: boolean) {
@@ -106,7 +110,7 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
   deleteId(id: number) {
     this.coreService.deleteEmployee(id).subscribe(res => {
       this.delRes = res
-      if (this.delRes.msg == "Company Deleted successfully") {
+      if (this.delRes.msg == "Employee Deleted successfully") {
         // this.getcompanyList()
       }
 

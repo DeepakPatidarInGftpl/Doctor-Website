@@ -1,8 +1,8 @@
    
         <div class="page-header">
             <div class="page-title">
-                <h4> Add Company</h4>
-                <h6>Create new Company </h6>
+                <h4> Update Company</h4>
+                <!-- <h6>Create new Company </h6> -->
             </div>
         </div>
         <!-- /add -->
@@ -11,7 +11,7 @@
                 <form [formGroup]="companyForm" (ngSubmit)="submit()">
                     <div class="row">
                        
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label> Name*</label>
                                 <input type="text" formControlName="name" id="name"
@@ -21,7 +21,7 @@
                                 <span class="text-danger"*ngIf="name && name.invalid && name.touched">Enter your name </span>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label>Email*</label>
                                 <input type="text" formControlName="email"  id="email"
@@ -31,7 +31,7 @@
                                 <span class="text-danger"*ngIf="email && email.invalid && email.touched">Enter your email address in format abc@example.com</span>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label> Phone*</label>
                                 <input type="text" formControlName="phone" maxlength="10" minlength="10" id="phone"
@@ -41,7 +41,7 @@
                                 <span class="text-danger"*ngIf="phone && phone.invalid && phone.touched">Enter your 10 digits mobile phone number</span>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label> Currency*</label>
                                 <input type="text" formControlName="currency" id="currency"
@@ -51,7 +51,7 @@
                                 <span class="text-danger"*ngIf="currency && currency.invalid && currency.touched">Enter your currency</span>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label> gst*</label>
                                 <input type="text" formControlName="gst" id="gst"
@@ -61,17 +61,18 @@
                                 <span class="text-danger"*ngIf="gst && gst.invalid && gst.touched">Invalid GST Number</span>                                 
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label> Financial Year*</label>
                                 <input type="date" formControlName="financial_year" id="financial_year"
                                 [ngClass]="{
                                   'is-invalid': f['financial_year'].touched && f['financial_year'].invalid
                                 }" [(ngModel)]="data.financial_year">
+                                <span class="text-danger"*ngIf="dateError">{{dateError}}</span>    
                                 <span class="text-danger"*ngIf="financial_year && financial_year.invalid && financial_year.touched">Date (format:dd/mm/yyyy)</span>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label>Country*</label>
                                 <!-- <input type="text" formControlName="country"> -->
@@ -89,7 +90,7 @@
                             </div>
                         </div>
     
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label> State*</label>
                                 <!-- <input type="text" formControlName="state"> -->
@@ -115,7 +116,7 @@
                                 </div>
                         </div>
     
-                        <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label>Pincode*</label>
                                 <input type="text" formControlName="pincode" maxlength="6" minlength="6" id="pincode"
@@ -125,7 +126,7 @@
                                 <span class="text-danger"*ngIf="pincode && pincode.invalid && pincode.touched">Enter your 6 digits pincode number</span>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        <div class="col-lg-7 col-sm-7 col-12">
                             <div class="form-group">
                                 <label>Address*</label>
                                 <textarea class="form-control" formControlName="address" id="address"

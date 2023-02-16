@@ -5,7 +5,10 @@ import { BrandlistRoutingModule } from './brandlist-routing.module';
 import { BrandlistComponent } from './brandlist.component';
 import { DataTablesModule } from 'angular-datatables';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { FormsModule } from '@angular/forms';
+
+import { DatepickerModule } from 'ng2-datepicker';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -16,7 +19,9 @@ import { FormsModule } from '@angular/forms';
     BrandlistRoutingModule,
     DataTablesModule,
     FormsModule,
-    SweetAlert2Module.forRoot()
+    ReactiveFormsModule,
+    SweetAlert2Module.forRoot(),
+    DatepickerModule
   ]
 })
 export class BrandlistModule { }

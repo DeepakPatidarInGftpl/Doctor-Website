@@ -48,6 +48,10 @@ export class WarehouseListComponent implements OnInit, OnDestroy {
       if (t.isConfirmed) {
         this.coreService.deleteWarehouse(id).subscribe(res => {
           this.delRes = res
+          console.log(res);
+          // if (this.delRes.msg == "Warehouse Deleted successfully") {
+          //   this.tableData
+          // }
           if (this.delRes.msg == "Warehouse Deleted successfully") {
             this.tableData
           }

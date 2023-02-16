@@ -41,6 +41,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./editstate/editstate.module').then((m) => m.EditstateModule),
   },
+  {
+    path:'citylist',
+    loadChildren:()=>
+    import('./citylist/citylist.module').then((m)=>m.CitylistModule)
+  }
 ],
   },
 ];

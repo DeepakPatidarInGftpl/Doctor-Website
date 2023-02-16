@@ -5,7 +5,8 @@ import { StatelistRoutingModule } from './statelist-routing.module';
 import { StatelistComponent } from './statelist.component';
 import { DataTablesModule } from 'angular-datatables';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatepickerModule } from 'ng2-datepicker';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,9 @@ import { FormsModule } from '@angular/forms';
     StatelistRoutingModule,
     DataTablesModule,
     FormsModule,
-    SweetAlert2Module.forRoot()
+    SweetAlert2Module.forRoot(),
+    ReactiveFormsModule,
+    DatepickerModule
   ]
 })
 export class StatelistModule { }

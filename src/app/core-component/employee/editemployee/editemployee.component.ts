@@ -38,8 +38,8 @@ export class EditemployeeComponent implements OnInit {
       anniversary: new FormControl('', [Validators.required]),
       address: new FormControl('', [Validators.required]),
       pincode: new FormControl('', [Validators.required,Validators.maxLength(6), Validators.minLength(6),Validators.pattern(/^[0-9]*$/)]),
-      attendance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
-      employee_id: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      // attendance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      // employee_id: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
     })
@@ -65,6 +65,7 @@ export class EditemployeeComponent implements OnInit {
     })
   }
   addRes:any
+  dateError=null;
   submit() {
     console.log(this.employeeForm.value);
     if (this.employeeForm.valid) {
@@ -74,12 +75,24 @@ export class EditemployeeComponent implements OnInit {
         if (this.addRes.msg == "Employee updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
-          this.router.navigate(['//employee/employeelist']).then(() => {
-            window.location.reload()
-          })
+          this.router.navigate(['//employee/employeelist'])
+          // .then(() => {
+          //   window.location.reload()
+          // })
         }
       }, err => {
         console.log(err.error.gst);
+        if (err.error.dob) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }else if(err.error.anniversary){
+          this.dateError = 'Date (format:dd/mm/yyyy)' ;
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }
         // this.toastr.error(err.error.gst)
         // this.toastr.error(err.error.email)
         // this.toastr.error(err.error.state)
@@ -130,5 +143,5 @@ export class EditemployeeComponent implements OnInit {
   get statee() {
     return this.employeeForm.get('state')
   }
-  
+
 }

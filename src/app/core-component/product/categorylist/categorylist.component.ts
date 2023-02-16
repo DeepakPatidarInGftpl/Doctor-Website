@@ -22,7 +22,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   }
 
 
-  confirmText(index: any) {
+  confirmText(index: any, id) {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -37,6 +37,9 @@ export class CategorylistComponent implements OnInit, OnDestroy {
       },
     }).then((t) => {
       if (t.isConfirmed) {
+        this.coreServ.deleteProductCateg(id).subscribe( res => {
+          console.log(res);
+        })
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',
@@ -96,7 +99,6 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     }
   }
 
-  
   ngOnDestroy() {
     this.coreServ.editThisData(null)
 }

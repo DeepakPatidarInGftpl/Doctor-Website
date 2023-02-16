@@ -35,7 +35,7 @@ export class EditaccountComponent implements OnInit {
       mobile: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl('', [Validators.required, Validators.email]),
       pan: new FormControl('', [Validators.required, Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
-      gstin_uin: new FormControl('', [Validators.required]),
+      gstin_uin: new FormControl('', [Validators.required,Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       anniversary: new FormControl('', [Validators.required]),
       accounts_type: new FormControl('', [Validators.required]),
       opening_balance: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
@@ -82,6 +82,7 @@ export class EditaccountComponent implements OnInit {
   }
 
   addRes: any
+  dateError=null
   submit() {
     console.log(this.accountForm.value);
     if (this.accountForm.valid) {
@@ -91,14 +92,31 @@ export class EditaccountComponent implements OnInit {
         if (this.addRes.msg == "Account updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.accountForm.reset()
-          this.router.navigate(['//account/accountlist']).then(() => {
-            window.location.reload()
-          })
+          this.router.navigate(['//account/accountlist'])
+          // .then(() => {
+          //   window.location.reload()
+          // })
 
 
         }
       }, err => {
         console.log(err.error.gst);
+        if (err.error.anniversary) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }else if (err.error.birthday) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }else if (err.error.credit_days) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }
       })
     } else {
       this.accountForm.markAllAsTouched()

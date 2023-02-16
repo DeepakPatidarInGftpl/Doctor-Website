@@ -72,7 +72,7 @@ const routes: Routes = [
           import('./barcode/barcode.module').then((m) => m.BarcodeModule),
       },
       {
-        path: 'editproduct',
+        path: 'editproduct/:id',
         loadChildren: () =>
           import('./editproduct/editproduct.module').then(
             (m) => m.EditproductModule
@@ -98,12 +98,97 @@ const routes: Routes = [
           import('./editbrand/editbrand.module').then((m) => m.EditbrandModule),
       },
       {
-        path: 'product-details',
+        path: 'product-details/:id',
         loadChildren: () =>
           import('./product-details/product-details.module').then(
             (m) => m.ProductDetailsModule
           ),
       },
+      {
+        path: 'hsncode',
+        loadChildren: () =>
+          import('./hsncode/hsncode.module').then(
+            (m) => m.HsncodeModule
+          ),
+      },
+      {
+        path: 'units',
+        loadChildren: () =>
+          import('./unit/unit.module').then(
+            (m) => m.UnitModule
+          ),
+      },
+      {
+        path: 'unitconversion',
+        loadChildren: () =>
+          import('./unit-conversion/unit-conversion.module').then(
+            (m) => m.UnitConversionModule
+          ),
+      },
+      {
+        path: 'colors',
+        loadChildren: () =>
+          import('./colors/colors.module').then(
+            (m) => m.ColorsModule
+          ),
+      },
+      {
+        path: 'size',
+        loadChildren: () =>
+          import('./size/size.module').then(
+            (m) => m.SizeModule
+          ),
+      },
+      {
+        path: 'tax',
+        loadChildren: () =>
+          import('./tax/tax.module').then(
+            (m) => m.TaxModule
+          ),
+      },
+      {
+        path: 'feature',
+        loadChildren: () =>
+          import('./feature/feature.module').then(
+            (m) => m.FeatureModule
+          ),
+      },
+      {
+        path: 'feature_group',
+        loadChildren: () =>
+          import('./feature-group/feature-group.module').then(
+            (m) => m.FeatureGroupModule
+          ),
+      },
+      {
+        path: 'variant',
+        loadChildren: () =>
+          import('./variant/variant.module').then(
+            (m) => m.VariantModule
+          ),
+      },
+      {
+        path: 'country',
+        loadChildren: () =>
+          import('./country/country.module').then(
+            (m) => m.CountryModule
+          ),
+      },
+      {
+        path: 'state',
+        loadChildren: () =>
+          import('./state/state.module').then(
+            (m) => m.StateModule
+          ),
+      },
+      {
+        path: 'city',
+        loadChildren: () =>
+          import('./city/city.module').then(
+            (m) => m.CityModule
+          ),
+      },
+
     ],
   },
   {
@@ -111,10 +196,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./brandlist/brandlist.module').then((m) => m.BrandlistModule),
   },
+  { path: 'subcategory-details/:id', loadChildren: () => import('./subcategorydetails/subcategorydetails.module').then((m) => m.SubcategorydetailsModule) },
+  { path: 'hsncode-details/:id', loadChildren: () => import('./hsncodedetails/hsncodedetails.module').then((m) => m.HsncodedetailsModule) },
+
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ProductRoutingModule {}
+export class ProductRoutingModule { }
