@@ -23,13 +23,7 @@ export class HsncodeComponent implements OnInit {
   }
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle()
-    // this.tableData = this.QueryService.hsncodeList;
-    // console.log(this.tableData);
-    this.coreService.hsncodeBehavior.subscribe(() => {
-      if (localStorage.getItem('hsncodeList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("hsncodeList")!))
-      }
-    })
+  
   }
 
   delRes: any
@@ -85,8 +79,16 @@ export class HsncodeComponent implements OnInit {
 
     };
     this.coreService.getHSNcode();
+      // this.tableData = this.QueryService.hsncodeList;
+    // console.log(this.tableData);
+    this.coreService.hsncodeBehavior.subscribe(() => {
+      if (localStorage.getItem('hsncodeList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("hsncodeList")!))
+      }
+    })
     this.getSubcategory();
     this.getTax();
+
   }
 
   selectAll(initChecked: boolean) {

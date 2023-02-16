@@ -12,7 +12,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class AddemployeeComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private coreService: CoreService, private toastr: ToastrService, private router: Router, private companyService:CompanyService) { }
+  constructor(private fb: FormBuilder, private coreService: CoreService, private toastr: ToastrService, private router: Router, private companyService: CompanyService) { }
   employeeForm!: FormGroup;
 
   get f() {
@@ -24,13 +24,13 @@ export class AddemployeeComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       fathers_name: new FormControl('', [Validators.required]),
       dob: new FormControl('', [Validators.required]),
-      mobile: new FormControl('', [Validators.required,Validators.maxLength(10), Validators.minLength(10),Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl('', [Validators.required,Validators.email]),
+      mobile: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
+      email: new FormControl('', [Validators.required, Validators.email]),
       anniversary: new FormControl('', [Validators.required]),
       address: new FormControl('', [Validators.required]),
-      pincode: new FormControl('', [Validators.required,Validators.maxLength(6), Validators.minLength(6),Validators.pattern(/^[0-9]*$/)]),
-      attendance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
-      employee_id: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      pincode: new FormControl('', [Validators.required, Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      attendance: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      employee_id: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
     })
@@ -58,14 +58,14 @@ export class AddemployeeComponent implements OnInit {
       console.log(this.state);
     })
   }
-
-  addRes:any
+  dateError = null
+  addRes: any
   submit() {
     console.log(this.employeeForm.value);
     if (this.employeeForm.valid) {
       this.coreService.addEmployee(this.employeeForm.value).subscribe(res => {
         console.log(res);
-        this.addRes=res
+        this.addRes = res
         if (this.addRes.msg == "Successfuly Added") {
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
@@ -76,6 +76,17 @@ export class AddemployeeComponent implements OnInit {
         }
       }, err => {
         console.log(err.error.gst);
+        if (err.error.dob) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }else if(err.error.anniversary){
+          this.dateError = 'Date (format:dd/mm/yyyy)' ;
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }
         // this.toastr.error(err.error.gst)
         // this.toastr.error(err.error.email)
         // this.toastr.error(err.error.state)
@@ -95,7 +106,7 @@ export class AddemployeeComponent implements OnInit {
   get name() {
     return this.employeeForm.get('name')
   }
-  get fathers_name(){
+  get fathers_name() {
     return this.employeeForm.get('fathers_name')
   }
   get dob() {
@@ -104,13 +115,13 @@ export class AddemployeeComponent implements OnInit {
   get mobile() {
     return this.employeeForm.get('mobile');
   }
-  get anniversary(){
+  get anniversary() {
     return this.employeeForm.get('anniversary');
   }
-  get attendance(){
+  get attendance() {
     return this.employeeForm.get('attendance');
   }
-  get employee_id(){
+  get employee_id() {
     return this.employeeForm.get('employee_id')
   }
   get pincode() {

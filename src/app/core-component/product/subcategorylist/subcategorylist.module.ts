@@ -21,7 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     DatepickerModule,
-    SweetAlert2Module.forRoot()
+   
   ]
 })
 export class SubcategorylistModule { }

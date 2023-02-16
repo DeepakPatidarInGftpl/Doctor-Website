@@ -68,6 +68,7 @@
                                 [ngClass]="{
                                   'is-invalid': f['financial_year'].touched && f['financial_year'].invalid
                                 }" [(ngModel)]="data.financial_year">
+                                <span class="text-danger"*ngIf="dateError">{{dateError}}</span>    
                                 <span class="text-danger"*ngIf="financial_year && financial_year.invalid && financial_year.touched">Date (format:dd/mm/yyyy)</span>
                             </div>
                         </div>

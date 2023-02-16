@@ -73,6 +73,7 @@ export class AddaccountComponent implements OnInit {
   }
 
   addRes: any
+  dateError = null
   submit() {
     console.log(this.accountForm.value);
     if (this.accountForm.valid) {
@@ -89,6 +90,22 @@ export class AddaccountComponent implements OnInit {
         }
       }, err => {
         console.log(err.error.gst);
+        if (err.error.anniversary) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }else if (err.error.birthday) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }else if (err.error.credit_days) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }
       })
     } else {
       this.accountForm.markAllAsTouched()

@@ -44,12 +44,19 @@ export class HeaderComponent implements OnInit {
 
 
   logOut() {
-    this.authServ.logout().subscribe(res => {
-      console.log(res);
+    if(localStorage.getItem('token')){
+      this.authServ.logout().subscribe(res => {
+        console.log(res);
+        this.toastr.success('LogOut Successfull');
+        this.Router.navigate(['/auth/signin'])
+        this.authServ.doLogout()
+      })
+    } else{
+      localStorage.removeItem('token');
       this.toastr.success('LogOut Successfull');
       this.Router.navigate(['/auth/signin'])
-      this.authServ.doLogout()
-    })
+    }
+   
   }
 
   LoadScript(js: string) {
