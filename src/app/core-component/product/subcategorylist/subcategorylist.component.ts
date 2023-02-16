@@ -44,7 +44,7 @@ export class SubcategorylistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteProductSubcategory(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Warehouse Deleted successfully") {
+          if (this.delRes.msg ==  "Product Subcategory Deleted successfully") {
             this.ngOnInit()
           }
         })
@@ -106,7 +106,7 @@ export class SubcategorylistComponent implements OnInit {
   deleteId(id: number) {
     this.coreService.deleteUnits(id).subscribe(res => {
       this.delRes = res
-      if (this.delRes.msg == "Subactegory Deleted successfully") {
+      if (this.delRes.msg == "Product Subcategory Deleted successfully") {
         // this.getcompanyList()
       }
     })
@@ -275,7 +275,7 @@ export class SubcategorylistComponent implements OnInit {
         console.log(res);
         this.addRes = res
         this.loader = true
-        if (this.addRes.msg == "Account updated successfully") {
+        if (this.addRes.msg == "Product Subcategory updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.subcategoryForm.reset()
           this.addForm = true

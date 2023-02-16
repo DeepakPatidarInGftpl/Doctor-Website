@@ -46,7 +46,7 @@ export class ColorsComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Colour Deleted successfully") {
             this.tableData
-            window.location.reload()
+          this.ngOnInit();
           }
         })
         Swal.fire({

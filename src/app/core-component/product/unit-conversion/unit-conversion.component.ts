@@ -45,8 +45,7 @@ export class UnitConversionComponent implements OnInit {
         this.coreService.deleteUnitConversion(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Unit Conversion Deleted successfully") {
-            this.tableData
-            window.location.reload()
+           this.ngOnInit();
           }
         })
         Swal.fire({

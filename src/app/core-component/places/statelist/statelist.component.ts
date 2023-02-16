@@ -45,8 +45,7 @@ export class StatelistComponent implements OnInit {
         this.coreService.deletestate(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "State Deleted successfully") {
-            this.tableData
-            window.location.reload()
+          this.ngOnInit();
           }
         })
         Swal.fire({

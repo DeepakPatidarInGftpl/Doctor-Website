@@ -45,7 +45,7 @@ export class TaxComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Tax Deleted successfully") {
             this.tableData
-            window.location.reload()
+            this.ngOnInit();
           }
         })
         Swal.fire({

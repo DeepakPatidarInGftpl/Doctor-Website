@@ -48,10 +48,10 @@ export class HsncodeComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.deleteWarehouse(id).subscribe(res => {
+        this.coreService.deleteHSNcode(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "HSNCode Deleted successfully") {
-            this.tableData
+           this.ngOnInit()
           }
         })
         Swal.fire({

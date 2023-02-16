@@ -45,7 +45,7 @@ export class FeatureComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Feature Deleted successfully") {
             this.tableData
-            window.location.reload()
+            this.ngOnInit();
           }
         })
         Swal.fire({
@@ -103,7 +103,7 @@ export class FeatureComponent implements OnInit {
     this.coreService.deleteFuature_group(id).subscribe(res => {
       this.delRes = res
       if (this.delRes.msg == "Feature Deleted successfully") {
-        window.location.reload()
+        this.ngOnInit();
       }
 
     })

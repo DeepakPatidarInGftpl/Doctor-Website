@@ -46,7 +46,7 @@ export class FeatureGroupComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "FeatureGroup Deleted successfully") {
             this.tableData
-            window.location.reload()
+            this.ngOnInit();
           }
         })
         Swal.fire({

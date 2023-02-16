@@ -41,11 +41,10 @@ export class CountrieslistComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.deleteFeature(id).subscribe(res => {
+        this.coreService.deleteCountry(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Feature Deleted successfully") {
-            this.tableData
-            window.location.reload()
+          if (this.delRes.msg == "Country Deleted successfully") {
+            this.ngOnInit()
           }
         })
         Swal.fire({
@@ -97,7 +96,7 @@ export class CountrieslistComponent implements OnInit {
     this.coreService.deleteCountry(id).subscribe(res => {
       this.delRes = res
       if (this.delRes.msg == "Country Deleted successfully") {
-        window.location.reload()
+        this.ngOnInit()
       }
 
     })

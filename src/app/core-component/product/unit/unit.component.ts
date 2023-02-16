@@ -43,8 +43,8 @@ export class UnitComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteUnits(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Warehouse Deleted successfully") {
-            this.tableData
+          if (this.delRes.msg == "Unit Deleted successfully") {
+           this.ngOnInit()
           }
         })
         Swal.fire({

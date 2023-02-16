@@ -27,7 +27,6 @@ export class EditproductComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Aroute.snapshot.paramMap.get('id');
     console.log(this.id);
-
     this.productForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
@@ -43,35 +42,25 @@ export class EditproductComponent implements OnInit {
       size: new FormArray([], [Validators.required]),
       variant: new FormArray([], [Validators.required]),
     })
-
     this.coreService.getProductById(this.id).subscribe(res => {
       // this.productShow(res)
-  
-
-        if (this.id == res.id) {
-          console.log(res.color);
-          console.log(res.variant);
-
-          // this.colors = res.color
-          this.colors = res.color.map((res: any) => res.id);
-          // console.log(this.colors, 'thiscolors');
-
-          this.variants = res.variant.map((res: any) => res.id);
-          // console.log(this.variants, 'thisVariant');
-
-          this.sizes = res.size.map((res: any) => res.id)
-          // console.log(this.variants, 'thisSize');
-
-          this.productForm.patchValue({
-            title: res.title,
-            description: res.description,
-            product_store: res.product_store,
-          })
-
-        }
-
+      if (this.id == res.id) {
+        console.log(res.color);
+        console.log(res.variant);
+        // this.colors = res.color
+        this.colors = res.color.map((res: any) => res.id);
+        // console.log(this.colors, 'thiscolors');
+        this.variants = res.variant.map((res: any) => res.id);
+        // console.log(this.variants, 'thisVariant');
+        this.sizes = res.size.map((res: any) => res.id)
+        // console.log(this.variants, 'thisSize');
+        this.productForm.patchValue({
+          title: res.title,
+          description: res.description,
+          product_store: res.product_store,
+        })
+      }
     })
-
 
     this.getCategory()
     this.getSubCategory()
@@ -88,10 +77,8 @@ export class EditproductComponent implements OnInit {
   // this working
   arraySubCat: any = []
   onSelectionChange(subCat: any, isChecked: any) {
-
     this.arraySubCat.push(subCat.id)
     console.log(this.arraySubCat);
-
     if (isChecked.checked) {
       this.colors.push(subCat.id);
     } else {
@@ -152,17 +139,15 @@ export class EditproductComponent implements OnInit {
     this.coreService.getSize().subscribe(res => {
       console.log(res);
       this.sizeList = res
-     setTimeout(() => {
-      this.sizeList.map((map: any) => {
-        console.log(this.sizes.includes(map.id),'size');
-        
-        if(this.sizes.includes(map.id)){
-          const formArray = this.productForm.get('size') as FormArray;
-          formArray.push(new FormControl(map.id));
-        }
-      })
-     }, 2000);
-
+      setTimeout(() => {
+        this.sizeList.map((map: any) => {
+          console.log(this.sizes.includes(map.id), 'size');
+          if (this.sizes.includes(map.id)) {
+            const formArray = this.productForm.get('size') as FormArray;
+            formArray.push(new FormControl(map.id));
+          }
+        })
+      }, 2000);
     })
   }
   varantList: any
@@ -180,7 +165,6 @@ export class EditproductComponent implements OnInit {
           }
         })
       }, 2000);
-     
     })
   }
   unitList: any
@@ -341,6 +325,7 @@ export class EditproductComponent implements OnInit {
     return this.productForm.get('size')
   }
   get variant() {
-    return this.productForm.get('variant')
+    return this.productForm.get('variant');
   }
+
 }

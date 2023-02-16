@@ -68,11 +68,19 @@ export class CompanyService {
 
   countryList() {
     let url = this.apiUrl + '/country/';
-    return this.HttpService.get(url, this.HttpService.headers)
+    return this.http.get(url,{
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
   }
   stateList() {
     let url = this.apiUrl + '/state/';
-    return this.HttpService.get(url, this.HttpService.headers)
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
   }
 
   deleteC(route: string, data:any) {
