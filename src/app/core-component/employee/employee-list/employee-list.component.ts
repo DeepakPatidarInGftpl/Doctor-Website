@@ -18,7 +18,7 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
   initChecked: boolean = false
   public tableData: any | employee
 
- 
+
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
   }
@@ -69,8 +69,12 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
       },
 
     };
-    let i = this.coreService.getEmploye();
-    console.log(i);
+     this.coreService.getEmploye();
+
+     this.coreService.employeeBehavior.subscribe( () => {
+     this.tableData = JSON.parse(localStorage.getItem('employeeList')!);
+     })
+
     console.log(this.coreService.data);
 
     // this.coreService.getEmployee().subscribe(res => {
@@ -78,7 +82,6 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
     //   this.tableData = res
     // })
 
-    this.tableData = this.QueryService.employeeList;
   }
 
 
@@ -89,8 +92,8 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
     // console.log('ngAfterViewChecked');
     // this.tableData=this.QueryService.employeeList
     // console.log(this.tableData);
-    
-    //search sorting filtering not wroking when direct getting variable data 
+
+    //search sorting filtering not wroking when direct getting variable data
   }
 
   selectAll(initChecked: boolean) {

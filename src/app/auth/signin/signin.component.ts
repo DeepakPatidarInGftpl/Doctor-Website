@@ -44,6 +44,10 @@ export class SigninComponent implements OnInit {
     this.storage.Checkuser();
     this.password = 'password';
 
+    if(localStorage.getItem('token')) {
+      this.router.navigate(['/dashboard']);
+    }
+
 
   }
 
@@ -59,7 +63,7 @@ export class SigninComponent implements OnInit {
       console.log(res);
       this.loginRes = res;
       console.log(this.loginRes.token);
-      
+
       if (this.loginRes.token) {
         this.toastr.success('Login Successfull');
         this.router.navigate(['//dashboard']).then(()=>{
@@ -67,7 +71,7 @@ export class SigninComponent implements OnInit {
         })
         localStorage.setItem('token', this.loginRes.token)
         console.log(this.loginRes.token);
-        
+
       }
     }, err => {
       this.toastr.error(err.error.status);

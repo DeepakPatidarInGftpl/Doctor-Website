@@ -32,10 +32,10 @@ selectS:any
     this.getState();
     this.copmpanyService.getCompanyById(this.companyId).subscribe(res => {
       this.data = res
-    
-     
+
+
       // this.companyForm.patchValue(this.data)
-     
+
       // this.companyForm.get('state')?.setValue(this.data.state)
       // this.companyForm.controls['state'].setValue(this.data.state)
       // this.companyForm.patchValue({
@@ -43,7 +43,7 @@ selectS:any
       // })
       this.selectS=this.data.state
       console.log(this.state);
-      
+
     })
 
     this.companyForm = this.fb.group({
@@ -59,7 +59,7 @@ selectS:any
       country: new FormControl('', [Validators.required]),
 
     })
-   
+
   }
 
 
@@ -92,9 +92,10 @@ selectS:any
       if (res.msg == "Company updated successfully") {
         this.toastr.success(res.msg);
         this.companyForm.reset();
-        this.router.navigate(['//company/companylist']).then(()=>{
-          window.location.reload()
-        })
+        this.router.navigate(['//company/companylist'])
+        // .then(()=>{
+        //   window.location.reload()
+        // })
       }
     })
     } else{
@@ -104,7 +105,7 @@ selectS:any
 
   }
 
-  
+
   get name() {
     return this.companyForm.get('name')
   }
@@ -128,7 +129,7 @@ selectS:any
   }
   get address() {
     return this.companyForm.get('address')
-  } 
+  }
   get countryy() {
     return this.companyForm.get('country')
   }

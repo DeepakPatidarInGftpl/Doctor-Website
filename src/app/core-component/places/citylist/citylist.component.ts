@@ -78,7 +78,9 @@ export class CitylistComponent implements OnInit {
 
     };
     this.coreService.getcity();
-    this.tableData = this.QueryService.cityList;
+    this.coreService.cityBehavior.subscribe( () => {
+      this.tableData = JSON.parse(localStorage.getItem('cityList')!);
+    })
     console.log(this.tableData);
     this.getstate();
   }
@@ -148,7 +150,7 @@ export class CitylistComponent implements OnInit {
         }, err => {
           console.log(err.error.gst);
         })
-     
+
     } else {
       this.cityForm.markAllAsTouched()
       console.log('forms invalid');

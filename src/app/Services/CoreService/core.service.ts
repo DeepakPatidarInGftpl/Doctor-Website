@@ -9,9 +9,9 @@ import { Account } from 'src/app/interfaces/account';
   providedIn: 'root'
 })
 export class CoreService {
-  employeeBehavior=new BehaviorSubject(null);
-  accountBehavior=new BehaviorSubject(null);
-  companyBehavior=new BehaviorSubject(null);
+  employeeBehavior = new BehaviorSubject(null);
+  accountBehavior = new BehaviorSubject(null);
+  companyBehavior = new BehaviorSubject(null);
   subcategoryBehavior = new BehaviorSubject(null);
   brandBehavior = new BehaviorSubject(null);
   colorBehavior = new BehaviorSubject(null);
@@ -26,6 +26,23 @@ export class CoreService {
   cityBehavior = new BehaviorSubject(null);
   featureBehavior = new BehaviorSubject(null);
   featureGroupBehavior = new BehaviorSubject(null);
+  productListBehaviur = new BehaviorSubject(null);
+
+
+
+
+
+  editThings = new BehaviorSubject(null);
+
+
+  wareHouseSubject = new BehaviorSubject(null)
+
+  ProdCategBehaveSub = new BehaviorSubject(null)
+
+  subCategoriesGroup = new BehaviorSubject(null)
+
+
+
   constructor(private http: HttpClient) { }
   apiUrl = `${environment.api}`;
   public data: any
@@ -87,7 +104,7 @@ export class CoreService {
 
   countryList() {
     let url = this.apiUrl + '/country';
-    return this.http.get(url,{
+    return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
@@ -95,14 +112,14 @@ export class CoreService {
   }
   stateList() {
     let url = this.apiUrl + '/state/';
-    return this.http.get(url,{
+    return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
-  getCategory(){
-    let url =this.apiUrl+'/pv-api/product-category/';
+  getCategory() {
+    let url = this.apiUrl + '/pv-api/product-category/';
     return this.http.get<Account>(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
@@ -167,52 +184,6 @@ export class CoreService {
     })
   }
 
-  //warehouse section
-  getWarehouse() {
-    let url = this.apiUrl + '/pv-api/warehouse/';
-    return this.http.get(url, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    }).subscribe((res) => {
-      console.log(res);
-      localStorage.setItem('warehouseList', JSON.stringify(res));
-
-    })
-  }
-
-  getWareouseById(id: number): Observable<any> {
-    let url = this.apiUrl + '/pv-api/warehouse/?id='
-    return this.http.get<any>(`${url}${id}`, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
-  }
-  addWarehouse(data: Warehouse): Observable<Warehouse> {
-    let url = this.apiUrl + '/pv-api/warehouse/';
-    return this.http.post<Warehouse>(url, data, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
-  }
-  updateWarehouse(data: Warehouse, id: number): Observable<Warehouse> {
-    let url = this.apiUrl + '/pv-api/warehouse/?id=';
-    return this.http.put<Warehouse>(`${url}${id}`, data, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
-  }
-  deleteWarehouse(id: number) {
-    let url = this.apiUrl + '/pv-api/warehouse/?id=';
-    return this.http.delete(`${url}${id}`, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
-  }
 
   //HSNCODE section
   getHSNcode() {
@@ -261,7 +232,7 @@ export class CoreService {
     })
   }
 
-  //productSubcategory   
+  //productSubcategory
   getSubcategory(): Observable<any> {
     let url = this.apiUrl + '/pv-api/product_subcategroy/';
     return this.http.get<any>(url, {
@@ -1006,6 +977,7 @@ export class CoreService {
     }).subscribe((res) => {
       console.log(res);
       localStorage.setItem('productList', JSON.stringify(res));
+      this.productListBehaviur.next(null)
     })
   }
   getProductById(id: number): Observable<any> {
@@ -1040,4 +1012,170 @@ export class CoreService {
       })
     })
   }
+
+
+
+
+
+
+
+
+
+
+
+
+  deleteWarehouse(id: number) {
+    let url = this.apiUrl + '/pv-api/warehouse/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  addWarehouse(data): Observable<any> {
+    let url = this.apiUrl + '/pv-api/warehouse/';
+    return this.http.post<any>(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  updateWarehouse(data, id) {
+    let url = this.apiUrl + '/pv-api/warehouse/?id=';
+    return this.http.put(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+
+
+  getProductCategory() {
+    let url = this.apiUrl + '/pv-api/product-category/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe(res => {
+      localStorage.setItem('prodCategories', JSON.stringify(res))
+      this.ProdCategBehaveSub.next(null)
+    })
+  }
+
+  addCategory(data) {
+    let url = this.apiUrl + '/pv-api/product-category/';
+    return this.http.post(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  deleteProductCateg(id) {
+    let url = this.apiUrl + '/pv-api/product-category/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+
+
+  editThisData(data) {
+    this.editThings.next(data)
+  }
+
+  editHttp(data, id) {
+    let url = this.apiUrl + '/pv-api/product-category/?id=';
+    return this.http.put(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+
+
+  subCategory() {
+    let url = this.apiUrl + '/pv-api/product_subcategroy/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'Token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getFeatureGroup() {
+    let url = this.apiUrl + '/pv-api/fuature_group/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'Token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  // getCategory() {
+  //   let url = this.apiUrl + '/pv-api/product-category/';
+  //   return this.http.get(url, {
+  //     headers: new HttpHeaders({
+  //       'Authorization': 'Token ' + `${localStorage.getItem('token')}`
+  //     })
+  //   })
+  // }
+
+
+
+  subCategoryGroupGet() {
+    let url = this.apiUrl + '/pv-api/subcategory_group/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe(res => {
+      localStorage.setItem('subCategories', JSON.stringify(res))
+      this.subCategoriesGroup.next(null)
+    })
+  }
+
+  postCategoriesGroup(data) {
+    let url = this.apiUrl + '/pv-api/subcategory_group/';
+    return this.http.post(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'Token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  deleteSubCategGroup(id) {
+    let url = this.apiUrl + '/pv-api/subcategory_group/?id=';
+    return this.http.delete(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+
+  editSubCategoryGroup(data, id) {
+    let url = this.apiUrl + '/pv-api/subcategory_group/?id='
+    return this.http.put(`${url}${id}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+
+
+
+
+
+
+
+
+
 }

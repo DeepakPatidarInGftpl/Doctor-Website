@@ -10,9 +10,7 @@ import { CoreService } from '../Services/CoreService/core.service';
 })
 export class QueryService {
   constructor(private companyService: CompanyService, private coreService: CoreService, private http: HttpClient,) {
-    this.companyService.getCompany().subscribe(res => {
-      localStorage.setItem('companyList', JSON.stringify(res));
-    })
+
   }
   apiUrl = `${environment.api}`;
 
@@ -21,11 +19,51 @@ export class QueryService {
   // companylist accountList
   employee = new BehaviorSubject(JSON.parse(localStorage.getItem('employeeList')!));
   public employeeList: any = this.employee.value;
-  // accountList 
+  // accountList
   account = new BehaviorSubject(JSON.parse(localStorage.getItem('accountList')!));
   public accountList: any = this.account.value;
-  // warehouseList 
-  warehouse = new BehaviorSubject(JSON.parse(localStorage.getItem('warehouseList')!));
+
+
+
+
+
+
+
+  warehouse = new BehaviorSubject(null);
+  // public warehouseList: any = this.warehouse.value;
+
+
+  getWarehouse() {
+    let url = this.apiUrl + '/pv-api/warehouse/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+      .subscribe((res) => {
+        localStorage.removeItem('warehouseList')
+        localStorage.setItem('warehouseList', JSON.stringify(res));
+        // this.warehouse.next(JSON.parse(localStorage.getItem('warehouseList')!))
+        console.log(res);
+        this.warehouse.next(res)
+      })
+
+  }
+
+
+
+
+
+
+
+
+  productCategories = new BehaviorSubject(JSON.parse(localStorage.getItem('prodCategories')))
+
+  subCategoriesGroup = new BehaviorSubject(JSON.parse(localStorage.getItem('subCategories')))
+
+
+  // accountList
+  // warehouseList
   public warehouseList: any = this.warehouse.value;
   // HSNcodeList
   hsncode = new BehaviorSubject(JSON.parse(localStorage.getItem('hsncodeList')!));
@@ -54,7 +92,7 @@ export class QueryService {
   //fuature_groupList
   fuature_group = new BehaviorSubject(JSON.parse(localStorage.getItem('fuature_groupList')!));
   public fuature_groupList: any = this.fuature_group.value;
-  // featureList 
+  // featureList
   fuature = new BehaviorSubject(JSON.parse(localStorage.getItem('featureList')!));
   public fuatureList: any = this.fuature.value;
   //variantList
@@ -90,7 +128,7 @@ export class QueryService {
   //  this.http.get(url, {
   //     headers: new HttpHeaders({
   //       'Authorization': 'token ' + `${localStorage.getItem('token')}`
-  //     })   
+  //     })
   //   }).subscribe((res)=>{
   //     // this.employeeList=res
   //     // console.log(this.employeeList);

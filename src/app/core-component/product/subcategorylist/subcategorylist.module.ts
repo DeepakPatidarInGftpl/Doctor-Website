@@ -10,7 +10,6 @@ import { DatepickerModule } from 'ng2-datepicker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
-
 @NgModule({
   declarations: [
     SubcategorylistComponent
@@ -20,7 +19,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SubcategorylistRoutingModule,
     DataTablesModule,
     FormsModule,
-    SweetAlert2Module.forRoot(),
     ReactiveFormsModule,
     DatepickerModule,
    

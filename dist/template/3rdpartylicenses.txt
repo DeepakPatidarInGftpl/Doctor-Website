@@ -210,9 +210,6 @@ terms above.
 ng-apexcharts
 MIT
 
-ng-multiselect-dropdown
-MIT
-
 ng2-charts
 ISC
 

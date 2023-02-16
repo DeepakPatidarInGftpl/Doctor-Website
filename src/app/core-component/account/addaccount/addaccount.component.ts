@@ -82,9 +82,10 @@ export class AddaccountComponent implements OnInit {
         if (this.addRes.msg == "Successfuly Added") {
           this.toastr.success(this.addRes.msg)
           this.accountForm.reset()
-          this.router.navigate(['//account/accountlist']).then(() => {
-            window.location.reload()
-          })
+          this.router.navigate(['//account/accountlist'])
+          // .then(() => {
+          //   window.location.reload()
+          // })
         }
       }, err => {
         console.log(err.error.gst);
