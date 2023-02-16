@@ -46,30 +46,30 @@ export class EditproductComponent implements OnInit {
 
     this.coreService.getProductById(this.id).subscribe(res => {
       // this.productShow(res)
-      res.map((data: any) => {
+  
 
-        if (this.id == data.id) {
-          console.log(data.color);
-          console.log(data.variant);
+        if (this.id == res.id) {
+          console.log(res.color);
+          console.log(res.variant);
 
-          // this.colors = data.color
-          this.colors = data.color.map((res: any) => res.id);
+          // this.colors = res.color
+          this.colors = res.color.map((res: any) => res.id);
           // console.log(this.colors, 'thiscolors');
 
-          this.variants = data.variant.map((res: any) => res.id);
+          this.variants = res.variant.map((res: any) => res.id);
           // console.log(this.variants, 'thisVariant');
 
-          this.sizes = data.size.map((res: any) => res.id)
+          this.sizes = res.size.map((res: any) => res.id)
           // console.log(this.variants, 'thisSize');
 
           this.productForm.patchValue({
-            title: data.title,
-            description: data.description,
-            product_store: data.product_store,
+            title: res.title,
+            description: res.description,
+            product_store: res.product_store,
           })
 
         }
-      })
+
     })
 
 
@@ -144,7 +144,7 @@ export class EditproductComponent implements OnInit {
             formArray.push(new FormControl(map.id));
           }
         })
-      }, 3000);
+      }, 2000);
     })
   }
   sizeList: any
@@ -161,7 +161,7 @@ export class EditproductComponent implements OnInit {
           formArray.push(new FormControl(map.id));
         }
       })
-     }, 3000);
+     }, 2000);
 
     })
   }
@@ -179,7 +179,7 @@ export class EditproductComponent implements OnInit {
             formArray.push(new FormControl(map.id));
           }
         })
-      }, 3000);
+      }, 2000);
      
     })
   }

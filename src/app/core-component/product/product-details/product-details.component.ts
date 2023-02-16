@@ -35,13 +35,13 @@ export class ProductDetailsComponent implements OnInit {
   productDetail: any
   getdata() {
     this.coreService.getProductById(this.id).subscribe(res => {
-      res.map((data:any)=>{
-        if(this.id==data.id){
-          this.productDetail = data
-          console.log(data);
+  
+        if(this.id==res.id){
+          this.productDetail = res
+          console.log(res);
           
         }
-      })
+  
     })
   }
 }

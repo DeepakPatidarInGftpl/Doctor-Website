@@ -331,7 +331,6 @@ export class HsncodeComponent implements OnInit {
         });
       }
     })
-
   }
 
   openaddForm() {
