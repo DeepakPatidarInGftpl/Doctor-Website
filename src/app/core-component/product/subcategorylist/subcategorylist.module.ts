@@ -9,7 +9,6 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { DatepickerModule } from 'ng2-datepicker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 
 @NgModule({
@@ -24,7 +23,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
     SweetAlert2Module.forRoot(),
     ReactiveFormsModule,
     DatepickerModule,
-    NgMultiSelectDropDownModule.forRoot()
+   
   ]
 })
 export class SubcategorylistModule { }
