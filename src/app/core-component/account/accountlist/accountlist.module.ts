@@ -1,0 +1,25 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { AccountlistRoutingModule } from './accountlist-routing.module';
+import { AccountlistComponent } from './accountlist.component';
+import { DataTablesModule } from 'angular-datatables';
+import { FormsModule } from '@angular/forms';
+import { DatepickerModule } from 'ng2-datepicker';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+
+
+@NgModule({
+  declarations: [
+    AccountlistComponent
+  ],
+  imports: [
+    CommonModule,
+    AccountlistRoutingModule,
+    DataTablesModule,
+    FormsModule,
+    DatepickerModule,
+    SweetAlert2Module.forRoot(),
+  ]
+})
+export class AccountlistModule { }

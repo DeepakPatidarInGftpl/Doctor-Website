@@ -1,0 +1,228 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4> Add Account</h4>
+        <h6>Create new Account </h6>
+    </div>
+</div>
+<!-- /add -->
+<div class="card">
+    <div class="card-body">
+        <form [formGroup]="accountForm" (ngSubmit)="submit()">
+        <div class="row">
+           
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label> Name*</label>
+                    <input type="text" formControlName="contact_person_name" id="contact_person_name"
+                    [ngClass]="{
+                      'is-invalid': f['contact_person_name'].touched && f['contact_person_name'].invalid
+                    }">
+                    <span class="text-danger"*ngIf="contact_person_name && contact_person_name.invalid && contact_person_name.touched">Enter your Name </span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Title*</label>
+                    <input type="text" formControlName="title" id="title"
+                    [ngClass]="{
+                      'is-invalid': f['title'].touched && f['title'].invalid
+                    }">
+                    <span class="text-danger"*ngIf="title && title.invalid && title.touched">Enter Title name </span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Date of Birth*</label>
+                    <input type="date" formControlName="birthday" id="birthday"
+                    [ngClass]="{
+                      'is-invalid': f['birthday'].touched && f['birthday'].invalid
+                    }">
+                    <span class="text-danger"*ngIf="birthday && birthday.invalid && birthday.touched">Date (format:dd/mm/yyyy)</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Email*</label>
+                    <input type="text" formControlName="email"  id="email"
+                    [ngClass]="{
+                      'is-invalid': f['email'].touched && f['email'].invalid
+                    }">
+                    <span class="text-danger"*ngIf="email && email.invalid && email.touched">Enter your email address in format abc@example.com</span>
+                </div>
+           </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label> Phone*</label>
+                    <input type="text" formControlName="mobile" maxlength="10" minlength="10" id="mobile"
+                    [ngClass]="{
+                      'is-invalid': f['mobile'].touched && f['mobile'].invalid
+                    }">
+                    <span class="text-danger"*ngIf="mobile && mobile.invalid && mobile.touched">Enter your 10 digits mobile phone number</span>
+           
+                </div>
+            </div>
+        
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Pancard*</label>
+                    <input type="text" formControlName="pan" id="pan"
+                    [ngClass]="{
+                      'is-invalid': f['pan'].touched && f['pan'].invalid
+                    }">
+                    <span class="text-danger"*ngIf="pan && pan.invalid && pan.touched">Enter your Pancard Number</span>            
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Gstin Number*</label>
+                    <input type="text" formControlName="gstin_uin" id="gstin_uin"
+                    [ngClass]="{
+                      'is-invalid': f['gstin_uin'].touched && f['gstin_uin'].invalid
+                    }">
+                    <span class="text-danger"*ngIf="gstin_uin && gstin_uin.invalid && gstin_uin.touched">Enter your gst number</span>            
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Anniversary*</label>
+                    <input type="date" formControlName="anniversary" id="anniversary"
+                    [ngClass]="{
+                      'is-invalid': f['anniversary'].touched && f['anniversary'].invalid
+                    }">
+                    <span class="text-danger"*ngIf="anniversary && anniversary.invalid && anniversary.touched">Date (format:dd/mm/yyyy)</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Opening Balance*</label>
+                    <input type="text" formControlName="opening_balance" id="opening_balance"
+                    [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
+                    <span class="text-danger"*ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">Enter your Opening Balance</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Opening Balance Type*</label>
+               
+                    <select formControlName="opening_balance_type" class="w-100 h-100 border" required id="opening_balance_type"
+                    [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">
+                      <option value="" selected disabled>Balance type</option>
+                      <option value="Cr">Cr</option>
+                      <option value="Dr">Dr</option>                     
+                    </select>
+                    <span class="text-danger"*ngIf="opening_balance_type && opening_balance_type.invalid && opening_balance_type.touched">Select Opening Balance Type</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Type of customer*</label>
+                    <select formControlName="type_of_customer" class="w-100 h-100 border" required id="type_of_customer"
+                    [ngClass]="{'is-invalid': f['type_of_customer'].touched && f['type_of_customer'].invalid}">
+                      <option value="" selected disabled>Balance type</option>
+                      <option value="Registered">Registered</option>                     
+                    </select>
+                    <span class="text-danger"*ngIf="type_of_customer && type_of_customer.invalid && type_of_customer.touched">Select Type of Customer</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Type of Account*</label>
+                    <!-- <input type="text" formControlName="accounts_type"  id="accounts_type"
+                    [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}"> -->
+
+                    <select formControlName="accounts_type" class="w-100 h-100 border" required id="accounts_type"
+                    [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}">
+                      <option value="" selected disabled>Accounts type</option>
+                      <option value="Cash">Cash</option>
+                      <option value="Bank">Bank</option>
+                      <option value="Employee">Employee</option>
+                      <option value="Customer">Customer</option>
+                      <option value="Sale">Sale</option>
+                      <option value="Purchase">Purchase</option>
+                      <option value="Stock">Stock</option>
+                      <option value="Dealer">Dealer</option>
+                      <option value="Supplier">Supplier</option>
+                      <option value="Tax">Tax</option>
+                      <option value="Expense">Expense</option>
+                      <option value="Capital">Capital</option>
+                      <option value="Current Asset">Current Asset</option>
+                      <option value="Current Liabilities">Current Liabilities</option>
+                      <option value="Fixed Assets">Fixed Assets</option>
+                    </select>
+
+                    <span class="text-danger"*ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select Type of Account</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Credit Days*</label>
+                    <input type="date" formControlName="credit_days" id="credit_days"
+                    [ngClass]="{'is-invalid': f['credit_days'].touched && f['credit_days'].invalid}">
+                    <span class="text-danger"*ngIf="credit_days && credit_days.invalid && credit_days.touched">Enter credit days</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Credit Amount*</label>
+                    <input type="text" formControlName="credit_amount" id="credit_amount"
+                    [ngClass]="{'is-invalid': f['credit_amount'].touched && f['credit_amount'].invalid}">
+                    <span class="text-danger"*ngIf="credit_amount && credit_amount.invalid && credit_amount.touched">Enter credit amount</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label>Country*</label>
+                    <!-- <input type="text" formControlName="country"> -->
+                    <select formControlName="country" class="w-100 h-100 border" required 
+                    #countryValue (change)="selectState(countryValue.value)" id="country"
+                    [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid
+                    }">
+                  <option value="" selected disabled>Country</option>
+                  <option value="{{country.id}}" *ngFor="let country of country">{{country.country_name}}         
+                  </option>
+                </select>
+               
+                <span class="text-danger"*ngIf="countryy && countryy.invalid && countryy.touched">Select country</span>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <label> State*</label>
+                    <!-- <input type="text" formControlName="state"> -->
+                    
+                    <!-- <select formControlName="state" class="w-100 h-100 border" required >
+                        <option value="" selected disabled>State</option>
+                        <option value="{{state.id}}" *ngFor="let state of state"  [style]="state.country==countryValue.value?state.state:'display:none'">{{state.state}}</option>
+                      </select> -->
+                      <select formControlName="state" class="w-100 h-100 border" required id="state"
+                      [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}">
+                        <option value="" selected disabled>State</option>
+                        <option value="{{state.id}}" *ngFor="let state of state">{{state.state}}</option>
+                      </select>
+                      <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched">Select state</span> 
+                </div>
+            </div>
+
+
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label>Address*</label>
+                    <textarea class="form-control" formControlName="address" id="address"
+                    [ngClass]="{
+                      'is-invalid': f['address'].touched && f['address'].invalid
+                    }"></textarea>
+                    <span class="text-danger"*ngIf="address && address.invalid && address.touched">Enter your address</span>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <button class="btn btn-submit me-2">Submit</button>
+                <a routerLink="//account/accountlist" class="btn btn-cancel">Cancel</a>
+            </div>
+      
+      </div>
+    </form>
+    </div>
+</div>
+<!-- /add -->
