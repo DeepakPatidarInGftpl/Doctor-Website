@@ -97,7 +97,8 @@ export class CountrieslistComponent implements OnInit {
     this.coreService.deleteCountry(id).subscribe(res => {
       this.delRes = res
       if (this.delRes.msg == "Country Deleted successfully") {
-        window.location.reload()
+        // window.location.reload()
+        this.ngOnInit()
       }
 
     })

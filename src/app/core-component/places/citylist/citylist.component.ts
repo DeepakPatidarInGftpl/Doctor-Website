@@ -46,7 +46,8 @@ export class CitylistComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "City Deleted successfully") {
             this.tableData
-            window.location.reload()
+            // window.location.reload()
+            this.ngOnInit()
           }
         })
         Swal.fire({
