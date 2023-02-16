@@ -52,11 +52,24 @@
                   <a routerLink="/product/subaddcategory">Add Sub Category</a>
                 </li>
                 <li><a routerLink="/product/brandlist">Brand List</a></li>
-                <li><a routerLink="/product/addbrand">Add Brand</a></li>
+                <!-- <li><a routerLink="/product/addbrand">Add Brand</a></li> -->
+                <li><a routerLink="/product/colors">Colors</a></li>
+                <li><a routerLink="/product/size">Sizes</a></li>
+                <li><a routerLink="/product/tax">Tax</a></li>
+                <li><a routerLink="/product/feature_group">Feature Group</a></li>
+                <li><a routerLink="/product/feature">Feature </a></li>
+                <li><a routerLink="product/hsncode">HSN Code</a></li>
+                <li><a routerLink="product/units">Units</a></li>
+                <li><a routerLink="product/unitconversion">Unit Conversion</a></li>
+                <li><a routerLink="/product/variant">Variant </a></li>
+                <!-- <li><a routerLink="/product/subcategory-group">Subcategory Group </a></li> -->
                 <li>
                   <a routerLink="/product/importproduct">Import Products</a>
                 </li>
                 <li><a routerLink="/product/barcode">Print Barcode</a></li>
+                <!-- <li><a routerLink="/product/country">Country</a></li>
+                <li><a routerLink="/product/state">State</a></li>
+                <li><a routerLink="/product/city">City</a></li> -->
               </ul>
             </li>
             <li class="submenu">
@@ -129,6 +142,7 @@
               
               </ul>
             </li>
+        
             <li class="submenu">
               <a
                 (click)="showSubMenu('Sales')"
@@ -331,12 +345,13 @@
                   hide: opendSubMenu[1] != 'Places'
                 }"
               >
-                <li><a routerLink="/places/newcountry">New Country</a></li>
+                <!-- <li><a routerLink="/places/newcountry">New Country</a></li> -->
                 <li>
                   <a routerLink="/places/countrieslist">Countries list</a>
                 </li>
-                <li><a routerLink="/places/newstate">New State </a></li>
+                <!-- <li><a routerLink="/places/newstate">New State </a></li> -->
                 <li><a routerLink="/places/statelist">State list</a></li>
+                <li><a routerLink="/places/citylist">City list</a></li>
               </ul>
             </li>
           </ul>
@@ -672,9 +687,9 @@
               <li>
                 <a routerLink="/product/subcategorylist">Sub Category List</a>
               </li>
-              <li>
+              <!-- <li>
                 <a routerLink="/product/subaddcategory">Add Sub Category</a>
-              </li>
+              </li> -->
               <li><a routerLink="/product/brandlist">Brand List</a></li>
               <li><a routerLink="/product/addbrand">Add Brand</a></li>
               <li>

@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { PlacesRoutingModule } from './places-routing.module';
 import { PlacesComponent } from './places.component';
 
-
 @NgModule({
   declarations: [
-    PlacesComponent
+    PlacesComponent,
+    
   ],
   imports: [
     CommonModule,

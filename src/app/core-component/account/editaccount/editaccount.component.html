@@ -10,7 +10,7 @@
         <form [formGroup]="accountForm" (ngSubmit)="submit()">
             <div class="row">
 
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label> Name*</label>
                         <input type="text" formControlName="contact_person_name" id="contact_person_name" [ngClass]="{
@@ -21,7 +21,7 @@
                             your Name </span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Title*</label>
                         <input type="text" formControlName="title" id="title" [ngClass]="{
@@ -31,7 +31,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Date of Birth*</label>
                         <input type="date" formControlName="birthday" id="birthday" [ngClass]="{
@@ -41,7 +41,7 @@
                             (format:dd/mm/yyyy)</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Email*</label>
                         <input type="text" formControlName="email" id="email" [ngClass]="{
@@ -51,7 +51,7 @@
                             address in format abc@example.com</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label> Phone*</label>
                         <input type="text" formControlName="mobile" maxlength="10" minlength="10" id="mobile" [ngClass]="{
@@ -63,27 +63,25 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Pancard*</label>
                         <input type="text" formControlName="pan" id="pan" [ngClass]="{
                       'is-invalid': f['pan'].touched && f['pan'].invalid
                     }">
-                        <span class="text-danger" *ngIf="pan && pan.invalid && pan.touched">Enter your Pancard
-                            Number</span>
+                        <span class="text-danger" *ngIf="pan && pan.invalid && pan.touched">Invalid Pancard Number</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Gstin Number*</label>
                         <input type="text" formControlName="gstin_uin" id="gstin_uin" [ngClass]="{
                       'is-invalid': f['gstin_uin'].touched && f['gstin_uin'].invalid
                     }">
-                        <span class="text-danger" *ngIf="gstin_uin && gstin_uin.invalid && gstin_uin.touched">Enter your
-                            gst number</span>
+                        <span class="text-danger" *ngIf="gstin_uin && gstin_uin.invalid && gstin_uin.touched">Invalid GST Number</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Anniversary*</label>
                         <input type="date" formControlName="anniversary" id="anniversary" [ngClass]="{
@@ -93,7 +91,7 @@
                             (format:dd/mm/yyyy)</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Opening Balance*</label>
                         <input type="text" formControlName="opening_balance" id="opening_balance"
@@ -103,7 +101,7 @@
                             Opening Balance</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Opening Balance Type*</label>
 
@@ -119,7 +117,7 @@
                             Opening Balance Type</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Type of customer*</label>
                         <select formControlName="type_of_customer" class="w-100 h-100 border" required
@@ -133,7 +131,7 @@
                             of Customer</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Type of Account*</label>
                         <!-- <input type="text" formControlName="accounts_type"  id="accounts_type"
@@ -164,7 +162,7 @@
                             Account</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Credit Days*</label>
                         <input type="date" formControlName="credit_days" id="credit_days"
@@ -173,7 +171,7 @@
                             *ngIf="credit_days && credit_days.invalid && credit_days.touched">Enter credit days</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Credit Amount*</label>
                         <input type="text" formControlName="credit_amount" id="credit_amount"
@@ -183,7 +181,7 @@
                             amount</span>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Country*</label>
                         <!-- <input type="text" formControlName="country"> -->
@@ -200,7 +198,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-sm-4 col-12">
+                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label> State*</label>
                         <!-- <input type="text" formControlName="state"> -->

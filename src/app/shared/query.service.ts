@@ -10,10 +10,7 @@ import { CoreService } from '../Services/CoreService/core.service';
 })
 export class QueryService {
   constructor(private companyService: CompanyService, private coreService: CoreService, private http: HttpClient,) {
-    this.companyService.getCompany().subscribe(res => {
-      localStorage.setItem('companyList', JSON.stringify(res));
-    })
-    this.getWarehouse()
+
   }
   apiUrl = `${environment.api}`;
 
@@ -65,6 +62,57 @@ export class QueryService {
   subCategoriesGroup = new BehaviorSubject(JSON.parse(localStorage.getItem('subCategories')))
 
 
+  // accountList
+  // warehouseList
+  public warehouseList: any = this.warehouse.value;
+  // HSNcodeList
+  hsncode = new BehaviorSubject(JSON.parse(localStorage.getItem('hsncodeList')!));
+  public hsncodeList: any = this.hsncode.value;
+  //unitList
+  unit = new BehaviorSubject(JSON.parse(localStorage.getItem('unitList')!));
+  public unitList: any = this.unit.value;
+  // unit conversion
+  unitconservation = new BehaviorSubject(JSON.parse(localStorage.getItem('unitconservationList')!));
+  public unitconservationList: any = this.unitconservation.value;
+  //productsubcategroyList
+  productsubcategory = new BehaviorSubject(JSON.parse(localStorage.getItem('productsubcategroyList')!));
+  public productsubcategoryList: any = this.productsubcategory.value;
+  //brandsList
+  brands = new BehaviorSubject(JSON.parse(localStorage.getItem('brandsList')!));
+  public brandsList: any = this.brands.value;
+  //colorsList
+  colors = new BehaviorSubject(JSON.parse(localStorage.getItem('colorsList')!));
+  public colorsList: any = this.colors.value;
+  //sizeList
+  size = new BehaviorSubject(JSON.parse(localStorage.getItem('sizesList')!));
+  public sizeList: any = this.size.value;
+  //sizeList
+  tax = new BehaviorSubject(JSON.parse(localStorage.getItem('taxList')!));
+  public taxList: any = this.tax.value;
+  //fuature_groupList
+  fuature_group = new BehaviorSubject(JSON.parse(localStorage.getItem('fuature_groupList')!));
+  public fuature_groupList: any = this.fuature_group.value;
+  // featureList
+  fuature = new BehaviorSubject(JSON.parse(localStorage.getItem('featureList')!));
+  public fuatureList: any = this.fuature.value;
+  //variantList
+  variant = new BehaviorSubject(JSON.parse(localStorage.getItem('variantList')!));
+  public variantList: any = this.variant.value;
+  //subcategorygroupList
+  subcategorygroup = new BehaviorSubject(JSON.parse(localStorage.getItem('subcategorygroupList')!));
+  public subcategorygroupList: any = this.subcategorygroup.value;
+  //cityList
+  city = new BehaviorSubject(JSON.parse(localStorage.getItem('cityList')!));
+  public cityList: any = this.city.value;
+  //stateList
+  state = new BehaviorSubject(JSON.parse(localStorage.getItem('stateList')!));
+  public stateList: any = this.state.value;
+  //countryList
+  country = new BehaviorSubject(JSON.parse(localStorage.getItem('countryList')!));
+  public countryList: any = this.country.value;
+  // productList
+  product = new BehaviorSubject(JSON.parse(localStorage.getItem('productList')!));
+  public productList: any = this.product.value;
   filterToggle(): void {
     // $(document).on('click', '#filter_search', function() {
     //   $('#filter_search').toggleClass("setclose");
@@ -87,88 +135,88 @@ export class QueryService {
   //   })
   // }
 
-  public countryList = [
-    {
-      CountryName: 'China',
-      Region: 'Beijing',
-      isSelected: false,
-      isStatus: false,
-    },
-    {
-      CountryName: 'USA',
-      Region: 'Newyork',
-      isSelected: false,
-      isStatus: false,
-    },
-    {
-      CountryName: 'Athens',
-      Region: 'Greece',
-      isSelected: false,
-      isStatus: false,
-    },
-    {
-      CountryName: 'Thailand',
-      Region: 'Bangkok',
-      isSelected: false,
-      isStatus: false,
-    },
-    {
-      CountryName: 'Phuket island	',
-      Region: 'Mueang Phuket',
-      isSelected: false,
-      isStatus: false,
-    },
-    {
-      CountryName: 'Germany',
-      Region: 'Berlin',
-      isSelected: false,
-      isStatus: false,
-    },
-    {
-      CountryName: 'Angola',
-      Region: 'Luanda',
-      isSelected: false,
-      isStatus: false,
-    },
-    {
-      CountryName: 'Albania',
-      Region: 'Albania',
-      isSelected: false,
-      isStatus: false,
-    },
-    {
-      CountryName: 'Turkey',
-      Region: 'Ankara',
-      isSelected: false,
-      isStatus: false,
-    },
-    {
-      CountryName: 'Phuket island',
-      Region: 'Mueang Phuket',
-      isSelected: false,
-      isStatus: false,
-    },
-    {
-      CountryName: 'Germany',
-      Region: 'Berlin',
-      isSelected: false,
-    },
-    {
-      CountryName: 'Angola',
-      Region: 'Luanda',
-      isSelected: false,
-    },
-    {
-      CountryName: 'Albania',
-      Region: 'Albania',
-      isSelected: false,
-    },
-    {
-      CountryName: 'Turkey',
-      Region: 'Ankara',
-      isSelected: false,
-    },
-  ];
+  // public countryList = [
+  //   {
+  //     CountryName: 'China',
+  //     Region: 'Beijing',
+  //     isSelected: false,
+  //     isStatus: false,
+  //   },
+  //   {
+  //     CountryName: 'USA',
+  //     Region: 'Newyork',
+  //     isSelected: false,
+  //     isStatus: false,
+  //   },
+  //   {
+  //     CountryName: 'Athens',
+  //     Region: 'Greece',
+  //     isSelected: false,
+  //     isStatus: false,
+  //   },
+  //   {
+  //     CountryName: 'Thailand',
+  //     Region: 'Bangkok',
+  //     isSelected: false,
+  //     isStatus: false,
+  //   },
+  //   {
+  //     CountryName: 'Phuket island	',
+  //     Region: 'Mueang Phuket',
+  //     isSelected: false,
+  //     isStatus: false,
+  //   },
+  //   {
+  //     CountryName: 'Germany',
+  //     Region: 'Berlin',
+  //     isSelected: false,
+  //     isStatus: false,
+  //   },
+  //   {
+  //     CountryName: 'Angola',
+  //     Region: 'Luanda',
+  //     isSelected: false,
+  //     isStatus: false,
+  //   },
+  //   {
+  //     CountryName: 'Albania',
+  //     Region: 'Albania',
+  //     isSelected: false,
+  //     isStatus: false,
+  //   },
+  //   {
+  //     CountryName: 'Turkey',
+  //     Region: 'Ankara',
+  //     isSelected: false,
+  //     isStatus: false,
+  //   },
+  //   {
+  //     CountryName: 'Phuket island',
+  //     Region: 'Mueang Phuket',
+  //     isSelected: false,
+  //     isStatus: false,
+  //   },
+  //   {
+  //     CountryName: 'Germany',
+  //     Region: 'Berlin',
+  //     isSelected: false,
+  //   },
+  //   {
+  //     CountryName: 'Angola',
+  //     Region: 'Luanda',
+  //     isSelected: false,
+  //   },
+  //   {
+  //     CountryName: 'Albania',
+  //     Region: 'Albania',
+  //     isSelected: false,
+  //   },
+  //   {
+  //     CountryName: 'Turkey',
+  //     Region: 'Ankara',
+  //     isSelected: false,
+  //   },
+  // ];
 
   public expenseCategoryList = [
     {
@@ -1035,140 +1083,140 @@ export class QueryService {
       Status: 'Unpaid',
     },
   ];
-  public productList = [
-    {
-      ProductName: 'Macbook pro',
-      SKU: 'PT001',
-      Category: 'Computers',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '1500.00',
-      Unit: 'pc',
-      Qty: '100.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product1.jpg',
-    },
-    {
-      ProductName: 'Orange',
-      SKU: 'PT002',
-      Category: 'Fruits',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '10.00',
-      Unit: 'pc',
-      Qty: '100.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product2.jpg',
-    },
-    {
-      ProductName: 'Pineapple',
-      SKU: 'PT003',
-      Category: 'Fruits',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '10.00',
-      Unit: 'pc',
-      Qty: '100.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product3.jpg',
-    },
-    {
-      ProductName: 'Strawberry',
-      SKU: 'PT004',
-      Category: 'Fruits',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '10.00',
-      Unit: 'pc',
-      Qty: '100.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product4.jpg',
-    },
-    {
-      ProductName: 'Avocat',
-      SKU: 'PT005',
-      Category: '	Accessories',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '10.00',
-      Unit: 'pc',
-      Qty: '150.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product5.jpg',
-    },
-    {
-      ProductName: 'Macbook Pro',
-      SKU: 'PT006',
-      Category: '	Shoes',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '10.00',
-      Unit: 'pc',
-      Qty: '100.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product6.jpg',
-    },
-    {
-      ProductName: 'Apple Earpods',
-      SKU: 'PT007',
-      Category: '	Shoes',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '10.00',
-      Unit: 'pc',
-      Qty: '100.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product7.jpg',
-    },
-    {
-      ProductName: 'iPhone 11',
-      SKU: 'PT008',
-      Category: '	Fruits',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '10.00',
-      Unit: 'pc',
-      Qty: '100.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product8.jpg',
-    },
-    {
-      ProductName: 'samsung',
-      SKU: 'PT009',
-      Category: '	Earphones',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '10.00',
-      Unit: 'pc',
-      Qty: '100.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product9.jpg',
-    },
-    {
-      ProductName: 'Banana',
-      SKU: 'PT0010',
-      Category: '	Health Care',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '10.00',
-      Unit: 'kg',
-      Qty: '100.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product11.jpg',
-    },
-    {
-      ProductName: 'Limon',
-      SKU: 'PT0011',
-      Category: '	Health Care',
-      isSelected: false,
-      Brand: 'N/D',
-      price: '10.00',
-      Unit: 'kg',
-      Qty: '100.00',
-      CreatedBy: 'Admin',
-      img: 'assets/img/product/product17.jpg',
-    },
-  ];
+  // public productList = [
+  //   {
+  //     ProductName: 'Macbook pro',
+  //     SKU: 'PT001',
+  //     Category: 'Computers',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '1500.00',
+  //     Unit: 'pc',
+  //     Qty: '100.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product1.jpg',
+  //   },
+  //   {
+  //     ProductName: 'Orange',
+  //     SKU: 'PT002',
+  //     Category: 'Fruits',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '10.00',
+  //     Unit: 'pc',
+  //     Qty: '100.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product2.jpg',
+  //   },
+  //   {
+  //     ProductName: 'Pineapple',
+  //     SKU: 'PT003',
+  //     Category: 'Fruits',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '10.00',
+  //     Unit: 'pc',
+  //     Qty: '100.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product3.jpg',
+  //   },
+  //   {
+  //     ProductName: 'Strawberry',
+  //     SKU: 'PT004',
+  //     Category: 'Fruits',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '10.00',
+  //     Unit: 'pc',
+  //     Qty: '100.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product4.jpg',
+  //   },
+  //   {
+  //     ProductName: 'Avocat',
+  //     SKU: 'PT005',
+  //     Category: '	Accessories',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '10.00',
+  //     Unit: 'pc',
+  //     Qty: '150.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product5.jpg',
+  //   },
+  //   {
+  //     ProductName: 'Macbook Pro',
+  //     SKU: 'PT006',
+  //     Category: '	Shoes',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '10.00',
+  //     Unit: 'pc',
+  //     Qty: '100.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product6.jpg',
+  //   },
+  //   {
+  //     ProductName: 'Apple Earpods',
+  //     SKU: 'PT007',
+  //     Category: '	Shoes',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '10.00',
+  //     Unit: 'pc',
+  //     Qty: '100.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product7.jpg',
+  //   },
+  //   {
+  //     ProductName: 'iPhone 11',
+  //     SKU: 'PT008',
+  //     Category: '	Fruits',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '10.00',
+  //     Unit: 'pc',
+  //     Qty: '100.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product8.jpg',
+  //   },
+  //   {
+  //     ProductName: 'samsung',
+  //     SKU: 'PT009',
+  //     Category: '	Earphones',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '10.00',
+  //     Unit: 'pc',
+  //     Qty: '100.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product9.jpg',
+  //   },
+  //   {
+  //     ProductName: 'Banana',
+  //     SKU: 'PT0010',
+  //     Category: '	Health Care',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '10.00',
+  //     Unit: 'kg',
+  //     Qty: '100.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product11.jpg',
+  //   },
+  //   {
+  //     ProductName: 'Limon',
+  //     SKU: 'PT0011',
+  //     Category: '	Health Care',
+  //     isSelected: false,
+  //     Brand: 'N/D',
+  //     price: '10.00',
+  //     Unit: 'kg',
+  //     Qty: '100.00',
+  //     CreatedBy: 'Admin',
+  //     img: 'assets/img/product/product17.jpg',
+  //   },
+  // ];
   public categoryList = [
     {
       img: 'assets/img/product/product6.jpg',
@@ -2553,92 +2601,92 @@ export class QueryService {
       email: 'customer@example.com',
     },
   ];
-  public stateList = [
-    {
-      StateName: 'Beijing',
-      CountryName: 'China',
-      isSelected: false,
-      isStatus: true
-    },
-    {
-      StateName: 'Newyork',
-      CountryName: 'USA',
-      isSelected: false,
-      isStatus: false
-    },
-    {
-      StateName: 'Athens',
-      CountryName: 'Greece',
-      isSelected: false,
-      isStatus: true
-    },
-    {
-      StateName: 'Thailand',
-      CountryName: 'Bangkok',
-      isSelected: false,
-      isStatus: false
-    },
-    {
-      StateName: 'Phuket island	',
-      CountryName: 'Mueang Phuket',
-      isSelected: false,
-      isStatus: true
-    },
-    {
-      StateName: 'Germany',
-      CountryName: 'Berlin',
-      isSelected: false,
-      isStatus: false
-    },
-    {
-      StateName: 'Angola',
-      CountryName: 'Luanda',
-      isSelected: false,
-      isStatus: true
-    },
-    {
-      StateName: 'Albania',
-      CountryName: 'Albania',
-      isSelected: false,
-      isStatus: false
-    },
-    {
-      StateName: 'Turkey',
-      CountryName: 'Ankara',
-      isSelected: false,
-      isStatus: false
-    },
-    {
-      StateName: 'Phuket island',
-      CountryName: 'Mueang Phuket',
-      isSelected: false,
-      isStatus: false
-    },
-    {
-      StateName: 'Germany',
-      CountryName: 'Berlin',
-      isSelected: false,
-      isStatus: false
-    },
-    {
-      StateName: 'Angola',
-      CountryName: 'Luanda',
-      isSelected: false,
-      isStatus: false
-    },
-    {
-      StateName: 'Albania',
-      CountryName: 'Albania',
-      isSelected: false,
-      isStatus: false
-    },
-    {
-      StateName: 'Turkey',
-      CountryName: 'Ankara',
-      isSelected: false,
-      isStatus: false
-    },
-  ];
+  // public stateList = [
+  //   {
+  //     StateName: 'Beijing',
+  //     CountryName: 'China',
+  //     isSelected: false,
+  //     isStatus: true
+  //   },
+  //   {
+  //     StateName: 'Newyork',
+  //     CountryName: 'USA',
+  //     isSelected: false,
+  //     isStatus: false
+  //   },
+  //   {
+  //     StateName: 'Athens',
+  //     CountryName: 'Greece',
+  //     isSelected: false,
+  //     isStatus: true
+  //   },
+  //   {
+  //     StateName: 'Thailand',
+  //     CountryName: 'Bangkok',
+  //     isSelected: false,
+  //     isStatus: false
+  //   },
+  //   {
+  //     StateName: 'Phuket island	',
+  //     CountryName: 'Mueang Phuket',
+  //     isSelected: false,
+  //     isStatus: true
+  //   },
+  //   {
+  //     StateName: 'Germany',
+  //     CountryName: 'Berlin',
+  //     isSelected: false,
+  //     isStatus: false
+  //   },
+  //   {
+  //     StateName: 'Angola',
+  //     CountryName: 'Luanda',
+  //     isSelected: false,
+  //     isStatus: true
+  //   },
+  //   {
+  //     StateName: 'Albania',
+  //     CountryName: 'Albania',
+  //     isSelected: false,
+  //     isStatus: false
+  //   },
+  //   {
+  //     StateName: 'Turkey',
+  //     CountryName: 'Ankara',
+  //     isSelected: false,
+  //     isStatus: false
+  //   },
+  //   {
+  //     StateName: 'Phuket island',
+  //     CountryName: 'Mueang Phuket',
+  //     isSelected: false,
+  //     isStatus: false
+  //   },
+  //   {
+  //     StateName: 'Germany',
+  //     CountryName: 'Berlin',
+  //     isSelected: false,
+  //     isStatus: false
+  //   },
+  //   {
+  //     StateName: 'Angola',
+  //     CountryName: 'Luanda',
+  //     isSelected: false,
+  //     isStatus: false
+  //   },
+  //   {
+  //     StateName: 'Albania',
+  //     CountryName: 'Albania',
+  //     isSelected: false,
+  //     isStatus: false
+  //   },
+  //   {
+  //     StateName: 'Turkey',
+  //     CountryName: 'Ankara',
+  //     isSelected: false,
+  //     isStatus: false
+  //   },
+  // ];
   public purchaseOrderReport = [
     {
       img: 'assets/img/product/product1.jpg',

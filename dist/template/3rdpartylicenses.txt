@@ -210,6 +210,9 @@ terms above.
 ng-apexcharts
 MIT
 
+ng-multiselect-dropdown
+MIT
+
 ng2-charts
 ISC
 
@@ -797,7 +800,7 @@ Apache-2.0
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- 
+
 
 
 sweetalert2

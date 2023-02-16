@@ -11,5 +11,7 @@ export class Error404Component implements OnInit {
 
   ngOnInit(): void {
   }
-
+  login() {
+    return !!localStorage.getItem('token');
+  }
 }

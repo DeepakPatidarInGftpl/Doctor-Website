@@ -26,7 +26,7 @@ export class AddaccountComponent implements OnInit {
       mobile: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl('', [Validators.required, Validators.email]),
       pan: new FormControl('', [Validators.required, Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
-      gstin_uin: new FormControl('', [Validators.required]),
+      gstin_uin: new FormControl('', [Validators.required,Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       anniversary: new FormControl('', [Validators.required]),
       accounts_type: new FormControl('', [Validators.required]),
       opening_balance: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
@@ -82,12 +82,9 @@ export class AddaccountComponent implements OnInit {
         if (this.addRes.msg == "Successfuly Added") {
           this.toastr.success(this.addRes.msg)
           this.accountForm.reset()
-
           this.router.navigate(['//account/accountlist']).then(() => {
             window.location.reload()
           })
-
-
         }
       }, err => {
         console.log(err.error.gst);
@@ -95,7 +92,6 @@ export class AddaccountComponent implements OnInit {
     } else {
       this.accountForm.markAllAsTouched()
       console.log('hhhhhh');
-
     }
   }
 
@@ -151,5 +147,4 @@ export class AddaccountComponent implements OnInit {
     return this.accountForm.get('address')
   }
 
-  // list file me check karna hai pahle direct api wala data deekha denge uske kuch second baad quryservice variable wala data store kara denge
 }

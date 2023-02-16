@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { employee } from 'src/app/interfaces/employee';
+import { Account } from 'src/app/interfaces/account';
 @Component({
   selector: 'app-accountlist',
   templateUrl: './accountlist.component.html',
@@ -15,12 +16,12 @@ export class AccountlistComponent implements OnInit {
  
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any | employee
+  public tableData: any | Account
 
  
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
-    this.tableData = this.QueryService.accountList;
+ 
   }
 
   delRes: any
@@ -39,10 +40,10 @@ export class AccountlistComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.deleteEmployee(id).subscribe(res => {
+        this.coreService.deleteAccount(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Company Deleted successfully") {
-            this.tableData
+          if (this.delRes.msg == "Account Deleted successfully") {
+            this.ngOnInit()
           }
         })
         Swal.fire({
@@ -69,14 +70,10 @@ export class AccountlistComponent implements OnInit {
       },
 
     };
-    let i = this.coreService.getAccount();
-    console.log(i);
-    console.log(this.QueryService.accountList);
+    this.tableData = this.QueryService.accountList;
+    // console.log(this.QueryService.accountList);
+    this.coreService.getAccount()
 
-    // this.coreService.getEmployee().subscribe(res => {
-    //   console.log(res);
-    //   this.tableData = res
-    // })
   }
 
   selectAll(initChecked: boolean) {

@@ -5,10 +5,10 @@ import { ProductRoutingModule } from './product-routing.module';
 import { ProductComponent } from './product.component';
 import { SubcategoryGroupComponent } from './subcategory-group/subcategory-group.component';
 
-
 @NgModule({
   declarations: [
     ProductComponent,
+
   ],
   imports: [
     CommonModule,

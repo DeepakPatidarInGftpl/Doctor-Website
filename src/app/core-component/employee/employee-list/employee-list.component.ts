@@ -21,7 +21,6 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
  
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
-    this.tableData = this.QueryService.employeeList;
   }
 
   delRes: any
@@ -42,8 +41,8 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
       if (t.isConfirmed) {
         this.coreService.deleteEmployee(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Company Deleted successfully") {
-            this.tableData
+          if (this.delRes.msg == "Employee Deleted successfully") {
+           this.ngOnInit()
           }
         })
         Swal.fire({
@@ -78,6 +77,8 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
     //   console.log(res);
     //   this.tableData = res
     // })
+
+    this.tableData = this.QueryService.employeeList;
   }
 
 
@@ -106,7 +107,7 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
   deleteId(id: number) {
     this.coreService.deleteEmployee(id).subscribe(res => {
       this.delRes = res
-      if (this.delRes.msg == "Company Deleted successfully") {
+      if (this.delRes.msg == "Employee Deleted successfully") {
         // this.getcompanyList()
       }
 
