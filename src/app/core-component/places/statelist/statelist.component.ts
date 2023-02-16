@@ -12,7 +12,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
   styleUrls: ['./statelist.component.scss']
 })
 export class StatelistComponent implements OnInit {
- 
+
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any
@@ -76,9 +76,13 @@ export class StatelistComponent implements OnInit {
         $('.dataTables_filter').appendTo('.search-input');
       },
     };
-    
+
     this.coreService.getstate();
-    this.tableData = this.QueryService.stateList;
+
+    this.coreService.stateBehavior.subscribe( () => {
+      this.tableData = JSON.parse(localStorage.getItem('stateList')!)
+    })
+
     console.log(this.tableData);
     this.getFeatureGroup();
   }
@@ -116,19 +120,19 @@ export class StatelistComponent implements OnInit {
     console.log(this.id);
 
     if (this.stateForm.valid) {
-    
+
         this.coreService.addstate(this.stateForm.value).subscribe(res => {
           console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Data Created") {
             this.toastr.success(this.addRes.msg)
             this.stateForm.reset()
-            window.location.reload();
+            this.ngOnInit()
           }
         }, err => {
           console.log(err.error.gst);
         })
-      
+
     } else {
       this.stateForm.markAllAsTouched()
       console.log('forms invalid');
@@ -144,12 +148,12 @@ export class StatelistComponent implements OnInit {
             this.toastr.success(this.addRes.msg)
             this.stateForm.reset();
             this.addForm = true;
-            window.location.reload()
+            this.ngOnInit()
           }
         }, err => {
           console.log(err.error);
         })
-     
+
     } else {
       this.stateForm.markAllAsTouched()
       console.log('forms invalid');

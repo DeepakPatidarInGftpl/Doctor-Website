@@ -91,9 +91,10 @@ export class EditaccountComponent implements OnInit {
         if (this.addRes.msg == "Account updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.accountForm.reset()
-          this.router.navigate(['//account/accountlist']).then(() => {
-            window.location.reload()
-          })
+          this.router.navigate(['//account/accountlist'])
+          // .then(() => {
+          //   window.location.reload()
+          // })
 
 
         }

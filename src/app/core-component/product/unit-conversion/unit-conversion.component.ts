@@ -45,7 +45,7 @@ export class UnitConversionComponent implements OnInit {
         this.coreService.deleteUnitConversion(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Unit Conversion Deleted successfully") {
-           this.ngOnInit();
+            this.ngOnInit();
           }
         })
         Swal.fire({
@@ -78,7 +78,10 @@ export class UnitConversionComponent implements OnInit {
 
     };
     this.coreService.getUnitConversion();
-    this.tableData = this.QueryService.unitconservationList;
+    this.coreService.unitConversionBehavior.subscribe(() => {
+      this.tableData = Object.values(JSON.parse(localStorage.getItem("unitconservationList")))
+    })
+
     console.log(this.tableData);
     this.getUnits();
   }
@@ -98,7 +101,7 @@ export class UnitConversionComponent implements OnInit {
     this.coreService.deleteUnitConversion(id).subscribe(res => {
       this.delRes = res
       if (this.delRes.msg == "Unit Conversion Deleted successfully") {
-        window.location.reload()
+        this.ngOnInit()
       }
 
     })
@@ -154,7 +157,7 @@ export class UnitConversionComponent implements OnInit {
   }
 
 
- submit() {
+  submit() {
     console.log(this.unitConversionForm.value);
     console.log(this.id);
 
@@ -165,7 +168,7 @@ export class UnitConversionComponent implements OnInit {
         if (this.addRes.msg == "Data Created") {
           this.toastr.success(this.addRes.msg)
           this.unitConversionForm.reset()
-          window.location.reload();
+          this.ngOnInit()
         }
       }, err => {
         console.log(err.error.gst);
@@ -176,7 +179,7 @@ export class UnitConversionComponent implements OnInit {
     }
   }
 
-  update(){
+  update() {
     if (this.unitConversionForm.valid) {
       this.coreService.updateUnitConversion(this.unitConversionForm.value, this.id).subscribe(res => {
         console.log(res);
@@ -184,8 +187,8 @@ export class UnitConversionComponent implements OnInit {
         if (this.addRes.msg == "Unit Conversion updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.unitConversionForm.reset()
-          this.addForm=true
-          window.location.reload()
+          this.addForm = true
+          this.ngOnInit()
         }
       }, err => {
         console.log(err.error.gst);
@@ -215,7 +218,7 @@ export class UnitConversionComponent implements OnInit {
       res.map((data: any) => {
         console.log(data);
         if (id == data.id) {
-          this.addForm=false
+          this.addForm = false
           this.unitConversionForm.patchValue(data);
           this.editFormdata = res
           this.unitConversionForm.get('unit')?.setValue(data.id)

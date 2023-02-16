@@ -78,7 +78,9 @@ export class CitylistComponent implements OnInit {
 
     };
     this.coreService.getcity();
-    this.tableData = this.QueryService.cityList;
+    this.coreService.cityBehavior.subscribe( () => {
+      this.tableData = JSON.parse(localStorage.getItem('cityList')!);
+    })
     console.log(this.tableData);
     this.getstate();
   }
@@ -121,7 +123,7 @@ export class CitylistComponent implements OnInit {
           if (this.addRes.msg == "Data Created") {
             this.toastr.success(this.addRes.msg)
             this.cityForm.reset()
-            window.location.reload();
+            this.ngOnInit()
           }
         }, err => {
           console.log(err.error.gst);
@@ -141,12 +143,12 @@ export class CitylistComponent implements OnInit {
             this.toastr.success(this.addRes.msg)
             this.cityForm.reset();
             this.addForm = true;
-            window.location.reload()
+            this.ngOnInit()
           }
         }, err => {
           console.log(err.error.gst);
         })
-     
+
     } else {
       this.cityForm.markAllAsTouched()
       console.log('forms invalid');

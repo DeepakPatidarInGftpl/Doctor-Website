@@ -6,17 +6,19 @@ import { CategorylistComponent } from './categorylist.component';
 import { DataTablesModule } from 'angular-datatables';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { AddcategoryModule } from "../addcategory/addcategory.module";
 
 @NgModule({
-  declarations: [
-    CategorylistComponent
-  ],
-  imports: [
-    CommonModule,
-    CategorylistRoutingModule,
-    DataTablesModule,
-    FormsModule,
-    SweetAlert2Module.forRoot()
-  ]
+    declarations: [
+        CategorylistComponent
+    ],
+    imports: [
+        CommonModule,
+        CategorylistRoutingModule,
+        DataTablesModule,
+        FormsModule,
+        SweetAlert2Module.forRoot(),
+        AddcategoryModule
+    ]
 })
-export class CategorylistModule { } 
+export class CategorylistModule { }
