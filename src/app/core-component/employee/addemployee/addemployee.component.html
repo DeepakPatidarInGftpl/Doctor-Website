@@ -37,6 +37,7 @@
                     [ngClass]="{
                       'is-invalid': f['dob'].touched && f['dob'].invalid
                     }">
+                    <span class="text-danger"*ngIf="dateError">{{dateError}}</span>     
                     <span class="text-danger"*ngIf="dob && dob.invalid && dob.touched">Date (format:dd/mm/yyyy)</span>
                 </div>
             </div>
@@ -68,6 +69,8 @@
                     [ngClass]="{
                       'is-invalid': f['anniversary'].touched && f['anniversary'].invalid
                     }">
+                    <span class="text-danger"*ngIf="dateError">{{dateError}}</span>     
+                   
                     <span class="text-danger"*ngIf="anniversary && anniversary.invalid && anniversary.touched">Date (format:dd/mm/yyyy)</span>
                 </div>
             </div>

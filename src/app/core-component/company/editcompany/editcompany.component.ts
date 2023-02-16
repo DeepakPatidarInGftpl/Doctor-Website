@@ -85,6 +85,7 @@ selectS:any
       console.log(this.state);
     })
   }
+  dateError=null
   submit() {
     if(this.companyForm.valid){
     this.copmpanyService.updateCompany(this.companyForm.value, this.companyId).subscribe(res => {
@@ -96,6 +97,13 @@ selectS:any
         // .then(()=>{
         //   window.location.reload()
         // })
+      }
+    },err=>{
+      if (err.error.financial_year) {
+        this.dateError = 'Date (format:dd/mm/yyyy)';
+        setTimeout(() => {
+          this.dateError=''
+        }, 2000);
       }
     })
     } else{

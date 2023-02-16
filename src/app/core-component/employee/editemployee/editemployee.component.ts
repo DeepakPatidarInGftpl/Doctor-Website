@@ -65,6 +65,7 @@ export class EditemployeeComponent implements OnInit {
     })
   }
   addRes:any
+  dateError=null;
   submit() {
     console.log(this.employeeForm.value);
     if (this.employeeForm.valid) {
@@ -81,6 +82,17 @@ export class EditemployeeComponent implements OnInit {
         }
       }, err => {
         console.log(err.error.gst);
+        if (err.error.dob) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }else if(err.error.anniversary){
+          this.dateError = 'Date (format:dd/mm/yyyy)' ;
+          setTimeout(() => {
+            this.dateError=''
+          }, 2000);
+        }
         // this.toastr.error(err.error.gst)
         // this.toastr.error(err.error.email)
         // this.toastr.error(err.error.state)

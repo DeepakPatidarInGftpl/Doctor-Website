@@ -65,7 +65,9 @@ export class ProductlistComponent implements OnInit {
 
     this.coreService.getProduct();
     this.coreService.productListBehaviur.subscribe( () => {
-      this.tableData =  Object.values(JSON.parse(localStorage.getItem("productList")))
+      if (localStorage.getItem('productList')) {
+        this.tableData = Object.values(JSON.parse(localStorage.getItem("productList")!))
+      }
     })
     // this.QueryService.productList;
     console.log(this.tableData);

@@ -37,6 +37,7 @@
                         <input type="date" formControlName="birthday" id="birthday" [ngClass]="{
                       'is-invalid': f['birthday'].touched && f['birthday'].invalid
                     }">
+                    <span class="text-danger"*ngIf="dateError">{{dateError}}</span>  
                         <span class="text-danger" *ngIf="birthday && birthday.invalid && birthday.touched">Date
                             (format:dd/mm/yyyy)</span>
                     </div>
@@ -87,6 +88,7 @@
                         <input type="date" formControlName="anniversary" id="anniversary" [ngClass]="{
                       'is-invalid': f['anniversary'].touched && f['anniversary'].invalid
                     }">
+                    <span class="text-danger"*ngIf="dateError">{{dateError}}</span>  
                         <span class="text-danger" *ngIf="anniversary && anniversary.invalid && anniversary.touched">Date
                             (format:dd/mm/yyyy)</span>
                     </div>
@@ -167,8 +169,8 @@
                         <label>Credit Days*</label>
                         <input type="date" formControlName="credit_days" id="credit_days"
                             [ngClass]="{'is-invalid': f['credit_days'].touched && f['credit_days'].invalid}">
-                        <span class="text-danger"
-                            *ngIf="credit_days && credit_days.invalid && credit_days.touched">Enter credit days</span>
+                            <span class="text-danger"*ngIf="dateError">{{dateError}}</span>  
+                            <span class="text-danger" *ngIf="credit_days && credit_days.invalid && credit_days.touched">Date(format:dd/mm/yyyy)</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
