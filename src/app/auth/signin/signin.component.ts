@@ -74,7 +74,16 @@ export class SigninComponent implements OnInit {
 
       }
     }, err => {
-      this.toastr.error(err.error.status);
+      console.log(err);
+      if(err.error.User==false){
+        console.log(err.error.msg);
+        
+        this.toastr.error(err.error.msg)
+      } else if(err.error.status){
+        this.toastr.error(err.error.status);
+      }
+  
+      
     })
   }
   ngOnDestroy() {
