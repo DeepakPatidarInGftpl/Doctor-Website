@@ -21,7 +21,6 @@ export class AccountlistComponent implements OnInit {
 
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
-
   }
 
   delRes: any
@@ -68,13 +67,11 @@ export class AccountlistComponent implements OnInit {
         $('.dt-buttons').appendTo('.wordset');
         $('.dataTables_filter').appendTo('.search-input');
       },
-
     };
     this.coreService.getAccount()
     this.coreService.accountBehavior.subscribe( () => {
       this.tableData = JSON.parse(localStorage.getItem('accountList')!);
     })
-
   }
 
   selectAll(initChecked: boolean) {
@@ -88,13 +85,13 @@ export class AccountlistComponent implements OnInit {
       })
     }
   }
+
   deleteId(id: number) {
     this.coreService.deleteEmployee(id).subscribe(res => {
       this.delRes = res
       if (this.delRes.msg == "Company Deleted successfully") {
         // this.getcompanyList()
       }
-
     })
   }
 }
