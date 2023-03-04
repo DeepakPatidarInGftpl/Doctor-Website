@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit {
         this.logoPath = 'assets/img/logo-white.png'
       } else {
         this.darkTheme = false;
-        this.logoPath = 'assets/img/logo.png'
+        this.logoPath = 'assets/logo/favicon_icon.png'
 
       }
     });
@@ -44,6 +44,8 @@ export class HeaderComponent implements OnInit {
 
 
   logOut() {
+    console.log(localStorage.getItem('token'));
+    
     if(localStorage.getItem('token')){
       this.authServ.logout().subscribe(res => {
         console.log(res);
