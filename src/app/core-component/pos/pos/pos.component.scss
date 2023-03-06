@@ -1,0 +1,162 @@
+.customer-type-div {
+    display: flex;
+    align-items: center;
+}
+
+.customer-type-div > div:first-child {
+    margin-right: 20px;
+}
+
+.customer-type-div label {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.top-header-left {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.salesman-div {
+    display: flex;
+    align-items: center;
+    width: 30%;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.salesman-div select {
+    margin-left: 15px;
+}
+
+.right-header-pos {
+    display: flex;
+    justify-content: end;
+}
+
+.amt-info-div ul {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.amt-info-div li {
+    border-right: 1px solid black;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.amt-info-div li:last-child {
+    border: none;
+}
+
+.amt-info-div li p {
+    margin-bottom: 5px;
+}
+
+.cus-details-wrapper {
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.cus-details-wrapper p {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.btn-pos {
+    border: none;
+    background: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-pos i {
+    font-size: 32px;
+    margin-bottom: 7px;
+}
+
+.right-btns-wrapper ul {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.right-btns-wrapper li {
+    width: 50%;
+    margin-bottom: 20px;
+}
+
+.right-header-pos i {
+    font-size: 24px;
+}
+
+.right-btns-wrapper li:last-child, .right-btns-wrapper li:nth-child(5) {
+    margin-bottom: 0;
+}
+
+.pos-i-grp, .pos-s-input {
+    max-width: 110px;
+}
+
+.flat-disc-wrapper {
+    display: flex;
+    align-items: end;
+}
+
+.flat-disc-wrapper .checkbox {
+    margin-left: 5px;
+}
+
+.amt-info-div ul {
+    align-items: center;
+}
+
+.bottom-pos-left {
+    position: absolute;
+    top: 62%;
+    width: 72%;
+}
+
+.pos-left-wrapper {
+    // position: relative;
+}
+
+.product-autocomplete .mat-form-field {
+    width: 100%;
+}
+
+.table-cross-btn {
+    border: none;
+    color: red;
+    background: transparent;
+}
+
+.table-pos thead tr {
+background-color: black;
+}
+
+.table-pos thead tr th {
+    color: white;
+}
+
+.mrp-input-table{
+    max-width: 100px;
+}
+
+.table-black-grp span {
+    background-color: black;
+    color: white;
+    border: none;
+}
+
+.table-black-grp input {
+    text-align: center;
+}
