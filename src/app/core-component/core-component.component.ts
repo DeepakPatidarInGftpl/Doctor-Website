@@ -35,7 +35,8 @@ export class CoreComponentComponent implements OnInit {
     if (
       data.url.split('/')[1] === 'errorpages' ||
       data.url.split('/')[2] === 'pos' ||
-      data.url.split('/')[1] === 'auth'
+      data.url.split('/')[1] === 'auth' ||
+      data.url.split('/')[1] === 'pos' 
     ) {
       this.sideBaractivePath = true;
     } else {
