@@ -1,4 +1,4 @@
-<div class="ms-0">
+<div class="pos-wrapper">
     
     <div class="row w-100 align-items-center pb-3">
         <div class="col-lg-9 col-sm-12 tabs_wrapper" >
@@ -53,335 +53,337 @@
         </div>
     </div>
 
-    <div class="row w-100">
-        <div class="col-lg-9 col-sm-12 tabs_wrapper pos-left-wrapper" >
-            <div class="row">
-                <div class="col-sm-4 product-autocomplete">
-                    <!-- <input type="text" class="form-control" placeholder="Scan Barcode/Enter Product Name"> -->
-                    <mat-form-field>
-                        <mat-label>Scan Barcode/Enter Product Name</mat-label>
-                        <input matInput placeholder="Search" [formControl]="autocompleteControl" [matAutocomplete]="auto">
-                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="optionSelected($event)">
-                          <mat-option *ngFor="let option of filteredOptions$ | async | slice : 0 : 2" [value]="option">{{ option }}</mat-option>
-                        </mat-autocomplete>
-                      </mat-form-field>
-                </div>
-                <div class="col-sm-4">
-                    <select class="form-select">
-                        <option>-- Select --</option>
-                        <option *ngFor="let customer of customers">{{customer.name}}</option>
-                    </select>
-                </div>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" placeholder="Scan Sales Invoice">
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-sm-12">
-                    <div class="table-responsive table-pos">
-                        <table class="table table-nowrap mb-0">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Itemcode</th>
-                                    <th>Product</th>
-                                    <th>Qty</th>
-                                    <th>MRP</th>
-                                    <th>Discount</th>
-                                    <th>Add Disc</th>
-                                    <th>Unit Cost</th>
-                                    <th>Net Amount</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="table-light" *ngFor="let option of selectedOptions; let i = index">
-                                    <td>1</td>
-                                    <td>01</td>
-                                    <td>{{option}}</td>
-                                    <td>
-                                        <div class="input-group pos-i-grp table-black-grp">
-                                            <span class="input-group-text" id="basic-addon1">-</span>
-                                            <input type="text" value="1" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
-                                            <span class="input-group-text" id="basic-addon1">+</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <input type="text" value="650.00" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1">
-                                    </td>
-                                    <td>
-                                        <div class="input-group pos-i-grp table-black-grp">
-                                            <span class="input-group-text" id="basic-addon1">₹
-                                            </span>
-                                            <input type="text" value="25.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
-                                        </div>
-                                    </td>
-                                    <td><div class="input-group pos-i-grp">
-                                        <span class="input-group-text" id="basic-addon1">%</span>
-                                        <input type="text" value="0.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
-                                    </div></td>
-                                    <td>700</td>
-                                    <td>1400</td>
-                                    <td><button (click)="removeOption(i)" class="table-cross-btn">
-                                        <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
-                                    </button></td>
-                                </tr>
-                            </tbody>
-                        </table>
+    <div class="pos-content">
+        <div class="row w-100">
+            <div class="col-lg-9 col-sm-12 tabs_wrapper pos-left-wrapper" >
+                <div class="row">
+                    <div class="col-sm-4 product-autocomplete">
+                        <!-- <input type="text" class="form-control" placeholder="Scan Barcode/Enter Product Name"> -->
+                        <mat-form-field>
+                            <mat-label>Scan Barcode/Enter Product Name</mat-label>
+                            <input matInput placeholder="Search" [formControl]="autocompleteControl" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)">
+                              <mat-option *ngFor="let option of filteredOptions$" [value]="option">{{ displayFn(option) }}</mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
                     </div>
-                </div>
-            </div>
-            <div class="bottom-pos-left">
-                <div class="row mt-5">
-                    <div class="col-sm-12">
-                        <input type="text" class="form-control" placeholder="Remarks">
+                    <div class="col-sm-4">
+                        <select class="form-select">
+                            <option>-- Select --</option>
+                            <option *ngFor="let customer of customers">{{customer.name}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" placeholder="Scan Sales Invoice">
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-sm-12">
-                        <div class="amt-info-div">
+                        <div class="table-responsive table-pos">
+                            <table class="table table-nowrap mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Itemcode</th>
+                                        <th>Product</th>
+                                        <th>Qty</th>
+                                        <th>MRP</th>
+                                        <th>Discount</th>
+                                        <th>Add Disc</th>
+                                        <th>Unit Cost</th>
+                                        <th>Net Amount</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-light" *ngFor="let cart of cartItems; let i = index">
+                                        <td>1</td>
+                                        <td>01</td>
+                                        <td>{{cart.name}}</td>
+                                        <td>
+                                            <div class="input-group pos-i-grp table-black-grp">
+                                                <span (click)="decreaseQty(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
+                                                <input type="text" value={{cart.quantity}} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                                                <span (click)="increaseQty(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">+</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" value="650.00" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1">
+                                        </td>
+                                        <td>
+                                            <div class="input-group pos-i-grp table-black-grp">
+                                                <span class="input-group-text" id="basic-addon1">₹
+                                                </span>
+                                                <input type="text" value="25.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                        </td>
+                                        <td><div class="input-group pos-i-grp">
+                                            <span class="input-group-text" id="basic-addon1">%</span>
+                                            <input type="text" value="0.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                                        </div></td>
+                                        <td>700</td>
+                                        <td>1400</td>
+                                        <td><button (click)="removeFromCart(cart)" class="table-cross-btn">
+                                            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                                        </button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-pos-left">
+                    <div class="row mt-5">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" placeholder="Remarks">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12">
+                            <div class="amt-info-div">
+                                <ul>
+                                    <li>
+                                        <p>0.000</p>
+                                        <h5>Quantity</h5>
+                                    </li>
+                                    <li>
+                                        <p>0.000</p>
+                                        <h5>MRP</h5>
+                                    </li>
+                                    <li>
+                                        <p>0.000</p>
+                                        <h5>Tax Amount</h5>
+                                    </li>
+                                    <li>
+                                        <p>0.000</p>
+                                        <button type="button" class="btn btn-dark"> 
+                                            Add Charges <i class="fas fa-plus" data-bs-toggle="tooltip" title="fa fa-plus"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <p>0.000</p>
+                                        <h5>Discount</h5>
+                                    </li>
+                                    <li>
+                                        <div class="flat-disc-wrapper">
+                                            <div class="input-group pos-i-grp">
+                                                <span class="input-group-text" id="basic-addon1">%</span>
+                                                <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="checkbox">
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <h5>Flat Discount</h5>
+                                    </li>
+                                    <li>
+                                        <input type="text" class="form-control pos-s-input" value="0.00">
+                                        <h5>Round Off</h5>
+                                    </li>
+                                    <li>
+                                        <p>0.000</p>
+                                        <h5>Amount</h5>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
+                                Redeem Credit</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
+                                Hold(F6)</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
+                                UPI(F5)</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
+                                Card(F3)</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
+                                Cash(F4)</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-dice-two" data-bs-toggle="tooltip" title="fas fa-dice-two"></i>
+                                Multiple Pay(F12)</button>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
+                                Apply Coupon</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
+                                Pay Later(F11)</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
+                                Hold&Print(F7)</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
+                                UPI&Print(F10)</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
+                                Card&Print(F9)</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-dark w-100"> 
+                            <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
+                                Cash&Print(F8)</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-lg-3 col-sm-12">
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <div class="cus-details-wrapper right-btns-wrapper">
                             <ul>
                                 <li>
-                                    <p>0.000</p>
-                                    <h5>Quantity</h5>
+                                    <button type="button" class="btn-pos"> 
+                                        <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
+                                            Hold Bill</button> 
                                 </li>
                                 <li>
-                                    <p>0.000</p>
-                                    <h5>MRP</h5>
+                                    <button type="button" class="btn-pos"> 
+                                        <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
+                                            Payments</button> 
                                 </li>
                                 <li>
-                                    <p>0.000</p>
-                                    <h5>Tax Amount</h5>
+                                    <button type="button" class="btn-pos"> 
+                                        <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
+                                            Add Payment</button> 
                                 </li>
                                 <li>
-                                    <p>0.000</p>
-                                    <button type="button" class="btn btn-dark"> 
-                                        Add Charges <i class="fas fa-plus" data-bs-toggle="tooltip" title="fa fa-plus"></i>
-                                    </button>
+                                    <button type="button" class="btn-pos"> 
+                                        <i class="fas fa-sticky-note" data-bs-toggle="tooltip" title="fas fa-sticky-note"></i>
+                                            Credit Notes</button> 
                                 </li>
                                 <li>
-                                    <p>0.000</p>
-                                    <h5>Discount</h5>
+                                    <button type="button" class="btn-pos"> 
+                                        <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
+                                            Redeem Loyalty</button> 
                                 </li>
                                 <li>
-                                    <div class="flat-disc-wrapper">
-                                        <div class="input-group pos-i-grp">
-                                            <span class="input-group-text" id="basic-addon1">%</span>
-                                            <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
-                                        </div>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" name="checkbox">
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <h5>Flat Discount</h5>
-                                </li>
-                                <li>
-                                    <input type="text" class="form-control pos-s-input" value="0.00">
-                                    <h5>Round Off</h5>
-                                </li>
-                                <li>
-                                    <p>0.000</p>
-                                    <h5>Amount</h5>
+                                    <button type="button" class="btn-pos"> 
+                                        <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
+                                            Orders</button> 
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
-                            Redeem Credit</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
-                            Hold(F6)</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
-                            UPI(F5)</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
-                            Card(F3)</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
-                            Cash(F4)</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-dice-two" data-bs-toggle="tooltip" title="fas fa-dice-two"></i>
-                            Multiple Pay(F12)</button>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
-                            Apply Coupon</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
-                            Pay Later(F11)</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
-                            Hold & Print(F7)</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
-                            UPI & Print(F10)</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
-                            Card & Print(F9)</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
-                        <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
-                            Cash & Print(F8)</button>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <div class="cus-details-wrapper">
+                            <h4>Customer Details</h4>
+                            <ul>
+                                <li>
+                                    <p>
+                                        Last Visited:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Last Bill Amount:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Most Purchased Item:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Closing:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Total Purchase:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Loyalty Points:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Membership:- 
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <div class="row mb-3">
-                <div class="col-sm-12">
-                    <div class="cus-details-wrapper right-btns-wrapper">
-                        <ul>
-                            <li>
-                                <button type="button" class="btn-pos"> 
-                                    <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
-                                        Hold Bill</button> 
-                            </li>
-                            <li>
-                                <button type="button" class="btn-pos"> 
-                                    <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
-                                        Payments</button> 
-                            </li>
-                            <li>
-                                <button type="button" class="btn-pos"> 
-                                    <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
-                                        Add Payment</button> 
-                            </li>
-                            <li>
-                                <button type="button" class="btn-pos"> 
-                                    <i class="fas fa-sticky-note" data-bs-toggle="tooltip" title="fas fa-sticky-note"></i>
-                                        Credit Notes</button> 
-                            </li>
-                            <li>
-                                <button type="button" class="btn-pos"> 
-                                    <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
-                                        Redeem Loyalty</button> 
-                            </li>
-                            <li>
-                                <button type="button" class="btn-pos"> 
-                                    <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
-                                        Orders</button> 
-                            </li>
-                        </ul>
+                <!-- <div class="row">
+                    <div class="col-sm-12">
+                        <div class="cus-details-wrapper">
+                            <h4>Customer Details</h4>
+                            <ul>
+                                <li>
+                                    <p>
+                                        Last Visited:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Last Bill Amount:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Most Purchased Item:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Closing:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Total Purchase:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Loyalty Points:- 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Membership:- 
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <!-- <div class="row mb-3">
-                <div class="col-sm-12">
-                    <div class="cus-details-wrapper">
-                        <h4>Customer Details</h4>
-                        <ul>
-                            <li>
-                                <p>
-                                    Last Visited:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Last Bill Amount:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Most Purchased Item:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Closing:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Total Purchase:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Loyalty Points:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Membership:- 
-                                </p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div> -->
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="cus-details-wrapper">
-                        <h4>Customer Details</h4>
-                        <ul>
-                            <li>
-                                <p>
-                                    Last Visited:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Last Bill Amount:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Most Purchased Item:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Closing:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Total Purchase:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Loyalty Points:- 
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Membership:- 
-                                </p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
