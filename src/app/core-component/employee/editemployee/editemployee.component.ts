@@ -26,7 +26,19 @@ export class EditemployeeComponent implements OnInit {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.coreService.getEmployeeById(this.id).subscribe(res => {
       this.data = res
-      this.employeeForm.patchValue(this.data)
+      this.employeeForm.patchValue({
+        name:this.data.name,
+        fathers_name:this.data.fathers_name,
+        dob:this.data.dob,
+        mobile:this.data.mobile,
+        email:this.data.email,
+        anniversary:this.data.anniversary,
+        address:this.data.address,
+        pincode:this.data.pincode,
+        attendance:this.data.attendance,
+        employee_id:this.data.employee_id,
+        
+      })
     })
 
     this.employeeForm = this.fb.group({
@@ -38,8 +50,8 @@ export class EditemployeeComponent implements OnInit {
       anniversary: new FormControl('', [Validators.required]),
       address: new FormControl('', [Validators.required]),
       pincode: new FormControl('', [Validators.required,Validators.maxLength(6), Validators.minLength(6),Validators.pattern(/^[0-9]*$/)]),
-      // attendance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
-      // employee_id: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      attendance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      employee_id: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
     })

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-7 col-sm-7 col-12">
+    <div class="col-lg-8 col-sm-8 col-12">
         <div class="page-header">
             <div class="page-title">
                 <h4>HSN Code list</h4>
@@ -57,7 +57,7 @@
                                 <th>HSN Code</th>
                                 <th>Subcategory</th>
                                 <th>Tax</th>
-                                <th>Is_active</th>
+                                <th>Is Active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -83,13 +83,13 @@
                                         [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span></td>
                                 <td>
-                                    <a class="me-3" routerLink="/product/hsncode-details/{{products.id}}">
+                                    <a class="me-2" routerLink="/product/hsncode-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-3" (click)="editForm(products.id)">
+                                    <a class="me-2" (click)="editForm(products.id)">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
+                                    <a (click)="confirmText(i,products.id)" class="confirm-text"
                                         href="javascript:void(0);">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
@@ -103,7 +103,7 @@
         </div>
 
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-4 col-sm-4 col-12">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
                 <h4> Add HSN Code</h4>
