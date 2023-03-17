@@ -1,3 +1,7 @@
+.pos-wrapper {
+    height: 80vh;
+}
+
 .customer-type-div {
     display: flex;
     align-items: center;
@@ -8,7 +12,7 @@
 }
 
 .customer-type-div label {
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: 400;
 }
 
@@ -22,7 +26,7 @@
     display: flex;
     align-items: center;
     width: 30%;
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: 400;
 }
 
@@ -44,7 +48,7 @@
 
 .amt-info-div li {
     border-right: 1px solid black;
-    padding: 10px 20px;
+    padding: 10px;
     text-align: center;
 }
 
@@ -63,9 +67,9 @@
 }
 
 .cus-details-wrapper p {
-    font-size: 18px;
+    font-size: 0.8rem;
     font-weight: 700;
-    margin-top: 8px;
+    margin-top: 5px;
 }
 
 .btn-pos {
@@ -76,11 +80,12 @@
     align-items: center;
     margin-left: auto;
     margin-right: auto;
+    font-size: 0.65rem;
 }
 
 .btn-pos i {
-    font-size: 32px;
-    margin-bottom: 7px;
+    font-size: 20px;
+    margin-bottom: 5px;
 }
 
 .right-btns-wrapper ul {
@@ -91,11 +96,11 @@
 
 .right-btns-wrapper li {
     width: 50%;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .right-header-pos i {
-    font-size: 24px;
+    font-size: 18px;
 }
 
 .right-btns-wrapper li:last-child, .right-btns-wrapper li:nth-child(5) {
@@ -103,7 +108,7 @@
 }
 
 .pos-i-grp, .pos-s-input {
-    max-width: 110px;
+    max-width: 85px;
 }
 
 .flat-disc-wrapper {
@@ -121,8 +126,8 @@
 
 .bottom-pos-left {
     position: absolute;
-    top: 62%;
-    width: 72%;
+    width: 70%;
+    bottom: 10px;
 }
 
 .pos-left-wrapper {
@@ -159,4 +164,24 @@ background-color: black;
 
 .table-black-grp input {
     text-align: center;
+}
+
+.cursor-pointer-pos {
+    cursor: pointer;
+}
+
+.amt-info-div h5 {
+    font-size: 0.75rem;
+}
+
+.amt-info-div button {
+    font-size: 14px;
+}
+
+.bottom-pos-left button {
+    font-size: 0.65rem;
+}
+
+.cus-details-wrapper h4 {
+    font-size: 1rem;
 }
