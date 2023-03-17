@@ -25,7 +25,23 @@ export class EditaccountComponent implements OnInit {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.coreService.getAccountById(this.id).subscribe(res => {
       this.data = res
-      this.accountForm.patchValue(this.data)
+      this.accountForm.patchValue({
+        contact_person_name:this.data.contact_person_name,
+        title:this.data.title,
+        birthday:this.data.birthday,
+        mobile:this.data.mobile,
+        email:this.data.email,
+        pan:this.data.pan,
+        gstin_uin:this.data.gstin_uin,
+        anniversary:this.data.anniversary,
+        accounts_type:this.data.accounts_type,
+        opening_balance:this.data.opening_balance,
+        opening_balance_type:this.data.opening_balance_type,
+        type_of_customer:this.data.type_of_customer,
+        credit_days:this.data.credit_days,
+        credit_amount:this.data.credit_amount,
+        address:this.data.address
+      })
     })
 
     this.accountForm = this.fb.group({
@@ -82,7 +98,9 @@ export class EditaccountComponent implements OnInit {
   }
 
   addRes: any
-  dateError=null
+  dateError=null;
+  countryError=null;
+  stateError=null
   submit() {
     console.log(this.accountForm.value);
     if (this.accountForm.valid) {
@@ -115,6 +133,16 @@ export class EditaccountComponent implements OnInit {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
             this.dateError=''
+          }, 2000);
+        }else if(err.error.country){
+          this.countryError='Select country';
+          setTimeout(() => {
+            this.countryError=''
+          }, 2000);
+        }else if(err.error.state){
+          this.stateError='Select state';
+          setTimeout(() => {
+            this.stateError=''
           }, 2000);
         }
       })

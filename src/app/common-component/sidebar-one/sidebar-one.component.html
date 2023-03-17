@@ -13,19 +13,19 @@
                           class="menu-arrow"></span></a>
                   <ul>
                       <li><a routerLink="/product/productlist" routerLinkActive="active">Product
-                              List</a></li>
+                              </a></li>
                       <li><a routerLink="/product/addproduct" routerLinkActive="active">Add
                               Product</a></li>
                       <li><a routerLink="/product/categorylist" routerLinkActive="active">Category
-                              List</a></li>
+                              </a></li>
                       <!-- <li><a routerLink="/product/addcategory" routerLinkActive="active">Add
                               Category</a></li> -->
                       <li><a routerLink="/product/subcategorylist" routerLinkActive="active">Sub
-                              Category List</a></li>
+                              Category </a></li>
                       <!-- <li><a routerLink="/product/subaddcategory" routerLinkActive="active">Add Sub
                               Category</a></li> -->
                       <li><a routerLink="/product/brandlist" routerLinkActive="active">Brand
-                              List</a></li>
+                              </a></li>
                       <!-- <li><a routerLink="/product/addbrand" routerLinkActive="active">Add Brand</a>
                       </li> -->
                       <li><a routerLink="/product/colors" routerLinkActive="active">Colors</a></li>
@@ -45,8 +45,8 @@
                               <!-- <li><a routerLink="/product/country" routerLinkActive="active">Country</a></li>
                               <li><a routerLink="/product/state" routerLinkActive="active">State</a></li>
                               <li><a routerLink="/product/city" routerLinkActive="active">City</a></li> -->
-                              <li><a routerLink="/product/warehouse" routerLinkActive="active">
-                                Warehouse</a></li>
+                              <!-- <li><a routerLink="/product/warehouse" routerLinkActive="active">
+                                Warehouse</a></li> -->
                   </ul>
               </li>
 
@@ -55,7 +55,7 @@
                         class="menu-arrow"></span></a>
                 <ul>
                     <li><a routerLink="/company/companylist" routerLinkActive="active">Company
-                            List</a></li>
+                            </a></li>
                     <li><a routerLink="/company/addcompany" routerLinkActive="active">Add
                             Company</a></li>
 
@@ -67,7 +67,7 @@
                         class="menu-arrow"></span></a>
                 <ul>
                     <li><a routerLink="/employee/employeelist" routerLinkActive="active">Employee
-                            List</a></li>
+                            </a></li>
                     <li><a routerLink="/employee/addemployee" routerLinkActive="active">Add
                             Employee</a></li>
 
@@ -78,10 +78,18 @@
                         class="menu-arrow"></span></a>
                 <ul>
                     <li><a routerLink="/account/accountlist" routerLinkActive="active">Account
-                            List</a></li>
+                            </a></li>
                     <li><a routerLink="/account/addaccount" routerLinkActive="active">Add
                             Account</a></li>
 
+                </ul>
+            </li>
+            <li class="submenu" >
+                <a  [ngClass]="{'active': activePath === 'warehouse'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Warehouse</span> <span
+                        class="menu-arrow"></span></a>
+                <ul>
+                    <li><a routerLink="/warehouse/warehouse" routerLinkActive="active">Warehouse
+                            </a></li>
                 </ul>
             </li>
 

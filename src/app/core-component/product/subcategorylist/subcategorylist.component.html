@@ -98,11 +98,11 @@
                                 <td>{{products.title}}</td>
                                 <td>{{products.category_id}}</td>
                                 <td>
-                                  <a class="me-3" routerLink="/product/subcategory-details/{{products.id}}">
+                                  <a class="me-2" routerLink="/product/subcategory-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
                                     
-                                    <a class="me-3" (click)="editForm(products.id)">
+                                    <a class="me-2" (click)="editForm(products.id)">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text" href="javascript:void(0);">

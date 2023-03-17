@@ -41,17 +41,17 @@
                   hide: opendSubMenu[1] != 'Product'
                 }"
               >
-                <li><a routerLink="/product/productlist">Product List</a></li>
+                <li><a routerLink="/product/productlist">Product</a></li>
                 <li><a routerLink="/product/addproduct">Add Product</a></li>
-                <li><a routerLink="/product/categorylist">Category List</a></li>
+                <li><a routerLink="/product/categorylist">Category</a></li>
                 <li><a routerLink="/product/addcategory">Add Category</a></li>
                 <li>
-                  <a routerLink="/product/subcategorylist">Sub Category List</a>
+                  <a routerLink="/product/subcategorylist">Sub Category</a>
                 </li>
                 <li>
                   <a routerLink="/product/subaddcategory">Add Sub Category</a>
                 </li>
-                <li><a routerLink="/product/brandlist">Brand List</a></li>
+                <li><a routerLink="/product/brandlist">Brand</a></li>
                 <!-- <li><a routerLink="/product/addbrand">Add Brand</a></li> -->
                 <li><a routerLink="/product/colors">Colors</a></li>
                 <li><a routerLink="/product/size">Sizes</a></li>
@@ -89,7 +89,7 @@
                 }"
               >
                 <li>
-                  <a routerLink="/company/companylist">Company List</a>
+                  <a routerLink="/company/companylist">Company</a>
                 </li>
                 <li><a routerLink="/company/addcompany">Add Company</a></li>
               
@@ -113,7 +113,7 @@
                 }"
               >
                 <li>
-                  <a routerLink="/employee/employeelist">Employee List</a>
+                  <a routerLink="/employee/employeelist">Employee</a>
                 </li>
                 <li><a routerLink="/employee/addemployee">Add Employee</a></li>
               
@@ -136,13 +136,34 @@
                 }"
               >
                 <li>
-                  <a routerLink="/account/accountlist">Account List</a>
+                  <a routerLink="/account/accountlist">Account</a>
                 </li>
                 <li><a routerLink="/account/addaccount">Add Account</a></li>
               
               </ul>
             </li>
-        
+            <li class="submenu">
+              <a
+                (click)="showSubMenu('Warehouse')"
+                [class.subdrop]="opendSubMenu[1] === 'Warehouse'"
+                href="javascript:void(0);"
+                ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
+                  Warehouse</span
+                >
+                <span class="menu-arrow"></span
+              ></a>
+              <ul
+                [ngClass]="{
+                  show: opendSubMenu[1] == 'Warehouse',
+                  hide: opendSubMenu[1] != 'Warehouse'
+                }"
+              >
+                <li>
+                  <a routerLink="/warehouse/warehouse">Warehouse</a>
+                </li>
+     
+              </ul>
+            </li>
             <li class="submenu">
               <a
                 (click)="showSubMenu('Sales')"
@@ -159,7 +180,7 @@
                   hide: opendSubMenu[1] != 'Sales'
                 }"
               >
-                <li><a routerLink="/sales/saleslist">Sales List</a></li>
+                <li><a routerLink="/sales/saleslist">Sales</a></li>
                 <li><a routerLink="/sales/pos">POS</a></li>
                 <li><a routerLink="/sales/add-sales">New Sales</a></li>
                 <li>
