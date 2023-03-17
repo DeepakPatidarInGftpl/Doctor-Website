@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-
+import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 @Component({
   selector: 'app-pos',
   templateUrl: './pos.component.html',
@@ -13,13 +13,26 @@ import { map, startWith } from 'rxjs/operators';
 
 
 export class PosComponent implements OnInit {
-  options: string[] = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry'];
-  selectedOptions: string[] = [];
-  autocompleteControl = new FormControl();
-  filteredOptions$: Observable<string[]> | undefined;
-  customers:any = [];
+  //options: string[] = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry'];
+  options = [
+    { id: 1, name: 'Option 1', value: 'option1', price: 10 },
+    { id: 2, name: 'Option 2', value: 'option2', price: 20 },
+    { id: 3, name: 'Option 3', value: 'option3', price: 30 },
+    { id: 4, name: 'Option 4', value: 'option4', price: 40 },
+    { id: 5, name: 'Option 5', value: 'option5', price: 50 },
+  ];
 
-  constructor(private http: HttpClient) { }
+  selectedOptions: any[] = [];
+  autocompleteControl = new FormControl();
+  //filteredOptions$: Observable<any[]> | undefined;
+  filteredOptions$:any;
+  customers:any = [];
+  cartItems: any[] = [];
+
+
+  constructor(private http: HttpClient, private cartService:PosCartService) { 
+    // this.cartItems = this.cartService.getCartItems();
+  }
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
@@ -42,32 +55,90 @@ export class PosComponent implements OnInit {
     //   console.log(data);
     //   this.customers = data;
     // })
-    this.filteredOptions$ = this.autocompleteControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filterOptions(value))
-    );
+    this.cartItems = this.cartService.getCartItems();
+    console.log(this.cartItems);
+    this.filteredOptions$ = this.options;
+    this.autocompleteControl.valueChanges.subscribe(value => {
+      this.filterArray(value);
+    });
+
+    // ).pipe(
+    //   startWith(''),
+    //   map(value => this.filterOptions(value))
+    // );
     this.http.get('/assets/data.json').subscribe(data => {
       console.log(data);
       this.customers = data;
     });
   }
 
-  filterOptions(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  filterArray(value: string) {
+    this.filteredOptions$ = this.options.filter(option => option.name.toLowerCase().includes(value?.toLowerCase()));
   }
 
-  optionSelected(event: { option: { viewValue: any; }; }) {
-    const selectedOption = event.option.viewValue;
-    if (!this.selectedOptions.includes(selectedOption)) {
-      this.selectedOptions.push(selectedOption);
-      this.autocompleteControl.setValue('');
-    }
+  filterOptions(value: any): any[] {
+    console.log('fil', value.name);
+    console.log('options', this.options[0].name);
+    const filterValue = value.toLowerCase();
+    return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+
+  // optionSelected(event) {
+  //   console.log(event.option)
+  //   const selectedOption = event.option.value;
+  //   if (!this.selectedOptions.includes(selectedOption)) {
+  //     let product = {
+  //       id: selectedOption.id,
+  //       name: selectedOption.name,
+  //       price: selectedOption.price,
+  //       quantity: 1
+  //     }
+  //     this.selectedOptions.push(product);
+  //     this.autocompleteControl.setValue('');
+  //   }
+  // }
+
+  optionSelected(event){
+    const selectedOption = event.option.value;
+    let product = {
+            id: selectedOption.id,
+            name: selectedOption.name,
+            price: selectedOption.price,
+            quantity: 1
+          }
+    this.addToCart(product);
+    this.autocompleteControl.setValue('');
   }
 
   removeOption(index: number) {
     console.log('removed');
     this.selectedOptions.splice(index, 1);
+  }
+
+  addToCart(product: any): void {
+    this.cartService.addToCart({ id: product.id, name: product.name, price: product.price, quantity: 1 });
+  }
+
+  increaseQty(item){
+    this.cartService.increase(item);
+  }
+
+  decreaseQty(item){
+    this.cartService.decrease(item);
+  }
+
+  removeFromCart(item: any): void {
+    this.cartService.removeFromCart(item);
+    this.cartItems = this.cartService.getCartItems();
+  }
+
+  clearCart(): void {
+    this.cartService.clearCart();
+    this.cartItems = [];
+  }
+
+  displayFn(item: any): string {
+    return item ? item.name : '';
   }
 
 }
