@@ -194,7 +194,7 @@
                             <option value="{{country.id}}" *ngFor="let country of country">{{country.country_name}}
                             </option>
                         </select>
-
+                        <span class="text-danger"*ngIf="countryError">{{countryError}}</span>  
                         <span class="text-danger" *ngIf="countryy && countryy.invalid && countryy.touched">Select
                             country</span>
                     </div>
@@ -214,6 +214,7 @@
                             <option value="" selected disabled>State</option>
                             <option value="{{state.id}}" *ngFor="let state of state">{{state.state}}</option>
                         </select>
+                        <span class="text-danger"*ngIf="stateError">{{stateError}}</span>  
                         <span class="text-danger" *ngIf="statee && statee.invalid && statee.touched">Select state</span>
                     </div>
                 </div>
