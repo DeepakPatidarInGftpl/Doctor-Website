@@ -293,8 +293,6 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   }
 
   openaddForm() {
-    console.log('');
-    
     this.addForm = true;
     this.form.reset();
   }
