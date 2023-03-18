@@ -138,7 +138,7 @@ export class StatelistComponent implements OnInit {
       console.log('forms invalid');
     }
   }
-
+  countryError=null;
   update(){
     if (this.stateForm.valid) {
         this.coreService.updatestate(this.stateForm.value, this.id).subscribe(res => {
@@ -152,6 +152,12 @@ export class StatelistComponent implements OnInit {
           }
         }, err => {
           console.log(err.error);
+          if(err.error.country){
+            this.countryError='Select Country';
+            setTimeout(() => {
+              this.countryError=''
+            }, 3000);
+          }
         })
 
     } else {
