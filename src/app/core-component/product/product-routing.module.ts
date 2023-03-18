@@ -43,6 +43,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'subCategoryDetails/:id',
+        loadChildren: () =>
+          import('./subcategory-group-details/subcategory-group-details.module').then(
+            (m) => m.SubcategoryGroupDetailsModule
+          ),
+      },
+      {
         path: 'subaddcategory',
         loadChildren: () =>
           import('./subaddcategory/subaddcategory.module').then(

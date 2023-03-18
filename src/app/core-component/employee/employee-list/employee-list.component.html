@@ -98,7 +98,7 @@
                                 <th>Country</th>
                                 <th>State</th>
                                 <th>Pincode</th>
-                                <th>Is_active</th>
+                                <th>Is Active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -127,13 +127,13 @@
                                     [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                     class="badges">{{products.is_active}}</span></td>
                                 <td>
-                                    <a class="me-3"  routerLink="//employee/employee-details/{{products.id}}">
+                                    <a class="me-1" routerLink="//employee/employee-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-3" routerLink="//employee/editemployee/{{products.id}}">
+                                    <a class="me-1" routerLink="//employee/editemployee/{{products.id}}">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text" href="javascript:void(0);">
+                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>

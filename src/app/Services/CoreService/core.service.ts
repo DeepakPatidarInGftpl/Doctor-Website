@@ -1032,6 +1032,14 @@ export class CoreService {
       })
     })
   }
+  getwarehouseById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/warehouse/?id='
+    return this.http.get<any>(`${url}${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
 
   addWarehouse(data): Observable<any> {
     let url = this.apiUrl + '/pv-api/warehouse/';

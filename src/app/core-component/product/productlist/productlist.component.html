@@ -108,19 +108,19 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </th>
-                                <th>title</th>
+                                <th>Title</th>
                                 <th>Category </th>
-                                <th>subcategory</th>
-                                <th>subcategory_group</th>
+                                <th>Subcategory</th>
+                                <th>Subcategory group</th>
                                 <th>Brand</th>
                                 <th>Unit</th>
-                                <th>unit_conversion</th>
-                                <th>features_subcategory</th>
-                                <th>product_store</th>
-                                <th>description</th>                           
-                                <th>is_approved</th>
-                                <th>is_measurable</th>
-                                <th>is_active</th>
+                                <th>Unit Conversion</th>
+                                <th>Features Subcategory</th>
+                                <th>Product Store</th>
+                                <th>Description</th>                           
+                                <th>Is Approved</th>
+                                <th>Is Measurable</th>
+                                <th>Is Active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -161,14 +161,14 @@
                                     [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                     class="badges">{{products.is_active}}</span></td>
                                 <td>
-                                    <a class="me-3"  routerLink="//product/product-details/{{products.id}}">
+                                    <a class="me-1" routerLink="//product/product-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-3" routerLink="//product/editproduct/{{products.id}}">
+                                    <a class="me-1" routerLink="//product/editproduct/{{products.id}}">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
 
-                                    <a (click)="confirmText(i,products.id)" class="confirm-text" href="javascript:void(0);">
+                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);">
                                         <img  src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
