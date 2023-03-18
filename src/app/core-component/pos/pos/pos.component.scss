@@ -172,7 +172,7 @@ background-color: black;
 }
 
 .amt-info-div h5 {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
 }
 
 .amt-info-div button {
@@ -201,19 +201,25 @@ background-color: black;
     max-width: 75%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 3px;
 }
 
  .pos-s-input {
     max-width: 70%;
     margin-left: auto;
     margin-right: auto;
+    padding: 0 5px;
+    margin-bottom: 3px;
 }
 
 .amt-info-div .flat-disc-wrapper .input-group-text {
-    padding: 5px;
+    padding: 0 2px;
 }
 
 .bottom-pos-left .row:nth-child(2) .col-sm-12 {
     padding: 0;
 }
 
+.amt-info-div .flat-disc-wrapper .form-control {
+    padding:  0 5px;
+}
