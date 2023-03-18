@@ -207,7 +207,7 @@
                                         {{feature.title}}
                                     </option>
                                 </select>
-
+                                <span *ngIf="countryError" class="text-danger">{{countryError}}</span>
                                 <span class="text-danger"
                                     *ngIf="country && country.invalid && country.touched">Select
                                     Feature Group

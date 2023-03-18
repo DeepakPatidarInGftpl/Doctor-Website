@@ -212,7 +212,7 @@
                                         {{state.state}}
                                     </option>
                                 </select>
-
+                                <span *ngIf="stateError" class="text-danger">{{stateError}}</span>
                                 <span class="text-danger"
                                     *ngIf="state && state.invalid && state.touched">Select
                                     state
