@@ -223,3 +223,125 @@ background-color: black;
 .amt-info-div .flat-disc-wrapper .form-control {
     padding:  0 5px;
 }
+
+.add-more-details-btn {
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    color: #212529;
+    font-weight: 400;
+}
+
+.posmodal .modal-footer {
+    border-top: 1px solid #dee2e6;
+}
+
+.modal1BtnPos {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.modal2BtnPos {
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.posmodal .modal-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 22px;
+    color: #000
+}
+
+.posmodal .form-group label {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+color: #000;
+}
+
+.posmodal .form-group input {
+    font-weight: 300;
+    font-family: 'Roboto';
+    color: #9C9C9C;
+}
+
+.posmodal .form-group input:focus {
+    border: 1px solid #201E1F;
+}
+
+.posmodal .form-group input:disabled {
+    border: 1px solid #9C9C9C;
+}
+
+.posmodal .form-check-label {
+    margin-bottom: 0;
+}
+
+.posmodal .form-check-input {
+    border-color: #000;
+}
+
+
+.posmodal .form-check-input:checked {
+    background-color: #000;
+    border-color: #000;
+}
+
+.pos-offcanvas {
+    background: #F5F8F5;;
+}
+
+.pos-offcanvas .offcanvas-header {
+    background-color: #000;
+    color: white;
+}
+
+.on-hold-card {
+    padding: 16px 16px 30px 16px;
+    background-color:white;
+    border-radius: 4px;
+}
+
+.on-hold-card .on-hold-card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.on-hold-card h5 {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+}
+
+.modalRedeem .redeem-modal-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.modalRedeem .redeem-modal-details h5 {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+}
+
+.modalRedeem .redeem-modal-details input {
+    width: 12%;
+    padding: 0 5px;
+}
+
+.modalRedeem .redeem-modal-details h4 {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 22px;
+}

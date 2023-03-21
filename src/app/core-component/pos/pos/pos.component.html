@@ -29,19 +29,19 @@
         </div>
         <div class="col-lg-3 col-sm-12 ">
             <div class="right-header-pos">
-                <button type="button" class="me-1 btn btn-dark btn-sm">
+                <button type="button" class="me-1 btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <i class="fa fa-cog" data-bs-toggle="tooltip" title="fa fa-cog"></i>
                 </button>
-                <button type="button" class="me-1 btn btn-dark btn-sm">
+                <button type="button" class="me-1 btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal1">
                     <i class="fa fa-bars" data-bs-toggle="tooltip" title="fa fa-bars"></i>
                 </button>
-                <button type="button" class="me-1 btn btn-dark btn-sm">
+                <button type="button" class="me-1 btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal2">
                     <i class="fa fa-trash" data-bs-toggle="tooltip" title="fa fa-trash"></i>
                 </button>
-                <button type="button" class="me-1 btn btn-dark btn-sm">
+                <button type="button" class="me-1 btn btn-dark btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample">
                     <i class="fa fa-expand" data-bs-toggle="tooltip" title="fa fa-expand"></i>
                 </button>
-                <button type="button" class="me-1 btn btn-dark btn-sm">
+                <button type="button" class="me-1 btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal3">
                     <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                 </button>
                 <button type="button" class="me-1 btn btn-dark btn-sm">
@@ -409,3 +409,324 @@
         </div>
     </div>
 </div>
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+  </button> -->
+  
+  <!-- Modal -->
+  <div class="modal fade posmodal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Cash In Hand Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Cash In Hand</label>
+                <input type="text" class="form-control" placeholder="Cash In Hand">
+            </div>
+        </div>
+        <div class="modal-footer mt-5">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-dark modal1BtnPos">Start Selling</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Modal 2-->
+  <div class="modal fade modalCusDetails posmodal" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModal1Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Customer Details</h5>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" placeholder="Name">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Mobile No.</label>
+                        <input type="text" class="form-control" placeholder="Mobile No.">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Whatsapp No.</label>
+                        <input type="text" class="form-control" placeholder="Whatsapp No.">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group mb-0">
+                        <label>Date Of Birth</label>
+                        <input type="text" disabled class="form-control" placeholder="Date Of Birth">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="add-more-details-btn my-3" (click)="addMoreDetailsHandler()">{{addMoreDetails ? 'Hide More Details' : 'Add More Details'}}</button>
+            <div *ngIf="addMoreDetails">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Address Line</label>
+                            <input type="text" class="form-control" placeholder="Address Line1">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>State</label>
+                            <select class="form-select">
+                                <option>-- Select --</option>
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>City</label>
+                            <select class="form-select">
+                                <option>-- Select --</option>
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>GST Type</label>
+                            <select class="form-select">
+                                <option>-- Select --</option>
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>GSTIN</label>
+                            <input type="text" disabled class="form-control" placeholder="GSTIN">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark modal2BtnPos">Save</button>
+            <!-- <div class="row w-100">
+                <div class="col-sm-12 text-center">
+                    <button type="button" class="btn btn-dark">Save</button>
+                </div>
+            </div> -->
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+        </div>
+      </div>
+    </div>
+  </div>  
+
+<!-- Modal 3-->
+<div class="modal fade modalPayment posmodal" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModal2Label">Payment</h5>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="d-block">Select Voucher Type</label>
+                        <div class="row justify-center">
+                            <div class="col-sm-12">
+                                <div class="radio-payments-modal-wrapper d-flex justify-content-around">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
+                                        <label class="form-check-label" for="gender_male">Sales</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
+                                        <label class="form-check-label" for="gender_male">Purchase</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
+                                        <label class="form-check-label" for="gender_male">Expense</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
+                                        <label class="form-check-label" for="gender_male">Cash In Hand</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Vendor</label>
+                        <select class="form-select">
+                            <option>-- Select --</option>
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Account</label>
+                        <select class="form-select">
+                            <option>-- Select --</option>
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="text" class="form-control" placeholder="Enter Amount">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group mb-0">
+                        <label>Remark</label>
+                        <input type="text" class="form-control" placeholder="Enter Remark">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark modal2BtnPos">Save</button>
+            <!-- <div class="row w-100">
+                <div class="col-sm-12 text-center">
+                    <button type="button" class="btn btn-dark">Save</button>
+                </div>
+            </div> -->
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+        </div>
+      </div>
+    </div>
+  </div>    
+
+<!-- Modal 4-->
+<div class="modal fade modalRedeem posmodal" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModal3Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModal3Label">Redeem Credit</h5>
+          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+        </div>
+        <div class="modal-body">
+           <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <button type="button" class="btn btn-dark w-100">Invoice Balance: 7150</button>
+            </div>
+            <div class="col-sm-2"></div>
+           </div>
+           <div class="row mt-4">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label>Scan Barcode/Type Number</label>
+                    <input type="text" class="form-control" placeholder="Name">
+                </div>
+            </div>
+           </div>
+           <div class="row">
+            <div class="col-sm-12">
+                <div class="redeem-modal-details">
+                    <h5>
+                        Credit Note Date
+                    </h5>
+                    <h5>
+                        N/A
+                    </h5>
+                </div>
+                <div class="redeem-modal-details">
+                    <h5>
+                        Credit Amount
+                    </h5>
+                    <h5>
+                        0
+                    </h5>
+                </div>
+                <div class="redeem-modal-details">
+                    <h5>
+                        Credit Available
+                    </h5>
+                    <h5>
+                        0
+                    </h5>
+                </div>
+                <div class="redeem-modal-details">
+                    <h5>
+                        Apply Credit
+                    </h5>
+                    <input type="number" class="form-control" value="0" />
+                </div>
+                <div class="redeem-modal-details mt-2">
+                    <h4>
+                        ₹Payable Amt
+                    </h4>
+                    <h4>
+                        7150
+                    </h4>
+                </div>
+            </div>
+           </div>
+        </div>
+        <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark modal2BtnPos">Apply Credit</button>
+        </div>
+      </div>
+    </div>
+  </div>   
+
+  <!-- Hold Off Canvas -->
+  <div class="offcanvas offcanvas-end pos-offcanvas" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasExampleLabel">On Hold</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="on-hold-card">
+                    <div class="on-hold-card-header">
+                        <h5>ORD: 6766</h5>
+                        <h5>Amt: ₹766</h5>
+                    </div>
+                    <h5 class="mb-1">Contact Name: Aditi Kapoor- 8389299999</h5>
+                    <h5>Created On: 2023-02-23 1:21pm</h5>
+                </div>
+            </div>
+            <div class="col-sm-12 mt-3">
+                <div class="on-hold-card">
+                    <div class="on-hold-card-header">
+                        <h5>ORD: 6766</h5>
+                        <h5>Amt: ₹766</h5>
+                    </div>
+                    <h5 class="mb-1">Contact Name: Aditi Kapoor- 8389299999</h5>
+                    <h5>Created On: 2023-02-23 1:21pm</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>  
