@@ -44,7 +44,7 @@
                 <button type="button" class="me-1 btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal3">
                     <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                 </button>
-                <button type="button" class="me-1 btn btn-dark btn-sm">
+                <button type="button" class="me-1 btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal4">
                     <i class="fa fa-share-square" data-bs-toggle="tooltip" title="fa fa-share-square"></i>
                 </button>
             </div>
@@ -123,7 +123,7 @@
                                     <td>01</td>
                                     <td>{{cart.name}}</td>
                                     <td>
-                                        <div class="input-group pos-i-grp table-black-grp">
+                                        <div class="input-group pos-i-grp table-black-grp qty-input">
                                             <span (click)="decreaseQty(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
                                             <input type="text" value={{cart.quantity}} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                                             <span (click)="increaseQty(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">+</span>
@@ -160,7 +160,7 @@
                         <input type="text" class="form-control" placeholder="Remarks">
                     </div>
                 </div>
-                <div class="row mt-2">
+                <div class="row mt-3">
                     <div class="col-sm-12">
                         <div class="amt-info-div">
                             <ul>
@@ -213,13 +213,62 @@
                     </div>
                 </div>
                 <div class="row mt-3">
+                    <div class="col-sm-12">
+                        <div class="btns-row">
+                        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal5"> 
+                            <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
+                                Redeem Credit</button>
+                                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal6"> 
+                                    <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
+                                        Hold(F6)</button>
+                                        <button type="button" class="btn btn-dark"> 
+                                            <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
+                                                UPI(F5)</button>
+                                                <button type="button" class="btn btn-dark"> 
+                                                    <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
+                                                        Card(F3)</button>
+                                                        <button type="button" class="btn btn-dark"> 
+                                                            <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
+                                                                Cash(F4)</button>
+                                                                <button type="button" class="btn btn-dark"> 
+                                                                    <i class="fas fa-dice-two" data-bs-toggle="tooltip" title="fas fa-dice-two"></i>
+                                                                        Multiple Pay(F12)</button>
+
+                    </div>
+                                                                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm-12">
+                        <div class="btns-row">
+                            <button type="button" class="btn btn-dark w-100"> 
+                                <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
+                                    Apply Coupon</button>
+                                    <button type="button" class="btn btn-dark w-100"> 
+                                        <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
+                                            Pay Later(F11)</button>
+                                            <button type="button" class="btn btn-dark w-100"> 
+                                                <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
+                                                    Hold&Print(F7)</button>
+                                                    <button type="button" class="btn btn-dark w-100"> 
+                                                        <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
+                                                            UPI&Print(F10)</button>
+                                                            <button type="button" class="btn btn-dark w-100"> 
+                                                                <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
+                                                                    Card&Print(F9)</button>
+                                                                    <button type="button" class="btn btn-dark w-100"> 
+                                                                        <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
+                                                                            Cash&Print(F8)</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row mt-3">
                     <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
+                        <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#exampleModal5"> 
                         <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
                             Redeem Credit</button>
                     </div>
                     <div class="col-sm-2">
-                        <button type="button" class="btn btn-dark w-100"> 
+                        <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#exampleModal6"> 
                         <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                             Hold(F6)</button>
                     </div>
@@ -243,8 +292,8 @@
                         <i class="fas fa-dice-two" data-bs-toggle="tooltip" title="fas fa-dice-two"></i>
                             Multiple Pay(F12)</button>
                     </div>
-                </div>
-                <div class="row mt-2">
+                </div> -->
+                <!-- <div class="row mt-2">
                     <div class="col-sm-2">
                         <button type="button" class="btn btn-dark w-100"> 
                         <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
@@ -275,7 +324,7 @@
                         <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                             Cash&Print(F8)</button>
                     </div>
-                </div>
+                </div> -->
             </div>
             
         </div>
@@ -421,7 +470,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Cash In Hand Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
         </div>
         <div class="modal-body">
             <div class="form-group">
@@ -443,7 +494,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Customer Details</h5>
-          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
         </div>
         <div class="modal-body">
             <div class="row">
@@ -543,7 +596,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModal2Label">Payment</h5>
-          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
         </div>
         <div class="modal-body">
             <div class="row">
@@ -631,7 +686,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModal3Label">Redeem Credit</h5>
-          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
         </div>
         <div class="modal-body">
            <div class="row">
@@ -645,7 +702,7 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <label>Scan Barcode/Type Number</label>
-                    <input type="text" class="form-control" placeholder="Name">
+                    <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
                 </div>
             </div>
            </div>
@@ -697,13 +754,440 @@
         </div>
       </div>
     </div>
-  </div>   
+  </div>  
+
+<!-- Modal 5-->
+<div class="modal fade posmodal fullmodal-pos" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModal4Label" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close">Back To Sale</button>
+        </div>
+        <div class="modal-body">
+           <div class="row">
+            <div class="col-sm-4">
+                <div class="left">
+                    <h3 class="title">Sale Summery</h3>
+                    <h5 class="desc">Customer: Aditi Kapoor- 932477888</h5>
+                    <div class="product-detail-box my-3">
+                        <div class="table-responsive table-pos">
+                            <table class="table table-nowrap mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Product</th>
+                                        <th>Qty</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-light" *ngFor="let cart of cartItems; let i = index">
+                                        <td>1</td>
+                                        <td>01</td>
+                                        <td>1400</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="other-product-details">
+                        <div class="other-product-detail">
+                            <h5>Tax Amount</h5>
+                            <h5>620.00</h5>
+                        </div>
+                        <div class="other-product-detail">
+                            <h5>Tax Amount</h5>
+                            <h5>620.00</h5>
+                        </div>
+                        <div class="other-product-detail">
+                            <h5>Tax Amount</h5>
+                            <h5>620.00</h5>
+                        </div>
+                    </div>
+                    <div class="payment-details">
+                        <h3>7150</h3>
+                        <h5>Payable Amount</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="right">
+                    <div class="total-amt">
+                        <h3>Pay</h3>
+                        <div class="input-group pos-i-grp table-black-grp">
+                            <span class="input-group-text" id="basic-addon1">₹
+                            </span>
+                            <input type="text" value="25.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12 payment-wrapper-p">
+                            <div class="payment-wrapper">
+                                <div class="form-group me-3">
+                                    <label>Received Amount:</label>
+                                    <input type="text" class="form-control" placeholder="Received Amount:">
+                                </div>
+                                <div class="form-group me-3">
+                                    <label>Payment Method:</label>
+                                    <select class="form-select">
+                                        <option>-- Select --</option>
+                                        <option>Option 1</option>
+                                        <option>Option 2</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn-remove" aria-label="Close">
+                                    <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                                  </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12 payment-wrapper-p">
+                            <div class="payment-wrapper">
+                                <div class="form-group me-3">
+                                    <label>Received Amount:</label>
+                                    <input type="text" class="form-control" placeholder="Received Amount:">
+                                </div>
+                                <div class="form-group me-3">
+                                    <label>Payment Method:</label>
+                                    <select class="form-select">
+                                        <option>-- Select --</option>
+                                        <option>Option 1</option>
+                                        <option>Option 2</option>
+                                    </select>
+                                </div>
+                                <div class="form-group me-3">
+                                    <label>Payment Account:</label>
+                                    <select class="form-select">
+                                        <option>-- Select --</option>
+                                        <option>Option 1</option>
+                                        <option>Option 2</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn-remove" aria-label="Close">
+                                    <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                                  </button>
+                            </div>
+                            <div class="payment-wrapper2">
+                                <div class="form-group">
+                                    <label>UPI ID::</label>
+                                    <input type="text" class="form-control" placeholder="UPI ID">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12 payment-wrapper-p">
+                            <div class="payment-wrapper">
+                                <div class="form-group me-3">
+                                    <label>Received Amount:</label>
+                                    <input type="text" class="form-control" placeholder="Received Amount:">
+                                </div>
+                                <div class="form-group me-3">
+                                    <label>Payment Method:</label>
+                                    <select class="form-select">
+                                        <option>-- Select --</option>
+                                        <option>Option 1</option>
+                                        <option>Option 2</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn-remove" aria-label="Close">
+                                    <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                                  </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12">
+                            <button type="button" class="add-more-details-btn my-3" (click)="addMoreDetailsHandler()"><i class="fa fa-plus me-1" data-bs-toggle="tooltip" title="fa fa-long-arrow-right"></i> {{addMoreDetails ? 'Hide More Details' : 'Add More Payment'}}</button>
+                            <button type="button" class="btn btn-dark w-100"> 
+                                Proceed To Pay <i class="fa fa-arrow-right ms-1" data-bs-toggle="tooltip" title="fa fa-long-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           </div>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark modal2BtnPos">Apply Credit</button>
+        </div> -->
+      </div>
+    </div>
+</div>    
+
+  <!-- Modal 6-->
+  <div class="modal fade posmodal" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModal5Label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <h5 class="modal-title" id="exampleModal5Label">Calculator</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div> -->
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Due Amount</label>
+                        <input type="text" class="form-control" placeholder="Cash In Hand">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Tendered</label>
+                        <input type="text" class="form-control" placeholder="Tendered">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Change</label>
+                        <input type="text" disabled class="form-control" placeholder="Change">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="cal-wrapper">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="cal-div-wrapper">
+                                    <div class="cal-div">1</div>
+                                    <div class="cal-div">2</div>
+                                    <div class="cal-div">3</div>
+                                    <div class="cal-div">+05</div>
+                                    <div class="cal-div">+100</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="cal-div-wrapper">
+                                    <div class="cal-div">1</div>
+                                    <div class="cal-div">2</div>
+                                    <div class="cal-div">3</div>
+                                    <div class="cal-div">+05</div>
+                                    <div class="cal-div">+100</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="cal-div-wrapper">
+                                    <div class="cal-div">1</div>
+                                    <div class="cal-div">2</div>
+                                    <div class="cal-div">3</div>
+                                    <div class="cal-div">+05</div>
+                                    <div class="cal-div">+100</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="cal-div-wrapper">
+                                    <div class="cal-div">1</div>
+                                    <div class="cal-div">2</div>
+                                    <div class="cal-div">3</div>
+                                    <div class="cal-div">+05</div>
+                                    <div class="cal-div">+100</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-7">
+                    <div>
+                        <button type="button" class="btn btn-dark mb-2 w-100">Submit</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-dark w-100" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="modal-footer mt-5">
+          <button type="button" class="btn btn-dark modal1BtnPos">Start Selling</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 7-->
+  <div class="modal fade posmodal" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModal6Label" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModal6Label">Current Register (19 Mar 2022 11:10 am - 19 Mar 2022 11:10 am)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="register-left-wrapper">
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                        <div class="register-left-div">
+                            <h4>Opening Cash</h4>
+                            <h4>500</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="register-table">
+                        <div class="table-responsive">
+                            <table class="table table-striped mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Firstname</th>
+                                        <th>Lastname</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>John</td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number" value="0">
+                                        </div>
+                                        <td>john@example.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td>John</td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number" value="0">
+                                        </div>
+                                        <td>john@example.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td>John</td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number" value="0">
+                                        </div>
+                                        <td>john@example.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td>John</td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number" value="0">
+                                        </div>
+                                        <td>john@example.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td>John</td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Scan Barcode/Type Number" value="0">
+                                        </div>
+                                        <td>john@example.com</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Bank Account</label>
+                        <select class="form-select">
+                            <option>-- Select --</option>
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Scan Barcode/Type Number</label>
+                        <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
+                    </div>
+                    <div class="form-group">
+                        <label>Scan Barcode/Type Number</label>
+                        <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
+                    </div>
+                    <div class="form-group">
+                        <label>Scan Barcode/Type Number</label>
+                        <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
+                    </div>
+                    <div class="form-group">
+                        <label>Scan Barcode/Type Number</label>
+                        <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
+                    </div>
+                    <div class="form-group">
+                        <label>Scan Barcode/Type Number</label>
+                        <input type="text" class="form-control" placeholder="Scan Barcode/Type Number">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-dark modal2BtnPos" data-bs-dismiss="modal" aria-label="Close">Close Register</button>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+  
 
   <!-- Hold Off Canvas -->
   <div class="offcanvas offcanvas-end pos-offcanvas" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasExampleLabel">On Hold</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close">
+        <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+      </button>
     </div>
     <div class="offcanvas-body">
         <div class="row">
