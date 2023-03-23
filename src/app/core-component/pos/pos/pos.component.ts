@@ -28,6 +28,7 @@ export class PosComponent implements OnInit {
   filteredOptions$:any;
   customers:any = [];
   cartItems: any[] = [];
+  addMoreDetails: any;
 
 
   constructor(private http: HttpClient, private cartService:PosCartService) { 
@@ -70,6 +71,8 @@ export class PosComponent implements OnInit {
       console.log(data);
       this.customers = data;
     });
+    this.addMoreDetails = false;
+    console.log(this.addMoreDetails);
   }
 
   filterArray(value: string) {
@@ -139,6 +142,10 @@ export class PosComponent implements OnInit {
 
   displayFn(item: any): string {
     return item ? item.name : '';
+  }
+
+  addMoreDetailsHandler() {
+    return this.addMoreDetails = !this.addMoreDetails;
   }
 
 }
