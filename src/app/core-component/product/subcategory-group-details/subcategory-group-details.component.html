@@ -1,0 +1,145 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Subcategory Group Details Details</h4>
+        <h6>Full details of a Subcategory Group Details</h6>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <!-- <div class="bar-code-view">
+                    <img src="assets/img/barcode1.png" alt="barcode">
+                    <a class="printimg">
+                        <img src="assets/img/icons/printer.svg" alt="print">
+                    </a>
+                </div> -->
+                <div class="productdetails">
+                    <ul class="product-bar" *ngIf="subcategoryDetails">
+                        <li>
+                            <h4>Title</h4>
+                            <h6>{{subcategoryDetails.title}}</h6>
+                        </li>
+                        <li>
+                            <h4>Is Active</h4>
+                            <h6>{{subcategoryDetails.is_active}}</h6>
+                        </li>
+                        <li>
+                            <h4>Category</h4>
+                            <div class="second-list">
+                                <ul *ngIf="subcategoryDetails.category">
+                                    <li>
+                                        <h4>Title</h4>
+                                        <h6>{{subcategoryDetails.category.title}}</h6>
+                                    </li>                                  
+                                    <li>
+                                        <h4>Is Active</h4>
+                                        <h6>{{subcategoryDetails.category.is_active}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Image</h4>
+                                        <div class="img-div">
+                                            <img [src]="imgUrl+subcategoryDetails.category.image" alt="" class="img2">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <h4>Feature Group</h4>
+                            <div class="second-list">
+                                <ul *ngFor="let feature_group of subcategoryDetails.feature_group">
+                                    <li>
+                                        <h4>Title</h4>
+                                        <h6>{{feature_group.title}}</h6>
+                                    </li>                                  
+                                    <li>
+                                        <h4>Is Active</h4>
+                                        <h6>{{feature_group.is_active}}</h6>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <h4>Sub Categories</h4>
+                            <div class="second-list">
+                                <ul *ngFor="let subcategories of subcategoryDetails.subcategories">
+                                    <li>
+                                        <h4>Title</h4>
+                                        <h6>{{subcategories.title}}</h6>
+                                    </li>  
+                                    <li>
+                                        <h4>Category Id</h4>
+                                        <h6>{{subcategories.category_id}}</h6>
+                                    </li>                                 
+                                    <li>
+                                        <h4>Is Active</h4>
+                                        <h6>{{subcategories.is_active}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Image</h4>
+                                        <div class="img-div">
+                                            <img [src]="imgUrl+subcategories.image" alt="" class="img2">
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <h4>Brands</h4>
+                                        <div class="second-list">
+                                            <ul *ngFor="let brand of subcategories.brand_id">
+                                                <li>
+                                                    <h4>title</h4>
+                                                    <h6>{{brand.title}}</h6>
+                                                </li>
+                                                <li>
+                                                    <h4>code</h4>
+                                                    <h6>{{brand.code}}</h6>
+                                                </li>
+                                                <li>
+                                                    <h4>Is Active</h4>
+                                                    <h6>{{brand.is_active}}</h6>
+                                                </li>
+                                                <li>
+                                                    <h4>Image</h4>
+                                                    <div class="img-div">
+                                                        <img [src]="imgUrl+brand.image" alt="" class="img2">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                      
+                             
+                            
+                        </li>
+                   
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="col-lg-4 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="slider-product-details">
+                    <div class="owl-carousel owl-theme product-slide">
+                        <div class="slider-product">
+                            <img [src]="imgUrl+subcategoryDetails.image" alt="img">
+                            <h4>{{subcategoryDetails.title}}</h4>
+                     
+                        </div>
+                        <div class="slider-product">
+                            <img [src]="imgUrl+subcategoryDetails.image" alt="img">
+                            <h4>{{subcategoryDetails.title}}</h4>
+                     
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>

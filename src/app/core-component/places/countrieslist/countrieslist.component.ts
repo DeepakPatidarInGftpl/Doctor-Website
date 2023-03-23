@@ -147,6 +147,7 @@ export class CountrieslistComponent implements OnInit {
           }
         }, err => {
           console.log(err.error);
+    
         })
 
     } else {

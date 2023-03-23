@@ -135,6 +135,7 @@ export class CitylistComponent implements OnInit {
     }
   }
 
+  stateError=null
   update(){
     if (this.cityForm.valid) {
         this.coreService.updatecity(this.cityForm.value, this.id).subscribe(res => {
@@ -148,7 +149,13 @@ export class CitylistComponent implements OnInit {
             this.ngOnInit();
           }
         }, err => {
-          console.log(err.error.gst);
+          console.log(err.error.state);
+          if(err.error.state){
+            this.stateError='Select State';
+            setTimeout(() => {
+              this.stateError=''
+            }, 3000);
+          }
         })
 
     } else {

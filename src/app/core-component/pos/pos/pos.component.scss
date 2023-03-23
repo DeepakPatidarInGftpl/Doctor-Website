@@ -1,5 +1,5 @@
 .pos-wrapper {
-    height: 80vh;
+    // height: 80vh;
 }
 
 .customer-type-div {
@@ -12,8 +12,19 @@
 }
 
 .customer-type-div label {
-    font-size: 1rem;
-    font-weight: 400;
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+}
+
+.customer-type-div .radio label input {
+    border-color: #000;
+}
+
+.customer-type-div .radio label input:checked {
+    background-color: #000;
+    border-color: #000;
 }
 
 .top-header-left {
@@ -26,8 +37,10 @@
     display: flex;
     align-items: center;
     width: 30%;
-    font-size: 1rem;
-    font-weight: 400;
+    font-weight: 500;
+    font-family: 'Roboto';
+font-style: normal;
+font-size: 16px;
 }
 
 .salesman-div select {
@@ -48,7 +61,8 @@
 
 .amt-info-div li {
     border-right: 1px solid black;
-    padding: 10px;
+    padding: 5px 0;
+    flex: 1;
     text-align: center;
 }
 
@@ -57,19 +71,32 @@
 }
 
 .amt-info-div li p {
-    margin-bottom: 5px;
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+    margin-bottom: 0px;
+    line-height: 1;
 }
 
+.amt-info-div li:last-child p {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+
 .cus-details-wrapper {
-    padding: 20px;
-    border: 1px solid black;
-    border-radius: 5px;
+    padding: 14px 25px;
+    border: 1px solid #9C9C9C;
+    border-radius: 4px;
 }
 
 .cus-details-wrapper p {
-    font-size: 0.8rem;
-    font-weight: 700;
-    margin-top: 5px;
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+margin-top: 8px;
 }
 
 .btn-pos {
@@ -80,11 +107,15 @@
     align-items: center;
     margin-left: auto;
     margin-right: auto;
-    font-size: 0.65rem;
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+color: #9C9C9C;
 }
 
 .btn-pos i {
-    font-size: 20px;
+    font-size: 24px;
     margin-bottom: 5px;
 }
 
@@ -96,7 +127,7 @@
 
 .right-btns-wrapper li {
     width: 50%;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
 }
 
 .right-header-pos i {
@@ -107,9 +138,9 @@
     margin-bottom: 0;
 }
 
-.pos-i-grp, .pos-s-input {
-    max-width: 85px;
-}
+// .pos-i-grp .pos-s-input {
+//     max-width: 70%;
+// }
 
 .flat-disc-wrapper {
     display: flex;
@@ -126,12 +157,12 @@
 
 .bottom-pos-left {
     position: absolute;
-    width: 70%;
-    bottom: 10px;
+    bottom: 0;
+    width: 97%;
 }
 
 .pos-left-wrapper {
-    // position: relative;
+    position: relative;
 }
 
 .product-autocomplete .mat-form-field {
@@ -140,8 +171,12 @@
 
 .table-cross-btn {
     border: none;
-    color: red;
+    color: #201E1F;
     background: transparent;
+}
+
+.table-cross-btn i {
+    font-size: 20px;
 }
 
 .table-pos thead tr {
@@ -150,6 +185,18 @@ background-color: black;
 
 .table-pos thead tr th {
     color: white;
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+}
+
+.table-pos tbody tr td {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+color: #9C9C9C;
 }
 
 .mrp-input-table{
@@ -171,17 +218,356 @@ background-color: black;
 }
 
 .amt-info-div h5 {
-    font-size: 0.75rem;
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
 }
 
 .amt-info-div button {
-    font-size: 14px;
+    font-size: 12px;
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+padding: 2px 4px;
 }
 
-.bottom-pos-left button {
-    font-size: 0.65rem;
+.bottom-pos-left .btns-row button {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+    flex-grow: 1;
+}
+
+.bottom-pos-left .btns-row {
+    display: flex;
+    gap: 10px;
 }
 
 .cus-details-wrapper h4 {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+}
+
+.pos-container {
+    height: 82vh;
+}
+
+.table-pos {
+    overflow-y: scroll;
+    height: 25vh;
+}
+
+.amt-info-div .flat-disc-wrapper {
+    justify-content: center;
+    max-width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3px;
+}
+
+ .pos-s-input {
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 5px;
+    margin-bottom: 3px;
+}
+
+.amt-info-div .flat-disc-wrapper .input-group-text {
+    padding: 0 2px;
+}
+
+.bottom-pos-left .row:nth-child(2) .col-sm-12 {
+    padding: 0;
+}
+
+.amt-info-div .flat-disc-wrapper .form-control {
+    padding:  0 5px;
+}
+
+.add-more-details-btn {
+    text-decoration: none;
+    border: none;
+    background: transparent;
     font-size: 1rem;
+    color: #212529;
+    font-weight: 400;
+}
+
+.posmodal .modal-footer {
+    border-top: 1px solid #dee2e6;
+}
+
+.modal1BtnPos {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.modal2BtnPos {
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.posmodal .modal-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 22px;
+    color: #000
+}
+
+.posmodal .form-group label {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+color: #000;
+}
+
+.posmodal .form-group input {
+    font-weight: 300;
+    font-family: 'Roboto';
+    color: #9C9C9C;
+}
+
+.posmodal .form-group input:focus {
+    border: 1px solid #201E1F;
+}
+
+.posmodal .form-group input:disabled {
+    border: 1px solid #9C9C9C;
+}
+
+.posmodal .form-check-label {
+    margin-bottom: 0;
+}
+
+.posmodal .form-check-input {
+    border-color: #000;
+}
+
+
+.posmodal .form-check-input:checked {
+    background-color: #000;
+    border-color: #000;
+}
+
+.pos-offcanvas {
+    background: #F5F8F5;;
+}
+
+.pos-offcanvas .offcanvas-header {
+    background-color: #000;
+    color: white;
+}
+
+.on-hold-card {
+    padding: 16px 16px 30px 16px;
+    background-color:white;
+    border-radius: 4px;
+}
+
+.on-hold-card .on-hold-card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.on-hold-card h5 {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+}
+
+.modalRedeem .redeem-modal-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.modalRedeem .redeem-modal-details h5 {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+}
+
+.modalRedeem .redeem-modal-details input {
+    width: 12%;
+    padding: 0 5px;
+}
+
+.modalRedeem .redeem-modal-details h4 {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 22px;
+}
+
+.pos-offcanvas .btn-close {
+    opacity: 1;
+    padding-top: 0;
+}
+
+.pos-offcanvas .btn-close i {
+    font-size: 24px;
+}
+
+.posmodal .btn-close i {
+    color: #9C9C9C;
+    font-size: 20px;
+}
+
+.fullmodal-pos .left {
+    border-right: 1px solid black;
+    padding: 32px
+}
+
+.fullmodal-pos .left .title, .fullmodal-pos .left .payment-details h3, .right .total-amt h3 {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 32px;
+}
+
+.fullmodal-pos .left .desc {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+}
+
+.fullmodal-pos .left .other-product-detail {
+    border-bottom: 1px solid #9C9C9C;
+    padding: 8px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.fullmodal-pos .left .other-product-detail h5, .fullmodal-pos .left .payment-details h5 {  
+font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+}
+
+.fullmodal-pos .left .payment-details {
+    text-align: end;
+    margin-top: 15px;
+}
+
+.fullmodal-pos .right .total-amt {
+     display: flex;
+     align-items: center;
+}
+
+.fullmodal-pos .right .total-amt .input-group {
+    width: 175px;
+    margin-left: 20px;
+}
+
+.fullmodal-pos .right .payment-wrapper-p {
+    padding: 18px 16px 0px 16px;
+    background: #EEEEEE;
+}
+
+.fullmodal-pos .right .payment-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.fullmodal-pos .right .payment-wrapper .btn-remove {
+    height: fit-content;
+    padding: 4px 8px;
+    border-radius: 50%;
+    border-color: #FF0000;
+    color: #FF0000;
+}
+
+.fullmodal-pos .right .payment-wrapper .btn-remove i {
+    font-size: 20px;
+}
+
+.add-more-details-btn i {
+    background: black;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    padding: 5px 6px;
+}
+
+.posmodal .cal-wrapper .cal-div-wrapper {
+    display: flex;
+}
+
+.posmodal .cal-wrapper .cal-div-wrapper .cal-div {
+    background-color: white;
+    padding: 10px 15px;
+    border: 1px solid black;
+    flex-grow: 1;
+    text-align: center;
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+}
+
+.posmodal .register-left-wrapper .register-left-div {
+    display: flex;
+}
+
+.posmodal .register-left-wrapper .register-left-div h4 {
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+padding: 10px 16px;
+}
+
+.posmodal .register-left-wrapper .register-left-div h4:first-child {
+    width: 80%;
+    text-align: left;
+    background-color: #EBECF2;
+}
+
+.posmodal .register-left-wrapper .register-left-div h4:last-child {
+    width: 20%;
+    text-align: right;
+    background-color: #F2F4F3;
+}
+
+.posmodal .register-left-wrapper .register-left-div:nth-child(even) h4:last-child {
+    background-color: #FFFFFF;
+}
+
+.posmodal .register-table .table thead th, .posmodal .register-table .table tbody tr td {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    color: #000
+}
+
+.posmodal .register-table .table thead {
+    // background-color: #F2F4F3;
+}
+
+.posmodal .register-table .form-group {
+    margin: 0
+}
+
+.qty-input input {
+    padding: 0;
+    width: 35px;
+}
+
+.qty-input span {
+    border-radius: 0;
 }

@@ -158,6 +158,9 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
     };
   }
 
+
+
+  
   arraySubCat = []
   onSelectionChange(subCat, isChecked) {
 
@@ -188,6 +191,9 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   }
 
 
+
+
+
   submitForm() {
     console.log(this.form.value);
 
@@ -215,6 +221,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
             this.coreServ.editThings.unsubscribe()
             this.selectedSubCats = []
             this.selectedFeature = []
+            this.addForm=true;
             this.form.reset()
             this.toastr.success(res.msg)
             this.ngOnInit()
@@ -226,6 +233,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
             this.form.reset()
             this.selectedSubCats = []
             this.selectedFeature = []
+            this.addForm=true;
             this.errormessFSubC = null
             this.errormessFFG = null
             this.toastr.success(res.msg)
@@ -249,6 +257,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
 
   editThis(prod) {
     this.coreServ.editThisData(prod)
+    this.editForm()
   }
 
   ngOnDestroy() {
@@ -283,4 +292,12 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
     return this.form.get('feature_group')
   }
 
+  openaddForm() {
+    this.addForm = true;
+    this.form.reset();
+  }
+  addForm=true
+  editForm(){
+    this.addForm=false
+  }
 }

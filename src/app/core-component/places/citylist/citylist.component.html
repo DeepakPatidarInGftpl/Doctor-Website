@@ -57,7 +57,7 @@
                                 <th>City</th>
                                 <th>City Code</th>
                                 <th>State</th>
-                                <th>Is_active</th>
+                                <th>Is Active</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -212,7 +212,7 @@
                                         {{state.state}}
                                     </option>
                                 </select>
-
+                                <span *ngIf="stateError" class="text-danger">{{stateError}}</span>
                                 <span class="text-danger"
                                     *ngIf="state && state.invalid && state.touched">Select
                                     state
