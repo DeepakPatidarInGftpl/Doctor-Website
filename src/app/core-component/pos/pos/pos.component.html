@@ -81,19 +81,41 @@
             <div class="row">
                 <div class="col-sm-4 product-autocomplete">
                     <!-- <input type="text" class="form-control" placeholder="Scan Barcode/Enter Product Name"> -->
-                    <mat-form-field>
+                    <form class="form-ex">
+                        <input type="text"
+                               placeholder="Scan Barcode/Enter Product Name"
+                               [formControl]="autocompleteControl"
+                               [matAutocomplete]="auto"
+                               class="form-control">
+                               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)">
+                                <mat-option *ngFor="let option of filteredOptions$" [value]="option">{{ displayFn(option) }}</mat-option>
+                              </mat-autocomplete>
+                      </form>
+                    <!-- <mat-form-field>
                         <mat-label>Scan Barcode/Enter Product Name</mat-label>
                         <input matInput placeholder="Search" [formControl]="autocompleteControl" [matAutocomplete]="auto">
                         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)">
                           <mat-option *ngFor="let option of filteredOptions$" [value]="option">{{ displayFn(option) }}</mat-option>
                         </mat-autocomplete>
-                      </mat-form-field>
+                      </mat-form-field> -->
                 </div>
                 <div class="col-sm-4">
-                    <select class="form-select">
+                    <form class="exam-form">
+                        <input type="text"
+                               placeholder="Search for a street"
+                               [formControl]="userCompleteControl"
+                               [matAutocomplete]="auto1"
+                               class="form-control">
+                        <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="optionSelected1($event)">
+                          <mat-option *ngFor="let street of filteredStreets | async" [value]="street">
+                            {{street}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </form>
+                    <!-- <select class="form-select">
                         <option>-- Select --</option>
                         <option *ngFor="let customer of customers">{{customer.name}}</option>
-                    </select>
+                    </select> -->
                 </div>
                 <div class="col-sm-4">
                     <input type="text" class="form-control" placeholder="Scan Sales Invoice">
@@ -139,7 +161,7 @@
                                             <input type="text" value="25.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                                         </div>
                                     </td>
-                                    <td><div class="input-group pos-i-grp">
+                                    <td><div class="input-group pos-i-grp table-black-grp">
                                         <span class="input-group-text" id="basic-addon1">%</span>
                                         <input type="text" value="0.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                                     </div></td>
@@ -466,7 +488,7 @@
   
   <!-- Modal -->
   <div class="modal fade posmodal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Cash In Hand Details</h5>
@@ -490,7 +512,7 @@
 
 <!-- Modal 2-->
   <div class="modal fade modalCusDetails posmodal" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModal1Label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Customer Details</h5>
@@ -592,7 +614,7 @@
 
 <!-- Modal 3-->
 <div class="modal fade modalPayment posmodal" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModal2Label">Payment</h5>
@@ -631,6 +653,103 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="d-block">Select Voucher Type</label>
+                        <div class="row justify-center">
+                            <div class="col-sm-12 mb-3">
+                                <div class="radio-payments-modal-wrapper d-flex justify-content-around">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
+                                        <label class="form-check-label" for="gender_male">Sales</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
+                                        <label class="form-check-label" for="gender_male">Purchase</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Vendor</label>
+                                    <select class="form-select">
+                                        <option>-- Select --</option>
+                                        <option>Option 1</option>
+                                        <option>Option 2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Account</label>
+                                    <select class="form-select">
+                                        <option>-- Select --</option>
+                                        <option>Option 1</option>
+                                        <option>Option 2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <input type="text" class="form-control" placeholder="Enter Amount">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Vendor</label>
+                                        <select class="form-select">
+                                            <option>-- Select --</option>
+                                            <option>Option 1</option>
+                                            <option>Option 2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Account</label>
+                                        <select class="form-select">
+                                            <option>-- Select --</option>
+                                            <option>Option 1</option>
+                                            <option>Option 2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Amount</label>
+                                        <input type="text" class="form-control" placeholder="Enter Amount">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Vendor</label>
+                                        <select class="form-select">
+                                            <option>-- Select --</option>
+                                            <option>Option 1</option>
+                                            <option>Option 2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Account</label>
+                                        <select class="form-select">
+                                            <option>-- Select --</option>
+                                            <option>Option 1</option>
+                                            <option>Option 2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Vendor</label>
@@ -657,7 +776,7 @@
                         <input type="text" class="form-control" placeholder="Enter Amount">
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group mb-0">
@@ -682,7 +801,7 @@
 
 <!-- Modal 4-->
 <div class="modal fade modalRedeem posmodal" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModal3Label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModal3Label">Redeem Credit</h5>
@@ -764,8 +883,8 @@
             <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close">Back To Sale</button>
         </div>
         <div class="modal-body">
-           <div class="row">
-            <div class="col-sm-4">
+           <div class="row flex-fill full-modal-row" style="min-height: 0">
+            <div class="col-sm-4 mh-100" style="overflow-y: hidden;">
                 <div class="left">
                     <h3 class="title">Sale Summery</h3>
                     <h5 class="desc">Customer: Aditi Kapoor- 932477888</h5>
@@ -809,7 +928,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-8 mh-100" style="overflow-y: scroll;">
                 <div class="right">
                     <div class="total-amt">
                         <h3>Pay</h3>
@@ -917,7 +1036,7 @@
 
   <!-- Modal 6-->
   <div class="modal fade posmodal" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModal5Label" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <!-- <div class="modal-header">
           <h5 class="modal-title" id="exampleModal5Label">Calculator</h5>
