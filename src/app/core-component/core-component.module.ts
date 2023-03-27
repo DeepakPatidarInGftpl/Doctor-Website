@@ -10,6 +10,7 @@ import { SidebarThreeComponent } from '../common-component/sidebar-three/sidebar
 import { SidebarFourComponent } from '../common-component/sidebar-four/sidebar-four.component';
 import { SidebarFiveComponent } from '../common-component/sidebar-five/sidebar-five.component';
 import { HeaderComponent } from '../common-component/header/header.component';
+
 import {
   PerfectScrollbarConfigInterface,
   PerfectScrollbarModule,
@@ -36,6 +37,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CoreComponentRoutingModule,
     FormsModule,
     PerfectScrollbarModule,
+
   ],
   providers: [
     {

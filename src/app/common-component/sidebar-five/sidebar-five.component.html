@@ -46,46 +46,7 @@
       <div class="tab-content tab-content-four pt-2">
         <ul class="tab-pane active" id="home" aria-labelledby="home-tab">
           <li><a routerLink="/dashboard"><span> Dashboard</span> </a></li>
-          <li class="submenu">
-            <a (click)="showSubMenu('Product')" [class.subdrop]="opendSubMenu[1] === 'Product'" href="javascript:void(0);"><span> Product</span> <span class="menu-arrow"></span></a>
-            <ul [ngClass]="{
-              show: opendSubMenu[1] == 'Product',
-              hide: opendSubMenu[1] != 'Product'
-            }">
-            <li><a routerLink="/product/productlist">Product</a></li>
-            <li><a routerLink="/product/addproduct">Add Product</a></li>
-            <li><a routerLink="/product/categorylist">Category</a></li>
-            <li><a routerLink="/product/addcategory">Add Category</a></li>
-            <li>
-              <a routerLink="/product/subcategorylist">Sub Category</a>
-            </li>
-            <li>
-              <a routerLink="/product/subCategoryGroup">Sub Category Group</a>
-            </li>
-            <!-- <li>
-              <a routerLink="/product/subaddcategory">Add Sub Category</a>
-            </li> -->
-            <li><a routerLink="/product/brandlist">Brand</a></li>
-            <!-- <li><a routerLink="/product/addbrand">Add Brand</a></li> -->
-            <li><a routerLink="/product/colors">Colors</a></li>
-            <li><a routerLink="/product/size">Sizes</a></li>
-            <li><a routerLink="/product/tax">Tax</a></li>
-            <li><a routerLink="/product/feature_group">Feature Group</a></li>
-            <li><a routerLink="/product/feature">Feature </a></li>
-            <li><a routerLink="product/hsncode">HSN Code</a></li>
-            <li><a routerLink="product/units">Units</a></li>
-            <li><a routerLink="product/unitconversion">Unit Conversion</a></li>
-            <li><a routerLink="/product/variant">Variant </a></li>
-            <!-- <li><a routerLink="/product/subcategory-group">Subcategory Group </a></li> -->
-            <li>
-              <a routerLink="/product/importproduct">Import Products</a>
-            </li>
-            <li><a routerLink="/product/barcode">Print Barcode</a></li>
-            <!-- <li><a routerLink="/product/country">Country</a></li>
-            <li><a routerLink="/product/state">State</a></li>
-            <li><a routerLink="/product/city">City</a></li> -->
-          </ul>
-          </li>
+
           <li class="submenu">
             <a (click)="showSubMenu('Company')" [class.subdrop]="opendSubMenu[1] === 'Company'" href="javascript:void(0);"><span> Company</span> <span class="menu-arrow"></span></a>
             <ul [ngClass]="{
@@ -128,6 +89,58 @@
             <li><a routerLink="/warehouse/warehouse">Warehouse</a></li>
           </ul>
           </li>
+          <li class="submenu">
+            <a (click)="showSubMenu('Product')" [class.subdrop]="opendSubMenu[1] === 'Product'" href="javascript:void(0);"><span> Product</span> <span class="menu-arrow"></span></a>
+            <ul [ngClass]="{
+              show: opendSubMenu[1] == 'Product',
+              hide: opendSubMenu[1] != 'Product'
+            }">
+            <li><a routerLink="/product/productlist">Product</a></li>
+            <li><a routerLink="/product/addproduct">Add Product</a></li>
+            <li><a routerLink="/product/categorylist">Category</a></li>
+            <li><a routerLink="/product/addcategory">Add Category</a></li>
+            <li>
+              <a routerLink="/product/subcategorylist">Sub Category</a>
+            </li>
+            <li>
+              <a routerLink="/product/subCategoryGroup">Sub Category Group</a>
+            </li>
+            <!-- <li>
+              <a routerLink="/product/subaddcategory">Add Sub Category</a>
+            </li> -->
+            <li><a routerLink="/product/brandlist">Brand</a></li>
+            <!-- <li><a routerLink="/product/addbrand">Add Brand</a></li> -->
+            <li><a routerLink="/product/colors">Colors</a></li>
+            <li><a routerLink="/product/size">Sizes</a></li>
+            <li><a routerLink="/product/tax">Tax</a></li>
+            <li><a routerLink="/product/feature_group">Feature Group</a></li>
+            <li><a routerLink="/product/feature">Feature </a></li>
+            <li><a routerLink="product/hsncode">HSN Code</a></li>
+            <li><a routerLink="product/units">Units</a></li>
+            <li><a routerLink="product/unitconversion">Unit Conversion</a></li>
+            <li><a routerLink="/product/variant">Variant </a></li>
+            <!-- <li><a routerLink="/product/subcategory-group">Subcategory Group </a></li> -->
+            <li>
+              <a routerLink="/product/importproduct">Import Products</a>
+            </li>
+            <li><a routerLink="/product/barcode">Print Barcode</a></li>
+            <!-- <li><a routerLink="/product/country">Country</a></li>
+            <li><a routerLink="/product/state">State</a></li>
+            <li><a routerLink="/product/city">City</a></li> -->
+          </ul>
+          </li>
+        
+          <li class="submenu">
+            <a (click)="showSubMenu('Website')" [class.subdrop]="opendSubMenu[1] === 'Website'" href="javascript:void(0);"><span> Website</span> <span class="menu-arrow"></span></a>
+            <ul [ngClass]="{
+              show: opendSubMenu[1] == 'Website',
+              hide: opendSubMenu[1] != 'Website'
+            }">
+            <li><a routerLink="/website/staticPage">Static Pages</a></li>
+            <li><a routerLink="/website/addStaticPage">Add Static Pages</a></li>
+          </ul>
+          </li>
+          
           <li class="submenu">
             <a (click)="showSubMenu('Sales')" [class.subdrop]="opendSubMenu[1] === 'Sales'" href="javascript:void(0);"><span> Sales</span> <span class="menu-arrow"></span></a>
             <ul [ngClass]="{

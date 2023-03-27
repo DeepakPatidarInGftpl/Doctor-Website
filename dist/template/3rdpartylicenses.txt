@@ -288,6 +288,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
+ngx-ckeditor
+
 ngx-editor
 MIT
 MIT License
@@ -575,7 +577,7 @@ THE SOFTWARE.
 
 prosemirror-view
 MIT
-Copyright (C) 2015-2017 by Marijn Haverbeke <marijnh@gmail.com> and others
+Copyright (C) 2015-2017 by Marijn Haverbeke <marijn@haverbeke.berlin> and others
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
