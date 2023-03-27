@@ -14,3 +14,13 @@ input[type="date"]
     padding: 10px 15px;
     border-radius: 5px;
 }
+.hov:hover{
+    color: #fff;
+    background-color: #8f9499;
+    border-color: #c4cdd5;
+}
+.unhov:hover{
+    background-color: #fff;
+    color: #fff;
+    border-color: #fff;
+}

@@ -45,28 +45,30 @@ export class EditaccountComponent implements OnInit {
     })
 
     this.accountForm = this.fb.group({
-      contact_person_name: new FormControl('', [Validators.required]),
+      contact_person_name: new FormControl('',),
       title: new FormControl('', [Validators.required]),
-      birthday: new FormControl('', [Validators.required]),
+      birthday: new FormControl('',),
       mobile: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      pan: new FormControl('', [Validators.required, Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
-      gstin_uin: new FormControl('', [Validators.required,Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
-      anniversary: new FormControl('', [Validators.required]),
+      email: new FormControl('', [ Validators.email]),
+      pan: new FormControl('', [ Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
+      gstin_uin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
+      anniversary: new FormControl('', ),
       accounts_type: new FormControl('', [Validators.required]),
       opening_balance: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type: new FormControl('', [Validators.required]),
       type_of_customer: new FormControl('', [Validators.required]),
-      credit_days: new FormControl('', [Validators.required]),
-      credit_amount: new FormControl('', [Validators.required]),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      address: new FormControl('', [Validators.required]),
+      credit_days: new FormControl('',),
+      credit_amount: new FormControl('',),
+      country: new FormControl('', ),
+      state: new FormControl('', ),
+      city: new FormControl('', ),
+      address: new FormControl('',),
 
     })
     this.getCountry();
     this.getState();
     this.getAccountType();
+    this.getCity();
   }
 
   country: any
@@ -87,6 +89,12 @@ export class EditaccountComponent implements OnInit {
     this.coreService.stateList().subscribe(res => {
       this.state = res;
       console.log(this.state);
+    })
+  }
+  city:any
+  getCity(){
+    this.coreService.getCity().subscribe(res=>{
+      this.city=res;
     })
   }
   accountType: any
@@ -200,6 +208,9 @@ export class EditaccountComponent implements OnInit {
   }
   get statee() {
     return this.accountForm.get('state')
+  }
+  get cityy(){
+    return this.accountForm.get('city')
   }
   get address() {
     return this.accountForm.get('address')
