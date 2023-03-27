@@ -64,6 +64,10 @@ font-size: 16px;
     padding: 5px 0;
     flex: 1;
     text-align: center;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .amt-info-div li:last-child {
@@ -200,13 +204,18 @@ color: #9C9C9C;
 }
 
 .mrp-input-table{
-    max-width: 100px;
+    max-width: 220px;
 }
 
 .table-black-grp span {
     background-color: black;
     color: white;
     border: none;
+    border-radius: 0;
+}
+
+.table-black-grp input {
+    border-radius: 0;
 }
 
 .table-black-grp input {
@@ -230,6 +239,9 @@ font-size: 16px;
 font-style: normal;
 font-weight: 500;
 padding: 2px 4px;
+width: 90%;
+margin-left: auto;
+margin-right: auto;
 }
 
 .bottom-pos-left .btns-row button {
@@ -258,7 +270,7 @@ font-size: 18px;
 
 .table-pos {
     overflow-y: scroll;
-    height: 25vh;
+    max-height: 165px;
 }
 
 .amt-info-div .flat-disc-wrapper {
@@ -279,6 +291,13 @@ font-size: 18px;
 
 .amt-info-div .flat-disc-wrapper .input-group-text {
     padding: 0 2px;
+    background-color: #000;
+    color: white;
+    border-radius: 0;
+}
+
+.amt-info-div .flat-disc-wrapper input {
+    border-radius: 0;
 }
 
 .bottom-pos-left .row:nth-child(2) .col-sm-12 {
@@ -570,4 +589,8 @@ padding: 10px 16px;
 
 .qty-input span {
     border-radius: 0;
+}
+
+.full-modal-row {
+    height: 82vh;
 }
