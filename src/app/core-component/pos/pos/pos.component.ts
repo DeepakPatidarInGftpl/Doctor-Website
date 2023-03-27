@@ -28,6 +28,11 @@ export class PosComponent implements OnInit {
   filteredOptions$:any;
   customers:any = [];
   cartItems: any[] = [];
+  addMoreDetails: any;
+  userCompleteControl = new FormControl('');
+  streets: string[] = ['Champs-Élysées', 'Lombard Street', 'Abbey Road', 'Fifth Avenue'];
+  filteredStreets: Observable<string[]>;
+  currentCustomer:any;
 
 
   constructor(private http: HttpClient, private cartService:PosCartService) { 
@@ -55,6 +60,10 @@ export class PosComponent implements OnInit {
     //   console.log(data);
     //   this.customers = data;
     // })
+    this.filteredStreets = this.userCompleteControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    );
     this.cartItems = this.cartService.getCartItems();
     console.log(this.cartItems);
     this.filteredOptions$ = this.options;
@@ -70,6 +79,17 @@ export class PosComponent implements OnInit {
       console.log(data);
       this.customers = data;
     });
+    this.addMoreDetails = false;
+    console.log(this.addMoreDetails);
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = this._normalizeValue(value);
+    return this.streets.filter(street => this._normalizeValue(street).includes(filterValue));
+  }
+
+  private _normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
   }
 
   filterArray(value: string) {
@@ -110,6 +130,11 @@ export class PosComponent implements OnInit {
     this.autocompleteControl.setValue('');
   }
 
+  optionSelected1(event){
+    console.log('clcik')
+    console.log(event);
+  }
+
   removeOption(index: number) {
     console.log('removed');
     this.selectedOptions.splice(index, 1);
@@ -139,6 +164,10 @@ export class PosComponent implements OnInit {
 
   displayFn(item: any): string {
     return item ? item.name : '';
+  }
+
+  addMoreDetailsHandler() {
+    return this.addMoreDetails = !this.addMoreDetails;
   }
 
 }

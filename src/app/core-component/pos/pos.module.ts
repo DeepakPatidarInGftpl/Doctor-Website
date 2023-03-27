@@ -20,6 +20,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule
-  ]
+    ]
 })
 export class PosModule { }
