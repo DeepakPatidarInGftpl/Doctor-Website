@@ -1,0 +1,82 @@
+.company-details-card {
+    border-radius: 0.625rem;
+    box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+    padding: 30px 50px;
+    // margin-top: 50px;
+    border: 1px solid #F9D9CC;
+
+    .bold-text {
+        color: #000;
+        font-size: 18px;
+        // margin-bottom: 3%;
+        line-height: 20px;
+    }
+
+
+    .card-title {
+        padding: 0 20px;
+    }
+
+    .grey-text {
+        color: #9C9C9C;
+        // margin-bottom: 3%;
+        line-height: 20px;
+        font-size: 18px;
+    }
+}
+
+
+.addrss {
+    float: right;
+    height: 7%;
+    width: 7%;
+    color: #FF9F43;
+}
+
+.bg {
+    background-color: #f2f3f9;
+    border: none;
+}
+
+.green {
+    color: lightgreen;
+    width: 22%;
+    height: 22%;
+}
+
+.grey {
+    color: gray;
+    width: 22%;
+    height: 22%;
+}
+
+.card-h {
+    width: 60%;
+
+}
+.card-p {
+    width: 40%;
+}
+
+.green-dot {
+    width: 10px;
+    height: 10px;
+    background: #00FF00;
+    border-radius: 50%;
+}
+
+.edit-icon {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+}
+
+.edit-icon svg{
+    height: 25px;
+    width: 25px;
+    color: #9c9c9c;
+}

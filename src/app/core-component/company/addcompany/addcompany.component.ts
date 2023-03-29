@@ -5,6 +5,7 @@ import { ThemeService } from 'ng2-charts';
 
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-addcompany',
@@ -40,7 +41,9 @@ export class AddcompanyComponent implements OnInit {
   get f() {
     return this.companyForm.controls;
   }
-  constructor(private fb: FormBuilder, private copmpanyService: CompanyService, private toastr: ToastrService, private router: Router) { }
+  constructor(private fb: FormBuilder, private copmpanyService: CompanyService, private toastr: ToastrService,
+     private router: Router,
+     private coreService:CoreService) { }
   date = new Date();
   ngOnInit(): void {
     this.companyForm = this.fb.group({
@@ -54,15 +57,32 @@ export class AddcompanyComponent implements OnInit {
       pincode: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]),
       state: new FormControl('', [Validators.required]),
       country: new FormControl('', [Validators.required]),
+      city:new FormControl('',[Validators.required])
     })
 
     this.getCountry();
     this.getState();
+    this.getYear();
+    this.getCurrency();
+    this.getCity();
   }
   delete(index: any) {
     this.tableData.splice(index, 1);
   }
-
+yearDetails:any
+  getYear(){
+    this.coreService.getFinancialYear().subscribe(res=>{
+      console.log(res); 
+      this.yearDetails=res;
+    })
+  }
+  currencyDetails:any
+  getCurrency(){
+    this.coreService.getCurrency().subscribe(res=>{
+      console.log(res);
+      this.currencyDetails=res;
+    })
+  }
   country: any
   getCountry() {
     this.copmpanyService.countryList().subscribe(res => {
@@ -74,6 +94,12 @@ export class AddcompanyComponent implements OnInit {
     this.copmpanyService.stateList().subscribe(res => {
       this.state = res;
       console.log(this.state);
+    })
+  }
+  city:any
+  getCity(){
+    this.coreService.getCity().subscribe(res=>{
+      this.city=res;
     })
   }
   selectState(val: any) {
@@ -151,5 +177,8 @@ export class AddcompanyComponent implements OnInit {
   }
   get statee() {
     return this.companyForm.get('state')
+  }
+  get cityy(){
+    return this.companyForm.get('city')
   }
 }

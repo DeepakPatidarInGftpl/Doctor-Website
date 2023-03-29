@@ -15,7 +15,9 @@ import { FeatherModule } from 'angular-feather';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptor/token.interceptor';
 import { ToastrModule } from 'ngx-toastr';
-
+import { CKEditorModule } from 'ngx-ckeditor';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxEditorModule } from 'ngx-editor';
 const icons = {
   Layers
 };
@@ -34,7 +36,10 @@ const icons = {
     BrowserAnimationsModule,
     FeatherModule.pick(icons),
     ToastrModule.forRoot(),
-    
+    CKEditorModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxEditorModule
   ],
   exports: [
     FeatherModule

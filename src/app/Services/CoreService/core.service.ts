@@ -27,7 +27,7 @@ export class CoreService {
   featureBehavior = new BehaviorSubject(null);
   featureGroupBehavior = new BehaviorSubject(null);
   productListBehaviur = new BehaviorSubject(null);
-
+  StaticPageBehaveSub=new BehaviorSubject(null)
 
 
 
@@ -934,6 +934,10 @@ export class CoreService {
       this.cityBehavior.next(null)
     })
   }
+  getCity(){
+    let url = this.apiUrl + '/city/';
+    return this.http.get(url)
+  }
   getcityById(id: number): Observable<any> {
     let url = this.apiUrl + '/city/?id='
     return this.http.get<any>(`${url}${id}`, {
@@ -1177,13 +1181,53 @@ export class CoreService {
     })
   }
 
+  // static pages
+  getStaicPages() {
+    let url = this.apiUrl + '/pv-api/static_pages/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    }).subscribe(res => {
+      localStorage.setItem('staticPages', JSON.stringify(res))
+      this.StaticPageBehaveSub.next(null)
+    })
+  }
+  getStaticPageBySlug(slug:any){
+    let url = this.apiUrl + '/pv-api/static_detail_pages/?slug='
+    return this.http.get<any>(`${url}${slug}`)
+  }
+  addStatic(data){
+    let url = this.apiUrl + '/pv-api/static_pages/';
+    return this.http.post(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  updateStaticPage(data: any, slug: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/static_pages/?slug=';
+    return this.http.put<any>(`${url}${slug}`, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+  deleteStaticPage(slug: number) {
+    let url = this.apiUrl + '/pv-api/static_pages/?slug=';
+    return this.http.delete(`${url}${slug}`, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
 
-
-
-
-
-
-
-
-
+  getFinancialYear(){
+    let url = this.apiUrl+'/pv-api/financial_year/';
+    return this.http.get(url)
+  }
+  getCurrency(){
+    let url = this.apiUrl+'/pv-api/currency/';
+    return this.http.get(url)
+  }
 }

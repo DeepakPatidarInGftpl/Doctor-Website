@@ -145,6 +145,7 @@ const routes: Routes = [
       {path:'employee',loadChildren:()=>import('./employee/employee.module').then((m)=>m.EmployeeModule)},
       {path:'account',loadChildren:()=>import('./account/account.module').then((m)=>m.AccountModule)},
       {path:'warehouse',loadChildren:()=>import('./warehouse/warehouse.module').then((m)=>m.WarehouseModule)},
+      {path:'website',loadChildren:()=>import('./website/website.module').then((m)=>m.WebsiteModule)},
   ],
   },
 
