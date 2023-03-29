@@ -6,16 +6,25 @@ import { Injectable } from '@angular/core';
 export class PosCartService {
 
   private cartItems: any[] = [];
+  private orders: any[] = [];
 
   constructor() { 
+    const orders = localStorage.getItem('orders');
     const items = localStorage.getItem('cartItems');
     if (items) {
       this.cartItems = JSON.parse(items);
+    }
+    if(orders) {
+      this.orders = JSON.parse(orders);
     }
   }
 
   getCartItems(): any[] {
     return this.cartItems;
+  }
+
+  getOrders(): any[] {
+    return this.orders;
   }
 
   addToCart(item: any): void {
@@ -59,5 +68,10 @@ export class PosCartService {
   clearCart(): void {
     this.cartItems = [];
     localStorage.removeItem('cartItems');
+  }
+
+  generateOrder(order: any) {
+    this.orders.push(order);
+    localStorage.setItem('orders', JSON.stringify(this.orders));
   }
 }

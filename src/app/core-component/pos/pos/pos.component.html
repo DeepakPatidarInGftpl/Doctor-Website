@@ -102,11 +102,14 @@
                 <div class="col-sm-4">
                     <form class="exam-form">
                         <input type="text"
-                               placeholder="Search for a street"
+                               placeholder="Search for a Customer"
                                [formControl]="userCompleteControl"
                                [matAutocomplete]="auto1"
                                class="form-control">
                         <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="optionSelected1($event)">
+                            <mat-option value="Walk-In">
+                                Walk-In Customer
+                            </mat-option>
                           <mat-option *ngFor="let street of filteredStreets | async" [value]="street">
                             {{street}}
                           </mat-option>
@@ -140,8 +143,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="table-light" *ngFor="let cart of cartItems; let i = index">
-                                    <td>1</td>
+                                <tr class="table-light" *ngFor="let cart of selectedOptions; let i = index">
+                                    <td>{{i}}</td>
                                     <td>01</td>
                                     <td>{{cart.name}}</td>
                                     <td>
@@ -165,8 +168,8 @@
                                         <span class="input-group-text" id="basic-addon1">%</span>
                                         <input type="text" value="0.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                                     </div></td>
-                                    <td>700</td>
-                                    <td>1400</td>
+                                    <td>{{cart.price}}</td>
+                                    <td>{{cart.price * cart.quantity}}</td>
                                     <td><button (click)="removeFromCart(cart)" class="table-cross-btn">
                                         <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                                     </button></td>
@@ -227,7 +230,7 @@
                                     <h5>Round Off</h5>
                                 </li>
                                 <li>
-                                    <p>0.000</p>
+                                    <p>{{this.totalAmount()}}</p>
                                     <h5>Amount</h5>
                                 </li>
                             </ul>
@@ -384,6 +387,11 @@
                                 <button type="button" class="btn-pos"> 
                                     <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
                                         Orders</button> 
+                            </li>
+                            <li *ngIf="showSyncButton()">
+                                <button type="button" class="btn-pos"> 
+                                    <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
+                                        Sync Orders</button> 
                             </li>
                         </ul>
                     </div>
@@ -887,7 +895,7 @@
             <div class="col-sm-4 mh-100" style="overflow-y: hidden;">
                 <div class="left">
                     <h3 class="title">Sale Summery</h3>
-                    <h5 class="desc">Customer: Aditi Kapoor- 932477888</h5>
+                    <h5 class="desc">Customer: {{this.currentCustomer}}- 932477888</h5>
                     <div class="product-detail-box my-3">
                         <div class="table-responsive table-pos">
                             <table class="table table-nowrap mb-0">
@@ -900,9 +908,9 @@
                                 </thead>
                                 <tbody>
                                     <tr class="table-light" *ngFor="let cart of cartItems; let i = index">
-                                        <td>1</td>
-                                        <td>01</td>
-                                        <td>1400</td>
+                                        <td>{{i}}</td>
+                                        <td>{{cart.name}}</td>
+                                        <td>{{cart.quantity}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -911,19 +919,19 @@
                     <div class="other-product-details">
                         <div class="other-product-detail">
                             <h5>Tax Amount</h5>
-                            <h5>620.00</h5>
+                            <h5>0.00</h5>
                         </div>
                         <div class="other-product-detail">
-                            <h5>Tax Amount</h5>
-                            <h5>620.00</h5>
+                            <h5>Total Amounts</h5>
+                            <h5>{{this.totalAmount()}}</h5>
                         </div>
                         <div class="other-product-detail">
-                            <h5>Tax Amount</h5>
-                            <h5>620.00</h5>
+                            <h5>Round Off</h5>
+                            <h5>0.00</h5>
                         </div>
                     </div>
                     <div class="payment-details">
-                        <h3>7150</h3>
+                        <h3>{{this.totalAmount()}}</h3>
                         <h5>Payable Amount</h5>
                     </div>
                 </div>
@@ -935,7 +943,7 @@
                         <div class="input-group pos-i-grp table-black-grp">
                             <span class="input-group-text" id="basic-addon1">₹
                             </span>
-                            <input type="text" value="25.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="text" value="{{this.totalAmount()}}" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -949,8 +957,9 @@
                                     <label>Payment Method:</label>
                                     <select class="form-select">
                                         <option>-- Select --</option>
-                                        <option>Option 1</option>
-                                        <option>Option 2</option>
+                                        <option>Cash</option>
+                                        <option>Card</option>
+                                        <option>UPI</option>
                                     </select>
                                 </div>
                                 <button type="button" class="btn-remove" aria-label="Close">
@@ -1049,19 +1058,19 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Due Amount</label>
-                        <input type="text" class="form-control" placeholder="Cash In Hand">
+                        <input type="number" value="{{this.totalAmount()}}" class="form-control" placeholder="Cash In Hand">
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Tendered</label>
-                        <input type="text" class="form-control" placeholder="Tendered">
+                        <input type="number" value="0" (change)="tenderedAmt($event)" class="form-control" placeholder="Tendered">
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Change</label>
-                        <input type="text" disabled class="form-control" placeholder="Change">
+                        <input type="number" value="{{this.changeAmt()}}" disabled class="form-control" placeholder="Change">
                     </div>
                 </div>
             </div>
@@ -1116,10 +1125,10 @@
                 </div>
                 <div class="col-sm-7">
                     <div>
-                        <button type="button" class="btn btn-dark mb-2 w-100">Submit</button>
+                        <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.generateOrder()">Submit</button>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-dark w-100" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button  id="exampleModal5Close" type="button" class="btn btn-dark w-100" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -1298,6 +1307,27 @@
     </div>
   </div>  
 
+  <!-- Modal 8-->
+  <div class="modal fade posmodal" id="exampleModal7" tabindex="-1" aria-labelledby="exampleModal7Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModal7Label">Sync Orders</h5>
+          <button type="button" (click)="closeSyncModal()" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <h4>Do you want to sync your orders?</h4>
+        </div>
+        <div class="modal-footer mt-5">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-dark modal1BtnPos">Sync Orders</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   
 
   <!-- Hold Off Canvas -->
@@ -1333,3 +1363,9 @@
         </div>
     </div>
   </div>  
+
+  <!-- <div *ngIf="loader" class="pos-loader">
+  <svg viewBox="25 25 50 50">
+    <circle r="20" cy="50" cx="50"></circle>
+  </svg>  
+  </div> -->
