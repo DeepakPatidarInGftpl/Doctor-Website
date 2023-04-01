@@ -17,6 +17,9 @@ import {
   PERFECT_SCROLLBAR_CONFIG,
 } from 'ngx-perfect-scrollbar';
 import { WarehouseListComponent } from './product/warehouse-list/warehouse-list.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { OrderModule } from 'ngx-order-pipe';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -37,7 +40,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CoreComponentRoutingModule,
     FormsModule,
     PerfectScrollbarModule,
-
+    Ng2SearchPipeModule,
+    NgxPaginationModule,
+    OrderModule
   ],
   providers: [
     {

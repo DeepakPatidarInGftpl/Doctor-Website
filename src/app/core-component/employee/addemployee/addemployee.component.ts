@@ -26,16 +26,18 @@ export class AddemployeeComponent implements OnInit {
       dob: new FormControl('', [Validators.required]),
       mobile: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      anniversary: new FormControl('', [Validators.required]),
-      address: new FormControl('', [Validators.required]),
-      pincode: new FormControl('', [Validators.required, Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
-      attendance: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      employee_id: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      country: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
+      anniversary: new FormControl(''),
+      address: new FormControl(''),
+      pincode: new FormControl('', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      attendance: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      employee_id: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      country: new FormControl(''),
+      state: new FormControl(''),
+      city: new FormControl('')
     })
     this.getCountry();
     this.getState();
+    this.getCity();
   }
 
   country: any
@@ -58,6 +60,13 @@ export class AddemployeeComponent implements OnInit {
       console.log(this.state);
     })
   }
+  city: any
+  getCity() {
+    this.coreService.getCity().subscribe(res => {
+      this.city = res;
+    })
+  }
+
   dateError = null
   addRes: any
   submit() {
@@ -79,12 +88,12 @@ export class AddemployeeComponent implements OnInit {
         if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
-            this.dateError=''
+            this.dateError = ''
           }, 2000);
-        }else if(err.error.anniversary){
-          this.dateError = 'Date (format:dd/mm/yyyy)' ;
+        } else if (err.error.anniversary) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
-            this.dateError=''
+            this.dateError = ''
           }, 2000);
         }
         // this.toastr.error(err.error.gst)
@@ -139,5 +148,7 @@ export class AddemployeeComponent implements OnInit {
   get statee() {
     return this.employeeForm.get('state')
   }
-
+  get cityy() {
+    return this.employeeForm.get('city')
+  }
 }

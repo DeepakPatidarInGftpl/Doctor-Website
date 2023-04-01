@@ -20,9 +20,18 @@
                                 <span><img src="assets/img/icons/closes.svg" alt="img"></span>
                             </a>
                         </div>
-                        <div class="search-input">
+                        <!-- <div class="search-input">
                             <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
-                        </div>
+                        </div> -->
+                        <div class="search-input">
+                            <a class="btn btn-searchset">
+                              <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                            <div class="dataTables_filter"><label>
+                              <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
+                              placeholder="search">
+                            </label>
+                          </div>
+                          </div>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -46,19 +55,21 @@
                     <table datatable [dtOptions]="dtOptions" class="table  datanew">
                         <thead>
                             <tr>
-                                <th>
-                                    <label class="checkboxs" (click)="selectAll(initChecked)">
+                                <th (click)="sort('id')" class="thone">
+                                    <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
                                         <input type="checkbox" [(ngModel)]="initChecked">
                                         <span class="checkmarks"></span>
                                     </label>
+                                    <i class="fa fa-sort"></i>
                                 </th>
-                                <th>Title</th>
-                                <th>Is Active</th>
-                                <th>Action</th>
+                                <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Slug <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let products of tableData; let i = index">
+                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="products.is_active">
@@ -66,25 +77,48 @@
                                     </label>
                                 </td>
                                 <td class="productimgname">
-                                    <a href="javascript:void(0);" style="line-height: 3;">{{products.title}}</a>
+                                    <a routerLink="//website/staticPage/details/{{products.slug}}" style="line-height: 3;">{{products.title}}</a>
                                 </td>
+                                <td>{{products.slug}}</td>
                                 <td><span
                                         [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span></td>
                                 <td>
-                                    <a class="me-1" routerLink="//website/staticPage/details/{{products.slug}}">
+                                    <a class="me-3" routerLink="//website/staticPage/details/{{products.slug}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-1" href="/website/updateStaticPage/{{products.slug}}">
+                                    <a class="me-3" href="/website/updateStaticPage/{{products.slug}}">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i,products.slug)" class="me-1 confirm-text"
+                                    <a (click)="confirmText(i,products.slug)" class="me-3 confirm-text"
                                         href="javascript:void(0);">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
                             </tr>
                         </tbody>
+                        <tr>
+                            <td colspan="5">
+                                <div class="dataTables_length">
+                                    <label class="labelSize">Show :&nbsp;
+                                        <select [(ngModel)]="pageSize">
+                                            <option [ngValue]="10">10</option>
+                                            <option [ngValue]="25">25</option>
+                                            <option [ngValue]="50">50</option>
+                                            <option [ngValue]="100">100</option>
+                                        </select>
+                                        entries</label>
+                                </div>
+                                <div>
+                                    <ul class="pagination"></ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
+                            </td>
+                        </tr>
                     </table>
                 </div>
 

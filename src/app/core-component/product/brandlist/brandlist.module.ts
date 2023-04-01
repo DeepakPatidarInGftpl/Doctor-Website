@@ -9,7 +9,9 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { DatepickerModule } from 'ng2-datepicker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { OrderModule } from 'ngx-order-pipe';
 @NgModule({
   declarations: [
     BrandlistComponent
@@ -21,7 +23,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     SweetAlert2Module.forRoot(),
-    DatepickerModule
+    DatepickerModule,
+    Ng2SearchPipeModule,
+    NgxPaginationModule,
+    OrderModule
   ]
 })
 export class BrandlistModule { }

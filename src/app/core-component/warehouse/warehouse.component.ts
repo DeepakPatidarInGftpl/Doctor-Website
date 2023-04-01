@@ -19,6 +19,10 @@ export class WarehouseComponent implements OnInit {
 
   warehouseForm: FormGroup
 
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
+
   constructor(
     private fb: FormBuilder,
     private coreService: CoreService,
@@ -75,12 +79,17 @@ export class WarehouseComponent implements OnInit {
 
   ngOnInit() {
 
-    this.queryService.getWarehouse()
-    this.queryService.warehouse.subscribe((res) => {
-      if (localStorage.getItem('warehouseList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("warehouseList")))
-      }
+    // this.queryService.getWarehouse()
+    // this.queryService.warehouse.subscribe((res) => {
+    //   if (localStorage.getItem('warehouseList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("warehouseList")))
+    //   }
+    // })
+
+    this.coreService.getWarehouse().subscribe(res=>{
+      this.tableData=res;
     })
+
 
     this.warehouseForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -112,20 +121,19 @@ export class WarehouseComponent implements OnInit {
 
 
 
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
-
-    };
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
+    // };
   }
 
   selectAll(initChecked: boolean) {
@@ -148,9 +156,6 @@ export class WarehouseComponent implements OnInit {
 
     })
   }
-
-
-
 
   addRes: any
   // submit() {
@@ -189,15 +194,13 @@ export class WarehouseComponent implements OnInit {
  submit() {
   console.log(this.warehouseForm.value);
   if (this.warehouseForm.valid) {
-   
     this.coreService.addWarehouse(this.warehouseForm.value).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
         this.toastr.success(this.addRes.msg)
         this.warehouseForm.reset()
-        this.ngOnInit()
-       
+        this.ngOnInit()    
       }
     }, err => {
       console.log(err.error.gst);
@@ -274,4 +277,23 @@ update(){
     return this.warehouseForm.get('address');
   }
 
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
 }

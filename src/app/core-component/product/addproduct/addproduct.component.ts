@@ -5,6 +5,10 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 
+
+import { Editor, Toolbar } from 'ngx-editor';
+import jsonDoc from './../../../doc';
+
 @Component({
   selector: 'app-addproduct',
   templateUrl: './addproduct.component.html',
@@ -12,6 +16,28 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class AddproductComponent implements OnInit {
   productForm!: FormGroup;
+
+  public measurable: boolean = false; 
+
+  editordoc = jsonDoc;
+  editor: Editor | any;
+  toolbar: Toolbar = [
+    ['bold', 'italic'],
+    ['underline', 'strike'],
+    ['code', 'blockquote'],
+    ['ordered_list', 'bullet_list'],
+    [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
+    ['link', 'image'],
+    // ['text_color', 'background_color'],
+    ['align_left', 'align_center', 'align_right', 'align_justify'],
+  ];
+
+
+ 
+  get doc(): any {
+    // return this.form.get('editorContent');
+    return this.productForm.get('description')
+  }
   get f() {
     return this.productForm.controls;
   }
@@ -19,6 +45,7 @@ export class AddproductComponent implements OnInit {
     private toastr: ToastrService) { }
 
   ngOnInit(): void {
+    this.editor = new Editor();
     this.productForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
@@ -27,14 +54,16 @@ export class AddproductComponent implements OnInit {
       features_subcategory: new FormControl('', [Validators.required]),
       subcategory_group: new FormControl('', [Validators.required]),
       unit: new FormControl('', [Validators.required]),
-      unit_conversion: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
+      unit_conversion: new FormControl(''),
+      description: new FormControl(''),
       product_store: new FormControl('', [Validators.required]),
+      style_code:new FormControl('',[Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      is_measurable:new FormControl(''),
       color: new FormArray([], [Validators.required]),
       size: new FormArray([], [Validators.required]),
-      variant: new FormArray([], [Validators.required]),
+      variant: new FormArray([]),
+      
     })
-
     this.getCategory()
     this.getSubCategory()
     this.getBrand()
@@ -111,6 +140,7 @@ export class AddproductComponent implements OnInit {
   }
 
   check: any
+  selectedColor=0;
   onCheckColor(event: any) {
     const formArray: any = this.productForm.get('color') as FormArray;
 
@@ -119,7 +149,8 @@ export class AddproductComponent implements OnInit {
       // Add a new control in the arrayForm
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.check = formArray
+      this.check = formArray;
+     this.selectedColor++;
     }
     /* unselected */
     else {
@@ -129,36 +160,45 @@ export class AddproductComponent implements OnInit {
         if (ctrl.value == event.target.value) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
+          this.selectedColor--;
           return;
         }
         i++;
       });
     }
   }
+  selectedSize=0;
+
   onCheckSize(event: any) {
     const formArray: any = this.productForm.get('size') as FormArray;
 
     /* Selected */
     if (event.target.checked) {
+
       // Add a new control in the arrayForm
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
+      this.selectedSize++;
     }
     /* unselected */
     else {
       // find the unselected element
-      let i: number = 0;
+      let i: number = 1;
+
       formArray.controls.forEach((ctrl: any) => {
         if (ctrl.value == event.target.value) {
+
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
+          this.selectedSize--;
           return;
         }
         i++;
       });
     }
   }
+  selectedVariant=0;
   onCheckVariant(event: any) {
     const formArray: any = this.productForm.get('variant') as FormArray;
 
@@ -167,7 +207,9 @@ export class AddproductComponent implements OnInit {
       // Add a new control in the arrayForm
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.check = formArray
+      this.check = formArray;
+
+    this.selectedVariant++;
     }
     /* unselected */
     else {
@@ -177,12 +219,14 @@ export class AddproductComponent implements OnInit {
         if (ctrl.value == event.target.value) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
+          this.selectedVariant--;
           return;
         }
         i++;
       });
     }
   }
+
   submit() {
     console.log(this.productForm.value);
 
@@ -200,7 +244,9 @@ export class AddproductComponent implements OnInit {
     formdata.append('color', JSON.stringify(this.productForm.get('color')?.value));
     formdata.append('size', JSON.stringify(this.productForm.get('size')?.value));
     formdata.append('variant', JSON.stringify(this.productForm.get('variant')?.value));
-
+    formdata.append('style_code',this.productForm.get('style_code')?.value);
+    formdata.append('is_measurable',this.productForm.get('is_measurable')?.value);
+   
     if (this.productForm.valid) {
       this.coreService.addProduct(formdata).subscribe(res => {
         if (res.msg == "Data Created") {
@@ -216,43 +262,49 @@ export class AddproductComponent implements OnInit {
     }
   }
 
-  get title(){
+  get title() {
     return this.productForm.get('title')
   }
-  get category(){
+  get category() {
     return this.productForm.get('category')
   }
-  get subcategory(){
+  get subcategory() {
     return this.productForm.get('subcategory')
   }
-  get brand(){
+  get brand() {
     return this.productForm.get('brand')
   }
-  get features_subcategory(){
+  get features_subcategory() {
     return this.productForm.get('features_subcategory')
   }
-  get subcategory_group(){
+  get subcategory_group() {
     return this.productForm.get('subcategory_group')
   }
-  get unit(){
+  get unit() {
     return this.productForm.get('unit')
   }
-  get unit_conversion(){
+  get unit_conversion() {
     return this.productForm.get('unit_conversion')
   }
-  get description(){
+  get description() {
     return this.productForm.get('description')
   }
-  get product_store(){
+  get product_store() {
     return this.productForm.get('product_store')
   }
-  get color(){
+  get color() {
     return this.productForm.get('color')
   }
-  get size(){
+  get size() {
     return this.productForm.get('size')
   }
-  get variant(){
+  get variant() {
     return this.productForm.get('variant')
+  }
+  get style_code(){
+    return this.productForm.get('style_code')
+  }
+  get is_measurable(){
+    return this.productForm.get('is_measurable')
   }
 }

@@ -70,11 +70,14 @@ export class CompanylistComponent implements OnInit {
       },
 
     };
-    this.companyService.getCompany()
-    this.companyService.companyBehaviour.subscribe( () => {
+    // this.companyService.getCompany()
+    // this.companyService.companyBehaviour.subscribe( () => {
 
-      this.tableData = JSON.parse(localStorage.getItem('companyList')!);
+    //   this.tableData = JSON.parse(localStorage.getItem('companyList')!);
 
+    // })
+    this.companyService.getCompany().subscribe(res=>{
+      this.tableData=res;
     })
 
   }

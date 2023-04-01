@@ -9,6 +9,9 @@ import { DatepickerModule } from 'ng2-datepicker';
 import { StaticPagesComponent } from './static-pages.component';
 import { StaticpageDetalsComponent } from './staticpage-detals/staticpage-detals.component';
 
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { OrderModule } from 'ngx-order-pipe';
 @NgModule({
   declarations: [
     StaticPagesComponent,
@@ -24,6 +27,9 @@ import { StaticpageDetalsComponent } from './staticpage-detals/staticpage-detals
     ReactiveFormsModule,
     DatepickerModule,
     SweetAlert2Module.forRoot(),
+    Ng2SearchPipeModule,
+    NgxPaginationModule,
+    OrderModule
   ]
 })
 export class StaticPagesModule { }

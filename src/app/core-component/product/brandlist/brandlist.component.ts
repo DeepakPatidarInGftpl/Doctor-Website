@@ -59,34 +59,40 @@ export class BrandlistComponent implements OnInit {
       }
     });
   }
+
+  titlee: any;
+p:number=1
+pageSize: number = 10;
   ngOnInit(): void {
     this.brandForm = new FormGroup({
       title: new FormControl('', [Validators.required]),
       code: new FormControl('', Validators.required),
       image: new FormControl('', Validators.required),
     })
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
-    this.coreService.getbrand();
-    // this.tableData = this.QueryService.brandsList;
-    // console.log(this.tableData);
+    // };
+    // this.coreService.getbrand();
+    
 
-    this.coreService.brandBehavior.subscribe(() => {
-      if (localStorage.getItem('brandsList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("brandsList")!))
-      }
+    // this.coreService.brandBehavior.subscribe(() => {
+    //   if (localStorage.getItem('brandsList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("brandsList")!))
+    //   }
+    // })
+    this.coreService.getBrand().subscribe(res=>{
+      this.tableData=res;
     })
   }
 
@@ -259,5 +265,25 @@ export class BrandlistComponent implements OnInit {
   openaddForm() {
     this.addForm = true;
     this.brandForm.reset();
+  }
+
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 }

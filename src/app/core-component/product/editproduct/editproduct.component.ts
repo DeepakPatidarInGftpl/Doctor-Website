@@ -3,6 +3,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { Editor, Toolbar } from 'ngx-editor';
+import jsonDoc from './../../../doc';
 
 @Component({
   selector: 'app-editproduct',
@@ -12,6 +14,8 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 export class EditproductComponent implements OnInit {
 
   productForm!: FormGroup;
+  
+  public measurable: boolean = false; 
   get f() {
     return this.productForm.controls;
   }
@@ -19,12 +23,36 @@ export class EditproductComponent implements OnInit {
   variants: any = [];
   sizes: any = [];
   ischeck = true;
-  uncheck = false
+  uncheck = false;
+
+
+  editordoc = jsonDoc;
+  editor: Editor | any;
+  toolbar: Toolbar = [
+    ['bold', 'italic'],
+    ['underline', 'strike'],
+    ['code', 'blockquote'],
+    ['ordered_list', 'bullet_list'],
+    [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
+    ['link', 'image'],
+    // ['text_color', 'background_color'],
+    ['align_left', 'align_center', 'align_right', 'align_justify'],
+  ];
+
+
+ 
+  get doc(): any {
+    // return this.form.get('editorContent');
+    return this.productForm.get('description')
+  }
+
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder,
     private toastr: ToastrService, private Aroute: ActivatedRoute) { }
   id: any
   dat: any
   ngOnInit(): void {
+    this.editor = new Editor();
+
     this.id = this.Aroute.snapshot.paramMap.get('id');
     console.log(this.id);
     this.productForm = this.fb.group({
@@ -35,12 +63,14 @@ export class EditproductComponent implements OnInit {
       features_subcategory: new FormControl('', [Validators.required]),
       subcategory_group: new FormControl('', [Validators.required]),
       unit: new FormControl('', [Validators.required]),
-      unit_conversion: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
+      unit_conversion: new FormControl(''),
+      description: new FormControl(''),
       product_store: new FormControl('', [Validators.required]),
+      style_code:new FormControl('',[Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      is_measurable:new FormControl(''),
       color: new FormArray([], [Validators.required]),
       size: new FormArray([], [Validators.required]),
-      variant: new FormArray([], [Validators.required]),
+      variant: new FormArray([]),   
     })
     this.coreService.getProductById(this.id).subscribe(res => {
       // this.productShow(res)
@@ -58,6 +88,8 @@ export class EditproductComponent implements OnInit {
           title: res.title,
           description: res.description,
           product_store: res.product_store,
+          style_code:res.style_code,
+          is_measurable:res.is_measurable
         })
       }
     })
@@ -181,6 +213,7 @@ export class EditproductComponent implements OnInit {
   }
 
   check: any
+  selectedColor=0;
   onCheckColor(event: any) {
     const formArray: any = this.productForm.get('color') as FormArray;
 
@@ -189,7 +222,8 @@ export class EditproductComponent implements OnInit {
       // Add a new control in the arrayForm
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.check = formArray
+      this.check = formArray;
+     this.selectedColor++;
     }
     /* unselected */
     else {
@@ -199,12 +233,14 @@ export class EditproductComponent implements OnInit {
         if (ctrl.value == event.target.value) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
+          this.selectedColor--;
           return;
         }
         i++;
       });
     }
   }
+  selectedSize=0;
   onCheckSize(event: any) {
     const formArray: any = this.productForm.get('size') as FormArray;
 
@@ -213,7 +249,8 @@ export class EditproductComponent implements OnInit {
       // Add a new control in the arrayForm
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.check = formArray
+      this.check = formArray;
+this.selectedSize++;
     }
     /* unselected */
     else {
@@ -223,12 +260,14 @@ export class EditproductComponent implements OnInit {
         if (ctrl.value == event.target.value) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
+          this.selectedSize--;
           return;
         }
         i++;
       });
     }
   }
+  selectedVariant=0;
   onCheckVariant(event: any) {
     const formArray: any = this.productForm.get('variant') as FormArray;
 
@@ -238,6 +277,7 @@ export class EditproductComponent implements OnInit {
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
+     this.selectedVariant++;
     }
     /* unselected */
     else {
@@ -247,7 +287,8 @@ export class EditproductComponent implements OnInit {
         if (ctrl.value == event.target.value) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
-          return;
+          this.selectedVariant--
+          return;       
         }
         i++;
       });
@@ -258,6 +299,7 @@ export class EditproductComponent implements OnInit {
     console.log(this.arraySubCat);
 
     let formdata: any = new FormData();
+
     formdata.append('title', this.productForm.get('title')?.value);
     formdata.append('category', this.productForm.get('category')?.value);
     formdata.append('subcategory', this.productForm.get('subcategory')?.value);
@@ -271,6 +313,8 @@ export class EditproductComponent implements OnInit {
     formdata.append('color', JSON.stringify(this.productForm.get('color')?.value));
     formdata.append('size', JSON.stringify(this.productForm.get('size')?.value));
     formdata.append('variant', JSON.stringify(this.productForm.get('variant')?.value));
+    formdata.append('style_code',this.productForm.get('style_code')?.value);
+    formdata.append('is_measurable',this.productForm.get('is_measurable')?.value);
 
 
     if (this.productForm.valid) {
@@ -326,6 +370,12 @@ export class EditproductComponent implements OnInit {
   }
   get variant() {
     return this.productForm.get('variant');
+  }
+  get style_code(){
+    return this.productForm.get('style_code')
+  }
+  get is_measurable(){
+    return this.productForm.get('is_measurable')
   }
 
 }
