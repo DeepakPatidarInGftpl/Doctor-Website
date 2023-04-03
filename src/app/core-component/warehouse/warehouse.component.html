@@ -1,6 +1,5 @@
 <div class="row">
-    <div class="col-7">
-  
+    <div class="col-lg-7 col-sm-7 col-12">
   
       <div class="page-header">
         <div class="page-title">
@@ -27,9 +26,18 @@
                   <span><img src="assets/img/icons/closes.svg" alt="img"></span>
                 </a>
               </div>
-              <div class="search-input">
+              <!-- <div class="search-input">
                 <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+              </div> -->
+              <div class="search-input">
+                <a class="btn btn-searchset">
+                  <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                <div class="dataTables_filter"><label>
+                  <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
+                  placeholder="search">
+                </label>
               </div>
+     </div>
             </div>
             <div class="wordset">
               <ul>
@@ -89,21 +97,22 @@
             <table datatable [dtOptions]="dtOptions" class="table  datanew">
               <thead>
                 <tr>
-                  <th>
-                    <label class="checkboxs" (click)="selectAll(initChecked)">
-                      <input type="checkbox" [(ngModel)]="initChecked">
-                      <span class="checkmarks"></span>
+                  <th (click)="sort('id')" class="thone">
+                    <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
+                        <input type="checkbox" [(ngModel)]="initChecked">
+                        <span class="checkmarks"></span>
                     </label>
-                  </th>
-                  <th>Title</th>
-                  <th>Accounts Type</th>
-                  <th>Address</th>
-                  <th>Is Active</th>
-                  <th>Action</th>
+                    <i class="fa fa-sort"></i>
+                </th>
+                  <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
+                  <th (click)="sort('id')" class="thone">Accounts Type <i class="fa fa-sort"></i></th>
+                  <th (click)="sort('id')" class="thone">Address <i class="fa fa-sort"></i></th>
+                  <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
+                  <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let products of tableData; let i = index">
+                <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p}  let i = index">
                   <td>
                     <label class="checkboxs">
                       <input type="checkbox" [(ngModel)]="products.is_active">
@@ -135,12 +144,34 @@
                   </td>
                 </tr>
               </tbody>
+              <tr>
+                <td colspan="5">
+                    <div class="dataTables_length">
+                        <label class="labelSize">Show :&nbsp;
+                            <select [(ngModel)]="pageSize">
+                                <option [ngValue]="10">10</option>
+                                <option [ngValue]="25">25</option>
+                                <option [ngValue]="50">50</option>
+                                <option [ngValue]="100">100</option>
+                            </select>
+                            entries</label>
+                    </div>
+                    <div>
+                        <ul class="pagination"></ul>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
+                </td>
+            </tr>
             </table>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-5">
+    <div class="col-lg-5 col-sm-5 col-12">
       <div class="page-header">
         <div class="page-title">
             <!-- <h4> {{this.addForm? 'Edit Warehouse': 'Add Warehouse'}}</h4>

@@ -22,7 +22,9 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   public tableData: any = []
 
   form: FormGroup
-
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
 
   constructor(private QueryService: QueryService, private coreServ: CoreService, private toastr: ToastrService) {
     this.QueryService.filterToggle()
@@ -80,17 +82,17 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   errormessFSubC
   errormessFFG
   ngOnInit() {
+    // this.coreServ.subCategoryGroupGet()
 
+    // this.coreServ.subCategoriesGroup.subscribe(() => {
+    //   if (localStorage.getItem("subCategories")) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("subCategories")))
+    //   }
+    // })
 
-    this.coreServ.subCategoryGroupGet()
-
-    this.coreServ.subCategoriesGroup.subscribe(() => {
-      if (localStorage.getItem("subCategories")) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("subCategories")))
-      }
-    })
-
-
+this.coreServ.getSubcategoryGroup().subscribe(res=>{
+  this.tableData=res;
+})
 
     let eTitle = ''
     let eCategory = ''
@@ -113,7 +115,6 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
 
     this.coreServ.editThings.subscribe((res: any) => {
 
-
       this.editMode = res
       console.log(res);
 
@@ -123,9 +124,8 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
         eCategory = res?.category?.id
         this.subcatEdit = res.subcategories
         this.featureCategoryEdit = res.feature_group
-
-
-        this.selectedSubCats = this.subcatEdit.map(res => res.id);
+        this.selectedSubCats = this.subcatEdit.map(res => res.id,
+          this.selectedCat.length);
         this.selectedFeature = this.featureCategoryEdit.map(res => res.id)
       }
 
@@ -141,78 +141,71 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
 
     console.log(this.subcategories);
 
-
-
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: 'Search...',
-        info: '_START_ - _END_ of _TOTAL_ items',
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.none');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
-    };
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: 'Search...',
+    //     info: '_START_ - _END_ of _TOTAL_ items',
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.none');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
+    // };
   }
 
-
-
-  
   arraySubCat = []
+  selectedSubCat=0;
   onSelectionChange(subCat, isChecked) {
-
     this.arraySubCat.push(subCat.id)
     if (isChecked.checked) {
       this.selectedSubCats.push(subCat.id);
+      this.selectedSubCat++;
+
     } else {
-      this.selectedSubCats = this.selectedSubCats.filter(id => id !== subCat.id);
+      this.selectedSubCats = this.selectedSubCats.filter(id => id !== subCat.id,
+        this.selectedSubCat--
+        );
     }
   }
 
 
-  arrayFeatutreGroup = []
+  arrayFeatutreGroup = [];
+  selectedFeatureGrp=0;
   selectFeatureGroup(fGroup, isChecked) {
     this.arrayFeatutreGroup.push(fGroup.id)
     if (isChecked.checked) {
       this.selectedFeature.push(fGroup.id);
+      this.selectedFeatureGrp++;
     } else {
-      this.selectedFeature = this.selectedFeature.filter(id => id !== fGroup.id);
+      this.selectedFeature = this.selectedFeature.filter(id => id !== fGroup.id,
+        this.selectedFeatureGrp--);
     }
   }
 
-  selectedCat
-
+  selectedCat;
   selectCate(id) {
     this.selectedCat = id.target.value
     console.log(this.form.controls['category'].value);
   }
 
 
-
-
-
   submitForm() {
     console.log(this.form.value);
-
     if (this.form.controls['category'].value == 'Category Type') {
       this.form.controls['category'].invalid
     }
-
-
     if (this.form.invalid) {
       this.form.markAllAsTouched()
       console.log('forms invalid');
     } else {
-
       var formdata: any = new FormData();
       formdata.append("title", this.form.controls['title'].value);
       formdata.append("category", this.form.controls['category'].value);
       formdata.append("subcategories", `[${this.selectedSubCats}]`);
       formdata.append("feature_group", `[${this.selectedFeature}]`);
-
 
       if (this.editMode) {
         this.coreServ.editSubCategoryGroup(formdata, this.editMode.id).subscribe((res: any) => {
@@ -299,5 +292,25 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   addForm=true
   editForm(){
     this.addForm=false
+  }
+
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'title'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 }

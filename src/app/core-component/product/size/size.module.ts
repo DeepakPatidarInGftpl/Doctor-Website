@@ -10,6 +10,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { DataTablesModule } from 'angular-datatables';
 
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { OrderModule } from 'ngx-order-pipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { DataTablesModule } from 'angular-datatables';
     FormsModule,
     ReactiveFormsModule,
     SweetAlert2Module,
-    DataTablesModule
+    DataTablesModule,
+    Ng2SearchPipeModule,
+    NgxPaginationModule,
+    OrderModule
   ]
 })
 export class SizeModule { }

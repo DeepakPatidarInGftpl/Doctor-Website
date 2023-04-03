@@ -8,8 +8,7 @@
 <div class="card">
     <div class="card-body">
         <form [formGroup]="accountForm" (ngSubmit)="submit()">
-        <div class="row">
-           
+        <div class="row">          
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label> Name</label>
@@ -59,11 +58,9 @@
                     [ngClass]="{
                       'is-invalid': f['mobile'].touched && f['mobile'].invalid
                     }">
-                    <span class="text-danger"*ngIf="mobile && mobile.invalid && mobile.touched">Enter your 10 digits mobile phone number</span>
-           
+                    <span class="text-danger"*ngIf="mobile && mobile.invalid && mobile.touched">Enter your 10 digits mobile phone number</span>          
                 </div>
-            </div>
-        
+            </div>        
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label>Pancard</label>
@@ -91,29 +88,16 @@
                     [ngClass]="{
                       'is-invalid': f['anniversary'].touched && f['anniversary'].invalid
                     }">
-                    <span class="text-danger"*ngIf="dateError">{{dateError}}</span>     
-                   
+                    <span class="text-danger"*ngIf="dateError">{{dateError}}</span>       
                     <span class="text-danger"*ngIf="anniversary && anniversary.invalid && anniversary.touched">Date (format:dd/mm/yyyy)</span>
                 </div>
             </div>
             <div class="col-lg-6 col-sm-6 col-12">
-
-                <div class="form-group row">
-                
+                <div class="form-group row">                
                     <div class="col-lg-12">
                         <label>Opening Balance*</label>
-                        <div class="input-group">
-                            
-                            <!-- <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Balance type</button>
-                            <ul class="dropdown-menu">
-                                <select formControlName="opening_balance_type" class="w-100 h-100 border" required id="opening_balance_type"
-                                [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">                     
-                                </select>
-                                <li><option value="Cr">Cr</option></li>
-                                <li><option value="Dr">Dr</option></li>
-                               
-                            </ul> -->
-                            <div>
+                        <div class="input-group">                           
+                          <div>
                             <select formControlName="opening_balance_type" class=" border hov" required id="opening_balance_type"
                             [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">
                               <option class="unhov" value="" selected disabled>Balance type</option>
@@ -121,19 +105,15 @@
                               <option class="unhov" value="Dr">Dr</option>  
                             </select>
                             <span class="text-danger d-block"*ngIf="opening_balance_type && opening_balance_type.invalid && opening_balance_type.touched">Select Balance Type</span>
-
                             </div>
                             <div>
                           <input type="text" formControlName="opening_balance" id="opening_balance"
-                            [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
-                            
+                            [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">                           
                             <span class="text-danger ml-5 pl-5"*ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">
                                 Enter your Balance</span>          
                    </div>
-                       </div>
-        
-                   </div>
-                   
+                       </div>      
+                   </div>                   
                 </div>
            </div>
 
@@ -160,14 +140,13 @@
                     </select>
                     <span class="text-danger"*ngIf="type_of_customer && type_of_customer.invalid && type_of_customer.touched">Select Type of Customer</span>
                 </div>
-
             </div>
+
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label>Type of Account*</label>
                     <!-- <input type="text" formControlName="accounts_type"  id="accounts_type"
                     [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}"> -->
-
                     <select formControlName="accounts_type" class="w-100 h-100 border" required id="accounts_type"
                     [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}">
                       <option value="" selected disabled>Accounts type</option>
@@ -187,10 +166,10 @@
                       <option value="Current Liabilities">Current Liabilities</option>
                       <option value="Fixed Assets">Fixed Assets</option>
                     </select>
-
                     <span class="text-danger"*ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select Type of Account</span>
                 </div>
             </div>
+
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label>Credit Days</label>
@@ -200,6 +179,7 @@
                     <span class="text-danger"*ngIf="credit_days && credit_days.invalid && credit_days.touched">Date (format:dd/mm/yyyy)</span>
                 </div>
             </div>
+
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label>Credit Amount</label>
@@ -208,19 +188,18 @@
                     <span class="text-danger"*ngIf="credit_amount && credit_amount.invalid && credit_amount.touched">Enter credit amount</span>
                 </div>
             </div>
+            
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label>Country</label>
-                    <!-- <input type="text" formControlName="country"> -->
-                    <select formControlName="country" class="w-100 h-100 border" 
+                 <select formControlName="country" class="w-100 h-100 border" 
                     #countryValue (change)="selectState(countryValue.value)" id="country"
                     [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid
                     }">
                   <option value="" selected disabled>Country</option>
                   <option value="{{country.id}}" *ngFor="let country of country">{{country.country_name}}         
                   </option>
-                </select>
-               
+                </select>    
                 <span class="text-danger"*ngIf="countryy && countryy.invalid && countryy.touched">Select country</span>
                 </div>
             </div>
@@ -229,7 +208,6 @@
                 <div class="form-group">
                     <label> State</label>
                     <!-- <input type="text" formControlName="state"> -->
-                    
                     <!-- <select formControlName="state" class="w-100 h-100 border" required >
                         <option value="" selected disabled>State</option>
                         <option value="{{state.id}}" *ngFor="let state of state"  [style]="state.country==countryValue.value?state.state:'display:none'">{{state.state}}</option>
@@ -242,6 +220,7 @@
                       <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched">Select state</span> 
                 </div>
             </div>
+
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label> City</label>

@@ -21,7 +21,9 @@ export class SubcategorylistComponent implements OnInit {
     return this.subcategoryForm.controls;
   }
   imgUrl = 'https://pv.greatfuturetechno.com';
-
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
   }
@@ -58,35 +60,38 @@ export class SubcategorylistComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
+    // };
     this.subcategoryForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
       image: new FormControl('', [Validators.required]),
       category_id: new FormControl('', [Validators.required]),
-      brand_id: new FormArray([], [Validators.required])
+      brand_id: new FormArray([],)
     })
 
-    this.coreService.getProductSubcategory();
-    // this.tableData = this.QueryService.productsubcategoryList;
-    // console.log(this.tableData);
-    this.coreService.subcategoryBehavior.subscribe(() => {
-      if (localStorage.getItem('productsubcategroyList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("productsubcategroyList")!))
-      }
+    // this.coreService.getProductSubcategory();
+  
+    // this.coreService.subcategoryBehavior.subscribe(() => {
+    //   if (localStorage.getItem('productsubcategroyList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("productsubcategroyList")!))
+    //   }
+    // })
+    this.coreService.getproductSubcategory().subscribe(res=>{
+      this.tableData=res;
     })
+
     this.productCategory();
     this.getbrand()
 
@@ -142,6 +147,7 @@ export class SubcategorylistComponent implements OnInit {
     })
   }
   check: any
+  selectBrand=0;
   onCheckChange(event: any) {
     const formArray: any = this.subcategoryForm.get('brand_id') as FormArray;
 
@@ -151,6 +157,7 @@ export class SubcategorylistComponent implements OnInit {
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
+      this.selectBrand++
     }
     /* unselected */
     else {
@@ -160,7 +167,9 @@ export class SubcategorylistComponent implements OnInit {
         if (ctrl.value == event.target.value) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
+          this.selectBrand--
           return;
+          
         }
         i++;
       });
@@ -336,5 +345,25 @@ export class SubcategorylistComponent implements OnInit {
   openaddForm() {
     this.addForm = true;
     this.subcategoryForm.reset();
+  }
+
+    
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 }

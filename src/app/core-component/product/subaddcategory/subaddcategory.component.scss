@@ -1,0 +1,22 @@
+
+.thone i{
+    float: right;
+    margin-top: 4px;
+ }
+ 
+ @media (max-width:765px) {
+    .thone i{
+       float: inherit;
+       margin-top: 0;
+    }
+ }
+ .fa-sort:before {
+    content: "\f0dc";
+    right: 0.5em;
+    /* content: "\f107"; */
+    /* font-family: "Font Awesome 5 Free"; */
+    /* top: 14px; */
+    color: #BABFC7;
+    font-size: 12px;
+    opacity: 1;
+ }

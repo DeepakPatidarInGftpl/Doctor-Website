@@ -21,6 +21,9 @@ export class FeatureComponent implements OnInit {
   get f() {
     return this.featureForm.controls;
   }
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService,) {
     this.QueryService.filterToggle();
   }
@@ -62,28 +65,31 @@ export class FeatureComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       feature_group: new FormControl('', [Validators.required])
     })
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
-    this.coreService.getFeature();
-    // this.tableData = this.QueryService.fuatureList;
-    // console.log(this.tableData);
+    // };
+    // this.coreService.getFeature();
+    // // this.tableData = this.QueryService.fuatureList;
+    // // console.log(this.tableData);
 
-    this.coreService.featureBehavior.subscribe(() => {
-      if (localStorage.getItem('featureList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("featureList")!))
-      }
+    // this.coreService.featureBehavior.subscribe(() => {
+    //   if (localStorage.getItem('featureList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("featureList")!))
+    //   }
+    // })
+    this.coreService.getfeature().subscribe(res=>{
+      this.tableData=res;
     })
     this.getFeatureGroup();
   }
@@ -220,6 +226,25 @@ update(){
   openaddForm() {
     this.addForm = true;
     this.featureForm.reset();
+  }
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 }
 

@@ -21,6 +21,9 @@ export class StaticPagesComponent implements OnInit {
   get f() {
     return this.staticPgForm.controls;
   }
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
   }
@@ -63,32 +66,33 @@ export class StaticPagesComponent implements OnInit {
       slug: new FormControl('', [Validators.required]),   
       description:new FormControl('',[Validators.required])
     })
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
-    this.coreService.getStaicPages();
-    // this.tableData = this.QueryService.colorsList;
-    // console.log(this.tableData);
+    // };
+    // this.coreService.getStaicPages();
+    // // this.tableData = this.QueryService.colorsList;
+    // // console.log(this.tableData);
 
-    this.coreService.StaticPageBehaveSub.subscribe(() => {
-      if (localStorage.getItem('staticPages')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("staticPages")!))
-        console.log(this.tableData);
-        
-      }
-    })
-  
+    // this.coreService.StaticPageBehaveSub.subscribe(() => {
+    //   if (localStorage.getItem('staticPages')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("staticPages")!))
+    //     console.log(this.tableData);   
+    //   }
+    // })
+  this.coreService.getStaicPages().subscribe(res=>{
+    this.tableData=res;
+  })
   }
 
   selectAll(initChecked: boolean) {
@@ -194,4 +198,22 @@ update(){
     this.staticPgForm.reset();
   }
 
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
 }

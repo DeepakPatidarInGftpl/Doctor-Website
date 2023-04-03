@@ -18,6 +18,11 @@ export class AccountlistComponent implements OnInit {
   initChecked: boolean = false
   public tableData: any | Account
 
+ 
+  titlee: any;
+  name:any
+  p:number=1
+  pageSize: number = 10;
 
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
@@ -55,22 +60,25 @@ export class AccountlistComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
-    };
-    this.coreService.getAccount()
-    this.coreService.accountBehavior.subscribe( () => {
-      this.tableData = JSON.parse(localStorage.getItem('accountList')!);
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
+    // };
+      // this.coreService.getAccount()
+      // this.coreService.accountBehavior.subscribe( () => {
+      //   this.tableData = JSON.parse(localStorage.getItem('accountList')!);
+      // })
+    this.coreService.getAccount().subscribe(res=>{
+      this.tableData=res;
     })
   }
 
@@ -93,5 +101,36 @@ export class AccountlistComponent implements OnInit {
         // this.getcompanyList()
       }
     })
+  }
+
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res.contact_person_name);
+        console.log(res.contact_person_name.toLocaleLowerCase());
+        console.log(res.contact_person_name.match(this.titlee));
+        if(res.contact_person_name.match(this.titlee)){
+          return res.contact_person_name.match(this.titlee);
+        }else if(res.title.match(this.titlee)){
+          return res.title.match(this.titlee);
+        }
+     
+      })
+      // this.tableData = this.tableData.filter(res => {
+      //   console.log(res);
+      //   console.log(res.title.toLocaleLowerCase());
+      //   console.log(res.title.match(this.name));
+      //   return res.title.match(this.name);
+      // })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 }

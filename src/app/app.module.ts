@@ -18,6 +18,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { CKEditorModule } from 'ngx-ckeditor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxEditorModule } from 'ngx-editor';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 const icons = {
   Layers
 };
@@ -39,7 +40,8 @@ const icons = {
     CKEditorModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxEditorModule
+    NgxEditorModule,
+    Ng2SearchPipeModule
   ],
   exports: [
     FeatherModule
