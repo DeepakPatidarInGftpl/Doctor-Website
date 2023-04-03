@@ -25,6 +25,102 @@
                 >
               </a>
             </li>
+
+            <!-- master -->
+            <li class="submenu">
+              <a
+                (click)="showSubMenu('Company')"
+                [class.subdrop]="opendSubMenu[1] === 'Company'"
+                href="javascript:void(0);"
+                ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
+                  Company</span
+                >
+                <span class="menu-arrow"></span
+              ></a>
+              <ul
+                [ngClass]="{
+                  show: opendSubMenu[1] == 'Company',
+                  hide: opendSubMenu[1] != 'Company'
+                }"
+              >
+                <li>
+                  <a routerLink="/company/companylist">Company</a>
+                </li>
+                <!-- <li><a routerLink="/company/addcompany">Add Company</a></li> -->
+              
+              </ul>
+            </li>
+
+            <li class="submenu">
+              <a
+                (click)="showSubMenu('Employee')"
+                [class.subdrop]="opendSubMenu[1] === 'Employee'"
+                href="javascript:void(0);"
+                ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
+                  Employee</span
+                >
+                <span class="menu-arrow"></span
+              ></a>
+              <ul
+                [ngClass]="{
+                  show: opendSubMenu[1] == 'Employee',
+                  hide: opendSubMenu[1] != 'Employee'
+                }"
+              >
+                <li>
+                  <a routerLink="/employee/employeelist">Employee</a>
+                </li>
+                <!-- <li><a routerLink="/employee/addemployee">Add Employee</a></li> -->
+              
+              </ul>
+            </li>
+            <li class="submenu">
+              <a
+                (click)="showSubMenu('Account')"
+                [class.subdrop]="opendSubMenu[1] === 'Account'"
+                href="javascript:void(0);"
+                ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
+                  Account</span
+                >
+                <span class="menu-arrow"></span
+              ></a>
+              <ul
+                [ngClass]="{
+                  show: opendSubMenu[1] == 'Account',
+                  hide: opendSubMenu[1] != 'Account'
+                }"
+              >
+                <li>
+                  <a routerLink="/account/accountlist">Account</a>
+                </li>
+                <!-- <li><a routerLink="/account/addaccount">Add Account</a></li> -->
+              
+              </ul>
+            </li>
+            <li class="submenu">
+              <a
+                (click)="showSubMenu('Warehouse')"
+                [class.subdrop]="opendSubMenu[1] === 'Warehouse'"
+                href="javascript:void(0);"
+                ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
+                  Warehouse</span
+                >
+                <span class="menu-arrow"></span
+              ></a>
+              <ul
+                [ngClass]="{
+                  show: opendSubMenu[1] == 'Warehouse',
+                  hide: opendSubMenu[1] != 'Warehouse'
+                }"
+              >
+                <li>
+                  <a routerLink="/warehouse/warehouse">Warehouse</a>
+                </li>
+     
+              </ul>
+            </li>
+       
+
             <li class="submenu">
               <a
                 (click)="showSubMenu('Product')"
@@ -42,7 +138,7 @@
                 }"
               >
                 <li><a routerLink="/product/productlist">Product</a></li>
-                <li><a routerLink="/product/addproduct">Add Product</a></li>
+                <!-- <li><a routerLink="/product/addproduct">Add Product</a></li> -->
                 <li><a routerLink="/product/categorylist">Category</a></li>
                 <li><a routerLink="/product/addcategory">Add Category</a></li>
                 <li>
@@ -75,96 +171,27 @@
                 <li><a routerLink="/product/city">City</a></li> -->
               </ul>
             </li>
+            
             <li class="submenu">
               <a
-                (click)="showSubMenu('Company')"
-                [class.subdrop]="opendSubMenu[1] === 'Company'"
+                (click)="showSubMenu('Website')"
+                [class.subdrop]="opendSubMenu[1] === 'Website'"
                 href="javascript:void(0);"
                 ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
-                  Company</span
+                  Website</span
                 >
                 <span class="menu-arrow"></span
               ></a>
               <ul
                 [ngClass]="{
-                  show: opendSubMenu[1] == 'Company',
-                  hide: opendSubMenu[1] != 'Company'
+                  show: opendSubMenu[1] == 'Website',
+                  hide: opendSubMenu[1] != 'Website'
                 }"
               >
                 <li>
-                  <a routerLink="/company/companylist">Company</a>
+                  <a routerLink="/website/staticPage">Static Pages</a>
                 </li>
-                <li><a routerLink="/company/addcompany">Add Company</a></li>
-              
-              </ul>
-            </li>
-
-            <li class="submenu">
-              <a
-                (click)="showSubMenu('Employee')"
-                [class.subdrop]="opendSubMenu[1] === 'Employee'"
-                href="javascript:void(0);"
-                ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
-                  Employee</span
-                >
-                <span class="menu-arrow"></span
-              ></a>
-              <ul
-                [ngClass]="{
-                  show: opendSubMenu[1] == 'Employee',
-                  hide: opendSubMenu[1] != 'Employee'
-                }"
-              >
-                <li>
-                  <a routerLink="/employee/employeelist">Employee</a>
-                </li>
-                <li><a routerLink="/employee/addemployee">Add Employee</a></li>
-              
-              </ul>
-            </li>
-            <li class="submenu">
-              <a
-                (click)="showSubMenu('Account')"
-                [class.subdrop]="opendSubMenu[1] === 'Account'"
-                href="javascript:void(0);"
-                ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
-                  Account</span
-                >
-                <span class="menu-arrow"></span
-              ></a>
-              <ul
-                [ngClass]="{
-                  show: opendSubMenu[1] == 'Account',
-                  hide: opendSubMenu[1] != 'Account'
-                }"
-              >
-                <li>
-                  <a routerLink="/account/accountlist">Account</a>
-                </li>
-                <li><a routerLink="/account/addaccount">Add Account</a></li>
-              
-              </ul>
-            </li>
-            <li class="submenu">
-              <a
-                (click)="showSubMenu('Warehouse')"
-                [class.subdrop]="opendSubMenu[1] === 'Warehouse'"
-                href="javascript:void(0);"
-                ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
-                  Warehouse</span
-                >
-                <span class="menu-arrow"></span
-              ></a>
-              <ul
-                [ngClass]="{
-                  show: opendSubMenu[1] == 'Warehouse',
-                  hide: opendSubMenu[1] != 'Warehouse'
-                }"
-              >
-                <li>
-                  <a routerLink="/warehouse/warehouse">Warehouse</a>
-                </li>
-     
+                <li><a routerLink="/website/addStaticPage">Add Static Pages</a></li>
               </ul>
             </li>
             <li class="submenu">

@@ -7,6 +7,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SubcategoryGroupComponent } from './subcategory-group.component';
 import { subCatRoutingModule } from './subcategory-group.routing.mudule';
 
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { OrderModule } from 'ngx-order-pipe';
+
 @NgModule({
   declarations: [
     SubcategoryGroupComponent
@@ -17,7 +21,10 @@ import { subCatRoutingModule } from './subcategory-group.routing.mudule';
     DataTablesModule,
     ReactiveFormsModule,
     FormsModule,
-    SweetAlert2Module.forRoot()
+    SweetAlert2Module.forRoot(),
+    Ng2SearchPipeModule,
+    OrderModule,
+    NgxPaginationModule
   ]
 })
 export class subcatModule { }

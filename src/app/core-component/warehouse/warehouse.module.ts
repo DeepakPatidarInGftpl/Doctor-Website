@@ -8,6 +8,10 @@ import { SweetAlert2Module } from "@sweetalert2/ngx-sweetalert2";
 import { DataTablesModule } from "angular-datatables";
 import { DatepickerModule } from "ng2-datepicker";
 
+
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { OrderModule } from 'ngx-order-pipe';
 @NgModule({
   declarations: [
     WarehouseComponent
@@ -19,7 +23,10 @@ import { DatepickerModule } from "ng2-datepicker";
     ReactiveFormsModule,
     DatepickerModule,
     SweetAlert2Module,
-    DataTablesModule
+    DataTablesModule,
+    Ng2SearchPipeModule,
+    NgxPaginationModule,
+    OrderModule
   ]
 })
 export class WarehouseModule { }

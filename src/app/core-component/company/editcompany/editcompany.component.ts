@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject } from 'rxjs';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-editcompany',
@@ -16,7 +17,8 @@ export class EditcompanyComponent implements OnInit {
   get f() {
     return this.companyForm.controls;
   }
-  constructor(private fb: FormBuilder, private Arout: ActivatedRoute, private copmpanyService: CompanyService, private router: Router, private toastr: ToastrService) {
+  constructor(private fb: FormBuilder, private Arout: ActivatedRoute, private copmpanyService: CompanyService, private router: Router, private toastr: ToastrService
+    ,private coreService:CoreService) {
     //getting data through url
     console.log(this.router.getCurrentNavigation()?.extras?.state?.['example']);
 
@@ -25,11 +27,12 @@ export class EditcompanyComponent implements OnInit {
 
   companyId: any
   data: any
-selectS:any
+  selectS: any
   ngOnInit(): void {
     this.companyId = this.Arout.snapshot.paramMap.get('id');
     this.getCountry();
     this.getState();
+    this.getCity();
     this.copmpanyService.getCompanyById(this.companyId).subscribe(res => {
       this.data = res
 
@@ -41,7 +44,7 @@ selectS:any
       // this.companyForm.patchValue({
       //   state:this.data.state
       // })
-      this.selectS=this.data.state
+      this.selectS = this.data.state
       console.log(this.state);
 
     })
@@ -52,12 +55,12 @@ selectS:any
       phone: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]*$/),]),
       financial_year: new FormControl('', [Validators.required]),
       currency: new FormControl('', [Validators.required]),
-      gst: new FormControl('', [Validators.required,Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
+      gst: new FormControl('', [Validators.required, Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       address: new FormControl('', [Validators.required]),
       pincode: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]),
       state: new FormControl('', [Validators.required]),
       country: new FormControl('', [Validators.required]),
-
+      city:new FormControl('',[Validators.required])
     })
 
   }
@@ -85,28 +88,34 @@ selectS:any
       console.log(this.state);
     })
   }
-  dateError=null
-  submit() {
-    if(this.companyForm.valid){
-    this.copmpanyService.updateCompany(this.companyForm.value, this.companyId).subscribe(res => {
-      console.log(res);
-      if (res.msg == "Company updated successfully") {
-        this.toastr.success(res.msg);
-        this.companyForm.reset();
-        this.router.navigate(['//company/companylist'])
-        // .then(()=>{
-        //   window.location.reload()
-        // })
-      }
-    },err=>{
-      if (err.error.financial_year) {
-        this.dateError = 'Date (format:dd/mm/yyyy)';
-        setTimeout(() => {
-          this.dateError=''
-        }, 2000);
-      }
+  city:any
+  getCity(){
+    this.coreService.getCity().subscribe(res=>{
+      this.city=res;
     })
-    } else{
+  }
+  dateError = null
+  submit() {
+    if (this.companyForm.valid) {
+      this.copmpanyService.updateCompany(this.companyForm.value, this.companyId).subscribe(res => {
+        console.log(res);
+        if (res.msg == "Company updated successfully") {
+          this.toastr.success(res.msg);
+          this.companyForm.reset();
+          this.router.navigate(['//company/companylist'])
+          // .then(()=>{
+          //   window.location.reload()
+          // })
+        }
+      }, err => {
+        if (err.error.financial_year) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError = ''
+          }, 2000);
+        }
+      })
+    } else {
       this.companyForm.markAllAsTouched()
       console.log('error');
     }
@@ -143,5 +152,8 @@ selectS:any
   }
   get statee() {
     return this.companyForm.get('state')
+  }
+  get cityy(){
+    return this.companyForm.get('city')
   }
 }

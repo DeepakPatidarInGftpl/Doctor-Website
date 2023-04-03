@@ -64,6 +64,10 @@ font-size: 16px;
     padding: 5px 0;
     flex: 1;
     text-align: center;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .amt-info-div li:last-child {
@@ -200,13 +204,18 @@ color: #9C9C9C;
 }
 
 .mrp-input-table{
-    max-width: 100px;
+    max-width: 220px;
 }
 
 .table-black-grp span {
     background-color: black;
     color: white;
     border: none;
+    border-radius: 0;
+}
+
+.table-black-grp input {
+    border-radius: 0;
 }
 
 .table-black-grp input {
@@ -222,6 +231,7 @@ color: #9C9C9C;
 font-style: normal;
 font-weight: 500;
 font-size: 16px;
+line-height: 1.2;
 }
 
 .amt-info-div button {
@@ -230,6 +240,9 @@ font-size: 16px;
 font-style: normal;
 font-weight: 500;
 padding: 2px 4px;
+width: 90%;
+margin-left: auto;
+margin-right: auto;
 }
 
 .bottom-pos-left .btns-row button {
@@ -258,7 +271,7 @@ font-size: 18px;
 
 .table-pos {
     overflow-y: scroll;
-    height: 25vh;
+    max-height: 165px;
 }
 
 .amt-info-div .flat-disc-wrapper {
@@ -279,6 +292,13 @@ font-size: 18px;
 
 .amt-info-div .flat-disc-wrapper .input-group-text {
     padding: 0 2px;
+    background-color: #000;
+    color: white;
+    border-radius: 0;
+}
+
+.amt-info-div .flat-disc-wrapper input {
+    border-radius: 0;
 }
 
 .bottom-pos-left .row:nth-child(2) .col-sm-12 {
@@ -485,7 +505,7 @@ font-size: 20px;
 
 .fullmodal-pos .right .payment-wrapper .btn-remove {
     height: fit-content;
-    padding: 4px 8px;
+    padding: 4px 10px;
     border-radius: 50%;
     border-color: #FF0000;
     color: #FF0000;
@@ -493,6 +513,7 @@ font-size: 20px;
 
 .fullmodal-pos .right .payment-wrapper .btn-remove i {
     font-size: 20px;
+    line-height: 1.2;
 }
 
 .add-more-details-btn i {
@@ -570,4 +591,59 @@ padding: 10px 16px;
 
 .qty-input span {
     border-radius: 0;
+}
+
+.full-modal-row {
+    height: 82vh;
+}
+
+.pos-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 0.7;
+}
+
+.pos-loader svg {
+ width: 3.25em;
+ transform-origin: center;
+ animation: rotate4 2s linear infinite;
+}
+
+.pos-loader circle {
+ fill: none;
+ stroke: hsl(214, 97%, 59%);
+ stroke-width: 2;
+ stroke-dasharray: 1, 200;
+ stroke-dashoffset: 0;
+ stroke-linecap: round;
+ animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+ 100% {
+  transform: rotate(360deg);
+ }
+}
+
+@keyframes dash4 {
+ 0% {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+ }
+
+ 50% {
+  stroke-dasharray: 90, 200;
+  stroke-dashoffset: -35px;
+ }
+
+ 100% {
+  stroke-dashoffset: -125px;
+ }
 }

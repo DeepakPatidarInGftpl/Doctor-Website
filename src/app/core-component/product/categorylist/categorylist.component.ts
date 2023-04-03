@@ -16,7 +16,9 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   public tableData: any = []
 
   apiUrl = environment.api
-
+  title: any;
+p:number=1
+pageSize: number = 10;
   constructor(private QueryService: QueryService, private coreServ: CoreService, private router: Router) {
     this.QueryService.filterToggle()
   }
@@ -37,7 +39,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreServ.deleteProductCateg(id).subscribe( res => {
+        this.coreServ.deleteProductCateg(id).subscribe(res => {
           console.log(res);
         })
         Swal.fire({
@@ -55,28 +57,30 @@ export class CategorylistComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.coreServ.getProductCategory()
-    this.coreServ.ProdCategBehaveSub.subscribe(() => {
-      if (localStorage.getItem("prodCategories")) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("prodCategories")))
-      }
+    this.coreServ.getProductCategor().subscribe(res => {
+      this.tableData = res;
     })
+    // this.coreServ.ProdCategBehaveSub.subscribe(() => {
+    //   if (localStorage.getItem("prodCategories")) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("prodCategories")))
+    //   }
+    // })
 
 
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
+    // };
   }
 
   editMode = false
@@ -99,7 +103,28 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     }
   }
 
+  search() {
+    if (this.title == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.toLocaleLowerCase().match(this.title.toLocaleLowerCase()));
+
+        return res.title.match(this.title);
+
+
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
   ngOnDestroy() {
     this.coreServ.editThisData(null)
-}
+  }
 }

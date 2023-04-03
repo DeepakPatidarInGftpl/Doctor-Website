@@ -21,6 +21,9 @@ export class SizeComponent implements OnInit {
   get f() {
     return this.sizeForm.controls;
   }
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
   }
@@ -62,27 +65,32 @@ export class SizeComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       code: new FormControl('', [Validators.required]),   
     })
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
-    this.coreService.getsize();
-    // this.tableData = this.QueryService.sizeList;
-    // console.log(this.tableData);
-    this.coreService.sizeBehavior.subscribe(() => {
-      if (localStorage.getItem('sizesList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("sizesList")!))
-      }
+    // };
+
+    // this.coreService.getsize();
+    // // this.tableData = this.QueryService.sizeList;
+    // // console.log(this.tableData);
+    // this.coreService.sizeBehavior.subscribe(() => {
+    //   if (localStorage.getItem('sizesList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("sizesList")!))
+    //   }
+    // })
+    
+    this.coreService.getSize().subscribe(res=>{
+      this.tableData=res;
     })
   }
 
@@ -216,6 +224,26 @@ update(){
   openaddForm() {
     this.addForm = true;
     this.sizeForm.reset();
+  }
+
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 
 }
