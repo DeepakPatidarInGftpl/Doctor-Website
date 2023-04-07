@@ -66,6 +66,9 @@ MIT
 @angular/router
 MIT
 
+@angular/service-worker
+MIT
+
 @sweetalert2/ngx-sweetalert2
 
 angular-datatables
