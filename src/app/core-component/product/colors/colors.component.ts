@@ -22,6 +22,9 @@ export class ColorsComponent implements OnInit {
   get f() {
     return this.colorForm.controls;
   }
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
   }
@@ -63,28 +66,32 @@ export class ColorsComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       color_code: new FormControl('', [Validators.required]),   
     })
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
-    this.coreService.getcolor();
-    // this.tableData = this.QueryService.colorsList;
-    // console.log(this.tableData);
+    // };
+   
+    // this.coreService.getcolor();
+    // // this.tableData = this.QueryService.colorsList;
+    // // console.log(this.tableData);
 
-    this.coreService.colorBehavior.subscribe(() => {
-      if (localStorage.getItem('colorsList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("colorsList")!))
-      }
+    // this.coreService.colorBehavior.subscribe(() => {
+    //   if (localStorage.getItem('colorsList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("colorsList")!))
+    //   }
+    // })
+    this.coreService.getColor().subscribe(res=>{
+      this.tableData=res;
     })
   
   }
@@ -106,11 +113,11 @@ export class ColorsComponent implements OnInit {
       if (this.delRes.msg == "Colors Deleted successfully") {
         window.location.reload()
       }
-
     })
   }
 
   addRes: any
+
   // submit() {
   //   console.log(this.colorForm.value);
   //   console.log(this.id);
@@ -164,9 +171,7 @@ export class ColorsComponent implements OnInit {
       }
     }, err => {
       console.log(err.error.gst);
-    })
-    
-    
+    })   
   } else {
     this.colorForm.markAllAsTouched()
     console.log('forms invalid');
@@ -187,8 +192,7 @@ update(){
       }
     }, err => {
       console.log(err.error.gst);
-    })
-   
+    })  
   } else {
     this.colorForm.markAllAsTouched()
     console.log('forms invalid');
@@ -222,5 +226,24 @@ update(){
   openaddForm() {
     this.addForm = true;
     this.colorForm.reset();
+  }
+
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 }

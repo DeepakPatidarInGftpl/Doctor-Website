@@ -90,8 +90,7 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
         if (this.addRes.msg == "Data Created") {
           this.toastr.success(this.addRes.msg)
           this.staticPgForm.reset()
-          // window.location.reload();
-          this.ngOnInit()
+          this.router.navigate(['/website/staticPage'])
         }
       }, err => {
         console.log(err.error.gst);

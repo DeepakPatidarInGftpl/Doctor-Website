@@ -21,6 +21,9 @@ export class StatelistComponent implements OnInit {
   get f() {
     return this.stateForm.controls;
   }
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService,
     private Service: CompanyService) {
     this.QueryService.filterToggle();
@@ -63,28 +66,30 @@ export class StatelistComponent implements OnInit {
       state_code: new FormControl('', [Validators.required]),
       country: new FormControl('', [Validators.required]),
     })
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
-    };
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
+    // };
 
-    this.coreService.getstate();
+    // this.coreService.getstate();
 
-    this.coreService.stateBehavior.subscribe( () => {
-      this.tableData = JSON.parse(localStorage.getItem('stateList')!)
-    })
-
+    // this.coreService.stateBehavior.subscribe( () => {
+    //   this.tableData = JSON.parse(localStorage.getItem('stateList')!)
+    // })
+this.coreService.getstate().subscribe(res=>{
+  this.tableData=res;
+})
     console.log(this.tableData);
-    this.getFeatureGroup();
+    this.getCountryList();
   }
 
   selectAll(initChecked: boolean) {
@@ -108,10 +113,10 @@ export class StatelistComponent implements OnInit {
 
     })
   }
-  featureGroup: any
-  getFeatureGroup() {
-    this.coreService.getFuature_groupD().subscribe(res => {
-      this.featureGroup = res
+  countryList: any
+  getCountryList() {
+    this.coreService.getCountry().subscribe(res => {
+      this.countryList = res
     })
   }
   addRes: any
@@ -200,6 +205,26 @@ export class StatelistComponent implements OnInit {
   openaddForm() {
     this.addForm = true;
     this.stateForm.reset();
+  }
+
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.state.toLocaleLowerCase());
+        console.log(res.state.match(this.titlee));
+        return res.state.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 
 }

@@ -22,6 +22,10 @@ export class FeatureGroupComponent implements OnInit {
   get f() {
     return this.featureForm.controls;
   }
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
+
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService,) {
     this.QueryService.filterToggle();
   }
@@ -62,27 +66,30 @@ export class FeatureGroupComponent implements OnInit {
     this.featureForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
     })
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
-    this.coreService.getFuature_group();
-    // this.tableData = this.QueryService.fuature_groupList;
-    // console.log(this.tableData);
-    this.coreService.featureGroupBehavior.subscribe(() => {
-      if (localStorage.getItem('fuature_groupList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("fuature_groupList")!))
-      }
+    // };
+    // this.coreService.getFuature_group();
+    // // this.tableData = this.QueryService.fuature_groupList;
+    // // console.log(this.tableData);
+    // this.coreService.featureGroupBehavior.subscribe(() => {
+    //   if (localStorage.getItem('fuature_groupList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("fuature_groupList")!))
+    //   }
+    // })
+    this.coreService.getFuature_groupD().subscribe(res=>{
+      this.tableData=res;
     })
   }
 
@@ -213,4 +220,23 @@ update(){
     this.featureForm.reset();
   }
 
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
 }

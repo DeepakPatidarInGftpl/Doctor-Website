@@ -9,6 +9,9 @@ import { FormsModule } from '@angular/forms';
 import { DatepickerModule } from 'ng2-datepicker';
 import { EmployeeListComponent } from './employee-list.component';
 
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { OrderModule } from 'ngx-order-pipe';
 
 @NgModule({
   declarations: [EmployeeListComponent],
@@ -19,6 +22,9 @@ import { EmployeeListComponent } from './employee-list.component';
     FormsModule,
     DatepickerModule,
     SweetAlert2Module.forRoot(),
+    Ng2SearchPipeModule,
+    NgxPaginationModule,
+    OrderModule
   ]
 })
 export class EmployeeListModule { }

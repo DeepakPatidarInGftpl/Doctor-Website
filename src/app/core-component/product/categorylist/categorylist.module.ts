@@ -8,6 +8,9 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { AddcategoryModule } from "../addcategory/addcategory.module";
 
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { OrderModule } from 'ngx-order-pipe';
 @NgModule({
     declarations: [
         CategorylistComponent
@@ -18,7 +21,10 @@ import { AddcategoryModule } from "../addcategory/addcategory.module";
         DataTablesModule,
         FormsModule,
         SweetAlert2Module.forRoot(),
-        AddcategoryModule
+        AddcategoryModule,
+        Ng2SearchPipeModule,
+        NgxPaginationModule,
+        OrderModule
     ]
 })
 export class CategorylistModule { }

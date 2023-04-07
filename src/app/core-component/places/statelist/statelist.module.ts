@@ -8,6 +8,10 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatepickerModule } from 'ng2-datepicker';
 
+
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { OrderModule } from 'ngx-order-pipe';
 @NgModule({
   declarations: [
     StatelistComponent
@@ -19,7 +23,10 @@ import { DatepickerModule } from 'ng2-datepicker';
     FormsModule,
     SweetAlert2Module.forRoot(),
     ReactiveFormsModule,
-    DatepickerModule
+    DatepickerModule,
+    Ng2SearchPipeModule,
+    NgxPaginationModule,
+    OrderModule
   ]
 })
 export class StatelistModule { }

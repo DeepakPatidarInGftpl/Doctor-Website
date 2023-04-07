@@ -21,6 +21,11 @@ export class UnitComponent implements OnInit {
   get f() {
     return this.unitsForm.controls;
   }
+
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
+
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
   }
@@ -60,28 +65,34 @@ export class UnitComponent implements OnInit {
     this.unitsForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
     })
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
 
-    };
-    this.coreService.getUnits();
-    // this.tableData = this.QueryService.unitList;
-    // console.log(this.tableData);
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    this.coreService.unitBehavior.subscribe(() => {
-      if (localStorage.getItem('unitList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("unitList")!))
-      }
+    // };
+
+    // this.coreService.getUnits();
+    // // this.tableData = this.QueryService.unitList;
+    // // console.log(this.tableData);
+
+    // this.coreService.unitBehavior.subscribe(() => {
+    //   if (localStorage.getItem('unitList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("unitList")!))
+    //   }
+    // })
+    
+    this.coreService.getUnit().subscribe(res=>{
+      this.tableData=res;
     })
 
   }
@@ -212,5 +223,24 @@ id:any
     })
   }
 
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
 }
 

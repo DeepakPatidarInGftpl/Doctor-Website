@@ -18,9 +18,15 @@ export class HsncodeComponent implements OnInit {
   public tableData: any
 
   hsncodeForm!: FormGroup;
+
   get f() {
     return this.hsncodeForm.controls;
   }
+
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
+
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle()
   
@@ -64,28 +70,32 @@ export class HsncodeComponent implements OnInit {
       tax: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       subcategory: new FormArray([], [Validators.required]),
     })
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
-    this.coreService.getHSNcode();
-      // this.tableData = this.QueryService.hsncodeList;
-    // console.log(this.tableData);
-    this.coreService.hsncodeBehavior.subscribe(() => {
-      if (localStorage.getItem('hsncodeList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("hsncodeList")!))
-      }
-    })
+    // };
+
+    // this.coreService.getHSNcode();
+    //   // this.tableData = this.QueryService.hsncodeList;
+    // // console.log(this.tableData);
+    // this.coreService.hsncodeBehavior.subscribe(() => {
+    //   if (localStorage.getItem('hsncodeList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("hsncodeList")!))
+    //   }
+    // })
+this.coreService.getHSNCode().subscribe(res=>{
+  this.tableData=res
+})
     this.getSubcategory();
     this.getTax();
 
@@ -338,5 +348,25 @@ export class HsncodeComponent implements OnInit {
   openaddForm() {
     this.addForm = true;
     this.hsncodeForm.reset();
+  }
+
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        return res.title.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 }

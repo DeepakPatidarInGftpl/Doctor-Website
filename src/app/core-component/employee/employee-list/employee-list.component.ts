@@ -16,8 +16,11 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any | employee
+  public tableData: any | employee;
 
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
 
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
@@ -55,32 +58,32 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
     });
   }
   ngOnInit(): void {
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
-     this.coreService.getEmploye();
+    // };
+    //  this.coreService.getEmploye();
 
-     this.coreService.employeeBehavior.subscribe( () => {
-     this.tableData = JSON.parse(localStorage.getItem('employeeList')!);
-     })
+    //  this.coreService.employeeBehavior.subscribe( () => {
+    //  this.tableData = JSON.parse(localStorage.getItem('employeeList')!);
+    //  })
 
-    console.log(this.coreService.data);
+    // console.log(this.coreService.data);
 
-    // this.coreService.getEmployee().subscribe(res => {
-    //   console.log(res);
-    //   this.tableData = res
-    // })
+    this.coreService.getEmployee().subscribe(res => {
+      console.log(res);
+      this.tableData = res
+    })
 
   }
 
@@ -115,5 +118,24 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
       }
 
     })
+  }
+  
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.name.toLocaleLowerCase());
+        console.log(res.name.match(this.titlee));
+        return res.name.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 }

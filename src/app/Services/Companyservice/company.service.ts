@@ -33,9 +33,6 @@ export class CompanyService {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
-    }).subscribe(res => {
-      localStorage.setItem('companyList', JSON.stringify(res));
-      this.companyBehaviour.next(null)
     })
   }
 

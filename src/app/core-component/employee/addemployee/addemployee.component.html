@@ -8,8 +8,7 @@
 <div class="card">
     <div class="card-body">
         <form [formGroup]="employeeForm" (ngSubmit)="submit()">
-        <div class="row">
-           
+        <div class="row">       
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label> Name*</label>
@@ -58,13 +57,12 @@
                     [ngClass]="{
                       'is-invalid': f['mobile'].touched && f['mobile'].invalid
                     }">
-                    <span class="text-danger"*ngIf="mobile && mobile.invalid && mobile.touched">Enter your 10 digits mobile phone number</span>
-           
+                    <span class="text-danger"*ngIf="mobile && mobile.invalid && mobile.touched">Enter your 10 digits mobile phone number</span>      
                 </div>
             </div>
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
-                    <label>Anniversary*</label>
+                    <label>Anniversary</label>
                     <input type="date" formControlName="anniversary" id="anniversary"
                     [ngClass]="{
                       'is-invalid': f['anniversary'].touched && f['anniversary'].invalid
@@ -76,7 +74,7 @@
             </div>
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
-                    <label>Attendance*</label>
+                    <label>Attendance</label>
                     <input type="text" formControlName="attendance" id="attendance"
                     [ngClass]="{
                       'is-invalid': f['attendance'].touched && f['attendance'].invalid
@@ -86,7 +84,7 @@
             </div>
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
-                    <label>Employee id*</label>
+                    <label>Employee id</label>
                     <input type="text" formControlName="employee_id" id="employee_id"
                     [ngClass]="{
                       'is-invalid': f['employee_id'].touched && f['employee_id'].invalid
@@ -96,9 +94,9 @@
             </div>
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
-                    <label>Country*</label>
+                    <label>Country</label>
                     <!-- <input type="text" formControlName="country"> -->
-                    <select formControlName="country" class="w-100 h-100 border" required 
+                    <select formControlName="country" class="w-100 h-100 border" 
                     #countryValue (change)="selectState(countryValue.value)" id="country"
                     [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid
                     }">
@@ -113,14 +111,14 @@
 
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
-                    <label> State*</label>
+                    <label> State</label>
                     <!-- <input type="text" formControlName="state"> -->
                     
                     <!-- <select formControlName="state" class="w-100 h-100 border" required >
                         <option value="" selected disabled>State</option>
                         <option value="{{state.id}}" *ngFor="let state of state"  [style]="state.country==countryValue.value?state.state:'display:none'">{{state.state}}</option>
                       </select> -->
-                      <select formControlName="state" class="w-100 h-100 border" required id="state"
+                      <select formControlName="state" class="w-100 h-100 border" id="state"
                       [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}">
                         <option value="" selected disabled>State</option>
                         <option value="{{state.id}}" *ngFor="let state of state">{{state.state}}</option>
@@ -128,10 +126,22 @@
                       <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched">Select state</span> 
                 </div>
             </div>
-
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
-                    <label>Pincode*</label>
+                    <label> City</label>
+                      <select formControlName="city" class="w-100 h-100 border" id="city"
+                      [ngClass]="{
+                        'is-invalid': f['city'].touched && f['city'].invalid
+                      }">
+                        <option value="" selected disabled>City</option>
+                        <option value="{{city.id}}" *ngFor="let city of city">{{city.city}}</option>
+                      </select>
+                      <span class="text-danger"*ngIf="cityy && cityy.invalid && cityy.touched">Select city</span> 
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-3 col-12">
+                <div class="form-group">
+                    <label>Pincode</label>
                     <input type="text" formControlName="pincode" maxlength="6" minlength="6" id="pincode"
                     [ngClass]="{'is-invalid': f['pincode'].touched && f['pincode'].invalid}">
                     <span class="text-danger"*ngIf="pincode && pincode.invalid && pincode.touched">Enter your 6 digits pincode number</span>
@@ -141,7 +151,7 @@
 
             <div class="col-lg-7 col-sm-7 col-12">
                 <div class="form-group">
-                    <label>Address*</label>
+                    <label>Address</label>
                     <textarea class="form-control" formControlName="address" id="address"
                     [ngClass]="{
                       'is-invalid': f['address'].touched && f['address'].invalid

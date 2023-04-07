@@ -13,6 +13,9 @@ export class ProductlistComponent implements OnInit {
   initChecked: boolean = false
   public tableData: any = []
 
+  titlee: any;
+p:number=1
+pageSize: number = 10;
   constructor(private QueryService: QueryService, private coreService: CoreService) {
     this.QueryService.filterToggle()
   }
@@ -49,27 +52,30 @@ export class ProductlistComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: 'Search...',
-        info: '_START_ - _END_ of _TOTAL_ items',
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.none');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
-    };
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: 'Search...',
+    //     info: '_START_ - _END_ of _TOTAL_ items',
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.none');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
+    // };
 
-    this.coreService.getProduct();
-    this.coreService.productListBehaviur.subscribe( () => {
-      if (localStorage.getItem('productList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("productList")!))
-      }
-    })
+    // this.coreService.getProduct();
+    // this.coreService.productListBehaviur.subscribe( () => {
+    //   if (localStorage.getItem('productList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("productList")!))
+    //   }
+    // })
     // this.QueryService.productList;
+    this.coreService.getProducts().subscribe(res=>{
+      this.tableData=res
+    })
     console.log(this.tableData);
   }
   selectAll(initChecked: boolean) {
@@ -83,4 +89,39 @@ export class ProductlistComponent implements OnInit {
       })
     }
   }
+
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.title.toLocaleLowerCase());
+        console.log(res.title.match(this.titlee));
+        // search data base on - title, category,subcategory,subcategory_grp,
+        if(res.title.match(this.titlee)){
+          return res.title.match(this.titlee);
+        }else if(res.category.match(this.titlee)){
+          return res.category.match(this.titlee);
+        }
+        else if(res.subcategory.match(this.titlee)){
+          return res.subcategory.match(this.titlee);
+        }
+        // else if(res.subcategory_group.match(this.titlee)){
+        //   return res.subcategory_group.match(this.titlee);
+        // }
+        // else if(res.brand.match(this.titlee)){
+        //   return res.brand.match(this.titlee);
+        // }
+       
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
+
 }

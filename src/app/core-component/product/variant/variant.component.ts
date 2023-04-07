@@ -21,6 +21,9 @@ export class VariantComponent implements OnInit {
   get f() {
     return this.variantForm.controls;
   }
+  titlee: any;
+  p:number=1
+  pageSize: number = 10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService,) {
     this.QueryService.filterToggle();
   }
@@ -61,30 +64,34 @@ export class VariantComponent implements OnInit {
       sku: new FormControl('', [Validators.required]),
       minimum_stock_threshold: new FormControl('', [Validators.required])
     })
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
 
-    };
-    this.coreService.getVariant();
-    // this.tableData = this.QueryService.variantList;
-    // console.log(this.tableData);
+    // };
 
-    this.coreService.variantBehavior.subscribe(() => {
-      if (localStorage.getItem('variantList')) {
-        this.tableData = Object.values(JSON.parse(localStorage.getItem("variantList")!))
-      }
+    // this.coreService.getVariant();
+    // // this.tableData = this.QueryService.variantList;
+    // // console.log(this.tableData);
+
+    // this.coreService.variantBehavior.subscribe(() => {
+    //   if (localStorage.getItem('variantList')) {
+    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("variantList")!))
+    //   }
+    // })
+
+    this.coreService.getVariantd().subscribe(res=>{
+      this.tableData=res;
     })
-
   }
 
   selectAll(initChecked: boolean) {
@@ -180,6 +187,26 @@ export class VariantComponent implements OnInit {
   openaddForm() {
     this.addForm = true;
     this.variantForm.reset();
+  }
+
+   
+  search() {
+    if (this.titlee == "") {
+      this.ngOnInit();
+    } else {
+      this.tableData = this.tableData.filter(res => {
+        console.log(res);
+        console.log(res.sku.toLocaleLowerCase());
+        console.log(res.sku.match(this.titlee));
+        return res.sku.match(this.titlee);
+      })
+    }
+  }
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
   }
 }
 

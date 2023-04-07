@@ -20,6 +20,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxEditorModule } from 'ngx-editor';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+
 const icons = {
   Layers
 };
@@ -42,6 +44,7 @@ const icons = {
     FormsModule,
     ReactiveFormsModule,
     NgxEditorModule,
+    Ng2SearchPipeModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
