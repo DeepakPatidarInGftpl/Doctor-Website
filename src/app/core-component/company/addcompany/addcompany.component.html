@@ -106,6 +106,9 @@
                           <option value="{{country.id}}" *ngFor="let country of country">{{country.country_name}}         
                           </option>
                         </select>
+
+                      
+
                         <span class="text-danger"*ngIf="countryy && countryy.invalid && countryy.touched">Select country</span>
                         </div>
                     </div>
@@ -123,12 +126,14 @@
                               <select formControlName="state" class="w-100 h-100 border" required id="state"
                               [ngClass]="{
                                 'is-invalid': f['state'].touched && f['state'].invalid
-                              }">
+                              }"   #stateValue (change)="selectCity(stateValue.value)">
                                 <option value="" selected disabled>State</option>
                                 <option value="{{state.id}}" *ngFor="let state of state">{{state.state}}</option>
                               </select>
-                              <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched">Select state</span> 
-                        </div>
+                              <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched && state?.length>0">Select state</span> 
+                              <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched && state?.length<=0">Data not available</span> 
+    
+                            </div>
                     </div>
 
                     <div class="col-lg-3 col-sm-3 col-12">
@@ -141,8 +146,10 @@
                               <option value="" selected disabled>City</option>
                               <option value="{{city.id}}" *ngFor="let city of city">{{city.city}}</option>
                             </select>
-                            <span class="text-danger"*ngIf="cityy && cityy.invalid && cityy.touched">Select city</span> 
-                      </div>
+                            <span class="text-danger"*ngIf="cityy && cityy.invalid && cityy.touched && city?.length>0">Select city</span> 
+                            <span class="text-danger"*ngIf="cityy && cityy.invalid && cityy.touched && city?.length<=0">data not available</span> 
+                      
+                          </div>
                   </div>
                     <div class="col-lg-3 col-sm-3 col-12">
                         <div class="form-group">

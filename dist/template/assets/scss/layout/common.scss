@@ -344,3 +344,20 @@ a:hover{
     text-decoration: none;
     background-color: $__primarycolor;
 }
+
+// pagination
+.pagination{
+    display: inline !important;
+    padding-left: 4px !important;
+    height: 30px !important;
+    width: auto !important;
+    /* float: right; */
+    border-color: #ebedf2 !important;
+    color: #575962 !important;
+    font-family: "Poppins", sans-serif !important;
+    border-radius: 5px !important;
+    padding: 0 !important;
+}
+.f-right{
+    float: right;
+ }

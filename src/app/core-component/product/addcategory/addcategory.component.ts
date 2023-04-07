@@ -36,6 +36,7 @@ export class AddcategoryComponent implements OnInit {
       }
       this.formaddCateg = new FormGroup({
         title: new FormControl(ftitle, [Validators.required]),
+        discount: new FormControl('',Validators.pattern(/^[0-9]*$/)),
         image: new FormControl(fimage, Validators.required)
       })
       console.log(this.formaddCateg);
@@ -64,12 +65,14 @@ export class AddcategoryComponent implements OnInit {
         var formData: any = new FormData();
 
         formData.append("title", this.formaddCateg.get('title')?.value);
+        formData.append("discount", this.formaddCateg.get('discount')?.value);
         formData.append("image", this.formaddCateg.get('image')?.value);
 
         this.CoreServ.editHttp(formData, this.editRoute.id).subscribe((res: any) => {
           this.toastr.success(res.msg)
           if (res.msg == 'Product Category updated successfully') {
             this.formaddCateg.reset()
+            // this.ngOnInit();
             window.location.reload()
           }
           console.log(res);
@@ -81,6 +84,7 @@ export class AddcategoryComponent implements OnInit {
 
 
         formData.append("title", this.formaddCateg.get('title')?.value);
+        formData.append("discount", this.formaddCateg.get('discount')?.value);
         formData.append("image", this.formaddCateg.get('image')?.value);
 
         this.CoreServ.addCategory(formData).subscribe((res: any) => {
@@ -101,5 +105,8 @@ export class AddcategoryComponent implements OnInit {
 
   get image() {
     return this.formaddCateg.get('image')
+  }
+  get discount(){
+    return this.formaddCateg.get('discount')
   }
 }

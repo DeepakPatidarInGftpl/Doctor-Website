@@ -69,18 +69,24 @@ export class EditemployeeComponent implements OnInit {
   state: any
   getState() {
     this.coreService.stateList().subscribe(res => {
-      this.state = res;
+      // this.state = res;
     })
   }
   selectState(val: any) {
     console.log(val);
-    this.coreService.stateList().subscribe(res => {
+    this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
     })
   }
   city: any
   getCity() {
     this.coreService.getCity().subscribe(res => {
+      // this.city = res;
+    })
+  }
+  selectCity(val: any) {
+    console.log(val);
+    this.coreService.getCityByStateId(val).subscribe(res => {
       this.city = res;
     })
   }

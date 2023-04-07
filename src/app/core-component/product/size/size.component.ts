@@ -23,9 +23,12 @@ export class SizeComponent implements OnInit {
   }
   titlee: any;
   p:number=1
-  pageSize: number = 10;
+  pageSize: number = 5;
+ 
+  itemsPerPage = 5;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
+   
   }
 
   delRes: any
@@ -116,42 +119,6 @@ export class SizeComponent implements OnInit {
   }
 
   addRes: any
-  // submit() {
-  //   console.log(this.sizeForm.value);
-  //   console.log(this.id);
-
-  //   if (this.sizeForm.valid) {
-  //     if (this.id) {
-  //       this.coreService.updatesize(this.sizeForm.value, this.id).subscribe(res => {
-  //         console.log(res);
-  //         this.addRes = res
-  //         if (this.addRes.msg == "Size updated successfully") {
-  //           this.toastr.success(this.addRes.msg)
-  //           this.sizeForm.reset()
-  //           window.location.reload()
-  //         }
-  //       }, err => {
-  //         console.log(err.error.gst);
-  //       })
-  //     } else {
-  //       this.coreService.addsize(this.sizeForm.value).subscribe(res => {
-  //         console.log(res);
-  //         this.addRes = res
-  //         if (this.addRes.msg == "Data Created") {
-  //           this.toastr.success(this.addRes.msg)
-  //           this.sizeForm.reset()
-  //           window.location.reload();
-  //         }
-  //       }, err => {
-  //         console.log(err.error.gst);
-  //       })
-  //     }
-  //   } else {
-  //     this.sizeForm.markAllAsTouched()
-  //     console.log('forms invalid');
-  //   }
-  // }
-
   
  submit() {
   console.log(this.sizeForm.value);

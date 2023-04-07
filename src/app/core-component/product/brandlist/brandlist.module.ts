@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
+import {MatSelectModule} from '@angular/material/select';
 @NgModule({
   declarations: [
     BrandlistComponent
@@ -26,7 +27,8 @@ import { OrderModule } from 'ngx-order-pipe';
     DatepickerModule,
     Ng2SearchPipeModule,
     NgxPaginationModule,
-    OrderModule
+    OrderModule,
+    MatSelectModule
   ]
 })
 export class BrandlistModule { }

@@ -21,7 +21,7 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
   titlee: any;
   p:number=1
   pageSize: number = 10;
-
+  itemsPerPage:number=10;
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
   }

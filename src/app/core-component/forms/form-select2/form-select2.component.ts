@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
   selector: 'app-form-select2',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormSelect2Component implements OnInit {
 
-  constructor() { }
-
+  constructor(private coreService:CoreService) { }
+  subcategoryList
   ngOnInit(): void {
+    this.coreService.getSubcategory().subscribe(res => {
+      console.log(res);
+      this.subcategoryList = res
+      
+    })
   }
 
   ngAfterViewInit() {

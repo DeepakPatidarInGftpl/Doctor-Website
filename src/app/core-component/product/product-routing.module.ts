@@ -154,6 +154,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'taxSlab',
+        loadChildren: () =>
+          import('./tax-slabs/tax-slabs.module').then(
+            (m) => m.TaxSlabsModule
+          ),
+      },
+      {
         path: 'feature',
         loadChildren: () =>
           import('./feature/feature.module').then(
