@@ -93,7 +93,8 @@
                                 </th>
                                 <th (click)="sort('id')" class="thone">Image <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Category Code <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Category <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Discount <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
@@ -113,6 +114,7 @@
                                 </td>
                                 <td routerLink="/product/subcategory-details/{{products.id}}">{{products.title}}</td>
                                 <td>{{products.category_id}}</td>
+                                <td>{{products.discount}}</td>
                                 <td>
                                     <a class="me-2" routerLink="/product/subcategory-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
@@ -128,7 +130,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
                                     <label class="labelSize">Show :&nbsp;
@@ -149,8 +151,28 @@
                             <td colspan="5">
                                 <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
                             </td>
-                        </tr>
+                        </tr> -->
                     </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                            <select [(ngModel)]="itemsPerPage" class="pagination" >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="-1">All</option>
+                              </select>
+                            </div>
+                        </div>
+                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                        <div class="f-right">
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        </div>
+             
+                       </div>
+                     </div>
                 </div>
             </div>
         </div>
@@ -184,12 +206,23 @@
                         </div>
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
+                                <label>Discount*</label>
+                                <input type="text" formControlName="discount" id="discount" [ngClass]="{
+                                    'is-invalid': f['discount'].touched && f['discount'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex-432)
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
                                 <label>Category*</label>
                                 <select formControlName="category_id" class="w-100 h-100 border" required
                                     #category_idValue id="category_id" [ngClass]="{
                               'is-invalid': f['category_id'].touched && f['category_id'].invalid
                             }">
-                                    <option value="" selected disabled>category</option>
+                                    <option value="" selected disabled>Select category</option>
                                     <option value="{{category.id}}" *ngFor="let category of categoryList">
                                         {{category.title}}
                                     </option>
@@ -199,15 +232,13 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
+                        <!-- <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
-                                <label>Brand</label>
+                                <label>Brands</label>
                                 <div class="dropdown">
                                     <button type="button" class="dropdown-toggle button" type="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">Select Brand</button>
 
-                                    <!-- <input type="button" value="Select Brand" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false"> -->
                                     <ul class="dropdown-menu" style="width: 100%;">
                                         <li><a class="dropdown-item" *ngFor="let brand of brandList; let i=index">
                                                 <input type="checkbox" [value]="brand.id"
@@ -218,14 +249,14 @@
                                                 {{brand.title}}
                                             </a></li>
                                     </ul>
-                                    <p *ngIf="selectBrand>0">{{selectBrand + ' Items Selected'}}</p>
+                                    <p *ngIf="selectBrand>0">{{selectBrand + ' Brand Selected'}}</p>
                                 </div>
                                 <span class="text-danger"
                                     *ngIf="brand_id && brand_id.invalid && brand_id.touched">Select Brand
                                 </span>
 
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label>Sub Category Image*</label>
@@ -244,7 +275,7 @@
 
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit </button>
-                            <a routerLink="/product/subcategorylist" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/subcategorylist" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
                     </div>
@@ -264,6 +295,18 @@
 
                             </div>
                         </div>
+
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Discount*</label>
+                                <input type="text" formControlName="discount" id="discount" [ngClass]="{
+                                    'is-invalid': f['discount'].touched && f['discount'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex-432)
+                                </span>
+
+                            </div>
+                        </div>
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Category*</label>
@@ -271,7 +314,7 @@
                                     #category_idValue id="category_id" [ngClass]="{
                               'is-invalid': f['category_id'].touched && f['category_id'].invalid
                             }">
-                                    <option value="" selected disabled>category</option>
+                                    <option value="" selected disabled>Select category</option>
                                     <option value="{{category.id}}" *ngFor="let category of categoryList">
                                         {{category.title}}
                                     </option>
@@ -281,15 +324,13 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
+                        <!-- <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Brand</label>
                                 <div class="dropdown">
                                     <button type="button" class="dropdown-toggle button" type="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">Select Brand</button>
 
-                                    <!-- <input type="button" value="Select Brand" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false"> -->
                                     <ul class="dropdown-menu" style="width: 100%;">
                                         <li><a class="dropdown-item" *ngFor="let brand of brandList; let i=index">
                                                 <input type="checkbox" [value]="brand.id"
@@ -308,7 +349,7 @@
                                 </span>
 
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label> Sub Category Image*</label>
@@ -327,7 +368,7 @@
 
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
                     </div>

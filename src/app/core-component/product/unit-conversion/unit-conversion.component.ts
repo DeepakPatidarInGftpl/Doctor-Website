@@ -24,7 +24,9 @@ export class UnitConversionComponent implements OnInit {
   }
   titlee: any;
   p:number=1
-  pageSize: number = 10;
+  pageSize: number = 5;
+ 
+  itemsPerPage = 5;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
   }
@@ -62,7 +64,7 @@ export class UnitConversionComponent implements OnInit {
   }
   ngOnInit(): void {
     this.unitConversionForm = this.fb.group({
-      title: new FormControl('', [Validators.required]),
+      alternate_unit: new FormControl('', [Validators.required]),
       quantity: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       unit: new FormControl('', [Validators.required])
     })
@@ -205,8 +207,8 @@ export class UnitConversionComponent implements OnInit {
     }
   }
 
-  get title() {
-    return this.unitConversionForm.get('title')
+  get alternate_unit() {
+    return this.unitConversionForm.get('alternate_unit')
   }
   get quantity() {
     return this.unitConversionForm.get('quantity')

@@ -18,7 +18,7 @@ export class EditcompanyComponent implements OnInit {
     return this.companyForm.controls;
   }
   constructor(private fb: FormBuilder, private Arout: ActivatedRoute, private copmpanyService: CompanyService, private router: Router, private toastr: ToastrService
-    ,private coreService:CoreService) {
+    , private coreService: CoreService) {
     //getting data through url
     console.log(this.router.getCurrentNavigation()?.extras?.state?.['example']);
 
@@ -28,14 +28,16 @@ export class EditcompanyComponent implements OnInit {
   companyId: any
   data: any
   selectS: any
+
   ngOnInit(): void {
     this.companyId = this.Arout.snapshot.paramMap.get('id');
     this.getCountry();
     this.getState();
     this.getCity();
+    this.getYear();
     this.copmpanyService.getCompanyById(this.companyId).subscribe(res => {
       this.data = res
-
+      console.log(this.data);
 
       // this.companyForm.patchValue(this.data)
 
@@ -60,7 +62,7 @@ export class EditcompanyComponent implements OnInit {
       pincode: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]),
       state: new FormControl('', [Validators.required]),
       country: new FormControl('', [Validators.required]),
-      city:new FormControl('',[Validators.required])
+      city: new FormControl('', [Validators.required])
     })
 
   }
@@ -76,22 +78,38 @@ export class EditcompanyComponent implements OnInit {
   state: any
   getState() {
     this.copmpanyService.stateList().subscribe(res => {
-      this.state = res;
+      // this.state = res;
       console.log(this.state);
     })
   }
 
   selectState(val: any) {
     console.log(val);
-    this.copmpanyService.stateList().subscribe(res => {
+    this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
       console.log(this.state);
     })
   }
-  city:any
-  getCity(){
-    this.coreService.getCity().subscribe(res=>{
-      this.city=res;
+  city: any
+  getCity() {
+    this.coreService.getCity().subscribe(res => {
+      // this.city=res;
+    })
+  }
+
+  selectCity(val: any) {
+    console.log(val);
+    this.coreService.getCityByStateId(val).subscribe(res => {
+      this.city = res;
+
+    })
+  }
+
+  yearDetails: any
+  getYear() {
+    this.coreService.getFinancialYear().subscribe(res => {
+      console.log(res);
+      this.yearDetails = res;
     })
   }
   dateError = null
@@ -153,7 +171,7 @@ export class EditcompanyComponent implements OnInit {
   get statee() {
     return this.companyForm.get('state')
   }
-  get cityy(){
+  get cityy() {
     return this.companyForm.get('city')
   }
 }

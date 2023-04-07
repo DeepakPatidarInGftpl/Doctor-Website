@@ -16,6 +16,7 @@ export class ProductlistComponent implements OnInit {
   titlee: any;
 p:number=1
 pageSize: number = 10;
+itemsPerPage:number=10;
   constructor(private QueryService: QueryService, private coreService: CoreService) {
     this.QueryService.filterToggle()
   }

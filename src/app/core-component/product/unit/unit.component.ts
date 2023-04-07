@@ -24,7 +24,9 @@ export class UnitComponent implements OnInit {
 
   titlee: any;
   p:number=1
-  pageSize: number = 10;
+  pageSize: number = 5;
+ 
+  itemsPerPage = 5;
 
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
@@ -24,8 +24,9 @@ export class FeatureGroupComponent implements OnInit {
   }
   titlee: any;
   p:number=1
-  pageSize: number = 10;
-
+  pageSize: number = 5;
+ 
+  itemsPerPage = 5;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService,) {
     this.QueryService.filterToggle();
   }
@@ -65,7 +66,9 @@ export class FeatureGroupComponent implements OnInit {
   ngOnInit(): void {
     this.featureForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
+      feature:new FormArray([], [Validators.required]),
     })
+
     // this.dtOptions = {
     //   dom: 'Btlpif',
     //   pagingType: 'numbers',
@@ -91,6 +94,7 @@ export class FeatureGroupComponent implements OnInit {
     this.coreService.getFuature_groupD().subscribe(res=>{
       this.tableData=res;
     })
+    this.getFeature();
   }
 
   selectAll(initChecked: boolean) {
@@ -114,6 +118,58 @@ export class FeatureGroupComponent implements OnInit {
     })
   }
 
+  featureList:any;
+
+  features: any = [];
+
+  getFeature(){
+    this.coreService.getfeature().subscribe(res=>{
+      this.featureList=res;
+      console.log(this.featureList);
+      
+      if(!this.addForm){
+ 
+        this.featureList.map((map:any)=>{
+          console.log(map);
+          
+          console.log(this.features.includes(map.id));
+          
+          if(this.features.includes(map.id)){
+            let formArray:any=this.featureForm.get('feature') as FormArray;
+            formArray.push(new FormControl(map.id))
+          }
+        })
+      }
+    })
+  }
+
+  
+  check: any
+  selectedSubcat = 0;
+  onCheckChange(event: any) {
+    const formArray: any = this.featureForm.get('feature') as FormArray;
+    /* Selected */
+    if (event.target.checked) {
+      formArray.push(new FormControl(parseInt(event.target.value)));
+      // parseInt(formArray.push(new FormControl(event.target.value)))
+      this.check = formArray
+      this.selectedSubcat++;
+    }
+    else {
+      // find the unselected element
+      let i: number = 0;
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          this.selectedSubcat--;
+          return;
+        }
+        i++;
+      });
+    }
+  }
+  
   addRes: any
   // submit() {
   //   console.log(this.featureForm.value);
@@ -156,9 +212,13 @@ export class FeatureGroupComponent implements OnInit {
   console.log(this.featureForm.value);
   console.log(this.id);
 
+  var formData: any = new FormData();
+  formData.append("title",this.featureForm.get('title')?.value);
+  formData.append('feature', JSON.stringify(this.featureForm.get('feature')?.value));
+
   if (this.featureForm.valid) {
   
-    this.coreService.addFuature_group(this.featureForm.value).subscribe(res => {
+    this.coreService.addFuature_group(formData).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "FeatureGroup Successfuly Added") {
@@ -177,8 +237,12 @@ export class FeatureGroupComponent implements OnInit {
 }
 
 update(){
+  var formData: any = new FormData();
+  formData.append("title",this.featureForm.get('title')?.value);
+  formData.append('feature', JSON.stringify(this.featureForm.get('feature')?.value));
+
   if (this.featureForm.valid) {
-    this.coreService.updateFuature_group(this.featureForm.value, this.id).subscribe(res => {
+    this.coreService.updateFuature_group(formData, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "FeatureGroup updated successfully") {
@@ -199,7 +263,9 @@ update(){
   get title() {
     return this.featureForm.get('title')
   }
- 
+ get feature(){
+  return this.featureForm.get('feature');
+ }
  
   addForm = true
   id: any
@@ -209,6 +275,7 @@ update(){
     this.coreService.getFuature_groupById(id).subscribe(res => {
       console.log(res);
       if (id == res.id) {
+        this.getFeature()
         this.addForm=false
         this.featureForm.patchValue(res);
         this.editFormdata = res

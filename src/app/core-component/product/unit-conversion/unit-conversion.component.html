@@ -65,7 +65,7 @@
                                     </label>
                                     <i class="fa fa-sort"></i>
                                 </th>
-                                <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Alternate Unit <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Units <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Quantity <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
@@ -83,7 +83,7 @@
                                 </td>
                                 <td class="productimgname">
 
-                                    <a href="javascript:void(0);" style="line-height: 3;">{{products.title}}</a>
+                                    <a href="javascript:void(0);" style="line-height: 3;">{{products.alternate_unit}}</a>
                                 </td>
                                 <td>{{products.unit}}</td>
                                 <td>{{products.quantity}}</td>
@@ -102,7 +102,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
                                     <label class="labelSize">Show :&nbsp;
@@ -123,8 +123,28 @@
                             <td colspan="5">
                                 <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
                             </td>
-                        </tr>
+                        </tr> -->
                     </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                            <select [(ngModel)]="itemsPerPage" class="pagination" >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="-1">All</option>
+                              </select>
+                            </div>
+                        </div>
+                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                        <div class="f-right">
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        </div>
+             
+                       </div>
+                     </div>
                 </div>
 
             </div>
@@ -149,12 +169,18 @@
 
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
-                                    'is-invalid': f['title'].touched && f['title'].invalid
-                                  }">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
-                                </span>
+                                <label>Alternate Unit*</label>
+                                
+                                <select formControlName="alternate_unit" class="w-100 h-100 border" required
+                                #unitValue id="alternate_unit" [ngClass]="{
+                          'is-invalid': f['alternate_unit'].touched && f['alternate_unit'].invalid}">
+                                <option value="" selected disabled>Alternate unit</option>
+                                <option value="{{unit.id}}" *ngFor="let unit of unitList">
+                                    {{unit.title}}
+                                </option>
+                            </select>
+                              <span class="text-danger" *ngIf="alternate_unit && alternate_unit.invalid && alternate_unit.touched">Select alternate unit
+                              </span>
 
                             </div>
                         </div>
@@ -190,7 +216,7 @@
 
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
                     </div>
@@ -202,11 +228,17 @@
 
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
-                                    'is-invalid': f['title'].touched && f['title'].invalid
-                                  }">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
+                                <label>Alternate Unit*</label>
+                               
+                                  <select formControlName="alternate_unit" class="w-100 h-100 border" required
+                                  #unitValue id="alternate_unit" [ngClass]="{
+                            'is-invalid': f['alternate_unit'].touched && f['alternate_unit'].invalid}">
+                                  <option value="" selected disabled>Alternate_unit</option>
+                                  <option value="{{unit.id}}" *ngFor="let unit of unitList">
+                                      {{unit.title}}
+                                  </option>
+                              </select>
+                                <span class="text-danger" *ngIf="alternate_unit && alternate_unit.invalid && alternate_unit.touched">Select alternate unit
                                 </span>
 
                             </div>
@@ -240,7 +272,7 @@
                         </div>
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
                         </div>
                     </div>
                 </form>

@@ -22,8 +22,9 @@ export class SubcategorylistComponent implements OnInit {
   }
   imgUrl = 'https://pv.greatfuturetechno.com';
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
+  itemsPerPage:number=10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
   }
@@ -46,7 +47,7 @@ export class SubcategorylistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteProductSubcategory(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg ==  "Product Subcategory Deleted successfully") {
+          if (this.delRes.msg == "Product Subcategory Deleted successfully") {
             this.ngOnInit()
           }
         })
@@ -78,18 +79,19 @@ export class SubcategorylistComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       image: new FormControl('', [Validators.required]),
       category_id: new FormControl('', [Validators.required]),
-      brand_id: new FormArray([],)
+      discount: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)])
+      // brand_id: new FormArray([],)
     })
 
     // this.coreService.getProductSubcategory();
-  
+
     // this.coreService.subcategoryBehavior.subscribe(() => {
     //   if (localStorage.getItem('productsubcategroyList')) {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("productsubcategroyList")!))
     //   }
     // })
-    this.coreService.getproductSubcategory().subscribe(res=>{
-      this.tableData=res;
+    this.coreService.getproductSubcategory().subscribe(res => {
+      this.tableData = res;
     })
 
     this.productCategory();
@@ -129,25 +131,25 @@ export class SubcategorylistComponent implements OnInit {
     this.coreService.getBrand().subscribe(res => {
       console.log(res);
       this.brandList = res;
-      if(this.addForm){
-    
-      }else{
-        this.brandList.map((map:any)=>{
+      if (this.addForm) {
+
+      } else {
+        this.brandList.map((map: any) => {
           console.log(this.brands.includes(map.id));
-          
-          if(this.brands.includes(map.id)){
-            console.log(map.id,'map.id');
-            
-            let formArray:any=this.subcategoryForm.get('brand_id') as FormArray;
+
+          if (this.brands.includes(map.id)) {
+            console.log(map.id, 'map.id');
+
+            let formArray: any = this.subcategoryForm.get('brand_id') as FormArray;
             formArray.push(new FormControl(map.id))
           }
         })
       }
-    
+
     })
   }
   check: any
-  selectBrand=0;
+  selectBrand = 0;
   onCheckChange(event: any) {
     const formArray: any = this.subcategoryForm.get('brand_id') as FormArray;
 
@@ -169,7 +171,7 @@ export class SubcategorylistComponent implements OnInit {
           formArray.removeAt(i);
           this.selectBrand--
           return;
-          
+
         }
         i++;
       });
@@ -243,7 +245,7 @@ export class SubcategorylistComponent implements OnInit {
     formdata.append('title', this.subcategoryForm.get('title')?.value);
     formdata.append('image', this.subcategoryForm.get('image')?.value);
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
-    formdata.append('brand_id', JSON.stringify(this.subcategoryForm.get('brand_id')?.value));
+    formdata.append('discount',this.subcategoryForm.get('discount')?.value);
 
 
     if (this.subcategoryForm.valid) {
@@ -271,13 +273,13 @@ export class SubcategorylistComponent implements OnInit {
 
   update() {
     console.log(this.subcategoryForm.value);
-    
+
     var formdata: any = new FormData()
 
     formdata.append('title', this.subcategoryForm.get('title')?.value);
     formdata.append('image', this.subcategoryForm.get('image')?.value);
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
-    formdata.append('brand_id', JSON.stringify(this.subcategoryForm.get('brand_id')?.value));
+    formdata.append('discount',this.subcategoryForm.get('discount')?.value);
 
     if (this.subcategoryForm.valid) {
       this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
@@ -314,7 +316,9 @@ export class SubcategorylistComponent implements OnInit {
   get brand_id() {
     return this.subcategoryForm.get('brand_id')
   }
-
+  get discount() {
+    return this.subcategoryForm.get('discount')
+  }
   addForm = true
   id: any
   brandEdit: any;
@@ -326,17 +330,18 @@ export class SubcategorylistComponent implements OnInit {
 
       if (id == res.id) {
         this.addForm = false;
-        this.getbrand()
-        this.brandEdit = res.brand_id;
-        console.log(this.brandEdit);
-        console.log(res);
-        this.brands=res.brand_id.map((res: any) => res.id);
-        console.log(this.brands,'this.brands');
+        // this.getbrand()
+        // this.brandEdit = res.brand_id;
         
+        console.log(res);
+        // this.brands = res.brand_id.map((res: any) => res.id);
+        // console.log(this.brands, 'this.brands');
+
         this.subcategoryForm.patchValue({
           title: res.title,
-          // image:res.image,
-          // category_id: res.category_id,
+          image:res.image,
+          category_id: res.category_id,
+         discount:res.discount
         });
       }
     })
@@ -347,7 +352,7 @@ export class SubcategorylistComponent implements OnInit {
     this.subcategoryForm.reset();
   }
 
-    
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();

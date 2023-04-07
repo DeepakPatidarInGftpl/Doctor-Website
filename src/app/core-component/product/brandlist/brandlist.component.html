@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-7 col-sm-7 col-12">
+    <div class="col-lg-8 col-sm-8 col-12">
         <div class="page-header">
             <div class="page-title">
                 <h4>Brand List</h4>
@@ -89,6 +89,9 @@
                                 <th (click)="sort('id')" class="thone">Image <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Code <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Discount <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Subcategory group <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">SubCategory <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone" >Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
@@ -107,6 +110,20 @@
                                 </td>
                                 <td>{{products.title}}</td>
                                 <td>{{products.code}}</td>
+                                <td>{{products.discount}}</td>
+
+                               
+                                <td>
+                                    <tr *ngFor="let subcatG of products.subcategory_group">
+                                        <td>{{subcatG.title}}</td>
+                                    </tr>
+                                </td>
+                               
+                                <td>
+                                    <tr *ngFor="let subcat of products.subcategory">
+                                        <td>{{subcat.title}}</td>
+                                    </tr>
+                                </td>
                                 <td>
                                     <a class="me-3" (click)="editForm(products.id)">
                                         <img src="assets/img/icons/edit.svg" alt="img">
@@ -117,7 +134,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
                                     <label class="labelSize">Show :&nbsp;
@@ -138,14 +155,34 @@
                             <td colspan="5">
                                 <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
                             </td>
-                        </tr>
+                        </tr> -->
                     </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                            <select [(ngModel)]="itemsPerPage" class="pagination" >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="-1">All</option>
+                              </select>
+                            </div>
+                        </div>
+                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                        <div class="f-right">
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        </div>
+             
+                       </div>
+                     </div>
                 </div>
             </div>
         </div>
         <!-- /product list -->
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-4 col-sm-4 col-12">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
                 <h4> Add Brands </h4>
@@ -160,7 +197,7 @@
                 <form [formGroup]="brandForm" (ngSubmit)="submit()">
                     <div class="row">
 
-                        <div class="col-lg-10 col-sm-10 col-12">
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
                                 <input type="text" formControlName="title" id="title" [ngClass]="{
@@ -171,9 +208,9 @@
 
                             </div>
                         </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
-                                <label>Code*</label>
+                                <label>Code</label>
                                 <input type="text" formControlName="code" id="code" [ngClass]="{
                                     'is-invalid': f['code'].touched && f['code'].invalid
                                   }">
@@ -182,9 +219,66 @@
 
                             </div>
                         </div>
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Discount</label>
+                                <input type="text" formControlName="discount" id="discount" [ngClass]="{
+                                    'is-invalid': f['discount'].touched && f['discount'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Subcategory group</label>
+                               
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Select Subcategory group</button>
+                                    <ul class="dropdown-menu" style="width: 100%;">
+                                        <li><a class="dropdown-item" *ngFor="let subcatgroup of subcatGroupList">
+                                                <input type="checkbox" [value]="subcatgroup.id" (change)="onCheckSize($event)"
+                                                    formArrayName="subcategory_group" style="margin-right: 5px;" [ngClass]="{
+                                                        'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
+                                                      }"    #categoryValue (change)="getSubcategoryBySubcatGroup(categoryValue.value)">
+                                                {{subcatgroup.title}}
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <p *ngIf="selectedSubCatGrp>0">{{selectedSubCatGrp + ' Subcategory group Selected'}}</p>
+                            <span class="text-danger" *ngIf="subcategory_group && subcategory_group.invalid && subcategory_group.touched">Select subcategory group
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>SubCategory*</label>
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Select Subcategory</button>
+                                    <ul class="dropdown-menu" style="width: 100%;">
+                                        <li><a class="dropdown-item" *ngFor="let subcategory of subcatbySubcatGroup; let i=index" >
+                                                <input type="checkbox" [value]="subcategory.id"
+                                                    (change)="onCheckChange($event)" formArrayName="subcategory" style="margin-right: 5px;"
+                                                    [ngClass]="{
+                                                        'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
+                                                      }" >
+                                                {{subcategory.title}}
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                
+                                <p *ngIf="selectedSubcat>0">{{selectedSubcat + ' Subcategory Selected'}}</p>
+                                <span class="text-danger"
+                                    *ngIf="subcategory && subcategory.invalid && subcategory.touched">Select subcategory
+                                 </span>
+                            </div>
+                        </div>
                         <div class="col-lg-12">
                             <div class="form-group">
-                                <label>	Product Image*</label>
+                                <label>	Brand Image*</label>
                                 <div class="image-upload">
                                     <input type="file" formControlName="image" (change)="onSelect($event)">
                                     <div class="image-uploads">
@@ -199,7 +293,7 @@
 
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
                     </div>
@@ -209,7 +303,7 @@
                 <form [formGroup]="brandForm" (ngSubmit)="update()">
                     <div class="row">
 
-                        <div class="col-lg-10 col-sm-10 col-12">
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
                                 <input type="text" formControlName="title" id="title" [ngClass]="{
@@ -220,9 +314,9 @@
 
                             </div>
                         </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
-                                <label>Code*</label>
+                                <label>Code</label>
                                 <input type="text" formControlName="code" id="code" [ngClass]="{
                                     'is-invalid': f['code'].touched && f['code'].invalid
                                   }">
@@ -231,9 +325,72 @@
 
                             </div>
                         </div>
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Discount</label>
+                                <input type="text" formControlName="discount" id="discount" [ngClass]="{
+                                    'is-invalid': f['discount'].touched && f['discount'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Subcategory group</label>
+                         
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Select Subcategory group</button>
+                                    <ul class="dropdown-menu" style="width: 100%;">
+                                        <li><a class="dropdown-item" *ngFor="let subcatgroup of subcatGroupList">
+                                                <input type="checkbox" [value]="subcatgroup.id"
+                                                [checked]="subcatGroup.includes(subcatgroup.id)"
+                                                (change)="onCheckSize($event)"
+                                                    formArrayName="subcategory_group" style="margin-right: 5px;" [ngClass]="{
+                                                        'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
+                                                      }" #categoryValue (change)="getSubcategoryBySubcatGroup(categoryValue.value)">
+                                                {{subcatgroup.title}}
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <p *ngIf="selectedSubCatGrp>0">{{selectedSubCatGrp + ' Subcategory group Selected'}}</p>
+                            <span class="text-danger" *ngIf="subcategory_group && subcategory_group.invalid && subcategory_group.touched">Select subcategory group
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>SubCategory*</label>
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Select Subcategory</button>
+                                    <ul class="dropdown-menu" style="width: 100%;">
+                                        <li><a class="dropdown-item" *ngFor="let subcategory of subcatbySubcatGroup; let i=index" >
+                                                <input type="checkbox" [value]="subcategory.id" [checked]="selectSubcat.includes(subcategory.id)"
+                                                    (change)="onCheckChange($event)" formArrayName="subcategory" style="margin-right: 5px;"
+                                                    [ngClass]="{
+                                                        'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
+                                                      }" >
+                                                {{subcategory.title}}
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <p *ngIf="selectedSubcat>0">{{selectedSubcat + ' Subcategory Selected'}}</p>
+                              
+
+                                 <span class="text-danger"
+							*ngIf="subcategory && subcategory.invalid && subcategory.touched && subcatbySubcatGroup?.length>0">Select Sub Category
+						</span>
+						<span class="text-danger"
+						*ngIf="subcategory_group && subcategory_group.touched && subcatbySubcatGroup?.length<=0">Subcategory not available
+					</span>
+                            </div>
+                        </div>
                         <div class="col-lg-12">
                             <div class="form-group">
-                                <label>	Product Image*</label>
+                                <label>	Brand Image*</label>
                                 <div class="image-upload">
                                     <input type="file" formControlName="image" (change)="onSelect($event)">
                                     <div class="image-uploads">
@@ -248,10 +405,10 @@
 
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
-                    </div>
+                    </div> 
                 </form>
             </div>
         </div>

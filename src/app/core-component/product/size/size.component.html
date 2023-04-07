@@ -35,8 +35,10 @@
                           </div>
                           </div>
                     </div>
+
                     <div class="wordset">
                         <ul>
+                            
                             <li>
                                 <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
                                         src="assets/img/icons/pdf.svg" alt="img"></a>
@@ -71,8 +73,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
-
+                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{ itemsPerPage: itemsPerPage, currentPage: p } let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="products.is_active">
@@ -80,7 +81,6 @@
                                     </label>
                                 </td>
                                 <td class="productimgname">
-
                                     <a href="javascript:void(0);" style="line-height: 3;">{{products.title}}</a>
                                 </td>
                                 <td>{{products.code}}</td>
@@ -88,7 +88,6 @@
                                         [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span></td>
                                 <td>
-
                                     <a class="me-3" (click)="editForm(products.id)">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
@@ -99,35 +98,38 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tr>
-                            <td colspan="5">
-                                <div class="dataTables_length">
-                                    <label class="labelSize">Show :&nbsp;
-                                        <select [(ngModel)]="pageSize">
-                                            <option [ngValue]="10">10</option>
-                                            <option [ngValue]="25">25</option>
-                                            <option [ngValue]="50">50</option>
-                                            <option [ngValue]="100">100</option>
-                                        </select>
-                                        entries</label>
-                                </div>
-                                <div>
-                                    <ul class="pagination"></ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
+                   
+                       
+                       
+                        <!-- <tr>
                             <td colspan="5">
                                 <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
                             </td>
-                        </tr>
+                        </tr> -->
                     </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="-1">All</option>
+                              </select>
+                            </div>
+                        </div>
+                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                        <div class="f-right">
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        </div>
+             
+                       </div>
+                     </div>
                 </div>
-
             </div>
         </div>
-
-
     </div>
     <div class="col-lg-5 col-sm-5 col-12">
         <div class="page-header">
@@ -143,7 +145,6 @@
             <div class="card-body" *ngIf="addForm">
                 <form [formGroup]="sizeForm" (ngSubmit)="submit()">
                     <div class="row">
-
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
@@ -152,7 +153,6 @@
                                   }">
                                 <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
                                 </span>
-
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-6 col-12">
@@ -164,23 +164,18 @@
                                 <span class="text-danger"
                                     *ngIf="code && code.invalid && code.touched">Enter Size Code
                                 </span>
-
                             </div>
                         </div>
-
-
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
                             <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
                         </div>
-
                     </div>
                 </form>
             </div>
             <div class="card-body" *ngIf="!addForm">
                 <form [formGroup]="sizeForm" (ngSubmit)="update()">
                     <div class="row">
-
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
@@ -189,7 +184,6 @@
                                   }">
                                 <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
                                 </span>
-
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-6 col-12">
@@ -201,16 +195,12 @@
                                 <span class="text-danger"
                                     *ngIf="code && code.invalid && code.touched">Enter Size Code
                                 </span>
-
                             </div>
                         </div>
-
-
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
                             <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
                         </div>
-
                     </div>
                 </form>
             </div>

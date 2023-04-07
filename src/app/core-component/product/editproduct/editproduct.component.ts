@@ -211,7 +211,18 @@ export class EditproductComponent implements OnInit {
       this.unitConversionList = res
     })
   }
-
+  subcatbyCategory: any;
+  getSubcategoryByCategory(val:any) {
+    this.coreService.getSubcategoryByCategory(val).subscribe(res => {
+      this.subcatbyCategory = res;
+    })
+  }
+  brandBySubcat:any;
+  selectBrand(val:any){
+    this.coreService.getBrandBySubcategory(val).subscribe(res=>{
+      this.brandBySubcat=res;
+    })
+  }
   check: any
   selectedColor=0;
   onCheckColor(event: any) {
