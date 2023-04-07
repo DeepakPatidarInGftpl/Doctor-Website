@@ -207,8 +207,8 @@ export class PosComponent implements OnInit {
   }
 
   removeFromCart(item: any): void {
-    this.cartService.removeFromCart(item);
-    this.cartItems = this.cartService.getCartItems();
+    //this.cartService.removeFromCart(item);
+    //this.cartItems = this.cartService.getCartItems();
   }
 
   clearCart(): void {
@@ -225,7 +225,8 @@ export class PosComponent implements OnInit {
   }
 
   totalAmount(){
-    let cartItems = this.cartService.getCartItems();
+    //let cartItems = this.cartService.getCartItems();
+    let cartItems = this.selectedOptions;
     let totalPrice = 0;
     for(let cart of cartItems){
       totalPrice += cart.price * cart.quantity;
@@ -254,12 +255,14 @@ export class PosComponent implements OnInit {
   generateOrder(){
     
   if(navigator.onLine){
+    this.selectedOptions = [];
+    this.currentCustomer = '';
     this.toastr.success('Created Online', 'Order', {
       timeOut: 5000
     });
     document.getElementById("exampleModal5Close").click();
   } else {
-    let cartItems = this.cartService.getCartItems();
+    let cartItems = this.selectedOptions;
     let change = this.changeAmt();
     let tendered = this.tenderedAmount;
     let total = this.totalAmount();
@@ -275,7 +278,6 @@ export class PosComponent implements OnInit {
     this.toastr.success('Created Offline', 'Order', {
       timeOut: 5000
     });
-    this.cartService.clearCart();
     this.selectedOptions = [];
     this.currentCustomer = '';
     document.getElementById("exampleModal5Close").click();
