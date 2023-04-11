@@ -63,31 +63,31 @@
                                     </label>
                                     <i class="fa fa-sort"></i>
                                 </th>
-                                <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th> -->
                                 <th (click)="sort('id')" class="thone">HSN Code <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Subcategory <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Tax <i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Tax <i class="fa fa-sort"></i></th> -->
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p}  let i = index">
+                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="products.is_active">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-                                <td class="productimgname">
-                                    <!-- <a href="javascript:void(0);" class="product-img">
-                                        <img [src]="products.img" alt="product">
-                                    </a> -->
+                                <!-- <td class="productimgname">                         
                                     <a routerLink="/product/hsncode-details/{{products.id}}" style="line-height: 3;">{{products.title}}</a>
-                                </td>
+                                </td> -->
                                 <td>{{products.hsn_code}}</td>
-                                <td>{{products.subcategory}}</td>
-                                <td>{{products.tax}}</td>
+                                <td>
+                                    <tr *ngFor="let subcat of products.subcategory">
+                                        <td>{{subcat.title}}</td>
+                                    </tr></td>
+                                <!-- <td>{{products.tax}}</td> -->
 
                                 <td><span
                                         [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
@@ -106,7 +106,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
                                     <label class="labelSize">Show :&nbsp;
@@ -127,8 +127,28 @@
                             <td colspan="5">
                                 <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
                             </td>
-                        </tr>
+                        </tr> -->
                     </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                            <select [(ngModel)]="itemsPerPage" class="pagination" >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="-1">All</option>
+                              </select>
+                            </div>
+                        </div>
+                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                        <div class="f-right">
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        </div>
+             
+                       </div>
+                     </div>
                 </div>
                 <!-- </div> -->
             </div>
@@ -151,7 +171,7 @@
                 <form [formGroup]="hsncodeForm" (ngSubmit)="submit()">
                     <div class="row">
 
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <!-- <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
                                 <input type="text" formControlName="title" id="title" [ngClass]="{
@@ -161,9 +181,9 @@
                                     name </span>
 
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label> HSN Code*</label>
                                 <input type="text" formControlName="hsn_code" id="hsn_code" [ngClass]="{
@@ -175,12 +195,10 @@
 
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <!-- <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Tax*</label>
-                                <!-- <input class="form-control" formControlName="tax" id="tax" [ngClass]="{
-                                    'is-invalid': f['tax'].touched && f['tax'].invalid
-                                  }"> -->
+                               
                                   <select formControlName="tax" class="w-100 h-100 border" required
                                   #taxValue id="tax" [ngClass]="{
                             'is-invalid': f['tax'].touched && f['tax'].invalid
@@ -194,8 +212,8 @@
                                   </span>
 
                             </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        </div> -->
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>SubCategory*</label>
                                 <div class="dropdown">
@@ -212,6 +230,7 @@
                                             </a></li>
                                     </ul>
                                 </div>
+                                <p *ngIf="selectedSubcat>0">{{selectedSubcat + ' Subcategory Selected'}}</p>
                                 <span class="text-danger"
                                     *ngIf="subcategory && subcategory.invalid && subcategory.touched">Select subcategory
                                    </span>
@@ -219,7 +238,7 @@
                         </div>
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="//warehouse/warehouselist" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="//warehouse/warehouselist" class="btn btn-cancel">Cancel</a> -->
                         </div>
                     </div>
                 </form>
@@ -227,7 +246,7 @@
             <div class="card-body"*ngIf="!addForm" >
                 <form [formGroup]="hsncodeForm" (ngSubmit)="update()">
                     <div class="row">
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <!-- <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
                                 <input type="text" formControlName="title" id="title" [ngClass]="{
@@ -236,8 +255,8 @@
                                 <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
                                     name </span>
                             </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        </div> -->
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label> HSN Code*</label>
                                 <input type="text" formControlName="hsn_code" id="hsn_code" [ngClass]="{
@@ -247,7 +266,7 @@
                                     HSN Code (example-12345)</span>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <!-- <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Tax*</label>
                                   <select formControlName="tax" class="w-100 h-100 border" required
@@ -260,8 +279,8 @@
                                 <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Select tax
                                     </span>
                             </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        </div> -->
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>SubCategory*</label>
                                 <div class="dropdown">
@@ -285,7 +304,7 @@
                         </div>
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="//warehouse/warehouselist" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="//warehouse/warehouselist" class="btn btn-cancel">Cancel</a> -->
                         </div>
                     </div>
                 </form>

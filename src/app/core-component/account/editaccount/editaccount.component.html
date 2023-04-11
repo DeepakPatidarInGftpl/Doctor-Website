@@ -168,7 +168,7 @@
                         <!-- <input type="text" formControlName="accounts_type"  id="accounts_type"
                         [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}"> -->
     
-                        <select formControlName="accounts_type" class="w-100 h-100 border" required id="accounts_type"
+                        <!-- <select formControlName="accounts_type" class="w-100 h-100 border" required id="accounts_type"
                         [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}">
                           <option value="" selected disabled>Accounts type</option>
                           <option value="Cash">Cash</option>
@@ -186,8 +186,14 @@
                           <option value="Current Asset">Current Asset</option>
                           <option value="Current Liabilities">Current Liabilities</option>
                           <option value="Fixed Assets">Fixed Assets</option>
-                        </select>
+                        </select> -->
     
+                        <select formControlName="accounts_type" class="w-100 h-100 border" required id="accounts_type"
+                        [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}">
+                      <option value="" selected disabled>Accounts type</option>
+                      <option value="{{account.title}}" *ngFor="let account of accountType">{{account.title}}         
+                      </option>
+                    </select>   
                         <span class="text-danger"*ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select Type of Account</span>
                     </div>
                 </div>
@@ -235,11 +241,14 @@
                             <option value="{{state.id}}" *ngFor="let state of state"  [style]="state.country==countryValue.value?state.state:'display:none'">{{state.state}}</option>
                           </select> -->
                           <select formControlName="state" class="w-100 h-100 border" id="state"
-                          [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}">
+                          [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}"
+                          #stateValue (change)="selectCity(stateValue.value)">
                             <option value="" selected disabled>State</option>
                             <option value="{{state.id}}" *ngFor="let state of state">{{state.state}}</option>
                           </select>
-                          <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched">Select state</span> 
+                          <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched && state?.length>0">Select state</span> 
+                          <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched && state?.length<=0">Data not available</span> 
+    
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
@@ -252,7 +261,9 @@
                             <option value="" selected disabled>City</option>
                             <option value="{{city.id}}" *ngFor="let city of city">{{city.city}}</option>
                           </select>
-                          <span class="text-danger"*ngIf="cityy && cityy.invalid && cityy.touched">Select city</span> 
+                          <span class="text-danger"*ngIf="cityy && cityy.invalid && cityy.touched && city?.length>0">Select city</span> 
+                          <span class="text-danger"*ngIf="cityy && cityy.invalid && cityy.touched && city?.length<=0">data not available</span> 
+                   
                     </div>
                 </div>
     

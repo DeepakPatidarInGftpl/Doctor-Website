@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { AuthServiceService } from 'src/app/Services/auth-service.service';
 import { SettingsService } from 'src/app/shared/settings/settings.service';
 
@@ -16,7 +17,9 @@ export class HeaderComponent implements OnInit {
   public darkTheme: boolean = false;
   public logoPath: string = '';
 
-  constructor(private Router: Router, private settings: SettingsService, private authServ: AuthServiceService, private toastr: ToastrService) {
+  constructor(private Router: Router, private settings: SettingsService, private authServ: AuthServiceService, private toastr: ToastrService,
+    private coreService: CoreService
+  ) {
     this.activePath = this.Router.url.split('/')[2];
     this.Router.events.subscribe((data: any) => {
       if (data instanceof NavigationStart) {
@@ -45,22 +48,27 @@ export class HeaderComponent implements OnInit {
 
   logOut() {
     console.log(localStorage.getItem('token'));
-    
-    if(localStorage.getItem('token')){
+
+    if (localStorage.getItem('token')) {
       this.authServ.logout().subscribe(res => {
         console.log(res);
         this.toastr.success('LogOut Successfull');
         this.Router.navigate(['/auth/signin'])
         this.authServ.doLogout()
       })
-    } else{
+    } else {
       localStorage.removeItem('token');
       this.toastr.success('LogOut Successfull');
       this.Router.navigate(['/auth/signin'])
     }
-   
-  }
 
+  }
+  userDetails: any
+  profile() {
+    this.coreService.getProfile().subscribe(res => {
+      this.userDetails = res;
+    })
+  }
   LoadScript(js: string) {
     var script = document.createElement('script');
     script.src = js;

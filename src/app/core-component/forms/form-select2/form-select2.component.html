@@ -29,8 +29,8 @@
                                 <p>Use select2() function on select element to convert it to Select 2.</p>
                                 <select class="js-example-basic-single select2 form-select">
                                     <option selected="selected">orange</option>
-                                    <option>white</option>
-                                    <option>purple</option>
+                                    <option value="{{d.id}}" *ngFor="let d of subcategoryList">{{d.title}}</option>
+                                    
                                 </select>
                             </div>
                         </div>

@@ -22,7 +22,7 @@ export class WarehouseComponent implements OnInit {
   titlee: any;
   p:number=1
   pageSize: number = 10;
-
+  itemsPerPage:number=10;
   constructor(
     private fb: FormBuilder,
     private coreService: CoreService,
@@ -89,7 +89,7 @@ export class WarehouseComponent implements OnInit {
     this.coreService.getWarehouse().subscribe(res=>{
       this.tableData=res;
     })
-
+this.getAccountType();
 
     this.warehouseForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -157,6 +157,13 @@ export class WarehouseComponent implements OnInit {
     })
   }
 
+  accountType: any
+  getAccountType() {
+    this.coreService.accountType().subscribe(res => {
+      console.log(res);
+      this.accountType = res
+    })
+  }
   addRes: any
   // submit() {
   //   if (this.warehouseForm.valid) {

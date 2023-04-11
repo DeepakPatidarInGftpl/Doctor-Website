@@ -89,24 +89,30 @@ yearDetails:any
       this.country = res;
     })
   }
-  state: any
+
   getState() {
     this.copmpanyService.stateList().subscribe(res => {
-      this.state = res;
+      // this.state = res;
       console.log(this.state);
     })
   }
   city:any
   getCity(){
     this.coreService.getCity().subscribe(res=>{
-      this.city=res;
+      // this.city=res;
     })
   }
+  state: any
   selectState(val: any) {
     console.log(val);
-    this.copmpanyService.stateList().subscribe(res => {
+    this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
       console.log(this.state);
+    })
+  }
+  selectCity(val:any){
+    this.coreService.getCityByStateId(val).subscribe(res=>{
+      this.city=res
     })
   }
   dateError = null
