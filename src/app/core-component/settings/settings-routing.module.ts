@@ -47,6 +47,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./taxrates/taxrates.module').then((m) => m.TaxratesModule),
       },
+      //financial year
+      {
+        path:'finncialYear',
+        loadChildren:()=>import('./financial-year/financial-year.module').then((m)=>m.FinancialYearModule)
+      }
     ],
   },
   {

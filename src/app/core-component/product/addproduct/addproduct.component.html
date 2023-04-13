@@ -35,7 +35,7 @@
 						<label>Category</label>
 						<select class="form-select" formControlName="category" [ngClass]="{
 							'is-invalid': f['category'].touched && f['category'].invalid
-						  }">
+						  }" #categoryValue (change)="getSubcategoryByCategory(categoryValue.value)">
 							<option value="" selected disabled>Choose Category</option>
 							<option value="{{category.id}}" *ngFor="let category of categoryList">{{category.title}}
 							</option>
@@ -50,33 +50,39 @@
 						<label>Sub Category</label>
 						<select class="form-select" formControlName="subcategory" [ngClass]="{
 							'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
-						  }">
+						  }" #subcatValue (change)="selectBrand(subcatValue.value)">
 							<option value="" selected disabled>Choose Sub Category</option>
-							<option value="{{subcat.id}}" *ngFor="let subcat of subcatList">{{subcat.title}}</option>
+							<option value="{{subcat.id}}" *ngFor="let subcat of subcatbyCategory">{{subcat.title}}</option>
 						</select>
+						
 						<span class="text-danger"
-							*ngIf="subcategory && subcategory.invalid && subcategory.touched">Select Sub Category
+							*ngIf="subcategory && subcategory.invalid && subcategory.touched && subcatbyCategory?.length>0">Select Sub Category
 						</span>
+						<span class="text-danger"
+						*ngIf="category && category.touched && subcatbyCategory?.length<=0">Subcategory not available
+					</span>
 					</div>
 				</div>
 				<div class="col-lg-3 col-sm-6 col-12">
 					<div class="form-group">
-						<label>Brand</label>
+						<label>Brands</label>
 						<select class="form-select" formControlName="brand" [ngClass]="{
 							'is-invalid': f['brand'].touched && f['brand'].invalid
 						  }">
 							<option value="" selected disabled>Choose Brand</option>
+							<!-- *ngFor="let brand of brandBySubcat" -->
 							<option value="{{brand.id}}" *ngFor="let brand of brandList">{{brand.title}}</option>
 						</select>
+						
 						<span class="text-danger"
-							*ngIf="subcategory && subcategory.invalid && subcategory.touched">Select Sub Category
+							*ngIf="brand && brand.invalid && brand.touched">Select Brand
 						</span>
 					</div>
 				</div>
 
 				<div class="col-lg-3 col-sm-6 col-12">
 					<div class="form-group">
-						<label>Features Subcategory</label>
+						<label>Features Group</label>
 						<select class="form-select" formControlName="features_subcategory" [ngClass]="{
 							'is-invalid': f['features_subcategory'].touched && f['features_subcategory'].invalid
 						  }">
@@ -109,7 +115,7 @@
 				</div>
 				<div class="col-lg-3 col-sm-6 col-12">
 					<div class="form-group">
-						<label>Color</label>
+						<label>Colors</label>
 						<!-- <select class="form-select" formControlName="color">
 							<option value="" selected disabled>Choose color</option>
 							<option value="{{color.id}}" *ngFor="let color of colorList">{{color.title}}</option>
@@ -132,7 +138,7 @@
 									</a></li>
 							</ul>
 						</div>
-						<p *ngIf="selectedColor>0">{{selectedColor + ' Items Selected'}}</p>
+						<p *ngIf="selectedColor>0">{{selectedColor + ' Colors Selected'}}</p>
 						<span class="text-danger" *ngIf="color && color.invalid && color.touched">Select Color
 						</span>
 					</div>
@@ -158,7 +164,7 @@
 									</a></li>
 							</ul>
 						</div>
-						<p *ngIf="selectedSize>0">{{selectedSize + ' Items Selected'}}</p>
+						<p *ngIf="selectedSize>0">{{selectedSize + ' Size Selected'}}</p>
 					<span class="text-danger" *ngIf="size && size.invalid && size.touched">Select Size
 						</span>
 					</div>
@@ -209,7 +215,7 @@
 						  }">
 							<option value="" selected disabled>Choose unit_conversion</option>
 							<option value="{{unitConversion.id}}" *ngFor="let unitConversion of unitConversionList">
-								{{unitConversion.title}}</option>
+								{{unitConversion.alternate_unitnj}}</option>
 						</select>
 						<span class="text-danger"
 							*ngIf="unit_conversion && unit_conversion.invalid && unit_conversion.touched">Select Unit

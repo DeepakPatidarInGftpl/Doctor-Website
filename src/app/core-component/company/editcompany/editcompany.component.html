@@ -64,10 +64,18 @@
                         <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label> Financial Year*</label>
-                                <input type="date" formControlName="financial_year" id="financial_year"
+                                <!-- <input type="date" formControlName="financial_year" id="financial_year"
                                 [ngClass]="{
                                   'is-invalid': f['financial_year'].touched && f['financial_year'].invalid
-                                }" [(ngModel)]="data.financial_year">
+                                }" [(ngModel)]="data.financial_year"> -->
+
+                                <select formControlName="financial_year" class="w-100 h-100 border" required id="financial_year"
+                            [ngClass]="{
+                              'is-invalid': f['financial_year'].touched && f['financial_year'].invalid
+                            }">
+                              <option value="" selected disabled>Financial Year</option>
+                              <option value="{{year.id}}" *ngFor="let year of yearDetails">{{(year.start_year |slice :0:4) + '-' +(year.close_year |slice :0:4)}}</option>
+                            </select>
                                 <span class="text-danger"*ngIf="dateError">{{dateError}}</span>    
                                 <span class="text-danger"*ngIf="financial_year && financial_year.invalid && financial_year.touched">Date (format:dd/mm/yyyy)</span>
                             </div>
@@ -81,7 +89,7 @@
                                 #countryValue (change)="selectState(countryValue.value)" id="country"
                                 [ngClass]="{
                                   'is-invalid': f['country'].touched && f['country'].invalid
-                                }">
+                                }" >
                               <option value="" selected disabled>Country</option>
                               <option value="{{country.id}}" *ngFor="let country of country">{{country.country_name}}         
                               </option>
@@ -103,15 +111,13 @@
                                   <select formControlName="state" class="w-100 h-100 border" required id="state"
                                   [ngClass]="{
                                     'is-invalid': f['state'].touched && f['state'].invalid
-                                  }">
+                                  }" #stateValue (change)="selectCity(stateValue.value)">
                                     <option value="" selected disabled>State</option>
                                     <option [value]="state.id" *ngFor="let state of state">{{state.state}}</option>
                                   </select>
-                                  <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched">Select state</span>
-
-                           <!-- <div *ngFor="let state of state"> 
-                            <h1 *ngIf="state.state==data.state">{{state.id}}</h1>
-                           </div> -->
+                                  <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched && state?.length>0">Select state</span> 
+                                  <span class="text-danger"*ngIf="statee && statee.invalid && statee.touched && state?.length<=0">Data not available</span> 
+        
                            
                                 </div>
                         </div>
@@ -126,7 +132,8 @@
                                   <option value="" selected disabled>City</option>
                                   <option value="{{city.id}}" *ngFor="let city of city">{{city.city}}</option>
                                 </select>
-                                <span class="text-danger"*ngIf="cityy && cityy.invalid && cityy.touched">Select city</span> 
+                                <span class="text-danger"*ngIf="cityy && cityy.invalid && cityy.touched && city?.length>0">Select city</span> 
+                                <span class="text-danger"*ngIf="cityy && cityy.invalid && cityy.touched && city?.length<=0">data not available</span> 
                           </div>
                       </div>
                         <div class="col-lg-3 col-sm-3 col-12">

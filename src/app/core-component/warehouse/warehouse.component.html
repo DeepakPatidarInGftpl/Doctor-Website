@@ -144,7 +144,7 @@
                   </td>
                 </tr>
               </tbody>
-              <tr>
+              <!-- <tr>
                 <td colspan="5">
                     <div class="dataTables_length">
                         <label class="labelSize">Show :&nbsp;
@@ -165,8 +165,28 @@
                 <td colspan="5">
                     <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
                 </td>
-            </tr>
+            </tr> -->
             </table>
+            <div class="row">
+              <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                  <div class="entries"> Show per page
+                  <select [(ngModel)]="itemsPerPage" class="pagination" >
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                      <option value="50">50</option>
+                      <option value="-1">All</option>
+                    </select>
+                  </div>
+              </div>
+             <div class="col-lg-8 col-sm-8 col-12 mt-2">
+              <div class="f-right">
+                  <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                  <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+              </div>
+   
+             </div>
+           </div>
           </div>
         </div>
       </div>
@@ -208,7 +228,7 @@
                         <select formControlName="accounts_type" class="w-100 h-100 border" required id="accounts_type"
                         [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}">
                           <option value="" selected disabled>Accounts type</option>
-                          <option value="Cash">Cash</option>
+                          <!-- <option value="Cash">Cash</option>
                           <option value="Bank">Bank</option>
                           <option value="Employee">Employee</option>
                           <option value="Customer">Customer</option>
@@ -222,7 +242,9 @@
                           <option value="Capital">Capital</option>
                           <option value="Current Asset">Current Asset</option>
                           <option value="Current Liabilities">Current Liabilities</option>
-                          <option value="Fixed Assets">Fixed Assets</option>
+                          <option value="Fixed Assets">Fixed Assets</option> -->
+                          <option value="{{account.title}}" *ngFor="let account of accountType">{{account.title}}         
+                          </option>
                         </select>
                         <span class="text-danger"*ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select Type of Account</span>
                     </div>
@@ -267,7 +289,7 @@
                         <select formControlName="accounts_type" class="w-100 h-100 border" required id="accounts_type"
                         [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}">
                           <option value="" selected disabled>Accounts type</option>
-                          <option value="Cash">Cash</option>
+                          <!-- <option value="Cash">Cash</option>
                           <option value="Bank">Bank</option>
                           <option value="Employee">Employee</option>
                           <option value="Customer">Customer</option>
@@ -281,7 +303,9 @@
                           <option value="Capital">Capital</option>
                           <option value="Current Asset">Current Asset</option>
                           <option value="Current Liabilities">Current Liabilities</option>
-                          <option value="Fixed Assets">Fixed Assets</option>
+                          <option value="Fixed Assets">Fixed Assets</option> -->
+                          <option value="{{account.title}}" *ngFor="let account of accountType">{{account.title}}         
+                          </option>
                         </select>
                         <span class="text-danger"*ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select Type of Account</span>
                     </div>

@@ -27,7 +27,7 @@ export class CoreService {
   featureBehavior = new BehaviorSubject(null);
   featureGroupBehavior = new BehaviorSubject(null);
   productListBehaviur = new BehaviorSubject(null);
-  StaticPageBehaveSub=new BehaviorSubject(null)
+  StaticPageBehaveSub = new BehaviorSubject(null)
 
 
 
@@ -961,7 +961,7 @@ export class CoreService {
     //   this.cityBehavior.next(null)
     // })
   }
-  getCity(){
+  getCity() {
     let url = this.apiUrl + '/city/';
     return this.http.get(url)
   }
@@ -1051,12 +1051,6 @@ export class CoreService {
       })
     })
   }
-
-
-
-
-
-
 
   getWarehouse() {
     let url = this.apiUrl + '/pv-api/warehouse/';
@@ -1199,7 +1193,7 @@ export class CoreService {
     })
   }
 
-  
+
   getSubCategoryGroup() {
     let url = this.apiUrl + '/pv-api/subcategory_group/';
     return this.http.get(url, {
@@ -1249,11 +1243,11 @@ export class CoreService {
     //   this.StaticPageBehaveSub.next(null)
     // })
   }
-  getStaticPageBySlug(slug:any){
+  getStaticPageBySlug(slug: any) {
     let url = this.apiUrl + '/pv-api/static_detail_pages/?slug='
     return this.http.get<any>(`${url}${slug}`)
   }
-  addStatic(data){
+  addStatic(data) {
     let url = this.apiUrl + '/pv-api/static_pages/';
     return this.http.post(url, data, {
       headers: new HttpHeaders({
@@ -1277,13 +1271,95 @@ export class CoreService {
       })
     })
   }
-
-  getFinancialYear(){
-    let url = this.apiUrl+'/pv-api/financial_year/';
+  // /pv-api/footer_features/
+  getFooterFeature() {
+    let url = this.apiUrl + '/pv-api/footer_features/';
     return this.http.get(url)
   }
-  getCurrency(){
-    let url = this.apiUrl+'/pv-api/currency/';
+  getFooterFeatureById(id) {
+    let url = this.apiUrl + '/pv-api/footer_features/?id=';
+    return this.http.get(`${url}${id}`)
+  }
+  addFooterFeature(data) {
+    let url = this.apiUrl + '/pv-api/footer_features/';
+    return this.http.post(url, data);
+  }
+  updateFooterFeature(data: any, id: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/footer_features/?id=';
+    return this.http.put<any>(`${url}${id}`, data)
+  }
+  deleteFooterFeature(id: number) {
+    let url = this.apiUrl + '/pv-api/footer_features/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+  // fnancial year
+  getFinancialYear() {
+    let url = this.apiUrl + '/pv-api/financial_year/';
     return this.http.get(url)
+  }
+  getFinancialYearById(id) {
+    let url = this.apiUrl + '/pv-api/financial_year/?id=';
+    return this.http.get(`${url}${id}`)
+  }
+  addFinancialYear(data) {
+    let url = this.apiUrl + '/pv-api/financial_year/';
+    return this.http.post(url, data);
+  }
+  updateFinancialYear(data: any, id: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/financial_year/?id=';
+    return this.http.put<any>(`${url}${id}`, data);
+  }
+  deleteFinancialYear(id: number) {
+    let url = this.apiUrl + '/pv-api/financial_year/?id=';
+    return this.http.delete(`${url}${id}`);
+  }
+  getCurrency() {
+    let url = this.apiUrl + '/pv-api/currency/';
+    return this.http.get(url);
+  }
+
+
+  // profile
+  getProfile() {
+    let url = this.apiUrl + '/pv-api/profile/';
+    return this.http.get(url);
+  }
+
+  //category wise subcategory
+  getSubcategoryByCategory(id: any) {
+    let url = this.apiUrl + '/pv-api/category_wise_subcategory/?category_id=';
+    return this.http.get<any>(`${url}${id}`);
+  }
+
+  //brands wise subcategory
+  // getBrandBySubcategory(id: any) {
+
+  //   let url = this.apiUrl + '/pv-api/brands_wise_subcategory/?subcategory_id=';
+  //   return this.http.get<any>(`${url}${id}`);
+  // }
+  //country wise state
+  getStateByCountryId(id: any) {
+    let url = this.apiUrl + '/state/?country_id=';
+    return this.http.get<any>(`${url}${id}`);
+  }
+  // state wise city
+  getCityByStateId(id: any) {
+    let url = this.apiUrl + '/city/?state_id=';
+    return this.http.get<any>(`${url}${id}`);
+  }
+  //category wise subcatGroup
+  getSubcatGraoupByCategory(id: any) {
+    let url = this.apiUrl + '/pv-api/category_wise_sub_category_group/?category_id=';
+    return this.http.get<any>(`${url}/${id}`);
+  }
+  //subcatGroup wise subcategory
+  getSubcategoryBySubcatGroup(id: any) {
+    let url = this.apiUrl + '/pv-api/subcategory_group_wise_subcategory/?sub_category_group_id=';
+    return this.http.get<any>(`${url}${id}`);
+  }
+  // subcategory wise brands
+  getBrandBySubcategory(id: any) {
+    let url = this.apiUrl + '/pv-api/subcategory_wise_brands/?subcategory_id=';
+    return this.http.get(`${url}/${id}`)
   }
 }

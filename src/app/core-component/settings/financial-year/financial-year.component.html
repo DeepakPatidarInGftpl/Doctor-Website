@@ -1,0 +1,216 @@
+<div class="row">
+    <div class="col-lg-7 col-sm-7 col-12">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Footer Financial Year</h4>
+                <h6>Manage your Financial Year</h6>
+            </div>
+            <div class="page-btn" *ngIf="!addForm">
+                <a class="btn btn-added" (click)="openaddForm()">
+                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Financial Year
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="assets/img/icons/filter.svg" alt="img">
+                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                            </a>
+                        </div>
+                  
+                        <div class="search-input">
+                            <a class="btn btn-searchset">
+                              <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                            <div class="dataTables_filter"><label>
+                              <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
+                              placeholder="search">
+                            </label>
+                          </div>
+                          </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                                        src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                                        src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                                        src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table datatable [dtOptions]="dtOptions" class="table  datanew">
+                        <thead>
+                            <tr>
+                                <th (click)="sort('id')" class="thone">
+                                    <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
+                                        <input type="checkbox" [(ngModel)]="initChecked">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                    <i class="fa fa-sort"></i>
+                                </th>
+                                <th (click)="sort('id')" class="thone">Start Year<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Close Year<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Is Active<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox" [(ngModel)]="products.is_active">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    {{products.start_year}}
+                                </td>
+                                <td>
+                                    {{products.close_year}}
+                                   
+                                </td>
+                                
+                                <td><span
+                                        [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                                        class="badges">{{products.is_active}}</span></td>
+                                <td>
+
+                                    <a class="me-3" (click)="editForm(products.id)">
+                                        <img src="assets/img/icons/edit.svg" alt="img">
+                                    </a>
+                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
+                                        href="javascript:void(0);">
+                                        <img src="assets/img/icons/delete.svg" alt="img">
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                       
+                    </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                            <select [(ngModel)]="itemsPerPage" class="pagination" >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="-1">All</option>
+                              </select>
+                            </div>
+                        </div>
+                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                        <div class="f-right">
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        </div>
+             
+                       </div>
+                     </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-lg-5 col-sm-5 col-12">
+        <div class="page-header">
+            <div class="page-title" *ngIf="addForm">
+                <h4> Add Financial Year </h4>
+                <h6>Create new Financial Year </h6>
+            </div>
+            <div class="page-title" *ngIf="!addForm">
+                <h4> Update Financial Year </h4>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body" *ngIf="addForm">
+                <form [formGroup]="FinancialYearForm" (ngSubmit)="submit()">
+                    <div class="row">
+
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Start Year*</label>
+                                <input type="date" formControlName="start_year" id="start_year" [ngClass]="{
+                                    'is-invalid': f['start_year'].touched && f['start_year'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="start_year && start_year.invalid && start_year.touched">Enter Title
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Close Year*</label>
+                                <input type="date" formControlName="close_year" id="close_year" [ngClass]="{
+                                    'is-invalid': f['close_year'].touched && f['close_year'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="close_year && close_year.invalid && close_year.touched">Enter Title
+                                </span>
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2">Submit</button>
+                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="card-body" *ngIf="!addForm">
+                <form [formGroup]="FinancialYearForm" (ngSubmit)="update()">
+                    <div class="row">
+
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Start Year*</label>
+                                <input type="date" formControlName="start_year" id="start_year" [ngClass]="{
+                                    'is-invalid': f['start_year'].touched && f['start_year'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="start_year && start_year.invalid && start_year.touched">Enter Title
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Close Year*</label>
+                                <input type="date" formControlName="close_year" id="close_year" [ngClass]="{
+                                    'is-invalid': f['close_year'].touched && f['close_year'].invalid
+                                  }">
+                                <span class="text-danger" *ngIf="close_year && close_year.invalid && close_year.touched">Enter Title
+                                </span>
+
+                            </div>
+                        </div>
+                        
+
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2">Submit</button>
+                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

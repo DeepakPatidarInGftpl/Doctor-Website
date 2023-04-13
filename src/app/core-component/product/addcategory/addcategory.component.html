@@ -12,7 +12,15 @@
                         </div>
                     </div>
 
+                    <div class="col-lg-10 col-sm-10 col-12">
+                        <div class="form-group">
+                            <label>Discount</label>
+                            <input type="text" formControlName="discount" id="discount" >
+                            <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount
+                            </span>
 
+                        </div>
+                    </div>
                     <div class="col-lg-12">
                         <div class="form-group">
                             <label>	Category Image*</label>

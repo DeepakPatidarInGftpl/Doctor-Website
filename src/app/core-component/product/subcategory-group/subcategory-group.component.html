@@ -158,29 +158,28 @@
                 </tr>
 
               </tbody>
-              <tr>
-                <td colspan="5">
-                    <div class="dataTables_length">
-                        <label class="labelSize">Show :&nbsp;
-                            <select [(ngModel)]="pageSize">
-                              <option [ngValue]="10">10</option>
-                              <option [ngValue]="25">25</option>
-                              <option [ngValue]="50">50</option>
-                              <option [ngValue]="100">100</option>
-                            </select>
-                            entries</label>
-                    </div>
-                    <div>
-                        <ul class="pagination"></ul>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="5">
-                    <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
-                </td>
-            </tr>
+           
             </table>
+            <div class="row">
+              <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                  <div class="entries"> Show per page
+                  <select [(ngModel)]="itemsPerPage" class="pagination" >
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                      <option value="50">50</option>
+                      <option value="-1">All</option>
+                    </select>
+                  </div>
+              </div>
+             <div class="col-lg-8 col-sm-8 col-12 mt-2">
+              <div class="f-right">
+                  <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                  <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+              </div>
+   
+             </div>
+           </div>
           </div>
         </div>
       </div>
@@ -205,7 +204,7 @@
       <div class="card">
         <div class="card-body">
           <form [formGroup]="form" class="row">
-            <div class="col-lg-6 col-sm-6 col-12">
+            <div class="col-lg-12 col-sm-12 col-12">
               <div class="form-group">
                 <label>Title</label>
                 <div class="image-upload mb-2">
@@ -214,20 +213,21 @@
                 <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter The Title</span>
               </div>
             </div>
-            <div class="col-lg-6 col-sm-6 col-12">
+            <div class="col-lg-12 col-sm-12 col-12">
               <div class="form-group">
                 <label>Category</label>
                 <div class="image-upload mb-2">
-                  <select class="w-100" formControlName="category" (change)="selectCate($event)">
-                    <option value="" [selected]="!editMode" disabled>Category Type</option>
+                  <select class="w-100" formControlName="category" (change)="selectCate($event)"
+                  #categoryValue (change)="getSubcategoryByCategory(categoryValue.value)">
+                    <option value="" [selected]="!editMode" disabled>Select Category</option>
                     <option *ngFor="let cate of categories" id="{{cate.id}}" [value]="cate.id">{{ cate.title }}</option>
                   </select>
                 </div>
-                <span class="text-danger" *ngIf="category && category.invalid && category.touched">Enter The
+                <span class="text-danger" *ngIf="category && category.invalid && category.touched">Select
                   Category</span>
               </div>
             </div>
-            <div class="col-lg-6 col-sm-6 col-12">
+            <div class="col-lg-12 col-sm-12 col-12">
               <!-- <label class="form-control">Sub Category Name</label>
 
               <div class="" *ngFor="let subCat of subCategory">
@@ -243,23 +243,26 @@
                   <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false">Select Subcategory</button>
                   <ul class="dropdown-menu" style="width: 100%;">
-                    <li><a class="dropdown-item" *ngFor="let subCat of subCategory; let i=index">
+                    <li><a class="dropdown-item" *ngFor="let subCat of subcatbyCategory; let i=index">
                         <input type="checkbox" [value]="subCat.id" [checked]="selectedSubCats.includes(subCat.id)"
                           (change)="onSelectionChange(subCat, $event.target)" style="margin-right: 5px;">
                         {{subCat.title}}
                       </a></li>
                   </ul>
-                  <p *ngIf="selectedSubCat>0">{{selectedSubCat}}</p>
+                  <p *ngIf="selectedSubCat>0">{{selectedSubCat + ' Subcategory selected'}}</p>
                 </div>
-                <span class="text-danger" *ngIf="subcategories && subcategories.invalid && subcategories.touched">Select
-                  sub category
-                </span>
+                <span class="text-danger"
+                *ngIf="subcategories && subcategories.invalid && subcategories.touched && subcatbyCategory?.length>0">Select Sub Category
+              </span>
+              <span class="text-danger"
+              *ngIf="category && category.touched && subcatbyCategory?.length<=0">Subcategory Not available
+            </span>
               </div>
 
 
               <span class="text-danger" *ngIf="errormessFSubC">{{errormessFSubC}}</span>
             </div>
-            <div class="col-lg-6 col-sm-6 col-12">
+            <div class="col-lg-12 col-sm-12 col-12">
               <!-- <label class="form-control">Feature Group</label>
               <div class="my-2" *ngFor="let fGroup of featureGroup">
                 <label for="{{fGroup.id}}">{{fGroup.title}}
@@ -281,7 +284,7 @@
                         {{fGroup.title}}
                       </a></li>
                   </ul>
-                  <p *ngIf="selectedFeatureGrp>0">{{selectedFeatureGrp}}</p>
+                  <p *ngIf="selectedFeatureGrp>0">{{selectedFeatureGrp + ' Feature group selected'}}</p>
                 </div>
                 <span class="text-danger" *ngIf="errormessFFG">{{ errormessFFG }}</span>
               </div>

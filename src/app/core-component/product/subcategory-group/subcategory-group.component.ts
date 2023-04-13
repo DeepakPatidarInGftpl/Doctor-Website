@@ -25,7 +25,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   titlee: any;
   p:number=1
   pageSize: number = 10;
-
+  itemsPerPage:number=10;
   constructor(private QueryService: QueryService, private coreServ: CoreService, private toastr: ToastrService) {
     this.QueryService.filterToggle()
   }
@@ -69,12 +69,8 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
     return this.form.controls
   }
 
-
   subcatEdit
   featureCategoryEdit
-
-
-
 
   selectedSubCats = [];
   selectedFeature = []
@@ -124,8 +120,10 @@ this.coreServ.getSubcategoryGroup().subscribe(res=>{
         eCategory = res?.category?.id
         this.subcatEdit = res.subcategories
         this.featureCategoryEdit = res.feature_group
-        this.selectedSubCats = this.subcatEdit.map(res => res.id,
-          this.selectedCat.length);
+        // this.selectedSubCats = this.subcatEdit.map(res => res.id,
+        //   console.log(res));
+        this.selectedSubCats = res.subcategories.map(res => res.id,
+          console.log(res));
         this.selectedFeature = this.featureCategoryEdit.map(res => res.id)
       }
 
@@ -191,7 +189,12 @@ this.coreServ.getSubcategoryGroup().subscribe(res=>{
     console.log(this.form.controls['category'].value);
   }
 
-
+  subcatbyCategory: any;
+  getSubcategoryByCategory(val:any) {
+    this.coreServ.getSubcategoryByCategory(val).subscribe(res => {
+      this.subcatbyCategory = res;
+    })
+  }
   submitForm() {
     console.log(this.form.value);
     if (this.form.controls['category'].value == 'Category Type') {

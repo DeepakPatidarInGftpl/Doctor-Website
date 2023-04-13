@@ -2,8 +2,8 @@
     <div class="col-lg-7 col-sm-7 col-12">
         <div class="page-header">
             <div class="page-title">
-                <h4>Feature Group list</h4>
-                <h6>Manage your Feature Group</h6>
+                <h4>Feature  list</h4>
+                <h6>Manage your Feature </h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
                 <a class="btn btn-added" (click)="openaddForm()">
@@ -65,13 +65,13 @@
                                     <i class="fa fa-sort"></i>
                                 </th>
                                 <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Feature Group <i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Feature Group <i class="fa fa-sort"></i></th> -->
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p}  let i = index">
+                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
 
                                 <td>
                                     <label class="checkboxs">
@@ -83,7 +83,7 @@
 
                                     <a href="javascript:void(0);" style="line-height: 3;">{{products.title}}</a>
                                 </td>
-                                <td>{{products.feature_group}}</td>
+                                <!-- <td>{{products.feature_group}}</td> -->
                                 <td><span
                                         [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span></td>
@@ -100,7 +100,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
                                     <label class="labelSize">Show :&nbsp;
@@ -121,10 +121,29 @@
                             <td colspan="5">
                                 <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
                             </td>
-                        </tr>
+                        </tr> -->
                     </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                            <select [(ngModel)]="itemsPerPage" class="pagination" >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="-1">All</option>
+                              </select>
+                            </div>
+                        </div>
+                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                        <div class="f-right">
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        </div>
+             
+                       </div>
+                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -146,7 +165,7 @@
                 <form [formGroup]="featureForm" (ngSubmit)="submit()">
                     <div class="row">
 
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
                                 <input type="text" formControlName="title" id="title" [ngClass]="{
@@ -157,12 +176,10 @@
 
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <!-- <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Feature Group*</label>
-                                <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
-                                    'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
-                                  }"> -->
+                             
                                 <select formControlName="feature_group" class="w-100 h-100 border" required
                                     #feature_groupValue id="feature_group" [ngClass]="{
                             'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
@@ -179,10 +196,10 @@
                                 </span>
 
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
                     </div>
@@ -192,7 +209,7 @@
                 <form [formGroup]="featureForm" (ngSubmit)="update()">
                     <div class="row">
 
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
                                 <input type="text" formControlName="title" id="title" [ngClass]="{
@@ -203,12 +220,10 @@
 
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <!-- <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Feature Group*</label>
-                                <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
-                                    'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
-                                  }"> -->
+                              
                                 <select formControlName="feature_group" class="w-100 h-100 border" required
                                     #feature_groupValue id="feature_group" [ngClass]="{
                             'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
@@ -225,10 +240,10 @@
                                 </span>
 
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
                     </div>

@@ -65,6 +65,7 @@
                                     <i class="fa fa-sort"></i>
                                 </th>
                                 <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Feature<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                             </tr>
@@ -78,9 +79,14 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-                                <td class="productimgname">
+                                <td>
 
-                                    <a href="javascript:void(0);" style="line-height: 3;">{{products.title}}</a>
+                                    {{products.title}}
+                                </td>
+                                <td>
+                                   <tr *ngFor="let dat of products.feature">
+                                    <td> {{dat.title}}</td>
+                                   </tr>
                                 </td>
                                 <td><span
                                         [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
@@ -98,7 +104,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
                                     <label class="labelSize">Show :&nbsp;
@@ -119,8 +125,28 @@
                             <td colspan="5">
                                 <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
                             </td>
-                        </tr>
+                        </tr> -->
                     </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                            <select [(ngModel)]="itemsPerPage" class="pagination" >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="-1">All</option>
+                              </select>
+                            </div>
+                        </div>
+                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                        <div class="f-right">
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        </div>
+             
+                       </div>
+                     </div>
                 </div>
 
             </div>
@@ -144,7 +170,7 @@
                 <form [formGroup]="featureForm" (ngSubmit)="submit()">
                     <div class="row">
 
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
                                 <input type="text" formControlName="title" id="title" [ngClass]="{
@@ -155,10 +181,31 @@
 
                             </div>
                         </div>
-         
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Feature*</label>
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Select Feature</button>
+                                    <ul class="dropdown-menu" style="width: 100%;">
+                                        <li><a class="dropdown-item" *ngFor="let feature of featureList; let i=index" >
+                                                <input type="checkbox" [value]="feature.id" 
+                                                    (change)="onCheckChange($event)" formArrayName="feature" style="margin-right: 5px;"
+                                                    [ngClass]="{
+                                                        'is-invalid': f['feature'].touched && f['feature'].invalid
+                                                      }" >
+                                                {{feature.title}}
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <span class="text-danger"
+                                    *ngIf="feature && feature.invalid && feature.touched">Select feature
+                                 </span>
+                            </div>
+                        </div>
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/feature_group" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/feature_group" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
                     </div>
@@ -167,7 +214,7 @@
             <div class="card-body" *ngIf="!addForm">
                 <form [formGroup]="featureForm" (ngSubmit)="update()">
                     <div class="row">
-                        <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
                                 <input type="text" formControlName="title" id="title" [ngClass]="{
@@ -178,10 +225,32 @@
 
                             </div>
                         </div>
-         
+                        <div class="col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Feature*</label>
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">Select Feature</button>
+                                    <ul class="dropdown-menu" style="width: 100%;">
+                                        <li><a class="dropdown-item" *ngFor="let feature of featureList; let i=index" >
+                                                <input type="checkbox" [value]="feature.id" [checked]="features.includes(feature.id)"
+                                                    (change)="onCheckChange($event)" formArrayName="feature" style="margin-right: 5px;"
+                                                    [ngClass]="{
+                                                        'is-invalid': f['feature'].touched && f['feature'].invalid
+                                                      }" >
+                                                {{feature.title}}
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <span class="text-danger"
+                                    *ngIf="feature && feature.invalid && feature.touched">Select feature
+                                 </span>
+                            </div>
+                        </div>
+
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/feature_group" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/feature_group" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
                     </div>

@@ -17,7 +17,7 @@ import jsonDoc from './../../../doc';
 export class AddproductComponent implements OnInit {
   productForm!: FormGroup;
 
-  public measurable: boolean = false; 
+  public measurable: boolean = false;
 
   editordoc = jsonDoc;
   editor: Editor | any;
@@ -33,7 +33,7 @@ export class AddproductComponent implements OnInit {
   ];
 
 
- 
+
   get doc(): any {
     // return this.form.get('editorContent');
     return this.productForm.get('description')
@@ -57,12 +57,12 @@ export class AddproductComponent implements OnInit {
       unit_conversion: new FormControl(''),
       description: new FormControl(''),
       product_store: new FormControl('', [Validators.required]),
-      style_code:new FormControl('',[Validators.required,Validators.pattern(/^[0-9]*$/)]),
-      is_measurable:new FormControl(''),
+      style_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      is_measurable: new FormControl(''),
       color: new FormArray([], [Validators.required]),
       size: new FormArray([], [Validators.required]),
       variant: new FormArray([]),
-      
+
     })
     this.getCategory()
     this.getSubCategory()
@@ -132,15 +132,27 @@ export class AddproductComponent implements OnInit {
       this.unitList = res
     })
   }
-  unitConversionList: any
+  subcatbyCategory: any;
+  getSubcategoryByCategory(val:any) {
+    this.coreService.getSubcategoryByCategory(val).subscribe(res => {
+      this.subcatbyCategory = res;
+    })
+  }
+  unitConversionList: any;
   getUnitConversion() {
     this.coreService.getunitconversion().subscribe(res => {
       this.unitConversionList = res
     })
   }
 
+  brandBySubcat:any;
+  selectBrand(val:any){
+    this.coreService.getBrandBySubcategory(val).subscribe(res=>{
+      this.brandBySubcat=res;
+    })
+  }
   check: any
-  selectedColor=0;
+  selectedColor = 0;
   onCheckColor(event: any) {
     const formArray: any = this.productForm.get('color') as FormArray;
 
@@ -150,7 +162,7 @@ export class AddproductComponent implements OnInit {
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray;
-     this.selectedColor++;
+      this.selectedColor++;
     }
     /* unselected */
     else {
@@ -167,7 +179,7 @@ export class AddproductComponent implements OnInit {
       });
     }
   }
-  selectedSize=0;
+  selectedSize = 0;
 
   onCheckSize(event: any) {
     const formArray: any = this.productForm.get('size') as FormArray;
@@ -198,7 +210,7 @@ export class AddproductComponent implements OnInit {
       });
     }
   }
-  selectedVariant=0;
+  selectedVariant = 0;
   onCheckVariant(event: any) {
     const formArray: any = this.productForm.get('variant') as FormArray;
 
@@ -209,7 +221,7 @@ export class AddproductComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray;
 
-    this.selectedVariant++;
+      this.selectedVariant++;
     }
     /* unselected */
     else {
@@ -244,9 +256,9 @@ export class AddproductComponent implements OnInit {
     formdata.append('color', JSON.stringify(this.productForm.get('color')?.value));
     formdata.append('size', JSON.stringify(this.productForm.get('size')?.value));
     formdata.append('variant', JSON.stringify(this.productForm.get('variant')?.value));
-    formdata.append('style_code',this.productForm.get('style_code')?.value);
-    formdata.append('is_measurable',this.productForm.get('is_measurable')?.value);
-   
+    formdata.append('style_code', this.productForm.get('style_code')?.value);
+    formdata.append('is_measurable', this.productForm.get('is_measurable')?.value);
+
     if (this.productForm.valid) {
       this.coreService.addProduct(formdata).subscribe(res => {
         if (res.msg == "Data Created") {
@@ -301,10 +313,10 @@ export class AddproductComponent implements OnInit {
   get variant() {
     return this.productForm.get('variant')
   }
-  get style_code(){
+  get style_code() {
     return this.productForm.get('style_code')
   }
-  get is_measurable(){
+  get is_measurable() {
     return this.productForm.get('is_measurable')
   }
 }

@@ -25,8 +25,9 @@ export class HsncodeComponent implements OnInit {
 
   titlee: any;
   p:number=1
-  pageSize: number = 10;
-
+  pageSize: number = 5;
+ 
+  itemsPerPage = 5;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle()
   
@@ -65,9 +66,9 @@ export class HsncodeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.hsncodeForm = this.fb.group({
-      title: new FormControl('', [Validators.required]),
+      // title: new FormControl('', [Validators.required]),
       hsn_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      tax: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      // tax: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       subcategory: new FormArray([], [Validators.required]),
     })
     // this.dtOptions = {
@@ -124,6 +125,7 @@ this.coreService.getHSNCode().subscribe(res=>{
 
   // form submit
   check: any
+  selectedSubcat = 0;
   onCheckChange(event: any) {
     const formArray: any = this.hsncodeForm.get('subcategory') as FormArray;
 
@@ -133,6 +135,7 @@ this.coreService.getHSNCode().subscribe(res=>{
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
+      this.selectedSubcat++;
     }
     /* unselected */
     else {
@@ -142,12 +145,14 @@ this.coreService.getHSNCode().subscribe(res=>{
         if (ctrl.value == event.target.value) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
+          this.selectedSubcat--;
           return;
         }
         i++;
       });
     }
   }
+
   subcategoryList: any
   getSubcategory() {
     this.coreService.getSubcategory().subscribe(res => {
@@ -156,6 +161,7 @@ this.coreService.getHSNCode().subscribe(res=>{
       if(!this.addForm){
       this.subcategoryList.map((map:any)=>{
         console.log(this.subcategories.includes(map.id));
+        console.log(map);
         
         if(this.subcategories.includes(map.id)){
           let formArray:any=this.hsncodeForm.get('subcategory') as FormArray;
@@ -166,36 +172,7 @@ this.coreService.getHSNCode().subscribe(res=>{
     })
   }
 
-  // addRes: any
-  // submit() {
-  //   console.log(this.hsncodeForm.value);
-  //   var formdata: any = new FormData()
-
-  //   formdata.append('title', this.hsncodeForm.get('title')?.value);
-  //   formdata.append('tax', this.hsncodeForm.get('tax')?.value);
-  //   formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
-  //   formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
-
-  //   if (this.hsncodeForm.valid) {
-  //     this.coreService.addHSNcode(formdata).subscribe(res => {
-  //       console.log(res);
-  //       this.addRes = res
-  //       if (this.addRes.msg == "Data Created") {
-  //         this.toastr.success(this.addRes.msg)
-  //         this.hsncodeForm.reset()
-  //         this.router.navigate(['product/hsncode']).then(() => {
-  //           window.location.reload()
-  //         })
-  //       }
-  //     }, err => {
-  //       console.log(err.error.gst);
-  //     })
-  //   } else {
-  //     this.hsncodeForm.markAllAsTouched()
-  //     console.log('forms invalid');
-  //   }
-  // }
-
+ 
   addRes: any
   data: any
   // submit() {
@@ -245,8 +222,6 @@ this.coreService.getHSNCode().subscribe(res=>{
     console.log(this.hsncodeForm.value);
     var formdata: any = new FormData()
 
-    formdata.append('title', this.hsncodeForm.get('title')?.value);
-    formdata.append('tax', this.hsncodeForm.get('tax')?.value);
     formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
     formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
 
@@ -275,8 +250,6 @@ this.coreService.getHSNCode().subscribe(res=>{
     console.log(this.hsncodeForm.value);
     var formdata: any = new FormData()
 
-    formdata.append('title', this.hsncodeForm.get('title')?.value);
-    formdata.append('tax', this.hsncodeForm.get('tax')?.value);
     formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
     formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
 
@@ -302,12 +275,7 @@ this.coreService.getHSNCode().subscribe(res=>{
   get hsn_code() {
     return this.hsncodeForm.get('hsn_code')
   }
-  get title() {
-    return this.hsncodeForm.get('title')
-  }
-  get tax() {
-    return this.hsncodeForm.get('tax');
-  }
+ 
   get subcategory() {
     return this.hsncodeForm.get('subcategory');
   }
@@ -331,14 +299,13 @@ this.coreService.getHSNCode().subscribe(res=>{
       if (id == res.id) {
         this.addForm = false;
         this.getSubcategory();
-        this.brandEdit = res.brand_id;
+     
         console.log(res);
-        this.subcategories = res.subcategory
-        console.log(this.subcategories);
+       
+        
+        this.subcategories = res.subcategory.map((res:any)=>res.id);
         
         this.hsncodeForm.patchValue({
-          title: res.title,
-          tax: res.tax,
           hsn_code: res.hsn_code
         });
       }
