@@ -61,6 +61,66 @@ itemsPerPage:number=10;
       }
     });
   }
+  select=false
+  // active deactive
+  deActivate(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Deactivate this country!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Deactivate it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.countryIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Country Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Deactivate!',
+         text: 'Country Is Deactivate Successfully.',
+       });
+     }
+   });
+ }
+ Active(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Active this country!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Active it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.countryIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Country Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Active!',
+         text: 'Country Is Active Successfully.',
+       });
+     }
+   });
+ }
   ngOnInit(): void {
     this.countryForm = this.fb.group({
       country_name: new FormControl('', [Validators.required]),
@@ -86,11 +146,17 @@ itemsPerPage:number=10;
     // })
     this.coreService.getCountry().subscribe(res=>{
       this.tableData=res;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     console.log(this.tableData);
     this.getFeatureGroup();
   }
-
+//select table row
+allSelected: boolean = false;
+selectedRows:boolean[]
+selectAlll() {
+  this.selectedRows.fill(this.allSelected);
+}
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {

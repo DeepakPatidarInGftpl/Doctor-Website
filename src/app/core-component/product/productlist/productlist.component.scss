@@ -40,6 +40,11 @@ div.dt-buttons .dt-button {
   margin-top: 4px;
 }
 
+#printTable .thone i{
+  float: unset;
+  margin-left: 5px;
+}
+
 @media (max-width:765px) {
   .thone i{
      float: inherit;

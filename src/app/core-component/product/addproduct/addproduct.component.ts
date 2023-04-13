@@ -44,26 +44,40 @@ export class AddproductComponent implements OnInit {
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder,
     private toastr: ToastrService) { }
 
+  disable = true
+
   ngOnInit(): void {
     this.editor = new Editor();
     this.productForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
+      subcategory_group: new FormControl('', [Validators.required]),
       subcategory: new FormControl('', [Validators.required]),
       brand: new FormControl('', [Validators.required]),
-      features_subcategory: new FormControl('', [Validators.required]),
-      subcategory_group: new FormControl('', [Validators.required]),
-      unit: new FormControl('', [Validators.required]),
-      unit_conversion: new FormControl(''),
-      description: new FormControl(''),
-      product_store: new FormControl('', [Validators.required]),
-      style_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      is_measurable: new FormControl(''),
       color: new FormArray([], [Validators.required]),
       size: new FormArray([], [Validators.required]),
-      variant: new FormArray([]),
+      product_store: new FormControl('', [Validators.required]),
+      unit: new FormControl('', [Validators.required]),
+      purchase_tax_including: new FormControl(''),
+      is_measurable: new FormControl(''),
+      sales_tax_including: new FormControl(''),
+      is_active: new FormControl(''),
+      tax_slab: new FormControl(''),
+      description: new FormControl(''),
 
+      // features_subcategory: new FormControl('', [Validators.required]),
+      // unit_conversion: new FormControl(''),  
+      // style_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      // variant: new FormArray([]),
+
+      features: this.fb.array([]),
+      variants: this.fb.array([])
     })
+
+    // add form
+    this.addFeature();
+    //add form
+
     this.getCategory()
     this.getSubCategory()
     this.getBrand()
@@ -74,11 +88,64 @@ export class AddproductComponent implements OnInit {
     this.getVariant()
     this.getUnit()
     this.getUnitConversion()
+    this.getTaxSlab()
+    this.getFeatureData()
+    this.getFeatureGroup()
   }
+
+  features(): FormGroup {
+    return this.fb.group({
+      featureGroup: (''),
+      feature: (''),
+    });
+  }
+
+  getFeature(): FormArray {
+    return this.productForm.get('features') as FormArray;
+  }
+  addFeature() {
+    this.getFeature().push(this.features())
+  }
+  removeAmount(i: any) {
+    this.getFeature().removeAt(i)
+  }
+
+variantsForm(): FormGroup {
+    return this.fb.group({
+      product:(''),
+      variant:(''),
+      mrp:(''),
+      cost_price:(''),
+      selling_price:(''),
+      stock:(''),
+      minimum_stock:(''),
+      selling_price_dealer:(''),
+      selling_price_employee:(''),
+      barcode:(''),
+      sku:(''),
+      max_order_quantity:('')
+    })
+  }
+  getVarinatsForm():FormArray{
+    return this.productForm.get('variants') as FormArray;
+  }
+  addVariant() {
+    this.getVarinatsForm().push(this.variantsForm())
+  }
+  removeVariant(k:any){
+    this.getVarinatsForm().removeAt(k)
+  }
+  
   categoryList: any
   getCategory() {
     this.coreService.getCategory().subscribe(res => {
       this.categoryList = res
+    })
+  }
+  taxSlabList: any
+  getTaxSlab() {
+    this.coreService.getTaxSlab().subscribe(res => {
+      this.taxSlabList = res
     })
   }
   subcatList: any
@@ -132,10 +199,16 @@ export class AddproductComponent implements OnInit {
       this.unitList = res
     })
   }
-  subcatbyCategory: any;
-  getSubcategoryByCategory(val:any) {
-    this.coreService.getSubcategoryByCategory(val).subscribe(res => {
-      this.subcatbyCategory = res;
+  subcatGroupByCategory: any;
+  getSubcategoryGroupByCategory(val: any) {
+    this.coreService.getSubcatGraoupByCategory(val).subscribe(res => {
+      this.subcatGroupByCategory = res;
+    })
+  }
+  subcatbyCategoryGroup: any
+  getSubcategoryBySubcategoryGroup(val: any) {
+    this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
+      this.subcatbyCategoryGroup = res.subcategories;
     })
   }
   unitConversionList: any;
@@ -145,10 +218,23 @@ export class AddproductComponent implements OnInit {
     })
   }
 
-  brandBySubcat:any;
-  selectBrand(val:any){
-    this.coreService.getBrandBySubcategory(val).subscribe(res=>{
-      this.brandBySubcat=res;
+  brandBySubcat: any;
+  selectBrand(val: any) {
+    this.coreService.getBrandBySubcategory(val).subscribe(res => {
+      this.brandBySubcat = res;
+    })
+  }
+
+  featureList: any;
+  getFeatureData() {
+    this.coreService.getfeature().subscribe(res => {
+      this.featureList = res;
+    })
+  }
+  featureGroupList: any;
+  getFeatureGroup() {
+    this.coreService.getFeatureGroup().subscribe(res => {
+      this.featureGroupList = res;
     })
   }
   check: any
@@ -183,10 +269,8 @@ export class AddproductComponent implements OnInit {
 
   onCheckSize(event: any) {
     const formArray: any = this.productForm.get('size') as FormArray;
-
     /* Selected */
     if (event.target.checked) {
-
       // Add a new control in the arrayForm
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
@@ -197,10 +281,8 @@ export class AddproductComponent implements OnInit {
     else {
       // find the unselected element
       let i: number = 1;
-
       formArray.controls.forEach((ctrl: any) => {
         if (ctrl.value == event.target.value) {
-
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
           this.selectedSize--;
@@ -319,4 +401,5 @@ export class AddproductComponent implements OnInit {
   get is_measurable() {
     return this.productForm.get('is_measurable')
   }
+
 }

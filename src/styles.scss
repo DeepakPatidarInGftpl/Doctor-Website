@@ -1,5 +1,14 @@
 @import "/src/assets/scss/main.scss";
 
+
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+
+*{
+  font-family: 'Poppins', sans-serif;
+}
+
+
 .sidebar .sidebar-menu>ul>li.submenu ul.show,
 .show,
 .sidebar.sidebar-four ul ul.show {
@@ -45,4 +54,49 @@ body {
 
   background: #FF9F43 !important;
  
+}
+
+.mat-pseudo-checkbox-checked, .mat-pseudo-checkbox-indeterminate, .mat-accent .mat-pseudo-checkbox-checked, .mat-accent .mat-pseudo-checkbox-indeterminate {
+  background: #FF9F43 !important;
+}
+.mat-select-value {
+  color: #637381 !important;
+}
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  background-color: #FF9F43 !important;
+}
+
+.mat-tab-label{
+  width: 33% !important;
+  min-width: auto !important;
+}
+
+.mat-tab-labels{
+  justify-content: space-between !important;
+}
+
+.mat-tab-label-active .mat-tab-label-content{
+  color: #201E1F;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.mat-tab-label .mat-tab-label-content{
+  font-size: 18px;
+}
+
+.mat-tab-label-container{
+  margin-bottom: 25px;
+  border-bottom: 1px solid #EEEEEE;
+}
+
+.mat-tab-header{
+  border-bottom: none;
+}
+// table slide
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: #FF9F43 !important;
+}
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+ background-color: #FF9F43 !important;
 }

@@ -59,7 +59,66 @@ export class BrandlistComponent implements OnInit {
       }
     });
   }
-
+  select=false
+  // active deactive
+  deActivate(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Deactivate this brand!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Deactivate it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.brandIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Brands Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Deactivate!',
+         text: 'Brand Is Deactivate Successfully.',
+       });
+     }
+   });
+ }
+ Active(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Active this brand!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Active it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.brandIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Brands Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Active!',
+         text: 'Brand Is Active Successfully.',
+       });
+     }
+   });
+ }
   titlee: any;
 p:number=1
 pageSize: number = 10;
@@ -97,10 +156,18 @@ itemsPerPage:number=10;
     // })
     this.coreService.getBrand().subscribe(res=>{
       this.tableData=res;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getSubcatGroup();
   
   }
+
+    //select table row
+ allSelected: boolean = false;
+ selectedRows:boolean[]
+ selectAlll() {
+   this.selectedRows.fill(this.allSelected);
+ }
 
   selectAll(initChecked: boolean) {
     if (!initChecked) {
@@ -157,7 +224,6 @@ itemsPerPage:number=10;
  
   subcategories:any=[];
  
-
   subcatbySubcatGroup: any;
   getSubcategoryBySubcatGroup(val:any) {
     this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
@@ -282,7 +348,6 @@ itemsPerPage:number=10;
   //     console.log('forms invalid');
   //   }
   // }
-
 
   submit() {
     console.log(this.brandForm.value);

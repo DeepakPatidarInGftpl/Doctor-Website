@@ -62,6 +62,66 @@ export class UnitConversionComponent implements OnInit {
       }
     });
   }
+  select=false
+  // active deactive
+  deActivate(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Deactivate this unit conversion!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Deactivate it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.unitConversionIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "UnitConversion Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Deactivate!',
+         text: 'Unit Conversion Is Deactivate Successfully.',
+       });
+     }
+   });
+ }
+ Active(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Active this unit conversion!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Active it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.unitConversionIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "UnitConversion Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Active!',
+         text: 'Unit Conversion Is Active Successfully.',
+       });
+     }
+   });
+ }
   ngOnInit(): void {
     this.unitConversionForm = this.fb.group({
       alternate_unit: new FormControl('', [Validators.required]),
@@ -89,10 +149,17 @@ export class UnitConversionComponent implements OnInit {
 
     this.coreService.getunitconversion().subscribe(res=>{
       this.tableData=res;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     console.log(this.tableData);
     this.getUnits();
   }
+//select table row
+allSelected: boolean = false;
+selectedRows:boolean[]
+selectAlll() {
+  this.selectedRows.fill(this.allSelected);
+}
 
   selectAll(initChecked: boolean) {
     if (!initChecked) {

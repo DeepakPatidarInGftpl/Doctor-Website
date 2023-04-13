@@ -24,7 +24,7 @@ itemsPerPage:number=10;
     this.QueryService.filterToggle()
   }
 
-
+  delRes:any
   confirmText(index: any, id) {
     Swal.fire({
       title: 'Are you sure?',
@@ -53,13 +53,73 @@ itemsPerPage:number=10;
     });
 
   }
-
+  select=false
+  // active deactive
+  deActivate(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Deactivate this Category!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Deactivate it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreServ.categoryIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Product Category Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Deactivate!',
+         text: 'Category Is Deactivate Successfully.',
+       });
+     }
+   });
+ }
+ Active(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Active this Category!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Active it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreServ.categoryIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Product Category Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Active!',
+         text: 'Category Is Active Successfully.',
+       });
+     }
+   });
+ }
 
 
   ngOnInit() {
 
     this.coreServ.getProductCategor().subscribe(res => {
       this.tableData = res;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     // this.coreServ.ProdCategBehaveSub.subscribe(() => {
     //   if (localStorage.getItem("prodCategories")) {
@@ -82,6 +142,14 @@ itemsPerPage:number=10;
     //   },
 
     // };
+  }
+
+
+  
+  allSelected: boolean = false;
+  selectedRows:boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
   }
 
   editMode = false

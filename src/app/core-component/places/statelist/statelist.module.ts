@@ -12,6 +12,8 @@ import { DatepickerModule } from 'ng2-datepicker';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 @NgModule({
   declarations: [
     StatelistComponent
@@ -26,7 +28,8 @@ import { OrderModule } from 'ngx-order-pipe';
     DatepickerModule,
     Ng2SearchPipeModule,
     NgxPaginationModule,
-    OrderModule
+    OrderModule,
+    MatSlideToggleModule
   ]
 })
 export class StatelistModule { }

@@ -5,8 +5,8 @@ import { AddproductRoutingModule } from './addproduct-routing.module';
 import { AddproductComponent } from './addproduct.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxEditorModule } from 'ngx-editor';
-
-
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatIconModule} from '@angular/material/icon';
 @NgModule({
   declarations: [
     AddproductComponent
@@ -16,7 +16,9 @@ import { NgxEditorModule } from 'ngx-editor';
     AddproductRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxEditorModule
+    NgxEditorModule,
+    MatTabsModule,
+    MatIconModule
   ]
 })
 export class AddproductModule { }
