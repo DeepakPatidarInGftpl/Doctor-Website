@@ -20,6 +20,7 @@ font-size: 16px;
 
 .customer-type-div .radio label input {
     border-color: #000;
+    accent-color: black;
 }
 
 .customer-type-div .radio label input:checked {
@@ -90,7 +91,7 @@ font-size: 16px;
 
 
 .cus-details-wrapper {
-    padding: 14px 25px;
+    padding: 14px 18px;
     border: 1px solid #9C9C9C;
     border-radius: 4px;
 }
@@ -160,9 +161,9 @@ color: #9C9C9C;
 }
 
 .bottom-pos-left {
-    position: absolute;
-    bottom: 0;
-    width: 97%;
+    // position: absolute;
+    // bottom: 0;
+    // width: 97%;
 }
 
 .pos-left-wrapper {
@@ -266,12 +267,18 @@ font-size: 18px;
 }
 
 .pos-container {
-    height: 82vh;
+    height: calc(100vh - 60px);
+    padding: 5px;
+    // height: calc(~"100vh - 150px");
 }
 
 .table-pos {
-    overflow-y: scroll;
-    max-height: 165px;
+    // overflow-y: scroll;
+    // max-height: 320px;
+}
+
+.table-pos .table tbody tr td {
+    padding: 5px 10px;
 }
 
 .amt-info-div .flat-disc-wrapper {
@@ -646,4 +653,42 @@ padding: 10px 16px;
  100% {
   stroke-dashoffset: -125px;
  }
+}
+
+.table-pos .form-control, .table-pos .input-group-text {
+    padding: .2rem .75rem;
+    line-height: 1;
+}
+
+.bottom-pos-left .col-sm-12 {
+    // padding-right: 0;
+}
+
+.final-left {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.final-test {
+    padding-right: 10px;
+    position: absolute;
+    height: 100%;
+    flex-direction: column;
+    display: flex;
+    width: 99%;
+}
+
+final-test > div:first-child {
+    flex-shrink: 0;
+}
+
+.final-test > div:nth-child(2) {
+    height: 100%;
+    overflow: auto;
+}
+
+.final-test >div:last-child {
+    flex-shrink: 0;
 }

@@ -76,6 +76,7 @@ export class AddproductComponent implements OnInit {
 
     // add form
     this.addFeature();
+    // this.addVariant();
     //add form
 
     this.getCategory()
@@ -110,32 +111,32 @@ export class AddproductComponent implements OnInit {
     this.getFeature().removeAt(i)
   }
 
-variantsForm(): FormGroup {
+  variants(): FormGroup {
     return this.fb.group({
-      product:(''),
-      variant:(''),
-      mrp:(''),
-      cost_price:(''),
-      selling_price:(''),
-      stock:(''),
-      minimum_stock:(''),
-      selling_price_dealer:(''),
-      selling_price_employee:(''),
-      barcode:(''),
-      sku:(''),
-      max_order_quantity:('')
+      product: (''),
+      variant: (''),
+      mrp: (''),
+      cost_price: (''),
+      selling_price: (''),
+      stock: (''),
+      minimum_stock: (''),
+      selling_price_dealer: (''),
+      selling_price_employee: (''),
+      barcode: (''),
+      sku: (''),
+      max_order_quantity: ('')
     })
   }
-  getVarinatsForm():FormArray{
+  getVarinatsForm(): FormArray {
     return this.productForm.get('variants') as FormArray;
   }
   addVariant() {
-    this.getVarinatsForm().push(this.variantsForm())
+    this.getVarinatsForm().push(this.variants())
   }
-  removeVariant(k:any){
+  removeVariant(k: any) {
     this.getVarinatsForm().removeAt(k)
   }
-  
+
   categoryList: any
   getCategory() {
     this.coreService.getCategory().subscribe(res => {
@@ -239,12 +240,45 @@ variantsForm(): FormGroup {
   }
   check: any
   selectedColor = 0;
-  onCheckColor(event: any) {
+  checkedColors: any = [];
+  checkedSizes: any = [];
+  chekVarints = []
+  onCheckColor(event: any,color) {
+    console.log(color,'colorname');
+    
+    this.chekVarints = []
     const formArray: any = this.productForm.get('color') as FormArray;
 
     /* Selected */
     if (event.target.checked) {
       // Add a new control in the arrayForm
+      console.log(event.target.value);
+      this.checkedColors.push(event.target.value);
+      console.log(this.checkedColors, 'checkcolor');
+      if (this.checkedSizes.length > 0 && this.checkedColors.length == 0) {
+        for (let n = 0; n < this.checkedSizes.length; n++) {
+          this.chekVarints.push({ size: n });
+          console.log(this.chekVarints, 'sizeif');
+
+        }
+
+      }
+      if (this.checkedColors.length > 0) {
+        if (this.checkedSizes.length > 0) {
+          for (let i = 0; i < this.checkedColors.length; i++) {
+            for (let j = 0; j < this.checkedSizes.length; j++) {
+              this.chekVarints.push({ color: i, size: j })
+              console.log(this.chekVarints, 'checkvariants');
+            }
+          }
+        } else {
+          for (let k = 0; k < this.checkedColors.length; k++) {
+            this.chekVarints.push({ color: k })
+            console.log(this.chekVarints, 'else size');
+          }
+        }
+      }
+
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray;
@@ -259,19 +293,84 @@ variantsForm(): FormGroup {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
           this.selectedColor--;
+          this.checkedColors.pop(i);
+          console.log(this.checkedColors, 'checkcolor');
           return;
         }
         i++;
       });
     }
   }
+
   selectedSize = 0;
 
-  onCheckSize(event: any) {
+  checkSizeColor() {
+    if (this.checkedSizes.length > 0 && this.checkedColors.length == 0) {
+      for (let n = 0; n < this.checkedSizes.length; n++) {
+        this.chekVarints.push({ size: n });
+        console.log(this.chekVarints, 'sizeif');
+      }
+    }
+    if (this.checkedColors.length > 0) {
+      if (this.checkedSizes.length > 0) {
+        for (let i = 0; i < this.checkedColors.length; i++) {
+          for (let j = 0; j < this.checkedSizes.length; j++) {
+            this.chekVarints.push({ color: i, size: j })
+            console.log(this.chekVarints, 'checkvariants');
+          }
+        }
+      } else {
+        for (let k = 0; k < this.checkedColors.length; k++) {
+          this.chekVarints.push({ color: k })
+          console.log(this.chekVarints, 'else size');
+        }
+      }
+    }
+  }
+
+  sizeCheck=[]
+  checkSize(e) {   
+     //push and pop 
+     console.log(e.target.value);
+     
+     if(this.sizeCheck.length<=0){
+      this.sizeCheck.push(e.target.value);    
+     }else{
+      for (let i = 0; i <= this.sizeCheck.length; i++) {
+        if(this.sizeCheck.includes(e.target.value)){
+          this.sizeCheck.splice(i,1)
+        }else{
+          this.sizeCheck.push(e.target.value)
+        }
+      }
+     }
+      
+        this.checkVariant(e); 
+  }  
+    checkColor(e) {    //push and pop   
+      if(this.checkedColors.length > 0){
+        this.checkedColors.push(e.target.value);   
+       } else { 
+         this.checkedColors.pop(e.target.value)  
+      }   
+        this.checkVariant(e);  
+      } 
+      checkVariant(e) {  
+        console.log(e);
+        
+          console.log(this.checkedColors, 'colors');    
+          console.log(this.sizeCheck, 'sizes'); 
+         }
+
+  onCheckSize(event: any,size) {
+    console.log(size,'sizename');
+    
     const formArray: any = this.productForm.get('size') as FormArray;
     /* Selected */
     if (event.target.checked) {
       // Add a new control in the arrayForm
+      this.checkedSizes.push(event.target.value);
+      console.log(this.checkedSizes, 'checksizes');
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
@@ -285,6 +384,8 @@ variantsForm(): FormGroup {
         if (ctrl.value == event.target.value) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
+          this.checkedSizes.pop(i);
+          console.log(this.checkedSizes, 'checksizes');
           this.selectedSize--;
           return;
         }

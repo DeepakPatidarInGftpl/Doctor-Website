@@ -45,6 +45,17 @@ export class CoreComponentComponent implements OnInit {
     if (data.url.split('/')[2] === 'pos') {
       this.sideBaractivePath = true;
     }
+    if(data.url.split('/')[1] === 'pos'){
+      window.addEventListener('load', function () {
+        let wrapper:any = document.getElementById('core-comp1');
+        wrapper.classList.remove('content');      
+      })
+      
+      // wrapper.classList.remove('content');
+      // wrapper = wrapper[0];
+      //$('#core-comp1').addClass('content1');
+
+    }
   }
   ngAfterViewInit() {
     this.LoadScript('assets/js/script.js');
