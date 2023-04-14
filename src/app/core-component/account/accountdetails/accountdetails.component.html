@@ -3,11 +3,16 @@
         <h4>Account Details</h4>
         <h6>Full details of a Account</h6>
     </div>
+    <div class="page-btn">
+        <a routerLink="//account/editaccount/{{employeeDetails.id}}" class="btn btn-added">
+            <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Account
+        </a>
+    </div>
 </div>
 
 <!-- /add -->
 <div class="row">
-    <div class="col-lg-8 col-sm-12">
+    <div class="col-lg-12 col-sm-12" *ngIf="employeeDetails">
         <div class="card">
             <div class="card-body">
                 <!-- <div class="bar-code-view">
@@ -74,17 +79,17 @@
                             <h4>Credit Amount</h4>
                             <h6>{{employeeDetails.credit_amount}}</h6>
                         </li>
-                        <li>
+                        <!-- <li>
                             <h4>Is Active</h4>
                             <h6>{{employeeDetails.is_active}}</h6>
-                        </li>
+                        </li> -->
                         <li>
                             <h4>Country</h4>
-                            <h6>{{employeeDetails.country}}</h6>
+                            <h6>{{employeeDetails.country.country_name}}</h6>
                         </li>
                         <li>
                             <h4>State</h4>
-                            <h6>{{employeeDetails.state}}</h6>
+                            <h6>{{employeeDetails.state.state}}</h6>
                         </li>                    
                         <li>
                             <h4>Address</h4>
@@ -92,6 +97,12 @@
                         </li>
                     </ul>
                 </div>
+    
+            </div>
+            <div class="d-flex align-items-center mx-4">
+                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                <span [ngClass]="{'bg-lightgreen': employeeDetails.is_active === true, 'bg-lightred' : employeeDetails.is_active === false,'bg-lightyellow' : employeeDetails.is_active === 'Partial' }"
+                                    class="badges">{{employeeDetails.is_active}}</span>
             </div>
         </div>
     </div>

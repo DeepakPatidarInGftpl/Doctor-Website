@@ -44,26 +44,41 @@ export class AddproductComponent implements OnInit {
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder,
     private toastr: ToastrService) { }
 
+  disable = true
+
   ngOnInit(): void {
     this.editor = new Editor();
     this.productForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
+      subcategory_group: new FormControl('', [Validators.required]),
       subcategory: new FormControl('', [Validators.required]),
       brand: new FormControl('', [Validators.required]),
-      features_subcategory: new FormControl('', [Validators.required]),
-      subcategory_group: new FormControl('', [Validators.required]),
-      unit: new FormControl('', [Validators.required]),
-      unit_conversion: new FormControl(''),
-      description: new FormControl(''),
-      product_store: new FormControl('', [Validators.required]),
-      style_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      is_measurable: new FormControl(''),
       color: new FormArray([], [Validators.required]),
       size: new FormArray([], [Validators.required]),
-      variant: new FormArray([]),
+      product_store: new FormControl('', [Validators.required]),
+      unit: new FormControl('', [Validators.required]),
+      purchase_tax_including: new FormControl(''),
+      is_measurable: new FormControl(''),
+      sales_tax_including: new FormControl(''),
+      is_active: new FormControl(''),
+      tax_slab: new FormControl(''),
+      description: new FormControl(''),
 
+      // features_subcategory: new FormControl('', [Validators.required]),
+      // unit_conversion: new FormControl(''),  
+      // style_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      // variant: new FormArray([]),
+
+      features: this.fb.array([]),
+      variants: this.fb.array([])
     })
+
+    // add form
+    this.addFeature();
+    // this.addVariant();
+    //add form
+
     this.getCategory()
     this.getSubCategory()
     this.getBrand()
@@ -74,11 +89,64 @@ export class AddproductComponent implements OnInit {
     this.getVariant()
     this.getUnit()
     this.getUnitConversion()
+    this.getTaxSlab()
+    this.getFeatureData()
+    this.getFeatureGroup()
   }
+
+  features(): FormGroup {
+    return this.fb.group({
+      featureGroup: (''),
+      feature: (''),
+    });
+  }
+
+  getFeature(): FormArray {
+    return this.productForm.get('features') as FormArray;
+  }
+  addFeature() {
+    this.getFeature().push(this.features())
+  }
+  removeAmount(i: any) {
+    this.getFeature().removeAt(i)
+  }
+
+  variants(): FormGroup {
+    return this.fb.group({
+      product: (''),
+      variant: (''),
+      mrp: (''),
+      cost_price: (''),
+      selling_price: (''),
+      stock: (''),
+      minimum_stock: (''),
+      selling_price_dealer: (''),
+      selling_price_employee: (''),
+      barcode: (''),
+      sku: (''),
+      max_order_quantity: ('')
+    })
+  }
+  getVarinatsForm(): FormArray {
+    return this.productForm.get('variants') as FormArray;
+  }
+  addVariant() {
+    this.getVarinatsForm().push(this.variants())
+  }
+  removeVariant(k: any) {
+    this.getVarinatsForm().removeAt(k)
+  }
+
   categoryList: any
   getCategory() {
     this.coreService.getCategory().subscribe(res => {
       this.categoryList = res
+    })
+  }
+  taxSlabList: any
+  getTaxSlab() {
+    this.coreService.getTaxSlab().subscribe(res => {
+      this.taxSlabList = res
     })
   }
   subcatList: any
@@ -132,10 +200,16 @@ export class AddproductComponent implements OnInit {
       this.unitList = res
     })
   }
-  subcatbyCategory: any;
-  getSubcategoryByCategory(val:any) {
-    this.coreService.getSubcategoryByCategory(val).subscribe(res => {
-      this.subcatbyCategory = res;
+  subcatGroupByCategory: any;
+  getSubcategoryGroupByCategory(val: any) {
+    this.coreService.getSubcatGraoupByCategory(val).subscribe(res => {
+      this.subcatGroupByCategory = res;
+    })
+  }
+  subcatbyCategoryGroup: any
+  getSubcategoryBySubcategoryGroup(val: any) {
+    this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
+      this.subcatbyCategoryGroup = res.subcategories;
     })
   }
   unitConversionList: any;
@@ -145,20 +219,66 @@ export class AddproductComponent implements OnInit {
     })
   }
 
-  brandBySubcat:any;
-  selectBrand(val:any){
-    this.coreService.getBrandBySubcategory(val).subscribe(res=>{
-      this.brandBySubcat=res;
+  brandBySubcat: any;
+  selectBrand(val: any) {
+    this.coreService.getBrandBySubcategory(val).subscribe(res => {
+      this.brandBySubcat = res;
+    })
+  }
+
+  featureList: any;
+  getFeatureData() {
+    this.coreService.getfeature().subscribe(res => {
+      this.featureList = res;
+    })
+  }
+  featureGroupList: any;
+  getFeatureGroup() {
+    this.coreService.getFeatureGroup().subscribe(res => {
+      this.featureGroupList = res;
     })
   }
   check: any
   selectedColor = 0;
-  onCheckColor(event: any) {
+  checkedColors: any = [];
+  checkedSizes: any = [];
+  chekVarints = []
+  onCheckColor(event: any,color) {
+    console.log(color,'colorname');
+    
+    this.chekVarints = []
     const formArray: any = this.productForm.get('color') as FormArray;
 
     /* Selected */
     if (event.target.checked) {
       // Add a new control in the arrayForm
+      console.log(event.target.value);
+      this.checkedColors.push(event.target.value);
+      console.log(this.checkedColors, 'checkcolor');
+      if (this.checkedSizes.length > 0 && this.checkedColors.length == 0) {
+        for (let n = 0; n < this.checkedSizes.length; n++) {
+          this.chekVarints.push({ size: n });
+          console.log(this.chekVarints, 'sizeif');
+
+        }
+
+      }
+      if (this.checkedColors.length > 0) {
+        if (this.checkedSizes.length > 0) {
+          for (let i = 0; i < this.checkedColors.length; i++) {
+            for (let j = 0; j < this.checkedSizes.length; j++) {
+              this.chekVarints.push({ color: i, size: j })
+              console.log(this.chekVarints, 'checkvariants');
+            }
+          }
+        } else {
+          for (let k = 0; k < this.checkedColors.length; k++) {
+            this.chekVarints.push({ color: k })
+            console.log(this.chekVarints, 'else size');
+          }
+        }
+      }
+
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray;
@@ -173,21 +293,84 @@ export class AddproductComponent implements OnInit {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
           this.selectedColor--;
+          this.checkedColors.pop(i);
+          console.log(this.checkedColors, 'checkcolor');
           return;
         }
         i++;
       });
     }
   }
+
   selectedSize = 0;
 
-  onCheckSize(event: any) {
-    const formArray: any = this.productForm.get('size') as FormArray;
+  checkSizeColor() {
+    if (this.checkedSizes.length > 0 && this.checkedColors.length == 0) {
+      for (let n = 0; n < this.checkedSizes.length; n++) {
+        this.chekVarints.push({ size: n });
+        console.log(this.chekVarints, 'sizeif');
+      }
+    }
+    if (this.checkedColors.length > 0) {
+      if (this.checkedSizes.length > 0) {
+        for (let i = 0; i < this.checkedColors.length; i++) {
+          for (let j = 0; j < this.checkedSizes.length; j++) {
+            this.chekVarints.push({ color: i, size: j })
+            console.log(this.chekVarints, 'checkvariants');
+          }
+        }
+      } else {
+        for (let k = 0; k < this.checkedColors.length; k++) {
+          this.chekVarints.push({ color: k })
+          console.log(this.chekVarints, 'else size');
+        }
+      }
+    }
+  }
 
+  sizeCheck=[]
+  checkSize(e) {   
+     //push and pop 
+     console.log(e.target.value);
+     
+     if(this.sizeCheck.length<=0){
+      this.sizeCheck.push(e.target.value);    
+     }else{
+      for (let i = 0; i <= this.sizeCheck.length; i++) {
+        if(this.sizeCheck.includes(e.target.value)){
+          this.sizeCheck.splice(i,1)
+        }else{
+          this.sizeCheck.push(e.target.value)
+        }
+      }
+     }
+      
+        this.checkVariant(e); 
+  }  
+    checkColor(e) {    //push and pop   
+      if(this.checkedColors.length > 0){
+        this.checkedColors.push(e.target.value);   
+       } else { 
+         this.checkedColors.pop(e.target.value)  
+      }   
+        this.checkVariant(e);  
+      } 
+      checkVariant(e) {  
+        console.log(e);
+        
+          console.log(this.checkedColors, 'colors');    
+          console.log(this.sizeCheck, 'sizes'); 
+         }
+
+  onCheckSize(event: any,size) {
+    console.log(size,'sizename');
+    
+    const formArray: any = this.productForm.get('size') as FormArray;
     /* Selected */
     if (event.target.checked) {
-
       // Add a new control in the arrayForm
+      this.checkedSizes.push(event.target.value);
+      console.log(this.checkedSizes, 'checksizes');
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
@@ -197,12 +380,12 @@ export class AddproductComponent implements OnInit {
     else {
       // find the unselected element
       let i: number = 1;
-
       formArray.controls.forEach((ctrl: any) => {
         if (ctrl.value == event.target.value) {
-
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
+          this.checkedSizes.pop(i);
+          console.log(this.checkedSizes, 'checksizes');
           this.selectedSize--;
           return;
         }
@@ -319,4 +502,5 @@ export class AddproductComponent implements OnInit {
   get is_measurable() {
     return this.productForm.get('is_measurable')
   }
+
 }

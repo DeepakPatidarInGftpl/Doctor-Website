@@ -139,8 +139,13 @@
                 <h4>Product Details</h4>
                 <h6>Full details of a product</h6>
             </div>
+            <div class="page-btn">
+                <a routerLink="//product/editproduct/{{productDetail.id}}" class="btn btn-added">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Product
+                </a>
+            </div>
         </div>
-        <div class="company-details-card card">
+        <div class="company-details-card card" *ngIf="productDetail">
             <table>
                 <tr class="ro-border">
                     <td colspan="2" class="f-500">Title</td>
@@ -209,12 +214,12 @@
                         <h6>{{productDetail.is_measurable}}</h6>
                     </td>
                 </tr>
-                <tr class="ro-border">
+                <!-- <tr class="ro-border">
                     <td colspan="2" class="f-500">Is Active</td>
                     <td colspan="6" class="f-400">
                         <h6>{{productDetail.is_active}}</h6>
                     </td>
-                </tr>
+                </tr> -->
                
                 <tr class="ro-border">
                     <td colspan="2" class="f-500">Color</td>
@@ -223,12 +228,12 @@
                             <div class="col-sm-6">
                                 <h6 class="f-500">Title</h6>
                                 <h6 class="f-500">Color Code</h6>
-                                <h6 class="f-500">Is Active</h6>
+                                <!-- <h6 class="f-500">Is Active</h6> -->
                             </div>
                             <div class="col-sm-6">
                                 <h6>{{color.title}}</h6>
                                 <h6>{{color.color_code}}</h6>
-                                <h6>{{color.is_active}}</h6>
+                                <!-- <h6>{{color.is_active}}</h6> -->
                             </div>
                         </div>
                     </td>
@@ -241,12 +246,12 @@
                             <div class="col-sm-6">
                                 <h6 class="f-500">Title</h6>
                                 <h6 class="f-500">Code</h6>
-                                <h6 class="f-500">Is Active</h6>
+                                <!-- <h6 class="f-500">Is Active</h6> -->
                             </div>
                             <div class="col-sm-6">
                                 <h6>{{size.title}}</h6>
                                 <h6>{{size.code}}</h6>
-                                <h6>{{size.is_active}}</h6>
+                                <!-- <h6>{{size.is_active}}</h6> -->
                             </div>
                         </div>
                     </td>
@@ -259,20 +264,25 @@
                             <div class="col-sm-6">
                                 <h6 class="f-500">SKU</h6>
                                 <h6 class="f-500">Minimum Stock</h6>
-                                <h6 class="f-500">Is Active</h6>
+                                <!-- <h6 class="f-500">Is Active</h6> -->
                             </div>
                             <div class="col-sm-6">
                                 <h6>{{variant.sku}}</h6>
                                 <h6>{{variant.minimum_stock_threshold}}</h6>
-                                <h6>{{variant.is_active}}</h6>
+                                <!-- <h6>{{variant.is_active}}</h6> -->
                             </div>
                         </div>
                     </td>
                 </tr> 
  
             </table>
+            <div class="d-flex align-items-center mt-3">
+                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                <span [ngClass]="{'bg-lightgreen': productDetail.is_active === true, 'bg-lightred' : productDetail.is_active === false,'bg-lightyellow' : productDetail.is_active === 'Partial' }"
+                                    class="badges">{{productDetail.is_active}}</span>
+            </div>
         </div>
-
+       
         <!-- <div class="company-details-card card">
             <div class="sub-card row" style="border: none;">
                 <div class="col-sm-4">

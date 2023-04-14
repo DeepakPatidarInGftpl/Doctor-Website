@@ -61,6 +61,68 @@ export class StaticPagesComponent implements OnInit {
       }
     });
   }
+
+  select=false
+  // active deactive
+  deActivate(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Deactivate this static page!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Deactivate it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.staticPageIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Static Pages Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Deactivate!',
+         text: 'Static Pages Is Deactivate Successfully.',
+       });
+     }
+   });
+ }
+ Active(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Active this static page!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Active it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.staticPageIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Static Pages Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Active!',
+         text: 'Static Page Is Active Successfully.',
+       });
+     }
+   });
+ }
+
   ngOnInit(): void {
     this.staticPgForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -93,8 +155,15 @@ export class StaticPagesComponent implements OnInit {
     // })
   this.coreService.getStaicPages().subscribe(res=>{
     this.tableData=res;
+    this.selectedRows = new Array(this.tableData.length).fill(false);
   })
   }
+//select table row
+allSelected: boolean = false;
+selectedRows:boolean[]
+selectAlll() {
+  this.selectedRows.fill(this.allSelected);
+}
 
   selectAll(initChecked: boolean) {
     if (!initChecked) {

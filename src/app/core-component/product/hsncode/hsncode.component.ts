@@ -24,13 +24,13 @@ export class HsncodeComponent implements OnInit {
   }
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 5;
- 
+
   itemsPerPage = 5;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle()
-  
+
   }
 
   delRes: any
@@ -52,7 +52,7 @@ export class HsncodeComponent implements OnInit {
         this.coreService.deleteHSNcode(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "HSNCode Deleted successfully") {
-           this.ngOnInit()
+            this.ngOnInit()
           }
         })
         Swal.fire({
@@ -61,6 +61,66 @@ export class HsncodeComponent implements OnInit {
           text: 'Your file has been deleted.',
         });
         this.tableData.splice(index, 1);
+      }
+    });
+  }
+  select = false
+  // active deactive
+  deActivate(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this HSNCode!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.hsncodeIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "HSNCode Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deactivate!',
+          text: 'HSNCode Group Is Deactivate Successfully.',
+        });
+      }
+    });
+  }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this HSNCode!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.hsncodeIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "HSNCode Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: 'HSNCode Group Is Active Successfully.',
+        });
       }
     });
   }
@@ -94,12 +154,19 @@ export class HsncodeComponent implements OnInit {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("hsncodeList")!))
     //   }
     // })
-this.coreService.getHSNCode().subscribe(res=>{
-  this.tableData=res
-})
+    this.coreService.getHSNCode().subscribe(res => {
+      this.tableData = res
+      this.selectedRows = new Array(this.tableData.length).fill(false);
+    })
     this.getSubcategory();
     this.getTax();
 
+  }
+  //select table row
+  allSelected: boolean = false;
+  selectedRows: boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
   }
 
   selectAll(initChecked: boolean) {
@@ -158,21 +225,21 @@ this.coreService.getHSNCode().subscribe(res=>{
     this.coreService.getSubcategory().subscribe(res => {
       console.log(res);
       this.subcategoryList = res
-      if(!this.addForm){
-      this.subcategoryList.map((map:any)=>{
-        console.log(this.subcategories.includes(map.id));
-        console.log(map);
-        
-        if(this.subcategories.includes(map.id)){
-          let formArray:any=this.hsncodeForm.get('subcategory') as FormArray;
-          formArray.push(new FormControl(map.id))
-        }
-      })
-    }
+      if (!this.addForm) {
+        this.subcategoryList.map((map: any) => {
+          console.log(this.subcategories.includes(map.id));
+          console.log(map);
+
+          if (this.subcategories.includes(map.id)) {
+            let formArray: any = this.hsncodeForm.get('subcategory') as FormArray;
+            formArray.push(new FormControl(map.id))
+          }
+        })
+      }
     })
   }
 
- 
+
   addRes: any
   data: any
   // submit() {
@@ -260,7 +327,7 @@ this.coreService.getHSNCode().subscribe(res=>{
         if (this.addRes.msg == "HSNCode updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.hsncodeForm.reset()
-          this.addForm=true;
+          this.addForm = true;
           // window.location.reload()
           this.ngOnInit()
         }
@@ -275,7 +342,7 @@ this.coreService.getHSNCode().subscribe(res=>{
   get hsn_code() {
     return this.hsncodeForm.get('hsn_code')
   }
- 
+
   get subcategory() {
     return this.hsncodeForm.get('subcategory');
   }
@@ -299,12 +366,12 @@ this.coreService.getHSNCode().subscribe(res=>{
       if (id == res.id) {
         this.addForm = false;
         this.getSubcategory();
-     
+
         console.log(res);
-       
-        
-        this.subcategories = res.subcategory.map((res:any)=>res.id);
-        
+
+
+        this.subcategories = res.subcategory.map((res: any) => res.id);
+
         this.hsncodeForm.patchValue({
           hsn_code: res.hsn_code
         });
@@ -317,7 +384,7 @@ this.coreService.getHSNCode().subscribe(res=>{
     this.hsncodeForm.reset();
   }
 
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();

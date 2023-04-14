@@ -14,7 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { DataTablesModule } from 'angular-datatables';
-
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 @NgModule({
   declarations: [FinancialYearComponent],
   imports: [
@@ -27,7 +27,8 @@ import { DataTablesModule } from 'angular-datatables';
     DataTablesModule,
     Ng2SearchPipeModule,
     NgxPaginationModule,
-    OrderModule
+    OrderModule,
+    MatSlideToggleModule
   ]
 })
 export class FinancialYearModule { }

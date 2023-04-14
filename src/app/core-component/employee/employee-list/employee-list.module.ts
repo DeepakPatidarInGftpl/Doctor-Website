@@ -12,7 +12,7 @@ import { EmployeeListComponent } from './employee-list.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
-
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 @NgModule({
   declarations: [EmployeeListComponent],
   imports: [
@@ -24,7 +24,8 @@ import { OrderModule } from 'ngx-order-pipe';
     SweetAlert2Module.forRoot(),
     Ng2SearchPipeModule,
     NgxPaginationModule,
-    OrderModule
+    OrderModule,
+    MatSlideToggleModule
   ]
 })
 export class EmployeeListModule { }

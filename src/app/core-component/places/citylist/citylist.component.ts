@@ -22,9 +22,9 @@ export class CitylistComponent implements OnInit {
     return this.cityForm.controls;
   }
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService,
     private service: CompanyService) {
     this.QueryService.filterToggle();
@@ -49,7 +49,7 @@ export class CitylistComponent implements OnInit {
         this.coreService.deletecity(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "City Deleted successfully") {
-           this.ngOnInit()
+            this.ngOnInit()
           }
         })
         Swal.fire({
@@ -58,6 +58,66 @@ export class CitylistComponent implements OnInit {
           text: 'Your file has been deleted.',
         });
         this.tableData.splice(index, 1);
+      }
+    });
+  }
+  select = false
+  // active deactive
+  deActivate(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this city!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.cityIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "City Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deactivate!',
+          text: 'City Is Deactivate Successfully.',
+        });
+      }
+    });
+  }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this city!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.cityIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "City Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: 'City Is Active Successfully.',
+        });
       }
     });
   }
@@ -86,13 +146,20 @@ export class CitylistComponent implements OnInit {
     //   this.tableData = JSON.parse(localStorage.getItem('cityList')!);
     // })
 
-    this.coreService.getcity().subscribe(res=>{
-      this.tableData=res;
+    this.coreService.getcity().subscribe(res => {
+      this.tableData = res;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     console.log(this.tableData);
     this.getstate();
   }
 
+  //select table row
+  allSelected: boolean = false;
+  selectedRows: boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
+  }
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -125,46 +192,46 @@ export class CitylistComponent implements OnInit {
     console.log(this.id);
 
     if (this.cityForm.valid) {
-        this.coreService.addcity(this.cityForm.value).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Data Created") {
-            this.toastr.success(this.addRes.msg)
-            this.cityForm.reset()
-            // window.location.reload();
-            this.ngOnInit()
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
+      this.coreService.addcity(this.cityForm.value).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "Data Created") {
+          this.toastr.success(this.addRes.msg)
+          this.cityForm.reset()
+          // window.location.reload();
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
     } else {
       this.cityForm.markAllAsTouched()
       console.log('forms invalid');
     }
   }
 
-  stateError=null
-  update(){
+  stateError = null
+  update() {
     if (this.cityForm.valid) {
-        this.coreService.updatecity(this.cityForm.value, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "City updated successfully") {
-            this.toastr.success(this.addRes.msg)
-            this.cityForm.reset();
-            this.addForm = true;
-            // window.location.reload()
-            this.ngOnInit();
-          }
-        }, err => {
-          console.log(err.error.state);
-          if(err.error.state){
-            this.stateError='Select State';
-            setTimeout(() => {
-              this.stateError=''
-            }, 3000);
-          }
-        })
+      this.coreService.updatecity(this.cityForm.value, this.id).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "City updated successfully") {
+          this.toastr.success(this.addRes.msg)
+          this.cityForm.reset();
+          this.addForm = true;
+          // window.location.reload()
+          this.ngOnInit();
+        }
+      }, err => {
+        console.log(err.error.state);
+        if (err.error.state) {
+          this.stateError = 'Select State';
+          setTimeout(() => {
+            this.stateError = ''
+          }, 3000);
+        }
+      })
 
     } else {
       this.cityForm.markAllAsTouched()
@@ -203,7 +270,7 @@ export class CitylistComponent implements OnInit {
     this.cityForm.reset();
   }
 
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();

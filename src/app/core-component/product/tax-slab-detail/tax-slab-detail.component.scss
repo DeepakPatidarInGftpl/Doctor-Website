@@ -1,0 +1,67 @@
+.second-list{
+    width: 70%;
+}
+.second-list ul li{
+    display: flex;
+    border-bottom: 1px solid #d8d8d8;
+}
+.img-div{
+    width: 70%;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.product-bar li{
+    border: 1px solid #E9ECEF;
+    padding: 15px;
+}
+
+.sub-card{
+    margin: 0;
+    width: 100%;
+}
+
+.product-bar li h4{
+    font-size: 18px;
+    font-weight: 500;
+    color: #212B3C;
+}
+
+.company-details-card{
+    padding: 20px;
+}
+
+.sub-card .col-sm-4, .sub-card .col-sm-8{
+    padding: 0;
+}
+
+.ro-6 .col-sm-6{
+    padding: 0;
+}
+
+.ro-6{
+    width: 100%;
+    margin: 0;
+}
+
+td{
+    border: 1px solid #E9ECEF;
+    padding: 15px;
+}
+
+.ro-6 .col-sm-6 h6{
+    border: 1px solid #E9ECEF;
+    padding: 15px;
+}
+
+.f-500{
+    font-size: 18px;
+    font-weight: 500;
+    color: #212B3C;
+}
+
+.f-400{
+    font-size: 18px;
+    font-weight:400;
+    color: #212B3C;
+}

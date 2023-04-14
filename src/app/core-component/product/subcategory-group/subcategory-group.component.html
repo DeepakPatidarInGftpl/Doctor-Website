@@ -112,7 +112,7 @@
                 <tr>
                   <th (click)="sort('id')" class="thone">
                     <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
-                        <input type="checkbox" [(ngModel)]="initChecked">
+                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
                         <span class="checkmarks"></span>
                     </label>
                     <i class="fa fa-sort"></i>
@@ -129,7 +129,7 @@
                 <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                   <td>
                     <label class="checkboxs">
-                      <input type="checkbox" [(ngModel)]="products.isSelected">
+                      <input type="checkbox" [(ngModel)]="selectedRows[i]">
                       <span class="checkmarks"></span>
                     </label>
                   </td>
@@ -141,9 +141,12 @@
 
                   <td>{{products.subcategories[0]?.title}}</td>
                   <td>{{products.feature_group[0]?.title}}</td>
-                  <td><span
-                      [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
-                      class="badges">{{products.is_active}}</span></td>
+                  <td>
+                    <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                      class="badges">{{products.is_active}}</span> -->
+                      <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                         
+                    </td>
                   <td>
                     <a class="me-2" routerLink="/product/subCategoryDetails/{{products.id}}">
                       <img src="assets/img/icons/eye.svg" alt="img">

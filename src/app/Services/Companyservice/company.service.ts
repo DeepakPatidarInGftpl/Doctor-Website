@@ -44,7 +44,10 @@ export class CompanyService {
       })
     })
   }
-
+  companyYearIsActive(id:any,data){
+    let url =this.apiUrl+'/pv-api/company/?id=';
+    return this.http.patch(`${url}${id}`,data);
+  }
   postCompany(data: company): Observable<any> {
     let url = this.apiUrl + '/pv-api/company/';
     return this.http.post(url, data, {

@@ -1,133 +1,120 @@
-
-<div class="page-header">
+<div class="page-header justify-content-center">
     <div class="page-title">
-        <h4>Tax Slab ADD</h4>
+        <h4>Tax Slab Add</h4>
         <h6>Create new Tax Slab</h6>
     </div>
 </div>
 
 
 <!-- /add -->
-<div class="card">
-    <div class="card-body">
-        <form [formGroup]="taxSlabForm" (ngSubmit)="submit()">
-            <div class="row">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label>Subcategory Group*</label>
-                                    <select formControlName="subcategory_group" class="w-100 h-100 border" required
-                                        #category_idValue id="subcategory_group" [ngClass]="{
+<form [formGroup]="taxSlabForm" (ngSubmit)="submit()">
+    <div class="row"> 
+        <div class="card ">
+            <div class="card-body">
+                <div class="row form-card">
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>Subcategory Group*</label>
+                            <select formControlName="subcategory_group" class="w-100 h-100 border" required
+                                #category_idValue id="subcategory_group" [ngClass]="{
                       'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid}" #categoryValue
-                                        (change)="getSubcategoryBySubcatGroup(categoryValue.value)">
-                                        <option value="" selected disabled>select subcategory group</option>
-                                        <option value="{{subcatGroup.id}}" *ngFor="let subcatGroup of subcatGroupList">
-                                            {{subcatGroup.title}}
-                                        </option>
-                                    </select>
-                                    <span class="text-danger"
-                                        *ngIf="subcategory_group && subcategory_group.invalid && subcategory_group.touched">Select
-                                        Category
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label>SubCategory*</label>
-                                    <div class="dropdown">
-                                        <button type="button" class="dropdown-toggle button" type="button"
-                                            data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
-                                        <ul class="dropdown-menu" style="width: 100%;">
-                                            <li><a class="dropdown-item"
-                                                    *ngFor="let subcategory of subcatbySubcatGroup; let i=index">
-                                                    <input type="checkbox" [value]="subcategory.id"
-                                                        (change)="onCheckChange($event)" formArrayName="subcategory"
-                                                        style="margin-right: 5px;" [ngClass]="{
-                                                'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
-                                              }">
-                                                    {{subcategory.title}}
-                                                </a></li>
-                                        </ul>
-                                    </div>
-                                    <p *ngIf="selectedSubcat>0">{{selectedSubcat + ' Subcategory Selected'}}</p>
-                                    <span class="text-danger"
-                                        *ngIf="subcategory && subcategory.invalid && subcategory.touched">Select
-                                        subcategory
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-8 col-sm-8 col-12">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>From Amount</th>
-                                            <th>To Amount</th>
-                                            <th>Tax</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container formArrayName="amount">
-                                            <ng-container *ngFor="let d of getAmount().controls; let i=index">
-                                                <tr [formGroupName]="i">
-                                                    <td>
-                                                        <input type="text" class="form-control inp"
-                                                            formControlName="from_amount" placeholder="ex-100"/>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" formControlName="to_amount"
-                                                            class="form-control inp" placeholder="ex-1000">
-                                                    </td>
-                                                    <td>
-                                                        <select formControlName="tax" class="inp">
-                                                            <option value="" selected disabled>Select tax</option>
-                                                            <option value="{{tax.id}}" *ngFor="let tax of taxList">
-                                                                {{tax.title}}
-                                                            </option>
-                                                        </select>
-                                                        <button (click)="removeAmount(i)" class="btn" style="background: #FF9F43;">&#8722;</button>
-                                                    </td>
-                                                    
-                                                </tr>
-                                                
-                                            </ng-container>
-                                        </ng-container>
-                                        <div class="w-100">
-                                           <span (click)="addAmount()">add more</span>
-                                        </div>
-                                       
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- <div formArrayName="amount">
-                    <div *ngFor="let d of getAmount().controls; let i=index">
-                        <div [formGroupName]="i">
-                            <input type="text" formControlName="from_amount" placeholder="from_amount">
-                            <input type="text" formControlName="to_amount" placeholder="to_amount">
-                            <select formControlName="tax">
-                                <option value="" selected disabled>Select tax</option>
-                                <option value="{{tax.id}}" *ngFor="let tax of taxList">{{tax.title}}</option>
+                                (change)="getSubcategoryBySubcatGroup(categoryValue.value)">
+                                <option value="" selected disabled>select subcategory group</option>
+                                <option value="{{subcatGroup.id}}" *ngFor="let subcatGroup of subcatGroupList">
+                                    {{subcatGroup.title}}
+                                </option>
                             </select>
-                            <button (click)="removeAmount(i)">&#8722;</button>
+                            <span class="text-danger"
+                                *ngIf="subcategory_group && subcategory_group.invalid && subcategory_group.touched">Select
+                                Category
+                            </span>
                         </div>
                     </div>
-                </div>
-                <span (click)="addAmount()">add more</span><br>
-                <button> submits</button> -->
 
-                            <div class="col-lg-12">
-                                <button class="btn btn-submit me-2">Submit</button>
-
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>SubCategory*</label>
+                            <div class="dropdown">
+                                <button type="button" class="dropdown-toggle button" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
+                                <ul class="dropdown-menu" style="width: 100%;">
+                                    <li><a class="dropdown-item"
+                                            *ngFor="let subcategory of subcatbySubcatGroup; let i=index">
+                                            <input type="checkbox" [value]="subcategory.id"
+                                                (change)="onCheckChange($event)" formArrayName="subcategory"
+                                                style="margin-right: 5px;" [ngClass]="{
+                                                'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
+                                              }">
+                                            {{subcategory.title}}
+                                        </a></li>
+                                </ul>
                             </div>
+                        
+                            <!-- <mat-select formControlName="subcategory" multiple placeholder="Select Subcategory">
+                                  <mat-option *ngFor="let subcategory of subcatbySubcatGroup; let i=index" [value]="subcategory.id"> {{subcategory.title}}</mat-option>
+                                </mat-select> -->
+                            
+                            <p *ngIf="selectedSubcat>0">{{selectedSubcat + ' Subcategory Selected'}}</p>
+                           
+                            <span class="text-danger"
+							*ngIf="subcategory && subcategory.invalid && subcategory.touched && subcatbySubcatGroup?.length>0">Select Sub Category
+						</span>
+						<span class="text-danger"
+						*ngIf="subcategory_group && subcategory_group.touched && subcatbySubcatGroup?.length<=0">Subcategory not available
+					</span>
+
                         </div>
+                    </div>
+
+                    <div class="col-lg-8 col-sm-8 col-12">
+                        <table class="table amt-table">
+                            <thead>
+                                <tr>
+                                    <th>From Amount</th>
+                                    <th>To Amount</th>
+                                    <th>Tax</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container formArrayName="amount_tax_slabs">
+                                    <ng-container *ngFor="let d of getAmount().controls; let i=index">
+                                        <tr [formGroupName]="i">
+                                            <td>
+                                                <input type="text" class="form-control inp"
+                                                    formControlName="from_amount" placeholder="ex-100" />
+                                            </td>
+                                            <td>
+                                                <input type="text" formControlName="to_amount" class="form-control inp"
+                                                    placeholder="ex-1000">
+                                            </td>
+                                            <td>
+                                                <select formControlName="tax" class="inp">
+                                                    <option value="" selected disabled>Select tax</option>
+                                                    <option value="{{tax.id}}" *ngFor="let tax of taxList">
+                                                        {{tax.tax_percentage}}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <button (click)="removeAmount(i)" class="btn"
+                                                    style="background: #FF9F43;">&#8722;</button>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                        <div class="w-100 text-right">
+                            <span (click)="addAmount()" class="addMore">+ Add more</span>
+                        </div>
+                    </div> 
+                    <div class="col-lg-8 text-end mt-5">
+                        <button class="btn btn-submit me-2">Submit</button>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 <!-- /add -->
