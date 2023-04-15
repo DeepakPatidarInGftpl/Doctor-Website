@@ -1481,12 +1481,39 @@ featureGroupIsActive(id:any,data){
     let url = this.apiUrl+'/pv-api/tax_slabs/';
     return this.http.post(url,data)
   }
-  updateTaxSlab(id:any,data:any){
+  updateTaxSlab(data:any,id:number){
     let url = this.apiUrl+'/pv-api/tax_slabs/?id=';
     return this.http.put(`${url}${id}`,data)
   }
   deleteTaxSlab(id:any){
     let url = this.apiUrl+'/pv-api/tax_slabs/?id=';
     return this.http.delete(`${url}${id}`)
+  }
+
+  // banner
+  getBanner(){
+    let url = this.apiUrl+'/pv-api/banner/';
+    return this.http.get(url)
+  }
+  getBannerbById(id:any){
+    let url = this.apiUrl+'/pv-api/banner/?id=';
+    return this.http.get(`${url}${id}`)
+  }
+  addBanner(data:any){
+    let url = this.apiUrl+'/pv-api/banner/';
+    return this.http.post(url,data)
+  }
+  updateBanner(data:any,id:number){
+    let url = this.apiUrl+'/pv-api/banner/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  
+  deleteBanner(id:any){
+    let url = this.apiUrl+'/pv-api/banner/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+  bannerIsActive(id:any,data){
+    let url =this.apiUrl+'/pv-api/banner/?id=';
+    return this.http.patch(`${url}${id}`,data);
   }
 }

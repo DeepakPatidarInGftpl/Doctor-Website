@@ -91,6 +91,8 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
           this.toastr.success(this.addRes.msg)
           this.staticPgForm.reset()
           this.router.navigate(['/website/staticPage'])
+        }else if(this.addRes.slug[0]=="Static Pages with this slug already exists."){
+          this.toastr.error(this.addRes.slug[0])
         }
       }, err => {
         console.log(err.error.gst);
