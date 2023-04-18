@@ -156,3 +156,38 @@ input[type="button"] {
     line-height: inherit; 
     border: none;
 }
+
+.image-upload{
+    background: #FF9F43;
+    color: #fff;
+    font-size: 14px;
+    width: 120px;
+    margin-bottom: 0;
+}
+
+.image-upload input[type=file]{
+    height: 36px;
+}
+
+.image-upload .image-uploads{
+    color: #fff;
+    padding: 0;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-uploads h4{
+    color: #fff;
+}
+.p-img{
+    width: 20%;
+    border: 2px solid gray;
+    border-radius: 20%;
+    margin-right: 20px;
+}
+.svg{
+    width: 20%;
+    height: 20%;
+}
