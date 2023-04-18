@@ -258,7 +258,6 @@ export class SubcategorylistComponent implements OnInit {
   // selectimg(event: Event, index: number) {
   //   const file = (event.target as HTMLInputElement).files![0];
   //   console.log(file);
-  
   //   const control = this.subcategoryForm.get('subcategories')?.at(index)?.get('image');
   //   control?.patchValue(file);
   //   control?.updateValueAndValidity();
@@ -266,6 +265,7 @@ export class SubcategorylistComponent implements OnInit {
   
   addRes: any
   data: any
+  
   // submit() {
   //   console.log(this.subcategoryForm.value);
   //   console.log(this.id);

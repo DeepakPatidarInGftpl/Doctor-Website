@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -9,12 +9,22 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { Editor, Toolbar } from 'ngx-editor';
 import jsonDoc from './../../../doc';
 
+import { MatTabGroup } from '@angular/material/tabs';
+import { event } from 'jquery';
+
 @Component({
   selector: 'app-addproduct',
   templateUrl: './addproduct.component.html',
   styleUrls: ['./addproduct.component.scss']
 })
 export class AddproductComponent implements OnInit {
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
+
+  selectTab(index: number) {
+    this.tabGroup.selectedIndex = index;
+  }
+  name = "abc"
+  disable = true
   productForm!: FormGroup;
 
   public measurable: boolean = false;
@@ -44,8 +54,10 @@ export class AddproductComponent implements OnInit {
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder,
     private toastr: ToastrService) { }
 
-  disable = true
+  isDisabled: true;
   productNamme: any
+
+
   ngOnInit(): void {
     this.editor = new Editor();
     this.productForm = this.fb.group({
@@ -55,7 +67,9 @@ export class AddproductComponent implements OnInit {
       subcategory: new FormControl('', [Validators.required]),
       brand: new FormControl('', [Validators.required]),
       color: new FormArray([], [Validators.required]),
+      // color: new FormControl('', [Validators.required]),
       size: new FormArray([], [Validators.required]),
+      // size: new FormControl('', [Validators.required]),
       product_store: new FormControl('', [Validators.required]),
       unit: new FormControl('', [Validators.required]),
       purchase_tax_including: new FormControl(''),
@@ -64,19 +78,20 @@ export class AddproductComponent implements OnInit {
       is_active: new FormControl(''),
       tax_slab: new FormControl(''),
       description: new FormControl(''),
+      hsncode: new FormControl(''),
 
       // features_subcategory: new FormControl('', [Validators.required]),
       // unit_conversion: new FormControl(''),  
       // style_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       // variant: new FormArray([]),
 
-      features: this.fb.array([]),
-      variants: this.fb.array([]),
+      product_features: this.fb.array([]),
+      variant_product: this.fb.array([]),
       product_image: this.fb.array([])
     })
 
     // add form
-    this.addFeature();
+    // this.addFeature();
     // this.addVariant();
     this.addproductImage()
     //add form
@@ -98,13 +113,13 @@ export class AddproductComponent implements OnInit {
 
   features(): FormGroup {
     return this.fb.group({
-      featureGroup: (''),
+      feature_group: (''),
       feature: (''),
     });
   }
 
   getFeature(): FormArray {
-    return this.productForm.get('features') as FormArray;
+    return this.productForm.get('product_features') as FormArray;
   }
   addFeature() {
     this.getFeature().push(this.features())
@@ -115,13 +130,13 @@ export class AddproductComponent implements OnInit {
 
   variants(): FormGroup {
     return this.fb.group({
-      product: (''),
-      variant: (''),
+      product_title: (''),
+      variant_name: (''),
       mrp: (''),
       cost_price: (''),
       selling_price: (''),
       stock: (''),
-      minimum_stock: (''),
+      minimum_stock_threshold: (''),
       selling_price_dealer: (''),
       selling_price_employee: (''),
       barcode: (''),
@@ -132,7 +147,7 @@ export class AddproductComponent implements OnInit {
   }
 
   getVarinatsForm(): FormArray {
-    return this.productForm.get('variants') as FormArray;
+    return this.productForm.get('variant_product') as FormArray;
   }
   addVariant() {
     this.getVarinatsForm().push(this.variants())
@@ -258,12 +273,66 @@ export class AddproductComponent implements OnInit {
       this.featureGroupList = res;
     })
   }
+
+  // subcategory wise hsn code
+  hsncodeBysubcatList: any;
+  getHsncodeBySubcategory(val: any) {
+    this.coreService.getHsncodeBySubcategory(val).subscribe(res => {
+      console.log(res);
+      this.hsncodeBysubcatList = res;
+    })
+  }
+
+  // subcategory wise tax slab
+  taxSlabBysubcatList: any;
+  getTaxslabBySubcategory(val: any) {
+    this.coreService.getTaxslabBySubcategory(val).subscribe(res => {
+      console.log(res);
+      this.taxSlabBysubcatList = res;
+    })
+  }
+
+  // subcategory wise tax slab
+  featureGrpBysubcatGroupList: any;
+  featureData: any;
+  getFeaturegroupBySubcategory(val: any) {
+    this.coreService.getFeaturegroupBySubcategoryGroup(val).subscribe(res => {
+      console.log(res);
+      this.featureGrpBysubcatGroupList = res;
+      // open feature form 
+      const feature = this.productForm.get('product_features') as FormArray;
+      feature.clear();
+      for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
+        this.addFeature();
+      }
+      this.featureGrpBysubcatGroupList.feature_group.forEach((res,index)=>{
+        console.log(res);
+        
+        const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
+        imageGroup.patchValue({
+          feature_group: res.id
+        });
+      })
+
+    })
+
+  }
+  // open feature or subact after select subcatGroup 
+  oncheck(val: any) {
+    this.getSubcategoryBySubcategoryGroup(val)
+    this.getFeaturegroupBySubcategory(val);
+    this.getHsncodeBySubcategory(val)
+  }
+  
+  // open hsn or taxslab or brand after select subcat
+  checkSubact(val: any) {
+    this.selectBrand(val);
+    this.getTaxslabBySubcategory(val);
+    this.getHsncodeBySubcategory(val);
+  }
   check: any
   selectedColor = 0;
-
-
   onCheckColor(event: any,) {
-
     const formArray: any = this.productForm.get('color') as FormArray;
     /* Selected */
     if (event.target.checked) {
@@ -289,19 +358,20 @@ export class AddproductComponent implements OnInit {
     }
   }
 
+
   selectedSize = 0;
-
+  selectedTaxes = {};
   onCheckSize(event: any) {
-
     const formArray: any = this.productForm.get('size') as FormArray;
     /* Selected */
     if (event.target.checked) {
       // Add a new control in the arrayForm
-
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedSize++;
+      console.log(this.selectedSize);
+      
     }
     /* unselected */
     else {
@@ -349,23 +419,25 @@ export class AddproductComponent implements OnInit {
 
   submit() {
     console.log(this.productForm.value);
-
     let formdata: any = new FormData();
     formdata.append('title', this.productForm.get('title')?.value);
     formdata.append('category', this.productForm.get('category')?.value);
     formdata.append('subcategory', this.productForm.get('subcategory')?.value);
     formdata.append('brand', this.productForm.get('brand')?.value);
-    formdata.append('features_subcategory', this.productForm.get('features_subcategory')?.value);
+    // formdata.append('features_subcategory', this.productForm.get('features_subcategory')?.value);
     formdata.append('subcategory_group', this.productForm.get('subcategory_group')?.value);
     formdata.append('unit', this.productForm.get('unit')?.value);
-    formdata.append('unit_conversion', this.productForm.get('unit_conversion')?.value);
+    formdata.append('hsncode', this.productForm.get('hsncode')?.value);
     formdata.append('description', this.productForm.get('description')?.value);
     formdata.append('product_store', this.productForm.get('product_store')?.value);
     formdata.append('color', JSON.stringify(this.productForm.get('color')?.value));
     formdata.append('size', JSON.stringify(this.productForm.get('size')?.value));
-    formdata.append('variant', JSON.stringify(this.productForm.get('variant')?.value));
-    formdata.append('style_code', this.productForm.get('style_code')?.value);
+    formdata.append('tax_slab', this.productForm.get('tax_slab')?.value);
+    // formdata.append('style_code', this.productForm.get('style_code')?.value);
     formdata.append('is_measurable', this.productForm.get('is_measurable')?.value);
+    formdata.append('purchase_tax_including', this.productForm.get('purchase_tax_including')?.value);
+    formdata.append('sales_tax_including', this.productForm.get('sales_tax_including')?.value);
+    formdata.append('is_active', this.productForm.get('is_active')?.value);
 
     // nested formdata 
     // working also
@@ -390,7 +462,8 @@ export class AddproductComponent implements OnInit {
     //   });
     // });
     // variant nested data send json format
-    const variantsArray = this.productForm.get('variants') as FormArray;
+
+    const variantsArray = this.productForm.get('variant_product') as FormArray;
     const variantsData = [];
     variantsArray.controls.forEach((variants) => {
       const featuresGroup = variants as FormGroup;
@@ -401,7 +474,7 @@ export class AddproductComponent implements OnInit {
       });
       variantsData.push(featureObj);
     });
-    formdata.append('variants', JSON.stringify(variantsData));
+    formdata.append('variant_product', JSON.stringify(variantsData));
 
 
     // feature
@@ -416,7 +489,7 @@ export class AddproductComponent implements OnInit {
 
     // feature send in json format 
 
-    const featuresArray = this.productForm.get('features') as FormArray;
+    const featuresArray = this.productForm.get('product_features') as FormArray;
     const featuresData = [];
     featuresArray.controls.forEach((features) => {
       const featuresGroup = features as FormGroup;
@@ -427,7 +500,7 @@ export class AddproductComponent implements OnInit {
       });
       featuresData.push(featureObj);
     });
-    formdata.append('features', JSON.stringify(featuresData));
+    formdata.append('product_features', JSON.stringify(featuresData));
 
     // product image
     const product_imageArray = this.productForm.get('product_image') as FormArray;
@@ -441,39 +514,37 @@ export class AddproductComponent implements OnInit {
     });
 
     // variant nested data send json format
-//     const product_imageArray = this.productForm.get('product_image') as FormArray;
-//     const product_imageData = [];
-//     product_imageArray.controls.forEach((product_image) => {
-//       const product_imageGroup = product_image as FormGroup;
-//       const featureObj = {};
-//       Object.keys(product_imageGroup.controls).forEach((key) => {
-//         const control = product_imageGroup.controls[key];
-//         featureObj[key] = control.value;
-//       });
-//       product_imageData.push(featureObj);
-//     });
-//     formdata.append('product_image', JSON.stringify(product_imageData));
+    //     const product_imageArray = this.productForm.get('product_image') as FormArray;
+    //     const product_imageData = [];
+    //     product_imageArray.controls.forEach((product_image) => {
+    //       const product_imageGroup = product_image as FormGroup;
+    //       const featureObj = {};
+    //       Object.keys(product_imageGroup.controls).forEach((key) => {
+    //         const control = product_imageGroup.controls[key];
+    //         featureObj[key] = control.value;
+    //       });
+    //       product_imageData.push(featureObj);
+    //     });
+    //     formdata.append('product_image', JSON.stringify(product_imageData));
 
-//     const product_imageArray = this.productForm.get('product_image') as FormArray;
-// const product_imageData = [];
+    //     const product_imageArray = this.productForm.get('product_image') as FormArray;
+    // const product_imageData = [];
 
-// product_imageArray.controls.forEach((product_image) => {
-//   const product_imageGroup = product_image as FormGroup;
-//   const featureObj = {};
+    // product_imageArray.controls.forEach((product_image) => {
+    //   const product_imageGroup = product_image as FormGroup;
+    //   const featureObj = {};
 
-//   Object.keys(product_imageGroup.controls).forEach((key) => {
-//     const control = product_imageGroup.controls[key];
-//     featureObj[key] = control.value;
-//   });
+    //   Object.keys(product_imageGroup.controls).forEach((key) => {
+    //     const control = product_imageGroup.controls[key];
+    //     featureObj[key] = control.value;
+    //   });
 
-//   product_imageData.push(featureObj);
-// });
+    //   product_imageData.push(featureObj);
+    // });
 
-// const productImageDataJson = JSON.stringify(product_imageData);
+    // const productImageDataJson = JSON.stringify(product_imageData);
 
-// formdata.append('product_image', productImageDataJson);
-
-
+    // formdata.append('product_image', productImageDataJson);
 
     this.coreService.addProduct(formdata).subscribe(res => {
       if (res.msg == "Data Created") {
@@ -543,7 +614,12 @@ export class AddproductComponent implements OnInit {
   get is_measurable() {
     return this.productForm.get('is_measurable')
   }
-
+  get tax_slab() {
+    return this.productForm.get('tax_slab')
+  }
+  get hsn_code() {
+    return this.productForm.get('hsncode')
+  }
 
   currentSizes: any = [];
   currentColors: any = [];
@@ -618,40 +694,24 @@ export class AddproductComponent implements OnInit {
     //     variant: this.currentColors[index],
     //   });
     // });
-    const userArray = this.productForm.get('variants') as FormArray;
+
+    const userArray = this.productForm.get('variant_product') as FormArray;
     this.currentVariants.map((user, index) => {
       console.log(user);
-
       const userGroup = userArray.at(index) as FormGroup;
       console.log(userGroup);
-
       userGroup.patchValue({
-        variant: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`
+        variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`
       });
     });
 
   }
-  newvariants(): FormGroup {
-    return this.fb.group({
-      product: (''),
-      variant: (''),
-      mrp: (''),
-      cost_price: (''),
-      selling_price: (''),
-      stock: (''),
-      minimum_stock: (''),
-      selling_price_dealer: (''),
-      selling_price_employee: (''),
-      barcode: (''),
-      sku: (''),
-      max_order_quantity: ('')
-    })
-  }
+  
   variantForm() {
-    const variants = this.productForm.get('variants') as FormArray;
+    const variants = this.productForm.get('variant_product') as FormArray;
     variants.clear();
     for (let i = 0; i < this.currentVariants.length; i++) {
-      this.getVarinatsForm().push(this.newvariants());
+      this.getVarinatsForm().push(this.variants());
     }
   }
 
@@ -702,30 +762,51 @@ export class AddproductComponent implements OnInit {
     });
     imagesarray.get('image')?.updateValueAndValidity();
   }
-
+  p_img: any[] = []
   onImageSelected(event: Event, index: number) {
+    // this.select(event)
     const file = (event.target as HTMLInputElement).files![0];
+    if (file) {
+      this.p_img[index];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url[index] = reader.result as string;
+      };
+    }
     const imageGroup = (this.productForm.get('product_image') as FormArray).at(index) as FormGroup;
     imageGroup.patchValue({
       image: file
     });
     imageGroup.get('file')?.updateValueAndValidity();
-  }
 
+
+  }
   // base 64 
   // onImageSelected(event: Event, index: number) {
   //   const file = (event.target as HTMLInputElement).files![0];
   //   const reader = new FileReader();
   //   const imageGroup = (this.productForm.get('product_image') as FormArray).at(index) as FormGroup;
-  
+
   //   reader.onload = () => {
   //     imageGroup.patchValue({
   //       image: reader.result as string
   //     });
   //   };
-  
+
   //   reader.readAsDataURL(file);
   //   imageGroup.get('file')?.updateValueAndValidity();
   // }
+  url: any[] = [];
+  select(e) {
+    if (e.target.files) {
+      var reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = ((event) => {
+        // this.url=event.target.result
+      })
+    }
+  }
+
 
 }
