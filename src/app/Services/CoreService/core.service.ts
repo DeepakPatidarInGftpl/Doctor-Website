@@ -1327,7 +1327,7 @@ export class CoreService {
     // })
   }
   getStaticPageBySlug(slug: any) {
-    let url = this.apiUrl + '/pv-api/static_detail_pages/?slug=';
+    let url = this.apiUrl + '/pv-api/static_pages/?slug=';
     return this.http.get<any>(`${url}${slug}`)
   }
   staticPageIsActive(slug: any, data) {

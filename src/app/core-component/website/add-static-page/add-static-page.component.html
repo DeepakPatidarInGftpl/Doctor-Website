@@ -68,7 +68,6 @@
         </div>
     </div>  -->
 
-
 <div class="card">
     <div class="card-body">
         <form [formGroup]="staticPgForm" (ngSubmit)="submit()">
@@ -77,8 +76,7 @@
                     <div class="form-group">
                         <label>Title*</label>
                         <input type="text" formControlName="title" id="title" [ngClass]="{
-                            'is-invalid': f['title'].touched && f['title'].invalid
-                          }">
+                            'is-invalid': f['title'].touched && f['title'].invalid}">
                           <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
                         </span>
                     </div>
@@ -88,11 +86,27 @@
                     <div class="form-group">
                         <label>Slug*</label>
                         <input type="text" formControlName="slug" id="slug" [ngClass]="{
-                            'is-invalid': f['slug'].touched && f['slug'].invalid
-                          }">
+                            'is-invalid': f['slug'].touched && f['slug'].invalid}">
                           <span class="text-danger"
                           *ngIf="slug && slug.invalid && slug.touched">Enter Slug
                       </span>
+                    </div>
+                </div>
+                <!-- choice_type -->
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Store*</label>
+                        <select class="form-select" formControlName="choice_type" [ngClass]="{
+                        'is-invalid': f['choice_type'].touched && f['choice_type'].invalid}">
+                            <option value="" selected disabled>Select Choice Type</option>
+                            <option value="Privacy-Policy">Privacy-Policy</option>
+                            <option value="Return-Policy">Return-Policy</option>
+                            <option value="Cancellation">Cancellation</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="choice_type && choice_type.invalid && choice_type.touched">Select
+                            Choice Type
+                        </span>
                     </div>
                 </div>
 
@@ -102,8 +116,7 @@
                         <ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
                         </ngx-editor-menu>
                         <ngx-editor [editor]="editor" formControlName="description" id="slug" [ngClass]="{
-                            'is-invalid': f['description'].touched && f['description'].invalid
-                          }">
+                            'is-invalid': f['description'].touched && f['description'].invalid}">
                         </ngx-editor>
                         <span class="text-danger"
                         *ngIf="description && description.invalid && description.touched">Enter Description

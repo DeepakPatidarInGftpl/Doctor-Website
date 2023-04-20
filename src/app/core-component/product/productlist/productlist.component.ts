@@ -158,6 +158,8 @@ itemsPerPage:number=10;
     }
   }
 
+ 
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
@@ -165,26 +167,28 @@ itemsPerPage:number=10;
       this.tableData = this.tableData.filter(res => {
         console.log(res);
         console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        // search data base on - title, category,subcategory,subcategory_grp,
+        console.log(res.title.toLocaleLowerCase().match(this.titlee.toLocaleLowerCase()));
+        // return res.title.match(this.titlee);
         if(res.title.match(this.titlee)){
-          return res.title.match(this.titlee);
-        }else if(res.category.match(this.titlee)){
-          return res.category.match(this.titlee);
-        }
-        else if(res.subcategory.match(this.titlee)){
-          return res.subcategory.match(this.titlee);
-        }
-        // else if(res.subcategory_group.match(this.titlee)){
-        //   return res.subcategory_group.match(this.titlee);
-        // }
-        // else if(res.brand.match(this.titlee)){
-        //   return res.brand.match(this.titlee);
-        // }
-       
+                  return res.title.match(this.titlee);
+                }
+                // else if(res.category.title.match(this.titlee)){
+                //   return res.category.title.match(this.titlee);
+                // }
+                // else if(res.subcategory.title.match(this.titlee)){
+                //   return res.subcategory.title.match(this.titlee);
+                // }
+                // else if(res.subcategory_group.title.match(this.titlee)){
+                //   return res.subcategory_group.title.match(this.titlee);
+                // }
+                // else if(res.brand.title.match(this.titlee)){
+                //   return res.brand.title.match(this.titlee);
+                // }
+        
       })
     }
   }
+
   key = 'id'
   reverse: boolean = false;
   sort(key) {

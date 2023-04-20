@@ -1,4 +1,4 @@
-import { formatDate } from '@angular/common';
+import { Location, formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -52,7 +52,7 @@ export class AddproductComponent implements OnInit {
     return this.productForm.controls;
   }
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService, private location:Location) { }
 
   isDisabled: true;
   productNamme: any
@@ -76,9 +76,9 @@ export class AddproductComponent implements OnInit {
       is_measurable: new FormControl(''),
       sales_tax_including: new FormControl(''),
       is_active: new FormControl(''),
-      tax_slab: new FormControl(''),
+      // tax_slab: new FormControl(''),
       description: new FormControl(''),
-      hsncode: new FormControl(''),
+      // hsncode: new FormControl(''),
 
       // features_subcategory: new FormControl('', [Validators.required]),
       // unit_conversion: new FormControl(''),  
@@ -241,10 +241,10 @@ export class AddproductComponent implements OnInit {
       this.subcatGroupByCategory = res;
     })
   }
-  subcatbyCategoryGroup: any
+  subcatbySubCategoryGroup: any
   getSubcategoryBySubcategoryGroup(val: any) {
     this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
-      this.subcatbyCategoryGroup = res.subcategories;
+      this.subcatbySubCategoryGroup = res.subcategories;
     })
   }
   unitConversionList: any;
@@ -255,7 +255,7 @@ export class AddproductComponent implements OnInit {
   }
 
   brandBySubcat: any;
-  selectBrand(val: any) {
+  getBrandBySubcategory(val: any) {
     this.coreService.getBrandBySubcategory(val).subscribe(res => {
       this.brandBySubcat = res;
     })
@@ -321,14 +321,14 @@ export class AddproductComponent implements OnInit {
   oncheck(val: any) {
     this.getSubcategoryBySubcategoryGroup(val)
     this.getFeaturegroupBySubcategory(val);
-    this.getHsncodeBySubcategory(val)
+    // this.getHsncodeBySubcategory(val)
   }
   
   // open hsn or taxslab or brand after select subcat
   checkSubact(val: any) {
-    this.selectBrand(val);
-    this.getTaxslabBySubcategory(val);
-    this.getHsncodeBySubcategory(val);
+    this.getBrandBySubcategory(val);
+    // this.getTaxslabBySubcategory(val);
+    // this.getHsncodeBySubcategory(val);
   }
   check: any
   selectedColor = 0;
@@ -427,12 +427,12 @@ export class AddproductComponent implements OnInit {
     // formdata.append('features_subcategory', this.productForm.get('features_subcategory')?.value);
     formdata.append('subcategory_group', this.productForm.get('subcategory_group')?.value);
     formdata.append('unit', this.productForm.get('unit')?.value);
-    formdata.append('hsncode', this.productForm.get('hsncode')?.value);
+    // formdata.append('hsncode', this.productForm.get('hsncode')?.value);
     formdata.append('description', this.productForm.get('description')?.value);
     formdata.append('product_store', this.productForm.get('product_store')?.value);
     formdata.append('color', JSON.stringify(this.productForm.get('color')?.value));
     formdata.append('size', JSON.stringify(this.productForm.get('size')?.value));
-    formdata.append('tax_slab', this.productForm.get('tax_slab')?.value);
+    // formdata.append('tax_slab', this.productForm.get('tax_slab')?.value);
     // formdata.append('style_code', this.productForm.get('style_code')?.value);
     formdata.append('is_measurable', this.productForm.get('is_measurable')?.value);
     formdata.append('purchase_tax_including', this.productForm.get('purchase_tax_including')?.value);
@@ -546,14 +546,7 @@ export class AddproductComponent implements OnInit {
 
     // formdata.append('product_image', productImageDataJson);
 
-    this.coreService.addProduct(formdata).subscribe(res => {
-      if (res.msg == "Data Created") {
-        this.toastr.success(res.msg);
-        this.router.navigate(['//product/productlist'])
-      } else {
-        console.log('res api error');
-      }
-    })
+   
     if (this.productForm.valid) {
       this.coreService.addProduct(formdata).subscribe(res => {
         if (res.msg == "Data Created") {
@@ -808,5 +801,8 @@ export class AddproductComponent implements OnInit {
     }
   }
 
+  goBack(){
+    this.location.back();
+  }
 
 }

@@ -6,6 +6,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { Editor, Toolbar } from 'ngx-editor';
 import jsonDoc from './../../../doc';
 import { MatTabGroup } from '@angular/material/tabs';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-editproduct',
@@ -14,15 +15,15 @@ import { MatTabGroup } from '@angular/material/tabs';
 })
 export class EditproductComponent implements OnInit {
 
-  @ViewChild('tabGroup') tabGroup: MatTabGroup;
+  @ViewChild('tabGroups') tabGroup: MatTabGroup;
 
   selectTab(index: number) {
     this.tabGroup.selectedIndex = index;
   }
   productNamme: any
   productForm!: FormGroup;
-  
-  public measurable: boolean = false; 
+
+  public measurable: boolean = false;
   get f() {
     return this.productForm.controls;
   }
@@ -47,16 +48,17 @@ export class EditproductComponent implements OnInit {
   ];
 
 
- 
+
   get doc(): any {
     // return this.form.get('editorContent');
     return this.productForm.get('description')
   }
 
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder,
-    private toastr: ToastrService, private Aroute: ActivatedRoute) { }
+    private toastr: ToastrService, private Aroute: ActivatedRoute, private location: Location) { }
   id: any
   dat: any
+  editRes: any;
   ngOnInit(): void {
     this.editor = new Editor();
 
@@ -78,9 +80,9 @@ export class EditproductComponent implements OnInit {
       is_measurable: new FormControl(''),
       sales_tax_including: new FormControl(''),
       is_active: new FormControl(''),
-      tax_slab: new FormControl(''),
+      // tax_slab: new FormControl(''),
       description: new FormControl(''),
-      hsncode: new FormControl(''),
+      // hsncode: new FormControl(''),
 
       // features_subcategory: new FormControl('', [Validators.required]),
       // unit_conversion: new FormControl(''),  
@@ -95,8 +97,8 @@ export class EditproductComponent implements OnInit {
     this.coreService.getProductById(this.id).subscribe(res => {
       // this.productShow(res)
       if (this.id == res.id) {
-        console.log(res.color);
-        console.log(res.variant);
+        this.editRes = res
+
         // this.colors = res.color
         this.colors = res.color.map((res: any) => res.id);
         // console.log(this.colors, 'thiscolors');
@@ -108,16 +110,26 @@ export class EditproductComponent implements OnInit {
           title: res.title,
           description: res.description,
           product_store: res.product_store,
-          style_code:res.style_code,
-          is_measurable:res.is_measurable,
-          purchase_tax_including:res.purchase_tax_including,
-          sale_tax_including:res.sale_tax_including,
-          is_active:res.is_active
+          style_code: res.style_code,
+          is_measurable: res.is_measurable,
+          purchase_tax_including: res.purchase_tax_including,
+          sale_tax_including: res.sale_tax_including,
+          is_active: res.is_active,
+          category: res.category.id,
+          subcategory_group: res.subcategory_group.id,
+          subcategory: res.subcategory.id,
+          brand: res.brand.id,
+          unit: res.unit.id
         })
+        this.productForm.setControl('product_features', this.udateFeature(this.editRes.product_feature_product));
+        this.productForm.setControl('variant_product', this.udateVariant(this.editRes.variant_product));
+        this.getSubcategoryGroupByCategory(res.category.id);
+        this.oncheck(res.subcategory_group.id);
+        this.checkSubact(res.subcategory.id);
       }
     })
 
-      // add form
+    // add form
     // this.addFeature();
     // this.addVariant();
     this.addproductImage()
@@ -130,7 +142,7 @@ export class EditproductComponent implements OnInit {
     this.getSubcatGroup()
     this.getColor()
     this.getSize()
-  
+
     this.getUnit()
     this.getUnitConversion()
     this.getTaxSlab()
@@ -149,8 +161,40 @@ export class EditproductComponent implements OnInit {
       this.colors = this.colors.filter((id: any) => id !== subCat.id);
     }
   }
+  udateFeature(add: any): FormArray {
+    console.log(add);
+    let formarr = new FormArray([]);
+    add.forEach((j: any) => {
+      formarr.push(this.fb.group({
+        feature_group: j.feature_group,
+        feature: j.feature,
+      }))
+    })
+    return formarr
+  }
 
-
+  udateVariant(add: any): FormArray {
+    console.log(add);
+    let formarr = new FormArray([]);
+    add.forEach((k: any) => {
+      formarr.push(this.fb.group({
+        id:k.id,
+      product_title: k.product_title,
+      variant_name: k.variant_name,
+      mrp: k.mrp,
+      cost_price:k.cost_price,
+      selling_price: k.selling_price,
+      stock:k.stock,
+      minimum_stock_threshold: k.minimum_stock_threshold,
+      selling_price_dealer: k.selling_price_dealer,
+      selling_price_employee: k.selling_price_employee,
+      // barcode: k.barcode,
+      sku: k.sku,
+      max_order_quantity: k.max_order_quantity,
+      }))
+    })
+    return formarr
+  }
   features(): FormGroup {
     return this.fb.group({
       feature_group: (''),
@@ -170,6 +214,7 @@ export class EditproductComponent implements OnInit {
 
   variants(): FormGroup {
     return this.fb.group({
+      id:(''),
       product_title: (''),
       variant_name: (''),
       mrp: (''),
@@ -179,7 +224,7 @@ export class EditproductComponent implements OnInit {
       minimum_stock_threshold: (''),
       selling_price_dealer: (''),
       selling_price_employee: (''),
-      barcode: (''),
+      // barcode: (''),
       sku: (''),
       max_order_quantity: (''),
 
@@ -211,9 +256,6 @@ export class EditproductComponent implements OnInit {
   removeProductImage(k: any) {
     this.getproductImage().removeAt(k)
   }
-
-
-
 
   categoryList: any
   getCategory() {
@@ -260,35 +302,76 @@ export class EditproductComponent implements OnInit {
     })
   }
   colorList: any
+  // getColor() {
+  //   this.coreService.getColor().subscribe(res => {
+  //     this.colorList = res;
+  //     setTimeout(() => {
+  //       this.colorList.map((map: any) => {
+  //         if (this.colors.includes(map.id)) {
+  //           console.log(map.id, 'mapid');
+  //           const formArray: any = this.productForm.get('color') as FormArray;
+  //           formArray.push(new FormControl(map.id));
+  //           // this.currentColors.push(map.id)
+  //           // console.log(this.currentColors.push(map.id));
+  //         }
+  //       })
+  //     }, 2000);
+  //   })
+  // }
   getColor() {
     this.coreService.getColor().subscribe(res => {
       this.colorList = res;
-      setTimeout(() => {
-        this.colorList.map((map: any) => {
-          if (this.colors.includes(map.id)) {
-            console.log(map.id, 'mapid');
-            const formArray: any = this.productForm.get('color') as FormArray;
-            formArray.push(new FormControl(map.id));
+      const formArray = this.productForm.get('color') as FormArray;
+      res.forEach(color => {
+        if (this.colors.includes(color.id)) {
+          const index = formArray.controls.findIndex(x => x.value === color.id);
+          if (index === -1) {
+            formArray.push(new FormControl(color.id));
           }
-        })
-      }, 2000);
-    })
+        } else {
+          const index = formArray.controls.findIndex(x => x.value === color.id);
+          if (index !== -1) {
+            formArray.removeAt(index);
+          }
+        }
+      });
+    });
   }
   sizeList: any
+  // getSize() {
+  //   this.coreService.getSize().subscribe(res => {
+  //     console.log(res);
+  //     this.sizeList = res
+  //     setTimeout(() => {
+  //       this.sizeList.map((map: any) => {
+  //         console.log(this.sizes.includes(map.id), 'size');
+  //         if (this.sizes.includes(map.id)) {
+  //           const formArray = this.productForm.get('size') as FormArray;
+  //           formArray.push(new FormControl(map.id));
+  //         }
+  //       })
+  //     }, 2000);
+  //   })
+  // }
   getSize() {
     this.coreService.getSize().subscribe(res => {
       console.log(res);
-      this.sizeList = res
-      setTimeout(() => {
-        this.sizeList.map((map: any) => {
-          console.log(this.sizes.includes(map.id), 'size');
-          if (this.sizes.includes(map.id)) {
-            const formArray = this.productForm.get('size') as FormArray;
-            formArray.push(new FormControl(map.id));
+      this.sizeList = res;
+      const formArray = this.productForm.get('size') as FormArray;
+      res.forEach(size => {
+        if (this.sizes.includes(size.id)) {
+          const index = formArray.controls.findIndex(x => x.value === size.id);
+          if (index === -1) {
+            formArray.push(new FormControl(size.id));
           }
-        })
-      }, 2000);
-    })
+        } else {
+          const index = formArray.controls.findIndex(x => x.value === size.id);
+          if (index !== -1) {
+            formArray.removeAt(index);
+          }
+        }
+      });
+    });
   }
   // varantList: any
   // getVariant() {
@@ -320,15 +403,15 @@ export class EditproductComponent implements OnInit {
     })
   }
   subcatbyCategory: any;
-  getSubcategoryByCategory(val:any) {
+  getSubcategoryByCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe(res => {
       this.subcatbyCategory = res;
     })
   }
-  brandBySubcat:any;
-  selectBrand(val:any){
-    this.coreService.getBrandBySubcategory(val).subscribe(res=>{
-      this.brandBySubcat=res;
+  brandBySubcat: any;
+  selectBrand(val: any) {
+    this.coreService.getBrandBySubcategory(val).subscribe(res => {
+      this.brandBySubcat = res;
     })
   }
 
@@ -376,9 +459,8 @@ export class EditproductComponent implements OnInit {
       for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
         this.addFeature();
       }
-      this.featureGrpBysubcatGroupList.feature_group.forEach((res,index)=>{
+      this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
         console.log(res);
-        
         const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
         imageGroup.patchValue({
           feature_group: res.id
@@ -386,96 +468,113 @@ export class EditproductComponent implements OnInit {
       })
 
     })
-
   }
 
-  subcatbyCategoryGroup: any
+  subcatbySubCategoryGroup: any
   getSubcategoryBySubcategoryGroup(val: any) {
     this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
-      this.subcatbyCategoryGroup = res.subcategories;
+      this.subcatbySubCategoryGroup = res.subcategories;
     })
   }
   // open feature or subact after select subcatGroup 
   oncheck(val: any) {
     this.getSubcategoryBySubcategoryGroup(val)
     this.getFeaturegroupBySubcategory(val);
-    this.getHsncodeBySubcategory(val)
+    // this.getHsncodeBySubcategory(val)
   }
-  
+
   // open hsn or taxslab or brand after select subcat
   checkSubact(val: any) {
     this.selectBrand(val);
-    this.getTaxslabBySubcategory(val);
-    this.getHsncodeBySubcategory(val);
+    // this.getTaxslabBySubcategory(val);
+    // this.getHsncodeBySubcategory(val);
   }
-
 
   check: any
-  selectedColor=0;
-  onCheckColor(event: any) {
-    const formArray: any = this.productForm.get('color') as FormArray;
+  selectedColor = 0;
+  // onCheckColor(event: any) {
+  //   const formArray: any = this.productForm.get('color') as FormArray;
+  //   /* Selected */
+  //   if (event.target.checked) {
+  //     // Add a new control in the arrayForm
+  //     formArray.push(new FormControl(parseInt(event.target.value)));
+  //     // parseInt(formArray.push(new FormControl(event.target.value)))
+  //     this.check = formArray;
+  //     this.selectedColor++;
+  //   }
+  //   /* unselected */
+  //   else {
+  //     // find the unselected element
+  //     let i: number = 0;
+  //     formArray.controls.forEach((ctrl: any) => {
+  //       if (ctrl.value == event.target.value) {
+  //         // Remove the unselected element from the arrayForm
+  //         formArray.removeAt(i);
+  //         this.selectedColor--;
+  //         return;
+  //       }
+  //       i++;
+  //     });
+  //   }
+  // }
+  selectedSize = 0;
+  // onCheckSize(event: any) {
+  //   const formArray: any = this.productForm.get('size') as FormArray;
+  //   /* Selected */
+  //   if (event.target.checked) {
+  //     // Add a new control in the arrayForm
+  //     formArray.push(new FormControl(parseInt(event.target.value)));
+  //     // parseInt(formArray.push(new FormControl(event.target.value)))
+  //     this.check = formArray;
+  //     this.selectedSize++;
+  //   }
+  //   /* unselected */
+  //   else {
+  //     // find the unselected element
+  //     let i: number = 0;
+  //     formArray.controls.forEach((ctrl: any) => {
+  //       if (ctrl.value == event.target.value) {
+  //         // Remove the unselected element from the arrayForm
+  //         formArray.removeAt(i);
+  //         this.selectedSize--;
+  //         return;
+  //       }
+  //       i++;
+  //     });
+  //   }
+  // }
 
-    /* Selected */
-    if (event.target.checked) {
-      // Add a new control in the arrayForm
-      formArray.push(new FormControl(parseInt(event.target.value)));
-      // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.check = formArray;
-     this.selectedColor++;
-    }
-    /* unselected */
-    else {
-      // find the unselected element
-      let i: number = 0;
-      formArray.controls.forEach((ctrl: any) => {
-        if (ctrl.value == event.target.value) {
-          // Remove the unselected element from the arrayForm
-          formArray.removeAt(i);
-          this.selectedColor--;
-          return;
-        }
-        i++;
-      });
-    }
+// Add a new color control to the color form array
+onCheckColor(event: any) {
+  const formArray = this.productForm.get('color') as FormArray;
+  if (event.target.checked) {
+    formArray.push(new FormControl(parseInt(event.target.value)));
+  } else {
+    const index = formArray.controls.findIndex(x => x.value === parseInt(event.target.value));
+    formArray.removeAt(index);
   }
-  selectedSize=0;
-  onCheckSize(event: any) {
-    const formArray: any = this.productForm.get('size') as FormArray;
+}
 
-    /* Selected */
-    if (event.target.checked) {
-      // Add a new control in the arrayForm
-      formArray.push(new FormControl(parseInt(event.target.value)));
-      // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.check = formArray;
-this.selectedSize++;
-    }
-    /* unselected */
-    else {
-      // find the unselected element
-      let i: number = 0;
-      formArray.controls.forEach((ctrl: any) => {
-        if (ctrl.value == event.target.value) {
-          // Remove the unselected element from the arrayForm
-          formArray.removeAt(i);
-          this.selectedSize--;
-          return;
-        }
-        i++;
-      });
-    }
+// Add a new size control to the size form array
+onCheckSize(event: any) {
+  const formArray = this.productForm.get('size') as FormArray;
+  if (event.target.checked) {
+    formArray.push(new FormControl(parseInt(event.target.value)));
+  } else {
+    const index = formArray.controls.findIndex(x => x.value === parseInt(event.target.value));
+    formArray.removeAt(index);
   }
-  selectedVariant=0;
+}
+  selectedVariant = 0;
   onCheckVariant(event: any) {
     const formArray: any = this.productForm.get('variant') as FormArray;
-
     /* Selected */
     if (event.target.checked) {
       // Add a new control in the arrayForm
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
-     this.selectedVariant++;
+      this.selectedVariant++;
     }
     /* unselected */
     else {
@@ -486,7 +585,7 @@ this.selectedSize++;
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
           this.selectedVariant--
-          return;       
+          return;
         }
         i++;
       });
@@ -504,12 +603,12 @@ this.selectedSize++;
     // formdata.append('features_subcategory', this.productForm.get('features_subcategory')?.value);
     formdata.append('subcategory_group', this.productForm.get('subcategory_group')?.value);
     formdata.append('unit', this.productForm.get('unit')?.value);
-    formdata.append('hsncode', this.productForm.get('hsncode')?.value);
+    // formdata.append('hsncode', this.productForm.get('hsncode')?.value);
     formdata.append('description', this.productForm.get('description')?.value);
     formdata.append('product_store', this.productForm.get('product_store')?.value);
     formdata.append('color', JSON.stringify(this.productForm.get('color')?.value));
     formdata.append('size', JSON.stringify(this.productForm.get('size')?.value));
-    formdata.append('tax_slab', this.productForm.get('tax_slab')?.value);
+    // formdata.append('tax_slab', this.productForm.get('tax_slab')?.value);
     // formdata.append('style_code', this.productForm.get('style_code')?.value);
     formdata.append('is_measurable', this.productForm.get('is_measurable')?.value);
     formdata.append('purchase_tax_including', this.productForm.get('purchase_tax_including')?.value);
@@ -646,7 +745,7 @@ this.selectedSize++;
   get variant() {
     return this.productForm.get('variant');
   }
-  get style_code(){
+  get style_code() {
     return this.productForm.get('style_code')
   }
   get is_measurable() {
@@ -660,7 +759,7 @@ this.selectedSize++;
   }
 
 
-  
+
   currentSizes: any = [];
   currentColors: any = [];
   currentVariants: any = [];
@@ -695,7 +794,9 @@ this.selectedSize++;
         this.currentVariants.push({ color: this.currentColors[i] });
         this.productColor = this.currentColors[i];
         console.log(this.productColor, 'productcolor');
-
+        //
+        this.currentVariants.push({ color: this.currentColors[i] });
+        this.productColor = this.currentColors[i];
       }
     } else if (this.currentSizes.length > 0 && this.currentColors.length == 0) {
       for (let i = 0; i < this.currentSizes.length; i++) {
@@ -713,28 +814,6 @@ this.selectedSize++;
     console.log(this.currentColors, 'currColors');
     console.log(this.currentVariants, 'currVar');
 
-    // this.currentColors.map((res:any)=>{
-    //   console.log(res);
-    //   // const variants = this.productForm.get('variants') as FormArray;
-    //   const variants = this.productForm.get('variants') as FormArray;
-    //   // variants.at(0).patchValue({
-    //   //   variant: res
-    //   // });
-    //   // variants.controls.forEach(control => {
-    //   //   control.patchValue({
-    //   //     variant: res   
-    //   //   });
-    //   // });
-
-    // })
-
-    // const variants = this.productForm.get('variants') as FormArray;
-    // variants.controls.forEach((control, index) => {
-    //   control.patchValue({
-    //     variant: this.currentColors[index],
-    //   });
-    // });
-
     const userArray = this.productForm.get('variant_product') as FormArray;
     this.currentVariants.map((user, index) => {
       console.log(user);
@@ -744,9 +823,8 @@ this.selectedSize++;
         variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`
       });
     });
-
   }
-  
+
   variantForm() {
     const variants = this.productForm.get('variant_product') as FormArray;
     variants.clear();
@@ -791,6 +869,7 @@ this.selectedSize++;
 
   //   imagesArray.updateValueAndValidity();
   // }
+
   url: any[] = [];
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
@@ -838,4 +917,7 @@ this.selectedSize++;
   //   imageGroup.get('file')?.updateValueAndValidity();
   // }
 
+  goBack() {
+    this.location.back();
+  }
 }

@@ -47,6 +47,7 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
   staticPgForm = this.fb.group({
     title: new FormControl('', [Validators.required]),
     slug: new FormControl('', [Validators.required]),
+    choice_type:new FormControl(''),
     description: new FormControl('', [Validators.required])
   })
 
@@ -114,6 +115,9 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
   }
   get description(): any {
     return this.staticPgForm.get('description')
+  }
+  get choice_type():any{
+    return this.staticPgForm.get('choice_type')
   }
 
 
