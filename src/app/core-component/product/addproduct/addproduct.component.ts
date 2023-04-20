@@ -691,6 +691,8 @@ export class AddproductComponent implements OnInit {
     const userArray = this.productForm.get('variant_product') as FormArray;
     this.currentVariants.map((user, index) => {
       console.log(user);
+      console.log(index);
+      
       const userGroup = userArray.at(index) as FormGroup;
       console.log(userGroup);
       userGroup.patchValue({
