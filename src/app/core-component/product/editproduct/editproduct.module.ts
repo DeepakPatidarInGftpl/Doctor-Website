@@ -9,6 +9,9 @@ import { NgxEditorModule } from 'ngx-editor';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
 
+import {MatSelectModule} from '@angular/material/select';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
 @NgModule({
   declarations: [
     EditproductComponent
@@ -20,7 +23,9 @@ import {MatIconModule} from '@angular/material/icon';
     ReactiveFormsModule,
     NgxEditorModule,
     MatTabsModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    MatCheckboxModule
   ]
 })
 export class EditproductModule { }

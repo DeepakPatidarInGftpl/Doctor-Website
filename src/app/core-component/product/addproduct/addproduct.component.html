@@ -275,7 +275,7 @@
 		<div class="card-body">
 			<div class="page-header">
 				<div class="page-title">
-					<h6 class="subhead-color"><mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>
+					<h6 class="subhead-color" (click)="goBack()"><mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>
 						Back to products</h6>
 					<h4>New Product</h4>
 				</div>
@@ -345,16 +345,16 @@
 										  }" #subcatValue (change)="checkSubact(subcatValue.value)">
 												<option value="" selected disabled>Select Sub Category</option>
 												<option value="{{subcat.id}}"
-													*ngFor="let subcat of subcatbyCategoryGroup">
+													*ngFor="let subcat of subcatbySubCategoryGroup">
 													{{subcat.title}}</option>
 											</select>
 
 											<span class="text-danger"
-												*ngIf="subcategory && subcategory.invalid && subcategory.touched && subcatbyCategoryGroup?.length>0">Select
+												*ngIf="subcategory && subcategory.invalid && subcategory.touched && subcatbySubCategoryGroup?.length>0">Select
 												Sub Category
 											</span>
 											<span class="text-danger"
-												*ngIf="category && category.touched && subcatbyCategoryGroup?.length<=0">Subcategory
+												*ngIf="subcategory_group && subcategory_group.touched && subcatbySubCategoryGroup?.length<=0">Subcategory
 												not available
 											</span>
 										</div>
@@ -365,16 +365,18 @@
 											<select class="form-select" formControlName="brand" [ngClass]="{
 											'is-invalid': f['brand'].touched && f['brand'].invalid}">
 												<option value="" selected disabled>Select Brand</option>
-
-												<option value="{{brand.id}}" *ngFor="let brand of brandList">
+												<option value="{{brand.id}}" *ngFor="let brand of brandBySubcat">
 													{{brand.title}}
 												</option>
 											</select>
-
 											<span class="text-danger"
-												*ngIf="brand && brand.invalid && brand.touched">Select
+												*ngIf="brand && brand.invalid && brand.touched && brandBySubcat?.length>0">Select
 												Brand
 											</span>
+											<span class="text-danger"
+											*ngIf="subcategory && subcategory.touched && brandBySubcat?.length<=0">Brands
+											not available
+										</span>
 										</div>
 									</div>
 									<div class="col-lg-6 col-sm-6 col-12">
@@ -385,7 +387,6 @@
 												<button type="button" class="dropdown-toggle button" type="button"
 													data-bs-toggle="dropdown" aria-expanded="false">Select
 													Color</button>
-
 												<ul class="dropdown-menu" style="width: 100%;">
 													<li><a class="dropdown-item"
 															*ngFor="let color of colorList; let i=index">
@@ -462,7 +463,7 @@
 											</span>
 										</div>
 									</div>
-									<div class="col-lg-6 col-sm-6 col-12">
+									<!-- <div class="col-lg-6 col-sm-6 col-12">
 										<div class="form-group">
 											<label>Tax Slab*</label>
 											<select class="form-select" formControlName="tax_slab" [ngClass]="{
@@ -495,7 +496,7 @@
 												Hsn Code
 											</span>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="col-lg-6 col-sm-6 col-12">
 										<div class="form-group">
@@ -609,7 +610,7 @@
 								</div>
 
 							</mat-tab>
-							<mat-tab label="Varients">
+							<mat-tab label="Variants">
 								<div class="table-responsive table-bg">
 									<table datatable class="table ">
 										<thead>
@@ -651,7 +652,7 @@
 														<td><input type="text" class="inp" placeholder="0"
 																formControlName="selling_price_employee"></td>
 														<td><input type="text" class="inp" placeholder="0"
-																formControlName="barcode"></td>
+																formControlName="sku"></td>
 														<td><input type="text" class="inp" placeholder="0"
 																formControlName="max_order_quantity"></td>
 													</tr>
