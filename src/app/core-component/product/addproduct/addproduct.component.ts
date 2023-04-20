@@ -319,4 +319,59 @@ export class AddproductComponent implements OnInit {
   get is_measurable() {
     return this.productForm.get('is_measurable')
   }
+
+  currentSizes:any = [];
+  currentColors:any = [];
+  currentVariants:any = [];
+
+  onCheckSizes(e) {
+    if(this.currentSizes.length == 0){
+      this.currentSizes.push(e.target.value);
+    } else {
+        if(!this.currentSizes.includes(e.target.value)){
+          this.currentSizes.push(e.target.value)
+        } else {
+          this.currentSizes = this.currentSizes.filter(item => item !== e.target.value);
+        }
+    }
+    this.variantCheck();
+  }
+
+  onCheckColors(e) {
+    if(this.currentColors.length == 0){
+      this.currentColors.push(e.target.value);
+    } else {
+        if(!this.currentColors.includes(e.target.value)){
+          this.currentColors.push(e.target.value)
+        } else {
+          this.currentColors = this.currentColors.filter(item => item !== e.target.value);
+        }
+    }
+    this.variantCheck();
+  }
+
+  variantCheck(){
+    let formArray: any = this.productForm.get('variant') as FormArray;
+    formArray.clear();
+    this.currentVariants = [];
+    if(this.currentColors.length > 0 && this.currentSizes.length == 0){
+      for(let i = 0; i < this.currentColors.length;i++){
+        this.currentVariants.push({color: this.currentColors[i]});
+      }
+    } else if(this.currentSizes.length > 0 && this.currentColors.length == 0){
+      for(let i = 0; i < this.currentSizes.length;i++){
+        this.currentVariants.push({size: this.currentSizes[i]});
+      }
+    } else {
+      for(let i = 0; i < this.currentSizes.length;i++){
+        for(let j = 0; j < this.currentColors.length;j++){
+          this.currentVariants.push({size: this.currentSizes[i], color: this.currentColors[j]});
+        }
+      }
+    }
+    console.log(this.currentSizes, 'currSizes');
+    console.log(this.currentColors, 'currColors');
+    console.log(this.currentVariants, 'currVar');
+  }
+  
 }
