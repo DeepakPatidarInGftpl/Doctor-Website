@@ -305,8 +305,7 @@
 										<div class="form-group">
 											<label>Category*</label>
 											<select class="form-select" formControlName="category" [ngClass]="{
-											'is-invalid': f['category'].touched && f['category'].invalid
-										  }" #categoryValue (change)="getSubcategoryGroupByCategory(categoryValue.value)">
+											'is-invalid': f['category'].touched && f['category'].invalid}" #categoryValue (change)="getSubcategoryGroupByCategory(categoryValue.value)">
 												<option value="" selected disabled>Select Category</option>
 												<option value="{{category.id}}" *ngFor="let category of categoryList">
 													{{category.title}}
@@ -394,8 +393,7 @@
 															*ngFor="let color of colorList; let i=index">
 															<input type="checkbox" [value]="color.id"
                                                             [checked]="colors.includes(color.id)"
-																(change)="onCheckColor($event)"
-																(change)="onCheckColors(color.title)"
+																(change)="onCheckColor($event,color.title)"
 																formArrayName="color" style="margin-right: 5px;"
 																[ngClass]="{
 																'is-invalid': f['color'].touched && f['color'].invalid
@@ -404,11 +402,9 @@
 														</a></li>
 												</ul>
 											</div>
-
 											   <!-- <mat-select formControlName="color" multiple placeholder="Select Subcategory">
                                   <mat-option *ngFor="let color of colorList; let i=index" [value]="color.id" (click)="onCheckColors(color.title)"> {{color.title}}</mat-option>
                                 </mat-select> -->
-
 											<p *ngIf="selectedColor>0">{{selectedColor + ' Colors Selected'}}</p>
 											<span class="text-danger"
 												*ngIf="color && color.invalid && color.touched">Select
@@ -426,12 +422,11 @@
 													<li><a class="dropdown-item" *ngFor="let size of sizeList" >
 															<input type="checkbox" [value]="size.id"
                                                             [checked]="sizes.includes(size.id)"
-																(change)="onCheckSize($event)"
-																(change)="onCheckSizes(size.title)" formArrayName="size"
+																(change)="onCheckSize($event,size.title)"
+																 formArrayName="size"
 																style="margin-right: 5px;" [ngClass]="{
 																'is-invalid': f['size'].touched && f['size'].invalid
 															  }" id="flexCheckDefault">
-															
 															<label class="form-check-label" for="flexCheckDefault">
 																{{size.title}}
 															  </label>
@@ -454,8 +449,7 @@
 										<div class="form-group">
 											<label>Store*</label>
 											<select class="form-select" formControlName="product_store" [ngClass]="{
-											'is-invalid': f['product_store'].touched && f['product_store'].invalid
-										  }">
+											'is-invalid': f['product_store'].touched && f['product_store'].invalid}">
 												<option value="" selected disabled>Select Product Store</option>
 												<option value="Online">Online</option>
 												<option value="Store">Store</option>
@@ -531,7 +525,7 @@
 											</div>
 											<div class="d_flex">
 												<div>
-													<input type="checkbox" formControlName="sales_tax_including"> Sales
+													<input type="checkbox" formControlName="sale_tax_including"> Sales
 													Tax Including
 												</div>
 												<div>

@@ -30,6 +30,9 @@ export class EditproductComponent implements OnInit {
   colors: any = [];
   // variants: any = [];
   sizes: any = [];
+  colorTitle: any = [];
+  sizeTitle: any = [];
+  updatedVariants: any;
   ischeck = true;
   uncheck = false;
 
@@ -98,13 +101,12 @@ export class EditproductComponent implements OnInit {
       // this.productShow(res)
       if (this.id == res.id) {
         this.editRes = res
-
         // this.colors = res.color
         this.colors = res.color.map((res: any) => res.id);
         // console.log(this.colors, 'thiscolors');
-        // this.variants = res.variant.map((res: any) => res.id);
-        // console.log(this.variants, 'thisVariant');
         this.sizes = res.size.map((res: any) => res.id)
+        this.colorTitle = res.color.map((res: any) => res.title)
+        this.sizeTitle = res.size.map((res: any) => res.title)
         // console.log(this.variants, 'thisSize');
         this.productForm.patchValue({
           title: res.title,
@@ -119,13 +121,22 @@ export class EditproductComponent implements OnInit {
           subcategory_group: res.subcategory_group.id,
           subcategory: res.subcategory.id,
           brand: res.brand.id,
-          unit: res.unit.id
+          unit: res.unit.id,
+          sales_tax_including: res.sales_tax_including
         })
         this.productForm.setControl('product_features', this.udateFeature(this.editRes.product_feature_product));
-        this.productForm.setControl('variant_product', this.udateVariant(this.editRes.variant_product));
+        // this.productForm.setControl('variant_product', this.udateVariant(this.editRes.variant_product));
         this.getSubcategoryGroupByCategory(res.category.id);
         this.oncheck(res.subcategory_group.id);
         this.checkSubact(res.subcategory.id);
+
+        console.log(this.editRes.variant_product);
+        console.log(this.colorTitle, 'colorarray ');
+        console.log(this.sizeTitle, 'sizearray');
+        this.updatedVariants = this.editRes.variant_product
+        this.variantLive();
+        console.log(this.updatedVariants );
+        
       }
     })
 
@@ -148,6 +159,8 @@ export class EditproductComponent implements OnInit {
     this.getTaxSlab()
     this.getFeatureData()
     this.getFeatureGroup()
+
+
   }
 
   // this working
@@ -173,28 +186,29 @@ export class EditproductComponent implements OnInit {
     return formarr
   }
 
-  udateVariant(add: any): FormArray {
-    console.log(add);
-    let formarr = new FormArray([]);
-    add.forEach((k: any) => {
-      formarr.push(this.fb.group({
-        id:k.id,
-      product_title: k.product_title,
-      variant_name: k.variant_name,
-      mrp: k.mrp,
-      cost_price:k.cost_price,
-      selling_price: k.selling_price,
-      stock:k.stock,
-      minimum_stock_threshold: k.minimum_stock_threshold,
-      selling_price_dealer: k.selling_price_dealer,
-      selling_price_employee: k.selling_price_employee,
-      // barcode: k.barcode,
-      sku: k.sku,
-      max_order_quantity: k.max_order_quantity,
-      }))
-    })
-    return formarr
-  }
+  // udateVariant(add: any): FormArray {
+  //   console.log(add);
+  //   let formarr = new FormArray([]);
+  //   add.forEach((k: any) => {
+  //     formarr.push(this.fb.group({
+  //       id:k.id,
+  //     product_title: k.product_title,
+  //     variant_name: k.variant_name,
+  //     mrp: k.mrp,
+  //     cost_price:k.cost_price,
+  //     selling_price: k.selling_price,
+  //     stock:k.stock,
+  //     minimum_stock_threshold: k.minimum_stock_threshold,
+  //     selling_price_dealer: k.selling_price_dealer,
+  //     selling_price_employee: k.selling_price_employee,
+  //     // barcode: k.barcode,
+  //     sku: k.sku,
+  //     max_order_quantity: k.max_order_quantity,
+  //     }))
+  //   })
+  //   return formarr
+  // }
+
   features(): FormGroup {
     return this.fb.group({
       feature_group: (''),
@@ -214,7 +228,7 @@ export class EditproductComponent implements OnInit {
 
   variants(): FormGroup {
     return this.fb.group({
-      id:(''),
+      id: (''),
       product_title: (''),
       variant_name: (''),
       mrp: (''),
@@ -311,8 +325,7 @@ export class EditproductComponent implements OnInit {
             console.log(map.id, 'mapid');
             const formArray: any = this.productForm.get('color') as FormArray;
             formArray.push(new FormControl(map.id));
-            // this.currentColors.push(map.id)
-            // console.log(this.currentColors.push(map.id));
+
           }
         })
       }, 2000);
@@ -388,7 +401,6 @@ export class EditproductComponent implements OnInit {
       this.featureGroupList = res;
     })
   }
-
   // subcategory wise hsn code
   hsncodeBysubcatList: any;
   getHsncodeBySubcategory(val: any) {
@@ -427,7 +439,6 @@ export class EditproductComponent implements OnInit {
           feature_group: res.id
         });
       })
-
     })
   }
 
@@ -443,7 +454,6 @@ export class EditproductComponent implements OnInit {
     this.getFeaturegroupBySubcategory(val);
     // this.getHsncodeBySubcategory(val)
   }
-
   // open hsn or taxslab or brand after select subcat
   checkSubact(val: any) {
     this.selectBrand(val);
@@ -451,16 +461,18 @@ export class EditproductComponent implements OnInit {
     // this.getHsncodeBySubcategory(val);
   }
 
-  check: any
+  check: any;
+  checkcolor: any;
   selectedColor = 0;
-  onCheckColor(event: any) {
+  onCheckColor(event: any, title: any) {
+    console.log(title);
     const formArray: any = this.productForm.get('color') as FormArray;
     /* Selected */
     if (event.target.checked) {
       // Add a new control in the arrayForm
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.check = formArray;
+      this.checkcolor = formArray;
       this.selectedColor++;
     }
     /* unselected */
@@ -477,10 +489,32 @@ export class EditproductComponent implements OnInit {
         i++;
       });
     }
+    if (this.colorTitle.length == 0) {
+      this.colorTitle.push(title)
+      console.log(this.colorTitle);
+    } else {
+      if (!this.colorTitle.includes(title)) {
+        this.colorTitle.push(title)
+
+      } else {
+        this.colorTitle = this.colorTitle.filter(item => item !== title)
+      }
+    }
+    console.log(this.colorTitle, 'currentcullor');
+    this.variantLive()
   }
   selectedSize = 0;
-  onCheckSize(event: any) {
-    const formArray: any = this.productForm.get('size') as FormArray;
+  onCheckSize(event: any, title) {
+    if (this.sizeTitle.length == 0) {
+      this.sizeTitle.push(title)
+    } else {
+      if (!this.sizeTitle.includes(title)) {
+        this.sizeTitle.push(title)
+      } else {
+        this.sizeTitle = this.sizeTitle.filter(item => item !== title)
+      }
+    }
+    let formArray: any = this.productForm.get('size') as FormArray;
     /* Selected */
     if (event.target.checked) {
       // Add a new control in the arrayForm
@@ -498,13 +532,80 @@ export class EditproductComponent implements OnInit {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
           this.selectedSize--;
+
           return;
         }
         i++;
       });
     }
+    console.log(this.sizeTitle, 'currentsizes');
+    this.variantLive()
   }
-  
+
+  varantArray: any[] = [];
+  variantLive() {
+    this.varantArray = [];
+
+    if (this.colorTitle.length > 0 && this.sizeTitle.length == 0) {
+      for (let i = 0; i < this.colorTitle.length; i++) {
+        this.varantArray.push({ color: this.colorTitle[i] });
+        this.productColor = this.colorTitle[i];
+        console.log(this.productColor, 'productcolor');
+        this.varantArray.push({ color: this.colorTitle[i] });
+        this.productColor = this.colorTitle[i];
+      }
+    } else if (this.sizeTitle.length > 0 && this.colorTitle.length == 0) {
+      for (let i = 0; i < this.sizeTitle.length; i++) {
+        this.varantArray.push({ size: this.sizeTitle[i] });
+      }
+    } else {
+      for (let i = 0; i < this.sizeTitle.length; i++) {
+        for (let j = 0; j < this.colorTitle.length; j++) {
+          this.varantArray.push({ size: this.sizeTitle[i], color: this.colorTitle[j] });
+        }
+      }
+    }
+    console.log(this.varantArray, 'variantArray hai');
+    // add form
+    const variants = this.productForm.get('variant_product') as FormArray;
+    variants.clear();
+    for (let i = 0; i < this.varantArray.length; i++) {
+      this.getVarinatsForm().push(this.variants());
+    }
+
+    const userArray = this.productForm.get('variant_product') as FormArray;
+
+    this.varantArray.map((user, index) => {
+      console.log(user);
+      const userGroup = userArray.at(index) as FormGroup;
+      console.log(userGroup);
+      userGroup.patchValue({
+        variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`
+      });
+    });
+// display updated value
+    console.log(this.updatedVariants );
+    this.updatedVariants.map((user, index) => {
+      console.log(user,'variiant user data');
+      const variantGroup = userArray.at(index) as FormGroup;
+      console.log(variantGroup);
+      variantGroup.patchValue({
+          product_title: user.product_title,
+              variant_name: user.variant_name,
+              mrp: user.mrp,
+              cost_price:user.cost_price,
+              selling_price: user.selling_price,
+              stock:user.stock,
+              minimum_stock_threshold: user.minimum_stock_threshold,
+              selling_price_dealer: user.selling_price_dealer,
+              selling_price_employee: user.selling_price_employee,
+              // barcode: k.barcode,
+              sku: user.sku,
+              max_order_quantity: user.max_order_quantity,
+      });
+    });
+  }
+
   selectedVariant = 0;
   onCheckVariant(event: any) {
     const formArray: any = this.productForm.get('variant') as FormArray;
@@ -534,7 +635,6 @@ export class EditproductComponent implements OnInit {
   submit() {
     console.log(this.productForm.value);
     console.log(this.arraySubCat);
-
     let formdata: any = new FormData();
     formdata.append('title', this.productForm.get('title')?.value);
     formdata.append('category', this.productForm.get('category')?.value);
@@ -592,7 +692,6 @@ export class EditproductComponent implements OnInit {
     });
     formdata.append('variant_product', JSON.stringify(variantsData));
 
-
     // feature
     // const featuresArray = this.productForm.get('features') as FormArray;
     // featuresArray.controls.forEach((features) => {
@@ -628,8 +727,6 @@ export class EditproductComponent implements OnInit {
         formdata.append(`product_image[${product_imageArray.controls.indexOf(product_image)}].${key}`, control.value);
       });
     });
-
-
 
     if (this.productForm.valid) {
       this.coreService.updateProduct(formdata, this.id).subscribe(res => {
@@ -698,13 +795,11 @@ export class EditproductComponent implements OnInit {
     return this.productForm.get('hsncode')
   }
 
-
-
   currentSizes: any = [];
   currentColors: any = [];
   currentVariants: any = [];
   productColor: any;
-
+  liveColor: any[] = [];
   onCheckSizes(e) {
     if (this.currentSizes.length == 0) {
       this.currentSizes.push(e);
@@ -734,7 +829,6 @@ export class EditproductComponent implements OnInit {
         this.currentVariants.push({ color: this.currentColors[i] });
         this.productColor = this.currentColors[i];
         console.log(this.productColor, 'productcolor');
-        //
         this.currentVariants.push({ color: this.currentColors[i] });
         this.productColor = this.currentColors[i];
       }
@@ -749,6 +843,7 @@ export class EditproductComponent implements OnInit {
         }
       }
     }
+
     this.variantForm();
     console.log(this.currentSizes, 'currSizes');
     console.log(this.currentColors, 'currColors');
@@ -838,8 +933,6 @@ export class EditproductComponent implements OnInit {
       image: file
     });
     imageGroup.get('file')?.updateValueAndValidity();
-
-
   }
   // base 64 
   // onImageSelected(event: Event, index: number) {

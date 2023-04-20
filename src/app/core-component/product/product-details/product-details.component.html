@@ -141,7 +141,7 @@
             </div>
             <div class="page-btn">
                 <a routerLink="//product/editproduct/{{productDetail.id}}" class="btn btn-added">
-                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Product
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Product
                 </a>
             </div>
         </div>
@@ -156,44 +156,33 @@
                 <tr class="ro-border">
                     <td colspan="2" class="f-500">Category</td>
                     <td colspan="6" class="f-400">
-                        {{productDetail.category}}
+                        {{productDetail.category.title}}
                     </td>
                 </tr>
                 <tr class="ro-border">
                     <td colspan="2" class="f-500">Sub Category</td>
                     <td colspan="6" class="f-400">
-                        <h6>{{productDetail.subcategory}}</h6>
+                        <h6>{{productDetail.subcategory.title}}</h6>
                     </td>
                 </tr>
                 <tr class="ro-border">
                     <td colspan="2" class="f-500">Sub Category Group</td>
                     <td colspan="6" class="f-400">
-                        <h6>{{productDetail.subcategory_group}}</h6>
+                        <h6>{{productDetail.subcategory_group.title}}</h6>
                     </td>
                 </tr>
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Features Subcategory</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.features_subcategory}}</h6>
-                    </td>
-                </tr>
+                
                 <tr class="ro-border">
                     <td colspan="2" class="f-500">Brand</td>
                     <td colspan="6" class="f-400">
-                        <h6>{{productDetail.brand}}</h6>
+                        <h6>{{productDetail.brand.title}}</h6>
                     </td>
                 </tr>
               
                 <tr class="ro-border">
                     <td colspan="2" class="f-500">Unit</td>
                     <td colspan="6" class="f-400">
-                        <h6>{{productDetail.unit}}</h6>
-                    </td>
-                </tr>
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Unit Conversion</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.unit_conversion}}</h6>
+                        <h6>{{productDetail.unit.title}}</h6>
                     </td>
                 </tr>
                 <tr class="ro-border">
@@ -202,12 +191,7 @@
                         <h6>{{productDetail.product_store}}</h6>
                     </td>
                 </tr>
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Is Aapproved</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.is_approved}}</h6>
-                    </td>
-                </tr>
+              
                 <tr class="ro-border">
                     <td colspan="2" class="f-500">Is Measurable</td>
                     <td colspan="6" class="f-400">
@@ -260,16 +244,33 @@
                 <tr class="ro-border">
                     <td colspan="2" class="f-500">Variant</td>
                     <td colspan="6" class="f-400 p-0">
-                        <div class="row ro-6" *ngFor="let variant of productDetail.variant">
+                        <div class="row ro-6" *ngFor="let variant of productDetail.variant_product">
                             <div class="col-sm-6">
-                                <h6 class="f-500">SKU</h6>
-                                <h6 class="f-500">Minimum Stock</h6>
-                                <!-- <h6 class="f-500">Is Active</h6> -->
+                                <h6 class="f-500">Product Title</h6>
+                                <h6 class="f-500">Variant Name</h6>
+                                <h6 class="f-500">Mrp</h6>
+                                <h6 class="f-500">Cost Price</h6>
+                                <h6 class="f-500">Minimum Stock Threshold</h6>
+                                <h6 class="f-500">Max Order Quantity</h6>
+                                <h6 class="f-500">Selling Price</h6>
+                                <h6 class="f-500">Selling Price Dealer</h6>
+                                <h6 class="f-500">Selling Price Employee</h6>
+                                <h6 class="f-500">Sku</h6>
+                                <h6 class="f-500">Stock</h6>
                             </div>
                             <div class="col-sm-6">
-                                <h6>{{variant.sku}}</h6>
+                                <h6>{{variant.product_title}}</h6>
+                                <h6>{{variant.product_name}}</h6>
+                                <h6>{{variant.mrp}}</h6>
+                                <h6>{{variant.cost_price}}</h6>
                                 <h6>{{variant.minimum_stock_threshold}}</h6>
-                                <!-- <h6>{{variant.is_active}}</h6> -->
+
+                                <h6>{{variant.max_order_quantity}}</h6>
+                                <h6>{{variant.selling_price}}</h6>
+                                <h6>{{variant.selling_price_dealer}}</h6>
+                                <h6>{{variant.selling_price_employee}}</h6>
+                                <h6>{{variant.sku}}</h6>
+                                <h6>{{variant.stock}}</h6>
                             </div>
                         </div>
                     </td>
