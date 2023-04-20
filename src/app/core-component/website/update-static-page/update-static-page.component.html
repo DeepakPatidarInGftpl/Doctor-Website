@@ -33,6 +33,23 @@
                     </div>
                 </div>
 
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Store*</label>
+                        <select class="form-select" formControlName="choice_type" [ngClass]="{
+                        'is-invalid': f['choice_type'].touched && f['choice_type'].invalid
+                      }">
+                            <option value="" selected disabled>Select Choice Type</option>
+                            <option value="Privacy-Policy">Privacy-Policy</option>
+                            <option value="Return-Policy">Return-Policy</option>
+                            <option value="Cancellation">Cancellation</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="choice_type && choice_type.invalid && choice_type.touched">Select
+                            Choice Type
+                        </span>
+                    </div>
+                </div>
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label>Description*</label>

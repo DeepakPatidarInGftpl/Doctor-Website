@@ -161,6 +161,27 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'taxSlabList',
+        loadChildren: () =>
+          import('./tax-slabs-list/tax-slabs-list.module').then(
+            (m) => m.TaxSlabsListModule
+          ),
+      },
+      {
+        path: 'taxSlabDetail/:id',
+        loadChildren: () =>
+          import('./tax-slab-detail/tax-slab-detail.module').then(
+            (m) => m.TaxSlabDetailModule
+          ),
+      },
+      {
+        path: 'taxSlabUpdate/:id',
+        loadChildren: () =>
+          import('./tax-slab-updated/tax-slab-updated.module').then(
+            (m) => m.TaxSlabUpdatedModule
+          ),
+      },
+      {
         path: 'feature',
         loadChildren: () =>
           import('./feature/feature.module').then(

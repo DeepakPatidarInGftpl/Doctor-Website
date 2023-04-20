@@ -1,7 +1,12 @@
 <div class="page-header">
     <div class="page-title">
         <h4>Product Sub Category Details</h4>
-        <h6>Full details of a Product Sub Categoryy</h6>
+        <h6>Full details of a Product Sub Category</h6>
+    </div>
+    <div class="page-btn">
+        <a routerLink="//product/subcategorylist" class="btn btn-added">
+            <img src="assets/img/icons/plus.svg" class="me-1" alt="img"> Product Sub Category
+        </a>
     </div>
 </div>
 
@@ -24,9 +29,9 @@
                         </li>
                         <li>
                             <h4>Category</h4>
-                            <h6>{{subcatDetails.category_id}}</h6>
+                            <h6>{{subcatDetails.category_id.title}}</h6>
                         </li>
-                        <li>
+                        <!-- <li>
                             <h4>Brand</h4>
                             <div class="second-list">
                                 <ul *ngFor="let brand of subcatDetails.brand_id">
@@ -50,10 +55,15 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>
+                        </li> -->
 
                     </ul>
                 </div>
+            </div>
+            <div class="d-flex align-items-center mx-3 mb-1">
+                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                <span [ngClass]="{'bg-lightgreen': subcatDetails.is_active === true, 'bg-lightred' : subcatDetails.is_active === false,'bg-lightyellow' : subcatDetails.is_active === 'Partial' }"
+                                    class="badges">{{subcatDetails.is_active}}</span>
             </div>
         </div>
     </div>

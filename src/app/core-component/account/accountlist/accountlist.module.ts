@@ -11,6 +11,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { OrderModule } from 'ngx-order-pipe';
     SweetAlert2Module.forRoot(),
     Ng2SearchPipeModule,
     NgxPaginationModule,
-    OrderModule
+    OrderModule,
+    MatSlideToggleModule
   ]
 })
 export class AccountlistModule { }

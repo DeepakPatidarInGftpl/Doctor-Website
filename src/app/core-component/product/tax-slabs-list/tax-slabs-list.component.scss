@@ -1,0 +1,49 @@
+
+// filter search
+
+.table>:not(:first-child) {
+    border-top: none !important; 
+ }
+ 
+ .labelSize{
+   display: flex;
+   align-items: center;
+   
+ }
+ 
+ .entries{
+   font-size: 12px;
+   color: #5E5873;
+   font-weight: 600;
+ 
+ }
+ 
+ .labelSize select{
+   border: 1px solid #ced4da;
+   width: 80px;
+   height: 30px;
+   padding: 0;
+   border-radius: 3px;
+ }
+ 
+ .thone i{
+  float: unset;
+  margin-left: 5px;
+}
+ 
+ @media (max-width:765px) {
+   .thone i{
+      float: inherit;
+      margin-top: 0;
+   }
+ }
+ .fa-sort:before {
+   content: "\f0dc";
+   right: 0.5em;
+   /* content: "\f107"; */
+   /* font-family: "Font Awesome 5 Free"; */
+   /* top: 14px; */
+   color: #BABFC7;
+   font-size: 12px;
+   opacity: 1;
+ }

@@ -22,6 +22,7 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
   p:number=1
   pageSize: number = 10;
   itemsPerPage:number=10;
+
   constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
   }
@@ -57,6 +58,66 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
       }
     });
   }
+
+  // active deactive
+  isActive(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this employee!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.employeeIsActive(id,'').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Employee Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deactivate!',
+          text: 'Employee Is Deactivate Successfully.',
+        });
+      }
+    });
+  }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this employee!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.employeeIsActive(id,'').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Employee Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: 'Employee Is Active Successfully.',
+        });
+      }
+    });
+  }
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -82,11 +143,17 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
 
     this.coreService.getEmployee().subscribe(res => {
       console.log(res);
-      this.tableData = res
+      this.tableData = res;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
   }
 
+  allSelected: boolean = false;
+  selectedRows:boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
+  }
 
   ngAfterViewChecked(): void {
     // let i = this.coreService.getEmploye();
@@ -98,7 +165,7 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
 
     //search sorting filtering not wroking when direct getting variable data
   }
-
+select=false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {

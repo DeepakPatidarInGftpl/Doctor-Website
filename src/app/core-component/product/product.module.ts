@@ -7,8 +7,8 @@ import { ProductComponent } from './product.component';
 @NgModule({
   declarations: [
     ProductComponent,
+   
     
-  
   ],
   imports: [
     CommonModule,

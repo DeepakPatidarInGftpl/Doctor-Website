@@ -78,6 +78,10 @@ export class CoreService {
       })
     })
   }
+  employeeIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/employee/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
   addEmployee(data: employee) {
     let url = this.apiUrl + '/pv-api/employee/';
     return this.http.post(url, data, {
@@ -121,12 +125,17 @@ export class CoreService {
   }
   getCategory() {
     let url = this.apiUrl + '/pv-api/product-category/';
-    return this.http.get<Account>(url, {
+    return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
   }
+  categoryIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/product-category/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+
   // Acount section
   accountType() {
     let url = this.apiUrl + '/pv-api/account_type/';
@@ -160,6 +169,10 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
+  }
+  accountIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/account/?id=';
+    return this.http.patch(`${url}${id}`, data);
   }
   addAccount(data: Account): Observable<Account> {
     let url = this.apiUrl + '/pv-api/account/';
@@ -216,6 +229,12 @@ export class CoreService {
       })
     })
   }
+
+  hsncodeIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/hsn_code/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+
   addHSNcode(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/hsn_code/';
     return this.http.post<any>(url, data, {
@@ -250,7 +269,10 @@ export class CoreService {
       })
     })
   }
-
+  subCategoryIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/product_subcategroy/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
   //units section
 
   getUnits() {
@@ -273,6 +295,7 @@ export class CoreService {
       })
     })
   }
+
   getUnitsById(id: number): Observable<any> {
     let url = this.apiUrl + '/pv-api/unit/?id='
     return this.http.get<any>(`${url}${id}`, {
@@ -281,6 +304,11 @@ export class CoreService {
       })
     })
   }
+  unitIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/unit/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+
   addUnits(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/unit/';
     return this.http.post<any>(url, data, {
@@ -337,6 +365,12 @@ export class CoreService {
       })
     })
   }
+
+  unitConversionIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/unitconservation/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+
   addUnitConversion(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/unitconservation/';
     return this.http.post<any>(url, data, {
@@ -445,6 +479,10 @@ export class CoreService {
       })
     })
   }
+  brandIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/brands/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
   addbrand(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/brands/';
     return this.http.post<any>(url, data, {
@@ -497,6 +535,10 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
+  }
+  colorIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/colour/?id=';
+    return this.http.patch(`${url}${id}`, data);
   }
   addcolor(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/colour/';
@@ -553,6 +595,11 @@ export class CoreService {
       })
     })
   }
+
+  sizeIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/size/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
   addsize(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/size/';
     return this.http.post<any>(url, data, {
@@ -605,6 +652,10 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
+  }
+  taxIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/tax/?id=';
+    return this.http.patch(`${url}${id}`, data);
   }
   addtax(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/tax/';
@@ -714,6 +765,11 @@ export class CoreService {
       })
     })
   }
+  featureIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/feature/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+
   addFeature(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/feature/';
     return this.http.post<any>(url, data, {
@@ -767,6 +823,10 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
+  }
+  variantIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/variant/?id=';
+    return this.http.patch(`${url}${id}`, data);
   }
   addVariant(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/variant/';
@@ -868,6 +928,10 @@ export class CoreService {
       })
     })
   }
+  countryIsActive(id: any, data) {
+    let url = this.apiUrl + '/country/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
   addCountry(data: any): Observable<any> {
     let url = this.apiUrl + '/country/';
     return this.http.post<any>(url, data, {
@@ -923,6 +987,10 @@ export class CoreService {
       })
     })
   }
+  stateIsActive(id: any, data) {
+    let url = this.apiUrl + '/state/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
   addstate(data: any): Observable<any> {
     let url = this.apiUrl + '/state/';
     return this.http.post<any>(url, data, {
@@ -972,6 +1040,10 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     })
+  }
+  cityIsActive(id: any, data) {
+    let url = this.apiUrl + '/city/?id=';
+    return this.http.patch(`${url}${id}`, data);
   }
   addcity(data: any): Observable<any> {
     let url = this.apiUrl + '/city/';
@@ -1027,6 +1099,11 @@ export class CoreService {
       })
     })
   }
+  productIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/product/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+
   addProduct(data: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/product/';
     return this.http.post<any>(url, data, {
@@ -1060,7 +1137,10 @@ export class CoreService {
       })
     })
   }
-
+  warehouseIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/warehouse/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
   deleteWarehouse(id: number) {
     let url = this.apiUrl + '/pv-api/warehouse/?id=';
     return this.http.delete(`${url}${id}`, {
@@ -1169,7 +1249,10 @@ export class CoreService {
       })
     })
   }
-
+  featureGroupIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/fuature_group/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
   // getCategory() {
   //   let url = this.apiUrl + '/pv-api/product-category/';
   //   return this.http.get(url, {
@@ -1244,8 +1327,12 @@ export class CoreService {
     // })
   }
   getStaticPageBySlug(slug: any) {
-    let url = this.apiUrl + '/pv-api/static_detail_pages/?slug='
+    let url = this.apiUrl + '/pv-api/static_pages/?slug=';
     return this.http.get<any>(`${url}${slug}`)
+  }
+  staticPageIsActive(slug: any, data) {
+    let url = this.apiUrl + '/pv-api/static_pages/?slug=';
+    return this.http.patch(`${url}${slug}`, data);
   }
   addStatic(data) {
     let url = this.apiUrl + '/pv-api/static_pages/';
@@ -1280,6 +1367,10 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/footer_features/?id=';
     return this.http.get(`${url}${id}`)
   }
+  footerIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/footer_features/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
   addFooterFeature(data) {
     let url = this.apiUrl + '/pv-api/footer_features/';
     return this.http.post(url, data);
@@ -1301,6 +1392,10 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/financial_year/?id=';
     return this.http.get(`${url}${id}`)
   }
+  financialYearIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/financial_year/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
   addFinancialYear(data) {
     let url = this.apiUrl + '/pv-api/financial_year/';
     return this.http.post(url, data);
@@ -1317,7 +1412,10 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/currency/';
     return this.http.get(url);
   }
-
+  currencyIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/currency/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
 
   // profile
   getProfile() {
@@ -1325,6 +1423,64 @@ export class CoreService {
     return this.http.get(url);
   }
 
+  subcategoryGroupIsActive(id: number, data) {
+    let url = this.apiUrl + '/pv-api/subcategory_group/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  // tax slab
+  getTaxSlab() {
+    let url = this.apiUrl + '/pv-api/tax_slabs/';
+    return this.http.get(url);
+  }
+  getTaxSlabById(id: any) {
+    let url = this.apiUrl + '/pv-api/tax_slabs/?id=';
+    return this.http.get(`${url}${id}`)
+  }
+  taxSlabIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/tax_slabs/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addTaxSlab(data: any) {
+    let url = this.apiUrl + '/pv-api/tax_slabs/';
+    return this.http.post(url, data)
+  }
+  updateTaxSlab(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/tax_slabs/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deleteTaxSlab(id: any) {
+    let url = this.apiUrl + '/pv-api/tax_slabs/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
+  // banner
+  getBanner() {
+    let url = this.apiUrl + '/pv-api/banner/';
+    return this.http.get(url)
+  }
+  getBannerbById(id: any) {
+    let url = this.apiUrl + '/pv-api/banner/?id=';
+    return this.http.get(`${url}${id}`)
+  }
+  addBanner(data: any) {
+    let url = this.apiUrl + '/pv-api/banner/';
+    return this.http.post(url, data)
+  }
+  updateBanner(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/banner/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+
+  deleteBanner(id: any) {
+    let url = this.apiUrl + '/pv-api/banner/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+  bannerIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/banner/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+
+  
   //category wise subcategory
   getSubcategoryByCategory(id: any) {
     let url = this.apiUrl + '/pv-api/category_wise_subcategory/?category_id=';
@@ -1333,33 +1489,49 @@ export class CoreService {
 
   //brands wise subcategory
   // getBrandBySubcategory(id: any) {
-
   //   let url = this.apiUrl + '/pv-api/brands_wise_subcategory/?subcategory_id=';
   //   return this.http.get<any>(`${url}${id}`);
   // }
+  
   //country wise state
-  getStateByCountryId(id: any) {
+ 
+  getStateByCountryId(id: number) {
     let url = this.apiUrl + '/state/?country_id=';
     return this.http.get<any>(`${url}${id}`);
   }
   // state wise city
-  getCityByStateId(id: any) {
+  getCityByStateId(id: number) {
     let url = this.apiUrl + '/city/?state_id=';
     return this.http.get<any>(`${url}${id}`);
   }
   //category wise subcatGroup
-  getSubcatGraoupByCategory(id: any) {
+  getSubcatGraoupByCategory(id: number) {
     let url = this.apiUrl + '/pv-api/category_wise_sub_category_group/?category_id=';
-    return this.http.get<any>(`${url}/${id}`);
+    return this.http.get<any>(`${url}${id}`);
   }
   //subcatGroup wise subcategory
-  getSubcategoryBySubcatGroup(id: any) {
+  getSubcategoryBySubcatGroup(id: number) {
     let url = this.apiUrl + '/pv-api/subcategory_group_wise_subcategory/?sub_category_group_id=';
     return this.http.get<any>(`${url}${id}`);
   }
   // subcategory wise brands
-  getBrandBySubcategory(id: any) {
+  getBrandBySubcategory(id: number) {
     let url = this.apiUrl + '/pv-api/subcategory_wise_brands/?subcategory_id=';
-    return this.http.get(`${url}/${id}`)
+    return this.http.get(`${url}${id}`);
+  }
+  // subcategory wise hsn_code
+  getHsncodeBySubcategory(id: number) {
+    let url = this.apiUrl + '/pv-api/subcategory_wise_hsn_code/?subcategory_id=';
+    return this.http.get(`${url}${id}`);
+  }
+  // subcategory wise_tax_slab
+  getTaxslabBySubcategory(id: number) {
+    let url = this.apiUrl + '/pv-api/subcategory_wise_taxslabs/?subcategory_id=';
+    return this.http.get(`${url}${id}`);
+  }
+  // subcategory group Wise feature group
+  getFeaturegroupBySubcategoryGroup(id:number){
+    let url = this.apiUrl+'/pv-api/subcategory_group_wise_feature_group/?subcategory_group_id=';
+    return this.http.get(`${url}${id}`);
   }
 }

@@ -10,7 +10,7 @@ import { subCatRoutingModule } from './subcategory-group.routing.mudule';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
-
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 @NgModule({
   declarations: [
     SubcategoryGroupComponent
@@ -24,7 +24,8 @@ import { OrderModule } from 'ngx-order-pipe';
     SweetAlert2Module.forRoot(),
     Ng2SearchPipeModule,
     OrderModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    MatSlideToggleModule
   ]
 })
 export class subcatModule { }

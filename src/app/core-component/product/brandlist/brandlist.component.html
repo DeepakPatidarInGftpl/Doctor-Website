@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <!-- /Filter -->
-                <div class="card" id="filter_inputs">
+                <!-- <div class="card" id="filter_inputs">
                     <div class="card-body pb-0">
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- /Filter -->
                 <div class="table-responsive">
                     <table datatable [dtOptions]="dtOptions" class="table datanew">
@@ -81,7 +81,7 @@
                             <tr>
                                 <th (click)="sort('id')" class="thone">
                                     <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
-                                        <input type="checkbox" [(ngModel)]="initChecked">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
                                         <span class="checkmarks"></span>
                                     </label>
                                     <i class="fa fa-sort"></i>
@@ -92,6 +92,7 @@
                                 <th (click)="sort('id')" class="thone">Discount <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Subcategory group <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">SubCategory <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone" >Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
@@ -99,7 +100,7 @@
                             <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
-                                        <input type="checkbox" [(ngModel)]="products.isSelected">
+                                        <input type="checkbox" [(ngModel)]="selectedRows[i]">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
@@ -123,6 +124,10 @@
                                     <tr *ngFor="let subcat of products.subcategory">
                                         <td>{{subcat.title}}</td>
                                     </tr>
+                                </td>
+                                <td>
+                                    <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                         
                                 </td>
                                 <td>
                                     <a class="me-3" (click)="editForm(products.id)">

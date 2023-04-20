@@ -13,6 +13,9 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
 import {MatSelectModule} from '@angular/material/select';
+
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 @NgModule({
   declarations: [
     BrandlistComponent
@@ -28,7 +31,8 @@ import {MatSelectModule} from '@angular/material/select';
     Ng2SearchPipeModule,
     NgxPaginationModule,
     OrderModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSlideToggleModule
   ]
 })
 export class BrandlistModule { }

@@ -57,7 +57,7 @@
                             <tr>
                                 <th (click)="sort('id')" class="thone">
                                     <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
-                                        <input type="checkbox" [(ngModel)]="initChecked">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
                                         <span class="checkmarks"></span>
                                     </label>
                                     <i class="fa fa-sort"></i>
@@ -73,7 +73,7 @@
 
                                 <td>
                                     <label class="checkboxs">
-                                        <input type="checkbox" [(ngModel)]="products.is_active">
+                                        <input type="checkbox"  [(ngModel)]="selectedRows[i]">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
@@ -84,10 +84,11 @@
                                     {{products.close_year}}
                                    
                                 </td>
-                                
-                                <td><span
-                                        [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
-                                        class="badges">{{products.is_active}}</span></td>
+                                <td>
+                                    <mat-slide-toggle
+                                    (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                    [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                    </td>
                                 <td>
 
                                     <a class="me-3" (click)="editForm(products.id)">
@@ -169,7 +170,7 @@
 
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
                     </div>
@@ -205,7 +206,7 @@
 
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
                         </div>
 
                     </div>

@@ -10,6 +10,8 @@ import { DataTablesModule } from 'angular-datatables';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
+import {MatSelectModule} from '@angular/material/select';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 @NgModule({
   declarations: [TaxSlabsComponent],
   imports: [
@@ -21,7 +23,9 @@ import { OrderModule } from 'ngx-order-pipe';
     DataTablesModule,
     Ng2SearchPipeModule,
     NgxPaginationModule,
-    OrderModule
+    OrderModule,
+    MatSelectModule,
+    MatCheckboxModule
   ]
 })
 export class TaxSlabsModule { }

@@ -12,6 +12,7 @@ import { StaticpageDetalsComponent } from './staticpage-detals/staticpage-detals
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 @NgModule({
   declarations: [
     StaticPagesComponent,
@@ -29,7 +30,8 @@ import { OrderModule } from 'ngx-order-pipe';
     SweetAlert2Module.forRoot(),
     Ng2SearchPipeModule,
     NgxPaginationModule,
-    OrderModule
+    OrderModule,
+    MatSlideToggleModule
   ]
 })
 export class StaticPagesModule { }
