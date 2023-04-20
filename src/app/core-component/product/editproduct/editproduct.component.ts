@@ -302,76 +302,37 @@ export class EditproductComponent implements OnInit {
     })
   }
   colorList: any
-  // getColor() {
-  //   this.coreService.getColor().subscribe(res => {
-  //     this.colorList = res;
-  //     setTimeout(() => {
-  //       this.colorList.map((map: any) => {
-  //         if (this.colors.includes(map.id)) {
-  //           console.log(map.id, 'mapid');
-  //           const formArray: any = this.productForm.get('color') as FormArray;
-  //           formArray.push(new FormControl(map.id));
-  //           // this.currentColors.push(map.id)
-  //           // console.log(this.currentColors.push(map.id));
-  //         }
-  //       })
-  //     }, 2000);
-  //   })
-  // }
   getColor() {
     this.coreService.getColor().subscribe(res => {
       this.colorList = res;
-      const formArray = this.productForm.get('color') as FormArray;
-      res.forEach(color => {
-        if (this.colors.includes(color.id)) {
-          const index = formArray.controls.findIndex(x => x.value === color.id);
-          if (index === -1) {
-            formArray.push(new FormControl(color.id));
+      setTimeout(() => {
+        this.colorList.map((map: any) => {
+          if (this.colors.includes(map.id)) {
+            console.log(map.id, 'mapid');
+            const formArray: any = this.productForm.get('color') as FormArray;
+            formArray.push(new FormControl(map.id));
+            // this.currentColors.push(map.id)
+            // console.log(this.currentColors.push(map.id));
           }
-        } else {
-          const index = formArray.controls.findIndex(x => x.value === color.id);
-          if (index !== -1) {
-            formArray.removeAt(index);
-          }
-        }
-      });
-    });
+        })
+      }, 2000);
+    })
   }
   sizeList: any
-  // getSize() {
-  //   this.coreService.getSize().subscribe(res => {
-  //     console.log(res);
-  //     this.sizeList = res
-  //     setTimeout(() => {
-  //       this.sizeList.map((map: any) => {
-  //         console.log(this.sizes.includes(map.id), 'size');
-  //         if (this.sizes.includes(map.id)) {
-  //           const formArray = this.productForm.get('size') as FormArray;
-  //           formArray.push(new FormControl(map.id));
-  //         }
-  //       })
-  //     }, 2000);
-  //   })
-  // }
   getSize() {
     this.coreService.getSize().subscribe(res => {
       console.log(res);
-      this.sizeList = res;
-      const formArray = this.productForm.get('size') as FormArray;
-      res.forEach(size => {
-        if (this.sizes.includes(size.id)) {
-          const index = formArray.controls.findIndex(x => x.value === size.id);
-          if (index === -1) {
-            formArray.push(new FormControl(size.id));
+      this.sizeList = res
+      setTimeout(() => {
+        this.sizeList.map((map: any) => {
+          console.log(this.sizes.includes(map.id), 'size');
+          if (this.sizes.includes(map.id)) {
+            const formArray = this.productForm.get('size') as FormArray;
+            formArray.push(new FormControl(map.id));
           }
-        } else {
-          const index = formArray.controls.findIndex(x => x.value === size.id);
-          if (index !== -1) {
-            formArray.removeAt(index);
-          }
-        }
-      });
-    });
+        })
+      }, 2000);
+    })
   }
   // varantList: any
   // getVariant() {
@@ -492,79 +453,58 @@ export class EditproductComponent implements OnInit {
 
   check: any
   selectedColor = 0;
-  // onCheckColor(event: any) {
-  //   const formArray: any = this.productForm.get('color') as FormArray;
-  //   /* Selected */
-  //   if (event.target.checked) {
-  //     // Add a new control in the arrayForm
-  //     formArray.push(new FormControl(parseInt(event.target.value)));
-  //     // parseInt(formArray.push(new FormControl(event.target.value)))
-  //     this.check = formArray;
-  //     this.selectedColor++;
-  //   }
-  //   /* unselected */
-  //   else {
-  //     // find the unselected element
-  //     let i: number = 0;
-  //     formArray.controls.forEach((ctrl: any) => {
-  //       if (ctrl.value == event.target.value) {
-  //         // Remove the unselected element from the arrayForm
-  //         formArray.removeAt(i);
-  //         this.selectedColor--;
-  //         return;
-  //       }
-  //       i++;
-  //     });
-  //   }
-  // }
+  onCheckColor(event: any) {
+    const formArray: any = this.productForm.get('color') as FormArray;
+    /* Selected */
+    if (event.target.checked) {
+      // Add a new control in the arrayForm
+      formArray.push(new FormControl(parseInt(event.target.value)));
+      // parseInt(formArray.push(new FormControl(event.target.value)))
+      this.check = formArray;
+      this.selectedColor++;
+    }
+    /* unselected */
+    else {
+      // find the unselected element
+      let i: number = 0;
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          this.selectedColor--;
+          return;
+        }
+        i++;
+      });
+    }
+  }
   selectedSize = 0;
-  // onCheckSize(event: any) {
-  //   const formArray: any = this.productForm.get('size') as FormArray;
-  //   /* Selected */
-  //   if (event.target.checked) {
-  //     // Add a new control in the arrayForm
-  //     formArray.push(new FormControl(parseInt(event.target.value)));
-  //     // parseInt(formArray.push(new FormControl(event.target.value)))
-  //     this.check = formArray;
-  //     this.selectedSize++;
-  //   }
-  //   /* unselected */
-  //   else {
-  //     // find the unselected element
-  //     let i: number = 0;
-  //     formArray.controls.forEach((ctrl: any) => {
-  //       if (ctrl.value == event.target.value) {
-  //         // Remove the unselected element from the arrayForm
-  //         formArray.removeAt(i);
-  //         this.selectedSize--;
-  //         return;
-  //       }
-  //       i++;
-  //     });
-  //   }
-  // }
-
-// Add a new color control to the color form array
-onCheckColor(event: any) {
-  const formArray = this.productForm.get('color') as FormArray;
-  if (event.target.checked) {
-    formArray.push(new FormControl(parseInt(event.target.value)));
-  } else {
-    const index = formArray.controls.findIndex(x => x.value === parseInt(event.target.value));
-    formArray.removeAt(index);
+  onCheckSize(event: any) {
+    const formArray: any = this.productForm.get('size') as FormArray;
+    /* Selected */
+    if (event.target.checked) {
+      // Add a new control in the arrayForm
+      formArray.push(new FormControl(parseInt(event.target.value)));
+      // parseInt(formArray.push(new FormControl(event.target.value)))
+      this.check = formArray;
+      this.selectedSize++;
+    }
+    /* unselected */
+    else {
+      // find the unselected element
+      let i: number = 0;
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          this.selectedSize--;
+          return;
+        }
+        i++;
+      });
+    }
   }
-}
-
-// Add a new size control to the size form array
-onCheckSize(event: any) {
-  const formArray = this.productForm.get('size') as FormArray;
-  if (event.target.checked) {
-    formArray.push(new FormControl(parseInt(event.target.value)));
-  } else {
-    const index = formArray.controls.findIndex(x => x.value === parseInt(event.target.value));
-    formArray.removeAt(index);
-  }
-}
+  
   selectedVariant = 0;
   onCheckVariant(event: any) {
     const formArray: any = this.productForm.get('variant') as FormArray;
