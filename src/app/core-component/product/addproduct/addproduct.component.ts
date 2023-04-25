@@ -52,7 +52,7 @@ export class AddproductComponent implements OnInit {
     return this.productForm.controls;
   }
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder,
-    private toastr: ToastrService, private location:Location) { }
+    private toastr: ToastrService, private location: Location) { }
 
   isDisabled: true;
   productNamme: any
@@ -80,14 +80,9 @@ export class AddproductComponent implements OnInit {
       description: new FormControl(''),
       // hsncode: new FormControl(''),
 
-      // features_subcategory: new FormControl('', [Validators.required]),
-      // unit_conversion: new FormControl(''),  
-      // style_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      // variant: new FormArray([]),
-
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
-      product_image: this.fb.array([])
+      product_images: this.fb.array([])
     })
 
     // add form
@@ -158,12 +153,12 @@ export class AddproductComponent implements OnInit {
 
   productImage(): FormGroup {
     return this.fb.group({
-      color: (''),
+      product_colour: (''),
       image: ('')
     })
   }
   getproductImage(): FormArray {
-    return this.productForm.get('product_image') as FormArray;
+    return this.productForm.get('product_images') as FormArray;
   }
   addproductImage() {
     this.getproductImage().push(this.productImage())
@@ -305,9 +300,9 @@ export class AddproductComponent implements OnInit {
       for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
         this.addFeature();
       }
-      this.featureGrpBysubcatGroupList.feature_group.forEach((res,index)=>{
+      this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
         console.log(res);
-        
+
         const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
         imageGroup.patchValue({
           feature_group: res.id
@@ -323,7 +318,7 @@ export class AddproductComponent implements OnInit {
     this.getFeaturegroupBySubcategory(val);
     // this.getHsncodeBySubcategory(val)
   }
-  
+
   // open hsn or taxslab or brand after select subcat
   checkSubact(val: any) {
     this.getBrandBySubcategory(val);
@@ -371,7 +366,7 @@ export class AddproductComponent implements OnInit {
       this.check = formArray
       this.selectedSize++;
       console.log(this.selectedSize);
-      
+
     }
     /* unselected */
     else {
@@ -439,6 +434,8 @@ export class AddproductComponent implements OnInit {
     formdata.append('sales_tax_including', this.productForm.get('sales_tax_including')?.value);
     formdata.append('is_active', this.productForm.get('is_active')?.value);
 
+
+    
     // nested formdata 
     // working also
     // const variants = this.productForm.get('variants') as FormArray;
@@ -502,19 +499,19 @@ export class AddproductComponent implements OnInit {
     });
     formdata.append('product_features', JSON.stringify(featuresData));
 
-    // product image
-    const product_imageArray = this.productForm.get('product_image') as FormArray;
-    product_imageArray.controls.forEach((product_image) => {
-      const product_imageGroup = product_image as FormGroup;
-      Object.keys(product_imageGroup.controls).forEach((key) => {
-        const control = product_imageGroup.controls[key];
-        // formdata.append(`product_image[${product_imageArray.controls.indexOf(product_image)}].[${key}]`, control.value);
-        formdata.append(`product_image[${product_imageArray.controls.indexOf(product_image)}].${key}`, control.value);
-      });
-    });
+    // product image send binary data 
+    // const product_imageArray = this.productForm.get('product_images') as FormArray;
+    // product_imageArray.controls.forEach((product_image) => {
+    //   const product_imageGroup = product_image as FormGroup;
+    //   Object.keys(product_imageGroup.controls).forEach((key) => {
+    //     const control = product_imageGroup.controls[key];
+    //     // formdata.append(`product_image[${product_imageArray.controls.indexOf(product_image)}].[${key}]`, control.value);
+    //     formdata.append(`product_image[${product_imageArray.controls.indexOf(product_image)}].${key}`, control.value);
+    //   });
+    // });
 
     // variant nested data send json format
-    //     const product_imageArray = this.productForm.get('product_image') as FormArray;
+    //     const product_imageArray = this.productForm.get('product_images') as FormArray;
     //     const product_imageData = [];
     //     product_imageArray.controls.forEach((product_image) => {
     //       const product_imageGroup = product_image as FormGroup;
@@ -527,28 +524,27 @@ export class AddproductComponent implements OnInit {
     //     });
     //     formdata.append('product_image', JSON.stringify(product_imageData));
 
-    //     const product_imageArray = this.productForm.get('product_image') as FormArray;
-    // const product_imageData = [];
+    // image send nested data as json
+    const product_imageArray = this.productForm.get('product_images') as FormArray;
+    const product_imageData: any = [];
 
-    // product_imageArray.controls.forEach((product_image) => {
-    //   const product_imageGroup = product_image as FormGroup;
-    //   const featureObj = {};
+    product_imageArray.controls.forEach((product_image) => {
+      const product_imageGroup = product_image as FormGroup;
+      const featureObj: any = {};
 
-    //   Object.keys(product_imageGroup.controls).forEach((key) => {
-    //     const control = product_imageGroup.controls[key];
-    //     featureObj[key] = control.value;
-    //   });
+      Object.keys(product_imageGroup.controls).forEach((key) => {
+        const control = product_imageGroup.controls[key];
+        featureObj[key] = control.value;
+      });
 
-    //   product_imageData.push(featureObj);
-    // });
+      product_imageData.push(featureObj);
+    });
 
-    // const productImageDataJson = JSON.stringify(product_imageData);
+    const productImageDataJson = JSON.stringify(product_imageData);
+    formdata.append('product_images', productImageDataJson);
 
-    // formdata.append('product_image', productImageDataJson);
-
-   
     if (this.productForm.valid) {
-      this.coreService.addProduct(formdata).subscribe(res => {
+      this.coreService.addProduct(this.productForm.value).subscribe(res => {
         if (res.msg == "Data Created") {
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
@@ -559,6 +555,7 @@ export class AddproductComponent implements OnInit {
     } else {
       this.productForm.markAllAsTouched();
       console.log('forms invalid');
+      this.toastr.error('Please select all the required fields')
     }
   }
 
@@ -692,7 +689,7 @@ export class AddproductComponent implements OnInit {
     this.currentVariants.map((user, index) => {
       console.log(user);
       console.log(index);
-      
+
       const userGroup = userArray.at(index) as FormGroup;
       console.log(userGroup);
       userGroup.patchValue({
@@ -701,7 +698,7 @@ export class AddproductComponent implements OnInit {
     });
 
   }
-  
+
   variantForm() {
     const variants = this.productForm.get('variant_product') as FormArray;
     variants.clear();
@@ -710,47 +707,11 @@ export class AddproductComponent implements OnInit {
     }
   }
 
-  // selectImg(event: Event) {
-  //   const file = (event.target as HTMLInputElement).files![0];
-  //   console.log(file);
-
-  //   const imageArray = this.productForm.get('product_image') as FormArray;
-  //   const newImageGroup = this.fb.group({
-  //     image: [''],
-
-  //   });
-  //   imageArray.push(newImageGroup);
-
-  //   imageArray.controls.forEach((control, index) => {
-  //     const imageGroup = control as FormGroup;
-  //     imageGroup.patchValue({
-  //       image: file
-  //     });
-  //     imageGroup.get('image')?.updateValueAndValidity();
-  //   });
-  // }
-
-
-  // selectImg(event: Event) {
-  //   const file = (event.target as HTMLInputElement).files![0];
-  //   console.log(file);
-
-  //   const productImage = this.productForm.get('product_image') as FormGroup;
-  //   const imagesArray = productImage.get('images') as FormArray;
-
-  //   imagesArray.controls.forEach((control, index) => {
-  //     control.patchValue({
-  //       image: file
-  //     });
-  //   });
-
-  //   imagesArray.updateValueAndValidity();
-  // }
 
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
-    const productImage = this.productForm.get('product_image') as FormArray;
+    const productImage = this.productForm.get('product_images') as FormArray;
     const imagesarray = productImage.at(0) as FormGroup;
     imagesarray.patchValue({
       image: file
@@ -758,53 +719,62 @@ export class AddproductComponent implements OnInit {
     imagesarray.get('image')?.updateValueAndValidity();
   }
   p_img: any[] = []
+
+  //binary
+
+  // onImageSelected(event: Event, index: number) {
+  //   // this.select(event)
+  //   const file = (event.target as HTMLInputElement).files![0];
+  //   if (file) {
+  //     this.p_img[index];
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => {
+  //       this.url[index] = reader.result as string;
+  //     };
+  //   }
+  //   const imageGroup = (this.productForm.get('product_images') as FormArray).at(index) as FormGroup;
+  //   imageGroup.patchValue({
+  //     image: file
+  //   });
+  //   imageGroup.get('file')?.updateValueAndValidity();
+  // }
+
+  // base 64 
+  url: any[] = [];
+ imgValue:any=[];
+ Show=true
   onImageSelected(event: Event, index: number) {
-    // this.select(event)
     const file = (event.target as HTMLInputElement).files![0];
+    const reader = new FileReader();
     if (file) {
-      this.p_img[index];
+      this.Show=false
+      this.p_img[index]
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.url[index] = reader.result as string;
       };
     }
-    const imageGroup = (this.productForm.get('product_image') as FormArray).at(index) as FormGroup;
-    imageGroup.patchValue({
-      image: file
-    });
+    const imageGroup = (this.productForm.get('product_images') as FormArray).at(index) as FormGroup;
+    reader.onload = () => {
+      const imageValue = reader.result.toString().split(',')[1];
+      this.imgValue=imageValue
+      imageGroup.patchValue({
+        image: imageValue
+      });
+    };
+    reader.readAsDataURL(file);
     imageGroup.get('file')?.updateValueAndValidity();
-
-
-  }
-  // base 64 
-  // onImageSelected(event: Event, index: number) {
-  //   const file = (event.target as HTMLInputElement).files![0];
-  //   const reader = new FileReader();
-  //   const imageGroup = (this.productForm.get('product_image') as FormArray).at(index) as FormGroup;
-
-  //   reader.onload = () => {
-  //     imageGroup.patchValue({
-  //       image: reader.result as string
-  //     });
-  //   };
-
-  //   reader.readAsDataURL(file);
-  //   imageGroup.get('file')?.updateValueAndValidity();
-  // }
-  url: any[] = [];
-  select(e) {
-    if (e.target.files) {
-      var reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = ((event) => {
-        // this.url=event.target.result
-      })
-    }
   }
 
-  goBack(){
+  goBack() {
     this.location.back();
   }
-
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
+  }
+  
 }
