@@ -94,7 +94,7 @@ export class EditproductComponent implements OnInit {
 
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
-      product_image: this.fb.array([])
+      product_images: this.fb.array([])
     })
 
     this.coreService.getProductById(this.id).subscribe(res => {
@@ -257,12 +257,12 @@ export class EditproductComponent implements OnInit {
 
   productImage(): FormGroup {
     return this.fb.group({
-      color: (''),
+      product_colour: (''),
       image: ('')
     })
   }
   getproductImage(): FormArray {
-    return this.productForm.get('product_image') as FormArray;
+    return this.productForm.get('product_images') as FormArray;
   }
   addproductImage() {
     this.getproductImage().push(this.productImage())
@@ -718,18 +718,18 @@ export class EditproductComponent implements OnInit {
     formdata.append('product_features', JSON.stringify(featuresData));
 
     // product image
-    const product_imageArray = this.productForm.get('product_image') as FormArray;
+    const product_imageArray = this.productForm.get('product_images') as FormArray;
     product_imageArray.controls.forEach((product_image) => {
       const product_imageGroup = product_image as FormGroup;
       Object.keys(product_imageGroup.controls).forEach((key) => {
         const control = product_imageGroup.controls[key];
         // formdata.append(`product_image[${product_imageArray.controls.indexOf(product_image)}].[${key}]`, control.value);
-        formdata.append(`product_image[${product_imageArray.controls.indexOf(product_image)}].${key}`, control.value);
+        formdata.append(`product_images[${product_imageArray.controls.indexOf(product_image)}].${key}`, control.value);
       });
     });
 
     if (this.productForm.valid) {
-      this.coreService.updateProduct(formdata, this.id).subscribe(res => {
+      this.coreService.updateProduct(this.productForm.value, this.id).subscribe(res => {
         if (res.msg == "Product updated successfully") {
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
@@ -909,7 +909,7 @@ export class EditproductComponent implements OnInit {
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
-    const productImage = this.productForm.get('product_image') as FormArray;
+    const productImage = this.productForm.get('product_images') as FormArray;
     const imagesarray = productImage.at(0) as FormGroup;
     imagesarray.patchValue({
       image: file
@@ -917,10 +917,12 @@ export class EditproductComponent implements OnInit {
     imagesarray.get('image')?.updateValueAndValidity();
   }
   p_img: any[] = []
+Show=true;
   onImageSelected(event: Event, index: number) {
-    // this.select(event)
     const file = (event.target as HTMLInputElement).files![0];
+    const reader = new FileReader();
     if (file) {
+      this.Show=false;
       this.p_img[index];
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -928,11 +930,16 @@ export class EditproductComponent implements OnInit {
         this.url[index] = reader.result as string;
       };
     }
-    const imageGroup = (this.productForm.get('product_image') as FormArray).at(index) as FormGroup;
-    imageGroup.patchValue({
-      image: file
-    });
+    const imageGroup = (this.productForm.get('product_images') as FormArray).at(index) as FormGroup;
+    reader.onload = () => {
+      const imageValue = reader.result.toString().split(',')[1];
+      imageGroup.patchValue({
+        image: imageValue
+      });
+    };
+    reader.readAsDataURL(file);
     imageGroup.get('file')?.updateValueAndValidity();
+
   }
   // base 64 
   // onImageSelected(event: Event, index: number) {
@@ -952,5 +959,10 @@ export class EditproductComponent implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+   //dropdown auto close stop
+   onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
   }
 }

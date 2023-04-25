@@ -3,9 +3,8 @@
                 <h4>Product Details</h4>
                 <h6>Full details of a product</h6>
             </div>
-        </div> -->
-<!-- /add -->
-<!-- <div class="row">
+        </div> 
+ <div class="row">
             <div class="col-lg-8 col-sm-12">
                 <div class="card">
                     <div class="card-body">
@@ -128,11 +127,8 @@
             </div>
      </div> -->
 
-<!-- /add -->
-
 
 <div class="card bg">
-
     <div class="card-body">
         <div class="page-header">
             <div class="page-title">
@@ -145,360 +141,209 @@
                 </a>
             </div>
         </div>
-        <div class="company-details-card card" *ngIf="productDetail">
-            <table>
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Title</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.title}}</h6>
-                    </td>
-                </tr>
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Category</td>
-                    <td colspan="6" class="f-400">
-                        {{productDetail.category.title}}
-                    </td>
-                </tr>
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Sub Category</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.subcategory.title}}</h6>
-                    </td>
-                </tr>
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Sub Category Group</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.subcategory_group.title}}</h6>
-                    </td>
-                </tr>
-                
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Brand</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.brand.title}}</h6>
-                    </td>
-                </tr>
-              
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Unit</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.unit.title}}</h6>
-                    </td>
-                </tr>
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Product Store</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.product_store}}</h6>
-                    </td>
-                </tr>
-              
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Is Measurable</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.is_measurable}}</h6>
-                    </td>
-                </tr>
-                <!-- <tr class="ro-border">
-                    <td colspan="2" class="f-500">Is Active</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.is_active}}</h6>
-                    </td>
-                </tr> -->
-               
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Color</td>
-                    <td colspan="6" class="f-400 p-0">
-                        <div class="row ro-6" *ngFor="let color of productDetail.color">
-                            <div class="col-sm-6">
-                                <h6 class="f-500">Title</h6>
-                                <h6 class="f-500">Color Code</h6>
-                                <!-- <h6 class="f-500">Is Active</h6> -->
-                            </div>
-                            <div class="col-sm-6">
-                                <h6>{{color.title}}</h6>
-                                <h6>{{color.color_code}}</h6>
-                                <!-- <h6>{{color.is_active}}</h6> -->
-                            </div>
-                        </div>
-                    </td>
-                </tr>       
-                     
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Size</td>
-                    <td colspan="6" class="f-400 p-0">
-                        <div class="row ro-6" *ngFor="let size of productDetail.size">
-                            <div class="col-sm-6">
-                                <h6 class="f-500">Title</h6>
-                                <h6 class="f-500">Code</h6>
-                                <!-- <h6 class="f-500">Is Active</h6> -->
-                            </div>
-                            <div class="col-sm-6">
-                                <h6>{{size.title}}</h6>
-                                <h6>{{size.code}}</h6>
-                                <!-- <h6>{{size.is_active}}</h6> -->
-                            </div>
-                        </div>
-                    </td>
-                </tr>     
+        <div class="row">
+            <div class="col-lg-8 col-sm-12">
+                <div class="company-details-card card" *ngIf="productDetail">
+                    <table>
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Title</td>
+                            <td colspan="6" class="f-400">
+                                <h6>{{productDetail.title}}</h6>
+                            </td>
+                        </tr>
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Category</td>
+                            <td colspan="6" class="f-400">
+                                {{productDetail.category.title}}
+                            </td>
+                        </tr>
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Sub Category</td>
+                            <td colspan="6" class="f-400">
+                                <h6>{{productDetail.subcategory.title}}</h6>
+                            </td>
+                        </tr>
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Sub Category Group</td>
+                            <td colspan="6" class="f-400">
+                                <h6>{{productDetail.subcategory_group.title}}</h6>
+                            </td>
+                        </tr>
 
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Variant</td>
-                    <td colspan="6" class="f-400 p-0">
-                        <div class="row ro-6" *ngFor="let variant of productDetail.variant_product">
-                            <div class="col-sm-6">
-                                <h6 class="f-500">Product Title</h6>
-                                <h6 class="f-500">Variant Name</h6>
-                                <h6 class="f-500">Mrp</h6>
-                                <h6 class="f-500">Cost Price</h6>
-                                <h6 class="f-500">Minimum Stock Threshold</h6>
-                                <h6 class="f-500">Max Order Quantity</h6>
-                                <h6 class="f-500">Selling Price</h6>
-                                <h6 class="f-500">Selling Price Dealer</h6>
-                                <h6 class="f-500">Selling Price Employee</h6>
-                                <h6 class="f-500">Sku</h6>
-                                <h6 class="f-500">Stock</h6>
-                            </div>
-                            <div class="col-sm-6">
-                                <h6>{{variant.product_title}}</h6>
-                                <h6>{{variant.product_name}}</h6>
-                                <h6>{{variant.mrp}}</h6>
-                                <h6>{{variant.cost_price}}</h6>
-                                <h6>{{variant.minimum_stock_threshold}}</h6>
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Brand</td>
+                            <td colspan="6" class="f-400">
+                                <h6>{{productDetail.brand.title}}</h6>
+                            </td>
+                        </tr>
 
-                                <h6>{{variant.max_order_quantity}}</h6>
-                                <h6>{{variant.selling_price}}</h6>
-                                <h6>{{variant.selling_price_dealer}}</h6>
-                                <h6>{{variant.selling_price_employee}}</h6>
-                                <h6>{{variant.sku}}</h6>
-                                <h6>{{variant.stock}}</h6>
-                            </div>
-                        </div>
-                    </td>
-                </tr> 
- 
-            </table>
-            <div class="d-flex align-items-center mt-3">
-                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                <span [ngClass]="{'bg-lightgreen': productDetail.is_active === true, 'bg-lightred' : productDetail.is_active === false,'bg-lightyellow' : productDetail.is_active === 'Partial' }"
-                                    class="badges">{{productDetail.is_active}}</span>
-            </div>
-        </div>
-       
-        <!-- <div class="company-details-card card">
-            <div class="sub-card row" style="border: none;">
-                <div class="col-sm-4">
-                    <ul class="product-bar" *ngIf="productDetail">
-                        <li>
-                            <h4>Title</h4>
-                        </li>
-                        <li>
-                            <h4>Category</h4>
-                        </li>
-                        <li>
-                            <h4>Sub Category</h4>
-                        </li>
-                        <li>
-                            <h4>Sub Category Group</h4>
-                        </li>
-                        <li>
-                            <h4>Features Subcategory</h4>
-                        </li>
-                        <li>
-                            <h4>Brand</h4>
-                        </li>
-                        <li>
-                            <h4>Unit</h4>
-                        </li>
-                        <li>
-                            <h4>Unit Conversion</h4>
-                        </li>
-                        <li>
-                            <h4>Product Store</h4>
-                        </li>
-                        <li>
-                            <h4>Is Approved</h4>
-                        </li>
-                        <li>
-                            <h4>Is Measurable</h4>
-                        </li>
-                        <li>
-                            <h4>Is Active</h4>
-                        </li>
-                        <li>
-                            <h4>Color</h4>
-                        </li>
-                        <li>
-                            <h4>Size</h4>
-                        </li>
-                        <li>
-                            <h4>Variant</h4>
-                        </li>
-                        <li>
-                            <h4>Description</h4>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-8">
-                    <ul class="product-bar" *ngIf="productDetail">
-                        <li>
-                            <h6>{{productDetail.title}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.category}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.subcategory}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.subcategory_group}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.features_subcategory}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.brand}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.unit}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.unit_conversion}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.product_store}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.is_approved}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.is_measurable}}</h6>
-                        </li>
-                        <li>
-                            <h6>{{productDetail.is_active}}</h6>
-                        </li>
-                        <li style="padding:0">
-                            <div class="row ro-6">
-                                <div class="col-sm-6 ">
-                                    <ul *ngFor="let color of productDetail.color">
-                                        <li>
-                                            <h4>Title</h4>
-                                        </li>
-                                        <li>
-                                            <h4>Code</h4>
-                                        </li>
-                                        <li>
-                                            <h4>Is Active</h4>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-sm-6 ">
-                                    <ul *ngFor="let color of productDetail.color">
-                                        <li>
-                                           
-                                            <h6>{{color.title}}</h6>
-                                        </li>
-                                        <li>
-                                          
-                                            <h6>{{color.color_code}}</h6>
-                                        </li>
-                                        <li>
-                                           
-                                            <h6>{{color.is_active}}</h6>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                       <ul *ngFor="let color of productDetail.color">
-                                    <li>
-                                        <h4>Title</h4>
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Unit</td>
+                            <td colspan="6" class="f-400">
+                                <h6>{{productDetail.unit.title}}</h6>
+                            </td>
+                        </tr>
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Product Store</td>
+                            <td colspan="6" class="f-400">
+                                <h6>{{productDetail.product_store}}</h6>
+                            </td>
+                        </tr>
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Is Measurable</td>
+                            <td colspan="6" class="f-400">
+                                <h6>{{productDetail.is_measurable}}</h6>
+                            </td>
+                        </tr>
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Color</td>
+                            <td colspan="6" class="f-400 p-0">
+                                <div class="row ro-6" *ngFor="let color of productDetail.color">
+                                    <div class="col-sm-6">
+                                        <h6 class="f-500">Title</h6>
+                                        <h6 class="f-500">Color Code</h6>
+                                        <!-- <h6 class="f-500">Is Active</h6> -->
+                                    </div>
+                                    <div class="col-sm-6">
                                         <h6>{{color.title}}</h6>
-                                    </li>
-                                    <li>
-                                        <h4>Code</h4>
                                         <h6>{{color.color_code}}</h6>
-                                    </li>
-                                    <li>
-                                        <h4>Is Active</h4>
-                                        <h6>{{color.is_active}}</h6>
-                                    </li>
-                                </ul> 
-                        </li>
-                        <li>
-                            <div class="row ro-6">
-                                <div class="col-sm-6 ">
-                                    <ul *ngFor="let size of productDetail.size">
-                                        <li>
-                                            <h4>Title</h4>
-                                          
-                                        </li>
-                                        <li>
-                                            <h4>Tode</h4>
-                                        
-                                        </li>
-                                        <li>
-                                            <h4>Is Active</h4>
-                                       
-                                        </li>
-                                    </ul>
+                                        <!-- <h6>{{color.is_active}}</h6> -->
+                                    </div>
                                 </div>
-                                <div class="col-sm-6 ">
-                                    <ul *ngFor="let size of productDetail.size">
-                                        <li>
-                                          
-                                            <h6>{{size.title}}</h6>
-                                        </li>
-                                        <li>
-                                       
-                                            <h6>{{size.code}}</h6>
-                                        </li>
-                                        <li>
-                                       
-                                            <h6>{{size.is_active}}</h6>
-                                        </li>
-                                    </ul>
+                            </td>
+                        </tr>
+
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Size</td>
+                            <td colspan="6" class="f-400 p-0">
+                                <div class="row ro-6" *ngFor="let size of productDetail.size">
+                                    <div class="col-sm-6">
+                                        <h6 class="f-500">Title</h6>
+                                        <h6 class="f-500">Code</h6>
+                                        <!-- <h6 class="f-500">Is Active</h6> -->
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <h6>{{size.title}}</h6>
+                                        <h6>{{size.code}}</h6>
+                                        <!-- <h6>{{size.is_active}}</h6> -->
+                                    </div>
                                 </div>
-                            </div>
-                        
-                        </li>
-                        <li style="padding:0"> 
-                            <div class="row ro-6">
-                                <div class="col-sm-6 ">
-                                    <ul *ngFor="let variant of productDetail.variant">
-                                        <li>
-                                            <h4>SKU</h4>  
-                                        </li>
-                                        <li>
-                                            <h4>Code</h4> 
-                                        </li>
-                                        <li>
-                                            <h4>Is Active</h4>
-                                        </li>
-                                    </ul>
+                            </td>
+                        </tr>
+                        <tr class="ro-border">
+                            <td colspan="2" class="f-500">Product Feature</td>
+                            <td colspan="6" class="f-400">
+                                <div class="table-responsive">
+                                    <table datatable class="table datanew">
+                                        <thead>
+                                            <tr>
+                                                <th>Feature Group</th>
+                                                <th>Feature</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                *ngFor="let feature of productDetail.product_feature_product let i = index">
+                                                <td>{{feature.feature_group}}</td>
+                                                <td>{{feature.feature.title}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="col-sm-6 ">
-                                    <ul *ngFor="let variant of productDetail.variant">
-                                        <li>
-                                            <h6>{{variant.sku}}</h6>
-                                        </li>
-                                        <li>
-                                            <h6>{{variant.minimum_stock_threshold}}</h6>
-                                        </li>
-                                        <li>
-                                            <h6>{{variant.is_active}}</h6>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <h4>Description</h4>
-                            <h6>{{productDetail.description}}</h6>
-                        </li>
-                    </ul>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="container my-2">
+                        <h2 colspan="2" class="f-500">Variants</h2>
+                        <!-- <div class="row ro-6" *ngFor="let variant of productDetail.variant_product">
+                        <div class="col-sm-6">
+                            <h6 class="f-500">Product Title</h6>
+                            <h6 class="f-500">Variant Name</h6>
+                            <h6 class="f-500">Mrp</h6>
+                            <h6 class="f-500">Cost Price</h6>
+                            <h6 class="f-500">Minimum Stock Threshold</h6>
+                            <h6 class="f-500">Max Order Quantity</h6>
+                            <h6 class="f-500">Selling Price</h6>
+                            <h6 class="f-500">Selling Price Dealer</h6>
+                            <h6 class="f-500">Selling Price Employee</h6>
+                            <h6 class="f-500">Sku</h6>
+                            <h6 class="f-500">Stock</h6>
+                        </div>
+                        <div class="col-sm-6">
+                            <h6>{{variant.product_title}}</h6>
+                            <h6>{{variant.product_name}}</h6>
+                            <h6>{{variant.mrp}}</h6>
+                            <h6>{{variant.cost_price}}</h6>
+                            <h6>{{variant.minimum_stock_threshold}}</h6>
+                            <h6>{{variant.max_order_quantity}}</h6>
+                            <h6>{{variant.selling_price}}</h6>
+                            <h6>{{variant.selling_price_dealer}}</h6>
+                            <h6>{{variant.selling_price_employee}}</h6>
+                            <h6>{{variant.sku}}</h6>
+                            <h6>{{variant.stock}}</h6>
+                        </div>
+                    </div> -->
+                        <div class="table-responsive">
+                            <table datatable class="table datanew">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Variant</th>
+                                        <th>Mrp</th>
+                                        <th>Cost Price</th>
+                                        <th>Minimum Stock</th>
+                                        <th>Quantity</th>
+                                        <th>Selling Price</th>
+                                        <th>Dealer Price</th>
+                                        <th>Employee Price</th>
+                                        <th>Sku</th>
+                                        <th>Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let variant of productDetail.variant_product let i = index">
+                                        <td>{{variant.product_title}}</td>
+                                        <td>{{variant.variant_name}}</td>
+                                        <td>{{variant.mrp}}</td>
+                                        <td>{{variant.cost_price}}</td>
+                                        <td>{{variant.minimum_stock_threshold}}</td>
+                                        <td>{{variant.max_order_quantity}}</td>
+                                        <td>{{variant.selling_price}}</td>
+                                        <td>{{variant.selling_price_dealer}}</td>
+                                        <td>{{variant.selling_price_employee}}</td>
+                                        <td>{{variant.sku}}</td>
+                                        <td>{{variant.stock}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mt-3">
+                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                        <span
+                            [ngClass]="{'bg-lightgreen': productDetail.is_active === true, 'bg-lightred' : productDetail.is_active === false,'bg-lightyellow' : productDetail.is_active === 'Partial' }"
+                            class="badges">{{productDetail.is_active}}</span>
+                    </div>
                 </div>
             </div>
-            <div>
+            <!-- img -->
+            <div class="col-lg-4 col-sm-12">
+                <div class="card bg">
+                    <div class="card-body">
+                        <div class="company-details-card card">
+                            <div class="slider-product-details">
+                                <div class="owl-carousel owl-theme product-slide my-5">
+                                    <div class="slider-product" *ngFor="let image of productDetail.product_images">
+                                        <img [src]="image.image" [alt]="image.product_colour">
+                                        <h4>{{image.product_colour}}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div> -->
+
+        </div>
     </div>
 </div>
