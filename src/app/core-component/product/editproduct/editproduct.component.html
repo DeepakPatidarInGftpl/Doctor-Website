@@ -601,8 +601,9 @@
 								<p class="titl">{{productNamme}}</p>
 								<div class="table-responsive table-bg">
 									<table datatable class="table ">
-										<thead>
-											<tr>
+										<!-- <thead> -->
+											<!-- <tr> -->
+												<tr class="t-row">
 												<th style="display:none">Product </th>
 												<th>Variant </th>
 												<th>MRP </th>
@@ -616,7 +617,7 @@
 												<th>Barcode/SKU</th>
 												<th>Max order quantity</th>
 											</tr>
-										</thead>
+										<!-- </thead> -->
 										<tbody>
 											<ng-container formArrayName="variant_product">
 												<ng-container *ngFor="let d of getVarinatsForm().controls; let i=index">
