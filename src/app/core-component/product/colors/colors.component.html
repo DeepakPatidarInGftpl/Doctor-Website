@@ -1,3 +1,4 @@
+
 <div class="row">
     <div class="col-lg-7 col-sm-7 col-12">
         <div class="page-header">
@@ -58,7 +59,7 @@
                             <tr>
                                 <th (click)="sort('id')" class="thone">
                                     <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
-                                        <input type="checkbox" [(ngModel)]="initChecked">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
                                         <span class="checkmarks"></span>
                                     </label>
                                     <i class="fa fa-sort"></i>
@@ -74,7 +75,7 @@
 
                                 <td>
                                     <label class="checkboxs">
-                                        <input type="checkbox" [(ngModel)]="products.is_active">
+                                        <input type="checkbox" [(ngModel)]="selectedRows[i]">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
@@ -83,9 +84,11 @@
                                     <a href="javascript:void(0);" style="line-height: 3;">{{products.title}}</a>
                                 </td>
                                 <td>{{products.color_code}}</td>
-                                <td><span
-                                        [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
-                                        class="badges">{{products.is_active}}</span></td>
+                                <td>
+                                    <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                                        class="badges">{{products.is_active}}</span> -->
+                                        <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>          
+                                    </td>
                                 <td>
 
                                     <a class="me-3" (click)="editForm(products.id)">

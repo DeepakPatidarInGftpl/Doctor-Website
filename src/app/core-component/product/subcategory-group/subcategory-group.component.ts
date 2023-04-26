@@ -56,7 +56,67 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+  select=false
+  delRes:any;
+  // active deactive
+  deActivate(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Deactivate this subcategory group!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Deactivate it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreServ.subcategoryGroupIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Subcategory Group Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Deactivate!',
+         text: 'Subcategory Group Is Deactivate Successfully.',
+       });
+     }
+   });
+ }
+ Active(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Active this subcategory group!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Active it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreServ.subcategoryGroupIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Subcategory Group Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Active!',
+         text: 'Subcategory Group Is Active Successfully.',
+       });
+     }
+   });
+ }
   editMode;
 
   categories;
@@ -88,6 +148,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
 
 this.coreServ.getSubcategoryGroup().subscribe(res=>{
   this.tableData=res;
+  this.selectedRows = new Array(this.tableData.length).fill(false);
 })
 
     let eTitle = ''
@@ -154,6 +215,11 @@ this.coreServ.getSubcategoryGroup().subscribe(res=>{
     // };
   }
 
+  allSelected: boolean = false;
+  selectedRows:boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
+  }
   arraySubCat = []
   selectedSubCat=0;
   onSelectionChange(subCat, isChecked) {
@@ -221,6 +287,8 @@ this.coreServ.getSubcategoryGroup().subscribe(res=>{
             this.form.reset()
             this.toastr.success(res.msg)
             this.ngOnInit()
+            this.selectedSubCat=0;
+            this.selectedFeatureGrp=0;
           }
         })
       } else {
@@ -234,6 +302,8 @@ this.coreServ.getSubcategoryGroup().subscribe(res=>{
             this.errormessFFG = null
             this.toastr.success(res.msg)
             this.ngOnInit()
+            this.selectedSubCat=0;
+            this.selectedFeatureGrp=0;
           }
         },
           err => {

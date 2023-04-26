@@ -62,18 +62,83 @@ export class FinancialYearComponent implements OnInit {
       }
     });
   }
+  select=false
+  // active deactive
+  deActivate(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Deactivate this financial year!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Deactivate it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.financialYearIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "FinancialYear Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Deactivate!',
+         text: 'Financial Year Is Deactivate Successfully.',
+       });
+     }
+   });
+ }
+ Active(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Active this financial year!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Active it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.financialYearIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "FinancialYear Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Active!',
+         text: 'FinancialYear Is Active Successfully.',
+       });
+     }
+   });
+ }
   ngOnInit(): void {
     this.FinancialYearForm = this.fb.group({
       start_year: new FormControl('', [Validators.required]),
       close_year: new FormControl('', [Validators.required]),   
     })
-  
-    
+   
     this.coreService.getFinancialYear().subscribe(res=>{
       this.tableData=res;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
     })
   }
 
+  allSelected: boolean = false;
+  selectedRows:boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
+  }
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -93,7 +158,6 @@ export class FinancialYearComponent implements OnInit {
       }
     })
   }
-
 
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
@@ -131,7 +195,6 @@ export class FinancialYearComponent implements OnInit {
 
 update(){
   if (this.FinancialYearForm.valid) {
-  
     this.coreService.updateFinancialYear(this.FinancialYearForm.value, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
@@ -184,7 +247,6 @@ update(){
     this.FinancialYearForm.reset();
   }
 
-  
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
@@ -192,8 +254,8 @@ update(){
       this.tableData = this.tableData.filter(res => {
         console.log(res);
         console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
+        console.log(res.start_year.match(this.titlee));
+        return res.start_year.match(this.titlee);
       })
     }
   }

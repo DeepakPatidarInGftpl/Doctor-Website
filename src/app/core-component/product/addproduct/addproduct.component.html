@@ -1,11 +1,12 @@
-<div class="page-header">
+<!-- <img src="{{base64Image}}" alt=""> -->
+<!--<div class="page-header">
 	<div class="page-title">
 		<h4>Product Add</h4>
 		<h6>Create new product</h6>
 	</div>
 </div>
-<!-- /add -->
-<div class="card">
+
+ <div class="card">
 	<div class="card-body">
 		<form [formGroup]="productForm" (ngSubmit)="submit()">
 			<div class="row">
@@ -70,7 +71,7 @@
 							'is-invalid': f['brand'].touched && f['brand'].invalid
 						  }">
 							<option value="" selected disabled>Choose Brand</option>
-							<!-- *ngFor="let brand of brandBySubcat" -->
+					
 							<option value="{{brand.id}}" *ngFor="let brand of brandList">{{brand.title}}</option>
 						</select>
 						
@@ -116,18 +117,11 @@
 				<div class="col-lg-3 col-sm-6 col-12">
 					<div class="form-group">
 						<label>Colors</label>
-						<!-- <select class="form-select" formControlName="color">
-							<option value="" selected disabled>Choose color</option>
-							<option value="{{color.id}}" *ngFor="let color of colorList">{{color.title}}</option>
-						</select> -->
-
-
+					
 						<div class="dropdown">
 							<button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
 								aria-expanded="false">Choose Color</button>
 
-							<!-- <input type="button" value="Select Subcategory" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
-								aria-expanded="false"> -->
 							<ul class="dropdown-menu" style="width: 100%;">
 								<li><a class="dropdown-item" *ngFor="let color of colorList; let i=index">
 										<input type="checkbox" [value]="color.id" (change)="onCheckColor($event)"
@@ -146,11 +140,7 @@
 				<div class="col-lg-3 col-sm-6 col-12">
 					<div class="form-group">
 						<label>Size</label>
-						<!-- <select class="form-select" formControlName="size">
-							<option value="" selected disabled>Choose size</option>
-							<option value="{{size.id}}" *ngFor="let size of sizeList">{{size.title}}</option>
-						</select> -->
-
+					
 						<div class="dropdown">
 							<button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
 								aria-expanded="false">Choose Size</button>
@@ -172,10 +162,7 @@
 				<div class="col-lg-3 col-sm-6 col-12">
 					<div class="form-group">
 						<label>Variant</label>
-						<!-- <select class="form-select" formControlName="variant">
-							<option value="" selected disabled>Choose variant</option>
-							<option value="{{variant.id}}" *ngFor="let variant of varantList">{{variant.sku}}</option>
-						</select> -->
+					
 						<div class="dropdown">
 							<button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
 								aria-expanded="false">Choose Variant</button>
@@ -281,8 +268,468 @@
 			</div>
 		</form>
 	</div>
-</div>
-<!-- /add -->
+</div> -->
 
+
+<div class="row bg">
+	<div class="card">
+		<div class="card-body">
+			<div class="page-header">
+				<div class="page-title">
+					<h6 class="subhead-color" (click)="goBack()"><mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>
+						Back to products</h6>
+					<h4>New Product</h4>
+				</div>
+			</div>
+			<div class="company-details-card card">
+				<div class="sub-card row">
+					<form [formGroup]="productForm" (ngSubmit)="submit()">
+						<mat-tab-group animationDuration="0ms" #tabGroup>
+							<mat-tab label="General Details">
+								<div class="row mt-3">
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Title*</label>
+											<input type="text" placeholder="Title" formControlName="title" [ngClass]="{
+													'is-invalid': f['title'].touched && f['title'].invalid}" [(ngModel)]="productNamme">
+											<span class="text-danger"
+												*ngIf="title && title.invalid && title.touched">Enter
+												title
+											</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Category*</label>
+											<select class="form-select" formControlName="category" [ngClass]="{
+											'is-invalid': f['category'].touched && f['category'].invalid
+										  }" #categoryValue (change)="getSubcategoryGroupByCategory(categoryValue.value)">
+												<option value="" selected disabled>Select Category</option>
+												<option value="{{category.id}}" *ngFor="let category of categoryList">
+													{{category.title}}
+												</option>
+											</select>
+											<span class="text-danger"
+												*ngIf="category && category.invalid && category.touched">Select category
+											</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Subcategory Group*</label>
+											<select class="form-select" formControlName="subcategory_group" [ngClass]="{
+											'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
+										  }" #subCategoryGroupValue  (change)="oncheck(subCategoryGroupValue.value)">
+
+												<option value="" selected disabled>Select Subcategory Group</option>
+												<option value="{{subcatgroup.id}}"
+													*ngFor="let subcatgroup of subcatGroupByCategory">
+													{{subcatgroup.title}}
+												</option>
+											</select>
+											<span class="text-danger"
+												*ngIf="subcategory_group && subcategory_group.invalid && subcategory_group.touched && subcatGroupByCategory?.length>0">Select
+												Subcategory Group
+											</span>
+											<span class="text-danger"
+												*ngIf="category && category.touched && subcatGroupByCategory?.length<=0">Subcategory
+												Group
+												not available
+											</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Sub Category*</label>
+											<select class="form-select" formControlName="subcategory" [ngClass]="{
+											'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
+										  }" #subcatValue (change)="checkSubact(subcatValue.value)">
+												<option value="" selected disabled>Select Sub Category</option>
+												<option value="{{subcat.id}}"
+													*ngFor="let subcat of subcatbySubCategoryGroup">
+													{{subcat.title}}</option>
+											</select>
+
+											<span class="text-danger"
+												*ngIf="subcategory && subcategory.invalid && subcategory.touched && subcatbySubCategoryGroup?.length>0">Select
+												Sub Category
+											</span>
+											<span class="text-danger"
+												*ngIf="subcategory_group && subcategory_group.touched && subcatbySubCategoryGroup?.length<=0">Subcategory
+												not available
+											</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Brands</label>
+											<select class="form-select" formControlName="brand" [ngClass]="{
+											'is-invalid': f['brand'].touched && f['brand'].invalid}">
+												<option value="" selected disabled>Select Brand</option>
+												<option value="{{brand.id}}" *ngFor="let brand of brandBySubcat">
+													{{brand.title}}
+												</option>
+											</select>
+											<span class="text-danger"
+												*ngIf="brand && brand.invalid && brand.touched && brandBySubcat?.length>0">Select
+												Brand
+											</span>
+											<span class="text-danger"
+											*ngIf="subcategory && subcategory.touched && brandBySubcat?.length<=0">Brands
+											not available
+										</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Colors</label>
+
+											<div class="dropdown">
+												<button type="button" class="dropdown-toggle button" type="button"
+													data-bs-toggle="dropdown" aria-expanded="false">Select
+													Color</button>
+												<ul class="dropdown-menu" style="width: 100%;">
+													<li *ngFor="let color of colorList; let i=index">
+														<a class="dropdown-item">
+															<input type="checkbox" [value]="color.id"
+																(change)="onCheckColor($event)"
+																(change)="onCheckColors(color.title)"
+																formArrayName="color" style="margin-right: 5px;"
+																[ngClass]="{
+																'is-invalid': f['color'].touched && f['color'].invalid
+															  }" [id]="'checkbox-' + i" >
+															
+															<label [for]="'checkbox-' + i" (click)="onLabelClick($event)" style="margin-bottom: 0;">{{color.title}}</label>
+														</a></li>
+												</ul>
+											</div>
+
+											   <!-- <mat-select formControlName="color" multiple placeholder="Select Subcategory">
+                                  <mat-option *ngFor="let color of colorList; let i=index" [value]="color.id" (click)="onCheckColors(color.title)"> {{color.title}}</mat-option>
+                                </mat-select> -->
+
+											<p *ngIf="selectedColor>0">{{selectedColor + ' Colors Selected'}}</p>
+											<span class="text-danger"
+												*ngIf="color && color.invalid && color.touched">Select
+												Color
+											</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Size*</label>
+											<div class="dropdown">
+												<button type="button" class="dropdown-toggle button" type="button"
+													data-bs-toggle="dropdown" aria-expanded="false">Select Size</button>
+												<ul class="dropdown-menu" style="width: 100%;">
+													<li><a class="dropdown-item" *ngFor="let size of sizeList let i = index;" >
+															<input type="checkbox" [value]="size.id"
+																(change)="onCheckSize($event)"
+																(change)="onCheckSizes(size.title)" formArrayName="size"
+																style="margin-right: 5px;" [ngClass]="{
+																'is-invalid': f['size'].touched && f['size'].invalid
+															  }" [id]="'checkboxSize-' + i" >
+															  <label [for]="'checkboxSize-' + i" (click)="onLabelClick($event)" style="margin-bottom: 0;">{{size.title}}</label>
+														</a></li>
+												</ul>
+											</div>
+											
+											<!-- <mat-select formControlName="color" multiple placeholder="Select Subcategory">
+												<mat-option *ngFor="let size of sizeList; let i=index" [value]="size.id" (click)="onCheckSizes(size.title)"> {{size.title}}</mat-option>
+											  </mat-select> -->
+											  
+											<p *ngIf="selectedSize>0">{{selectedSize + ' Size Selected'}}</p>
+											<span class="text-danger"
+												*ngIf="size && size.invalid && size.touched">Select
+												Size
+											</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Store*</label>
+											<select class="form-select" formControlName="product_store" [ngClass]="{
+											'is-invalid': f['product_store'].touched && f['product_store'].invalid
+										  }">
+												<option value="" selected disabled>Select Product Store</option>
+												<option value="Online">Online</option>
+												<option value="Store">Store</option>
+												<option value="Both">Both</option>
+											</select>
+											<span class="text-danger"
+												*ngIf="product_store && product_store.invalid && product_store.touched">Select
+												Product Store
+											</span>
+										</div>
+									</div>
+									<!-- <div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Tax Slab*</label>
+											<select class="form-select" formControlName="tax_slab" [ngClass]="{
+											'is-invalid': f['category'].touched && f['category'].invalid
+										  }" #taxslabValue>
+												<option value="" selected disabled>Select Tax Slab</option>
+												<option value="{{tax.id}}" *ngFor="let tax of taxSlabBysubcatList">
+													{{tax.subcategory_group.title}}
+												</option>
+											</select>
+											<span class="text-danger"
+												*ngIf="tax_slab && tax_slab.invalid && tax_slab.touched">Select
+												Tax Slab
+											</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Hsn Code*</label>
+											<select class="form-select" formControlName="hsncode" [ngClass]="{
+											'is-invalid': f['category'].touched && f['category'].invalid
+										  }" #hsncodeValue>
+												<option value="" selected disabled>Select Hsn Code</option>
+												<option value="{{hsn.id}}" *ngFor="let hsn of hsncodeBysubcatList">
+													{{hsn.hsn_code}}
+												</option>
+											</select>
+											<span class="text-danger"
+												*ngIf="hsn_code && hsn_code.invalid && hsn_code.touched">Select
+												Hsn Code
+											</span>
+										</div>
+									</div> -->
+
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Unit*</label>
+											<select class="form-select" formControlName="unit" [ngClass]="{
+											'is-invalid': f['unit'].touched && f['unit'].invalid}">
+
+												<option value="" selected disabled>Select unit</option>
+												<option value="{{unit.id}}" *ngFor="let unit of unitList">{{unit.title}}
+												</option>
+											</select>
+											<span class="text-danger"
+												*ngIf="unit && unit.invalid && unit.touched">Select
+												Unit
+											</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<div class="d_flex">
+												<div class="d-flex">
+													<input type="checkbox" formControlName="purchase_tax_including" [id]="'checkboxTax-'" >	
+														<label [for]="'checkboxTax-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Purchase Tax Including</label>
+												</div>
+												<div class="d-flex">
+													<input type="checkbox" formControlName="is_measurable" [id]="'checkboxMeasure-'">
+													
+													<label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Measurable</label>
+												</div>
+											</div>
+											<div class="d_flex">
+												<div class="d-flex">
+													<input type="checkbox" formControlName="sales_tax_including" [id]="'checkboxSale-'"> 
+													<label [for]="'checkboxSale-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Sales Tax Including</label>
+												</div>
+												<div class="d_flex">
+													<input type="checkbox" formControlName="is_active" [id]="'checkboxActive-'">
+													<label [for]="'checkboxActive-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Active</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="col-lg-12">
+										<div class="form-group">
+											<label>Description</label>
+											<ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
+											</ngx-editor-menu>
+											<ngx-editor [editor]="editor" formControlName="description" id="slug"
+												[ngClass]="{
+											'is-invalid': f['description'].touched && f['description'].invalid}">
+											</ngx-editor>
+											<span class="text-danger"
+												*ngIf="description && description.invalid && description.touched">Enter
+												Description
+											</span>
+										</div>
+									</div>
+									<div class="col-sm-5">
+										<table class="table amt-table">
+											<thead>
+												<tr>
+													<th>Features</th>
+												</tr>
+											</thead>
+											<tbody>
+												<ng-container formArrayName="product_features">
+													<ng-container *ngFor="let d of getFeature().controls; let i=index">
+														<tr [formGroupName]="i">
+															<td colspan="5">
+																<div class="row">
+																	<div class="col-sm-4">
+																		<input type="text"
+																			formControlName="feature_group"
+																			class="feature-input"
+																			[readonly]="true" style="display:none">
+																			<label>{{ featureGrpBysubcatGroupList.feature_group[i].title }}</label>
+																	</div>
+																	
+																	<div class="col-sm-8">
+																		<select formControlName="feature" class="inp">
+																			<option value="" selected disabled>Select
+																				Tax</option>
+																			<option value="{{feature.id}}"
+																				*ngFor="let feature of featureList">
+																				{{feature.title}}
+																			</option>
+																		</select>
+																	</div>
+																</div>
+															</td>
+														</tr>
+													</ng-container>
+												</ng-container>
+											</tbody>
+										</table>
+									</div>
+									<div class="col-lg-12 text-center my-5">
+										<a class="btn btn-cancel">Clear</a>
+										<button type="button" class="btn btn-submit me-2" (click)="selectTab(1)">Save & Next</button>
+									</div>
+								</div>
+
+							</mat-tab>
+							<mat-tab label="Variants">
+							<p class="titl">{{productNamme}}</p>
+							
+								<div class="container table-responsive table-bg">
+									<table datatable class="table ">
+										<!-- <thead> -->
+											<!-- <tr> -->
+											<tr class="t-row">
+												<th style="display:none">Product </th>
+												<th width="0.5%">Variant </th>
+												<th>MRP </th>
+												<th>Cost Price </th>
+												<th>Selling Price-A</th>
+												<th>Stock </th>
+												<!-- Minimum Stock Threshold -->
+												<th>Minimum Stock</th>
+												<th>Selling Price Dealer</th>
+												<th>Selling Price Employee</th>
+												<th>Barcode/SKU</th>
+												<th>Max order quantity</th>
+											</tr>
+											<!-- </thead> -->
+										<tbody>
+											<ng-container formArrayName="variant_product">
+												<ng-container *ngFor="let d of getVarinatsForm().controls; let i=index">
+													<tr [formGroupName]="i">
+														<td style="display:none"><input type="text" class="inp"
+																formControlName="product_title" [ngModel]="productNamme" [readonly]="true"></td>
+														<td><input type="text" class="inp" value="RedXl"
+																formControlName="variant_name" [readonly]="true" style="width: 80px;"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="mrp"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="cost_price"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="selling_price"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="stock"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="minimum_stock_threshold"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="selling_price_dealer"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="selling_price_employee"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="sku"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="max_order_quantity"></td>
+													</tr>
+												</ng-container>
+											</ng-container>
+										</tbody>
+										
+									</table>
+									
+								</div>
+							<div class="col-lg-12 text-center my-5">
+										<a class="btn btn-cancel">Clear</a>
+										<button type="button" class="btn btn-submit me-2" (click)="selectTab(2)">Save & Create New</button>
+									</div>
+							</mat-tab>
+							<mat-tab label="Image">
+								<table class="table amt-table third-table">
+									<thead>
+										<tr>
+											<th>Colors</th>
+											<th>Image</th>
+											<th>&nbsp;</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="product_image">
+											<ng-container *ngFor="let d of getproductImage().controls; let i=index">
+												<tr [formGroupName]="i">
+													<td><input type="text" class="inp" placeholder="0"
+															formControlName="product_colour"></td>
+													<td [style]="!p_img?'width:30%':'width:30%'">
+														<div class="d-flex align-items-center">
+															<svg *ngIf="Show" xmlns="http://www.w3.org/2000/svg" width="20"
+																height="20" fill="currentColor" class="bi bi-image mx-5 svg"
+																viewBox="0 0 16 16">
+																<path
+																	d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+																<path
+																	d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
+															</svg>
+															<img [src]="url[i]" *ngIf="url[i]" alt="" class="p-img mx-5">
+															<div class="image-upload">
+																<input type="file" formControlName="image"
+																	(change)="onImageSelected($event, i)">
+																<div class="image-uploads">
+																	<h4 class="d-inline me-2">Upload</h4>
+																	<svg xmlns="http://www.w3.org/2000/svg" width="16"
+																		height="16" fill="currentColor"
+																		class="bi bi-cloud-upload" viewBox="0 0 16 16">
+																		<path fill-rule="evenodd"
+																			d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383z" />
+																		<path fill-rule="evenodd"
+																			d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3z" />
+																	</svg>
+																</div>
+															</div>
+														</div>
+													</td>
+													<td>
+														<div class="d-flex align-items-center">
+															<button (click)="removeProductImage(i)"
+																class="btn btn-cancel me-2">Clear</button>
+															<button type="button" class="btn btn-submit me-2"
+																(click)="addproductImage()">Add</button>
+														</div>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+								</tbody>
+								</table>
+
+								<div class="col-lg-12 text-center my-5">
+									<a class="btn btn-cancel">Clear</a>
+									<button class="btn btn-submit me-2">Save & Create New</button>
+								</div>
+								
+							</mat-tab>
+						</mat-tab-group>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 

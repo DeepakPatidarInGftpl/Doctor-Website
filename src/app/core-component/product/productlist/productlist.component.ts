@@ -51,7 +51,66 @@ itemsPerPage:number=10;
       }
     });
   }
-
+  select=false
+  // active deactive
+  deActivate(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Deactivate this product!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Deactivate it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.productIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Product Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Deactivate!',
+         text: 'Product Is Deactivate Successfully.',
+       });
+     }
+   });
+ }
+ Active(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Active this product!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Active it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.productIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Product Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Active!',
+         text: 'Product Is Active Successfully.',
+       });
+     }
+   });
+ }
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -75,10 +134,18 @@ itemsPerPage:number=10;
     // })
     // this.QueryService.productList;
     this.coreService.getProducts().subscribe(res=>{
-      this.tableData=res
+      this.tableData=res;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     console.log(this.tableData);
   }
+
+  allSelected: boolean = false;
+  selectedRows:boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
+  }
+  
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -91,6 +158,8 @@ itemsPerPage:number=10;
     }
   }
 
+ 
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
@@ -98,26 +167,28 @@ itemsPerPage:number=10;
       this.tableData = this.tableData.filter(res => {
         console.log(res);
         console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        // search data base on - title, category,subcategory,subcategory_grp,
+        console.log(res.title.toLocaleLowerCase().match(this.titlee.toLocaleLowerCase()));
+        // return res.title.match(this.titlee);
         if(res.title.match(this.titlee)){
-          return res.title.match(this.titlee);
-        }else if(res.category.match(this.titlee)){
-          return res.category.match(this.titlee);
-        }
-        else if(res.subcategory.match(this.titlee)){
-          return res.subcategory.match(this.titlee);
-        }
-        // else if(res.subcategory_group.match(this.titlee)){
-        //   return res.subcategory_group.match(this.titlee);
-        // }
-        // else if(res.brand.match(this.titlee)){
-        //   return res.brand.match(this.titlee);
-        // }
-       
+                  return res.title.match(this.titlee);
+                }
+                // else if(res.category.title.match(this.titlee)){
+                //   return res.category.title.match(this.titlee);
+                // }
+                // else if(res.subcategory.title.match(this.titlee)){
+                //   return res.subcategory.title.match(this.titlee);
+                // }
+                // else if(res.subcategory_group.title.match(this.titlee)){
+                //   return res.subcategory_group.title.match(this.titlee);
+                // }
+                // else if(res.brand.title.match(this.titlee)){
+                //   return res.brand.title.match(this.titlee);
+                // }
+        
       })
     }
   }
+
   key = 'id'
   reverse: boolean = false;
   sort(key) {

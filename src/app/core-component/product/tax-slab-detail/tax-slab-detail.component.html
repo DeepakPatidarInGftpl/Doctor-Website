@@ -1,0 +1,100 @@
+
+<div class="card bg">
+    <div class="card-body">
+        <!-- <div class="page-header">
+            <div class="page-title">
+                <h4>Tax Slab Details</h4>
+                <h6>Full details of a Tax Slab</h6>
+            </div>
+        </div> -->
+
+        <div class="page-header">
+           <div class="page-title">
+                <h4>Tax Slab Details</h4>
+                <h6>Full details of a Tax Slab</h6>
+            </div>
+            <div class="page-btn">
+                <a routerLink="//product/taxSlabUpdate/{{productDetail.id}}" class="btn btn-added">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Tax Slab
+                </a>
+            </div>
+        </div>
+
+        <div class="company-details-card card">
+            <table>
+                <tr class="ro-border">
+                    <td colspan="2" class="f-500">Sub Category Group</td>
+                    <td colspan="6" class="f-400">
+                        <h6>{{productDetail.subcategory_group.title}}</h6>
+                    </td>
+                </tr>
+                <tr class="ro-border">
+                    <td colspan="2" class="f-500">Sub Category</td>
+                    <td colspan="6" class="f-400 p-0">
+                        <div class="row ro-6" *ngFor="let subcategory of productDetail.subcategory">
+                            <!-- <div class="col-sm-6">
+                                <h6 class="f-500">Title</h6>                            
+                            </div> -->
+                            <div class="col-sm-12">
+                                <h6>{{subcategory.title+','}}</h6>                              
+                            </div>
+                        </div>
+                    
+                    </td>
+                </tr>   
+              
+                <!-- <tr class="ro-border">
+                    <td colspan="2" class="f-500">Is Active</td>
+                    <td colspan="6" class="f-400">
+                        <h6>{{productDetail.is_active}}</h6>
+                    </td>
+                </tr> -->
+             
+                <tr class="ro-border">
+                    <td colspan="2" class="f-500">Amount Tax Slabs</td>
+                    <td colspan="6" class="f-400 p-0">
+                        <!-- <div class="row ro-6" *ngFor="let amount of productDetail.amount_tax_slabs">
+                            <div class="col-sm-6">
+                                <h6 class="f-500">From Amount</h6>
+                                <h6 class="f-500">To Amount</h6>
+                                <h6 class="f-500">Tax</h6>                 
+                            </div>
+                            <div class="col-sm-6">
+                                <h6>{{amount.from_amount}}</h6>
+                                <h6>{{amount.to_amount}}</h6>
+                                <h6>{{amount.tax}}</h6>
+                            </div>
+                        </div> -->
+
+                        <div class="table-responsive">
+                            <table datatable class="table datanew">
+                                <thead>
+                                    <tr>   
+                                        <th>From Amount </th>
+                                        <th>To Amount </th>   
+                                        <th>Tax </th>      
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let amount of productDetail.amount_tax_slabs let i = index">
+                                       
+                                        <td>{{amount.from_amount}}</td>
+                                        <td>{{amount.to_amount}}</td>
+                                      <td>{{amount.tax}}</td>   
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>     
+            </table>
+        </div>
+      
+            
+        <div class="d-flex align-items-center">
+            <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+            <span [ngClass]="{'bg-lightgreen': productDetail.is_active === true, 'bg-lightred' : productDetail.is_active === false,'bg-lightyellow' : productDetail.is_active === 'Partial' }"
+                                class="badges">{{productDetail.is_active}}</span>
+        </div>
+   </div>
+</div>

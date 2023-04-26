@@ -11,8 +11,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./tax.component.scss']
 })
 export class TaxComponent implements OnInit {
-
   
+
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any
@@ -63,6 +63,66 @@ export class TaxComponent implements OnInit {
       }
     });
   }
+  select=false
+  // active deactive
+  deActivate(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Deactivate this tax!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Deactivate it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.taxIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Tax Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Deactivate!',
+         text: 'Tax Is Deactivate Successfully.',
+       });
+     }
+   });
+ }
+ Active(index: any, id: any) {
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "Do you want to Active this tax!",
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, Active it!',
+     buttonsStyling: true,
+     customClass: {
+       confirmButton: 'btn btn-primary',
+       cancelButton: 'btn btn-danger ml-1',
+     },
+   }).then((t) => {
+     if (t.isConfirmed) {
+       this.coreService.taxIsActive(id,'').subscribe(res => {
+         this.delRes = res
+         if (this.delRes.msg == "Tax Is active Updated Successfully") {
+           this.ngOnInit()
+         }
+       })
+       Swal.fire({
+         icon: 'success',
+         title: 'Active!',
+         text: 'Tax Is Active Successfully.',
+       });
+     }
+   });
+ }
   ngOnInit(): void {
     this.taxForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -92,7 +152,13 @@ export class TaxComponent implements OnInit {
     // })
   this.coreService.gettaxd().subscribe(res=>{
     this.tableData=res;
+   this.selectedRows = new Array(this.tableData.length).fill(false);
   })
+  }
+  allSelected: boolean = false;
+  selectedRows:boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
   }
 
   selectAll(initChecked: boolean) {

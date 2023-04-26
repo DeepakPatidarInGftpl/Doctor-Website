@@ -113,7 +113,7 @@
                             <tr>
                                 <th (click)="sort('id')" class="thone">
                                     <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
-                                        <input type="checkbox" [(ngModel)]="initChecked">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
                                         <span class="checkmarks"></span>
                                     </label>
                                     <i class="fa fa-sort"></i>
@@ -124,52 +124,61 @@
                                 <th (click)="sort('id')" class="thone">Subcategory group <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Brand <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Unit <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Unit Conversion <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Features Subcategory <i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Unit Conversion <i class="fa fa-sort"></i></th> -->
+                                <!-- <th (click)="sort('id')" class="thone">Features Subcategory <i class="fa fa-sort"></i></th> -->
                                 <th (click)="sort('id')" class="thone">Product Store <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Description <i class="fa fa-sort"></i></th>                           
-                                <th (click)="sort('id')" class="thone">Is Approved <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Measurable <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Sale Tax Including <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Purchase Tax Including<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                                
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
-                                        <input type="checkbox" [(ngModel)]="products.isSelected">
+                                        <input type="checkbox"  [(ngModel)]="selectedRows[i]">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
                                 <td class="productimgname">
-                                    <!-- <a href="javascript:void(0);" class="product-img">
-                                        <img [src]="products.img" alt="product">
-                                    </a> -->
+                                   
                                     <a routerLink="//product/product-details/{{products.id}}" style="line-height: 3;">{{products.title}}</a>
                                 </td>
-                                <td>{{products.category}}</td>
-                                <td>{{products.subcategory}}</td>
-                                <td>{{products.subcategory_group}}</td>
-                                <td>{{products.brand}}</td>
-                                <td>{{products.unit}}</td>
-                                <td>{{products.unit_conversion}}</td>
-                                <td>{{products.features_subcategory}}</td>
+                                <td>{{products.category.title}}</td>
+                                <td>{{products.subcategory.title}}</td>
+                                <td>{{products.subcategory_group.title}}</td>
+                                <td>{{products.brand.title}}</td>
+                                <td>{{products.unit.title}}</td>
+                                <!-- <td>{{products.unit_conversion}}</td> -->
+                                <!-- <td>{{products.features_subcategory}}</td> -->
                                 <td>{{products.product_store}}</td>
                                 <td [innerHTML]="products.description"></td>
+                                
                                 <td>
                                     <span
-                                    [ngClass]="{'bg-lightgreen': products.is_approved === true, 'bg-lightred' : products.is_approved === false,'bg-lightyellow' : products.is_approved === 'Partial' }"
-                                    class="badges">{{products.is_approved}}</span>
+                                    [ngClass]="{'bg-lightgreen': products.is_measurable === true, 'bg-lightred' : products.is_measurable === false,'bg-lightyellow' : products.is_measurable === 'Partial' }"
+                                    class="badges">{{products.is_measurable}}</span>
                                 </td>
                                 <td>
                                     <span
-                                        [ngClass]="{'bg-lightgreen': products.is_measurable === true, 'bg-lightred' : products.is_measurable === false,'bg-lightyellow' : products.is_measurable === 'Partial' }"
-                                        class="badges">{{products.is_measurable}}</span>
+                                        [ngClass]="{'bg-lightgreen': products.sale_tax_including === true, 'bg-lightred' : products.sale_tax_including === false,'bg-lightyellow' : products.sale_tax_including === 'Partial' }"
+                                        class="badges">{{products.sale_tax_including}}</span>
                                 </td>
-                                <td><span
-                                    [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
-                                    class="badges">{{products.is_active}}</span></td>
+                                <td>
+                                    <span
+                                        [ngClass]="{'bg-lightgreen': products.purchase_tax_including === true, 'bg-lightred' : products.purchase_tax_including === false,'bg-lightyellow' : products.purchase_tax_including === 'Partial' }"
+                                        class="badges">{{products.purchase_tax_including}}</span>
+                                </td>
+                                <td>
+                                    <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
+                                    class="badges">{{products.is_active}}</span> -->
+                                    <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                         
+                                </td>
                                 <td>
                                     <a class="me-1" routerLink="//product/product-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">

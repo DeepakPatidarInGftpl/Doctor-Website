@@ -47,6 +47,7 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
   staticPgForm = this.fb.group({
     title: new FormControl('', [Validators.required]),
     slug: new FormControl('', [Validators.required]),
+    choice_type:new FormControl(''),
     description: new FormControl('', [Validators.required])
   })
 
@@ -91,6 +92,8 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
           this.toastr.success(this.addRes.msg)
           this.staticPgForm.reset()
           this.router.navigate(['/website/staticPage'])
+        }else if(this.addRes.slug[0]=="Static Pages with this slug already exists."){
+          this.toastr.error(this.addRes.slug[0])
         }
       }, err => {
         console.log(err.error.gst);
@@ -112,6 +115,9 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
   }
   get description(): any {
     return this.staticPgForm.get('description')
+  }
+  get choice_type():any{
+    return this.staticPgForm.get('choice_type')
   }
 
 

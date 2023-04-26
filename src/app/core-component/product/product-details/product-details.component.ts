@@ -10,7 +10,14 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 export class ProductDetailsComponent implements OnInit {
 
   constructor(private Arout: ActivatedRoute, private coreService: CoreService) { }
+
+  images=[
+    {image:'https://i0.wp.com/www.flutterbeads.com/wp-content/uploads/2022/01/add-image-in-flutter-hero.png?fit=2850%2C1801&ssl=1',color:'blue'},
+    {image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9Lp_vpjcJFZDWE_C0lyv5SjGWuZR3J_AtP7_ydmA2mqnRRlXdmwzVsdaCjp8LbIM-6Qk&usqp=CAU',color:'red'},
+    {image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4qTg6fFDyOZqICjlmXpRpHZvBH-ugax9FwjYYfWuJ&s',color:'green'},
+ ]
   id: any
+  imgUrl='https://pv.greatfuturetechno.com'
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -35,13 +42,10 @@ export class ProductDetailsComponent implements OnInit {
   productDetail: any
   getdata() {
     this.coreService.getProductById(this.id).subscribe(res => {
-  
         if(this.id==res.id){
           this.productDetail = res
-          console.log(res);
-          
+          console.log(res); 
         }
-  
     })
   }
 }

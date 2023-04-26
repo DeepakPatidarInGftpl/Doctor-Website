@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 })
 export class ColorsComponent implements OnInit {
 
- 
+
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any
@@ -23,9 +23,9 @@ export class ColorsComponent implements OnInit {
     return this.colorForm.controls;
   }
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
   }
@@ -50,7 +50,7 @@ export class ColorsComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Colour Deleted successfully") {
             this.tableData
-          this.ngOnInit();
+            this.ngOnInit();
           }
         })
         Swal.fire({
@@ -62,10 +62,75 @@ export class ColorsComponent implements OnInit {
       }
     });
   }
+  select = false
+  // active deactive
+  deActivate(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this color!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.colorIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Color Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deactivate!',
+          text: 'Color Is Deactivate Successfully.',
+        });
+      }
+    });
+  }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this color!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.colorIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Colors Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: 'Color Is Active Successfully.',
+        });
+      }
+    });
+  }
+  form!: FormGroup;
   ngOnInit(): void {
+    this.form = this.fb.group({
+      img: new FormControl('')
+    })
+
     this.colorForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      color_code: new FormControl('', [Validators.required]),   
+      color_code: new FormControl('', [Validators.required]),
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -81,7 +146,7 @@ export class ColorsComponent implements OnInit {
     //   },
 
     // };
-   
+
     // this.coreService.getcolor();
     // // this.tableData = this.QueryService.colorsList;
     // // console.log(this.tableData);
@@ -91,10 +156,23 @@ export class ColorsComponent implements OnInit {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("colorsList")!))
     //   }
     // })
-    this.coreService.getColor().subscribe(res=>{
-      this.tableData=res;
+    this.coreService.getColor().subscribe(res => {
+      this.tableData = res;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-  
+
+  }
+  add() {
+    console.log('jj');
+
+    console.log(this.form.value);
+
+  }
+  //select table row
+  allSelected: boolean = false;
+  selectedRows: boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
   }
 
   selectAll(initChecked: boolean) {
@@ -155,50 +233,50 @@ export class ColorsComponent implements OnInit {
   //   }
   // }
 
-  
- submit() {
-  console.log(this.colorForm.value);
-  console.log(this.id);
 
-  if (this.colorForm.valid) {
-    this.coreService.addcolor(this.colorForm.value).subscribe(res => {
-      console.log(res);
-      this.addRes = res
-      if (this.addRes.msg == "Data Created") {
-        this.toastr.success(this.addRes.msg)
-        this.colorForm.reset()
-        // window.location.reload();
-        this.ngOnInit()
-      }
-    }, err => {
-      console.log(err.error.gst);
-    })   
-  } else {
-    this.colorForm.markAllAsTouched()
-    console.log('forms invalid');
-  }
-}
+  submit() {
+    console.log(this.colorForm.value);
+    console.log(this.id);
 
-update(){
-  if (this.colorForm.valid) {
-    this.coreService.updatecolor(this.colorForm.value, this.id).subscribe(res => {
-      console.log(res);
-      this.addRes = res
-      if (this.addRes.msg == "Colour updated successfully") {
-        this.toastr.success(this.addRes.msg)
-        this.colorForm.reset()
-        this.addForm=true
-        // window.location.reload()
-        this.ngOnInit()
-      }
-    }, err => {
-      console.log(err.error.gst);
-    })  
-  } else {
-    this.colorForm.markAllAsTouched()
-    console.log('forms invalid');
+    if (this.colorForm.valid) {
+      this.coreService.addcolor(this.colorForm.value).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "Data Created") {
+          this.toastr.success(this.addRes.msg)
+          this.colorForm.reset()
+          // window.location.reload();
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
+    } else {
+      this.colorForm.markAllAsTouched()
+      console.log('forms invalid');
+    }
   }
-}
+
+  update() {
+    if (this.colorForm.valid) {
+      this.coreService.updatecolor(this.colorForm.value, this.id).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "Colour updated successfully") {
+          this.toastr.success(this.addRes.msg)
+          this.colorForm.reset()
+          this.addForm = true
+          // window.location.reload()
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
+    } else {
+      this.colorForm.markAllAsTouched()
+      console.log('forms invalid');
+    }
+  }
 
   get title() {
     return this.colorForm.get('title')
@@ -206,7 +284,7 @@ update(){
   get color_code() {
     return this.colorForm.get('color_code')
   }
- 
+
   addForm = true
   id: any
   editFormdata: any
@@ -217,7 +295,7 @@ update(){
       res.map((data: any) => {
         console.log(data);
         if (id == data.id) {
-          this.addForm=false;
+          this.addForm = false;
           this.colorForm.patchValue(data);
           this.editFormdata = res
         }
@@ -228,7 +306,6 @@ update(){
     this.addForm = true;
     this.colorForm.reset();
   }
-
   search() {
     if (this.titlee == "") {
       this.ngOnInit();

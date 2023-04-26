@@ -3,10 +3,15 @@
         <h4>HSN Code Details</h4>
         <h6>Full details of a HSN Code</h6>
     </div>
+    <div class="page-btn" >
+        <a class="btn btn-added" routerLink="//product/hsncode">
+            <img src="assets/img/icons/plus.svg"  class="me-1" alt="img"> HSN Code
+        </a>
+    </div>
 </div>
 
 <div class="row">
-    <div class="col-lg-8 col-sm-12">
+    <div class="col-lg-12 col-sm-12" >
         <div class="card">
             <div class="card-body">
                 <!-- <div class="bar-code-view">
@@ -18,28 +23,50 @@
                 <div class="productdetails">
                     <ul class="product-bar" *ngIf="hsnDetails">
 
-                        <li>
+                        <!-- <li>
                             <h4>Title</h4>
                             <h6>{{hsnDetails.title}}</h6>
-                        </li>
+                        </li> -->
                         <li>
                             <h4>HSN Code</h4>
                             <h6>{{hsnDetails.hsn_code}}</h6>
                         </li>
-                        <li>
+                        <!-- <li>
                             <h4>Tax</h4>
                             <h6>{{hsnDetails.tax}}</h6>
-                          </li>
+                          </li> -->
                         <li>
                             <h4>Sub Category</h4>
-                            <h6>{{hsnDetails.subcategory}}</h6>
+                            <!-- <h6>{{hsnDetails.subcategory}}</h6> -->
+                            <div class="table-responsive">
+                                <table datatable class="table datanew">
+                                    <thead>
+                                        <tr>   
+                                            <th>Title</th>
+                                                
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let subcat of hsnDetails.subcategory let i = index">
+                                           
+                                            <td>{{subcat.title}}</td>
+                                           
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                       </li>
-                      <li>
+                      <!-- <li>
                         <h4>Is Active</h4>
                         <h6>{{hsnDetails.is_active}}</h6>
-                      </li>
+                      </li> -->
                     </ul>
                 </div>
+            </div>
+            <div class="d-flex align-items-center mx-3">
+                <p class="mb-0 d-inline f-500 me-2 mb-2">Is Active : </p>
+                <span [ngClass]="{'bg-lightgreen': hsnDetails.is_active === true, 'bg-lightred' : hsnDetails.is_active === false,'bg-lightyellow' : hsnDetails.is_active === 'Partial' }"
+                                    class="badges">{{hsnDetails.is_active}}</span>
             </div>
         </div>
     </div>
