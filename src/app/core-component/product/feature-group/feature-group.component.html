@@ -198,8 +198,9 @@
                                                     (change)="onCheckChange($event)" formArrayName="feature"
                                                     style="margin-right: 5px;" [ngClass]="{
                                                         'is-invalid': f['feature'].touched && f['feature'].invalid
-                                                      }">
-                                                {{feature.title}}
+                                                      }" [id]="'checkbox-' + i">
+                                                      <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{feature.title}}</label>			
+                     
                                             </a></li>
                                     </ul>
                                 </div>
@@ -243,8 +244,9 @@
                                                     (change)="onCheckChange($event)" formArrayName="feature"
                                                     style="margin-right: 5px;" [ngClass]="{
                                                         'is-invalid': f['feature'].touched && f['feature'].invalid
-                                                      }">
-                                                {{feature.title}}
+                                                      }" [id]="'checkbox-' + i">
+                                                      <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{feature.title}}</label>			
+                     
                                             </a></li>
                                     </ul>
                                 </div>

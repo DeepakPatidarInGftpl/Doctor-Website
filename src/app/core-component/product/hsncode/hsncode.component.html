@@ -229,8 +229,9 @@
                                                     (change)="onCheckChange($event)" formArrayName="subcategory" style="margin-right: 5px;"
                                                     [ngClass]="{
                                                         'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
-                                                      }" >
-                                                {{subcategory.title}}
+                                                      }" [id]="'checkbox-' + i">
+                                                      <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory.title}}</label>			
+                     
                                             </a></li>
                                     </ul>
                                 </div>
@@ -296,8 +297,10 @@
                                                     (change)="onCheckChange($event)" formArrayName="subcategory" style="margin-right: 5px;"
                                                     [ngClass]="{
                                                         'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
-                                                      }" >
-                                                {{subcategory.title}}
+                                                      }" [id]="'checkboxEdit-' + i">
+                                             
+                                                <label [for]="'checkboxEdit-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory.title}}</label>			
+                     
                                             </a></li>
                                     </ul>
                                 </div>

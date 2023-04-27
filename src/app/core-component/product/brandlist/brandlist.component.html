@@ -238,12 +238,13 @@
                                     <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
                                         aria-expanded="false">Select Subcategory group</button>
                                     <ul class="dropdown-menu" style="width: 100%;">
-                                        <li><a class="dropdown-item" *ngFor="let subcatgroup of subcatGroupList">
+                                        <li><a class="dropdown-item" *ngFor="let subcatgroup of subcatGroupList let i=index;">
                                                 <input type="checkbox" [value]="subcatgroup.id" (change)="onCheckSize($event)"
                                                     formArrayName="subcategory_group" style="margin-right: 5px;" [ngClass]="{
                                                         'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
-                                                      }"    #categoryValue (change)="getSubcategoryBySubcatGroup(categoryValue.value)">
-                                                {{subcatgroup.title}}
+                                                      }"    #categoryValue (change)="getSubcategoryBySubcatGroup(categoryValue.value)" [id]="'checkbox-' + i">
+                                                  <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcatgroup.title}}</label>			
+                     
                                             </a></li>
                                     </ul>
                                 </div>
@@ -264,8 +265,9 @@
                                                     (change)="onCheckChange($event)" formArrayName="subcategory" style="margin-right: 5px;"
                                                     [ngClass]="{
                                                         'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
-                                                      }" >
-                                                {{subcategory.title}}
+                                                      }" [id]="'checkboxSub-' + i">
+                                                      <label [for]="'checkboxSub-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory.title}}</label>			
+                     
                                             </a></li>
                                     </ul>
                                 </div>
@@ -344,14 +346,15 @@
                                     <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
                                         aria-expanded="false">Select Subcategory group</button>
                                     <ul class="dropdown-menu" style="width: 100%;">
-                                        <li><a class="dropdown-item" *ngFor="let subcatgroup of subcatGroupList">
+                                        <li><a class="dropdown-item" *ngFor="let subcatgroup of subcatGroupList let i=index;">
                                                 <input type="checkbox" [value]="subcatgroup.id"
                                                 [checked]="subcatGroup.includes(subcatgroup.id)"
                                                 (change)="onCheckSize($event)"
                                                     formArrayName="subcategory_group" style="margin-right: 5px;" [ngClass]="{
                                                         'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
-                                                      }" #categoryValue (change)="getSubcategoryBySubcatGroup(categoryValue.value)">
-                                                {{subcatgroup.title}}
+                                                      }" #categoryValue (change)="getSubcategoryBySubcatGroup(categoryValue.value)" [id]="'checkboxEdit-' + i">
+                                                      <label [for]="'checkboxEdit-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcatgroup.title}}</label>			
+                     
                                             </a></li>
                                     </ul>
                                 </div>
@@ -372,8 +375,9 @@
                                                     (change)="onCheckChange($event)" formArrayName="subcategory" style="margin-right: 5px;"
                                                     [ngClass]="{
                                                         'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
-                                                      }" >
-                                                {{subcategory.title}}
+                                                      }" [id]="'checkboxEditSub-' + i" >
+                                                      <label [for]="'checkboxEditSub-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory.title}}</label>			
+                     
                                             </a></li>
                                     </ul>
                                 </div>

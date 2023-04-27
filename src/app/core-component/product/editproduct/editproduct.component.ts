@@ -33,6 +33,7 @@ export class EditproductComponent implements OnInit {
   colorTitle: any = [];
   sizeTitle: any = [];
   updatedVariants: any;
+  updateImages: any;
   ischeck = true;
   uncheck = false;
 
@@ -62,6 +63,7 @@ export class EditproductComponent implements OnInit {
   id: any
   dat: any
   editRes: any;
+  imgUrl = 'https://pv.greatfuturetechno.com';
   ngOnInit(): void {
     this.editor = new Editor();
 
@@ -87,18 +89,13 @@ export class EditproductComponent implements OnInit {
       description: new FormControl(''),
       // hsncode: new FormControl(''),
 
-      // features_subcategory: new FormControl('', [Validators.required]),
-      // unit_conversion: new FormControl(''),  
-      // style_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      // variant: new FormArray([]),
-
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
       product_images: this.fb.array([])
     })
 
     this.coreService.getProductById(this.id).subscribe(res => {
-      // this.productShow(res)
+
       if (this.id == res.id) {
         this.editRes = res
         // this.colors = res.color
@@ -124,8 +121,31 @@ export class EditproductComponent implements OnInit {
           unit: res.unit.id,
           sales_tax_including: res.sales_tax_including
         })
-        this.productForm.setControl('product_features', this.udateFeature(this.editRes.product_feature_product));
-        // this.productForm.setControl('variant_product', this.udateVariant(this.editRes.variant_product));
+        // this.productForm.setControl('product_features', this.udateFeature(this.editRes?.product_feature_product));
+        // this.productForm.setControl('product_images', this.updateImage(this.editRes?.product_images));
+
+        // Patch the `product_features` form array
+        const productFeaturesFormArray = this.productForm.get('product_features') as FormArray;
+        productFeaturesFormArray.clear(); // Remove existing form groups
+        res.product_feature_product.forEach((feature: any) => {
+          const featureFormGroup = this.fb.group({
+            feature_group: feature.feature_group,
+            feature: feature.feature.id
+          });
+          productFeaturesFormArray.push(featureFormGroup); // Add new form group to form array
+        });
+
+        // Patch the `product_images` form array
+        const productImagesFormArray = this.productForm.get('product_images') as FormArray;
+        productImagesFormArray.clear(); // Remove existing form groups
+        res.product_images.forEach((image: any) => {
+          const imageFormGroup = this.fb.group({
+            product_colour: image.product_colour,
+            image: image.image
+          });
+          productImagesFormArray.push(imageFormGroup); // Add new form group to form array
+        });
+
         this.getSubcategoryGroupByCategory(res.category.id);
         this.oncheck(res.subcategory_group.id);
         this.checkSubact(res.subcategory.id);
@@ -135,8 +155,14 @@ export class EditproductComponent implements OnInit {
         console.log(this.sizeTitle, 'sizearray');
         this.updatedVariants = this.editRes.variant_product
         this.variantLive();
-        console.log(this.updatedVariants );
-        
+        if (this.editRes.product_images) {
+       
+            this.updateImages = this.editRes.product_images;
+            console.log(this.updateImages);
+         
+        }
+
+
       }
     })
 
@@ -180,10 +206,20 @@ export class EditproductComponent implements OnInit {
     add.forEach((j: any) => {
       formarr.push(this.fb.group({
         feature_group: j.feature_group,
-        feature: j.feature,
+        feature: j.feature.title,
       }))
     })
     return formarr
+  }
+  updateImage(add: any): FormArray {
+    let formArr = new FormArray([]);
+    add.forEach((i: any) => {
+      formArr.push(this.fb.group({
+        product_colour: i.product_colour,
+        image: i.image
+      }))
+    })
+    return formArr;
   }
 
   // udateVariant(add: any): FormArray {
@@ -233,7 +269,9 @@ export class EditproductComponent implements OnInit {
       variant_name: (''),
       mrp: (''),
       cost_price: (''),
-      selling_price: (''),
+      // selling_price: (''),
+      selling_price_online: (''),
+      selling_price_offline: (''),
       stock: (''),
       minimum_stock_threshold: (''),
       selling_price_dealer: (''),
@@ -425,20 +463,20 @@ export class EditproductComponent implements OnInit {
   getFeaturegroupBySubcategory(val: any) {
     this.coreService.getFeaturegroupBySubcategoryGroup(val).subscribe(res => {
       console.log(res);
-      this.featureGrpBysubcatGroupList = res;
-      // open feature form 
-      const feature = this.productForm.get('product_features') as FormArray;
-      feature.clear();
-      for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
-        this.addFeature();
-      }
-      this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
-        console.log(res);
-        const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
-        imageGroup.patchValue({
-          feature_group: res.id
-        });
-      })
+      // this.featureGrpBysubcatGroupList = res;
+      // // open feature form 
+      // const feature = this.productForm.get('product_features') as FormArray;
+      // feature.clear();
+      // for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
+      //   this.addFeature();
+      // }
+      // this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
+      //   console.log(res);
+      //   const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
+      //   imageGroup.patchValue({
+      //     feature_group: res.id
+      //   });
+      // })
     })
   }
 
@@ -583,25 +621,25 @@ export class EditproductComponent implements OnInit {
         variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`
       });
     });
-// display updated value
-    console.log(this.updatedVariants );
+    // display updated value
+    console.log(this.updatedVariants);
     this.updatedVariants.map((user, index) => {
-      console.log(user,'variiant user data');
+      console.log(user, 'variiant user data');
       const variantGroup = userArray.at(index) as FormGroup;
-      console.log(variantGroup);
+      // console.log(variantGroup);
       variantGroup.patchValue({
-          product_title: user.product_title,
-              variant_name: user.variant_name,
-              mrp: user.mrp,
-              cost_price:user.cost_price,
-              selling_price: user.selling_price,
-              stock:user.stock,
-              minimum_stock_threshold: user.minimum_stock_threshold,
-              selling_price_dealer: user.selling_price_dealer,
-              selling_price_employee: user.selling_price_employee,
-              // barcode: k.barcode,
-              sku: user.sku,
-              max_order_quantity: user.max_order_quantity,
+        product_title: user.product_title,
+        variant_name: user.variant_name,
+        mrp: user.mrp,
+        cost_price: user.cost_price,
+        selling_price: user.selling_price,
+        stock: user.stock,
+        minimum_stock_threshold: user.minimum_stock_threshold,
+        selling_price_dealer: user.selling_price_dealer,
+        selling_price_employee: user.selling_price_employee,
+        // barcode: k.barcode,
+        sku: user.sku,
+        max_order_quantity: user.max_order_quantity,
       });
     });
   }
@@ -729,7 +767,7 @@ export class EditproductComponent implements OnInit {
     });
 
     if (this.productForm.valid) {
-      this.coreService.updateProduct(this.productForm.value, this.id).subscribe(res => {
+      this.coreService.updateProduct(formdata, this.id).subscribe(res => {
         if (res.msg == "Product updated successfully") {
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
@@ -917,12 +955,12 @@ export class EditproductComponent implements OnInit {
     imagesarray.get('image')?.updateValueAndValidity();
   }
   p_img: any[] = []
-Show=true;
+  Show = true;
   onImageSelected(event: Event, index: number) {
     const file = (event.target as HTMLInputElement).files![0];
     const reader = new FileReader();
     if (file) {
-      this.Show=false;
+      this.Show = false;
       this.p_img[index];
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -960,9 +998,66 @@ Show=true;
   goBack() {
     this.location.back();
   }
-   //dropdown auto close stop
-   onLabelClick(event: Event) {
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
+  }
+
+  // variant calculation 
+
+  coastPriceError: any;
+  variantProducts: { mrp: number, coastPrice: number, sellingPrice: number, sellingPriceOffline: number, dealerPrice: number, employeePrice: number }[] = [];
+  price(index: number) {
+    const mrp = this.getVarinatsForm().at(index).get('mrp').value;
+    let discount: number;
+    if (mrp >= 100) {
+      discount = (mrp * 10) / 100;
+    } else if (mrp >= 1000) {
+      discount = (mrp * 20) / 100;
+    } else if (mrp >= 5000) {
+      discount = (mrp * 30) / 100;
+    } else if (mrp >= 10000) {
+      discount = (mrp * 50) / 100;
+    } else if (mrp >= 20000) {
+      discount = (mrp * 40) / 100;
+    } else {
+      discount = 0;
+    }
+    // price calculation
+    // price calculation
+    const coastPrice = mrp - discount;
+    if (coastPrice > mrp) {
+      this.coastPriceError = 'Coast price less than Mrp price';
+      setTimeout(() => {
+        this.coastPriceError = '';
+      }, 3000);
+    }
+    const sellingPrice = mrp;
+    const dealerPrice = mrp - discount;
+    const employeePrice = mrp;
+    const sellingPriceOffline = mrp;
+    this.variantProducts[index] = { mrp, coastPrice, sellingPrice, sellingPriceOffline, dealerPrice, employeePrice };
+
+  }
+  // get price 
+  getMrp(index: number): number {
+    return this.variantProducts[index]?.mrp || this.updatedVariants[index].mrp;
+  }
+  getCoastPrice(index: number): number {
+    return this.variantProducts[index]?.coastPrice || this.updatedVariants[index].cost_price;
+    // return this.variantProducts[index]?.coastPrice || 0;
+  }
+  getSellingPrice(index: number): number {
+    return this.variantProducts[index]?.sellingPrice || this.updatedVariants[index].selling_price_online;
+  }
+  getSellingPriceOffline(index: number): number {
+    return this.variantProducts[index]?.sellingPriceOffline || this.updatedVariants[index].selling_price_offline;
+  }
+  getDealerPrice(index: number): number {
+    return this.variantProducts[index]?.dealerPrice || this.updatedVariants[index].selling_price_dealer;
+  }
+  getEmployeePrice(index: number): number {
+    return this.variantProducts[index]?.employeePrice || this.updatedVariants[index].selling_price_employee;
   }
 }

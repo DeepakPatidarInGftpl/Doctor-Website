@@ -375,4 +375,9 @@ update(){
     this.key = key;
     this.reverse = !this.reverse
   }
+     //dropdown auto close stop
+     onLabelClick(event: Event) {
+      // Prevent the event from propagating to the dropdown menu
+      event.stopPropagation();
+    }
 }

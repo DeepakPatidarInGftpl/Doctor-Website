@@ -57,6 +57,7 @@ export class AddproductComponent implements OnInit {
   isDisabled: true;
   productNamme: any
 
+  imgUrl = 'https://pv.greatfuturetechno.com';
 
   ngOnInit(): void {
     this.editor = new Editor();
@@ -112,7 +113,6 @@ export class AddproductComponent implements OnInit {
       feature: (''),
     });
   }
-
   getFeature(): FormArray {
     return this.productForm.get('product_features') as FormArray;
   }
@@ -122,14 +122,15 @@ export class AddproductComponent implements OnInit {
   removeAmount(i: any) {
     this.getFeature().removeAt(i)
   }
-
   variants(): FormGroup {
     return this.fb.group({
       product_title: (''),
       variant_name: (''),
       mrp: (''),
       cost_price: (''),
-      selling_price: (''),
+      // selling_price: (''),
+      selling_price_online:(''),
+      selling_price_offline:(''),
       stock: (''),
       minimum_stock_threshold: (''),
       selling_price_dealer: (''),
@@ -140,7 +141,6 @@ export class AddproductComponent implements OnInit {
 
     })
   }
-
   getVarinatsForm(): FormArray {
     return this.productForm.get('variant_product') as FormArray;
   }
@@ -150,7 +150,6 @@ export class AddproductComponent implements OnInit {
   removeVariant(k: any) {
     this.getVarinatsForm().removeAt(k)
   }
-
   productImage(): FormGroup {
     return this.fb.group({
       product_colour: (''),
@@ -386,14 +385,12 @@ export class AddproductComponent implements OnInit {
   selectedVariant = 0;
   onCheckVariant(event: any) {
     const formArray: any = this.productForm.get('variant') as FormArray;
-
     /* Selected */
     if (event.target.checked) {
       // Add a new control in the arrayForm
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray;
-
       this.selectedVariant++;
     }
     /* unselected */
@@ -435,7 +432,6 @@ export class AddproductComponent implements OnInit {
     formdata.append('is_active', this.productForm.get('is_active')?.value);
 
 
-    
     // nested formdata 
     // working also
     // const variants = this.productForm.get('variants') as FormArray;
@@ -525,26 +521,22 @@ export class AddproductComponent implements OnInit {
     //     formdata.append('product_image', JSON.stringify(product_imageData));
 
     // image send nested data as json
+
     const product_imageArray = this.productForm.get('product_images') as FormArray;
     const product_imageData: any = [];
-
     product_imageArray.controls.forEach((product_image) => {
       const product_imageGroup = product_image as FormGroup;
       const featureObj: any = {};
-
       Object.keys(product_imageGroup.controls).forEach((key) => {
         const control = product_imageGroup.controls[key];
         featureObj[key] = control.value;
       });
-
       product_imageData.push(featureObj);
     });
-
     const productImageDataJson = JSON.stringify(product_imageData);
     formdata.append('product_images', productImageDataJson);
-
     if (this.productForm.valid) {
-      this.coreService.addProduct(this.productForm.value).subscribe(res => {
+      this.coreService.addProduct(formdata).subscribe(res => {
         if (res.msg == "Data Created") {
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
@@ -707,7 +699,6 @@ export class AddproductComponent implements OnInit {
     }
   }
 
-
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
@@ -741,14 +732,16 @@ export class AddproductComponent implements OnInit {
   // }
 
   // base 64 
+
   url: any[] = [];
- imgValue:any=[];
- Show=true
+  imgValue: any = [];
+  Show = true;
+
   onImageSelected(event: Event, index: number) {
     const file = (event.target as HTMLInputElement).files![0];
     const reader = new FileReader();
     if (file) {
-      this.Show=false
+      this.Show = false
       this.p_img[index]
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -759,7 +752,7 @@ export class AddproductComponent implements OnInit {
     const imageGroup = (this.productForm.get('product_images') as FormArray).at(index) as FormGroup;
     reader.onload = () => {
       const imageValue = reader.result.toString().split(',')[1];
-      this.imgValue=imageValue
+      this.imgValue = imageValue
       imageGroup.patchValue({
         image: imageValue
       });
@@ -776,5 +769,85 @@ export class AddproductComponent implements OnInit {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
   }
-  
-}
+
+  // mrp: number;
+  // discount: number;
+  // coastPrice: number;
+  // sellingPrice:number;
+  // dealerPrice:number;
+  // employeePrice:number;
+  // price() {
+  //   if (this.mrp >= 100) {
+  //     let discount:number = (this.mrp * 10) / 100;
+  //     this.discount = this.mrp-discount;
+  //     this.coastPrice = +this.mrp + +discount;
+  //     this.sellingPrice=this.coastPrice +discount;
+  //     this.dealerPrice=this.discount
+  //     this.employeePrice=this.mrp;
+
+  //   } else if (this.mrp >= 1000) {
+  //     let discount:number = (this.mrp * 50) / 100;
+  //     this.discount = this.mrp-discount;
+  //     this.coastPrice = +this.mrp + +discount;
+  //     this.sellingPrice=this.coastPrice +discount;
+  //     this.dealerPrice=this.discount
+  //     this.employeePrice=this.mrp
+  //   }
+  // }
+
+  // variants calculation
+  coastPriceError: any;
+  variantProducts: { mrp: number, coastPrice: number, sellingPrice: number,sellingPriceOffline: number, dealerPrice: number, employeePrice: number }[] = [];
+  price(index: number) {
+    const mrp = this.getVarinatsForm().at(index).get('mrp').value;
+    let discount: number;
+    if (mrp >= 100) {
+      discount = (mrp * 10) / 100;
+    } else if (mrp >= 1000) {
+      discount = (mrp * 20) / 100;
+    } else if (mrp >= 5000) {
+      discount = (mrp * 30) / 100;
+    } else if (mrp >= 10000) {
+      discount = (mrp * 50) / 100;
+    } else if (mrp >= 20000) {
+      discount = (mrp * 40) / 100;
+    } else {
+      discount = 0;
+    }
+    // price calculation
+    const coastPrice = mrp - discount;
+    if (coastPrice > mrp) {
+      this.coastPriceError = 'Coast price less than Mrp price';
+      setTimeout(() => {
+        this.coastPriceError='';
+      }, 3000);
+    }
+    const sellingPrice = mrp;
+    const dealerPrice = mrp - discount;
+    const employeePrice = mrp;
+    const sellingPriceOffline=mrp;
+    this.variantProducts[index] = { mrp, coastPrice, sellingPrice,sellingPriceOffline, dealerPrice, employeePrice };
+    
+  }
+  // get price 
+  getMrp(index: number): number {
+    return this.variantProducts[index]?.mrp;
+  }
+  getCoastPrice(index: number): number {
+    return this.variantProducts[index]?.coastPrice;
+    // return this.variantProducts[index]?.coastPrice || 0;
+  }
+  getSellingPrice(index: number): number {
+    return this.variantProducts[index]?.sellingPrice;
+  }
+  getSellingPriceOffline(index: number): number {
+    return this.variantProducts[index]?.sellingPriceOffline;
+  }
+  getDealerPrice(index: number): number {
+    return this.variantProducts[index]?.dealerPrice;
+  }
+  getEmployeePrice(index: number): number {
+    return this.variantProducts[index]?.employeePrice;
+  }
+
+} 

@@ -334,7 +334,7 @@
                             <div class="slider-product-details">
                                 <div class="owl-carousel owl-theme product-slide my-5">
                                     <div class="slider-product" *ngFor="let image of productDetail.product_images">
-                                        <img [src]="image.image" [alt]="image.product_colour">
+                                        <img [src]="imgUrl+image.image" [alt]="image.product_colour">
                                         <h4>{{image.product_colour}}</h4>
                                     </div>
                                 </div>
