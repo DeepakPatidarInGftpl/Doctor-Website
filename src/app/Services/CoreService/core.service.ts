@@ -1091,7 +1091,7 @@ export class CoreService {
       })
     })
   }
-  getProductById(id: number): Observable<any> {
+  getProductById(id: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/product/?id='
     return this.http.get<any>(`${url}${id}`, {
       headers: new HttpHeaders({

@@ -17,7 +17,7 @@ export class ProductDetailsComponent implements OnInit {
     {image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4qTg6fFDyOZqICjlmXpRpHZvBH-ugax9FwjYYfWuJ&s',color:'green'},
  ]
   id: any
-  imgUrl='https://pv.greatfuturetechno.com'
+  imgUrl='https://pv.greatfuturetechno.com';
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
