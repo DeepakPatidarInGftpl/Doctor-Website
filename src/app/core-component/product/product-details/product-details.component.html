@@ -196,6 +196,19 @@
                             </td>
                         </tr>
                         <tr class="ro-border">
+                            <td colspan="2" class="f-500">Description</td>
+                            <td colspan="6" class="f-400">
+                                <ul *ngIf="sho ">
+                                    <li [innerHTML]="productDetail.description | readMore"></li>
+                                    <span *ngIf="sho" (click)="hide()" class="spandes ">Read more...</span>
+                                </ul>
+                                <ul *ngIf="sho1">
+                                    <li [innerHTML]="productDetail.description | readLess"></li>
+                                    <span *ngIf="sho1" (click)="hide1()" class="spandes ">Read less...</span>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr class="ro-border">
                             <td colspan="2" class="f-500">Color</td>
                             <td colspan="6" class="f-400 p-0">
                                 <div class="row ro-6" *ngFor="let color of productDetail.color">
