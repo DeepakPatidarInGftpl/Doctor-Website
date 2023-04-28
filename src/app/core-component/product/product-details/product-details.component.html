@@ -200,7 +200,7 @@
                             <td colspan="6" class="f-400">
                                 <ul *ngIf="sho ">
                                     <li [innerHTML]="productDetail.description | readMore"></li>
-                                    <span *ngIf="sho" (click)="hide()" class="spandes ">Read more...</span>
+                                    <span *ngIf="sho && productDetail.description.length>100 " (click)="hide()" class="spandes ">Read more...</span>
                                 </ul>
                                 <ul *ngIf="sho1">
                                     <li [innerHTML]="productDetail.description | readLess"></li>
