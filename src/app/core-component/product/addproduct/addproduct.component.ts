@@ -535,6 +535,7 @@ export class AddproductComponent implements OnInit {
     });
     const productImageDataJson = JSON.stringify(product_imageData);
     formdata.append('product_images', productImageDataJson);
+    
     if (this.productForm.valid) {
       this.coreService.addProduct(formdata).subscribe(res => {
         if (res.msg == "Data Created") {

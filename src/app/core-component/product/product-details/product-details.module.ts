@@ -3,15 +3,18 @@ import { CommonModule } from '@angular/common';
 
 import { ProductDetailsRoutingModule } from './product-details-routing.module';
 import { ProductDetailsComponent } from './product-details.component';
+import { PipeModuleModule } from '../pipe-module/pipe-module.module';
 
 
 @NgModule({
   declarations: [
-    ProductDetailsComponent
+    ProductDetailsComponent,
+   
   ],
   imports: [
     CommonModule,
-    ProductDetailsRoutingModule
+    ProductDetailsRoutingModule,
+    PipeModuleModule
   ]
 })
 export class ProductDetailsModule { }

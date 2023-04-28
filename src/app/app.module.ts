@@ -29,7 +29,8 @@ const icons = {
 @NgModule({
   declarations: [
     AppComponent,
-    LayoutComponent,
+    LayoutComponent
+  
    
   ],
   imports: [
