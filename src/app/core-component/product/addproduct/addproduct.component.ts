@@ -42,8 +42,6 @@ export class AddproductComponent implements OnInit {
     ['align_left', 'align_center', 'align_right', 'align_justify'],
   ];
 
-
-
   get doc(): any {
     // return this.form.get('editorContent');
     return this.productForm.get('description')
@@ -128,6 +126,8 @@ export class AddproductComponent implements OnInit {
       variant_name: (''),
       mrp: (''),
       cost_price: (''),
+      variant_size:(''),
+      variant_color:(''),
       // selling_price: (''),
       selling_price_online:(''),
       selling_price_offline:(''),
@@ -334,6 +334,8 @@ export class AddproductComponent implements OnInit {
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray;
+      console.log(this.check);
+      
       this.selectedColor++;
     }
     /* unselected */
@@ -535,7 +537,7 @@ export class AddproductComponent implements OnInit {
     });
     const productImageDataJson = JSON.stringify(product_imageData);
     formdata.append('product_images', productImageDataJson);
-    
+
     if (this.productForm.valid) {
       this.coreService.addProduct(formdata).subscribe(res => {
         if (res.msg == "Data Created") {
@@ -608,27 +610,49 @@ export class AddproductComponent implements OnInit {
   currentColors: any = [];
   currentVariants: any = [];
   productColor: any;
+  selectSize:any=[];
 
-  onCheckSizes(e) {
+  onCheckSizes(e:any,id:any) {
     if (this.currentSizes.length == 0) {
       this.currentSizes.push(e);
+      // push data to selectSize
+      this.selectSize.push({id:id,title:e})
     } else {
       if (!this.currentSizes.includes(e)) {
         this.currentSizes.push(e)
-      } else { this.currentSizes = this.currentSizes.filter(item => item !== e); }
-    } this.variantCheck();
+         // push data to selectSize
+      this.selectSize.push({id:id,title:e})
+      } else {
+         this.currentSizes = this.currentSizes.filter(item => item !== e);
+         this.selectSize = this.selectSize.filter(item => item.id !== id || item.title !== e);
+
+         }
+    }
+    console.log(this.selectSize);
+    
+    this.variantCheck();
   }
 
-  onCheckColors(e) {
+  selectColor:any=[];
+  onCheckColors(e:any,id:any) {
     if (this.currentColors.length == 0) {
       this.currentColors.push(e);
+      // push data to selectColor 
+      this.selectColor.push({id:id,title:e})
     } else {
       if (!this.currentColors.includes(e)) {
         this.currentColors.push(e)
+         // push data to selectColor 
+        this.selectColor.push({id:id,title:e})
       } else {
         this.currentColors = this.currentColors.filter(item => item !== e);
+        this.selectColor = this.selectColor.filter(item => item.id !== id || item.title !== e);
       }
-    } this.variantCheck();
+    } 
+    console.log(this.selectColor);
+   
+    
+    this.variantCheck();
   }
 
   variantCheck() {
@@ -638,7 +662,6 @@ export class AddproductComponent implements OnInit {
         this.currentVariants.push({ color: this.currentColors[i] });
         this.productColor = this.currentColors[i];
         console.log(this.productColor, 'productcolor');
-
       }
     } else if (this.currentSizes.length > 0 && this.currentColors.length == 0) {
       for (let i = 0; i < this.currentSizes.length; i++) {

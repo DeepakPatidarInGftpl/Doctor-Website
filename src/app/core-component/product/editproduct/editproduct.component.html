@@ -395,7 +395,7 @@
 															*ngFor="let color of colorList; let i=index">
 															<input type="checkbox" [value]="color.id"
 																[checked]="colors.includes(color.id)"
-																(change)="onCheckColor($event,color.title)"
+																(change)="onCheckColor($event,color.id,color.title)"
 																formArrayName="color" style="margin-right: 5px;"
 																[ngClass]="{
 																'is-invalid': f['color'].touched && f['color'].invalid
@@ -428,7 +428,7 @@
 															*ngFor="let size of sizeList let i=index;">
 															<input type="checkbox" [value]="size.id"
 																[checked]="sizes.includes(size.id)"
-																(change)="onCheckSize($event,size.title)"
+																(change)="onCheckSize($event,size.id,size.title)"
 																formArrayName="size" style="margin-right: 5px;"
 																[ngClass]="{
 																'is-invalid': f['size'].touched && f['size'].invalid
@@ -624,13 +624,13 @@
 										<tr class="t-row">
 											<th style="display:none">Product </th>
 											<th width="0.5%">Variant </th>
+											<th>Color</th>
+											<th>Size</th>
 											<th>MRP </th>
 											<th>Cost Price </th>
 											<th>Selling Price Online</th>
 											<th>selling Price Offline</th>
-
 											<!-- Minimum Stock Threshold -->
-
 											<th>Selling Price Dealer</th>
 											<th>Selling Price Employee</th>
 											<th>Barcode/SKU</th>
@@ -650,6 +650,21 @@
 														<td><input type="text" class="inp" value="RedXl"
 																formControlName="variant_name" [readonly]="true"
 																style="width: 80px;"></td>
+																<td>
+																	<select class="variant_color" formControlName="variant_color" >
+																			<option value="" selected disabled>Color</option>
+																			<option value="{{color.id}}" *ngFor="let color of selectColor">{{color.title}}
+																			</option>
+																		</select>
+																</td>
+																<td>
+																	<select class="variant_size" formControlName="variant_size" >
+																			<option value="" selected disabled>Size</option>
+																			<option value="{{size.id}}" *ngFor="let size of selectSize">{{size.title}}
+																			</option>
+																		</select>
+																	
+																</td>
 														<td><input type="text" class="inp" placeholder="0"
 																formControlName="mrp" [ngModel]="getMrp(i)"
 																(input)="price(i)"></td>
@@ -666,7 +681,6 @@
 														<td><input type="text" class="inp" placeholder="0"
 																formControlName="selling_price_offline"
 																[ngModel]="getSellingPriceOffline(i)"></td>
-
 														<td><input type="text" class="inp" placeholder="0"
 																formControlName="selling_price_dealer"
 																[ngModel]="getDealerPrice(i)"></td>
