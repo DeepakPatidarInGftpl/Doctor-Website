@@ -276,7 +276,8 @@
 		<div class="card-body">
 			<div class="page-header">
 				<div class="page-title">
-					<h6 class="subhead-color" (click)="goBack()"><mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>
+					<h6 class="subhead-color" (click)="goBack()"><mat-icon
+							style="vertical-align: middle;">keyboard_backspace</mat-icon>
 						Back to products</h6>
 					<h4>New Product</h4>
 				</div>
@@ -319,7 +320,7 @@
 											<label>Subcategory Group*</label>
 											<select class="form-select" formControlName="subcategory_group" [ngClass]="{
 											'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
-										  }" #subCategoryGroupValue  (change)="oncheck(subCategoryGroupValue.value)">
+										  }" #subCategoryGroupValue (change)="oncheck(subCategoryGroupValue.value)">
 
 												<option value="" selected disabled>Select Subcategory Group</option>
 												<option value="{{subcatgroup.id}}"
@@ -375,9 +376,9 @@
 												Brand
 											</span>
 											<span class="text-danger"
-											*ngIf="subcategory && subcategory.touched && brandBySubcat?.length<=0">Brands
-											not available
-										</span>
+												*ngIf="subcategory && subcategory.touched && brandBySubcat?.length<=0">Brands
+												not available
+											</span>
 										</div>
 									</div>
 									<div class="col-lg-6 col-sm-6 col-12">
@@ -393,18 +394,21 @@
 														<a class="dropdown-item">
 															<input type="checkbox" [value]="color.id"
 																(change)="onCheckColor($event)"
-																(change)="onCheckColors(color.title)"
+																(change)="onCheckColors(color.title,color.id)"
 																formArrayName="color" style="margin-right: 5px;"
 																[ngClass]="{
 																'is-invalid': f['color'].touched && f['color'].invalid
-															  }" [id]="'checkbox-' + i" >
-															
-															<label [for]="'checkbox-' + i" (click)="onLabelClick($event)" style="margin-bottom: 0;">{{color.title}}</label>
-														</a></li>
+															  }" [id]="'checkbox-' + i">
+
+															<label [for]="'checkbox-' + i"
+																(click)="onLabelClick($event)"
+																style="margin-bottom: 0;">{{color.title}}</label>
+														</a>
+													</li>
 												</ul>
 											</div>
 
-											   <!-- <mat-select formControlName="color" multiple placeholder="Select Subcategory">
+											<!-- <mat-select formControlName="color" multiple placeholder="Select Subcategory">
                                   <mat-option *ngFor="let color of colorList; let i=index" [value]="color.id" (click)="onCheckColors(color.title)"> {{color.title}}</mat-option>
                                 </mat-select> -->
 
@@ -422,22 +426,26 @@
 												<button type="button" class="dropdown-toggle button" type="button"
 													data-bs-toggle="dropdown" aria-expanded="false">Select Size</button>
 												<ul class="dropdown-menu" style="width: 100%;">
-													<li><a class="dropdown-item" *ngFor="let size of sizeList let i = index;" >
+													<li><a class="dropdown-item"
+															*ngFor="let size of sizeList let i = index;">
 															<input type="checkbox" [value]="size.id"
 																(change)="onCheckSize($event)"
-																(change)="onCheckSizes(size.title)" formArrayName="size"
-																style="margin-right: 5px;" [ngClass]="{
+																(change)="onCheckSizes(size.title,size.id)"
+																formArrayName="size" style="margin-right: 5px;"
+																[ngClass]="{
 																'is-invalid': f['size'].touched && f['size'].invalid
-															  }" [id]="'checkboxSize-' + i" >
-															  <label [for]="'checkboxSize-' + i" (click)="onLabelClick($event)" style="margin-bottom: 0;">{{size.title}}</label>
+															  }" [id]="'checkboxSize-' + i">
+															<label [for]="'checkboxSize-' + i"
+																(click)="onLabelClick($event)"
+																style="margin-bottom: 0;">{{size.title}}</label>
 														</a></li>
 												</ul>
 											</div>
-											
+
 											<!-- <mat-select formControlName="color" multiple placeholder="Select Subcategory">
 												<mat-option *ngFor="let size of sizeList; let i=index" [value]="size.id" (click)="onCheckSizes(size.title)"> {{size.title}}</mat-option>
 											  </mat-select> -->
-											  
+
 											<p *ngIf="selectedSize>0">{{selectedSize + ' Size Selected'}}</p>
 											<span class="text-danger"
 												*ngIf="size && size.invalid && size.touched">Select
@@ -502,7 +510,6 @@
 											<label>Unit*</label>
 											<select class="form-select" formControlName="unit" [ngClass]="{
 											'is-invalid': f['unit'].touched && f['unit'].invalid}">
-
 												<option value="" selected disabled>Select unit</option>
 												<option value="{{unit.id}}" *ngFor="let unit of unitList">{{unit.title}}
 												</option>
@@ -517,28 +524,39 @@
 										<div class="form-group">
 											<div class="d_flex">
 												<div class="d-flex">
-													<input type="checkbox" formControlName="purchase_tax_including" [id]="'checkboxTax-'" >	
-														<label [for]="'checkboxTax-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Purchase Tax Including</label>
+													<input type="checkbox" formControlName="purchase_tax_including"
+														[id]="'checkboxTax-'">
+													<label [for]="'checkboxTax-'" class="d_flex"
+														style="margin-bottom: 0; margin-left: 5px;">Purchase Tax
+														Including</label>
 												</div>
 												<div class="d-flex">
-													<input type="checkbox" formControlName="is_measurable" [id]="'checkboxMeasure-'">
-													
-													<label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Measurable</label>
+													<input type="checkbox" formControlName="is_measurable"
+														[id]="'checkboxMeasure-'">
+
+													<label [for]="'checkboxMeasure-'" class="d_flex"
+														style="margin-bottom: 0; margin-left: 5px;">Is
+														Measurable</label>
 												</div>
 											</div>
 											<div class="d_flex">
 												<div class="d-flex">
-													<input type="checkbox" formControlName="sales_tax_including" [id]="'checkboxSale-'"> 
-													<label [for]="'checkboxSale-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Sales Tax Including</label>
+													<input type="checkbox" formControlName="sales_tax_including"
+														[id]="'checkboxSale-'">
+													<label [for]="'checkboxSale-'" class="d_flex"
+														style="margin-bottom: 0; margin-left: 5px;">Sales Tax
+														Including</label>
 												</div>
 												<div class="d_flex">
-													<input type="checkbox" formControlName="is_active" [id]="'checkboxActive-'">
-													<label [for]="'checkboxActive-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Active</label>
+													<input type="checkbox" formControlName="is_active"
+														[id]="'checkboxActive-'">
+													<label [for]="'checkboxActive-'" class="d_flex"
+														style="margin-bottom: 0; margin-left: 5px;">Active</label>
 												</div>
 											</div>
 										</div>
 									</div>
-									
+
 									<div class="col-lg-12">
 										<div class="form-group">
 											<label>Description</label>
@@ -570,9 +588,11 @@
 																	<div class="col-sm-4">
 																		<input type="text"
 																			formControlName="feature_group"
-																			class="feature-input"
-																			[readonly]="true" style="display:none">
-																			<label>{{ featureGrpBysubcatGroupList.feature_group[i].title }}</label>
+																			class="feature-input" [readonly]="true"
+																			style="display:none">
+																		<label>{{
+																			featureGrpBysubcatGroupList.feature_group[i].title
+																			}}</label>
 																	</div>
 																	<div class="col-sm-8">
 																		<select formControlName="feature" class="inp">
@@ -594,7 +614,8 @@
 									</div>
 									<div class="col-lg-12 text-center my-5">
 										<a class="btn btn-cancel">Clear</a>
-										<button type="button" class="btn btn-submit me-2" (click)="selectTab(1)">Save & Next</button>
+										<button type="button" class="btn btn-submit me-2" (click)="selectTab(1)">Save &
+											Next</button>
 									</div>
 								</div>
 
@@ -604,68 +625,94 @@
 									<p class="titl mx-1 my-1">{{productNamme}}</p>
 									<table datatable class="table ">
 										<!-- <thead> -->
-											<!-- <tr> -->
-											<tr class="t-row">
-												<th style="display:none">Product </th>
-												<th width="0.5%">Variant </th>
-												<th>MRP </th>
-												<th>Cost Price </th>
-												<th>Selling Price Online</th>
-												<th>selling Price Offline</th>
-												
-												<!-- Minimum Stock Threshold -->
-												
-												<th>Selling Price Dealer</th>
-												<th>Selling Price Employee</th>
-												<th>Barcode/SKU</th>
-												<th>Stock </th>
-												<th>Minimum Stock</th>
-												<th>Max order quantity</th>
-												
-											</tr>
-											<!-- </thead> -->
+										<!-- <tr> -->
+										<tr class="t-row">
+											<th style="display:none">Product </th>
+											<th width="0.5%">Variant </th>
+											<th>Color</th>
+											<th>Size</th>
+											<th>MRP </th>
+											<th>Cost Price </th>
+											<th>Selling Price Online</th>
+											<th>selling Price Offline</th>
+											<!-- Minimum Stock Threshold -->
+											<th>Selling Price Dealer</th>
+											<th>Selling Price Employee</th>
+											<th>Barcode/SKU</th>
+											<th>Stock </th>
+											<th>Minimum Stock</th>
+											<th>Max order quantity</th>
+										</tr>
+										<!-- </thead> -->
 										<tbody>
 											<ng-container formArrayName="variant_product">
 												<ng-container *ngFor="let d of getVarinatsForm().controls; let i=index">
 													<tr [formGroupName]="i">
 														<td style="display:none"><input type="text" class="inp"
-																formControlName="product_title" [ngModel]="productNamme" [readonly]="true"></td>
-														<td><input type="text" class="inp" value="RedXl"
-																formControlName="variant_name" [readonly]="true" style="width: 80px;"></td>
+																formControlName="product_title" [ngModel]="productNamme"
+																[readonly]="true"></td>
+														<td><input type="text" class="inp"
+																formControlName="variant_name" [readonly]="true"
+																style="width: 80px;"></td>
+														<td>
+															<select class="variant_color" formControlName="variant_color" [ngClass]="{
+																'is-invalid': f['variant_color'].touched && f['variant_color'].invalid}">
+																	<option value="" selected disabled>Select Color</option>
+																	<option value="{{color.id}}" *ngFor="let color of selectColor">{{color.title}}
+																	</option>
+																</select>
+														</td>
+														<td>
+															<select class="variant_size" formControlName="variant_size" [ngClass]="{
+																'is-invalid': f['variant_size'].touched && f['variant_size'].invalid}">
+																	<option value="" selected disabled>Select Size</option>
+																	<option value="{{size.id}}" *ngFor="let size of selectSize">{{size.title}}
+																	</option>
+																</select>
+														</td>
 														<td><input type="text" class="inp" placeholder="0"
-																formControlName="mrp" [ngModel]="getMrp(i)" (input)="price(i)"></td>
+																formControlName="mrp" [ngModel]="getMrp(i)"
+																(input)="price(i)"></td>
 														<td><input type="text" class="inp" placeholder="0"
-																formControlName="cost_price" [ngModel]="getCoastPrice(i)">
-																<br>
-																<span class="text-danger" *ngIf="coastPriceError">{{coastPriceError}}</span></td>
+																formControlName="cost_price"
+																[ngModel]="getCoastPrice(i)">
+															<br>
+															<span class="text-danger"
+																*ngIf="coastPriceError">{{coastPriceError}}</span>
+														</td>
 														<td><input type="text" class="inp" placeholder="0"
-																formControlName="selling_price_online" [ngModel]="getSellingPrice(i)"></td>
-																<td><input type="text" class="inp" placeholder="0"
-																	formControlName="selling_price_offline" [ngModel]="getSellingPriceOffline(i)"></td>
-		
+																formControlName="selling_price_online"
+																[ngModel]="getSellingPrice(i)"></td>
 														<td><input type="text" class="inp" placeholder="0"
-																formControlName="selling_price_dealer" [ngModel]="getDealerPrice(i)"></td>
+																formControlName="selling_price_offline"
+																[ngModel]="getSellingPriceOffline(i)"></td>
+
 														<td><input type="text" class="inp" placeholder="0"
-																formControlName="selling_price_employee" [ngModel]="getEmployeePrice(i)"></td>
+																formControlName="selling_price_dealer"
+																[ngModel]="getDealerPrice(i)"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="selling_price_employee"
+																[ngModel]="getEmployeePrice(i)"></td>
 														<td><input type="text" class="inp" placeholder="0"
 																formControlName="sku"></td>
-																<td><input type="text" class="inp" placeholder="0"
-																	formControlName="stock"></td>
-																	<td><input type="text" class="inp" placeholder="0"
-																		formControlName="minimum_stock_threshold"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="stock"></td>
+														<td><input type="text" class="inp" placeholder="0"
+																formControlName="minimum_stock_threshold"></td>
 														<td><input type="text" class="inp" placeholder="0"
 																formControlName="max_order_quantity"></td>
-																
+
 													</tr>
 												</ng-container>
 											</ng-container>
-										</tbody>	
+										</tbody>
 									</table>
 								</div>
-							<div class="col-lg-12 text-center my-5">
-								<a class="btn btn-cancel">Clear</a>
-								<button type="button" class="btn btn-submit me-2" (click)="selectTab(2)">Save & Create New</button>
-							</div>
+								<div class="col-lg-12 text-center my-5">
+									<a class="btn btn-cancel">Clear</a>
+									<button type="button" class="btn btn-submit me-2" (click)="selectTab(2)">Save &
+										Create New</button>
+								</div>
 							</mat-tab>
 							<mat-tab label="Image">
 								<table class="table amt-table third-table">
@@ -684,15 +731,16 @@
 															formControlName="product_colour" style="width: 100px;"></td>
 													<td [style]="!p_img?'width:30%':'width:30%'">
 														<div class="d-flex align-items-center">
-															<svg *ngIf="!url[i]" xmlns="http://www.w3.org/2000/svg" width="20"
-																height="20" fill="currentColor" class="bi bi-image mx-5 svg"
-																viewBox="0 0 16 16">
+															<svg *ngIf="!url[i]" xmlns="http://www.w3.org/2000/svg"
+																width="20" height="20" fill="currentColor"
+																class="bi bi-image mx-5 svg" viewBox="0 0 16 16">
 																<path
 																	d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
 																<path
 																	d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
 															</svg>
-															<img [src]="url[i]" *ngIf="url[i]" alt="" class="p-img mx-5">
+															<img [src]="url[i]" *ngIf="url[i]" alt=""
+																class="p-img mx-5">
 															<div class="image-upload">
 																<input type="file" formControlName="image"
 																	(change)="onImageSelected($event, i)">
@@ -710,21 +758,23 @@
 															</div>
 														</div>
 													</td>
-									<td>
-										<div class="d-flex align-items-center">
-									<button (click)="removeProductImage(i)" class="btn btn-cancel me-2">Clear</button>
-									<button type="button" class="btn btn-submit me-2" (click)="addproductImage()">Add</button>
-										</div>
-									</td>
-								</tr>
-								</ng-container>
+													<td>
+														<div class="d-flex align-items-center">
+															<button (click)="removeProductImage(i)"
+																class="btn btn-cancel me-2">Clear</button>
+															<button type="button" class="btn btn-submit me-2"
+																(click)="addproductImage()">Add</button>
+														</div>
+													</td>
+												</tr>
+											</ng-container>
 										</ng-container>
-								</tbody>
+									</tbody>
 								</table>
 								<div class="col-lg-12 text-center my-5">
 									<a class="btn btn-cancel">Clear</a>
 									<button class="btn btn-submit me-2">Save & Create New</button>
-								</div>	
+								</div>
 							</mat-tab>
 						</mat-tab-group>
 					</form>
@@ -734,5 +784,3 @@
 		</div>
 	</div>
 </div>
-
-
