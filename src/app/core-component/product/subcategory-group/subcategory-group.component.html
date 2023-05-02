@@ -281,8 +281,10 @@
                   <ul class="dropdown-menu" style="width: 100%;">
                     <li><a class="dropdown-item" *ngFor="let fGroup of featureGroup; let i=index">
                         <input type="checkbox" [value]="fGroup.id" [checked]="selectedFeature.includes(fGroup.id)"
-                          (change)="selectFeatureGroup(fGroup, $event.target)" style="margin-right: 5px;">
-                        {{fGroup.title}}
+                          (change)="selectFeatureGroup(fGroup, $event.target)" style="margin-right: 5px;" [id]="'checkboxFeat-' + i">
+                        
+                        <label [for]="'checkboxFeat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{fGroup.title}}</label>			
+                    
                       </a></li>
                   </ul>
                   <p *ngIf="selectedFeatureGrp>0">{{selectedFeatureGrp + ' Feature group selected'}}</p>

@@ -1302,8 +1302,7 @@ export class CoreService {
       })
     })
   }
-
-
+  
   editSubCategoryGroup(data, id) {
     let url = this.apiUrl + '/pv-api/subcategory_group/?id='
     return this.http.put(`${url}${id}`, data, {

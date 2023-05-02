@@ -655,16 +655,14 @@
 																formControlName="variant_name" [readonly]="true"
 																style="width: 80px;"></td>
 														<td>
-															<select class="variant_color" formControlName="variant_color" [ngClass]="{
-																'is-invalid': f['variant_color'].touched && f['variant_color'].invalid}">
+															<select class="variant_color" formControlName="variant_color">
 																	<option value="" selected disabled>Select Color</option>
 																	<option value="{{color.id}}" *ngFor="let color of selectColor">{{color.title}}
 																	</option>
 																</select>
 														</td>
 														<td>
-															<select class="variant_size" formControlName="variant_size" [ngClass]="{
-																'is-invalid': f['variant_size'].touched && f['variant_size'].invalid}">
+															<select class="variant_size" formControlName="variant_size">
 																	<option value="" selected disabled>Select Size</option>
 																	<option value="{{size.id}}" *ngFor="let size of selectSize">{{size.title}}
 																	</option>

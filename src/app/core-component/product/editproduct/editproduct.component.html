@@ -653,7 +653,7 @@
 																<td>
 																	<select class="variant_color" formControlName="variant_color" >
 																			<option value="" selected disabled>Color</option>
-																			<option value="{{color.id}}" *ngFor="let color of selectColor">{{color.title}}
+																			<option value="{{color.id}}"  *ngFor="let color of selectColor">{{color.title}}
 																			</option>
 																		</select>
 																</td>
@@ -665,36 +665,36 @@
 																		</select>
 																	
 																</td>
-														<td><input type="text" class="inp" placeholder="0"
+														<td><input type="number" class="inp" placeholder="0"
 																formControlName="mrp" [ngModel]="getMrp(i)"
 																(input)="price(i)"></td>
-														<td><input type="text" class="inp" placeholder="0"
+														<td><input type="number" class="inp" placeholder="0"
 																formControlName="cost_price"
 																[ngModel]="getCoastPrice(i)">
 															<br>
-															<span class="text-danger"
+															<span class="number-danger"
 																*ngIf="coastPriceError">{{coastPriceError}}</span>
 														</td>
-														<td><input type="text" class="inp" placeholder="0"
+														<td><input type="number" class="inp" placeholder="0"
 																formControlName="selling_price_online"
 																[ngModel]="getSellingPrice(i)"></td>
-														<td><input type="text" class="inp" placeholder="0"
+														<td><input type="number" class="inp" placeholder="0"
 																formControlName="selling_price_offline"
 																[ngModel]="getSellingPriceOffline(i)"></td>
-														<td><input type="text" class="inp" placeholder="0"
+														<td><input type="number" class="inp" placeholder="0"
 																formControlName="selling_price_dealer"
 																[ngModel]="getDealerPrice(i)"></td>
-														<td><input type="text" class="inp" placeholder="0"
+														<td><input type="number" class="inp" placeholder="0"
 																formControlName="selling_price_employee"
 																[ngModel]="getEmployeePrice(i)"></td>
 														<td><input type="text" class="inp" placeholder="0"
-																formControlName="sku"></td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="stock"></td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="minimum_stock_threshold"></td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="max_order_quantity"></td>
+																formControlName="sku" [ngModel]="getSku(i)"></td>
+														<td><input type="number" class="inp" placeholder="0"
+																formControlName="stock" [ngModel]="getStock(i)"></td>
+														<td><input type="number" class="inp" placeholder="0"
+																formControlName="minimum_stock_threshold" [ngModel]="getMinimumStock(i)"></td>
+														<td><input type="number" class="inp" placeholder="0"
+																formControlName="max_order_quantity" [ngModel]="getMaxOrderQuantity(i)"></td>
 
 													</tr>
 												</ng-container>
