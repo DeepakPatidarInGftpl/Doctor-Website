@@ -307,7 +307,6 @@ export class AddproductComponent implements OnInit {
           feature_group: res.id
         });
       })
-
     })
 
   }
@@ -326,7 +325,7 @@ export class AddproductComponent implements OnInit {
   }
   check: any
   selectedColor = 0;
-  onCheckColor(event: any,) {
+  onCheckColor(event: any) {
     const formArray: any = this.productForm.get('color') as FormArray;
     /* Selected */
     if (event.target.checked) {
