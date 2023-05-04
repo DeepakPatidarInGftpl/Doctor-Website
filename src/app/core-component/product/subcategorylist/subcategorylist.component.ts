@@ -419,7 +419,7 @@ export class SubcategorylistComponent implements OnInit {
           title: res.title,
           image:res.image,
           category_id: res.category_id,
-         discount:res.discount
+         discount:res?.discount
         });
       }
     })

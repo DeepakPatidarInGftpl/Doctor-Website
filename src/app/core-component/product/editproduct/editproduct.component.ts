@@ -33,6 +33,7 @@ export class EditproductComponent implements OnInit {
   colorTitle: any = [];
   sizeTitle: any = [];
   updatedVariants: any;
+  updateImages: any;
   ischeck = true;
   uncheck = false;
 
@@ -62,6 +63,7 @@ export class EditproductComponent implements OnInit {
   id: any
   dat: any
   editRes: any;
+  imgUrl = 'https://pv.greatfuturetechno.com';
   ngOnInit(): void {
     this.editor = new Editor();
 
@@ -87,18 +89,13 @@ export class EditproductComponent implements OnInit {
       description: new FormControl(''),
       // hsncode: new FormControl(''),
 
-      // features_subcategory: new FormControl('', [Validators.required]),
-      // unit_conversion: new FormControl(''),  
-      // style_code: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      // variant: new FormArray([]),
-
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
       product_images: this.fb.array([])
     })
 
     this.coreService.getProductById(this.id).subscribe(res => {
-      // this.productShow(res)
+
       if (this.id == res.id) {
         this.editRes = res
         // this.colors = res.color
@@ -107,7 +104,10 @@ export class EditproductComponent implements OnInit {
         this.sizes = res.size.map((res: any) => res.id)
         this.colorTitle = res.color.map((res: any) => res.title)
         this.sizeTitle = res.size.map((res: any) => res.title)
-        // console.log(this.variants, 'thisSize');
+
+        this.selectColor = res.variant_product.map(res => res.color).filter(Boolean);
+        this.selectSize = res.variant_product.map((res) => res.size).filter(Boolean);
+
         this.productForm.patchValue({
           title: res.title,
           description: res.description,
@@ -124,8 +124,36 @@ export class EditproductComponent implements OnInit {
           unit: res.unit.id,
           sales_tax_including: res.sales_tax_including
         })
-        this.productForm.setControl('product_features', this.udateFeature(this.editRes.product_feature_product));
-        // this.productForm.setControl('variant_product', this.udateVariant(this.editRes.variant_product));
+        // this.productForm.setControl('product_features', this.udateFeature(this.editRes?.product_feature_product));
+        // this.productForm.setControl('product_images', this.updateImage(this.editRes?.product_images));
+
+        // Patch the `product_features` form array
+        const productFeaturesFormArray = this.productForm.get('product_features') as FormArray;
+        productFeaturesFormArray.clear(); // Remove existing form groups
+        res.product_feature_product.forEach((feature: any) => {
+          const featureFormGroup = this.fb.group({
+            feature_group: feature.feature_group.title,
+            feature: feature.feature.id
+          });
+          productFeaturesFormArray.push(featureFormGroup); // Add new form group to form array
+        });
+
+        // Patch the `product_images` form array
+        const productImagesFormArray = this.productForm.get('product_images') as FormArray;
+        productImagesFormArray.clear(); // Remove existing form groups
+        if (res.product_images.length <= 0) {
+          this.addproductImage()
+        } else {
+          res.product_images.forEach((image: any) => {
+            const imageFormGroup = this.fb.group({
+              product_colour: image.product_colour || '',
+              image: image.image || ''
+            });
+            productImagesFormArray.push(imageFormGroup); // Add new form group to form array
+          });
+        }
+
+
         this.getSubcategoryGroupByCategory(res.category.id);
         this.oncheck(res.subcategory_group.id);
         this.checkSubact(res.subcategory.id);
@@ -134,9 +162,16 @@ export class EditproductComponent implements OnInit {
         console.log(this.colorTitle, 'colorarray ');
         console.log(this.sizeTitle, 'sizearray');
         this.updatedVariants = this.editRes.variant_product
+
         this.variantLive();
-        console.log(this.updatedVariants );
-        
+        if (this.editRes.product_images) {
+
+          this.updateImages = this.editRes.product_images;
+          console.log(this.updateImages);
+
+        }
+
+
       }
     })
 
@@ -180,10 +215,20 @@ export class EditproductComponent implements OnInit {
     add.forEach((j: any) => {
       formarr.push(this.fb.group({
         feature_group: j.feature_group,
-        feature: j.feature,
+        feature: j.feature.title,
       }))
     })
     return formarr
+  }
+  updateImage(add: any): FormArray {
+    let formArr = new FormArray([]);
+    add.forEach((i: any) => {
+      formArr.push(this.fb.group({
+        product_colour: i.product_colour,
+        image: i.image
+      }))
+    })
+    return formArr;
   }
 
   // udateVariant(add: any): FormArray {
@@ -228,12 +273,15 @@ export class EditproductComponent implements OnInit {
 
   variants(): FormGroup {
     return this.fb.group({
-      id: (''),
       product_title: (''),
       variant_name: (''),
       mrp: (''),
       cost_price: (''),
-      selling_price: (''),
+      variant_size: (''),
+      variant_color: (''),
+      // selling_price: (''),
+      selling_price_online: (''),
+      selling_price_offline: (''),
       stock: (''),
       minimum_stock_threshold: (''),
       selling_price_dealer: (''),
@@ -241,7 +289,6 @@ export class EditproductComponent implements OnInit {
       // barcode: (''),
       sku: (''),
       max_order_quantity: (''),
-
     })
   }
 
@@ -425,20 +472,20 @@ export class EditproductComponent implements OnInit {
   getFeaturegroupBySubcategory(val: any) {
     this.coreService.getFeaturegroupBySubcategoryGroup(val).subscribe(res => {
       console.log(res);
-      this.featureGrpBysubcatGroupList = res;
-      // open feature form 
-      const feature = this.productForm.get('product_features') as FormArray;
-      feature.clear();
-      for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
-        this.addFeature();
-      }
-      this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
-        console.log(res);
-        const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
-        imageGroup.patchValue({
-          feature_group: res.id
-        });
-      })
+      // this.featureGrpBysubcatGroupList = res;
+      // // open feature form 
+      // const feature = this.productForm.get('product_features') as FormArray;
+      // feature.clear();
+      // for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
+      //   this.addFeature();
+      // }
+      // this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
+      //   console.log(res);
+      //   const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
+      //   imageGroup.patchValue({
+      //     feature_group: res.id
+      //   });
+      // })
     })
   }
 
@@ -464,7 +511,8 @@ export class EditproductComponent implements OnInit {
   check: any;
   checkcolor: any;
   selectedColor = 0;
-  onCheckColor(event: any, title: any) {
+  selectColor: any = [];
+  onCheckColor(event: any, id: any, title: any) {
     console.log(title);
     const formArray: any = this.productForm.get('color') as FormArray;
     /* Selected */
@@ -491,29 +539,25 @@ export class EditproductComponent implements OnInit {
     }
     if (this.colorTitle.length == 0) {
       this.colorTitle.push(title)
+      this.selectColor.push({ id: id, title: title })
       console.log(this.colorTitle);
     } else {
       if (!this.colorTitle.includes(title)) {
         this.colorTitle.push(title)
-
+        this.selectColor.push({ id: id, title: title })
       } else {
         this.colorTitle = this.colorTitle.filter(item => item !== title)
+        this.selectColor = this.selectColor.filter(item => item.id !== id || item.title !== title);
       }
     }
+    console.log(this.selectColor, 'selectcolor');
     console.log(this.colorTitle, 'currentcullor');
     this.variantLive()
   }
   selectedSize = 0;
-  onCheckSize(event: any, title) {
-    if (this.sizeTitle.length == 0) {
-      this.sizeTitle.push(title)
-    } else {
-      if (!this.sizeTitle.includes(title)) {
-        this.sizeTitle.push(title)
-      } else {
-        this.sizeTitle = this.sizeTitle.filter(item => item !== title)
-      }
-    }
+  selectSize: any = [];
+  onCheckSize(event: any, id: any, title: any) {
+
     let formArray: any = this.productForm.get('size') as FormArray;
     /* Selected */
     if (event.target.checked) {
@@ -538,9 +582,26 @@ export class EditproductComponent implements OnInit {
         i++;
       });
     }
+
+    if (this.sizeTitle.length == 0) {
+      this.sizeTitle.push(title)
+      this.selectSize.push({ id: id, title: title })
+    } else {
+      if (!this.sizeTitle.includes(title)) {
+        this.sizeTitle.push(title)
+        this.selectSize.push({ id: id, title: title })
+      } else {
+        this.sizeTitle = this.sizeTitle.filter(item => item !== title)
+        this.selectSize = this.selectSize.filter(item => item.id !== id || item.title !== title);
+
+      }
+    }
+    console.log(this.selectSize, 'selectsize');
+
     console.log(this.sizeTitle, 'currentsizes');
     this.variantLive()
   }
+
 
   varantArray: any[] = [];
   variantLive() {
@@ -548,9 +609,6 @@ export class EditproductComponent implements OnInit {
 
     if (this.colorTitle.length > 0 && this.sizeTitle.length == 0) {
       for (let i = 0; i < this.colorTitle.length; i++) {
-        this.varantArray.push({ color: this.colorTitle[i] });
-        this.productColor = this.colorTitle[i];
-        console.log(this.productColor, 'productcolor');
         this.varantArray.push({ color: this.colorTitle[i] });
         this.productColor = this.colorTitle[i];
       }
@@ -572,9 +630,7 @@ export class EditproductComponent implements OnInit {
     for (let i = 0; i < this.varantArray.length; i++) {
       this.getVarinatsForm().push(this.variants());
     }
-
     const userArray = this.productForm.get('variant_product') as FormArray;
-
     this.varantArray.map((user, index) => {
       console.log(user);
       const userGroup = userArray.at(index) as FormGroup;
@@ -583,27 +639,35 @@ export class EditproductComponent implements OnInit {
         variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`
       });
     });
-// display updated value
-    console.log(this.updatedVariants );
+    // display updated value
+    console.log(this.updatedVariants);
     this.updatedVariants.map((user, index) => {
-      console.log(user,'variiant user data');
+      console.log(user, 'variiant user data');
       const variantGroup = userArray.at(index) as FormGroup;
-      console.log(variantGroup);
-      variantGroup.patchValue({
-          product_title: user.product_title,
-              variant_name: user.variant_name,
-              mrp: user.mrp,
-              cost_price:user.cost_price,
-              selling_price: user.selling_price,
-              stock:user.stock,
-              minimum_stock_threshold: user.minimum_stock_threshold,
-              selling_price_dealer: user.selling_price_dealer,
-              selling_price_employee: user.selling_price_employee,
-              // barcode: k.barcode,
-              sku: user.sku,
-              max_order_quantity: user.max_order_quantity,
-      });
+      // console.log(variantGroup);
+      // variantGroup.patchValue({
+      // product_title: user.product_title || '',
+      // variant_name: user.variant_name || '',
+      // mrp: user.mrp || '',
+      // cost_price: user.cost_price || '',
+      // selling_price: user.selling_price || '',
+      // stock: user.stock || '',
+      // minimum_stock_threshold: user.minimum_stock_threshold || '',
+      // selling_price_dealer: user.selling_price_dealer || '',
+      // selling_price_employee: user.selling_price_employee || '',
+      // // barcode: k.barcode,
+      // sku: user.sku || '',
+      // max_order_quantity: user.max_order_quantity || '',
+      // selling_price_online: user.selling_price_online || '',
+      // selling_price_offline: user.selling_price_offline || '',
+      // variant_size: user.variant_size.size.id || '',
+      // variant_color: user.variant_color.color.id || ''
+      // });
     });
+
+    console.log(this.colorTitle);
+    console.log(this.selectColor, 'select color');
+
   }
 
   selectedVariant = 0;
@@ -718,18 +782,32 @@ export class EditproductComponent implements OnInit {
     formdata.append('product_features', JSON.stringify(featuresData));
 
     // product image
+    // const product_imageArray = this.productForm.get('product_images') as FormArray;
+    // product_imageArray.controls.forEach((product_image) => {
+    //   const product_imageGroup = product_image as FormGroup;
+    //   Object.keys(product_imageGroup.controls).forEach((key) => {
+    //     const control = product_imageGroup.controls[key];
+    //     // formdata.append(`product_image[${product_imageArray.controls.indexOf(product_image)}].[${key}]`, control.value);
+    //     formdata.append(`product_images[${product_imageArray.controls.indexOf(product_image)}].${key}`, control.value);
+    //   });
+    // });
+
     const product_imageArray = this.productForm.get('product_images') as FormArray;
+    const product_imageData: any = [];
     product_imageArray.controls.forEach((product_image) => {
       const product_imageGroup = product_image as FormGroup;
+      const featureObj: any = {};
       Object.keys(product_imageGroup.controls).forEach((key) => {
         const control = product_imageGroup.controls[key];
-        // formdata.append(`product_image[${product_imageArray.controls.indexOf(product_image)}].[${key}]`, control.value);
-        formdata.append(`product_images[${product_imageArray.controls.indexOf(product_image)}].${key}`, control.value);
+        featureObj[key] = control.value;
       });
+      product_imageData.push(featureObj);
     });
+    const productImageDataJson = JSON.stringify(product_imageData);
+    formdata.append('product_images', productImageDataJson);
 
     if (this.productForm.valid) {
-      this.coreService.updateProduct(this.productForm.value, this.id).subscribe(res => {
+      this.coreService.updateProduct(formdata, this.id).subscribe(res => {
         if (res.msg == "Product updated successfully") {
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
@@ -827,10 +905,10 @@ export class EditproductComponent implements OnInit {
     if (this.currentColors.length > 0 && this.currentSizes.length == 0) {
       for (let i = 0; i < this.currentColors.length; i++) {
         this.currentVariants.push({ color: this.currentColors[i] });
-        this.productColor = this.currentColors[i];
+        // this.productColor = this.currentColors[i];
         console.log(this.productColor, 'productcolor');
-        this.currentVariants.push({ color: this.currentColors[i] });
-        this.productColor = this.currentColors[i];
+        // this.currentVariants.push({ color: this.currentColors[i] });
+        // this.productColor = this.currentColors[i];
       }
     } else if (this.currentSizes.length > 0 && this.currentColors.length == 0) {
       for (let i = 0; i < this.currentSizes.length; i++) {
@@ -917,12 +995,12 @@ export class EditproductComponent implements OnInit {
     imagesarray.get('image')?.updateValueAndValidity();
   }
   p_img: any[] = []
-Show=true;
+  Show = true;
   onImageSelected(event: Event, index: number) {
     const file = (event.target as HTMLInputElement).files![0];
     const reader = new FileReader();
     if (file) {
-      this.Show=false;
+      this.Show = false;
       this.p_img[index];
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -960,9 +1038,161 @@ Show=true;
   goBack() {
     this.location.back();
   }
-   //dropdown auto close stop
-   onLabelClick(event: Event) {
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
+  }
+
+  // variant calculation 
+
+  coastPriceError: any;
+  variantProducts: { color: any, size: any, max_order_quantity: any, minimum_stock_threshold: any, sku: any, stock: any, mrp: any, coastPrice: any, sellingPrice: any, sellingPriceOffline: any, dealerPrice: any, employeePrice: any }[] = [];
+  price(index: any) {
+
+    const mrp = this.getVarinatsForm().at(index).get('mrp').value;
+    let discount: any;
+    if (mrp >= 100) {
+      discount = (mrp * 10) / 100;
+    } else if (mrp >= 1000) {
+      discount = (mrp * 20) / 100;
+    } else if (mrp >= 5000) {
+      discount = (mrp * 30) / 100;
+    } else if (mrp >= 10000) {
+      discount = (mrp * 50) / 100;
+    } else if (mrp >= 20000) {
+      discount = (mrp * 40) / 100;
+    } else {
+      discount = 0;
+    }
+
+    // price calculation
+    // price calculation
+    const coastPrice = mrp - discount;
+    if (coastPrice > mrp) {
+      this.coastPriceError = 'Coast price less than Mrp price';
+      setTimeout(() => {
+        this.coastPriceError = '';
+      }, 3000);
+    }
+    const sellingPrice = mrp;
+    const dealerPrice = mrp - discount;
+    const employeePrice = mrp;
+    const sellingPriceOffline = mrp;
+    const stock = '';
+    const sku = '';
+    const minimum_stock_threshold = '';
+    const max_order_quantity = '';
+    const color = '';
+    const size = '';
+    this.variantProducts[index] = { color, size, max_order_quantity, minimum_stock_threshold, sku, stock, mrp, coastPrice, sellingPrice, sellingPriceOffline, dealerPrice, employeePrice };
+
+  }
+
+  // get price 
+  getMrp(index: number): number {
+    // return this.variantProducts[index]?.mrp || '';
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.mrp;
+    } else {
+      return this.updatedVariants[index]?.mrp || '';
+    }
+  }
+  getCoastPrice(index: number): number {
+    // return this.variantProducts[index]?.coastPrice || '';
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.coastPrice;
+    } else {
+      return this.updatedVariants[index]?.cost_price || '';
+    }
+  }
+  getSellingPrice(index: number): number {
+    // return this.variantProducts[index]?.sellingPrice || '';
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.sellingPrice;
+    } else {
+      return this.updatedVariants[index]?.selling_price_online || '';
+    }
+  }
+  getSellingPriceOffline(index: number): number {
+    // return this.variantProducts[index]?.sellingPriceOffline || '';
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.sellingPriceOffline;
+    } else {
+      return this.updatedVariants[index]?.selling_price_offline || '';
+    }
+  }
+  getDealerPrice(index: number): number {
+    // return this.variantProducts[index]?.dealerPrice || '';
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.dealerPrice;
+    } else {
+      return this.updatedVariants[index]?.selling_price_dealer || '';
+    }
+  }
+  getEmployeePrice(index: number): number {
+    // return this.variantProducts[index]?.employeePrice || '';
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.employeePrice;
+    } else {
+      return this.updatedVariants[index]?.selling_price_employee || '';
+    }
+  }
+  getStock(index: number): number {
+    // return this.variantProducts[index]?.mrp || '';
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.stock;
+    } else {
+      return this.updatedVariants[index]?.stock || '';
+    }
+  }
+  getSku(index: any): any {
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.sku;
+    } else {
+      return this.updatedVariants[index]?.sku || '';
+    }
+  }
+
+  getMinimumStock(index: number): any {
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.minimum_stock_threshold;
+    } else {
+      return this.updatedVariants[index]?.minimum_stock_threshold || '';
+    }
+  }
+
+  getMaxOrderQuantity(index: number): any {
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.max_order_quantity;
+    } else {
+      return this.updatedVariants[index]?.max_order_quantity || '';
+    }
+  }
+  getColors(index: number): any {
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.color.id;
+    } else {
+      return this.updatedVariants[index]?.color.id || '';
+    }
+  }
+  getSiz(index: number): any {
+    const variantProduct = this.variantProducts[index];
+    if (variantProduct) {
+      return variantProduct.size.id;
+    } else {
+      return this.updatedVariants[index]?.size.id || '';
+    }
   }
 }

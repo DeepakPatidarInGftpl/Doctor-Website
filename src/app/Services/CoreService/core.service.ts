@@ -1091,7 +1091,7 @@ export class CoreService {
       })
     })
   }
-  getProductById(id: number): Observable<any> {
+  getProductById(id: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/product/?id='
     return this.http.get<any>(`${url}${id}`, {
       headers: new HttpHeaders({
@@ -1302,8 +1302,7 @@ export class CoreService {
       })
     })
   }
-
-
+  
   editSubCategoryGroup(data, id) {
     let url = this.apiUrl + '/pv-api/subcategory_group/?id='
     return this.http.put(`${url}${id}`, data, {

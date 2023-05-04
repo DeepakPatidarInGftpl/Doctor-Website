@@ -108,7 +108,7 @@
                 </div> -->
                 <!-- /Filter -->
                 <div class="table-responsive">
-                    <table datatable [dtOptions]="dtOptions" class="table" id="printTable">
+                    <table datatable class="table" id="printTable">
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">
@@ -156,8 +156,15 @@
                                 <!-- <td>{{products.unit_conversion}}</td> -->
                                 <!-- <td>{{products.features_subcategory}}</td> -->
                                 <td>{{products.product_store}}</td>
-                                <td [innerHTML]="products.description"></td>
-                                
+                                <!-- <div *ngIf="sho">
+                                    <td [innerHTML]="products.description |readMore" *ngIf="sho"></td>
+                                    <span (click)="hide()" class="spandes ">Read more...</span>
+                                </div>
+                                <div *ngIf="sho1">
+                                    <td [innerHTML]="products.description |readLess" ></td>
+                                    <span (click)="hide1()" class="spandes ">Read more...</span>
+                                </div> -->
+                               <td [innerHTML]="products.description.length>100?products.description.slice(0, 150) + '...' :products.description"></td>
                                 <td>
                                     <span
                                     [ngClass]="{'bg-lightgreen': products.is_measurable === true, 'bg-lightred' : products.is_measurable === false,'bg-lightyellow' : products.is_measurable === 'Partial' }"

@@ -248,8 +248,8 @@
                   <ul class="dropdown-menu" style="width: 100%;">
                     <li><a class="dropdown-item" *ngFor="let subCat of subcatbyCategory; let i=index">
                         <input type="checkbox" [value]="subCat.id" [checked]="selectedSubCats.includes(subCat.id)"
-                          (change)="onSelectionChange(subCat, $event.target)" style="margin-right: 5px;">
-                        {{subCat.title}}
+                          (change)="onSelectionChange(subCat, $event.target)" style="margin-right: 5px;" [id]="'checkbox-' + i"> 
+                        <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subCat.title}}</label>			
                       </a></li>
                   </ul>
                   <p *ngIf="selectedSubCat>0">{{selectedSubCat + ' Subcategory selected'}}</p>
@@ -261,8 +261,6 @@
               *ngIf="category && category.touched && subcatbyCategory?.length<=0">Subcategory Not available
             </span>
               </div>
-
-
               <span class="text-danger" *ngIf="errormessFSubC">{{errormessFSubC}}</span>
             </div>
             <div class="col-lg-12 col-sm-12 col-12">
@@ -283,8 +281,10 @@
                   <ul class="dropdown-menu" style="width: 100%;">
                     <li><a class="dropdown-item" *ngFor="let fGroup of featureGroup; let i=index">
                         <input type="checkbox" [value]="fGroup.id" [checked]="selectedFeature.includes(fGroup.id)"
-                          (change)="selectFeatureGroup(fGroup, $event.target)" style="margin-right: 5px;">
-                        {{fGroup.title}}
+                          (change)="selectFeatureGroup(fGroup, $event.target)" style="margin-right: 5px;" [id]="'checkboxFeat-' + i">
+                        
+                        <label [for]="'checkboxFeat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{fGroup.title}}</label>			
+                    
                       </a></li>
                   </ul>
                   <p *ngIf="selectedFeatureGrp>0">{{selectedFeatureGrp + ' Feature group selected'}}</p>

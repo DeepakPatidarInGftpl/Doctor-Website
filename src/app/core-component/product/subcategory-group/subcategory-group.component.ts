@@ -319,11 +319,18 @@ this.coreServ.getSubcategoryGroup().subscribe(res=>{
       }
     }
   }
-
+id:any;
 
   editThis(prod) {
+    this.id=prod.id;
     this.coreServ.editThisData(prod)
     this.editForm()
+    this.id
+    this.coreServ.getSubcategoryGroupById(this.id).subscribe(res=>{
+      console.log(res);
+      this.getSubcategoryByCategory(res.category.id)
+    })
+   
   }
 
   ngOnDestroy() {
@@ -385,5 +392,10 @@ this.coreServ.getSubcategoryGroup().subscribe(res=>{
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
+  }
+   //dropdown auto close stop
+   onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
   }
 }

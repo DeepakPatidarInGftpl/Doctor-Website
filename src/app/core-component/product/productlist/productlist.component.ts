@@ -196,4 +196,19 @@ itemsPerPage:number=10;
     this.reverse = !this.reverse
   }
 
+
+  // read more or less
+  sho = true;
+  sho1 = false;
+  sho2 = false;
+  hide() {
+    this.sho = false;
+    this.sho1 = !this.sho1;
+    this.sho2 = false;
+  }
+  hide1() {
+    this.sho = true;
+    this.sho1 = false;
+    this.sho2 = !this.sho2;
+  }
 }
