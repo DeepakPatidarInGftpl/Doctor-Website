@@ -86,11 +86,14 @@
                         <form class="form-ex">
                             <input type="text"
                                    placeholder="Scan Barcode/Enter Product Name"
-                                   [formControl]="autocompleteControl"
-                                   [matAutocomplete]="auto"
+                                   [formControl]="productsAutocompleteControl"
+                                   [matAutocomplete]="auto" 
                                    class="form-control">
                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)">
-                                    <mat-option *ngFor="let option of filteredOptions$" [value]="option">{{ displayFn(option) }}</mat-option>
+                                    <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                                    <mat-option *ngIf="productsAutocompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                    <mat-option *ngIf="errorMsg" class="is-loading">{{errorMsg}}</mat-option>
+                                    <mat-option *ngFor="let option of filteredProducts" [value]="option">{{ displayFn(option) }}</mat-option>
                                   </mat-autocomplete>
                           </form>
                         <!-- <mat-form-field>
@@ -105,15 +108,17 @@
                         <form class="exam-form">
                             <input type="text"
                                    placeholder="Search for a Customer"
-                                   [formControl]="userCompleteControl"
+                                   [formControl]="customerAutoCompleteControl"
                                    [matAutocomplete]="auto1"
                                    class="form-control">
                             <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="optionSelected1($event)">
+                                <mat-option *ngIf="customerAutoCompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
                                 <mat-option value="Walk-In">
                                     Walk-In Customer
                                 </mat-option>
-                              <mat-option *ngFor="let street of filteredStreets | async" [value]="street">
-                                {{street}}
+                              <mat-option *ngFor="let customer of filteredCustomer" [value]="customer">
+                                {{ displayFn(customer) }}
                               </mat-option>
                             </mat-autocomplete>
                           </form>
@@ -145,19 +150,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="table-light" *ngFor="let cart of selectedOptions; let i = index">
+                                    <tr class="table-light" *ngFor="let cart of currentItems; let i = index">
                                         <td>{{i}}</td>
-                                        <td>01</td>
-                                        <td>{{cart.name}}</td>
+                                        <td>{{cart.sku}}</td>
+                                        <td>{{cart.product_title}}</td>
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp qty-input">
-                                                <span (click)="decreaseQty(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
+                                                <span (click)="decreaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
                                                 <input type="text" value={{cart.quantity}} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
-                                                <span (click)="increaseQty(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">+</span>
+                                                <span (click)="increaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">+</span>
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" value="650.00" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1">
+                                            <input type="text" value="{{cart.mrp}}" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1">
                                         </td>
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp">
@@ -170,9 +175,9 @@
                                             <span class="input-group-text" id="basic-addon1">%</span>
                                             <input type="text" value="0.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                                         </div></td>
-                                        <td>{{cart.price}}</td>
-                                        <td>{{cart.price * cart.quantity}}</td>
-                                        <td><button (click)="removeOption(i)" class="table-cross-btn">
+                                        <td>{{cart.mrp}}</td>
+                                        <td>{{cart.mrp * cart.quantity}}</td>
+                                        <td><button (click)="removeOptionCurrent(cart)" class="table-cross-btn">
                                             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                                         </button></td>
                                     </tr>
@@ -531,24 +536,31 @@
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
+        <form [formGroup]="customerForm" (ngSubmit)="submitCustomerForm()">
         <div class="modal-body">
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" placeholder="Name">
+                        <input type="text" class="form-control"
+                        placeholder="Name"
+                        formControlName="name">
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Mobile No.</label>
-                        <input type="text" class="form-control" placeholder="Mobile No.">
+                        <input type="text" class="form-control" 
+                        placeholder="Mobile No."
+                        formControlName="mobile_no">
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Whatsapp No.</label>
-                        <input type="text" class="form-control" placeholder="Whatsapp No.">
+                        <input type="text" class="form-control"
+                        placeholder="Whatsapp No."
+                        formControlName="whatsapp_no">
                     </div>
                 </div>
             </div>
@@ -556,7 +568,17 @@
                 <div class="col-sm-4">
                     <div class="form-group mb-0">
                         <label>Date Of Birth</label>
-                        <input type="text" disabled class="form-control" placeholder="Date Of Birth">
+                        <input type="date" class="form-control" 
+                        placeholder="Date Of Birth"
+                        formControlName="date_of_birth">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group mb-0">
+                        <label>Anniversary Date</label>
+                        <input type="date" class="form-control" 
+                        placeholder="Anniversary"
+                        formControlName="anniversary_date">
                     </div>
                 </div>
             </div>
@@ -566,13 +588,15 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Address Line</label>
-                            <input type="text" class="form-control" placeholder="Address Line1">
+                            <input type="text" class="form-control" 
+                            placeholder="Address Line1"
+                            formControlName="address_line_1">
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>State</label>
-                            <select class="form-select">
+                            <select class="form-select" formControlName="state">
                                 <option>-- Select --</option>
                                 <option>Option 1</option>
                                 <option>Option 2</option>
@@ -582,7 +606,7 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>City</label>
-                            <select class="form-select">
+                            <select class="form-select" formControlName="city">
                                 <option>-- Select --</option>
                                 <option>Option 1</option>
                                 <option>Option 2</option>
@@ -594,7 +618,7 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>GST Type</label>
-                            <select class="form-select">
+                            <select class="form-select" formControlName="gst_type">
                                 <option>-- Select --</option>
                                 <option>Option 1</option>
                                 <option>Option 2</option>
@@ -604,14 +628,16 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>GSTIN</label>
-                            <input type="text" disabled class="form-control" placeholder="GSTIN">
+                            <input type="text" class="form-control" 
+                            placeholder="GSTIN"
+                            formControlName="gstin">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal-footer mt-2">
-            <button type="button" class="btn btn-dark modal2BtnPos">Save</button>
+            <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
             <!-- <div class="row w-100">
                 <div class="col-sm-12 text-center">
                     <button type="button" class="btn btn-dark">Save</button>
@@ -619,6 +645,7 @@
             </div> -->
           <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
         </div>
+        </form>
       </div>
     </div>
   </div>  

@@ -1,11 +1,12 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormControl } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, Observer, fromEvent, merge, Subscription, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, filter, distinctUntilChanged, debounceTime, tap, switchMap, finalize, catchError } from 'rxjs/operators';
 import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 import { SyncServiceService } from 'src/app/Services/sync-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { __values } from 'tslib';
 @Component({
   selector: 'app-pos',
   templateUrl: './pos.component.html',
@@ -32,13 +33,13 @@ export class PosComponent implements OnInit {
   ];
 
   selectedOptions: any[] = [];
-  autocompleteControl = new FormControl();
+  productsAutocompleteControl = new FormControl();
   //filteredOptions$: Observable<any[]> | undefined;
   filteredOptions$:any;
   customers:any = [];
   cartItems: any[] = [];
   addMoreDetails: any;
-  userCompleteControl = new FormControl('');
+  customerAutoCompleteControl = new FormControl('');
   streets: string[] = ['Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow'];
   filteredStreets: Observable<string[]>;
   currentCustomer:any;
@@ -47,10 +48,33 @@ export class PosComponent implements OnInit {
   dueAmount:any;
   online: any;
   loader: any;
+  minLengthTerm = 3;
+  errorMsg!: string;
+  isLoading = false;
+  filteredProducts: any;
+  cusMinLengthTerm = 3;
+  cusErrorMsg!: string;
+  cusIsLoading = false;
+  filteredCustomer: any;
+  currentItems: any[] = [];
+  customerForm: FormGroup;
 
 
-  constructor(private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService) { 
+  constructor(public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService) { 
     // this.cartItems = this.cartService.getCartItems();
+    this.currentItems = this.cartService.getCurrentItems();
+    this.customerForm = this.fb.group({
+      name: [''],
+      mobile_no: [''],
+      whatsapp_no: [''],
+      date_of_birth: [''],
+      anniversary_date: [''],
+      address_line_1: [''],
+      state: [''],
+      city: [''],
+      gst_type: [''],
+      gstin: ['']
+    });
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -112,16 +136,119 @@ export class PosComponent implements OnInit {
     //   this.online = isOnline;
     //   this.loader = isOnline;
     // });
-    this.filteredStreets = this.userCompleteControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
+    // this.filteredStreets = this.customerAutoCompleteControl.valueChanges.pipe(
+    //   startWith(''),
+    //   map(value => this._filter(value || '')),
+    // );
     this.cartItems = this.cartService.getCartItems();
     console.log(this.cartItems);
-    this.filteredOptions$ = this.options;
-    this.autocompleteControl.valueChanges.subscribe(value => {
-      this.filterArray(value);
-    });
+
+
+    // this.filteredOptions$ = this.options;
+    // this.productsAutocompleteControl.valueChanges.subscribe(value => {
+    //   this.filterArray(value);
+    // });
+
+    let api_token = "4d586523c3dbbc989192bec34006e72a4edebf00";
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${api_token}`
+      });
+
+    const requestOptions = { headers: headers };
+
+    this.productsAutocompleteControl.valueChanges
+      .pipe(
+        filter(res => {
+          return res !== null && res.length >= this.minLengthTerm
+        }),
+        distinctUntilChanged(),
+        debounceTime(100),
+        tap(() => {
+          this.errorMsg = "";
+          this.filteredProducts = [];
+          this.isLoading = true;
+        }),
+        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/product_search/?search=${value}`, requestOptions)
+          .pipe(
+            catchError(err => {
+              // handleError(err);
+              console.log('err catch', err);
+              this.errorMsg = 'No Products Found';
+              this.isLoading = false;
+              return [];
+            }),
+            finalize(() => {
+              this.isLoading = false
+              console.log('search', value)
+            }),
+          )
+        )
+      )
+      .subscribe((data: any) => {
+        console.log('data', data)
+        if(data.variants.length > 0){
+          this.filteredProducts = data.variants;
+        }
+        // if (data['Search'] == undefined) {
+        //   this.errorMsg = data['Error'];
+        //   this.filteredProducts = [];
+        //   console.log('if');
+        // } else {
+        //   this.errorMsg = "";
+        //   this.filteredProducts = data['Search'];
+        //   console.log('else');
+        // }
+        console.log(this.filteredProducts, 'fil');
+        console.log(this.errorMsg, 'errmg');
+      });
+  
+      this.customerAutoCompleteControl.valueChanges
+      .pipe(
+        filter(res => {
+          return res !== null && res.length >= this.cusMinLengthTerm
+        }),
+        distinctUntilChanged(),
+        debounceTime(100),
+        tap(() => {
+          this.cusErrorMsg = "";
+          this.filteredCustomer = [];
+          this.cusIsLoading = true;
+        }),
+        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/product_search/?search=${value}`, requestOptions)
+          .pipe(
+            catchError(err => {
+              // handleError(err);
+              console.log('err catch', err);
+              this.cusErrorMsg = 'No Customer Found';
+              this.cusIsLoading = false;
+              return [];
+            }),
+            finalize(() => {
+              this.cusIsLoading = false
+              console.log('search', value)
+            }),
+          )
+        )
+      )
+      .subscribe((data: any) => {
+        console.log('data', data)
+        if(data.variants.length > 0){
+          this.filteredCustomer = data.variants;
+        }
+        // if (data['Search'] == undefined) {
+        //   this.errorMsg = data['Error'];
+        //   this.filteredProducts = [];
+        //   console.log('if');
+        // } else {
+        //   this.errorMsg = "";
+        //   this.filteredProducts = data['Search'];
+        //   console.log('else');
+        // }
+        console.log(this.filteredCustomer, 'Cus');
+        console.log(this.cusErrorMsg, 'errmgcus');
+      });
+  
 
     // ).pipe(
     //   startWith(''),
@@ -134,6 +261,11 @@ export class PosComponent implements OnInit {
     this.addMoreDetails = false;
     console.log(this.addMoreDetails);
   }
+
+  // productInputValue() {
+  //   let pValue = this.productsAutocompleteControl.value;
+  //   return pValue.length < 3 ? true : false;
+  // }
 
   private _filter(value: string): string[] {
     const filterValue = this._normalizeValue(value);
@@ -172,15 +304,20 @@ export class PosComponent implements OnInit {
 
   optionSelected(event){
     const selectedOption = event.option.value;
+    let product1 = {
+      ...selectedOption,
+      quantity: 1,
+    }
     let product = {
             id: selectedOption.id,
-            name: selectedOption.name,
-            price: selectedOption.price,
-            quantity: 1
+            product_title: selectedOption.product_title,
+            mrp: selectedOption.mrp,
+            quantity: 1,
+            sku: selectedOption.sku
           }
-    this.addToCart(product);
-    this.selectedOptions.push(product);
-    this.autocompleteControl.setValue('');
+    this.addToCurrent(product1);
+    this.selectedOptions.push(product1);
+    this.productsAutocompleteControl.setValue('');
   }
 
   optionSelected1(event){
@@ -194,8 +331,34 @@ export class PosComponent implements OnInit {
     this.selectedOptions.splice(index, 1);
   }
 
+  removeOptionCurrent(item) {
+    const index = this.selectedOptions.findIndex(currentItem => currentItem.id === item.id);
+    if (index !== -1) {
+      this.selectedOptions.splice(index, 1);
+    }
+    this.cartService.removeFromCurrent(item);
+  }
+
+  removeFromCurrent(item) {
+    console.log('removed');
+    // this.selectedOptions.splice(index, 1);
+    this.cartService.removeFromCurrent(item)
+  }
+
+  addToCurrent(product: any): void {
+    this.cartService.addToCurrent(product);
+  }
+
+  increaseQtyCurrent(item){
+    this.cartService.increaseCurrent(item);
+  }
+
+  decreaseQtyCurrent(item){
+    this.cartService.decreaseCurrent(item);
+  }
+
   addToCart(product: any): void {
-    this.cartService.addToCart({ id: product.id, name: product.name, price: product.price, quantity: 1 });
+    this.cartService.addToCart(product);
   }
 
   increaseQty(item){
@@ -217,7 +380,7 @@ export class PosComponent implements OnInit {
   }
 
   displayFn(item: any): string {
-    return item ? item.name : '';
+    return item ? item.product_title : '';
   }
 
   addMoreDetailsHandler() {
@@ -226,10 +389,11 @@ export class PosComponent implements OnInit {
 
   totalAmount(){
     //let cartItems = this.cartService.getCartItems();
-    let cartItems = this.selectedOptions;
+    let cartItems = this.cartService.getCurrentItems();
+    //let cartItems = this.selectedOptions;
     let totalPrice = 0;
     for(let cart of cartItems){
-      totalPrice += cart.price * cart.quantity;
+      totalPrice += cart.mrp * cart.quantity;
     }
     return totalPrice;
   }
@@ -301,6 +465,30 @@ export class PosComponent implements OnInit {
     } else {
       return false
     }
+  }
+
+  submitCustomerForm() {
+    let formData: any = new FormData();
+    formData.append('name', this.customerForm.get('name').value);
+    formData.append('mobile_no', this.customerForm.get('mobile_no').value);
+    formData.append('whatsapp_no', this.customerForm.get('whatsapp_no').value);
+    formData.append('date_of_birth', this.customerForm.get('date_of_birth').value);
+    formData.append('anniversary_date', this.customerForm.get('anniversary_date').value);
+    formData.append('address_line_1', this.customerForm.get('address_line_1').value);
+    formData.append('state', this.customerForm.get('state').value);
+    formData.append('city', this.customerForm.get('city').value);
+    formData.append('gst_type', this.customerForm.get('gst_type').value);
+    formData.append('gstin', this.customerForm.get('gstin').value);
+
+    // for(let x of formData){
+    //   console.log('formdata cus', x);
+    // }
+    // this.http
+    //   .post('https://pv.greatfuturetechno.com/pv-api/customer/', formData)
+    //   .subscribe({
+    //     next: (response) => console.log(response),
+    //     error: (error) => console.log(error),
+    //   });
   }
 
 }

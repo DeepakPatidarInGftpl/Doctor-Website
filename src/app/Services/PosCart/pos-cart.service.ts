@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class PosCartService {
-
+  currentItems:any[] = [];
   private cartItems: any[] = [];
   private orders: any[] = [];
 
@@ -19,12 +19,50 @@ export class PosCartService {
     }
   }
 
+  getCurrentItems(): any[] {
+    return this.currentItems;
+  }
+
   getCartItems(): any[] {
     return this.cartItems;
   }
 
   getOrders(): any[] {
     return this.orders;
+  }
+
+  addToCurrent(item: any): void {
+    const found = this.currentItems.find(currentItem => currentItem.id === item.id);
+    if (found) {
+      found.quantity += item.quantity;
+    } else {
+      this.currentItems.push(item);
+    }
+  }
+
+  increaseCurrent(item: any):void {
+    const found = this.currentItems.find(currentItem => currentItem.id === item.id);
+    found.quantity += 1;
+  }
+
+  decreaseCurrent(item: any):void {
+    const found = this.currentItems.find(currentItem => currentItem.id === item.id);
+    if(found.quantity == 1){
+      this.removeFromCurrent(found);
+    } else {
+      found.quantity -= 1;
+    }
+  }
+
+  removeFromCurrent(item: any): void {
+    const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id);
+    if (index !== -1) {
+      this.currentItems.splice(index, 1);
+    }
+  }
+
+  clearCurrent(): void {
+    this.currentItems = [];
   }
 
   addToCart(item: any): void {
