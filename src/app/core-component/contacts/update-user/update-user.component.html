@@ -1,0 +1,87 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4> Update User</h4>
+        <h6>Create new Update </h6>
+    </div>
+</div>
+<!-- /add -->
+<div class="card">
+    <div class="card-body">
+        <form [formGroup]="userForm" (ngSubmit)="submit()">
+            <div class="row">
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Mobile Number*</label>
+                        <input type="text" formControlName="mobile_no" id="mobile_no" [ngClass]="{
+                      'is-invalid': f['mobile_no'].touched && f['mobile_no'].invalid}">
+                        <span class="text-danger" *ngIf="mobile_no&& mobile_no.invalid && mobile_no.touched">Enter your mobile No</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" formControlName="username" id="username" [ngClass]="{
+                      'is-invalid': f['username'].touched && f['username'].invalid}">
+                        <span class="text-danger" *ngIf="username && username.invalid && username.touched">Enter your username </span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" formControlName="email" id="email" [ngClass]="{
+                      'is-invalid': f['email'].touched && f['email'].invalid}">
+                        <span class="text-danger" *ngIf="email && email.invalid && email.touched">Enter Remark</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" formControlName="password" id="password" [ngClass]="{
+                      'is-invalid': f['password'].touched && f['password'].invalid}">
+                        <span class="text-danger"*ngIf="password && password.invalid && password.touched">Enter your Password
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Permission Group</label>
+                        <input type="text" formControlName="permission_group" id="permission_group" [ngClass]="{
+                      'is-invalid': f['permission_group'].touched && f['permission_group'].invalid}">
+                        <span class="text-danger" *ngIf="permission_group && permission_group.invalid && permission_group.touched">Enter permission_group</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>User Type</label>
+                      <select formControlName="user_type" id="user_type" [ngClass]="{
+                        'is-invalid': f['user_type'].touched && f['user_type'].invalid}">
+                    <option value="" selected disabled>Select User Type</option>
+                    <option value="supplier">Supplier</option>
+                    <option value="vendor">Vendor</option>
+                    <option value="employee">Employee</option>
+                    <option value="customer">Customer</option>
+                    </select>
+                        <span class="text-danger" *ngIf="user_type && user_type.invalid && user_type.touched">Select User Type</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
+                    <div class="form-group mt-4">
+                            <div class="d-flex ">
+                                <input type="checkbox" formControlName="active"
+                                    [id]="'checkboxTax-'">
+                                <label [for]="'checkboxTax-'" class="d_flex"
+                                    style="margin-bottom: 0; margin-left: 5px;">Active</label>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <button class="btn btn-submit me-2">Submit</button>
+                    <a routerLink="//contacts/user" class="btn btn-cancel">Cancel</a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<!-- /add -->

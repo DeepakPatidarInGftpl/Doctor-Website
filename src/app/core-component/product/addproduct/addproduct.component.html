@@ -525,7 +525,7 @@
 											<div class="d_flex">
 												<div class="d-flex">
 													<input type="checkbox" formControlName="purchase_tax_including"
-														[id]="'checkboxTax-'">
+														[id]="'checkboxTax-'" [ngModel]="true">
 													<label [for]="'checkboxTax-'" class="d_flex"
 														style="margin-bottom: 0; margin-left: 5px;">Purchase Tax
 														Including</label>
@@ -542,14 +542,14 @@
 											<div class="d_flex">
 												<div class="d-flex">
 													<input type="checkbox" formControlName="sales_tax_including"
-														[id]="'checkboxSale-'">
+														[id]="'checkboxSale-'" [ngModel]="true">
 													<label [for]="'checkboxSale-'" class="d_flex"
 														style="margin-bottom: 0; margin-left: 5px;">Sales Tax
 														Including</label>
 												</div>
 												<div class="d_flex">
 													<input type="checkbox" formControlName="is_active"
-														[id]="'checkboxActive-'">
+														[id]="'checkboxActive-'" [ngModel]="true">
 													<label [for]="'checkboxActive-'" class="d_flex"
 														style="margin-bottom: 0; margin-left: 5px;">Active</label>
 												</div>
@@ -624,26 +624,16 @@
 								<div class="container table-responsive table-bg">
 									<p class="titl mx-1 my-1">{{productNamme}}</p>
 									<table datatable class="table ">
-										<!-- <thead> -->
-										<!-- <tr> -->
-										<tr class="t-row">
+										<thead>
+										<tr>
 											<th style="display:none">Product </th>
-											<th width="0.5%">Variant </th>
+											<th>Variant </th>
 											<th>Color</th>
 											<th>Size</th>
-											<th>MRP </th>
-											<th>Cost Price </th>
-											<th>Selling Price Online</th>
-											<th>selling Price Offline</th>
-											<!-- Minimum Stock Threshold -->
-											<th>Selling Price Dealer</th>
-											<th>Selling Price Employee</th>
 											<th>Barcode/SKU</th>
-											<th>Stock </th>
-											<th>Minimum Stock</th>
-											<th>Max order quantity</th>
+											<th></th>
 										</tr>
-										<!-- </thead> -->
+										</thead>
 										<tbody>
 											<ng-container formArrayName="variant_product">
 												<ng-container *ngFor="let d of getVarinatsForm().controls; let i=index">
@@ -652,8 +642,7 @@
 																formControlName="product_title" [ngModel]="productNamme"
 																[readonly]="true"></td>
 														<td><input type="text" class="inp"
-																formControlName="variant_name" [readonly]="true"
-																style="width: 80px;"></td>
+																formControlName="variant_name" [readonly]="true"></td>
 														<td>
 															<select class="variant_color" formControlName="variant_color">
 																	<option value="" selected disabled>Select Color</option>
@@ -668,38 +657,13 @@
 																	</option>
 																</select>
 														</td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="mrp" [ngModel]="getMrp(i)"
-																(input)="price(i)"></td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="cost_price"
-																[ngModel]="getCoastPrice(i)">
-															<br>
-															<span class="text-danger"
-																*ngIf="coastPriceError">{{coastPriceError}}</span>
+														<td><input type="text" class="inp" placeholder="0" formControlName="sku"></td>
+														<td>
+															<svg (click)="removeVariant(i)" style="color:red" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+																<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+																<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+															  </svg>
 														</td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="selling_price_online"
-																[ngModel]="getSellingPrice(i)"></td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="selling_price_offline"
-																[ngModel]="getSellingPriceOffline(i)"></td>
-
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="selling_price_dealer"
-																[ngModel]="getDealerPrice(i)"></td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="selling_price_employee"
-																[ngModel]="getEmployeePrice(i)"></td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="sku"></td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="stock"></td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="minimum_stock_threshold"></td>
-														<td><input type="text" class="inp" placeholder="0"
-																formControlName="max_order_quantity"></td>
-
 													</tr>
 												</ng-container>
 											</ng-container>

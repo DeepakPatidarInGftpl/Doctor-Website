@@ -51,10 +51,7 @@ export class EditproductComponent implements OnInit {
     ['align_left', 'align_center', 'align_right', 'align_justify'],
   ];
 
-
-
   get doc(): any {
-    // return this.form.get('editorContent');
     return this.productForm.get('description')
   }
 
@@ -194,8 +191,6 @@ export class EditproductComponent implements OnInit {
     this.getTaxSlab()
     this.getFeatureData()
     this.getFeatureGroup()
-
-
   }
 
   // this working
@@ -274,21 +269,10 @@ export class EditproductComponent implements OnInit {
   variants(): FormGroup {
     return this.fb.group({
       product_title: (''),
-      variant_name: (''),
-      mrp: (''),
-      cost_price: (''),
-      variant_size: (''),
-      variant_color: (''),
-      // selling_price: (''),
-      selling_price_online: (''),
-      selling_price_offline: (''),
-      stock: (''),
-      minimum_stock_threshold: (''),
-      selling_price_dealer: (''),
-      selling_price_employee: (''),
-      // barcode: (''),
-      sku: (''),
-      max_order_quantity: (''),
+      variant_name: new FormControl('',[Validators.required]),
+      variant_size:new FormControl('',[Validators.required]),
+      variant_color:(''),
+      sku: new FormControl(''),
     })
   }
 
@@ -372,7 +356,6 @@ export class EditproductComponent implements OnInit {
             console.log(map.id, 'mapid');
             const formArray: any = this.productForm.get('color') as FormArray;
             formArray.push(new FormControl(map.id));
-
           }
         })
       }, 2000);
@@ -539,15 +522,15 @@ export class EditproductComponent implements OnInit {
     }
     if (this.colorTitle.length == 0) {
       this.colorTitle.push(title)
-      this.selectColor.push({ id: id, title: title })
+      // this.selectColor.push({ id: id, title: title })
       console.log(this.colorTitle);
     } else {
       if (!this.colorTitle.includes(title)) {
         this.colorTitle.push(title)
-        this.selectColor.push({ id: id, title: title })
+        // this.selectColor.push({ id: id, title: title })
       } else {
         this.colorTitle = this.colorTitle.filter(item => item !== title)
-        this.selectColor = this.selectColor.filter(item => item.id !== id || item.title !== title);
+        // this.selectColor = this.selectColor.filter(item => item.id !== id || item.title !== title);
       }
     }
     console.log(this.selectColor, 'selectcolor');
@@ -576,7 +559,6 @@ export class EditproductComponent implements OnInit {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
           this.selectedSize--;
-
           return;
         }
         i++;
@@ -597,7 +579,6 @@ export class EditproductComponent implements OnInit {
       }
     }
     console.log(this.selectSize, 'selectsize');
-
     console.log(this.sizeTitle, 'currentsizes');
     this.variantLive()
   }
@@ -606,7 +587,6 @@ export class EditproductComponent implements OnInit {
   varantArray: any[] = [];
   variantLive() {
     this.varantArray = [];
-
     if (this.colorTitle.length > 0 && this.sizeTitle.length == 0) {
       for (let i = 0; i < this.colorTitle.length; i++) {
         this.varantArray.push({ color: this.colorTitle[i] });
@@ -1047,112 +1027,98 @@ export class EditproductComponent implements OnInit {
   // variant calculation 
 
   coastPriceError: any;
-  variantProducts: { color: any, size: any, max_order_quantity: any, minimum_stock_threshold: any, sku: any, stock: any, mrp: any, coastPrice: any, sellingPrice: any, sellingPriceOffline: any, dealerPrice: any, employeePrice: any }[] = [];
+  variantProducts: { color: any, size: any, sku: any }[] = [];
   price(index: any) {
 
-    const mrp = this.getVarinatsForm().at(index).get('mrp').value;
-    let discount: any;
-    if (mrp >= 100) {
-      discount = (mrp * 10) / 100;
-    } else if (mrp >= 1000) {
-      discount = (mrp * 20) / 100;
-    } else if (mrp >= 5000) {
-      discount = (mrp * 30) / 100;
-    } else if (mrp >= 10000) {
-      discount = (mrp * 50) / 100;
-    } else if (mrp >= 20000) {
-      discount = (mrp * 40) / 100;
-    } else {
-      discount = 0;
-    }
+    // const mrp = this.getVarinatsForm().at(index).get('mrp').value;
+    // let discount: any;
+    // if (mrp >= 100) {
+    //   discount = (mrp * 10) / 100;
+    // } else if (mrp >= 1000) {
+    //   discount = (mrp * 20) / 100;
+    // } else if (mrp >= 5000) {
+    //   discount = (mrp * 30) / 100;
+    // } else if (mrp >= 10000) {
+    //   discount = (mrp * 50) / 100;
+    // } else if (mrp >= 20000) {
+    //   discount = (mrp * 40) / 100;
+    // } else {
+    //   discount = 0;
+    // }
 
     // price calculation
-    // price calculation
-    const coastPrice = mrp - discount;
-    if (coastPrice > mrp) {
-      this.coastPriceError = 'Coast price less than Mrp price';
-      setTimeout(() => {
-        this.coastPriceError = '';
-      }, 3000);
-    }
-    const sellingPrice = mrp;
-    const dealerPrice = mrp - discount;
-    const employeePrice = mrp;
-    const sellingPriceOffline = mrp;
-    const stock = '';
+  
     const sku = '';
-    const minimum_stock_threshold = '';
-    const max_order_quantity = '';
     const color = '';
     const size = '';
-    this.variantProducts[index] = { color, size, max_order_quantity, minimum_stock_threshold, sku, stock, mrp, coastPrice, sellingPrice, sellingPriceOffline, dealerPrice, employeePrice };
+    this.variantProducts[index] = { color, size, sku,  };
 
   }
 
   // get price 
-  getMrp(index: number): number {
-    // return this.variantProducts[index]?.mrp || '';
-    const variantProduct = this.variantProducts[index];
-    if (variantProduct) {
-      return variantProduct.mrp;
-    } else {
-      return this.updatedVariants[index]?.mrp || '';
-    }
-  }
-  getCoastPrice(index: number): number {
-    // return this.variantProducts[index]?.coastPrice || '';
-    const variantProduct = this.variantProducts[index];
-    if (variantProduct) {
-      return variantProduct.coastPrice;
-    } else {
-      return this.updatedVariants[index]?.cost_price || '';
-    }
-  }
-  getSellingPrice(index: number): number {
-    // return this.variantProducts[index]?.sellingPrice || '';
-    const variantProduct = this.variantProducts[index];
-    if (variantProduct) {
-      return variantProduct.sellingPrice;
-    } else {
-      return this.updatedVariants[index]?.selling_price_online || '';
-    }
-  }
-  getSellingPriceOffline(index: number): number {
-    // return this.variantProducts[index]?.sellingPriceOffline || '';
-    const variantProduct = this.variantProducts[index];
-    if (variantProduct) {
-      return variantProduct.sellingPriceOffline;
-    } else {
-      return this.updatedVariants[index]?.selling_price_offline || '';
-    }
-  }
-  getDealerPrice(index: number): number {
-    // return this.variantProducts[index]?.dealerPrice || '';
-    const variantProduct = this.variantProducts[index];
-    if (variantProduct) {
-      return variantProduct.dealerPrice;
-    } else {
-      return this.updatedVariants[index]?.selling_price_dealer || '';
-    }
-  }
-  getEmployeePrice(index: number): number {
-    // return this.variantProducts[index]?.employeePrice || '';
-    const variantProduct = this.variantProducts[index];
-    if (variantProduct) {
-      return variantProduct.employeePrice;
-    } else {
-      return this.updatedVariants[index]?.selling_price_employee || '';
-    }
-  }
-  getStock(index: number): number {
-    // return this.variantProducts[index]?.mrp || '';
-    const variantProduct = this.variantProducts[index];
-    if (variantProduct) {
-      return variantProduct.stock;
-    } else {
-      return this.updatedVariants[index]?.stock || '';
-    }
-  }
+  // getMrp(index: number): number {
+  //   // return this.variantProducts[index]?.mrp || '';
+  //   const variantProduct = this.variantProducts[index];
+  //   if (variantProduct) {
+  //     return variantProduct.mrp;
+  //   } else {
+  //     return this.updatedVariants[index]?.mrp || '';
+  //   }
+  // }
+  // getCoastPrice(index: number): number {
+  //   // return this.variantProducts[index]?.coastPrice || '';
+  //   const variantProduct = this.variantProducts[index];
+  //   if (variantProduct) {
+  //     return variantProduct.coastPrice;
+  //   } else {
+  //     return this.updatedVariants[index]?.cost_price || '';
+  //   }
+  // }
+  // getSellingPrice(index: number): number {
+  //   // return this.variantProducts[index]?.sellingPrice || '';
+  //   const variantProduct = this.variantProducts[index];
+  //   if (variantProduct) {
+  //     return variantProduct.sellingPrice;
+  //   } else {
+  //     return this.updatedVariants[index]?.selling_price_online || '';
+  //   }
+  // }
+  // getSellingPriceOffline(index: number): number {
+  //   // return this.variantProducts[index]?.sellingPriceOffline || '';
+  //   const variantProduct = this.variantProducts[index];
+  //   if (variantProduct) {
+  //     return variantProduct.sellingPriceOffline;
+  //   } else {
+  //     return this.updatedVariants[index]?.selling_price_offline || '';
+  //   }
+  // }
+  // getDealerPrice(index: number): number {
+  //   // return this.variantProducts[index]?.dealerPrice || '';
+  //   const variantProduct = this.variantProducts[index];
+  //   if (variantProduct) {
+  //     return variantProduct.dealerPrice;
+  //   } else {
+  //     return this.updatedVariants[index]?.selling_price_dealer || '';
+  //   }
+  // }
+  // getEmployeePrice(index: number): number {
+  //   // return this.variantProducts[index]?.employeePrice || '';
+  //   const variantProduct = this.variantProducts[index];
+  //   if (variantProduct) {
+  //     return variantProduct.employeePrice;
+  //   } else {
+  //     return this.updatedVariants[index]?.selling_price_employee || '';
+  //   }
+  // }
+  // getStock(index: number): number {
+  //   // return this.variantProducts[index]?.mrp || '';
+  //   const variantProduct = this.variantProducts[index];
+  //   if (variantProduct) {
+  //     return variantProduct.stock;
+  //   } else {
+  //     return this.updatedVariants[index]?.stock || '';
+  //   }
+  // }
   getSku(index: any): any {
     const variantProduct = this.variantProducts[index];
     if (variantProduct) {
@@ -1162,23 +1128,22 @@ export class EditproductComponent implements OnInit {
     }
   }
 
-  getMinimumStock(index: number): any {
-    const variantProduct = this.variantProducts[index];
-    if (variantProduct) {
-      return variantProduct.minimum_stock_threshold;
-    } else {
-      return this.updatedVariants[index]?.minimum_stock_threshold || '';
-    }
-  }
-
-  getMaxOrderQuantity(index: number): any {
-    const variantProduct = this.variantProducts[index];
-    if (variantProduct) {
-      return variantProduct.max_order_quantity;
-    } else {
-      return this.updatedVariants[index]?.max_order_quantity || '';
-    }
-  }
+  // getMinimumStock(index: number): any {
+  //   const variantProduct = this.variantProducts[index];
+  //   if (variantProduct) {
+  //     return variantProduct.minimum_stock_threshold;
+  //   } else {
+  //     return this.updatedVariants[index]?.minimum_stock_threshold || '';
+  //   }
+  // }
+  // getMaxOrderQuantity(index: number): any {
+  //   const variantProduct = this.variantProducts[index];
+  //   if (variantProduct) {
+  //     return variantProduct.max_order_quantity;
+  //   } else {
+  //     return this.updatedVariants[index]?.max_order_quantity || '';
+  //   }
+  // }
   getColors(index: number): any {
     const variantProduct = this.variantProducts[index];
     if (variantProduct) {

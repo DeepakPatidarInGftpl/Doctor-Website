@@ -1,0 +1,320 @@
+
+<div class="card bg">
+    <div class="card-body">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Supplier Details</h4>
+                <h6>Full details of a Supplier</h6>
+            </div>
+            <div class="page-btn">
+                <a routerLink="//contacts/updateSupplier/{{supplierDetail.id}}" class="btn btn-added">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Supplier
+                </a>
+            </div>
+        </div>
+
+<mat-tab-group animationDuration="0ms">
+    <mat-tab label="General Details">
+        <!-- <div class="card bg">
+            <div class="card-body">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h4>Product Details</h4>
+                        <h6>Full details of a product</h6>
+                    </div>
+                    <div class="page-btn">
+                        <a class="btn btn-added">
+                            <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Product
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-sm-12">
+                        <div class="company-details-card card">
+                            <table>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Name</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>Supplier</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Company Name</td>
+                                    <td colspan="6" class="f-400">
+                                       Parmod Fashion
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Mobile Number</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>0123456789</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Telephone Number</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>1234567890</h6>
+                                    </td>
+                                </tr>
+        
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">WhatsApp Number</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>9630852074</h6>
+                                    </td>
+                                </tr>
+        
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Email</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>abc@gmail.com</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Remark</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>remark</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Date Of Birth</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>16-07-2000</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Anniversary Date</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>10-05-2023</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">GST Type</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>Commercial</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">GSTIN</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>ABC1235687121DSY</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Apply TDS</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>True</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Pan card </td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>ABC1221DSY</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Credit Limit</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>12000</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Payment Terms</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>Online</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Opening Balance</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>10000</h6>
+                                    </td>
+                                </tr>
+                                <tr class="ro-border">
+                                    <td colspan="2" class="f-500">Manufacture</td>
+                                    <td colspan="6" class="f-400">
+                                        <h6>Others</h6>
+                                    </td>
+                                </tr>
+                             
+                            </table>
+                            <div class="d-flex align-items-center mt-3">
+                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                <span
+                                    [ngClass]="{'bg-lightgreen': productDetail.is_active === true, 'bg-lightred' : productDetail.is_active === false,'bg-lightyellow' : productDetail.is_active === 'Partial' }"
+                                    class="badges">{{productDetail.is_active}}</span>
+                            </div>
+                        </div>
+                    </div>
+                 
+        
+                </div>
+            </div>
+        </div> -->
+
+        <div class="row">
+            <div class="col-lg-12 col-sm-12" >
+                <div class="card">
+                    <div class="card-body">
+                        <div class="productdetails">                  
+                            <ul class="product-bar">
+                                <li>
+                                    <h4>Name</h4>
+                                    <h6>{{supplierDetail.name}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Company name</h4>
+                                    <h6>{{supplierDetail.company_name}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Date of Birth</h4>
+                                    <h6>{{supplierDetail.date_of_birth}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Anniversary</h4>
+                                    <h6>{{supplierDetail.anniversary_date}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Mobile Number</h4>
+                                    <h6>{{supplierDetail.mobile_no}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Telephone Number</h4>
+                                    <h6>{{supplierDetail.telephone_no}}</h6>
+                                </li>
+                                <li>
+                                    <h4>WhatsApp Number</h4>
+                                    <h6>{{supplierDetail.whatsapp_no}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Email</h4>
+                                    <h6>{{supplierDetail.email}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Remark</h4>
+                                    <h6>{{supplierDetail.remark}}</h6>
+                                </li>
+                                <li>
+                                    <h4>GST Type</h4>
+                                    <h6>{{supplierDetail.gst_type}}</h6>
+                                </li>
+                                <li>
+                                    <h4>GSTIN</h4>
+                                    <h6>{{supplierDetail.gstin}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Apply TDS</h4>
+                                    <h6>{{supplierDetail.apply_tds}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Pan card</h4>
+                                    <h6>{{supplierDetail.pan_no}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Credit Limit</h4>
+                                    <h6>{{supplierDetail.credit_limit}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Payment Terms</h4>
+                                    <h6>{{supplierDetail.payment_terms}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Opening Balance</h4>
+                                    <h6>{{supplierDetail.opening_balance}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Manufacture</h4>
+                                    <h6>{{supplierDetail.supplier_type}}</h6>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mx-4">
+                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                        <span [ngClass]="{'bg-lightgreen': supplierDetail.is_active === true, 'bg-lightred' : supplierDetail.is_active === false,'bg-lightyellow' : supplierDetail.is_active === 'Partial' }"
+                                            class="badges">{{supplierDetail.is_active}}</span>
+                    </div>
+                </div>
+            </div>
+          </div>
+    </mat-tab>
+    <mat-tab label="Address">
+        <div class="row">
+            <div class="col-lg-12 col-sm-12" >
+                <div class="card" *ngFor="let address of supplierDetail.address">
+                    <div class="card-body">
+                        <div class="productdetails">                  
+                            <ul class="product-bar">
+                                <li>
+                                    <h4>Address Line 1</h4>
+                                    <h6>{{address.address_line_1}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Address Line 2</h4>
+                                    <h6>{{address.address_line_2}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Select Country</h4>
+                                    <h6>{{address?.country?.country_name}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Select State</h4>
+                                    <h6>{{address?.state?.state}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Select City</h4>
+                                    <h6>{{address?.city?.state}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Pincode</h4>
+                                    <h6>{{address.pincode}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Address Type</h4>
+                                    <h6>{{address.address_type}}</h6>
+                                </li>
+                               
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+    </mat-tab>
+    <mat-tab label="Bank Details">
+        <div class="row">
+            <div class="col-lg-12 col-sm-12" >
+                <div class="card" *ngFor="let bank of supplierDetail.bank_id">
+                    <div class="card-body" >
+                        <div class="productdetails">                  
+                            <ul class="product-bar">
+                                <li>
+                                    <h4>Account Holder Name</h4>
+                                    <h6>{{bank.account_holder_name}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Bank Name</h4>
+                                    <h6>{{bank.bank_name}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Branch Name</h4>
+                                    <h6>{{bank.branch_name}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Account Number</h4>
+                                    <h6>{{bank.account_no}}</h6>
+                                </li>
+                                <li>
+                                    <h4>Bank IFSC Code</h4>
+                                    <h6>{{bank.bank_ifsc_code}}</h6>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+</div>

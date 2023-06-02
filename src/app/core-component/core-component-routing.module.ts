@@ -146,6 +146,7 @@ const routes: Routes = [
       {path:'account',loadChildren:()=>import('./account/account.module').then((m)=>m.AccountModule)},
       {path:'warehouse',loadChildren:()=>import('./warehouse/warehouse.module').then((m)=>m.WarehouseModule)},
       {path:'website',loadChildren:()=>import('./website/website.module').then((m)=>m.WebsiteModule)},
+      {path:'contacts',loadChildren:()=>import('./contacts/contacts.module').then((m)=>m.ContactsModule)}
   ],
   },
 
