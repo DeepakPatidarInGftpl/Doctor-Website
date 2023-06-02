@@ -36,8 +36,8 @@ export class AddemployeeComponent implements OnInit {
       city: new FormControl('')
     })
     this.getCountry();
-    this.getState();
-    this.getCity();
+    // this.getState();
+    // this.getCity();
   }
 
   country: any

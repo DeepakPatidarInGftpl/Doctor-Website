@@ -9,6 +9,7 @@ import { SettingsComponent } from './settings.component';
   declarations: [
     SettingsComponent,
     
+    
   ],
   imports: [
     CommonModule,

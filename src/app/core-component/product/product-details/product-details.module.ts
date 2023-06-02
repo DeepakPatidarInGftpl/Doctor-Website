@@ -5,6 +5,14 @@ import { ProductDetailsRoutingModule } from './product-details-routing.module';
 import { ProductDetailsComponent } from './product-details.component';
 import { PipeModuleModule } from '../pipe-module/pipe-module.module';
 
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatIconModule} from '@angular/material/icon';
+
+import {MatSelectModule} from '@angular/material/select';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -14,7 +22,13 @@ import { PipeModuleModule } from '../pipe-module/pipe-module.module';
   imports: [
     CommonModule,
     ProductDetailsRoutingModule,
-    PipeModuleModule
+    PipeModuleModule,
+    MatTabsModule,
+    MatIconModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatSlideToggleModule,
+    FormsModule
   ]
 })
 export class ProductDetailsModule { }

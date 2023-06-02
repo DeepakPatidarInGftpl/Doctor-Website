@@ -7,8 +7,8 @@ export class ReadLessPipe implements PipeTransform {
 
   transform(text: string, length: number = 60, suffix: string = '...'): string {
 
-    if (text.length < length) {
-      let truncated: string = text.substring(length).trim() ;
+    if (text?.length < length) {
+      let truncated: string = text?.substring(length)?.trim() ;
       return truncated;
     }
     return text;

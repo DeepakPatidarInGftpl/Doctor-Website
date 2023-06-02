@@ -108,7 +108,7 @@ export class CoreService {
   }
 
   countryList() {
-    let url = this.apiUrl + '/country';
+    let url = this.apiUrl + '/country/';
     return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
@@ -1532,5 +1532,33 @@ export class CoreService {
   getFeaturegroupBySubcategoryGroup(id:number){
     let url = this.apiUrl+'/pv-api/subcategory_group_wise_feature_group/?subcategory_group_id=';
     return this.http.get(`${url}${id}`);
+  }
+
+
+  // batch Variant Product 
+
+  getBatch() {
+    let url = this.apiUrl + '/pv-api/batch/';
+    return this.http.get(url)
+  }
+  getBatchById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/batch/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  BatchIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/batch/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addBatch(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/batch/';
+    return this.http.post<any>(url, data)
+  }
+  updateBatch(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/batch/?id=';
+    return this.http.put<any>(`${url}${id}`, data)
+  }
+  deleteBatch(id: number) {
+    let url = this.apiUrl + '/pv-api/batch/?id=';
+    return this.http.delete(`${url}${id}`)
   }
 }

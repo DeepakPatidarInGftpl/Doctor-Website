@@ -10,7 +10,7 @@ import { Editor, Toolbar } from 'ngx-editor';
 import jsonDoc from './../../../doc';
 
 import { MatTabGroup } from '@angular/material/tabs';
-import { event } from 'jquery';
+
 
 @Component({
   selector: 'app-addproduct',
@@ -123,22 +123,10 @@ export class AddproductComponent implements OnInit {
   variants(): FormGroup {
     return this.fb.group({
       product_title: (''),
-      variant_name: (''),
-      mrp: (''),
-      cost_price: (''),
-      variant_size:(''),
+      variant_name: new FormControl('',[Validators.required]),
+      variant_size:new FormControl('',[Validators.required]),
       variant_color:(''),
-      // selling_price: (''),
-      selling_price_online:(''),
-      selling_price_offline:(''),
-      stock: (''),
-      minimum_stock_threshold: (''),
-      selling_price_dealer: (''),
-      selling_price_employee: (''),
-      barcode: (''),
-      sku: (''),
-      max_order_quantity: (''),
-
+      sku: new FormControl(''),
     })
   }
   getVarinatsForm(): FormArray {
@@ -793,84 +781,6 @@ export class AddproductComponent implements OnInit {
     event.stopPropagation();
   }
 
-  // mrp: number;
-  // discount: number;
-  // coastPrice: number;
-  // sellingPrice:number;
-  // dealerPrice:number;
-  // employeePrice:number;
-  // price() {
-  //   if (this.mrp >= 100) {
-  //     let discount:number = (this.mrp * 10) / 100;
-  //     this.discount = this.mrp-discount;
-  //     this.coastPrice = +this.mrp + +discount;
-  //     this.sellingPrice=this.coastPrice +discount;
-  //     this.dealerPrice=this.discount
-  //     this.employeePrice=this.mrp;
 
-  //   } else if (this.mrp >= 1000) {
-  //     let discount:number = (this.mrp * 50) / 100;
-  //     this.discount = this.mrp-discount;
-  //     this.coastPrice = +this.mrp + +discount;
-  //     this.sellingPrice=this.coastPrice +discount;
-  //     this.dealerPrice=this.discount
-  //     this.employeePrice=this.mrp
-  //   }
-  // }
-
-  // variants calculation
-  coastPriceError: any;
-  variantProducts: { mrp: number, coastPrice: number, sellingPrice: number,sellingPriceOffline: number, dealerPrice: number, employeePrice: number }[] = [];
-  price(index: number) {
-    const mrp = this.getVarinatsForm().at(index).get('mrp').value;
-    let discount: number;
-    if (mrp >= 100) {
-      discount = (mrp * 10) / 100;
-    } else if (mrp >= 1000) {
-      discount = (mrp * 20) / 100;
-    } else if (mrp >= 5000) {
-      discount = (mrp * 30) / 100;
-    } else if (mrp >= 10000) {
-      discount = (mrp * 50) / 100;
-    } else if (mrp >= 20000) {
-      discount = (mrp * 40) / 100;
-    } else {
-      discount = 0;
-    }
-    // price calculation
-    const coastPrice = mrp - discount;
-    if (coastPrice > mrp) {
-      this.coastPriceError = 'Coast price less than Mrp price';
-      setTimeout(() => {
-        this.coastPriceError='';
-      }, 3000);
-    }
-    const sellingPrice = mrp;
-    const dealerPrice = mrp - discount;
-    const employeePrice = mrp;
-    const sellingPriceOffline=mrp;
-    this.variantProducts[index] = { mrp, coastPrice, sellingPrice,sellingPriceOffline, dealerPrice, employeePrice };
-    
-  }
-  // get price 
-  getMrp(index: number): number {
-    return this.variantProducts[index]?.mrp;
-  }
-  getCoastPrice(index: number): number {
-    return this.variantProducts[index]?.coastPrice;
-    // return this.variantProducts[index]?.coastPrice || 0;
-  }
-  getSellingPrice(index: number): number {
-    return this.variantProducts[index]?.sellingPrice;
-  }
-  getSellingPriceOffline(index: number): number {
-    return this.variantProducts[index]?.sellingPriceOffline;
-  }
-  getDealerPrice(index: number): number {
-    return this.variantProducts[index]?.dealerPrice;
-  }
-  getEmployeePrice(index: number): number {
-    return this.variantProducts[index]?.employeePrice;
-  }
 
 } 
