@@ -49,8 +49,8 @@ const routes: Routes = [
       },
       //financial year
       {
-        path:'finncialYear',
-        loadChildren:()=>import('./financial-year/financial-year.module').then((m)=>m.FinancialYearModule)
+        path: 'finncialYear',
+        loadChildren: () => import('./financial-year/financial-year.module').then((m) => m.FinancialYearModule)
       }
     ],
   },
@@ -68,10 +68,14 @@ const routes: Routes = [
         (m) => m.EditpermissionModule
       ),
   },
+  {
+    path: 'paymentTerms',
+    loadChildren: () => import('./payment-terms/payment-terms.module').then((m) => m.PaymentTermsModule)
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class SettingsRoutingModule {}
+export class SettingsRoutingModule { }

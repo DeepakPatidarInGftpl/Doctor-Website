@@ -233,6 +233,10 @@ const routes: Routes = [
   },
   { path: 'subcategory-details/:id', loadChildren: () => import('./subcategorydetails/subcategorydetails.module').then((m) => m.SubcategorydetailsModule) },
   { path: 'hsncode-details/:id', loadChildren: () => import('./hsncodedetails/hsncodedetails.module').then((m) => m.HsncodedetailsModule) },
+  { path: 'batch/:id', loadChildren: () => import('./batch-variant-product/batch-variant-product.module').then((m) => m.BatchVariantProductModule) },
+  { path: 'batchUpdate/:id', loadChildren: () => import('./batch-variant-product-update/batch-variant-product-update.module').then((m) => m.BatchVariantProductUpdateModule) },
+  { path: 'batchList/:id', loadChildren: () => import('./batch-variant-product-list/batch-variant-product-list.module').then((m) => m.BatchVariantProductListModule) },
+  { path: 'batchDetails/:id', loadChildren: () => import('./batch-variant-product-details/batch-variant-product-details.module').then((m) => m.BatchVariantProductDetailsModule) },
 
 ];
 

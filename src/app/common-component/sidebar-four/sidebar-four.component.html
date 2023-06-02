@@ -8,8 +8,7 @@
             (click)="showMenu('mainMenu')"
             [class.subdrop]="opendSubMenu[0] === 'mainMenu'"
             ><img src="assets/img/icons/menu-icon.svg" alt="img" /><span>
-              Main Menu</span
-            >
+              Main Menu</span>
             <span class="menu-arrow"></span
           ></a>
           <ul
@@ -21,8 +20,7 @@
             <li>
               <a routerLink="/dashboard"
                 ><img src="assets/img/icons/dashboard.svg" alt="img" /><span>
-                  Dashboard</span
-                >
+                  Dashboard</span>
               </a>
             </li>
 
@@ -52,15 +50,12 @@
             </li>
 
             <li class="submenu">
-              <a
-                (click)="showSubMenu('Employee')"
+              <a (click)="showSubMenu('Employee')"
                 [class.subdrop]="opendSubMenu[1] === 'Employee'"
                 href="javascript:void(0);"
                 ><img src="assets/img/icons/purchase1.svg" alt="img" /><span>
-                  Employee</span
-                >
-                <span class="menu-arrow"></span
-              ></a>
+                  Employee</span>
+                <span class="menu-arrow"></span></a>
               <ul
                 [ngClass]="{
                   show: opendSubMenu[1] == 'Employee',
@@ -111,16 +106,13 @@
                 [ngClass]="{
                   show: opendSubMenu[1] == 'Warehouse',
                   hide: opendSubMenu[1] != 'Warehouse'
-                }"
-              >
+                }">
                 <li>
                   <a routerLink="/warehouse/warehouse">Warehouse</a>
                 </li>
      
               </ul>
             </li>
-       
-
             <li class="submenu">
               <a
                 (click)="showSubMenu('Product')"
