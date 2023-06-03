@@ -82,6 +82,8 @@ export class UpdateCustomerComponent implements OnInit {
       pincode: j.pincode,
       address_type: j.address_type
       }))
+      this.selectState(j.country.id);
+      this.selectCity(j.state.id);
     })
     return formarr
   }
@@ -187,12 +189,17 @@ export class UpdateCustomerComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.customerForm.reset()
           this.router.navigate(['//contacts/customer'])
-        }
+        }else{
+          this.toastr.error(this.addRes?.opening_balance[0]);
+          if(this.addRes?.email){
+            this.toastr.error(this.addRes?.email[0])
+          }}
       }, err => {
         console.log(err.error.gst);
         if(err.error.msg){
           this.toastr.error(err.error.msg)
         }
+
       else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {

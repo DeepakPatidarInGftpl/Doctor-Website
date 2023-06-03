@@ -38,7 +38,7 @@ export class AddSupplierComponent implements OnInit {
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl(''),
+      opening_balance: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       supplier_type: new FormControl('', [Validators.required])
     });
 
@@ -86,7 +86,7 @@ export class AddSupplierComponent implements OnInit {
       bank_ifsc_code: new FormControl('', [Validators.required]),
       bank_name: new FormControl('', [Validators.required]),
       branch_name: new FormControl(''),
-      account_no: new FormControl('', Validators.required),
+      account_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       account_holder_name: new FormControl('', [Validators.required])
     })
   }
@@ -206,6 +206,10 @@ export class AddSupplierComponent implements OnInit {
         if(err.error.msg){
           this.toastr.error(err.error.msg)
         }
+        else if(err.error){
+          this.toastr.error(err.error?.opening_balance[0]);
+          this.toastr.error(err.error?.email[0])
+        }
         else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
@@ -221,7 +225,6 @@ export class AddSupplierComponent implements OnInit {
     } else {
       this.supplierForm.markAllAsTouched()
       console.log('hhhhhh');
-
     }
   }
 
@@ -270,9 +273,7 @@ export class AddSupplierComponent implements OnInit {
   get address() {
     return this.supplierForm.get('address')
   }
-  get bank() {
-    return this.supplierForm.get('bank_id')
-  }
+
   get pan_no() {
     return this.supplierForm.get('pan_no')
   }
@@ -297,17 +298,20 @@ export class AddSupplierComponent implements OnInit {
   get pincode() {
     return this.supplierForm.get('pincode')
   }
-  get bname() {
-    return this.supplierForm.get('account_holder_name')
+
+  // nested bank error
+
+  getBankHolderName(index: number) {
+    return this.getBanks().controls[index].get('account_holder_name');
   }
-  get account_no() {
-    return this.supplierForm.get('account_no')
+  getAccountNo(index: number) {
+    return this.getBanks().controls[index].get('account_no');
   }
-  get bank_name() {
-    return this.supplierForm.get('bank_name')
+  getIfscCode(index: number) {
+    return this.getBanks().controls[index].get('bank_ifsc_code');
   }
-  get ifsc_code() {
-    return this.supplierForm.get('bank_ifsc_code')
+  getBankName(index: number) {
+    return this.getBanks().controls[index].get('bank_name');
   }
 
 

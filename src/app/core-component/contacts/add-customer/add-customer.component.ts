@@ -40,7 +40,7 @@ export class AddCustomerComponent implements OnInit {
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl(''),
+      opening_balance: new FormControl('',[ Validators.pattern(/^[0-9]*$/)]),
       invite_code:new FormControl(''),
       membership:new FormControl('')
     });
@@ -147,7 +147,7 @@ export class AddCustomerComponent implements OnInit {
     });
     formdata.append('address', JSON.stringify(addressData));
 
-    if (this.customerForm.valid) {
+    // if (this.customerForm.valid) {
       this.contactService.addCustomer(this.customerForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res
@@ -155,26 +155,29 @@ export class AddCustomerComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.customerForm.reset()
           this.router.navigate(['//contacts/customer'])
-        }
+        } else{
+          this.toastr.error(this.addRes?.opening_balance[0]);
+          if(this.addRes?.email){
+            this.toastr.error(this.addRes?.email[0])
+          }}
       }, err => {
         console.log(err.error.gst);
-        if (err.error.dob) {
-          this.dateError = 'Date (format:dd/mm/yyyy)';
-          setTimeout(() => {
-            this.dateError = ''
-          }, 2000);
-        } else if (err.error.anniversary) {
-          this.dateError = 'Date (format:dd/mm/yyyy)';
-          setTimeout(() => {
-            this.dateError = ''
-          }, 2000);
+         if(err.error){
+          this.toastr.error(err.error?.opening_balance[0]);
+          this.toastr.error(err.error?.email[0])
         }
+        else if (err.error.dob) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError = ''
+          }, 2000);
+        } 
       })
-    } else {
+    // } else {
       this.customerForm.markAllAsTouched()
       console.log('hhhhhh');
 
-    }
+    // }
   }
 
   get login_access() {
@@ -218,9 +221,6 @@ export class AddCustomerComponent implements OnInit {
   }
   get address() {
     return this.customerForm.get('address')
-  }
-  get bank() {
-    return this.customerForm.get('bank_id')
   }
   get pan_no() {
     return this.customerForm.get('pan_no')

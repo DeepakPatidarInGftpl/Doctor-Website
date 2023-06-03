@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
@@ -41,7 +41,7 @@ export class AddTransportComponent implements OnInit {
       // bank_id: new FormArray<any>([], ),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl(''),
+      opening_balance: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
     })
     this.addAddress()
     this.addBank()
@@ -50,17 +50,17 @@ export class AddTransportComponent implements OnInit {
     this.getPaymentTerms();
   }
 
-  paymentTerms:any;
-  getPaymentTerms(){
-    this.contactService.getPaymentTerms().subscribe(res=>{
-      this.paymentTerms=res;
+  paymentTerms: any;
+  getPaymentTerms() {
+    this.contactService.getPaymentTerms().subscribe(res => {
+      this.paymentTerms = res;
     })
   }
-  gstType:any;
-  getgstType(){
-    this.contactService.getTypeOfGst().subscribe(res=>{
+  gstType: any;
+  getgstType() {
+    this.contactService.getTypeOfGst().subscribe(res => {
       console.log(res);
-      this.gstType=res;
+      this.gstType = res;
     })
   }
   addressAdd(): FormGroup {
@@ -86,11 +86,11 @@ export class AddTransportComponent implements OnInit {
 
   bankAdd(): FormGroup {
     return this.fb.group({
-      bank_ifsc_code:new FormControl('',[Validators.required]),
-      bank_name:new FormControl('',[Validators.required]),
-      branch_name:new FormControl(''),
-      account_no:new FormControl('',Validators.required),
-      account_holder_name:new FormControl('',[Validators.required])
+      bank_ifsc_code: new FormControl('', [Validators.required]),
+      bank_name: new FormControl('', [Validators.required]),
+      branch_name: new FormControl(''),
+      account_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      account_holder_name: new FormControl('', [Validators.required])
     })
   }
   getBanks(): FormArray {
@@ -129,7 +129,7 @@ export class AddTransportComponent implements OnInit {
   }
   submit() {
     console.log(this.transportForm.value);
-    
+
     let formdata: any = new FormData();
     formdata.append('login_access', this.transportForm.get('login_access')?.value);
     formdata.append('name', this.transportForm.get('name')?.value);
@@ -148,7 +148,7 @@ export class AddTransportComponent implements OnInit {
     formdata.append('credit_limit', this.transportForm.get('credit_limit')?.value);
     formdata.append('payment_terms', this.transportForm.get('payment_terms')?.value);
     formdata.append('opening_balance', this.transportForm.get('opening_balance')?.value);
-  
+
     // nested addrs data 
     const addressArray = this.transportForm.get('address') as FormArray;
     const addressData = [];
@@ -177,7 +177,7 @@ export class AddTransportComponent implements OnInit {
     });
     formdata.append('bank_id', JSON.stringify(bankData));
 
-    if (this.transportForm.valid) {
+    // if (this.transportForm.valid) {
       this.contactService.addTransport(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
@@ -185,13 +185,22 @@ export class AddTransportComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.transportForm.reset()
           this.router.navigate(['//contacts/transport'])
+        }else{
+          this.toastr.error(this.addRes?.opening_balance[0]);
+          if(this.addRes?.email){
+            this.toastr.error(this.addRes?.error?.email[0])
+          }
         }
       }, err => {
         console.log(err.error.gst);
-        if(err.error.msg){
+        if (err.error.msg) {
           this.toastr.error(err.error.msg)
         }
-       else if (err.error.dob) {
+        else if (err.error) {
+          this.toastr.error(err.error?.opening_balance[0]);
+          this.toastr.error(err.error?.email[0])
+        }
+        else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
             this.dateError = ''
@@ -203,11 +212,11 @@ export class AddTransportComponent implements OnInit {
           }, 2000);
         }
       })
-    } else {
+    // } else {
       this.transportForm.markAllAsTouched()
       console.log('hhhhhh');
 
-    }
+    // }
   }
 
   get login_access() {
@@ -240,6 +249,7 @@ export class AddTransportComponent implements OnInit {
   get remark() {
     return this.transportForm.get('remark');
   }
+
   get gst_type() {
     return this.transportForm.get('gst_type')
   }
@@ -255,9 +265,7 @@ export class AddTransportComponent implements OnInit {
   get address() {
     return this.transportForm.get('address')
   }
-  get bank() {
-    return this.transportForm.get('bank_id')
-  }
+
   get pan_no() {
     return this.transportForm.get('pan_no')
   }
@@ -282,17 +290,21 @@ export class AddTransportComponent implements OnInit {
   get pincode() {
     return this.transportForm.get('pincode')
   }
-  get bname() {
-    return this.transportForm.get('name')
+
+  // nested bank error
+
+  getBankHolderName(index: number) {
+    return this.getBanks().controls[index].get('account_holder_name');
   }
-  get account_no() {
-    return this.transportForm.get('account_no')
+  getAccountNo(index: number) {
+    return this.getBanks().controls[index].get('account_no');
   }
-  get bank_name() {
-    return this.transportForm.get('bank_name')
+  getIfscCode(index: number) {
+    return this.getBanks().controls[index].get('bank_ifsc_code');
   }
-  get ifsc_code() {
-    return this.transportForm.get('ifsc_code')
+  getBankName(index: number) {
+    return this.getBanks().controls[index].get('bank_name');
   }
+
 }
 

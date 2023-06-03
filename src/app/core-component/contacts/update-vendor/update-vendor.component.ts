@@ -22,9 +22,9 @@ export class UpdateVendorComponent implements OnInit {
     return this.vendorForm.controls;
   }
   id: any;
-getRes:any;
+  getRes: any;
   ngOnInit(): void {
-    this.id=this.Arout.snapshot.paramMap.get('id');
+    this.id = this.Arout.snapshot.paramMap.get('id');
 
     this.vendorForm = this.fb.group({
       login_access: new FormControl(''),
@@ -54,31 +54,41 @@ getRes:any;
     this.getCountry();
     this.getgstType();
 
-    this.contactService.getVendorById(this.id).subscribe(res=>{
-      this.getRes=res;
+    this.contactService.getVendorById(this.id).subscribe(res => {
+      this.getRes = res;
       this.vendorForm.patchValue(this.getRes);
-      this.vendorForm.get('payment_terms')?.patchValue('')
-      this.vendorForm.setControl('address', this.udateAddress(this.getRes.address));
+      this.vendorForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id)
+      this.vendorForm.setControl('address', this.udateAddress(this.getRes?.address));
     })
-    
+    this.getPaymentTerms();
+
+  }
+  paymentTerms: any;
+  getPaymentTerms() {
+    this.contactService.getPaymentTerms().subscribe(res => {
+      this.paymentTerms = res;
+    })
   }
 
-    // updated data
-    udateAddress(add: any): FormArray {
-      let formarr = new FormArray([]);
-      add.forEach((j: any) => {
-        formarr.push(this.fb.group({
-          address_line_1: j.address_line_1,
+  // updated data
+  udateAddress(add: any): FormArray {
+    let formarr = new FormArray([]);
+    add.forEach((j: any) => {
+      formarr.push(this.fb.group({
+        address_line_1: j.address_line_1,
         address_line_2: j.address_line_2,
         country: j.country.id,
         state: j.state.id,
         city: j.city.id,
         pincode: j.pincode,
         address_type: j.address_type
-        }))
       })
-      return formarr
-    }
+      )
+      this.selectState(j.country.id);
+      this.selectCity(j.state.id)
+    })
+    return formarr
+  }
   gstType: any;
   getgstType() {
     this.contactService.getTypeOfGst().subscribe(res => {
@@ -169,7 +179,7 @@ getRes:any;
     formdata.append('address', JSON.stringify(addressData));
 
     if (this.vendorForm.valid) {
-      this.contactService.updateVendor(formdata,this.id).subscribe(res => {
+      this.contactService.updateVendor(formdata, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Vendor updated successfully") {
@@ -179,15 +189,19 @@ getRes:any;
         }
       }, err => {
         console.log(err.error.gst);
-        if(err.error.msg){
+        if (err.error.msg) {
           this.toastr.error(err.error.msg)
         }
-       else if (err.error.dob) {
+        else if(err.error){
+          this.toastr.error(err.error?.opening_balance[0]);
+          this.toastr.error(err.error?.email[0])
+        }
+        else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
             this.dateError = ''
           }, 2000);
-        } else if (err.error.anniversary) {
+        } else if (err.error.anniversary_date) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
             this.dateError = ''
@@ -197,7 +211,6 @@ getRes:any;
     } else {
       this.vendorForm.markAllAsTouched()
       console.log('hhhhhh');
-
     }
   }
 
