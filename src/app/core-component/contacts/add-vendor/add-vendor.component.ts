@@ -45,6 +45,14 @@ export class AddVendorComponent implements OnInit {
     this.addAddress();
     this.getCountry();
     this.getgstType();
+    this.getPaymentTerms();
+  }
+
+  paymentTerms:any;
+  getPaymentTerms(){
+    this.contactService.getPaymentTerms().subscribe(res=>{
+      this.paymentTerms=res;
+    })
   }
 
   gstType:any;
@@ -57,8 +65,8 @@ export class AddVendorComponent implements OnInit {
 
   addressAdd(): FormGroup {
     return this.fb.group({
-      address_line1: (''),
-      address_line2: (''),
+      address_line_1: (''),
+      address_line_2: (''),
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
@@ -143,8 +151,7 @@ export class AddVendorComponent implements OnInit {
       addressData.push(featureObj);
     });
     formdata.append('address', JSON.stringify(addressData));
-
-    if (this.vendorForm.valid) {
+    // if (this.vendorForm.valid) {
       this.contactService.addVendor(this.vendorForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res
@@ -152,12 +159,21 @@ export class AddVendorComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.vendorForm.reset()
           this.router.navigate(['//contacts/vendor'])
-        }
+        } else{
+          this.toastr.error(this.addRes?.opening_balance[0]);
+          if(this.addRes?.email){
+            this.toastr.error(this.addRes?.error?.email[0])
+          }}
       }, err => {
         console.log(err.error.gst);
         if(err.error.msg){
           this.toastr.error(err.error.msg)
-        } else if (err.error.dob) {
+        }
+        if(err.error){
+          this.toastr.error(err.error?.opening_balance[0]);
+          this.toastr.error(err.error?.email[0])
+        }
+         else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
             this.dateError = ''
@@ -169,11 +185,10 @@ export class AddVendorComponent implements OnInit {
           }, 2000);
         }
       })
-    } else {
+    // } else {
       this.vendorForm.markAllAsTouched()
       console.log('hhhhhh');
-
-    }
+    // }
   }
 
   get login_access() {

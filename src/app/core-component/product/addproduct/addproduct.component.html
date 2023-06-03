@@ -643,6 +643,8 @@
 																[readonly]="true"></td>
 														<td><input type="text" class="inp"
 																formControlName="variant_name" [readonly]="true"></td>
+																<span class="text-danger" *ngIf="getvariant_name(i)?.invalid && getvariant_name(i)?.touched">Enter
+																Variant name</span>
 														<td>
 															<select class="variant_color" formControlName="variant_color">
 																	<option value="" selected disabled>Select Color</option>
@@ -656,6 +658,9 @@
 																	<option value="{{size.id}}" *ngFor="let size of selectSize">{{size.title}}
 																	</option>
 																</select>
+																<br>
+																<span class="text-danger" *ngIf="getvariant_size(i)?.invalid && getvariant_size(i)?.touched">Enter
+																	Variant size</span>
 														</td>
 														<td><input type="text" class="inp" placeholder="0" formControlName="sku"></td>
 														<td>

@@ -592,13 +592,17 @@
 																formControlName="product_title" [ngModel]="productNamme"
 																[readonly]="true"></td>
 														<td><input type="text" class="inp" value="RedXl"
-																formControlName="variant_name" [readonly]="true"></td>
+																formControlName="variant_name" [readonly]="true">
+																<span class="text-danger" *ngIf="getvariant_name(i)?.invalid && getvariant_name(i)?.touched">Enter
+																	Variant name</span>
+															</td>
 																<td>
 																	<select class="variant_color" formControlName="variant_color" >
 																			<option value="" selected disabled>Color</option>
 																			<option value="{{color.id}}"  *ngFor="let color of selectColor">{{color.title}}
 																			</option>
 																		</select>
+																	
 																</td>
 																<td>
 																	<select class="variant_size" formControlName="variant_size" >
@@ -606,6 +610,9 @@
 																			<option value="{{size.id}}" *ngFor="let size of selectSize">{{size.title}}
 																			</option>
 																		</select>
+																		<br>
+																		<span class="text-danger" *ngIf="getvariant_size(i)?.invalid && getvariant_size(i)?.touched">Enter
+																			Variant size</span>
 																</td>	
 														<td><input type="text" class="inp" placeholder="0" formControlName="sku" [ngModel]="getSku(i)"></td>
 														<td>

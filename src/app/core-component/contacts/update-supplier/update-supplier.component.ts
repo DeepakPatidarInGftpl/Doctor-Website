@@ -46,17 +46,17 @@ export class UpdateSupplierComponent implements OnInit {
       // bank_id: new FormArray<any>([], ),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl(''),
+      opening_balance: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       supplier_type: new FormControl('', [Validators.required])
     });
 
     this.contactService.getSupplierById(this.id).subscribe(res => {
       this.getRes = res;
       this.supplierForm.patchValue(res);
-      this.supplierForm.get('payment_terms')?.patchValue('')
+      this.supplierForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id)
      
-      this.supplierForm.setControl('address', this.udateAddress(this.getRes.address));
-      this.supplierForm.setControl('bank_id', this.udateBank(this.getRes.bank_id));
+      this.supplierForm.setControl('address', this.udateAddress(this.getRes?.address));
+      this.supplierForm.setControl('bank_id', this.udateBank(this.getRes?.bank_id));
     });
 
     this.addAddress();
@@ -73,6 +73,8 @@ export class UpdateSupplierComponent implements OnInit {
   }
   // updated data
   udateAddress(add: any): FormArray {
+    console.log(add);
+    
     let formarr = new FormArray([]);
     add.forEach((j: any) => {
       formarr.push(this.fb.group({
@@ -85,6 +87,8 @@ export class UpdateSupplierComponent implements OnInit {
         address_type: j.address_type
       })
       )
+      this.selectState(j.country.id);
+      this.selectCity(j.state.id);
     })
     return formarr
   }
@@ -139,7 +143,7 @@ export class UpdateSupplierComponent implements OnInit {
       bank_ifsc_code: new FormControl('', [Validators.required]),
       bank_name: new FormControl('', [Validators.required]),
       branch_name: new FormControl(''),
-      account_no: new FormControl('', Validators.required),
+      account_no: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
       account_holder_name: new FormControl('', [Validators.required])
     })
   }
@@ -230,7 +234,7 @@ export class UpdateSupplierComponent implements OnInit {
     });
     formdata.append('bank_id', JSON.stringify(bankData));
 
-    if (this.supplierForm.valid) {
+    // if (this.supplierForm.valid) {
       this.contactService.updateSupplier(formdata,this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
@@ -238,10 +242,21 @@ export class UpdateSupplierComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.supplierForm.reset()
           this.router.navigate(['//contacts/supplier'])
-        }
+        }else{
+          this.toastr.error(this.addRes?.opening_balance[0]);
+          if(this.addRes?.email){
+            this.toastr.error(this.addRes?.error?.email[0])
+          }}
       }, err => {
         console.log(err.error.gst);
-        if (err.error.dob) {
+        if (err.error.email) {
+          this.toastr.error(err.error.email[0])
+        }
+        else if(err.error){
+          this.toastr.error(err.error?.opening_balance[0]);
+          this.toastr.error(err.error?.email[0])
+        }
+       else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
             this.dateError = ''
@@ -253,11 +268,9 @@ export class UpdateSupplierComponent implements OnInit {
           }, 2000);
         }
       })
-    } else {
+    // } else {
       this.supplierForm.markAllAsTouched()
-      console.log('hhhhhh');
-
-    }
+    // }
   }
 
   get login_access() {
@@ -332,17 +345,22 @@ export class UpdateSupplierComponent implements OnInit {
   get pincode() {
     return this.supplierForm.get('pincode')
   }
-  get bname() {
-    return this.supplierForm.get('name')
+
+  
+  // nested bank error
+
+  getBankHolderName(index: number) {
+    return this.getBanks().controls[index].get('account_holder_name');
   }
-  get account_no() {
-    return this.supplierForm.get('account_no')
+  getAccountNo(index: number) {
+    return this.getBanks().controls[index].get('account_no');
   }
-  get bank_name() {
-    return this.supplierForm.get('bank_name')
+  getIfscCode(index: number) {
+    return this.getBanks().controls[index].get('bank_ifsc_code');
   }
-  get ifsc_code() {
-    return this.supplierForm.get('ifsc_code')
+  getBankName(index: number) {
+    return this.getBanks().controls[index].get('bank_name');
   }
+
 }
 

@@ -45,7 +45,7 @@ export class UpdateTransportComponent implements OnInit {
       // bank_id: new FormArray<any>([], ),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl(''),
+      opening_balance: new FormControl('',[ Validators.pattern(/^[0-9]*$/)]),
     })
     this.addAddress()
     this.addBank()
@@ -54,12 +54,12 @@ export class UpdateTransportComponent implements OnInit {
     this.getPaymentTerms();
 
     this.contactService.getTransportById(this.id).subscribe(res => {
-      console.log(res[0]);
-      this.getRes = res[0];
+      console.log(res);
+      this.getRes = res;
 
 
 
-      console.log(this.getRes[0]);
+      console.log(this.getRes);
       this.transportForm.patchValue(this.getRes);
       this.transportForm.get('payment_terms')?.patchValue(this.getRes.payment_terms.id)
       this.transportForm.setControl('address', this.udateAddress(this.getRes.address));
@@ -80,6 +80,8 @@ export class UpdateTransportComponent implements OnInit {
         pincode: j.pincode,
         address_type: j.address_type
       }))
+      this.selectState(j.country.id);
+      this.selectCity(j.state.id)
     })
     return formarr
   }
@@ -232,7 +234,7 @@ export class UpdateTransportComponent implements OnInit {
       this.contactService.updateTransport(formdata, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Successfuly Added") {
+        if (this.addRes.msg == "Transport updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.transportForm.reset()
           this.router.navigate(['//contacts/transport'])
@@ -241,6 +243,10 @@ export class UpdateTransportComponent implements OnInit {
         console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
+        }
+        else if(err.error){
+          this.toastr.error(err.error?.opening_balance[0]);
+          this.toastr.error(err.error?.email[0])
         }
         else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
@@ -306,9 +312,7 @@ export class UpdateTransportComponent implements OnInit {
   get address() {
     return this.transportForm.get('address')
   }
-  get bank() {
-    return this.transportForm.get('bank_id')
-  }
+
   get pan_no() {
     return this.transportForm.get('pan_no')
   }
@@ -333,17 +337,20 @@ export class UpdateTransportComponent implements OnInit {
   get pincode() {
     return this.transportForm.get('pincode')
   }
-  get bname() {
-    return this.transportForm.get('name')
+ 
+  // nested bank error
+
+  getBankHolderName(index: number) {
+    return this.getBanks().controls[index].get('account_holder_name');
   }
-  get account_no() {
-    return this.transportForm.get('account_no')
+  getAccountNo(index: number) {
+    return this.getBanks().controls[index].get('account_no');
   }
-  get bank_name() {
-    return this.transportForm.get('bank_name')
+  getIfscCode(index: number) {
+    return this.getBanks().controls[index].get('bank_ifsc_code');
   }
-  get ifsc_code() {
-    return this.transportForm.get('ifsc_code')
+  getBankName(index: number) {
+    return this.getBanks().controls[index].get('bank_name');
   }
 }
 

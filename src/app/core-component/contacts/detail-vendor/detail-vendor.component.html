@@ -7,7 +7,7 @@
                 <h6>Full details of a Vendor</h6>
             </div>
             <div class="page-btn">
-                <a routerLink="//contacts/updateVendor/{{vendorDetail.id}}" class="btn btn-added">
+                <a routerLink="//contacts/updateVendor/{{vendorDetail?.id}}" class="btn btn-added">
                     <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Vendor
                 </a>
             </div>
@@ -79,7 +79,7 @@
                                 </li>
                                 <li>
                                     <h4>Payment Terms</h4>
-                                    <h6>{{vendorDetail.payment_terms}}</h6>
+                                    <h6>{{vendorDetail.payment_terms?.title}}</h6>
                                 </li>
                                 <li>
                                     <h4>Opening Balance</h4>
@@ -114,31 +114,31 @@
                             <ul class="product-bar">
                                 <li>
                                     <h4>Address Line 1</h4>
-                                    <h6>{{address.address_line1}}</h6>
+                                    <h6>{{address?.address_line_1}}</h6>
                                 </li>
                                 <li>
                                     <h4>Address Line 2</h4>
-                                    <h6>{{address.address_line2}}</h6>
+                                    <h6>{{address?.address_line_2}}</h6>
                                 </li>
                                 <li>
                                     <h4>Select Country</h4>
-                                    <h6>{{address.country}}</h6>
+                                    <h6>{{address.country?.country_name}}</h6>
                                 </li>
                                 <li>
                                     <h4>Select State</h4>
-                                    <h6>{{address.state}}</h6>
+                                    <h6>{{address.state?.state}}</h6>
                                 </li>
                                 <li>
                                     <h4>Select City</h4>
-                                    <h6>{{address.city}}</h6>
+                                    <h6>{{address?.city?.city}}</h6>
                                 </li>
                                 <li>
                                     <h4>Pincode</h4>
-                                    <h6>{{address.pincode}}</h6>
+                                    <h6>{{address?.pincode}}</h6>
                                 </li>
                                 <li>
                                     <h4>Address Type</h4>
-                                    <h6>{{address.address_type}}</h6>
+                                    <h6>{{address?.address_type}}</h6>
                                 </li>
                                
                             </ul>
