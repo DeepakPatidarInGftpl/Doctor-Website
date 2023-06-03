@@ -103,6 +103,7 @@ export class EditproductComponent implements OnInit {
         this.sizeTitle = res.size.map((res: any) => res.title)
 
         this.selectColor = res.variant_product.map(res => res.color).filter(Boolean);
+  
         this.selectSize = res.variant_product.map((res) => res.size).filter(Boolean);
 
         this.productForm.patchValue({
@@ -522,15 +523,15 @@ export class EditproductComponent implements OnInit {
     }
     if (this.colorTitle.length == 0) {
       this.colorTitle.push(title)
-      // this.selectColor.push({ id: id, title: title })
-      console.log(this.colorTitle);
+      this.selectColor.push({ id: id, title: title })
+      
     } else {
       if (!this.colorTitle.includes(title)) {
         this.colorTitle.push(title)
-        // this.selectColor.push({ id: id, title: title })
+        this.selectColor.push({ id: id, title: title })
       } else {
         this.colorTitle = this.colorTitle.filter(item => item !== title)
-        // this.selectColor = this.selectColor.filter(item => item.id !== id || item.title !== title);
+        this.selectColor = this.selectColor.filter(item => item.id !== id || item.title !== title);
       }
     }
     console.log(this.selectColor, 'selectcolor');
@@ -853,6 +854,14 @@ export class EditproductComponent implements OnInit {
     return this.productForm.get('hsncode')
   }
 
+
+  getvariant_name(index: number) {
+    return this.getVarinatsForm().controls[index].get('variant_name');
+  }
+  getvariant_size(index: number) {
+    return this.getVarinatsForm().controls[index].get('variant_size');
+  }
+  
   currentSizes: any = [];
   currentColors: any = [];
   currentVariants: any = [];

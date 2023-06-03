@@ -593,6 +593,12 @@ export class AddproductComponent implements OnInit {
     return this.productForm.get('hsncode')
   }
 
+  getvariant_name(index: number) {
+    return this.getVarinatsForm().controls[index].get('variant_name');
+  }
+  getvariant_size(index: number) {
+    return this.getVarinatsForm().controls[index].get('variant_size');
+  }
   currentSizes: any = [];
   currentColors: any = [];
   currentVariants: any = [];

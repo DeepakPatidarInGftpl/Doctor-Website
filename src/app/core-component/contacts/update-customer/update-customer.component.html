@@ -270,7 +270,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Opening Balance</label>
-                        <input type="text" formControlName="opening_balance" id="opening_balance"
+                        <input type="text" formControlName="opening_balance" id="opening_balance" maxlength="10" minlength="1"
                             [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
                         <span class="text-danger"
                             *ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">Enter Opening

@@ -79,6 +79,8 @@ export class UpdateEmployeeComponent implements OnInit {
         address_type: j.address_type
       })
       )
+      this.selectState(j.country.id);
+      this.selectCity(j.state.id);
     })
     return formarr
   }
@@ -309,18 +311,22 @@ export class UpdateEmployeeComponent implements OnInit {
   get pincode() {
     return this.employeeForm.get('pincode')
   }
-  get bname() {
-    return this.employeeForm.get('name')
+ 
+  // nested bank error
+
+  getBankHolderName(index: number) {
+    return this.getBanks().controls[index].get('account_holder_name');
   }
-  get account_no() {
-    return this.employeeForm.get('account_no')
+  getAccountNo(index: number) {
+    return this.getBanks().controls[index].get('account_no');
   }
-  get bank_name() {
-    return this.employeeForm.get('bank_name')
+  getIfscCode(index: number) {
+    return this.getBanks().controls[index].get('bank_ifsc_code');
   }
-  get ifsc_code() {
-    return this.employeeForm.get('ifsc_code')
+  getBankName(index: number) {
+    return this.getBanks().controls[index].get('bank_name');
   }
+
   get email() {
     return this.employeeForm.get('email')
   }

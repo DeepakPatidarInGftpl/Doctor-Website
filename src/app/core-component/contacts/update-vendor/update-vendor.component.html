@@ -255,10 +255,10 @@
                     <div class="form-group">
                         <label>Payment Terms</label>
                         <select formControlName="payment_terms" class="w-100 h-100 border" id="payment_terms" [ngClass]="{
-                        'is-invalid': f['payment_terms'].touched && f['payment_terms'].invalid}">
-                            <option value="" selected disabled>payment_terms</option>
-                            <option value="terms">terms</option>
-                        </select>
+                            'is-invalid': f['payment_terms'].touched && f['payment_terms'].invalid}">
+                                <option value="" selected disabled>payment_terms</option>
+                                <option value="{{payment.id}}" *ngFor="let payment of paymentTerms">{{payment.title}}</option>
+                            </select>
                         <span class="text-danger"
                             *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select Payment
                             Terms</span>
@@ -267,7 +267,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Opening Balance</label>
-                        <input type="text" formControlName="opening_balance" id="opening_balance"
+                        <input type="text" formControlName="opening_balance" id="opening_balance" maxlength="10" minlength="1"
                             [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
                         <span class="text-danger"
                             *ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">Enter Opening

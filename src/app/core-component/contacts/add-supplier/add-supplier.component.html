@@ -279,45 +279,26 @@
                     </div>
                 </div>
 
-                <!-- <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Bank</label>
-                        <div class="dropdown">
-                            <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">Select Bank</button>
-                            <ul class="dropdown-menu" style="width: 100%;">
-                                <li><a class="dropdown-item" *ngFor="let bank of bankDetails let i=index;">
-                                        <input type="checkbox" [value]="bank.id" (change)="onCheckBank($event)"
-                                            formArrayName="bank_id" style="margin-right: 5px;" [ngClass]="{
-                                            'is-invalid': f['bank_id'].touched && f['bank_id'].invalid
-                                          }" #categoryValue [id]="'checkboxBank-' + i">
-                                        <label [for]="'checkboxBank-' + i" style="margin-bottom: 0;"
-                                            (click)="onLabelClick($event)">{{bank.title}}</label>
-                                    </a></li>
-                            </ul>
-                        </div>
-                        <span class="text-danger" *ngIf="bank && bank.invalid && bank.touched">Select bank
-                        </span>
-                    </div>
-                </div> -->
-              
+            
                 <div formArrayName="bank_id">
                     <div *ngFor="let d of getBanks().controls; let i=index">
                         <div [formGroupName]="i" class="row">
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label>Bank Holder Name</label>
+                                    <label>Bank Holder Name*</label>
                                     <input type="text" formControlName="account_holder_name">
                                     <span class="text-danger"
-                                    *ngIf="bname && bname.invalid && bname.touched">Enter your name </span>
+                                        *ngIf="getBankHolderName(i)?.invalid && getBankHolderName(i)?.touched">Enter
+                                        Bank holder name</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label>Bank Name</label>
+                                    <label>Bank Name*</label>
                                     <input type="text" formControlName="bank_name">
                                     <span class="text-danger"
-                                        *ngIf="bank_name && bank_name.invalid && bank_name.touched">Enter your Bank Name</span>
+                                        *ngIf="getBankName(i)?.invalid && getBankName(i)?.touched">Enter your Bank
+                                        Name</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
@@ -328,34 +309,38 @@
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label>Account No</label>
+                                    <label>Account No*</label>
                                     <input type="text" formControlName="account_no">
                                     <span class="text-danger"
-                                    *ngIf="account_no && account_no.invalid && account_no.touched">Enter your account no</span>
+                                        *ngIf="getAccountNo(i)?.invalid && getAccountNo(i)?.touched">Enter your account
+                                        no</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3">
                                 <div class="form-group">
-                                    <label>IFSC Code</label>
+                                    <label>IFSC Code*</label>
                                     <input type="text" formControlName="bank_ifsc_code">
                                     <span class="text-danger"
-                                        *ngIf="ifsc_code && ifsc_code.invalid && ifsc_code.touched">Enter your Ifsc code</span>
+                                    *ngIf="getIfscCode(i)?.invalid && getIfscCode(i)?.touched">Enter your Ifsc code</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
-                                <span (click)="removeBank(i)" class="btn" style="color: red;"
-                                    *ngIf="i>0"><svg style="width:20px; height:20px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                      </svg></span>
-                        </div>
+                                <span (click)="removeBank(i)" class="btn" style="color: red;" *ngIf="i>0"><svg
+                                        style="width:20px; height:20px" xmlns="http://www.w3.org/2000/svg" width="16"
+                                        height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path
+                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg></span>
+                            </div>
                         </div>
                     </div>
                     <div class="w-100 text-right mb-3">
-                        <span (click)="addBank()" class="addMore" style="background: #FF9F43; color: white; border-radius: 2px;">+  Add More Banks</span>
+                        <span (click)="addBank()" class="addMore"
+                            style="background: #FF9F43; color: white; border-radius: 2px;">+ Add More Banks</span>
                     </div>
                 </div>
-
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
@@ -373,7 +358,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Opening Balance</label>
-                        <input type="text" formControlName="opening_balance" id="opening_balance"
+                        <input type="text" formControlName="opening_balance" id="opening_balance" maxlength="10" minlength="1"
                             [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
                         <span class="text-danger"
                             *ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">Enter Opening
