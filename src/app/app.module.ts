@@ -22,6 +22,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
+import{NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown'
+
 const icons = {
   Layers
 };
@@ -30,8 +32,6 @@ const icons = {
   declarations: [
     AppComponent,
     LayoutComponent
-  
-   
   ],
   imports: [
     BrowserModule,
@@ -51,7 +51,8 @@ const icons = {
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    NgMultiSelectDropDownModule
   ],
   exports: [
     FeatherModule

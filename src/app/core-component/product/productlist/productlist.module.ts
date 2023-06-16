@@ -12,6 +12,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
 import { PipeModuleModule } from '../pipe-module/pipe-module.module';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 @NgModule({
   declarations: [
     ProductlistComponent
@@ -26,7 +27,8 @@ import { PipeModuleModule } from '../pipe-module/pipe-module.module';
     NgxPaginationModule,
     OrderModule,
     MatSlideToggleModule,
-    PipeModuleModule
+    PipeModuleModule,
+    MatProgressBarModule
   ]
 })
 export class ProductlistModule { }

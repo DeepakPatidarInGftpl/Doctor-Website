@@ -23,8 +23,14 @@
                             </a>
                         </div>
                         <div class="search-input">
-                            <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
-                        </div>
+                            <a class="btn btn-searchset">
+                              <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                            <div class="dataTables_filter"><label>
+                              <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
+                              placeholder="search">
+                            </label>
+                          </div>
+                 </div>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -40,103 +46,87 @@
                         </ul>
                     </div>
                 </div>
-                <!-- /Filter -->
-                <div class="card" id="filter_inputs">
-                    <div class="card-body pb-0">
-                        <div class="row">
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <ngx-datepicker [(ngModel)]="date"></ngx-datepicker>
-                                </div>
-                            </div>
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <input type="text" placeholder="Enter Reference">
-                                </div>
-                            </div>
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <select class="form-select">
-                                        <option>Choose Supplier</option>
-                                        <option>Supplier</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <select class="form-select">
-                                        <option>Choose Status</option>
-                                        <option>Inprogress</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg col-sm-6 col-12">
-                                <div class="form-group">
-                                    <select class="form-select">
-                                        <option>Choose Payment Status</option>
-                                        <option>Payment Status</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-1 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /Filter -->
                 <div class="table-responsive">
-                    <table   datatable [dtOptions]="dtOptions" class="table datanew">
+                    <table datatable  class="table datanew">
                         <thead>
                             <tr>
-                                <th>
-                                    <label class="checkboxs" (click)="selectAll(initChecked)">
-                                        <input type="checkbox" [(ngModel)]="initChecked">
+                                <th (click)="sort('id')" class="thone">
+                                    <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
                                         <span class="checkmarks"></span>
                                     </label>
+                                    <i class="fa fa-sort"></i>
                                 </th>
-                                <th>Supplier Name</th>
-                                <th>Reference</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Grand Total</th>
-                                <th>Paid</th>
-                                <th>Due</th>
-                                <th>Payment Status</th>
-                                <th>Action</th>
+                                <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Purchase Date <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Purchase Number<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Shipping Date <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Shipping Note <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Note <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr  *ngFor="let purchase of tableData; let i = index">
+                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
-                                        <input type="checkbox" [(ngModel)]="purchase.isSelected">
+                                        <input type="checkbox" [(ngModel)]="selectedRows[i]">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-                                <td class="text-bolds">{{purchase.SupplierName}}</td>
-                                <td>{{purchase.Reference}}</td>
-                                <td>{{purchase.Date}}</td>
-                                <td><span [ngClass]="{'bg-lightgreen': purchase.Status === 'Received', 'bg-lightred' : purchase.Status === 'Pending','bg-lightyellow' : purchase.Status === 'Ordered'}" class="badges">{{purchase.Status}}</span></td>
-                                <td>{{purchase.GrandTotal}}</td>
-                                <td>{{purchase.Paid}}</td>
-                                <td>{{purchase.Due}}</td>
-                                <td><span [ngClass]="{'bg-lightgreen': purchase.PaymentStatus === 'Paid', 'bg-lightred' : purchase.PaymentStatus === 'UnPaid','bg-lightyellow' : purchase.PaymentStatus === 'Partial' }"class="badges">{{purchase.PaymentStatus}}</span></td>
+                                <td class="productimgname">
+                                    <a routerLink="//purchase/purchaseDetails/{{products.id}}" style="line-height: 3;">{{products?.supplier?.name}}</a>
+                                </td>
+                                <td>{{products.order_date}}</td>
+                                <td>{{products.order_no}}</td>
+                                <td>{{products.shipping_date}}</td>
+                                <td>{{products.shipping_note}}</td>
+                                <td>{{products.note}}</td>
                                 <td>
-
-                                    <a class="me-3" routerLink="//purchase/editpurchase">
+                                    <span [ngClass]="{'bg-lightgreen': products.status === 'Received', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}" class="badges">{{products.status}}</span>
+                                </td>
+                                <td>
+                                    <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td>
+                                <td>
+                                    <a class="me-1" routerLink="//purchase/purchaseDetails/{{products.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-1" routerLink="//purchase/editpurchase/{{products.id}}">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i)" class="me-3 confirm-text" href="javascript:void(0);">
+                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
                             </tr>
-
                         </tbody>
-                    </table>
+                     </table>
+
+                     <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                     </div>
+                    <div class="row" *ngIf="!loader">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                            <select [(ngModel)]="itemsPerPage" class="pagination" >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="-1">All</option>
+                              </select>
+                            </div>
+                        </div>
+                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                        <div class="f-right">
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        </div>
+                       </div>
+                     </div>
                 </div>
             </div>
         </div>
