@@ -14,7 +14,6 @@ export class FormSelect2Component implements OnInit {
     this.coreService.getSubcategory().subscribe(res => {
       console.log(res);
       this.subcategoryList = res
-      
     })
   }
 

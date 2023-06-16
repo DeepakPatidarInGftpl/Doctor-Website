@@ -32,9 +32,10 @@ export class BatchVariantProductComponent implements OnInit {
   }
   id: number;
   vid:number;
+  mrpN:number
   ngOnInit(): void {
     this.batchForm = this.fb.group({
-      variant: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      // variant: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       mrp: new FormControl('', [Validators.required]),
       cost_price: new FormControl('', Validators.pattern(/^[0-9]*$/)),
       selling_price_online: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
@@ -54,7 +55,7 @@ export class BatchVariantProductComponent implements OnInit {
   submit() {
     console.log(this.batchForm.value);
     if (this.batchForm.valid) {
-      this.coreService.addBatch(this.batchForm.value).subscribe(res => {
+      this.coreService.addBatch(this.batchForm.value,this.id).subscribe(res => {
         this.addRes = res
         if (this.addRes.Is_Sucess == "True") {
           this.toastr.success(this.addRes.msg)

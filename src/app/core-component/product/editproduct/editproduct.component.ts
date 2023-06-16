@@ -143,6 +143,7 @@ export class EditproductComponent implements OnInit {
           this.addproductImage()
         } else {
           res.product_images.forEach((image: any) => {
+            console.log(image);
             const imageFormGroup = this.fb.group({
               product_colour: image.product_colour || '',
               image: image.image || ''
@@ -151,11 +152,9 @@ export class EditproductComponent implements OnInit {
           });
         }
 
-
         this.getSubcategoryGroupByCategory(res.category.id);
         this.oncheck(res.subcategory_group.id);
         this.checkSubact(res.subcategory.id);
-
         console.log(this.editRes.variant_product);
         console.log(this.colorTitle, 'colorarray ');
         console.log(this.sizeTitle, 'sizearray');
@@ -163,13 +162,9 @@ export class EditproductComponent implements OnInit {
 
         this.variantLive();
         if (this.editRes.product_images) {
-
           this.updateImages = this.editRes.product_images;
           console.log(this.updateImages);
-
         }
-
-
       }
     })
 
@@ -576,7 +571,6 @@ export class EditproductComponent implements OnInit {
       } else {
         this.sizeTitle = this.sizeTitle.filter(item => item !== title)
         this.selectSize = this.selectSize.filter(item => item.id !== id || item.title !== title);
-
       }
     }
     console.log(this.selectSize, 'selectsize');
@@ -617,7 +611,9 @@ export class EditproductComponent implements OnInit {
       const userGroup = userArray.at(index) as FormGroup;
       console.log(userGroup);
       userGroup.patchValue({
-        variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`
+        variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`,
+        variant_color: user.color == undefined ? user.color : `${user.color}`,
+        variant_size:  user.size == undefined ? user.size : `${user.size}`,
       });
     });
     // display updated value
@@ -677,6 +673,7 @@ export class EditproductComponent implements OnInit {
       });
     }
   }
+  loader = false
   submit() {
     console.log(this.productForm.value);
     console.log(this.arraySubCat);
@@ -788,8 +785,10 @@ export class EditproductComponent implements OnInit {
     formdata.append('product_images', productImageDataJson);
 
     if (this.productForm.valid) {
+      this.loader = true
       this.coreService.updateProduct(formdata, this.id).subscribe(res => {
         if (res.msg == "Product updated successfully") {
+          this.loader = false;
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
         } else {
@@ -854,14 +853,13 @@ export class EditproductComponent implements OnInit {
     return this.productForm.get('hsncode')
   }
 
-
   getvariant_name(index: number) {
     return this.getVarinatsForm().controls[index].get('variant_name');
   }
   getvariant_size(index: number) {
     return this.getVarinatsForm().controls[index].get('variant_size');
   }
-  
+
   currentSizes: any = [];
   currentColors: any = [];
   currentVariants: any = [];
@@ -922,7 +920,9 @@ export class EditproductComponent implements OnInit {
       const userGroup = userArray.at(index) as FormGroup;
       console.log(userGroup);
       userGroup.patchValue({
-        variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`
+        variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`,
+        variant_color: user.color == undefined ? user.color : `${user.color}`,
+        variant_size:  user.size == undefined ? user.size : `${user.size}`,
       });
     });
   }
@@ -1128,6 +1128,7 @@ export class EditproductComponent implements OnInit {
   //     return this.updatedVariants[index]?.stock || '';
   //   }
   // }
+
   getSku(index: any): any {
     const variantProduct = this.variantProducts[index];
     if (variantProduct) {
@@ -1153,6 +1154,7 @@ export class EditproductComponent implements OnInit {
   //     return this.updatedVariants[index]?.max_order_quantity || '';
   //   }
   // }
+
   getColors(index: number): any {
     const variantProduct = this.variantProducts[index];
     if (variantProduct) {
@@ -1168,5 +1170,21 @@ export class EditproductComponent implements OnInit {
     } else {
       return this.updatedVariants[index]?.size.id || '';
     }
+  }
+
+
+  saveAndNext() {
+    // Check if all form fields are valid
+    if (this.isFormValid()) {
+      this.tabGroup.selectedIndex = 1;
+    } else {
+      console.log('Please fill in all required fields before proceeding.');
+      this.toastr.error('Please fill in all required fields before proceeding.')
+    }
+  }
+
+  isFormValid() {
+    this.productForm.markAllAsTouched();
+    return this.productForm.valid;
   }
 }

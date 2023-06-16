@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PurchaseComponent } from './purchase.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'purchaselist', pathMatch: 'full' },
@@ -31,10 +30,48 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'editpurchase',
+    path: 'editpurchase/:id',
     loadChildren: () =>
       import('./editpurchase/editpurchase.module').then(
         (m) => m.EditpurchaseModule
+      ),
+  },
+  {
+    path: 'purchaseDetails/:id',
+    loadChildren: () =>
+      import('./details-purchase/details-purchase.module').then(
+        (m) => m.DetailsPurchaseModule
+      ),
+  },
+
+  
+      {
+        path: 'material-Inward-list',
+        loadChildren: () =>
+          import('./material-inward/material-inward.module').then(
+            (m) => m.MaterialInwardModule
+          ),
+      },
+ 
+  {
+    path: 'addmaterial-Inward',
+    loadChildren: () =>
+      import('./addmaterial-inward/addmaterial-inward.module').then(
+        (m) => m.AddmaterialInwardModule
+      ),
+  },
+  {
+    path: 'editmaterial-Inward/:id',
+    loadChildren: () =>
+      import('./updatematerial-inward/updatematerial-inward.module').then(
+        (m) => m.UpdatematerialInwardModule
+      ),
+  },
+  {
+    path: 'material-InwardDetails/:id',
+    loadChildren: () =>
+      import('./details-material-inward/details-material-inward.module').then(
+        (m) => m.DetailsMaterialInwardModule
       ),
   },
 ];
