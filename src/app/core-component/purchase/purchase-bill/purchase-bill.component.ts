@@ -3,11 +3,11 @@ import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-servi
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 @Component({
-  selector: 'app-material-inward',
-  templateUrl: './material-inward.component.html',
-  styleUrls: ['./material-inward.component.scss']
+  selector: 'app-purchase-bill',
+  templateUrl: './purchase-bill.component.html',
+  styleUrls: ['./purchase-bill.component.scss']
 })
-export class MaterialInwardComponent implements OnInit {
+export class PurchaseBillComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
@@ -36,9 +36,9 @@ export class MaterialInwardComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.purchaseService.deleteMaterial(id).subscribe(res => {
+        this.purchaseService.deletePurchaseBill(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "MATERIAL INWARD Deleted successfully") {
+          if (this.delRes.msg == "PURCHASE BILL Deleted successfully") {
             this.ngOnInit()
           }
         })
@@ -56,7 +56,7 @@ export class MaterialInwardComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this material inward!",
+      text: "Do you want to Deactivate this purchase Bill!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -68,16 +68,16 @@ export class MaterialInwardComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.purchaseService.MaterialIsActive(id, '').subscribe(res => {
+        this.purchaseService.PurchaseBillIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Material Inward Is active Updated Successfully") {
+          if (this.delRes.msg == "Purchase Bill Is active Updated Successfully") {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Material Inward Is Deactivate Successfully.',
+          text: 'Purchase Bill Is Deactivate Successfully.',
         });
       }
     });
@@ -85,7 +85,7 @@ export class MaterialInwardComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this Material Inward!",
+      text: "Do you want to Active this purchase Bill!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -97,24 +97,27 @@ export class MaterialInwardComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.purchaseService.MaterialIsActive(id, '').subscribe(res => {
+        this.purchaseService.PurchaseBillIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Material Inward Is active Updated Successfully") {
+          if (this.delRes.msg == "Purchase Bill Is active Updated Successfully") {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Material Inward Is Active Successfully.',
+          text: 'Purchase Bill Is Active Successfully.',
         });
       }
     });
   }
+
+  loader=true;
   ngOnInit(): void {
-    this.purchaseService.getMaterial().subscribe(res => {
+    this.purchaseService.getPurchaseBill().subscribe(res => {
       console.log(res);
       this.tableData = res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
   }
@@ -140,7 +143,7 @@ export class MaterialInwardComponent implements OnInit {
   deleteId(id: number) {
     this.purchaseService.deleteMaterial(id).subscribe(res => {
       this.delRes = res
-      if (this.delRes.msg == "Purchase Order Deleted successfully") {
+      if (this.delRes.msg == "PURCHASE BILL Deleted successfully") {
         // this.getcompanyList()
       }
     })

@@ -45,7 +45,7 @@ export class EditpurchaseComponent implements OnInit {
   variantControl = new FormControl();
   variants: any[] = [];
   filteredVariants: Observable<any[]>;
-
+  getresbyId:any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
 
@@ -66,6 +66,7 @@ export class EditpurchaseComponent implements OnInit {
 
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
       console.log(res);
+      this.getresbyId=res;
       this.purchaseForm.patchValue(res);
       this.purchaseForm.get('supplier')?.patchValue(res.supplier.id)
       this.purchaseForm.setControl('purchase_cart', this.udateCart(res.cart));
@@ -168,9 +169,13 @@ export class EditpurchaseComponent implements OnInit {
     console.log(event);
     const selectedItemId = event.id;
     console.log(selectedItemId);
-    // const variants = this.purchaseForm.get('purchase_cart') as FormArray;
-    // variants.clear();
-    // this.addCart();
+    
+    if(this.getresbyId.cart.length>=0){
+      const variants = this.purchaseForm.get('purchase_cart') as FormArray;
+    variants.clear();
+    this.addCart();
+     }
+    
     this.purchaseForm.patchValue({
       supplier: selectedItemId
     });
