@@ -3,14 +3,17 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 
 @Component({
-  selector: 'app-updatematerial-inward',
-  templateUrl: './updatematerial-inward.component.html',
-  styleUrls: ['./updatematerial-inward.component.scss']
+  selector: 'app-updatepurchase-bill',
+  templateUrl: './updatepurchase-bill.component.html',
+  styleUrls: ['./updatepurchase-bill.component.scss']
 })
-export class UpdatematerialInwardComponent implements OnInit {
+export class UpdatepurchaseBillComponent implements OnInit {
+
+
 
   searchControl = new FormControl();
   searchResults: any[] = [];
@@ -24,6 +27,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
+    private contactService: ContactService,
     private Arout: ActivatedRoute) {
   }
 
@@ -40,33 +44,38 @@ export class UpdatematerialInwardComponent implements OnInit {
   variants: any[] = [];
   filteredVariants: Observable<any[]>;
 
-  materialForm!: FormGroup;
+  puchaseBillForm!: FormGroup;
   get f() {
-    return this.materialForm.controls;
+    return this.puchaseBillForm.controls;
   }
 
   subcategoryList;
   id: any;
-  getresbyId:any;
+  getresbyId: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
-    this.purchaseService.getMaterialById(this.id).subscribe(res=>{
-      console.log(res);
-      this.getresbyId=res;
-      this.materialForm.patchValue(res);
-      this.materialForm.get('supplier')?.patchValue(res.supplier.id);
-      this.materialForm.get('purchase_order')?.patchValue(res.purchase_order.id);
-      this.materialForm.setControl('material_inward_cart', this.udateCart(res.cart));
-    })
-    this.materialForm = this.fb.group({
+
+    this.puchaseBillForm = this.fb.group({
       supplier: new FormControl('', [Validators.required]),
-      purchase_order: new FormControl('', [Validators.required]),
-      po_date: new FormControl(''),
-      material_inward_date: new FormControl('', [Validators.required]),
-      material_inward_no: new FormControl(''),
-      shipping_note: new FormControl(''),
-      recieved_by: new FormControl(''),
-      material_inward_cart: this.fb.array([]),
+      supplier_bill_date: new FormControl('', [Validators.required]),
+      refrence_bill_no: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      supplier_bill_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      material_inward_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      payment_term: new FormControl(''),
+      due_date: new FormControl('', [Validators.required]),
+      reverse_charge: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+
+      shipping_date: new FormControl('', [Validators.required]),
+      export: new FormControl(''),
+
+      selling_price_online: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      selling_price_offline: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      dealer_price: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+
+      employee_price: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      status: new FormControl(''),
+
+      purchase_bill: this.fb.array([]),
       // total_tax: new FormControl('', ),
       // total_discount: new FormControl('', ),
       // sub_total: new FormControl('', ),
@@ -74,6 +83,16 @@ export class UpdatematerialInwardComponent implements OnInit {
       // total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       note: new FormControl(''),
     });
+
+    this.purchaseService.getPurchaseBillById(this.id).subscribe(res => {
+      console.log(res);
+      this.getresbyId=res;
+      this.puchaseBillForm.patchValue(res);
+      this.puchaseBillForm.get('supplier')?.patchValue(res.supplier.id);
+      this.puchaseBillForm.get('material_inward_no')?.patchValue(res.material_inward_no.id);
+      this.puchaseBillForm.setControl('purchase_bill', this.udateCart(res.cart));
+    })
+
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
@@ -85,47 +104,48 @@ export class UpdatematerialInwardComponent implements OnInit {
     this.getSuuplier();
     this.getVariants();
     this.getPurchase();
+    this.getMaterialInward();
+    this.getPaymentTerms()
   }
 
-  get supplier() {
-    return this.materialForm.get('supplier') as FormControl;
-  }
-  material_inward_cart(): FormGroup {
-    return this.fb.group({
-      barcode: (''),
-      qty: (''),
-      po_qty: (''),
-      unit_cost: (''),
-      mrp: (''),
-      discount: (''),
-      tax: (''),
-      landing_cost: (''),
-      total: ('')
-    })
-  }
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
-    add.forEach((j: any,i) => {
+    add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
         qty: j.qty,
-        po_qty:j.po_qty,
         unit_cost: j.unit_cost,
         mrp: j.mrp,
         discount: j.discount,
         tax: j.tax,
         landing_cost: j.landing_cost,
-        total: j.total
+        // total: j.total
       }))
       this.barcode[i] = j.barcode.sku;
     })
     return formarr
   }
+
+  get supplier() {
+    return this.puchaseBillForm.get('supplier') as FormControl;
+  }
+  purchase_bill(): FormGroup {
+    return this.fb.group({
+      barcode: (''),
+      qty: (''),
+      unit_cost: (''),
+      mrp: (''),
+      discount: (''),
+      tax: (''),
+      landing_cost: (''),
+      // total: ('')
+    })
+  }
   getCart(): FormArray {
-    return this.materialForm.get('material_inward_cart') as FormArray;
+    return this.puchaseBillForm.get('purchase_bill') as FormArray;
   }
   addCart() {
-    this.getCart().push(this.material_inward_cart())
+    this.getCart().push(this.purchase_bill())
   }
   removeCart(i: any) {
     this.getCart().removeAt(i)
@@ -150,24 +170,39 @@ export class UpdatematerialInwardComponent implements OnInit {
       console.log(this.purchaseList);
     })
   }
+  materialList: any;
+  getMaterialInward() {
+    this.purchaseService.getMaterial().subscribe(res => {
+      console.log(res);
+      this.materialList = res;
+    })
+  }
+  paymentList: any;
+  getPaymentTerms() {
+    this.contactService.getPaymentTerms().subscribe(res => {
+      console.log(res);
+      this.paymentList = res;
+    })
+  }
+
   oncheck(event: any) {
     console.log(event);
-    const selectedItemId = event;
+    const selectedItemId = event; // Assuming the ID field is 'item_id'
     console.log(selectedItemId);
-    
     if(this.getresbyId.cart.length>=0){
-     const variants = this.materialForm.get('material_inward_cart') as FormArray;
-    variants.clear();
-    this.addCart();
+      const variants = this.puchaseBillForm.get('purchase_bill') as FormArray;
+      variants.clear();
+      this.addCart();
     }
-    this.materialForm.patchValue({
+    
+    this.puchaseBillForm.patchValue({
       supplier: selectedItemId
     });
   }
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(selectedItemId);
-    const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+    const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: selectedItemId
     });
@@ -175,21 +210,34 @@ export class UpdatematerialInwardComponent implements OnInit {
   getRes: any;
   loader = false;
   submit() {
-    console.log(this.materialForm.value);
-    if (this.materialForm.valid) {
+    console.log(this.puchaseBillForm.value);
+    if (this.puchaseBillForm.valid) {
+
       this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.materialForm.get('supplier')?.value);
-      formdata.append('purchase_order', this.materialForm.get('purchase_order')?.value);
-      formdata.append('po_date', this.materialForm.get('po_date')?.value);
-      formdata.append('material_inward_date', this.materialForm.get('material_inward_date')?.value);
-      formdata.append('material_inward_no', this.materialForm.get('material_inward_no')?.value);
-      formdata.append('shipping_note', this.materialForm.get('shipping_note')?.value);
-      formdata.append('recieved_by', this.materialForm.get('recieved_by')?.value);
-      formdata.append('note', this.materialForm.get('note')?.value);
+      formdata.append('supplier', this.puchaseBillForm.get('supplier')?.value);
+      formdata.append('supplier_bill_date', this.puchaseBillForm.get('supplier_bill_date')?.value);
+      formdata.append('refrence_bill_no', this.puchaseBillForm.get('refrence_bill_no')?.value);
+      formdata.append('supplier_bill_no', this.puchaseBillForm.get('supplier_bill_no')?.value);
+      formdata.append('material_inward_no', this.puchaseBillForm.get('material_inward_no')?.value);
+      formdata.append('payment_term', this.puchaseBillForm.get('payment_term')?.value);
+      formdata.append('due_date', this.puchaseBillForm.get('due_date')?.value);
+
+      formdata.append('reverse_charge', this.puchaseBillForm.get('reverse_charge')?.value);
+      formdata.append('shipping_date', this.puchaseBillForm.get('shipping_date')?.value);
+      formdata.append('export', this.puchaseBillForm.get('export')?.value);
+
+      formdata.append('selling_price_online', this.puchaseBillForm.get('selling_price_online')?.value);
+      formdata.append('selling_price_offline', this.puchaseBillForm.get('selling_price_offline')?.value);
+      formdata.append('dealer_price', this.puchaseBillForm.get('dealer_price')?.value);
+
+      formdata.append('employee_price', this.puchaseBillForm.get('employee_price')?.value);
+      formdata.append('status', this.puchaseBillForm.get('status')?.value);
+
+      formdata.append('note', this.puchaseBillForm.get('note')?.value);
 
       // nested addrs data 
-      const cartArray = this.materialForm.get('material_inward_cart') as FormArray;
+      const cartArray = this.puchaseBillForm.get('purchase_bill') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
         const cartGroup = address as FormGroup;
@@ -200,18 +248,18 @@ export class UpdatematerialInwardComponent implements OnInit {
         });
         cartData.push(cartObject);
       });
-      formdata.append('material_inward_cart', JSON.stringify(cartData));
-      this.purchaseService.updateMaterial(formdata,this.id).subscribe(res => {
+      formdata.append('purchase_bill', JSON.stringify(cartData));
+      this.purchaseService.updatePurchaseBill(formdata, this.id).subscribe(res => {
         console.log(res);
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
           this.loader = false;
           this.toastrService.success(this.getRes.msg);
-          this.router.navigate(['//purchase/material-Inward-list'])
+          this.router.navigate(['//purchase/purchase-bill-list'])
         }
       })
     } else {
-      this.materialForm.markAllAsTouched()
+      this.puchaseBillForm.markAllAsTouched()
     }
   }
   private _filter(value: string | number, include: boolean): any[] {
@@ -279,7 +327,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     console.log(this.barcode);
 
     this.v_id = value.id;
-    const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+    const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: value.id
     });
@@ -414,3 +462,4 @@ export class UpdatematerialInwardComponent implements OnInit {
   }
 
 }
+
