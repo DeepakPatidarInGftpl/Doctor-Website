@@ -38,7 +38,7 @@ export class MaterialInwardComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.deleteMaterial(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Deleted successfully") {
+          if (this.delRes.msg == "MATERIAL INWARD Deleted successfully") {
             this.ngOnInit()
           }
         })
@@ -56,7 +56,7 @@ export class MaterialInwardComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this purchase order!",
+      text: "Do you want to Deactivate this material inward!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -70,14 +70,14 @@ export class MaterialInwardComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.MaterialIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Purchase Order Is active Updated Successfully") {
+          if (this.delRes.msg == "Material Inward Is active Updated Successfully") {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Purchase Order Is Deactivate Successfully.',
+          text: 'Material Inward Is Deactivate Successfully.',
         });
       }
     });
@@ -85,7 +85,7 @@ export class MaterialInwardComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this purchase!",
+      text: "Do you want to Active this Material Inward!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -99,14 +99,14 @@ export class MaterialInwardComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.MaterialIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Purchase Order Is active Updated Successfully") {
+          if (this.delRes.msg == "Material Inward Is active Updated Successfully") {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Purchase Order Is Active Successfully.',
+          text: 'Material Inward Is Active Successfully.',
         });
       }
     });
