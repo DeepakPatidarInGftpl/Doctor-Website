@@ -51,7 +51,7 @@ export class PurchaseServiceService {
     return this.http.get(url)
   }
   
-  
+  //material-inward
   getMaterial(){
     let url =this.apiUrl+'/pv-api/material_inward/';
     return this.http.get(url);
@@ -74,6 +74,34 @@ export class PurchaseServiceService {
   }
   deleteMaterial(id: number) {
     let url = this.apiUrl + '/pv-api/material_inward/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+  
+  // purchase-bill
+
+    
+  getPurchaseBill(){
+    let url =this.apiUrl+'/pv-api/purchase_bill/';
+    return this.http.get(url);
+  }
+  addPurchaseBill(data:any){
+    let url = this.apiUrl+'/pv-api/purchase_bill/';
+    return this.http.post(url,data);
+  }
+  getPurchaseBillById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/purchase_bill/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  PurchaseBillIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/purchase_bill/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  updatePurchaseBill(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/purchase_bill/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  deletePurchaseBill(id: number) {
+    let url = this.apiUrl + '/pv-api/purchase_bill/?id=';
     return this.http.delete(`${url}${id}`)
   }
 }

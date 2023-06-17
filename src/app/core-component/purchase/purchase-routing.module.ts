@@ -74,6 +74,36 @@ const routes: Routes = [
         (m) => m.DetailsMaterialInwardModule
       ),
   },
+
+  {
+    path: 'purchase-bill-list',
+    loadChildren: () =>
+      import('./purchase-bill/purchase-bill.module').then(
+        (m) => m.PurchaseBillModule
+      ),
+  },
+
+{
+path: 'addpurchase-bill',
+loadChildren: () =>
+  import('./addpurchase-bill/addpurchase-bill.module').then(
+    (m) => m.AddpurchaseBillModule
+  ),
+},
+{
+path: 'editpurchase-bill/:id',
+loadChildren: () =>
+  import('./updatepurchase-bill/updatepurchase-bill.module').then(
+    (m) => m.UpdatepurchaseBillModule
+  ),
+},
+{
+path: 'purchase-billDetails/:id',
+loadChildren: () =>
+  import('./detailspurchase-bill/detailspurchase-bill.module').then(
+    (m) => m.DetailspurchaseBillModule
+  ),
+},
 ];
 
 @NgModule({
