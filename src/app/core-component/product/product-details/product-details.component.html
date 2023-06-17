@@ -483,7 +483,7 @@
                                             <!-- </thead> -->
                                             <tbody>
                                               <tr *ngFor="let batch of batchList" class="bg-color">
-                                                <ng-container *ngIf="batch?.variant?.id==variant?.id">                                          
+                                                <ng-container *ngIf="variant?.batch && variant?.batch.includes(batch?.id)">                                          
                                                 <td class="boder">{{ batch?.mrp }}</td>
                                                 <td class="boder">{{ batch?.cost_price }}</td>
                                                 <td class="boder">{{ batch?.selling_price_online }}</td>
@@ -496,9 +496,9 @@
                                                 <td class="boder"><mat-slide-toggle (click)="batch?.is_active ? isActive(i,batch.id):Active(i,batch?.id)" [(ngModel)]="batch.is_active"></mat-slide-toggle>
                                                 </td>
                                                 <td class="boder">
-                                                    <a routerLink="//product/batchList/{{variant?.id}}">
+                                                    <!-- <a routerLink="//product/batchList/{{variant?.id}}">
                                                         <img src="assets/img/icons/eye.svg" alt="img">
-                                                    </a>
+                                                    </a> -->
                                                     <a routerLink="//product/batchUpdate/{{batch?.id}}">
                                                         <img src="assets/img/icons/edit.svg" alt="img">
                                                     </a>

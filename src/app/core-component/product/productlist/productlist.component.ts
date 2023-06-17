@@ -111,6 +111,10 @@ itemsPerPage:number=10;
      }
    });
  }
+ loader=true;
+
+ isAscending: boolean = true;
+
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -133,8 +137,11 @@ itemsPerPage:number=10;
     //   }
     // })
     // this.QueryService.productList;
+    
     this.coreService.getProducts().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
+      console.log(this.tableData);
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     console.log(this.tableData);

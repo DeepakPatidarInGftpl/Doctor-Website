@@ -1549,9 +1549,9 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/batch/?id=';
     return this.http.patch(`${url}${id}`, data);
   }
-  addBatch(data: any): Observable<any> {
-    let url = this.apiUrl + '/pv-api/batch/';
-    return this.http.post<any>(url, data)
+  addBatch(data: any,id:any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/batch/?variant_id=';
+    return this.http.post<any>(`${url}${id}`, data)
   }
   updateBatch(data: any, id: number): Observable<any> {
     let url = this.apiUrl + '/pv-api/batch/?id=';

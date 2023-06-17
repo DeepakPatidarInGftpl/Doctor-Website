@@ -123,9 +123,9 @@ export class AddproductComponent implements OnInit {
   variants(): FormGroup {
     return this.fb.group({
       product_title: (''),
-      variant_name: new FormControl('',[Validators.required]),
-      variant_size:new FormControl('',[Validators.required]),
-      variant_color:(''),
+      variant_name: new FormControl('', [Validators.required]),
+      variant_size: new FormControl('', [Validators.required]),
+      variant_color: (''),
       sku: new FormControl(''),
     })
   }
@@ -322,7 +322,7 @@ export class AddproductComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray;
       console.log(this.check);
-      
+
       this.selectedColor++;
     }
     /* unselected */
@@ -398,6 +398,8 @@ export class AddproductComponent implements OnInit {
     }
   }
 
+
+  loader = false
   submit() {
     console.log(this.productForm.value);
     let formdata: any = new FormData();
@@ -457,7 +459,6 @@ export class AddproductComponent implements OnInit {
       variantsData.push(featureObj);
     });
     formdata.append('variant_product', JSON.stringify(variantsData));
-
 
     // feature
     // const featuresArray = this.productForm.get('features') as FormArray;
@@ -526,8 +527,10 @@ export class AddproductComponent implements OnInit {
     formdata.append('product_images', productImageDataJson);
 
     if (this.productForm.valid) {
+      this.loader = true
       this.coreService.addProduct(formdata).subscribe(res => {
         if (res.msg == "Data Created") {
+          this.loader = false;
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
         } else {
@@ -599,52 +602,53 @@ export class AddproductComponent implements OnInit {
   getvariant_size(index: number) {
     return this.getVarinatsForm().controls[index].get('variant_size');
   }
+
   currentSizes: any = [];
   currentColors: any = [];
   currentVariants: any = [];
   productColor: any;
-  selectSize:any=[];
+  selectSize: any = [];
 
-  onCheckSizes(e:any,id:any) {
+  onCheckSizes(e: any, id: any) {
     if (this.currentSizes.length == 0) {
       this.currentSizes.push(e);
       // push data to selectSize
-      this.selectSize.push({id:id,title:e})
+      this.selectSize.push({ id: id, title: e })
     } else {
       if (!this.currentSizes.includes(e)) {
         this.currentSizes.push(e)
-         // push data to selectSize
-      this.selectSize.push({id:id,title:e})
+        // push data to selectSize
+        this.selectSize.push({ id: id, title: e })
       } else {
-         this.currentSizes = this.currentSizes.filter(item => item !== e);
-         this.selectSize = this.selectSize.filter(item => item.id !== id || item.title !== e);
+        this.currentSizes = this.currentSizes.filter(item => item !== e);
+        this.selectSize = this.selectSize.filter(item => item.id !== id || item.title !== e);
 
-         }
+      }
     }
     console.log(this.selectSize);
-    
+
     this.variantCheck();
   }
 
-  selectColor:any=[];
-  onCheckColors(e:any,id:any) {
+  selectColor: any = [];
+  onCheckColors(e: any, id: any) {
     if (this.currentColors.length == 0) {
       this.currentColors.push(e);
       // push data to selectColor 
-      this.selectColor.push({id:id,title:e})
+      this.selectColor.push({ id: id, title: e })
     } else {
       if (!this.currentColors.includes(e)) {
         this.currentColors.push(e)
-         // push data to selectColor 
-        this.selectColor.push({id:id,title:e})
+        // push data to selectColor 
+        this.selectColor.push({ id: id, title: e })
       } else {
         this.currentColors = this.currentColors.filter(item => item !== e);
         this.selectColor = this.selectColor.filter(item => item.id !== id || item.title !== e);
       }
-    } 
+    }
     console.log(this.selectColor);
-   
-    
+
+
     this.variantCheck();
   }
 
@@ -702,10 +706,11 @@ export class AddproductComponent implements OnInit {
       const userGroup = userArray.at(index) as FormGroup;
       console.log(userGroup);
       userGroup.patchValue({
-        variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`
+        variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`,
+        variant_color: user.color == undefined ? user.color : `${user.color}`,
+        variant_size: user.size == undefined ? user.size : `${user.size}`,
       });
     });
-
   }
 
   variantForm() {
@@ -778,6 +783,21 @@ export class AddproductComponent implements OnInit {
     imageGroup.get('file')?.updateValueAndValidity();
   }
 
+  saveAndNext() {
+    // Check if all form fields are valid
+    if (this.isFormValid()) {
+      this.tabGroup.selectedIndex = 1;
+    } else {
+      console.log('Please fill in all required fields before proceeding.');
+      this.toastr.error('Please fill in all required fields before proceeding.')
+    }
+  }
+
+  isFormValid() {
+    this.productForm.markAllAsTouched();
+    return this.productForm.valid;
+  }
+
   goBack() {
     this.location.back();
   }
@@ -786,7 +806,6 @@ export class AddproductComponent implements OnInit {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
   }
-
 
 
 } 
