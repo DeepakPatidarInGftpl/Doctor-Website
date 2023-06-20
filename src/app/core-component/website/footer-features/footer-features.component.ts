@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { WebsiteService } from 'src/app/Services/website/website.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -27,7 +27,7 @@ export class FooterFeaturesComponent implements OnInit {
   p:number=1
   pageSize: number = 10;
   itemsPerPage:number=10;
-  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
    
   }
 
@@ -47,7 +47,7 @@ export class FooterFeaturesComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.deleteFooterFeature(id).subscribe(res => {
+        this.websiteService.deleteFooterFeature(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Footer Features Deleted successfully") {
             this.tableData
@@ -80,7 +80,7 @@ export class FooterFeaturesComponent implements OnInit {
      },
    }).then((t) => {
      if (t.isConfirmed) {
-       this.coreService.footerIsActive(id,'').subscribe(res => {
+       this.websiteService.footerIsActive(id,'').subscribe(res => {
          this.delRes = res
          if (this.delRes.msg == "Footer Features Is active Updated Successfully") {
            this.ngOnInit()
@@ -109,7 +109,7 @@ export class FooterFeaturesComponent implements OnInit {
      },
    }).then((t) => {
      if (t.isConfirmed) {
-       this.coreService.footerIsActive(id,'').subscribe(res => {
+       this.websiteService.footerIsActive(id,'').subscribe(res => {
          this.delRes = res
          if (this.delRes.msg == "Footer Features Is active Updated Successfully") {
            this.ngOnInit()
@@ -130,7 +130,7 @@ export class FooterFeaturesComponent implements OnInit {
     })
   
     
-    this.coreService.getFooterFeature().subscribe(res=>{
+    this.websiteService.getFooterFeature().subscribe(res=>{
       this.tableData=res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -154,7 +154,7 @@ selectAlll() {
     }
   }
   deleteId(id: number) {
-    this.coreService.deletesize(id).subscribe(res => {
+    this.websiteService.deletesize(id).subscribe(res => {
       this.delRes = res
       if (this.delRes.msg == "Footer Features Deleted successfully") {
         window.location.reload()
@@ -183,7 +183,7 @@ selectAlll() {
   formdata.append('image', this.FooterFeaturesForm.get('image')?.value);
  
   if (this.FooterFeaturesForm.valid) {
-    this.coreService.addFooterFeature(formdata).subscribe(res => {
+    this.websiteService.addFooterFeature(formdata).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
@@ -208,7 +208,7 @@ update(){
     formdata.append('title', this.FooterFeaturesForm.get('title')?.value);
     formdata.append('image', this.FooterFeaturesForm.get('image')?.value);
 
-    this.coreService.updateFooterFeature(formdata, this.id).subscribe(res => {
+    this.websiteService.updateFooterFeature(formdata, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Footer Features Updated Sucessfully") {
@@ -240,7 +240,7 @@ update(){
   resData:any;
   editForm(id: number) {
     this.id = id
-    this.coreService.getFooterFeatureById(id).subscribe(res => {
+    this.websiteService.getFooterFeatureById(id).subscribe(res => {
       this.resData=res
       this.resData.map((data: any) => {
         console.log(data);

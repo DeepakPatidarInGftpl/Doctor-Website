@@ -4,12 +4,13 @@ import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-servi
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-detailspurchase-bill',
-  templateUrl: './detailspurchase-bill.component.html',
-  styleUrls: ['./detailspurchase-bill.component.scss']
+  selector: 'app-details-debitnotes',
+  templateUrl: './details-debitnotes.component.html',
+  styleUrls: ['./details-debitnotes.component.scss']
 })
-export class DetailspurchaseBillComponent implements OnInit {
+export class DetailsDebitnotesComponent implements OnInit {
 
+  
   constructor(private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location) { }
   id: any;
   ngOnInit(): void {
@@ -18,7 +19,7 @@ export class DetailspurchaseBillComponent implements OnInit {
   }
   purchaseBillDetail: any
   getdata() {
-    this.purchaseService.getPurchaseBillById(this.id).subscribe(res => {
+    this.purchaseService.getDebitNotesById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.purchaseBillDetail = res
         console.log(res);
@@ -29,4 +30,5 @@ export class DetailspurchaseBillComponent implements OnInit {
     this.location.back();
   }
 }
+
 

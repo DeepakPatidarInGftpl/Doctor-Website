@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { WebsiteService } from 'src/app/Services/website/website.service';
 import Swal from 'sweetalert2';
-
 @Component({
   selector: 'app-banner',
   templateUrl: './banner.component.html',
@@ -26,7 +24,7 @@ export class BannerComponent implements OnInit {
   pageSize: number = 5;
 
   itemsPerPage = 5;
-  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService,) {
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,) {
 
   }
 
@@ -46,7 +44,7 @@ export class BannerComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.deleteBanner(id).subscribe(res => {
+        this.websiteService.deleteBanner(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Banner Deleted successfully") {
             this.tableData
@@ -79,7 +77,7 @@ export class BannerComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.bannerIsActive(id, '').subscribe(res => {
+        this.websiteService.bannerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Banner Is active Updated Successfully") {
             this.ngOnInit()
@@ -108,7 +106,7 @@ export class BannerComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.bannerIsActive(id, '').subscribe(res => {
+        this.websiteService.bannerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Banner active Updated Successfully") {
             this.ngOnInit()
@@ -142,15 +140,15 @@ export class BannerComponent implements OnInit {
     //   },
 
     // };
-    // this.coreService.gettax();
+    // this.websiteService.gettax();
     // // this.tableData = this.QueryService.taxList;
     // // console.log(this.tableData);
-    // this.coreService.taxBehavior.subscribe(() => {
+    // this.websiteService.taxBehavior.subscribe(() => {
     //   if (localStorage.getItem('taxList')) {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("taxList")!))
     //   }
     // })
-    this.coreService.getBanner().subscribe(res => {
+    this.websiteService.getBanner().subscribe(res => {
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -173,7 +171,7 @@ export class BannerComponent implements OnInit {
     }
   }
   deleteId(id: number) {
-    this.coreService.deleteBanner(id).subscribe(res => {
+    this.websiteService.deleteBanner(id).subscribe(res => {
       this.delRes = res
       if (this.delRes.msg == "Banner Deleted successfully") {
         window.location.reload()
@@ -206,7 +204,7 @@ export class BannerComponent implements OnInit {
       formdata.append('image', this.bannerForm.get('image')?.value);
 
 
-      this.coreService.addBanner(formdata).subscribe(res => {
+      this.websiteService.addBanner(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
@@ -234,7 +232,7 @@ export class BannerComponent implements OnInit {
       formdata.append('url', this.bannerForm.get('url')?.value);
       formdata.append('image', this.bannerForm.get('image')?.value);
 
-      this.coreService.updateBanner(formdata, this.id).subscribe(res => {
+      this.websiteService.updateBanner(formdata, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Banner Updated Sucessfully") {
@@ -270,7 +268,7 @@ export class BannerComponent implements OnInit {
   resEdit:any
   editForm(id: number) {
     this.id = id
-    this.coreService.getBannerbById(id).subscribe(res => {
+    this.websiteService.getBannerbById(id).subscribe(res => {
       console.log(res);
       this.resEdit=res;
       this.resEdit.map((data: any) => {

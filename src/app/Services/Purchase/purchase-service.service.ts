@@ -78,7 +78,6 @@ export class PurchaseServiceService {
   }
   
   // purchase-bill
-
     
   getPurchaseBill(){
     let url =this.apiUrl+'/pv-api/purchase_bill/';
@@ -102,6 +101,33 @@ export class PurchaseServiceService {
   }
   deletePurchaseBill(id: number) {
     let url = this.apiUrl + '/pv-api/purchase_bill/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
+
+  // debit notes
+  getDebitNotes(){
+    let url =this.apiUrl+'/pv-api/debit_note/';
+    return this.http.get(url);
+  }
+  addDebitNotes(data:any){
+    let url = this.apiUrl+'/pv-api/debit_note/';
+    return this.http.post(url,data);
+  }
+  getDebitNotesById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/debit_note/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  DebitNotesIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/debit_note/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  updateDebitNotes(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/debit_note/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  deleteDebitNotes(id: number) {
+    let url = this.apiUrl + '/pv-api/debit_note/?id=';
     return this.http.delete(`${url}${id}`)
   }
 }
