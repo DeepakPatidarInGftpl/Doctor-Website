@@ -1357,31 +1357,7 @@ export class CoreService {
       })
     })
   }
-  // /pv-api/footer_features/
-  getFooterFeature() {
-    let url = this.apiUrl + '/pv-api/footer_features/';
-    return this.http.get(url)
-  }
-  getFooterFeatureById(id) {
-    let url = this.apiUrl + '/pv-api/footer_features/?id=';
-    return this.http.get(`${url}${id}`)
-  }
-  footerIsActive(id: any, data) {
-    let url = this.apiUrl + '/pv-api/footer_features/?id=';
-    return this.http.patch(`${url}${id}`, data);
-  }
-  addFooterFeature(data) {
-    let url = this.apiUrl + '/pv-api/footer_features/';
-    return this.http.post(url, data);
-  }
-  updateFooterFeature(data: any, id: any): Observable<any> {
-    let url = this.apiUrl + '/pv-api/footer_features/?id=';
-    return this.http.put<any>(`${url}${id}`, data)
-  }
-  deleteFooterFeature(id: number) {
-    let url = this.apiUrl + '/pv-api/footer_features/?id=';
-    return this.http.delete(`${url}${id}`)
-  }
+  
   // fnancial year
   getFinancialYear() {
     let url = this.apiUrl + '/pv-api/financial_year/';
@@ -1452,32 +1428,7 @@ export class CoreService {
     return this.http.delete(`${url}${id}`)
   }
 
-  // banner
-  getBanner() {
-    let url = this.apiUrl + '/pv-api/banner/';
-    return this.http.get(url)
-  }
-  getBannerbById(id: any) {
-    let url = this.apiUrl + '/pv-api/banner/?id=';
-    return this.http.get(`${url}${id}`)
-  }
-  addBanner(data: any) {
-    let url = this.apiUrl + '/pv-api/banner/';
-    return this.http.post(url, data)
-  }
-  updateBanner(data: any, id: number) {
-    let url = this.apiUrl + '/pv-api/banner/?id=';
-    return this.http.put(`${url}${id}`, data)
-  }
-
-  deleteBanner(id: any) {
-    let url = this.apiUrl + '/pv-api/banner/?id=';
-    return this.http.delete(`${url}${id}`)
-  }
-  bannerIsActive(id: any, data) {
-    let url = this.apiUrl + '/pv-api/banner/?id=';
-    return this.http.patch(`${url}${id}`, data);
-  }
+ 
 
   
   //category wise subcategory
@@ -1541,7 +1492,7 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/batch/';
     return this.http.get(url)
   }
-  getBatchById(id: number): Observable<any> {
+  getBatchById(id: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/batch/?id='
     return this.http.get<any>(`${url}${id}`)
   }
