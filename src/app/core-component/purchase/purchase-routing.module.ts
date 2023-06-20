@@ -44,15 +44,15 @@ const routes: Routes = [
       ),
   },
 
-  
-      {
-        path: 'material-Inward-list',
-        loadChildren: () =>
-          import('./material-inward/material-inward.module').then(
-            (m) => m.MaterialInwardModule
-          ),
-      },
- 
+
+  {
+    path: 'material-Inward-list',
+    loadChildren: () =>
+      import('./material-inward/material-inward.module').then(
+        (m) => m.MaterialInwardModule
+      ),
+  },
+
   {
     path: 'addmaterial-Inward',
     loadChildren: () =>
@@ -83,31 +83,61 @@ const routes: Routes = [
       ),
   },
 
-{
-path: 'addpurchase-bill',
-loadChildren: () =>
-  import('./addpurchase-bill/addpurchase-bill.module').then(
-    (m) => m.AddpurchaseBillModule
-  ),
-},
-{
-path: 'editpurchase-bill/:id',
-loadChildren: () =>
-  import('./updatepurchase-bill/updatepurchase-bill.module').then(
-    (m) => m.UpdatepurchaseBillModule
-  ),
-},
-{
-path: 'purchase-billDetails/:id',
-loadChildren: () =>
-  import('./detailspurchase-bill/detailspurchase-bill.module').then(
-    (m) => m.DetailspurchaseBillModule
-  ),
-},
+  {
+    path: 'addpurchase-bill',
+    loadChildren: () =>
+      import('./addpurchase-bill/addpurchase-bill.module').then(
+        (m) => m.AddpurchaseBillModule
+      ),
+  },
+  {
+    path: 'editpurchase-bill/:id',
+    loadChildren: () =>
+      import('./updatepurchase-bill/updatepurchase-bill.module').then(
+        (m) => m.UpdatepurchaseBillModule
+      ),
+  },
+  {
+    path: 'purchase-billDetails/:id',
+    loadChildren: () =>
+      import('./detailspurchase-bill/detailspurchase-bill.module').then(
+        (m) => m.DetailspurchaseBillModule
+      ),
+  },
+
+  {
+    path: 'debit-notes-list',
+    loadChildren: () =>
+      import('./debitnotes/debitnotes.module').then(
+        (m) => m.DebitnotesModule
+      ),
+  },
+
+  {
+    path: 'adddebit-notes',
+    loadChildren: () =>
+      import('./add-debitnotes/add-debitnotes.module').then(
+        (m) => m.AddDebitnotesModule
+      ),
+  },
+  {
+    path: 'editdebit-notes/:id',
+    loadChildren: () =>
+      import('./update-debitnotes/update-debitnotes.module').then(
+        (m) => m.UpdateDebitnotesModule
+      ),
+  },
+  {
+    path: 'debit-notesDetails/:id',
+    loadChildren: () =>
+      import('./details-debitnotes/details-debitnotes.module').then(
+        (m) => m.DetailsDebitnotesModule
+      ),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class PurchaseRoutingModule {}
+export class PurchaseRoutingModule { }

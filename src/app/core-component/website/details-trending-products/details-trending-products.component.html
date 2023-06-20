@@ -1,0 +1,84 @@
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                            style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                            Back to Trending Products</h6>
+                    <h4>New Trending Products</h4>
+                </div>
+                <div class="page-btn">
+                    <a routerLink="//website/trendingProducts" class="btn btn-added">
+                        <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Trending Products
+                    </a>
+                </div>
+            </div>
+            <div class="company-details-card card" >
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="Trending Products">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th class="th">Discount</th>
+                                            <td class="td">{{trendingDetail?.discount +'%'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+<br>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <td class="th">Product Name</td>
+                                            <td class="th">Variant Name</td>
+                                            <td class="th">Barcode</td>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let cart of trendingDetail?.variant">
+                                            <td class="td">{{cart?.product_title}}</td>
+                                            <td class="td">{{cart?.variant_name}}</td>
+                                            <td class="td">{{cart?.sku}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Variants">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <td class="th">Product Name</td>
+                                            <td class="th">Variant Name</td>
+                                            <td class="th">Barcode</td>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let cart of trendingDetail?.variant">
+                                            <td class="td">{{cart?.product_title}}</td>
+                                            <td class="td">{{cart?.variant_name}}</td>
+                                            <td class="td">{{cart?.sku}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+                <div class="d-flex align-items-center my-3 mx-3">
+                    <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                    <span
+                        [ngClass]="{'bg-lightgreen': trendingDetail?.is_active === true, 'bg-lightred' : trendingDetail?.is_active === false,'bg-lightyellow' : trendingDetail?.is_active === 'Partial' }"
+                        class="badges">{{trendingDetail?.is_active}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
