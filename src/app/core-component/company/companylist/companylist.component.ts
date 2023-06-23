@@ -17,11 +17,8 @@ export class CompanylistComponent implements OnInit {
   initChecked: boolean = false
   public tableData: any | company
 
-
   constructor(private QueryService: QueryService, private companyService: CompanyService, private router: Router) {
     this.QueryService.filterToggle()
-
-
   }
 
   confirmText(index: any, id: any) {
@@ -42,15 +39,21 @@ export class CompanylistComponent implements OnInit {
         this.companyService.deleteCompany(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Company Deleted successfully") {
-            this.ngOnInit()
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
       }
     });
   }
@@ -76,8 +79,8 @@ export class CompanylistComponent implements OnInit {
     //   this.tableData = JSON.parse(localStorage.getItem('companyList')!);
 
     // })
-    this.companyService.getCompany().subscribe(res=>{
-      this.tableData=res;
+    this.companyService.getCompany().subscribe(res => {
+      this.tableData = res;
     })
 
   }

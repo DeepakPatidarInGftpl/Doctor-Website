@@ -169,6 +169,10 @@ mat-form-field {
   border-top: none;
 }
 
+.mat-form-field-appearance-legacy .mat-form-field-label {
+  transform: perspective(100px);
+  top: 47% !important;
+}
 .progressbar {
   background-color: #FF9F43;
   margin-top: 40px;

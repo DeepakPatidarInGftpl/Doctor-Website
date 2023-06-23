@@ -43,16 +43,22 @@ export class CustomerComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deleteCustomer(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Deleted successfully") {
+          if (this.delRes.msg == "Customer Deleted successfully") {
            this.ngOnInit()
+           Swal.fire({
+            icon: 'success',
+            title: 'Deleted!',
+            text: 'Your file has been deleted.',
+          });
+          this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.erro,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
       }
     });
   }
@@ -116,10 +122,12 @@ export class CustomerComponent implements OnInit {
       }
     });
   }
+  loader=true;
   ngOnInit(): void {
     this.contactService.getCustomer().subscribe(res => {
       console.log(res);
       this.tableData = res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
   }

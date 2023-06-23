@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import { environment } from 'src/environments/environment';
@@ -17,14 +18,14 @@ export class CategorylistComponent implements OnInit, OnDestroy {
 
   apiUrl = environment.api
   title: any;
-p:number=1
-pageSize: number = 10;
-itemsPerPage:number=10;
-  constructor(private QueryService: QueryService, private coreServ: CoreService, private router: Router) {
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage: number = 10;
+  constructor(private QueryService: QueryService, private coreServ: CoreService, private router: Router, private toastr: ToastrService) {
     this.QueryService.filterToggle()
   }
 
-  delRes:any
+  delRes: any
   confirmText(index: any, id) {
     Swal.fire({
       title: 'Are you sure?',
@@ -41,84 +42,98 @@ itemsPerPage:number=10;
     }).then((t) => {
       if (t.isConfirmed) {
         this.coreServ.deleteProductCateg(id).subscribe(res => {
-          console.log(res);
+          this.delRes = res;
+          console.log(this.delRes);
+          if (this.delRes.msg == 'Product Category Deleted successfully') {
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+          } else {
+            console.log(this.delRes.error);
+            // this.toastr.error(this.delRes.error)
+            Swal.fire({
+              icon: 'error',
+              title: 'Deleted!',
+              text: this.delRes.error,
+            });
+          }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+
+        // this.tableData.splice(index, 1);
       }
     });
 
   }
-  select=false
+  select = false
   // active deactive
   deActivate(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Deactivate this Category!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Deactivate it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreServ.categoryIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.msg == "Product Category Is active Updated Successfully") {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Deactivate!',
-         text: 'Category Is Deactivate Successfully.',
-       });
-     }
-   });
- }
- Active(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Active this Category!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Active it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreServ.categoryIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.msg == "Product Category Is active Updated Successfully") {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Active!',
-         text: 'Category Is Active Successfully.',
-       });
-     }
-   });
- }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this Category!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreServ.categoryIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Product Category Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deactivate!',
+          text: 'Category Is Deactivate Successfully.',
+        });
+      }
+    });
+  }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this Category!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreServ.categoryIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Product Category Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: 'Category Is Active Successfully.',
+        });
+      }
+    });
+  }
 
-
+  loader = true;
   ngOnInit() {
 
     this.coreServ.getProductCategor().subscribe(res => {
       this.tableData = res;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     // this.coreServ.ProdCategBehaveSub.subscribe(() => {
@@ -145,9 +160,9 @@ itemsPerPage:number=10;
   }
 
 
-  
+
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }

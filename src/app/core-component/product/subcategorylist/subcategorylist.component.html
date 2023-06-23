@@ -158,6 +158,9 @@
                             </td>
                         </tr> -->
                     </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loaders"></mat-progress-bar>
+                     </div>
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
@@ -215,7 +218,7 @@
                                 <input type="text" formControlName="discount" id="discount" [ngClass]="{
                                     'is-invalid': f['discount'].touched && f['discount'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex-432)
+                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex: 1-100)
                                 </span>
 
                             </div>
@@ -278,11 +281,16 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-12">
+                        <!-- <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit </button>
-                            <!-- <a routerLink="/product/subcategorylist" class="btn btn-cancel">Cancel</a> -->
+                            <a routerLink="/product/subcategorylist" class="btn btn-cancel">Cancel</a>
+                        </div> -->
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Submit</button>
                         </div>
-
                     </div>
                 </form>
             </div>
@@ -307,7 +315,7 @@
                                 <input type="text" formControlName="discount" id="discount" [ngClass]="{
                                     'is-invalid': f['discount'].touched && f['discount'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex-432)
+                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex: 1-100)
                                 </span>
 
                             </div>
@@ -367,13 +375,17 @@
                                     <span class="text-danger" *ngIf="image && image.invalid && image.touched">Select
                                         image
                                     </span>
+                                    <span class="text-danger" *ngIf="imgError">Select image
+                                    </span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-lg-12">
-                            <button class="btn btn-submit me-2">Submit</button>
-                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
+                            <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Submit</button>
                         </div>
 
                     </div>

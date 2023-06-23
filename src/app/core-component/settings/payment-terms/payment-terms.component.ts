@@ -52,14 +52,21 @@ export class PaymentTermsComponent implements OnInit {
           if (this.delRes.msg == "Deleted successfully") {
             this.tableData
             this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
       }
     });
   }
@@ -123,6 +130,7 @@ export class PaymentTermsComponent implements OnInit {
      }
    });
  }
+ loader=true;
   ngOnInit(): void {
     this.paymentTermsForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -130,6 +138,7 @@ export class PaymentTermsComponent implements OnInit {
     })
    
     this.contactService.getPaymentTerms().subscribe(res=>{
+      this.loader=false;
       this.tableData=res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -170,16 +179,18 @@ export class PaymentTermsComponent implements OnInit {
   }
 
   addRes: any
-  
+  loaders=false;
  submit() {
   console.log(this.paymentTermsForm.value);
   console.log(this.id);
 
   if (this.paymentTermsForm.valid) {
+    this.loaders=true;
     this.contactService.addPaymentTerms(this.paymentTermsForm.value).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.paymentTermsForm.reset()
         // window.location.reload();
@@ -196,10 +207,12 @@ export class PaymentTermsComponent implements OnInit {
 
 update(){
   if (this.paymentTermsForm.valid) {
+    this.loaders=true;
     this.contactService.updatePaymentTerms(this.paymentTermsForm.value, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Payment Terms Updated Sucessfully") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.paymentTermsForm.reset()
         this.addForm=true

@@ -123,6 +123,7 @@ export class FooterFeaturesComponent implements OnInit {
      }
    });
  }
+ loader=true;
   ngOnInit(): void {
     this.FooterFeaturesForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -131,6 +132,7 @@ export class FooterFeaturesComponent implements OnInit {
   
     
     this.websiteService.getFooterFeature().subscribe(res=>{
+      this.loader=false;
       this.tableData=res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -173,7 +175,7 @@ selectAlll() {
   }
 
   addRes: any
-  
+  loaders=false;
  submit() {
   console.log(this.FooterFeaturesForm.value);
   console.log(this.id);
@@ -183,10 +185,12 @@ selectAlll() {
   formdata.append('image', this.FooterFeaturesForm.get('image')?.value);
  
   if (this.FooterFeaturesForm.valid) {
+    this.loaders=true;
     this.websiteService.addFooterFeature(formdata).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.FooterFeaturesForm.reset()
         // window.location.reload();
@@ -203,6 +207,7 @@ selectAlll() {
 
 update(){
   if (this.FooterFeaturesForm.valid) {
+    this.loaders=true;
     var formdata: any = new FormData()
 
     formdata.append('title', this.FooterFeaturesForm.get('title')?.value);
@@ -212,6 +217,7 @@ update(){
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Footer Features Updated Sucessfully") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.FooterFeaturesForm.reset()
         this.addForm=true

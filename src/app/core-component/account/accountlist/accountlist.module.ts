@@ -3,15 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { AccountlistRoutingModule } from './accountlist-routing.module';
 import { AccountlistComponent } from './accountlist.component';
-import { DataTablesModule } from 'angular-datatables';
-import { FormsModule } from '@angular/forms';
-import { DatepickerModule } from 'ng2-datepicker';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { OrderModule } from 'ngx-order-pipe';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [
@@ -20,14 +14,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
   imports: [
     CommonModule,
     AccountlistRoutingModule,
-    DataTablesModule,
-    FormsModule,
-    DatepickerModule,
     SweetAlert2Module.forRoot(),
-    Ng2SearchPipeModule,
-    NgxPaginationModule,
-    OrderModule,
-    MatSlideToggleModule
+    SharedModuleModule
   ]
 })
 export class AccountlistModule { }

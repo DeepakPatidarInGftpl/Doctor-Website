@@ -141,7 +141,7 @@ export class UpdateCustomerComponent implements OnInit {
       this.city = res;
     })
   }
-  
+  loader=false;
   submit() {
     console.log(this.customerForm.value);
     
@@ -182,10 +182,12 @@ export class UpdateCustomerComponent implements OnInit {
 
 
     if (this.customerForm.valid) {
+      this.loader=true;
       this.contactService.updateCustomer(formdata,this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "customer updated successfully") {
+          this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.customerForm.reset()
           this.router.navigate(['//contacts/customer'])

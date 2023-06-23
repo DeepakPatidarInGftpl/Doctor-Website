@@ -45,14 +45,21 @@ export class TaxSlabsListComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Tax Slabs Deleted successfully") {
             this.ngOnInit()
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+      
+        // this.tableData.splice(index, 1);
       }
     });
   }
@@ -115,9 +122,11 @@ export class TaxSlabsListComponent implements OnInit {
       }
     });
   }
+  loader=true;
   ngOnInit(): void {
     this.coreService.getTaxSlab().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
   }

@@ -164,7 +164,7 @@ export class UpdateEmployeeComponent implements OnInit {
       this.city = res;
     })
   }
-
+loader=false;
   submit() {
 
     let formdata: any = new FormData();
@@ -218,10 +218,12 @@ export class UpdateEmployeeComponent implements OnInit {
     formdata.append('bank_id', JSON.stringify(bankData));
 
     if (this.employeeForm.valid) {
+      this.loader=true;
       this.contactService.updateEmployee(formdata,this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Employee updated successfully") {
+          this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
           this.router.navigate(['//contacts/employee'])

@@ -86,7 +86,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
 
     this.purchaseService.getPurchaseBillById(this.id).subscribe(res => {
       console.log(res);
-      this.getresbyId=res;
+      this.getresbyId = res;
       this.puchaseBillForm.patchValue(res);
       this.puchaseBillForm.get('supplier')?.patchValue(res.supplier.id);
       this.puchaseBillForm.get('material_inward_no')?.patchValue(res.material_inward_no.id);
@@ -122,6 +122,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         // total: j.total
       }))
       this.barcode[i] = j.barcode.sku;
+      this.productName[i] = j.barcode.product_title;
     })
     return formarr
   }
@@ -189,12 +190,12 @@ export class UpdatepurchaseBillComponent implements OnInit {
     console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     console.log(selectedItemId);
-    if(this.getresbyId.cart.length>=0){
+    if (this.getresbyId.cart.length >= 0) {
       const variants = this.puchaseBillForm.get('purchase_bill') as FormArray;
       variants.clear();
       this.addCart();
     }
-    
+
     this.puchaseBillForm.patchValue({
       supplier: selectedItemId
     });
@@ -331,24 +332,36 @@ export class UpdatepurchaseBillComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery');
+    this.searchProduct('someQuery', '');
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
-  searchProduct(event: any) {
+  productName: any[] = [];
+  isProduct = true;
+  
+  searchProduct(event: any, index: any) {
     console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
-        this.productOption = res;
+        // this.productOption = res;
         console.log(this.searchs);
+        this.productName[index] = this.searchs[0].product_title;
+        console.log(this.productName);
         this.check = true;
+        const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
+        barcode.patchValue({
+          barcode: this.searchs[0].id
+        });
       });
     } else {
       this.searchs = [];
     }
+  }
+  open() {
+    this.isProduct = false
   }
 
   calculateTotalQty(): number {

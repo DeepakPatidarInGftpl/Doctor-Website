@@ -110,6 +110,7 @@ export class UpdateDebitnotesComponent implements OnInit {
         batch:j.batch.id
       }))
       this.barcode[i] = j.barcode.sku;
+      this.productName[i]=j.barcode.product_title;
     })
     return formarr
   }
@@ -307,24 +308,40 @@ export class UpdateDebitnotesComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery');
+    this.searchProduct('someQuery','');
   };
   staticValue: string = 'Static Value';
-  searchs: any[] = [];
-  searchProduct(event: any) {
+  searchs: any[] = []; productName: any[] = [];
+  isProduct = true;
+
+  searchProduct(event: any, index: any) {
     console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
+
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
         this.productOption = res;
         console.log(this.searchs);
+        this.productName[index] = this.searchs[0].product_title;
+        console.log(this.productName);
         this.check = true;
+        const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+        barcode.patchValue({
+          barcode: this.searchs[0].id
+        });
+        this.coreService.getBatchById(this.searchs[0].id).subscribe(res=>{
+          console.log(res);
+          this.batchList=res;
+        })
       });
     } else {
       this.searchs = [];
     }
+  }
+  open() {
+    this.isProduct = false
   }
 
   calculateTotalQty(): number {

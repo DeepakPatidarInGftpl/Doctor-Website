@@ -121,6 +121,7 @@ export class CitylistComponent implements OnInit {
       }
     });
   }
+  loader=true;
   ngOnInit(): void {
     this.cityForm = this.fb.group({
       city: new FormControl('', [Validators.required]),
@@ -147,6 +148,7 @@ export class CitylistComponent implements OnInit {
     // })
 
     this.coreService.getcity().subscribe(res => {
+      this.loader=false;
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -186,16 +188,19 @@ export class CitylistComponent implements OnInit {
       this.stateList = res
     })
   }
-  addRes: any
+  addRes: any;
+  loaders=false;
   submit() {
     console.log(this.cityForm.value);
     console.log(this.id);
 
     if (this.cityForm.valid) {
+      this.loaders=true;
       this.coreService.addcity(this.cityForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.cityForm.reset()
           // window.location.reload();
@@ -213,10 +218,12 @@ export class CitylistComponent implements OnInit {
   stateError = null
   update() {
     if (this.cityForm.valid) {
+      this.loaders=true;
       this.coreService.updatecity(this.cityForm.value, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "City updated successfully") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.cityForm.reset();
           this.addForm = true;

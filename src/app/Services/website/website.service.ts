@@ -94,10 +94,59 @@ export class WebsiteService {
   }
   deletesize(id: number) {
     let url = this.apiUrl + '/pv-api/size/?id=';
-    return this.http.delete(`${url}${id}`, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
+    return this.http.delete(`${url}${id}`)
+  }
+
+  // deal of the day
+  getDealOfTheDay(){
+    let url =this.apiUrl+'/pv-api/deals_of_the_day/';
+    return this.http.get(url);
+  }
+  addDealOfTheDay(data:any){
+    let url = this.apiUrl+'/pv-api/deals_of_the_day/';
+    return this.http.post(url,data);
+  }
+  getDealOfTheDayById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/deals_of_the_day/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  DealOfTheDayIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/deals_of_the_day/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  updateDealOfTheDay(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/deals_of_the_day/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  deleteDealOfTheDay(id: number) {
+    let url = this.apiUrl + '/pv-api/deals_of_the_day/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
+  // deal of the day
+
+  getAddressStore(){
+    let url =this.apiUrl+'/pv-api/store_address/';
+    return this.http.get(url);
+  }
+  addAddressStore(data:any){
+    let url = this.apiUrl+'/pv-api/store_address/';
+    return this.http.post(url,data);
+  }
+  getAddressStoreById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/store_address/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  AddressStoreIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/store_address/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  updateAddressStore(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/store_address/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  deleteAddressStore(id: number) {
+    let url = this.apiUrl + '/pv-api/store_address/?id=';
+    return this.http.delete(`${url}${id}`)
   }
 }

@@ -112,6 +112,7 @@ export class AddEmployeeComponent implements OnInit {
     })
   }
 
+  loader=false;
   submit() {
     console.log(this.employeeForm.value);
 
@@ -166,10 +167,12 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('bank_id', JSON.stringify(bankData));
 
     if (this.employeeForm.valid) {
+      this.loader=true;
       this.contactService.addEmployee(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Successfuly Added") {
+          this.loader=false
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
           this.router.navigate(['//contacts/supplier'])

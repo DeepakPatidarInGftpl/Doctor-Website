@@ -122,7 +122,7 @@ export class StaticPagesComponent implements OnInit {
      }
    });
  }
-
+loader=true;
   ngOnInit(): void {
     this.staticPgForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -154,6 +154,7 @@ export class StaticPagesComponent implements OnInit {
     //   }
     // })
   this.coreService.getStaicPages().subscribe(res=>{
+    this.loader=false;
     this.tableData=res;
     this.selectedRows = new Array(this.tableData.length).fill(false);
   })

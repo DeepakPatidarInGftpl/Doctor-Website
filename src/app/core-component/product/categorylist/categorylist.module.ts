@@ -3,15 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { CategorylistRoutingModule } from './categorylist-routing.module';
 import { CategorylistComponent } from './categorylist.component';
-import { DataTablesModule } from 'angular-datatables';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { FormsModule } from '@angular/forms';
 import { AddcategoryModule } from "../addcategory/addcategory.module";
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { OrderModule } from 'ngx-order-pipe';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 @NgModule({
     declarations: [
         CategorylistComponent
@@ -19,14 +13,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     imports: [
         CommonModule,
         CategorylistRoutingModule,
-        DataTablesModule,
-        FormsModule,
-        SweetAlert2Module.forRoot(),
         AddcategoryModule,
-        Ng2SearchPipeModule,
-        NgxPaginationModule,
-        OrderModule,
-        MatSlideToggleModule
+       SharedModuleModule
     ]
 })
 export class CategorylistModule { }

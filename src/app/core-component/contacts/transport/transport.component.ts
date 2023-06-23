@@ -42,18 +42,25 @@ export class TransportComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.deleteSupplier(id).subscribe(res => {
+        this.contactService.deleteTransport(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Deleted successfully") {
-           this.ngOnInit()
+          if (this.delRes.msg == "Transport Deleted successfully") {
+           this.ngOnInit();
+           Swal.fire({
+            icon: 'success',
+            title: 'Deleted!',
+            text: 'Your file has been deleted.',
+          });
+          this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
       }
     });
   }
@@ -62,7 +69,7 @@ export class TransportComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this employee!",
+      text: "Do you want to Deactivate this Transport!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -74,16 +81,16 @@ export class TransportComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.SupplierIsActive(id,'').subscribe(res => {
+        this.contactService.TransportIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Is active Updated Successfully") {
+          if (this.delRes.msg == "Transport Is active Updated Successfully") {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Employee Is Deactivate Successfully.',
+          text: 'Transport Is Deactivate Successfully.',
         });
       }
     });
@@ -91,7 +98,7 @@ export class TransportComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this employee!",
+      text: "Do you want to Active this Transport!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -103,46 +110,27 @@ export class TransportComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.SupplierIsActive(id,'').subscribe(res => {
+        this.contactService.TransportIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Is active Updated Successfully") {
+          if (this.delRes.msg == "Transport Is active Updated Successfully") {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Employee Is Active Successfully.',
+          text: 'Transport Is Active Successfully.',
         });
       }
     });
   }
+
+  loader=true;
   ngOnInit(): void {
-    // this.dtOptions = {
-    //   dom: 'Btlpif',
-    //   pagingType: 'numbers',
-    //   language: {
-    //     search: ' ',
-    //     searchPlaceholder: "Search...",
-    //     info: "_START_ - _END_ of _TOTAL_ items",
-    //   },
-    //   initComplete: (settings, json) => {
-    //     $('.dt-buttons').appendTo('.wordset');
-    //     $('.dataTables_filter').appendTo('.search-input');
-    //   },
-
-    // };
-    //  this.coreService.getEmploye();
-
-    //  this.coreService.employeeBehavior.subscribe( () => {
-    //  this.tableData = JSON.parse(localStorage.getItem('employeeList')!);
-    //  })
-
-    // console.log(this.coreService.data);
-
     this.contactService.getTransport().subscribe(res => {
       console.log(res);
       this.tableData = res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
   }

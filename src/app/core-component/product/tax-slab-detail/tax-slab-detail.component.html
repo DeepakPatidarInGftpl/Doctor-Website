@@ -72,7 +72,7 @@
                                     <tr>   
                                         <th>From Amount </th>
                                         <th>To Amount </th>   
-                                        <th>Tax </th>      
+                                        <th>Tax %</th>      
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -80,7 +80,7 @@
                                        
                                         <td>{{amount.from_amount}}</td>
                                         <td>{{amount.to_amount}}</td>
-                                      <td>{{amount.tax}}</td>   
+                                      <td>{{amount?.tax?.tax_percentage}}</td>   
                                     </tr>
                                 </tbody>
                             </table>

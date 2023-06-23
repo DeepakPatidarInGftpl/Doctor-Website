@@ -112,12 +112,15 @@ export class EditcompanyComponent implements OnInit {
       this.yearDetails = res;
     })
   }
-  dateError = null
+  dateError = null;
+  loaders=false;
   submit() {
     if (this.companyForm.valid) {
+      this.loaders=true;
       this.copmpanyService.updateCompany(this.companyForm.value, this.companyId).subscribe(res => {
         console.log(res);
         if (res.msg == "Company updated successfully") {
+          this.loaders=false;
           this.toastr.success(res.msg);
           this.companyForm.reset();
           this.router.navigate(['//company/companylist'])

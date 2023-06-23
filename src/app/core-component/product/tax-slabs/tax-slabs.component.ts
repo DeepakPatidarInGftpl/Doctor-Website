@@ -135,13 +135,16 @@ export class TaxSlabsComponent implements OnInit {
   }
 
   addRes: any;
+  loaders=false;
   submit() {
     console.log(this.taxSlabForm.value);
     if (this.taxSlabForm.valid) {
+      this.loaders=true;
       this.coreService.addTaxSlab(this.taxSlabForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res;
         if(this.addRes.msg == "Tax Slabs Created") {
+          this.loaders=false;
           this.toastrService.success(this.addRes.msg);
           this.router.navigate(['product/taxSlabList']);
         }
@@ -151,5 +154,9 @@ export class TaxSlabsComponent implements OnInit {
       console.log('forms invalid');
     }
   }
-
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
+  }
 }

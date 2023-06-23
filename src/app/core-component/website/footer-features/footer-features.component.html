@@ -13,7 +13,6 @@
         </div>
         <div class="card">
             <div class="card-body">
-
                 <div class="table-top">
                     <div class="search-set">
                         <div class="search-path">
@@ -108,6 +107,9 @@
                         </tbody>
                      
                     </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                    </div>
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
@@ -178,9 +180,15 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-12">
+                        <!-- <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit</button>
                             <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                        </div> -->
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Submit</button>
                         </div>
 
                     </div>
@@ -219,8 +227,10 @@
                         </div>
 
                         <div class="col-lg-12">
-                            <button class="btn btn-submit me-2">Submit</button>
-                            <a routerLink="/product/units" class="btn btn-cancel">Cancel</a>
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Submit</button>
                         </div>
 
                     </div>

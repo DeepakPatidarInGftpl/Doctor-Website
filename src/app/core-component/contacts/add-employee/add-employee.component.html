@@ -337,24 +337,27 @@
                 <div class="form-group mt-4">
                         <div class="d-flex ">
                             <input type="checkbox" formControlName="login_access"
-                                [id]="'checkboxTax-'">
+                                [id]="'checkboxTax-'" [ngModel]="true">
                             <label [for]="'checkboxTax-'" class="d_flex"
                                 style="margin-bottom: 0; margin-left: 5px;">Login Access</label>
                         </div>
                         <div class="d-flex ">
                             <input type="checkbox" formControlName="apply_tds"
-                                [id]="'checkboxMeasure-'">
+                                [id]="'checkboxMeasure-'" [ngModel]="true">
                             <label [for]="'checkboxMeasure-'" class="d_flex"
                                 style="margin-bottom: 0; margin-left: 5px;">Apply TDS</label>
                         </div>
                   
                 </div>
             </div>
+        
             <div class="col-lg-12">
-                <button class="btn btn-submit me-2">Submit</button>
-                <a routerLink="//employee/employeelist" class="btn btn-cancel">Cancel</a>
+                <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Submit</button>
+                    <a routerLink="//employee/employeelist" class="btn btn-cancel">Cancel</a>
             </div>
-      
       </div>
     </form>
     </div>

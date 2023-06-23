@@ -45,7 +45,7 @@ export class AddpurchaseComponent implements OnInit {
   searchForm!: FormGroup;
   subcategoryList;
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.purchaseForm = this.fb.group({
       supplier: new FormControl('', [Validators.required]),
       order_date: new FormControl(''),
@@ -126,7 +126,7 @@ export class AddpurchaseComponent implements OnInit {
       supplier: selectedItemId
     });
   }
-  oncheckVariant(event:any,index){
+  oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(selectedItemId);
     const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
@@ -139,7 +139,7 @@ export class AddpurchaseComponent implements OnInit {
   submit() {
     console.log(this.purchaseForm.value);
     if (this.purchaseForm.valid) {
-      this.loader=true;
+      this.loader = true;
       let formdata: any = new FormData();
       formdata.append('supplier', this.purchaseForm.get('supplier')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
@@ -171,9 +171,11 @@ export class AddpurchaseComponent implements OnInit {
         console.log(res);
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
-          this.loader=false;
+          this.loader = false;
           this.toastrService.success(this.getRes.msg);
           this.router.navigate(['//purchase/purchaselist'])
+        }else{
+          this.loader=false
         }
       })
     } else {
@@ -198,25 +200,25 @@ export class AddpurchaseComponent implements OnInit {
     console.log(value);
     const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
     const filteredVariant = include
-      ? this.variants?.filter(variant =>variant && (variant.product_title?.toLowerCase().includes(filterValue) ||
-            variant.sku?.toLowerCase().includes(filterValue) ||
-            variant.variant_name?.toLowerCase().includes(filterValue) ||
-            variant.id?.toString().includes(filterValue))
-        )
+      ? this.variants?.filter(variant => variant && (variant.product_title?.toLowerCase().includes(filterValue) ||
+        variant.sku?.toLowerCase().includes(filterValue) ||
+        variant.variant_name?.toLowerCase().includes(filterValue) ||
+        variant.id?.toString().includes(filterValue))
+      )
       : this.variants?.filter(variant =>
-          variant &&
-          !(variant.product_title?.toLowerCase().includes(filterValue) ||
-            variant.sku?.toLowerCase().includes(filterValue) ||
-            variant.variant_name?.toLowerCase().includes(filterValue) ||
-            variant.id?.toString().includes(filterValue))
-        );
+        variant &&
+        !(variant.product_title?.toLowerCase().includes(filterValue) ||
+          variant.sku?.toLowerCase().includes(filterValue) ||
+          variant.variant_name?.toLowerCase().includes(filterValue) ||
+          variant.id?.toString().includes(filterValue))
+      );
     if (!include && (!filteredVariant || filteredVariant.length === 0)) {
       console.log("No results found");
       filteredVariant.push({ product_title: "No data found" });
     }
     return filteredVariant || [];
   }
-  
+
   isLastCart(index: number): boolean {
     const cartControls = this.getCart().controls;
     return index === cartControls.length - 1;
@@ -244,37 +246,51 @@ export class AddpurchaseComponent implements OnInit {
   barcode: any[] = [];
   v_id: any;
   variantChanged(value: any, index) {
+    console.log(value);
+    
     console.log(index);
     console.log(value?.sku);
     this.barcode[index] = value.sku;
     console.log(this.barcode[index]);
     console.log(this.barcode);
-    
+
     this.v_id = value.id;
     const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery');
+    this.searchProduct('someQuery','');
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
-  searchProduct(event: any) {
+  productName: any[] = [];
+  isProduct = true;
+
+  searchProduct(event: any,index:any) {
     console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
+  
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
         this.productOption = res;
         console.log(this.searchs);
+        this.productName[index]= this.searchs[0].product_title;
+        console.log(this.productName);
         this.check = true;
+        const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+        barcode.patchValue({
+          barcode: this.searchs[0].id
+        });
       });
     } else {
       this.searchs = [];
     }
   }
-
+  open() {
+    this.isProduct = false
+  }
   calculateTotalQty(): number {
     let totalQty = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {

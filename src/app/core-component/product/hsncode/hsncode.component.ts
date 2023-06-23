@@ -52,15 +52,22 @@ export class HsncodeComponent implements OnInit {
         this.coreService.deleteHSNcode(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "HSNCode Deleted successfully") {
-            this.ngOnInit()
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
       }
     });
   }
@@ -124,6 +131,7 @@ export class HsncodeComponent implements OnInit {
       }
     });
   }
+  loader=true;
   ngOnInit(): void {
     this.hsncodeForm = this.fb.group({
       // title: new FormControl('', [Validators.required]),
@@ -155,6 +163,7 @@ export class HsncodeComponent implements OnInit {
     //   }
     // })
     this.coreService.getHSNCode().subscribe(res => {
+      this.loader=false;
       this.tableData = res
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -283,8 +292,7 @@ export class HsncodeComponent implements OnInit {
   //   }
   // }
 
-
-
+loaders=false;
   submit() {
     console.log(this.hsncodeForm.value);
     var formdata: any = new FormData()
@@ -294,10 +302,12 @@ export class HsncodeComponent implements OnInit {
 
 
     if (this.hsncodeForm.valid) {
+      this.loaders=true;
       this.coreService.addHSNcode(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "HSNCode Successfuly Added") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.hsncodeForm.reset()
           this.addForm = true
@@ -321,10 +331,12 @@ export class HsncodeComponent implements OnInit {
     formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
 
     if (this.hsncodeForm.valid) {
+      this.loaders=true;
       this.coreService.updateHSNcode(formdata, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "HSNCode updated successfully") {
+          this.loaders=false
           this.toastr.success(this.addRes.msg)
           this.hsncodeForm.reset()
           this.addForm = true;

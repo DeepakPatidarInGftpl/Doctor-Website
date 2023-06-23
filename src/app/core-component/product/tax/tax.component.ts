@@ -52,14 +52,20 @@ export class TaxComponent implements OnInit {
           if (this.delRes.msg == "Tax Deleted successfully") {
             this.tableData
             this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+        // this.tableData.splice(index, 1);
       }
     });
   }
@@ -123,10 +129,11 @@ export class TaxComponent implements OnInit {
      }
    });
  }
+ loader=true;
   ngOnInit(): void {
     this.taxForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      tax_percentage: new FormControl('', [Validators.required]),   
+      tax_percentage: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),   
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -152,6 +159,7 @@ export class TaxComponent implements OnInit {
     // })
   this.coreService.gettaxd().subscribe(res=>{
     this.tableData=res;
+    this.loader=false;
    this.selectedRows = new Array(this.tableData.length).fill(false);
   })
   }
@@ -219,21 +227,24 @@ export class TaxComponent implements OnInit {
   //   }
   // }
 
-  
+  loaders=false
  submit() {
   console.log(this.taxForm.value);
   console.log(this.id);
 
   if (this.taxForm.valid) {
-  
+  this.loaders=true;
     this.coreService.addtax(this.taxForm.value).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.taxForm.reset()
         // window.location.reload();
         this.ngOnInit()
+      }else{
+        this.toastr.error(this.addRes.tax_percentage)
       }
     }, err => {
       console.log(err.error.gst);
@@ -247,10 +258,12 @@ export class TaxComponent implements OnInit {
 
 update(){
   if (this.taxForm.valid) {
+    this.loaders=true;
     this.coreService.updatetax(this.taxForm.value, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Tax updated successfully") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.taxForm.reset()
         this.addForm=false

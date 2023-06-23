@@ -100,6 +100,7 @@ export class EditpurchaseComponent implements OnInit {
         total: j.total
       }))
       this.barcode[i] = j.barcode.sku;
+      this.productName[i]=j.barcode.product_title;
     })
     return formarr
   }
@@ -188,11 +189,12 @@ export class EditpurchaseComponent implements OnInit {
       barcode: selectedItemId
     });
   }
-
+loader=false;
   getRes: any;
   submit() {
     console.log(this.purchaseForm.value);
     if (this.purchaseForm.valid) {
+      this.loader=true;
       let formdata: any = new FormData();
       formdata.append('supplier', this.purchaseForm.get('supplier')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
@@ -226,6 +228,8 @@ export class EditpurchaseComponent implements OnInit {
         if (this.getRes.IsSuccess == "True") {
           this.toastrService.success(this.getRes.msg);
           this.router.navigate(['//purchase/purchaselist'])
+        }else {
+          this.loader = false
         }
       })
     } else {
@@ -300,28 +304,39 @@ export class EditpurchaseComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery');
+    this.searchProduct('someQuery','');
   };
 
   searchs: any[] = [];
   Qty: any[] = []
-
+productName: any[] = [];
+  isProduct = true;
   staticValue: string = 'Static Value';
-  searchProduct(event: any) {
+ 
+  searchProduct(event: any,index:any) {
     console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
+        // this.productOption = res;
         console.log(this.searchs);
+        this.productName[index]= this.searchs[0].product_title;
+        console.log(this.productName);
         this.check = true;
+        const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+        barcode.patchValue({
+          barcode: this.searchs[0].id
+        });
       });
     } else {
       this.searchs = [];
     }
   }
-
+  open() {
+    this.isProduct = false
+  }
   calculateTotalQty(): number {
     let totalQty = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {

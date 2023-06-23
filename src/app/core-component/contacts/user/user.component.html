@@ -60,10 +60,11 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Name <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">User Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Mobile Number <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Email<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">User Type <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Permission <i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Permission <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
@@ -77,21 +78,21 @@
                             </label>
                         </td>
                         <td class="productimgname">
-                            <a routerLink="//employee/employee-details/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
+                            <a  style="line-height: 3;">{{products.name}}</a>
                         </td>
                         <td>{{products.username}}</td>
-                        <td>{{products.mobile_no}}</td>
+                        <td>{{products.phone_number}}</td>
                         <td>{{products.email}}</td>
                         <td>{{products.user_type}}</td>
-                        <td>{{products.permission}}</td>
+                        <!-- <td>{{products.permission}}</td> -->
                         <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
                         <td>
-                            <a class="me-1" routerLink="//contacts/employee-details/{{products.id}}">
+                            <!-- <a class="me-1" routerLink="//contacts/employee-details/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
-                            </a>
-                            <a class="me-1" routerLink="//employee/updateUser/{{products.id}}">
+                            </a> -->
+                            <a class="me-1" routerLink="//contacts/updateUser/{{products.id}}">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);">
@@ -101,6 +102,9 @@
                     </tr>
                 </tbody>
              </table>
+             <div class="progressbar">
+                <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+            </div>
             <div class="row">
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
