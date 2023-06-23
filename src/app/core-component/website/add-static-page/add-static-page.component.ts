@@ -80,15 +80,18 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
 
   }
 
-  addRes: any
+  addRes: any;
+  loaders=false;
   submit() {
     console.log(this.staticPgForm.value);
 
     if (this.staticPgForm.valid) {
+      this.loaders=true;
       this.coreService.addStatic(this.staticPgForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.staticPgForm.reset()
           this.router.navigate(['/website/staticPage'])

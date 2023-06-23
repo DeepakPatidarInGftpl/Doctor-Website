@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ThemeService } from 'ng2-charts';
 
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
@@ -115,13 +114,16 @@ yearDetails:any
       this.city=res
     })
   }
-  dateError = null
+  dateError = null;
+  loaders=false;
   submit() {
     console.log(this.companyForm.value);
     if (this.companyForm.valid) {
+      this.loaders=true;
       this.copmpanyService.postCompany(this.companyForm.value).subscribe(res => {
         console.log(res);
         if (res.msg == "Successfuly Added") {
+          this.loaders=false;
           this.toastr.success(res.msg)
           this.companyForm.reset()
           this.router.navigate(['//company/companylist'])

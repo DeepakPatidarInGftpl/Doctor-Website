@@ -35,7 +35,7 @@ export class AddmaterialInwardComponent implements OnInit {
 
   variantControlName = 'barcode';
   variantControl = new FormControl();
-  
+
   variants: any[] = [];
   filteredVariants: Observable<any[]>;
 
@@ -46,12 +46,12 @@ export class AddmaterialInwardComponent implements OnInit {
 
   subcategoryList;
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.materialForm = this.fb.group({
       supplier: new FormControl('', [Validators.required]),
-      purchase_order: new FormControl('',[Validators.required]),
+      purchase_order: new FormControl('', [Validators.required]),
       po_date: new FormControl(''),
-      material_inward_date: new FormControl('',[Validators.required]),
+      material_inward_date: new FormControl('', [Validators.required]),
       material_inward_no: new FormControl(''),
       shipping_note: new FormControl(''),
       recieved_by: new FormControl(''),
@@ -114,12 +114,12 @@ export class AddmaterialInwardComponent implements OnInit {
       this.variants = res;
     })
   }
-  purchaseList:any;
-  getPurchase(){
-    this.purchaseService.getPurchase().subscribe(res=>{
-     this.purchaseList=res; 
-     console.log(this.purchaseList);
-     
+  purchaseList: any;
+  getPurchase() {
+    this.purchaseService.getPurchase().subscribe(res => {
+      this.purchaseList = res;
+      console.log(this.purchaseList);
+
     })
   }
   oncheck(event: any) {
@@ -133,7 +133,7 @@ export class AddmaterialInwardComponent implements OnInit {
       supplier: selectedItemId
     });
   }
-  oncheckVariant(event:any,index){
+  oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(selectedItemId);
     const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
@@ -146,8 +146,8 @@ export class AddmaterialInwardComponent implements OnInit {
   submit() {
     console.log(this.materialForm.value);
     if (this.materialForm.valid) {
-      
-      this.loader=true;
+
+      this.loader = true;
       let formdata: any = new FormData();
       formdata.append('supplier', this.materialForm.get('supplier')?.value);
       formdata.append('purchase_order', this.materialForm.get('purchase_order')?.value);
@@ -175,7 +175,7 @@ export class AddmaterialInwardComponent implements OnInit {
         console.log(res);
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
-          this.loader=false;
+          this.loader = false;
           this.toastrService.success(this.getRes.msg);
           this.router.navigate(['//purchase/material-Inward-list'])
         }
@@ -201,25 +201,25 @@ export class AddmaterialInwardComponent implements OnInit {
     console.log(value);
     const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
     const filteredVariant = include
-      ? this.variants?.filter(variant =>variant && (variant.product_title?.toLowerCase().includes(filterValue) ||
-            variant.sku?.toLowerCase().includes(filterValue) ||
-            variant.variant_name?.toLowerCase().includes(filterValue) ||
-            variant.id?.toString().includes(filterValue))
-        )
+      ? this.variants?.filter(variant => variant && (variant.product_title?.toLowerCase().includes(filterValue) ||
+        variant.sku?.toLowerCase().includes(filterValue) ||
+        variant.variant_name?.toLowerCase().includes(filterValue) ||
+        variant.id?.toString().includes(filterValue))
+      )
       : this.variants?.filter(variant =>
-          variant &&
-          !(variant.product_title?.toLowerCase().includes(filterValue) ||
-            variant.sku?.toLowerCase().includes(filterValue) ||
-            variant.variant_name?.toLowerCase().includes(filterValue) ||
-            variant.id?.toString().includes(filterValue))
-        );
+        variant &&
+        !(variant.product_title?.toLowerCase().includes(filterValue) ||
+          variant.sku?.toLowerCase().includes(filterValue) ||
+          variant.variant_name?.toLowerCase().includes(filterValue) ||
+          variant.id?.toString().includes(filterValue))
+      );
     if (!include && (!filteredVariant || filteredVariant.length === 0)) {
       console.log("No results found");
       filteredVariant.push({ product_title: "No data found" });
     }
     return filteredVariant || [];
   }
-  
+
   isLastCart(index: number): boolean {
     const cartControls = this.getCart().controls;
     return index === cartControls.length - 1;
@@ -247,30 +247,43 @@ export class AddmaterialInwardComponent implements OnInit {
     this.barcode[index] = value.sku;
     console.log(this.barcode[index]);
     console.log(this.barcode);
-    
+
     this.v_id = value.id;
     const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery');
+    this.searchProduct('someQuery', '');
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
-  searchProduct(event: any) {
+  productName: any[] = [];
+  isProduct = true;
+
+  searchProduct(event: any, index: any) {
     console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
+
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
         this.productOption = res;
         console.log(this.searchs);
+        this.productName[index] = this.searchs[0].product_title;
+        console.log(this.productName);
         this.check = true;
+        const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+        barcode.patchValue({
+          barcode: this.searchs[0].id
+        });
       });
     } else {
       this.searchs = [];
     }
+  }
+  open() {
+    this.isProduct = false
   }
 
   calculateTotalQty(): number {

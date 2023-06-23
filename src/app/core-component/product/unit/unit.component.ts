@@ -51,15 +51,22 @@ export class UnitComponent implements OnInit {
         this.coreService.deleteUnits(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Unit Deleted successfully") {
-           this.ngOnInit()
+           this.ngOnInit();
+           Swal.fire({
+            icon: 'success',
+            title: 'Deleted!',
+            text: 'Your file has been deleted.',
+          });
+          this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
       }
     });
   }
@@ -123,6 +130,7 @@ export class UnitComponent implements OnInit {
      }
    });
  }
+ loader=true;
   ngOnInit(): void {
     this.unitsForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -155,6 +163,7 @@ export class UnitComponent implements OnInit {
     
     this.coreService.getUnit().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
@@ -229,16 +238,18 @@ selectAlll() {
     this.unitsForm.reset();
   }
 
-
+loaders=false;
  submit() {
     console.log(this.unitsForm.value);
     console.log(this.id);
 
     if (this.unitsForm.valid) {
+      this.loaders=true;
       this.coreService.addUnits(this.unitsForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()
           // window.location.reload()
@@ -255,10 +266,12 @@ selectAlll() {
 
   update(){
     if (this.unitsForm.valid) {
+      this.loaders=true;
       this.coreService.updateUnits(this.unitsForm.value, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Unit updated successfully") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()
         //  window.location.reload()

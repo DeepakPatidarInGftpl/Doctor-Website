@@ -51,14 +51,21 @@ export class ColorsComponent implements OnInit {
           if (this.delRes.msg == "Colour Deleted successfully") {
             this.tableData
             this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+      
+        // this.tableData.splice(index, 1);
       }
     });
   }
@@ -123,6 +130,7 @@ export class ColorsComponent implements OnInit {
     });
   }
   form!: FormGroup;
+  loader=true
   ngOnInit(): void {
     this.form = this.fb.group({
       img: new FormControl('')
@@ -130,7 +138,7 @@ export class ColorsComponent implements OnInit {
 
     this.colorForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      color_code: new FormControl('', [Validators.required]),
+      color_code: new FormControl('', [Validators.required,Validators.pattern(/^#[0-9a-fA-F]$/)]),
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -158,6 +166,7 @@ export class ColorsComponent implements OnInit {
     // })
     this.coreService.getColor().subscribe(res => {
       this.tableData = res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
@@ -233,16 +242,18 @@ export class ColorsComponent implements OnInit {
   //   }
   // }
 
-
+loaders=false;
   submit() {
     console.log(this.colorForm.value);
     console.log(this.id);
 
     if (this.colorForm.valid) {
+      this.loaders=true;
       this.coreService.addcolor(this.colorForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.colorForm.reset()
           // window.location.reload();
@@ -259,10 +270,12 @@ export class ColorsComponent implements OnInit {
 
   update() {
     if (this.colorForm.valid) {
+      this.loaders=true;
       this.coreService.updatecolor(this.colorForm.value, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Colour updated successfully") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.colorForm.reset()
           this.addForm = true

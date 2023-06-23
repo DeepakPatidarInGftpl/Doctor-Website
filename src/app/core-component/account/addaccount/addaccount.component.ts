@@ -86,13 +86,16 @@ export class AddaccountComponent implements OnInit {
     })
   }
 
-  addRes: any
-  dateError = null
+  addRes: any;
+  dateError = null;
+  loaders=false;
   submit() {
     console.log(this.accountForm.value);
     if (this.accountForm.valid) {
+      this.loaders=true;
       this.coreService.addAccount(this.accountForm.value).subscribe(res => {
         console.log(res);
+        this.loaders=false;
         this.addRes = res
         if (this.addRes.msg == "Successfuly Added") {
           this.toastr.success(this.addRes.msg)

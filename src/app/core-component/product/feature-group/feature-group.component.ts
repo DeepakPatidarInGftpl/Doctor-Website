@@ -52,14 +52,22 @@ export class FeatureGroupComponent implements OnInit {
           if (this.delRes.msg == "FeatureGroup Deleted successfully") {
             this.tableData
             this.ngOnInit();
+            this.tableData.splice(index, 1);
+      
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+        // this.tableData.splice(index, 1);
       }
     });
   }
@@ -124,6 +132,7 @@ export class FeatureGroupComponent implements OnInit {
      }
    });
  }
+ loader=true;
   ngOnInit(): void {
     this.featureForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -154,6 +163,7 @@ export class FeatureGroupComponent implements OnInit {
     // })
     this.coreService.getFuature_groupD().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getFeature();
@@ -276,7 +286,7 @@ export class FeatureGroupComponent implements OnInit {
   //   }
   // }
 
-  
+  loaders=false;
  submit() {
   console.log(this.featureForm.value);
   console.log(this.id);
@@ -286,11 +296,12 @@ export class FeatureGroupComponent implements OnInit {
   formData.append('feature', JSON.stringify(this.featureForm.get('feature')?.value));
 
   if (this.featureForm.valid) {
-  
+  this.loaders=true;
     this.coreService.addFuature_group(formData).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "FeatureGroup Successfuly Added") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.featureForm.reset()
         // window.location.reload();
@@ -311,10 +322,12 @@ update(){
   formData.append('feature', JSON.stringify(this.featureForm.get('feature')?.value));
 
   if (this.featureForm.valid) {
+    this.loaders=true;
     this.coreService.updateFuature_group(formData, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "FeatureGroup updated successfully") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.featureForm.reset()
         this.addForm=true

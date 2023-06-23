@@ -16,9 +16,9 @@ export class EmployeeComponent implements OnInit {
   public tableData: any | employee;
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
 
   constructor(private contactService: ContactService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
@@ -40,18 +40,25 @@ export class EmployeeComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.deleteSupplier(id).subscribe(res => {
+        this.contactService.deleteEmployee(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Employee Deleted successfully") {
-           this.ngOnInit()
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
       }
     });
   }
@@ -72,7 +79,7 @@ export class EmployeeComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.EmployeeIsActive(id,'').subscribe(res => {
+        this.contactService.EmployeeIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Employee Is active Updated Successfully") {
             this.ngOnInit()
@@ -101,7 +108,7 @@ export class EmployeeComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.EmployeeIsActive(id,'').subscribe(res => {
+        this.contactService.EmployeeIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Employee Is active Updated Successfully") {
             this.ngOnInit()
@@ -115,17 +122,19 @@ export class EmployeeComponent implements OnInit {
       }
     });
   }
+  loader = true;
   ngOnInit(): void {
- 
+
     this.contactService.getEmployee().subscribe(res => {
       console.log(res);
       this.tableData = res;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
@@ -140,7 +149,7 @@ export class EmployeeComponent implements OnInit {
 
     //search sorting filtering not wroking when direct getting variable data
   }
-select=false
+  select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -161,7 +170,7 @@ select=false
 
     })
   }
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();

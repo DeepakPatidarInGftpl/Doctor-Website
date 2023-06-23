@@ -55,6 +55,13 @@ export class HeaderComponent implements OnInit {
         this.toastr.success('LogOut Successfull');
         this.Router.navigate(['/auth/signin'])
         this.authServ.doLogout()
+      }, (err: any) => {
+        console.log(err.error.detail);
+        if (err.error.detail) {
+          localStorage.removeItem('token');
+          this.toastr.success('LogOut Successfull');
+          this.Router.navigate(['/auth/signin'])
+        }
       })
     } else {
       localStorage.removeItem('token');

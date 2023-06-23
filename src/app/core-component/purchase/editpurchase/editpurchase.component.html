@@ -105,23 +105,27 @@
                                             <input class="input" type="text" placeholder="Search Barcode"
                                                 [attr.data-index]="i"
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                (keyup)="searchProduct(id.value)" (blur)="hideSearch()">
+                                                (keyup)="searchProduct(id.value,i)" (blur)="hideSearch()">
                                         </td>
-                                        <td>  
-                                            <mat-form-field class="w-100">
+                                        <td>
+                                            <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
+                                                (click)="open()" placeholder="Search Product" *ngIf="isProduct"
+                                                class="input">
+                                            <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
                                                 <input type="text" placeholder="Search Product" aria-label="Produt"
                                                     matInput [formControl]="variantControl" [matAutocomplete]="auto"
                                                     style="height: 18px;">
-                                                     
                                                 <mat-autocomplete #auto="matAutocomplete">
                                                     <mat-option *ngFor="let variant of filteredVariants | async"
                                                         [value]="variant?.product_title"
                                                         (onSelectionChange)="oncheckVariant(variant,i)"
-                                                        (onSelectionChange)="variantChanged(variant, i)">{{ variant?.product_title}}</mat-option>
+                                                        (onSelectionChange)="variantChanged(variant, i)">{{
+                                                        variant?.product_title}}</mat-option>
                                                     <ng-container *ngIf="(filteredVariants | async) as variants">
                                                         <mat-option *ngIf="variants?.length === 0"
                                                             [value]="'No data found'">
-                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+ add Product</a>
+                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+
+                                                                add Product</a>
                                                         </mat-option>
                                                     </ng-container>
                                                 </mat-autocomplete>
@@ -132,8 +136,11 @@
                                         <td><input type="text" formControlName="mrp" class="input"></td>
                                         <td><input type="text" formControlName="discount" class="input"></td>
                                         <td><input type="text" formControlName="tax" class="input"></td>
-                                        <td class="text-end"><input type="text" formControlName="landing_cost" class="input"></td>
-                                        <td class="text-end"><input type="text" formControlName="total" class="input" [value]="calculateTotalEveryIndex(i).toString()" [ngModel]="calculateTotalEveryIndex(i).toString()"></td>
+                                        <td class="text-end"><input type="text" formControlName="landing_cost"
+                                                class="input"></td>
+                                        <td class="text-end"><input type="text" formControlName="total" class="input"
+                                                [value]="calculateTotalEveryIndex(i).toString()"
+                                                [ngModel]="calculateTotalEveryIndex(i).toString()"></td>
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -191,7 +198,10 @@
             </div>
 
             <div class="col-lg-12">
-                <a href="javascript:void(0);" class="btn btn-submit me-2" (click)="submit()">Submit</a>
+                <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit()">Submit</button>
+                <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Submit</button>
                 <a routerLink="//purchase/purchaselist" class="btn btn-cancel">Cancel</a>
             </div>
         </form>

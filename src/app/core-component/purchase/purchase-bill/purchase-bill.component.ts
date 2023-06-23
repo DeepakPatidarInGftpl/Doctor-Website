@@ -40,14 +40,21 @@ export class PurchaseBillComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "PURCHASE BILL Deleted successfully") {
             this.ngOnInit()
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+        
       }
     });
   }

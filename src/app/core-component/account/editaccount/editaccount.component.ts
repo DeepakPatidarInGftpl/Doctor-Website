@@ -114,12 +114,15 @@ export class EditaccountComponent implements OnInit {
   addRes: any
   dateError=null;
   countryError=null;
-  stateError=null
+  stateError=null;
+  loaders=false;
   submit() {
     console.log(this.accountForm.value);
     if (this.accountForm.valid) {
+      this.loaders=true;
       this.coreService.updateAccount(this.accountForm.value, this.id).subscribe(res => {
         console.log(res);
+        this.loaders=false;
         this.addRes = res
         if (this.addRes.msg == "Account updated successfully") {
           this.toastr.success(this.addRes.msg)

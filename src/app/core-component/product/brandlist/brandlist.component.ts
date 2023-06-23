@@ -47,15 +47,22 @@ export class BrandlistComponent implements OnInit {
         this.coreService.deletebrand(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Brands Deleted successfully") {
-            this.tableData
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.ngOnInit()
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+      
+        // this.tableData.splice(index, 1);
       }
     });
   }
@@ -123,12 +130,13 @@ export class BrandlistComponent implements OnInit {
 p:number=1
 pageSize: number = 10;
 itemsPerPage:number=10;
+loader=true;
   ngOnInit(): void {
     this.brandForm = new FormGroup({
       title: new FormControl('', [Validators.required]),
       code: new FormControl(''),
       image: new FormControl('', Validators.required),
-      discount: new FormControl('',Validators.pattern(/^[0-9]*$/)),
+      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       subcategory_group: new FormArray<any>([], [Validators.required]),
       subcategory: new FormArray([], [Validators.required]),
     })
@@ -156,6 +164,7 @@ itemsPerPage:number=10;
     // })
     this.coreService.getBrand().subscribe(res=>{
       this.tableData=res;
+      this.loader=false
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getSubcatGroup();
@@ -348,7 +357,7 @@ itemsPerPage:number=10;
   //     console.log('forms invalid');
   //   }
   // }
-
+  loaders=false;
   submit() {
     console.log(this.brandForm.value);
     console.log(this.id);
@@ -362,11 +371,12 @@ itemsPerPage:number=10;
     formData.append('subcategory', JSON.stringify(this.brandForm.get('subcategory')?.value));
 
     if (this.brandForm.valid) {
-    
+    this.loaders=true;
       this.coreService.addbrand(formData).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loaders=false
           this.toastr.success(this.addRes.msg)
           this.brandForm.reset()
           // window.location.reload()
@@ -400,10 +410,12 @@ this.show=!this.show;
     formData.append('subcategory', JSON.stringify(this.brandForm.get('subcategory')?.value));
 
     if (this.brandForm.valid) {
+      this.loaders=true;
       this.coreService.updatebrand(formData, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Brands updated successfully") {
+          this.loaders=false
           this.toastr.success(this.addRes.msg)
           this.brandForm.reset()
           this.addForm=true
