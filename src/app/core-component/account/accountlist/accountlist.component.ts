@@ -13,12 +13,10 @@ import { Account } from 'src/app/interfaces/account';
 })
 export class AccountlistComponent implements OnInit {
 
-
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any | Account
 
- 
   titlee: any;
   name:any
   p:number=1
@@ -47,15 +45,21 @@ export class AccountlistComponent implements OnInit {
         this.coreService.deleteAccount(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Account Deleted successfully") {
-            this.ngOnInit()
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          }else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
       }
     });
   }
@@ -119,6 +123,7 @@ export class AccountlistComponent implements OnInit {
       }
     });
   }
+  loader=true;
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -139,6 +144,7 @@ export class AccountlistComponent implements OnInit {
       // })
     this.coreService.getAccount().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
   }

@@ -67,14 +67,17 @@ export class UpdateStaticPageComponent implements OnInit, OnDestroy {
 
   }
 
-  addRes: any
+  addRes: any;
+  loaders=false;
   submit() {
     console.log(this.staticPgForm.value);
     if (this.staticPgForm.valid) {
+      this.loaders=true;
       this.coreService.updateStaticPage(this.staticPgForm.value, this.slugid).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Updated Sucessfully") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.staticPgForm.reset()
           // window.location.reload();

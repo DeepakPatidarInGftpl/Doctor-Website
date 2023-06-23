@@ -51,14 +51,21 @@ export class FinancialYearComponent implements OnInit {
           if (this.delRes.msg == "Deleted successfully") {
             this.tableData
             this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+      
       }
     });
   }
@@ -122,6 +129,7 @@ export class FinancialYearComponent implements OnInit {
      }
    });
  }
+ loader=true;
   ngOnInit(): void {
     this.FinancialYearForm = this.fb.group({
       start_year: new FormControl('', [Validators.required]),
@@ -129,6 +137,7 @@ export class FinancialYearComponent implements OnInit {
     })
    
     this.coreService.getFinancialYear().subscribe(res=>{
+      this.loader=false;
       this.tableData=res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -169,16 +178,18 @@ export class FinancialYearComponent implements OnInit {
   }
 
   addRes: any
-  
+  loaders=false;
  submit() {
   console.log(this.FinancialYearForm.value);
   console.log(this.id);
 
   if (this.FinancialYearForm.valid) {
+    this.loaders=true;
     this.coreService.addFinancialYear(this.FinancialYearForm.value).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.FinancialYearForm.reset()
         // window.location.reload();
@@ -195,10 +206,12 @@ export class FinancialYearComponent implements OnInit {
 
 update(){
   if (this.FinancialYearForm.valid) {
+    this.loaders=true;
     this.coreService.updateFinancialYear(this.FinancialYearForm.value, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Finincial Year Updated Sucessfully") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.FinancialYearForm.reset()
         this.addForm=true

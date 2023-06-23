@@ -28,7 +28,6 @@ export class SizeComponent implements OnInit {
   itemsPerPage = 5;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
-   
   }
 
   delRes: any
@@ -52,14 +51,21 @@ export class SizeComponent implements OnInit {
           if (this.delRes.msg == "Size Deleted successfully") {
             this.tableData
             this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+      
+        // this.tableData.splice(index, 1);
       }
     });
   }
@@ -123,10 +129,11 @@ export class SizeComponent implements OnInit {
      }
    });
  }
+ loader=true
   ngOnInit(): void {
     this.sizeForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      code: new FormControl('', [Validators.required]),   
+      code: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),   
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -154,6 +161,7 @@ export class SizeComponent implements OnInit {
     
     this.coreService.getSize().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
   }
@@ -186,16 +194,18 @@ export class SizeComponent implements OnInit {
   }
 
   addRes: any
-  
+  loaders=false;
  submit() {
   console.log(this.sizeForm.value);
   console.log(this.id);
 
   if (this.sizeForm.valid) {
+    this.loaders=true;
     this.coreService.addsize(this.sizeForm.value).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.sizeForm.reset()
         // window.location.reload();
@@ -212,10 +222,12 @@ export class SizeComponent implements OnInit {
 
 update(){
   if (this.sizeForm.valid) {
+    this.loaders=true;
     this.coreService.updatesize(this.sizeForm.value, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Size updated successfully") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.sizeForm.reset()
         this.addForm=true

@@ -22,7 +22,7 @@ export class AddCustomerComponent implements OnInit {
 
   ngOnInit(): void {
     this.customerForm = this.fb.group({
-      login_access: new FormControl(''),
+      login_access: new FormControl('',[Validators.required]),
       name: new FormControl('',),
       company_name: new FormControl('',),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
@@ -30,19 +30,19 @@ export class AddCustomerComponent implements OnInit {
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl(''),
       remark: new FormControl(''),
-      date_of_birth: new FormControl('',),
-      anniversary_date: new FormControl('',),
+      date_of_birth: new FormControl('',[Validators.required]),
+      anniversary_date: new FormControl('',[Validators.required]),
       gst_type: new FormControl('',),
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
-      apply_tds: new FormControl(''),
-      credit_limit: new FormControl('',),
+      apply_tds: new FormControl('',[Validators.required]),
+      credit_limit: new FormControl('',[Validators.required]),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl('',[ Validators.pattern(/^[0-9]*$/)]),
-      invite_code:new FormControl(''),
-      membership:new FormControl('')
+      opening_balance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      invite_code: new FormControl(''),
+      membership: new FormControl('')
     });
     this.getgstType()
     this.addAddress();
@@ -50,17 +50,17 @@ export class AddCustomerComponent implements OnInit {
     this.getPaymentTerms();
   }
 
-  gstType:any;
-  getgstType(){
-    this.contactService.getTypeOfGst().subscribe(res=>{
+  gstType: any;
+  getgstType() {
+    this.contactService.getTypeOfGst().subscribe(res => {
       console.log(res);
-      this.gstType=res;
+      this.gstType = res;
     })
   }
-  paymentTerms:any;
-  getPaymentTerms(){
-    this.contactService.getPaymentTerms().subscribe(res=>{
-      this.paymentTerms=res;
+  paymentTerms: any;
+  getPaymentTerms() {
+    this.contactService.getPaymentTerms().subscribe(res => {
+      this.paymentTerms = res;
     })
   }
 
@@ -109,6 +109,7 @@ export class AddCustomerComponent implements OnInit {
       this.city = res;
     })
   }
+  loaders = false;
   submit() {
     console.log(this.customerForm.value);
 
@@ -146,36 +147,38 @@ export class AddCustomerComponent implements OnInit {
       addressData.push(featureObj);
     });
     formdata.append('address', JSON.stringify(addressData));
-
+    this.loaders = true
     // if (this.customerForm.valid) {
-      this.contactService.addCustomer(this.customerForm.value).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        if (this.addRes.msg == "Data Created") {
-          this.toastr.success(this.addRes.msg)
-          this.customerForm.reset()
-          this.router.navigate(['//contacts/customer'])
-        } else{
-          this.toastr.error(this.addRes?.opening_balance[0]);
-          if(this.addRes?.email){
-            this.toastr.error(this.addRes?.email[0])
-          }}
-      }, err => {
-        console.log(err.error.gst);
-         if(err.error){
-          this.toastr.error(err.error?.opening_balance[0]);
-          this.toastr.error(err.error?.email[0])
+    this.contactService.addCustomer(this.customerForm.value).subscribe(res => {
+      console.log(res);
+      this.addRes = res
+      if (this.addRes.msg == "Data Created") {
+        this.toastr.success(this.addRes.msg)
+        this.loaders=false;
+        this.customerForm.reset()
+        this.router.navigate(['//contacts/customer'])
+      } else {
+        this.toastr.error(this.addRes?.opening_balance[0]);
+        if (this.addRes?.email) {
+          this.toastr.error(this.addRes?.email[0])
         }
-        else if (err.error.dob) {
-          this.dateError = 'Date (format:dd/mm/yyyy)';
-          setTimeout(() => {
-            this.dateError = ''
-          }, 2000);
-        } 
-      })
+      }
+    }, err => {
+      console.log(err.error.gst);
+      if (err.error) {
+        this.toastr.error(err.error?.opening_balance[0]);
+        this.toastr.error(err.error?.email[0])
+      }
+      else if (err.error.dob) {
+        this.dateError = 'Date (format:dd/mm/yyyy)';
+        setTimeout(() => {
+          this.dateError = ''
+        }, 2000);
+      }
+    })
     // } else {
-      this.customerForm.markAllAsTouched()
-      console.log('hhhhhh');
+    this.customerForm.markAllAsTouched()
+    console.log('hhhhhh');
 
     // }
   }

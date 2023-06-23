@@ -120,6 +120,7 @@ export class BannerComponent implements OnInit {
       }
     });
   }
+  loader = true;
   ngOnInit(): void {
     this.bannerForm = this.fb.group({
       image: new FormControl('', [Validators.required]),
@@ -149,6 +150,7 @@ export class BannerComponent implements OnInit {
     //   }
     // })
     this.websiteService.getBanner().subscribe(res => {
+      this.loader = false;
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -190,14 +192,12 @@ export class BannerComponent implements OnInit {
   }
 
   addRes: any
-
+  loaders = false;
   submit() {
     console.log(this.bannerForm.value);
-
-
     if (this.bannerForm.valid) {
       console.log('valid');
-
+      this.loaders = true;
       var formdata: any = new FormData()
       formdata.append('title', this.bannerForm.get('title')?.value);
       formdata.append('url', this.bannerForm.get('url')?.value);
@@ -208,6 +208,7 @@ export class BannerComponent implements OnInit {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.bannerForm.reset()
           // window.location.reload();
@@ -225,8 +226,9 @@ export class BannerComponent implements OnInit {
 
   update() {
     console.log(this.id);
-    
+
     if (this.bannerForm.valid) {
+      this.loaders=true;
       var formdata: any = new FormData()
       formdata.append('title', this.bannerForm.get('title')?.value);
       formdata.append('url', this.bannerForm.get('url')?.value);
@@ -236,6 +238,7 @@ export class BannerComponent implements OnInit {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Banner Updated Sucessfully") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.bannerForm.reset()
           this.addForm = false
@@ -265,21 +268,21 @@ export class BannerComponent implements OnInit {
   addForm = true
   id: any
   editFormdata: any;
-  resEdit:any
+  resEdit: any
   editForm(id: number) {
     this.id = id
     this.websiteService.getBannerbById(id).subscribe(res => {
       console.log(res);
-      this.resEdit=res;
+      this.resEdit = res;
       this.resEdit.map((data: any) => {
         console.log(data);
         if (id == data.id) {
           console.log(data);
-          
+
           this.addForm = false
           this.bannerForm.patchValue({
-            title:data.title,
-            url:data.url
+            title: data.title,
+            url: data.url
           });
           this.editFormdata = res
         }

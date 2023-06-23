@@ -106,15 +106,16 @@
                                             <input class="input" type="text" placeholder="Search Barcode"
                                                 [attr.data-index]="i"
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                (keyup)="searchProduct(id.value)" (blur)="hideSearch()">
+                                                (keyup)="searchProduct(id.value,i)" (blur)="hideSearch()">
                                         </td>
                                         <td>  
-                                            <mat-form-field class="w-100">
+                                            <input type="text" [value]="productName[i]!== undefined ? productName[i]:''" (click)="open()" placeholder="Search Product" *ngIf="isProduct" class="input">
+      
+                                            <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
                                                 <input type="text" placeholder="Search Product" aria-label="Produt"
                                                     matInput [formControl]="variantControl" [matAutocomplete]="auto"
-                                                    style="height: 18px;">
-                                                     
-                                                <mat-autocomplete #auto="matAutocomplete">
+                                                    style="height: 18px;" >
+                                              <mat-autocomplete #auto="matAutocomplete">
                                                     <mat-option *ngFor="let variant of filteredVariants | async"
                                                         [value]="variant?.product_title"
                                                         (onSelectionChange)="oncheckVariant(variant,i)"

@@ -10,15 +10,15 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
 })
 export class VendorComponent implements OnInit {
 
- 
+
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any | employee;
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
 
   constructor(private contactService: ContactService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
@@ -43,15 +43,22 @@ export class VendorComponent implements OnInit {
         this.contactService.deleteEmployee(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Employee Deleted successfully") {
-           this.ngOnInit()
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
       }
     });
   }
@@ -60,7 +67,7 @@ export class VendorComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this employee!",
+      text: "Do you want to Deactivate this Vendor!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -72,16 +79,16 @@ export class VendorComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.SupplierIsActive(id,'').subscribe(res => {
+        this.contactService.VendorIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Is active Updated Successfully") {
+          if (this.delRes.msg == "Vendor Is active Updated Successfully") {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Employee Is Deactivate Successfully.',
+          text: 'Vendor Is Deactivate Successfully.',
         });
       }
     });
@@ -89,7 +96,7 @@ export class VendorComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this employee!",
+      text: "Do you want to Active this Vendor!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -101,30 +108,32 @@ export class VendorComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.SupplierIsActive(id,'').subscribe(res => {
+        this.contactService.VendorIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Is active Updated Successfully") {
+          if (this.delRes.msg == "Vendor Is active Updated Successfully") {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Employee Is Active Successfully.',
+          text: 'Vendor Is Active Successfully.',
         });
       }
     });
   }
+  loader = true;
   ngOnInit(): void {
     this.contactService.getVendor().subscribe(res => {
       console.log(res);
       this.tableData = res;
+      this.loader = false
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
@@ -139,7 +148,7 @@ export class VendorComponent implements OnInit {
 
     //search sorting filtering not wroking when direct getting variable data
   }
-select=false
+  select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -160,7 +169,7 @@ select=false
 
     })
   }
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();

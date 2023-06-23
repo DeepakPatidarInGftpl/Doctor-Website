@@ -71,10 +71,10 @@
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Purchase* </label>
+                        <label>Purchase Bill* </label>
                        <select formControlName="purchase" [ngClass]="{'is-invalid': f['purchase'].touched && f['purchase'].invalid}">
-                            <option value="" selected disabled>Select Purchase</option>
-                            <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase.order_no}}</option>
+                            <option value="" selected disabled>Select Purchase Bill</option>
+                            <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase.refrence_bill_no}}</option>
                         </select>
                     </div>
                 </div>
@@ -82,12 +82,6 @@
                     <div class="form-group">
                         <label>Shipping Date* </label>
                         <input type="date" formControlName="shipping_date" [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}">
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Export</label>
-                        <input type="text" formControlName="export" [ngClass]="{'is-invalid': f['export'].touched && f['export'].invalid}">
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
@@ -107,7 +101,14 @@
                         </select>
                     </div>
                 </div>
-              
+                <div class="col-lg-4 col-sm-6 col-12">
+                    <div class="form-group my-4">
+                        <div class="d-flex">
+                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true">
+                            <label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Export</label>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="table-responsive">
@@ -158,10 +159,13 @@
                                             <input class="input" type="text" placeholder="Search Barcode"
                                                 [attr.data-index]="i"
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                (keyup)="searchProduct(id.value)" (blur)="hideSearch()">
+                                                (keyup)="searchProduct(id.value,i)" (blur)="hideSearch()">
                                         </td>
                                         <td>  
-                                            <mat-form-field class="w-100">
+                                            <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
+                                            (click)="open()" placeholder="Search Product" *ngIf="isProduct"
+                                            class="input">
+                                        <mat-form-field class="w-100" *ngIf="!isProduct">
                                                 <input type="text" placeholder="Search Product" aria-label="Produt"
                                                     matInput [formControl]="variantControl" [matAutocomplete]="auto"
                                                     style="height: 18px;">

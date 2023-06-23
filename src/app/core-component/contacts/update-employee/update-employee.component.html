@@ -350,11 +350,17 @@
                       
                     </div>
                 </div>
-                <div class="col-lg-12">
+                <!-- <div class="col-lg-12">
                     <button class="btn btn-submit me-2">Submit</button>
                     <a routerLink="//employee/employeelist" class="btn btn-cancel">Cancel</a>
+                </div> -->
+                <div class="col-lg-12">
+                    <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                    <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Submit</button>
+                        <a routerLink="//employee/employeelist" class="btn btn-cancel">Cancel</a>
                 </div>
-          
           </div>
         </form>
     </div>

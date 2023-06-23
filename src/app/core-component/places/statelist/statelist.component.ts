@@ -50,14 +50,23 @@ export class StatelistComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "State Deleted successfully") {
           this.ngOnInit();
+          Swal.fire({
+            icon: 'success',
+            title: 'Deleted!',
+            text: 'Your file has been deleted.',
+          });
+          }else {
+            console.log(this.delRes);
+            // this.toastr.error(this.delRes.error)
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
+        // this.tableData.splice(index, 1);
       }
     });
   }
@@ -122,6 +131,7 @@ export class StatelistComponent implements OnInit {
      }
    });
  }
+ loader=true;
   ngOnInit(): void {
     this.stateForm = this.fb.group({
       state: new FormControl('', [Validators.required]),
@@ -148,6 +158,7 @@ export class StatelistComponent implements OnInit {
     //   this.tableData = JSON.parse(localStorage.getItem('stateList')!)
     // })
 this.coreService.getstate().subscribe(res=>{
+  this.loader=false;
   this.tableData=res;
   this.selectedRows = new Array(this.tableData.length).fill(false);
 })
@@ -189,17 +200,19 @@ selectAlll() {
       this.countryList = res
     })
   }
-  addRes: any
+  addRes: any;
+  loaders=false;
   submit() {
     console.log(this.stateForm.value);
     console.log(this.id);
 
     if (this.stateForm.valid) {
-
+this.loaders=true;
         this.coreService.addstate(this.stateForm.value).subscribe(res => {
           console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Data Created") {
+            this.loaders=false;
             this.toastr.success(this.addRes.msg)
             this.stateForm.reset()
             this.ngOnInit()
@@ -216,10 +229,12 @@ selectAlll() {
   countryError=null;
   update(){
     if (this.stateForm.valid) {
+      this.loaders=true;
         this.coreService.updatestate(this.stateForm.value, this.id).subscribe(res => {
           console.log(res);
           this.addRes = res
           if (this.addRes.msg == "State updated successfully") {
+            this.loaders=false;
             this.toastr.success(this.addRes.msg)
             this.stateForm.reset();
             this.addForm = true;

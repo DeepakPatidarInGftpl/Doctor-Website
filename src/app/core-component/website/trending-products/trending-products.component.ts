@@ -1,9 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { WebsiteService } from 'src/app/Services/website/website.service';
 import Swal from 'sweetalert2';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+
+// vaidation for future date
+function futureDateValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const selectedDate = new Date(control.value);
+    const currentDate = new Date();
+
+    if (selectedDate < currentDate) {
+      return { pastDate: true };
+    }
+
+    return null;
+  };
+}
 
 @Component({
   selector: 'app-trending-products',
@@ -125,10 +139,12 @@ export class TrendingProductsComponent implements OnInit {
       }
     });
   }
+  loader=true;
   ngOnInit(): void {
     this.trendingProductsForm = this.fb.group({
       variant: new FormArray([], [Validators.required]),
-      discount: new FormControl('', [Validators.pattern(/^[0-9]*$/),Validators.required]),
+      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
+      // datetime: new FormControl('', [Validators.required, futureDateValidator()])
     })
     //dropdown list
     this.dropdownSettings = {
@@ -143,6 +159,7 @@ export class TrendingProductsComponent implements OnInit {
 
     this.websiteService.getTrendingProducts().subscribe(res => {
       this.tableData = res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getVariant();
@@ -203,42 +220,58 @@ export class TrendingProductsComponent implements OnInit {
       })
     }
   }
-  
-  addRes: any
+
+  addRes: any;
+  loaders = false;
   submit() {
     console.log(this.trendingProductsForm.value);
     if (this.trendingProductsForm.valid) {
+      this.loaders=true
       console.log('valid');
-      var formdata: any = new FormData()
+      var formdata: any = new FormData();
       formdata.append('discount', this.trendingProductsForm.get('discount')?.value);
-      formdata.append('variant', JSON.stringify(this.trendingProductsForm.get('variant')?.value));
+  
+      // Filter out null values from the variant array
+      const variantArray = this.trendingProductsForm.get('variant')?.value.filter((value: any) => value !== null);
+      formdata.append('variant', JSON.stringify(variantArray));
+  
+      // formdata.append('datetime',this.trendingProductsForm.get('datetime')?.value);
+  
       this.websiteService.addTrendingProducts(formdata).subscribe(res => {
         console.log(res);
-        this.addRes = res
+        this.loaders=false;
+        this.addRes = res;
         if (this.addRes.Is_Sucess == "True") {
-          this.toastr.success(this.addRes.msg)
+          this.toastr.success(this.addRes.msg);
           this.trendingProductsForm.reset();
           this.selectedItems = [];
-          this.ngOnInit()
+          this.ngOnInit();
         }
       }, err => {
         console.log(err.error.gst);
-      })
+      });
     } else {
-      this.trendingProductsForm.markAllAsTouched()
+      this.trendingProductsForm.markAllAsTouched();
       console.log('forms invalid');
     }
   }
+  
 
   update() {
     console.log(this.id);
     console.log(this.trendingProductsForm.value);
     if (this.trendingProductsForm.valid) {
+      this.loaders=true
       var formdata: any = new FormData()
       formdata.append('discount', this.trendingProductsForm.get('discount')?.value);
-      formdata.append('variant', JSON.stringify(this.trendingProductsForm.get('variant')?.value));
+        // Filter out null values from the variant array
+        const variantArray = this.trendingProductsForm.get('variant')?.value.filter((value: any) => value !== null);
+        formdata.append('variant', JSON.stringify(variantArray));
+      // formdata.append('datetime',this.trendingProductsForm.get('datetime')?.value);
+      
       this.websiteService.updateTrendingProducts(formdata, this.id).subscribe(res => {
         console.log(res);
+        this.loaders=false
         this.addRes = res
         if (this.addRes.Is_Sucess == "True") {
           this.toastr.success(this.addRes.msg)
@@ -278,6 +311,7 @@ export class TrendingProductsComponent implements OnInit {
         this.addForm = false
         this.trendingProductsForm.patchValue({
           discount: this.resEdit.discount,
+          
         });
         // here selected data send value in formArray
         this.resEdit.variant.map((res: any) => {
@@ -301,18 +335,22 @@ export class TrendingProductsComponent implements OnInit {
   openaddForm() {
     this.addForm = true;
     this.trendingProductsForm.reset();
+    this.selectedItems = [];
   }
 
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
     } else {
-      this.tableData = this.tableData.filter(res => {
+      this.tableData = this.tableData.filter((res: any) => {
         console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
-      })
+
+        const matchingVariants = res.variant.filter((variant: any) =>
+          variant.product_title.toLowerCase().includes(this.titlee.toLowerCase())
+        );
+
+        return matchingVariants.length > 0;
+      });
     }
   }
   key = 'id'

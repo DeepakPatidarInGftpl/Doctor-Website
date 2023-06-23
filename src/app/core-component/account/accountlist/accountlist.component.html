@@ -12,7 +12,6 @@
             </div>
         </div>
 
-
         <!-- /product list -->
         <div class="card">
             <div class="card-body">
@@ -24,9 +23,6 @@
                                 <span><img src="assets/img/icons/closes.svg" alt="img"></span>
                             </a>
                         </div>
-                        <!-- <div class="search-input">
-                            <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
-                        </div> -->
                         <div class="search-input">
                             <a class="btn btn-searchset">
                               <img src="assets/img/icons/search-white.svg" alt="img"></a>
@@ -124,9 +120,6 @@
                                     </label>
                                 </td>
                                 <td class="productimgname">
-                                    <!-- <a href="javascript:void(0);" class="product-img">
-                                        <img [src]="products.img" alt="product">
-                                    </a> -->
                                     <a routerLink="//account/account-details/{{products.id}}" style="line-height: 3;">{{products.contact_person_name}}</a>
                                 </td>
                                 <td>{{products.title}}</td>
@@ -141,8 +134,7 @@
                                 <td>{{products.address}}</td>
                               
                                 <td>
-                                    <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
-                                    class="badges">{{products.is_active}}</span> -->
+                                    
                                     <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 
                                 </td>
@@ -182,6 +174,9 @@
                             </td>
                         </tr> -->
                     </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                    </div>
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page

@@ -177,4 +177,31 @@ deleteCustomer(id: number) {
   let url = this.apiUrl + '/pv-api/customer/?id=';
   return this.http.delete(`${url}${id}`)
 }
+
+//user
+
+getUser() {
+  let url = this.apiUrl + '/pv-api/user/';
+  return this.http.get(url)
+}
+getUserById(id: number): Observable<any> {
+  let url = this.apiUrl + '/pv-api/user/?id='
+  return this.http.get<any>(`${url}${id}`)
+}
+UserIsActive(id: any, data) {
+  let url = this.apiUrl + '/pv-api/user/?id=';
+  return this.http.patch(`${url}${id}`, data);
+}
+addUser(data:any) {
+  let url = this.apiUrl + '/pv-api/user/';
+  return this.http.post(url, data)
+}
+updateUser(data: any, id: number) {
+  let url = this.apiUrl + '/pv-api/user/?id=';
+  return this.http.put(`${url}${id}`,data)
+}
+deleteUser(id: number) {
+  let url = this.apiUrl + '/pv-api/user/?id=';
+  return this.http.delete(`${url}${id}`)
+}
 }

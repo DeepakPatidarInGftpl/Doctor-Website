@@ -13,7 +13,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 @NgModule({
   declarations: [
     TrendingProductsComponent
@@ -30,7 +30,8 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
     NgxPaginationModule,
     OrderModule,
     MatSlideToggleModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    MatProgressBarModule
   ]
 })
 export class TrendingProductsModule { }

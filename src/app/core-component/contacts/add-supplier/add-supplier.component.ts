@@ -131,6 +131,7 @@ export class AddSupplierComponent implements OnInit {
       this.city = res;
     })
   }
+  loader=false;
   submit() {
     console.log(this.supplierForm.value);
 
@@ -192,11 +193,12 @@ export class AddSupplierComponent implements OnInit {
     
     if (this.supplierForm.valid) {
       console.log('log');
-      
+      this.loader=true;
       this.contactService.addSupplier(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.supplierForm.reset()
           this.router.navigate(['//contacts/supplier'])
