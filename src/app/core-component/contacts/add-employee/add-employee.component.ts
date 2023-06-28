@@ -24,7 +24,7 @@ export class AddEmployeeComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl(),
+      email: new FormControl('',[Validators.email]),
       remark: new FormControl(),
       dob: new FormControl('',),
       anniversary: new FormControl('',),
@@ -33,11 +33,10 @@ export class AddEmployeeComponent implements OnInit {
       credit_limit: new FormControl(''),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
-
-      commission: new FormControl('',),
-      wages: new FormControl(''),
-      extra_wages: new FormControl(''),
-      target: new FormControl(''),
+      commission: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      target: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       username: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
       permission_group: new FormControl('')
@@ -54,7 +53,7 @@ export class AddEmployeeComponent implements OnInit {
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
-      pincode: (''),
+      pincode:new FormControl('',[Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -73,7 +72,7 @@ export class AddEmployeeComponent implements OnInit {
       bank_ifsc_code: new FormControl('', [Validators.required]),
       bank_name: new FormControl('', [Validators.required]),
       branch_name: new FormControl(''),
-      account_no: new FormControl('', Validators.required),
+      account_no: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
       account_holder_name: new FormControl('', [Validators.required])
     })
   }
@@ -89,29 +88,43 @@ export class AddEmployeeComponent implements OnInit {
 
   dateError = null
   addRes: any;
-  country: any
+  country: any[] = [];
+  state: any[][] = []; // Array of arrays to store states for each formArray item
+  city: any[][] = []; // Array of arrays to store cities for each formArray item
+  
   getCountry() {
-    this.coreService.countryList().subscribe(res => {
+    this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
       console.log(this.country);
-    })
+    });
   }
-  state: any
-  selectState(val: any) {
+  
+  selectState(val: any, i) {
     console.log(val);
+    const addressArray = this.getAddresss();
+    const addressControl = addressArray.at(i).get('country');
+    addressControl.setValue(val);
+  
     this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state = res;
-      console.log(this.state);
-    })
+      this.state[i] = res;
+      console.log(this.state[i]);
+      // Reset city for the current formArray item
+      this.city[i] = [];
+    });
   }
-  city: any;
-  selectCity(val: any) {
+  
+  selectCity(val: any, i) {
     console.log(val);
+    const addressArray = this.getAddresss();
+    const addressControl = addressArray.at(i).get('state');
+    addressControl.setValue(val);
+  
     this.coreService.getCityByStateId(val).subscribe(res => {
-      this.city = res;
-    })
+      this.city[i] = res;
+      console.log(this.city[i]);
+    });
   }
-
+  
   loader=false;
   submit() {
     console.log(this.employeeForm.value);
@@ -176,8 +189,11 @@ export class AddEmployeeComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
           this.router.navigate(['//contacts/supplier'])
+        }else{
+          this.loader=false;
         }
       }, err => {
+        this.loader=false;
         console.log(err.error.gst);
         if(err.error.msg){
           this.toastr.error(err.error.msg)
@@ -251,18 +267,19 @@ export class AddEmployeeComponent implements OnInit {
     return this.employeeForm.get('credit_limit')
   }
 
-  get countryy() {
-    return this.employeeForm.get('country')
+  countryy(index: number) {
+    return this.getAddresss().controls[index].get('country');
   }
-  get statee() {
-    return this.employeeForm.get('state')
+  statee(index: number) {
+    return this.getAddresss().controls[index].get('state');
   }
-  get cityy() {
-    return this.employeeForm.get('city')
+  cityy(index: number) {
+    return this.getAddresss().controls[index].get('city');
   }
-  get pincode() {
-    return this.employeeForm.get('pincode')
+  pincode(index: number) {
+    return this.getAddresss().controls[index].get('pincode')
   }
+
   
   // nested bank error
 

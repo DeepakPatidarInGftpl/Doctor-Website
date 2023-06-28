@@ -76,6 +76,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.debitNotesForm.get('supplier')?.patchValue(res.supplier.id);
       // this.debitNotesForm.get('purchase')?.patchValue(res.purchase_order.id);
       this.debitNotesForm.get('payment_term')?.patchValue(res.payment_term.id);
+      this.debitNotesForm.get('purchase')?.patchValue(res.purchase);
       this.debitNotesForm.setControl('cart', this.udateCart(res.cart));
     })
 

@@ -40,9 +40,9 @@ export class VendorComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.deleteEmployee(id).subscribe(res => {
+        this.contactService.deleteVendor(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Deleted successfully") {
+          if (this.delRes.msg == "Vendor Deleted successfully") {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',

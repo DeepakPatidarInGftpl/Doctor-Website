@@ -43,19 +43,15 @@
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" formControlName="email" id="email"
-                    [ngClass]="{
-                      'is-invalid': f['email'].touched && f['email'].invalid
-                    }">
+                    <input type="email" formControlName="email" id="email" [ngClass]="{'is-invalid': f['email'].touched && f['email'].invalid}">
+                    <span class="text-danger" *ngIf="email && email.invalid && email.touched">Enter Valid Email</span>  
                 </div>
             </div>
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label>Remark</label>
                     <input type="text" formControlName="remark" id="remark"
-                    [ngClass]="{
-                      'is-invalid': f['remark'].touched && f['remark'].invalid
-                    }">
+                    [ngClass]="{'is-invalid': f['remark'].touched && f['remark'].invalid}">
                </div>
             </div>
             <div class="col-lg-3 col-sm-3 col-12">
@@ -121,14 +117,14 @@
                             <div class="form-group">
                                 <label>Country</label>
                                 <select formControlName="country" class="w-100 h-100 border" #countryValue
-                                    (change)="selectState(countryValue.value)" id="country">
+                                    (change)="selectState(countryValue.value,i)" id="country">
                                     <option value="" selected disabled>Country</option>
                                     <option value="{{country.id}}" *ngFor="let country of country">
                                         {{country.country_name}}
                                     </option>
                                 </select>
                                 <span class="text-danger"
-                                    *ngIf="countryy && countryy.invalid && countryy.touched">Select
+                                    *ngIf="countryy(i).invalid && countryy(i).touched">Select
                                     country</span>
                             </div>
                         </div>
@@ -136,16 +132,16 @@
                             <div class="form-group">
                                 <label> State</label>
                                 <select formControlName="state" class="w-100 h-100 border" #stateValue
-                                    (change)="selectCity(stateValue.value)">
+                                    (change)="selectCity(stateValue.value,i)">
                                     <option value="" selected disabled>State</option>
-                                    <option value="{{state.id}}" *ngFor="let state of state">{{state.state}}
+                                    <option value="{{state.id}}" *ngFor="let state of state[i]">{{state.state}}
                                     </option>
                                 </select>
                                 <span class="text-danger"
-                                    *ngIf="statee && statee.invalid && statee.touched && state?.length>0">Select
+                                    *ngIf="statee(i).invalid && statee(i).touched && state[i]?.length>0">Select
                                     state</span>
                                 <span class="text-danger"
-                                    *ngIf="statee && statee.invalid && statee.touched && state?.length<=0">Data
+                                    *ngIf="statee(i).invalid && statee(i).touched && state[i]?.length<=0">Data
                                     not available</span>
                             </div>
                         </div>
@@ -154,13 +150,13 @@
                                 <label> City</label>
                                 <select formControlName="city" class="w-100 h-100 border" id="city">
                                     <option value="" selected disabled>City</option>
-                                    <option value="{{city.id}}" *ngFor="let city of city">{{city.city}}</option>
+                                    <option value="{{city.id}}" *ngFor="let city of city[i]">{{city.city}}</option>
                                 </select>
                                 <span class="text-danger"
-                                    *ngIf="cityy && cityy.invalid && cityy.touched && city?.length>0">Select
+                                    *ngIf="cityy(i).invalid && cityy(i).touched && city[i]?.length>0">Select
                                     city</span>
                                 <span class="text-danger"
-                                    *ngIf="cityy && cityy.invalid && cityy.touched && city?.length<=0">data not
+                                    *ngIf="cityy(i).invalid && cityy(i).touched && city[i]?.length<=0">data not
                                     available</span>
                             </div>
                         </div>
@@ -170,7 +166,7 @@
                                 <input type="text" formControlName="pincode" maxlength="6" minlength="6"
                                     id="pincode">
                                 <span class="text-danger"
-                                    *ngIf="pincode && pincode.invalid && pincode.touched">Enter your 6 digits
+                                    *ngIf="pincode(i).invalid && pincode(i).touched">Enter your 6 digits
                                     pincode number</span>
                             </div>
                         </div>
@@ -230,9 +226,7 @@
                             <div class="form-group">
                                 <label>Account No*</label>
                                 <input type="text" formControlName="account_no">
-                                <span class="text-danger"
-                                    *ngIf="getAccountNo(i)?.invalid && getAccountNo(i)?.touched">Enter your account
-                                    no</span>
+                                <span class="text-danger" *ngIf="getAccountNo(i)?.invalid && getAccountNo(i)?.touched">Enter valid account no</span>
                             </div>
                         </div>
                         <div class="col-lg-3 col-sm-3">
@@ -278,7 +272,7 @@
                     [ngClass]="{
                       'is-invalid': f['wages'].touched && f['wages'].invalid
                     }">
-                    <span class="text-danger"*ngIf="wages && wages.invalid && wages.touched">Enter your wages</span>            
+                    <span class="text-danger"*ngIf="wages && wages.invalid && wages.touched">Enter Valid wages value (ex-123)</span>            
                 </div>
             </div>
             <div class="col-lg-3 col-sm-3 col-12">
@@ -288,7 +282,7 @@
                     [ngClass]="{
                       'is-invalid': f['extra_wages'].touched && f['extra_wages'].invalid
                     }">
-                    <span class="text-danger"*ngIf="extra_wages && extra_wages.invalid && extra_wages.touched">Enter your extra_wages</span>            
+                    <span class="text-danger"*ngIf="extra_wages && extra_wages.invalid && extra_wages.touched">Enter Valid Extra Wages value (ex-123)</span>            
                 </div>
             </div>
             <div class="col-lg-3 col-sm-3 col-12">
@@ -298,7 +292,7 @@
                     [ngClass]="{
                       'is-invalid': f['target'].touched && f['target'].invalid
                     }">
-                    <span class="text-danger"*ngIf="target && target.invalid && target.touched">Enter Target</span>            
+                    <span class="text-danger"*ngIf="target && target.invalid && target.touched">Enter Valid Target value (ex-123)</span>            
                 </div>
             </div>
           
@@ -330,7 +324,7 @@
                     [ngClass]="{
                       'is-invalid': f['permission_group'].touched && f['permission_group'].invalid
                     }">
-                    <span class="text-danger"*ngIf="permission_group && permission_group.invalid && permission_group.touched">Enter your permission_group</span>            
+                    <span class="text-danger"*ngIf="permission_group && permission_group.invalid && permission_group.touched">Enter Permission group</span>            
                 </div>
             </div>
             <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">

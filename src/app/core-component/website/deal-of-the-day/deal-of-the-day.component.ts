@@ -140,7 +140,7 @@ export class DealOfTheDayComponent implements OnInit {
     });
   }
 
-  loader=true;
+  loader = true;
 
   ngOnInit(): void {
     this.dealOfTheDayForm = this.fb.group({
@@ -160,9 +160,9 @@ export class DealOfTheDayComponent implements OnInit {
     };
 
     this.websiteService.getDealOfTheDay().subscribe(res => {
-      this.loader=false;
+      this.loader = false;
       this.tableData = res;
-      
+
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getVariant();
@@ -223,30 +223,30 @@ export class DealOfTheDayComponent implements OnInit {
       })
     }
   }
-  
+
   addRes: any;
- loaders = false;
+  loaders = false;
   submit() {
     console.log(this.dealOfTheDayForm.value);
     if (this.dealOfTheDayForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       console.log('valid');
       var formdata: any = new FormData()
       formdata.append('discount', this.dealOfTheDayForm.get('discount')?.value);
       // formdata.append('variant', JSON.stringify(this.dealOfTheDayForm.get('variant')?.value));
-        // Filter out null values from the variant array
-        const variantArray = this.dealOfTheDayForm.get('variant')?.value.filter((value: any) => value !== null);
-        formdata.append('variant', JSON.stringify(variantArray));
-      formdata.append('datetime',this.dealOfTheDayForm.get('datetime')?.value);
+      // Filter out null values from the variant array
+      const variantArray = this.dealOfTheDayForm.get('variant')?.value.filter((value: any) => value !== null);
+      formdata.append('variant', JSON.stringify(variantArray));
+      formdata.append('datetime', this.dealOfTheDayForm.get('datetime')?.value);
 
       this.websiteService.addDealOfTheDay(formdata).subscribe(res => {
         console.log(res);
-        this.loaders=false;
+        this.loaders = false;
         this.addRes = res
         if (this.addRes.Is_Sucess == "True") {
           this.toastr.success(this.addRes.msg);
           this.selectedItems = [];
-          this.dealOfTheDayForm.reset(); 
+          this.dealOfTheDayForm.reset();
           this.ngOnInit()
         }
       }, err => {
@@ -262,22 +262,23 @@ export class DealOfTheDayComponent implements OnInit {
     console.log(this.id);
     console.log(this.dealOfTheDayForm.value);
     if (this.dealOfTheDayForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       var formdata: any = new FormData()
       formdata.append('discount', this.dealOfTheDayForm.get('discount')?.value);
       // formdata.append('variant', JSON.stringify(this.dealOfTheDayForm.get('variant')?.value));
       const variantArray = this.dealOfTheDayForm.get('variant')?.value.filter((value: any) => value !== null);
       formdata.append('variant', JSON.stringify(variantArray));
-      formdata.append('datetime',this.dealOfTheDayForm.get('datetime')?.value);
+      formdata.append('datetime', this.dealOfTheDayForm.get('datetime')?.value);
 
       this.websiteService.updateDealOfTheDay(formdata, this.id).subscribe(res => {
         console.log(res);
-        this.loaders=false;
+     
         this.addRes = res
         if (this.addRes.Is_Sucess == "True") {
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.dealOfTheDayForm.reset()
-          this.addForm = false
+          this.addForm = true
           this.selectedItems = [];
           this.ngOnInit()
         }
@@ -296,7 +297,7 @@ export class DealOfTheDayComponent implements OnInit {
   get discount() {
     return this.dealOfTheDayForm.get('discount')
   }
-  get datetime(){
+  get datetime() {
     return this.dealOfTheDayForm.get("datetime")
   }
 
@@ -313,10 +314,10 @@ export class DealOfTheDayComponent implements OnInit {
       if (id == this.resEdit.id) {
         console.log(this.resEdit.variant);
         this.addForm = false
-        
+
         this.dealOfTheDayForm.patchValue({
           discount: this.resEdit.discount,
-          datetime:this.resEdit.datetime
+          datetime: this.resEdit.datetime
         });
         // here selected data send value in formArray
         this.resEdit.variant.map((res: any) => {
@@ -348,16 +349,16 @@ export class DealOfTheDayComponent implements OnInit {
     } else {
       this.tableData = this.tableData.filter((res: any) => {
         console.log(res);
-  
+
         const matchingVariants = res.variant.filter((variant: any) =>
           variant.product_title.toLowerCase().includes(this.titlee.toLowerCase())
         );
-  
+
         return matchingVariants.length > 0;
       });
     }
   }
-  
+
   key = 'id'
   reverse: boolean = false;
   sort(key) {

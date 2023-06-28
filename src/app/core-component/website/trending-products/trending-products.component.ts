@@ -271,12 +271,12 @@ export class TrendingProductsComponent implements OnInit {
       
       this.websiteService.updateTrendingProducts(formdata, this.id).subscribe(res => {
         console.log(res);
-        this.loaders=false
         this.addRes = res
         if (this.addRes.Is_Sucess == "True") {
           this.toastr.success(this.addRes.msg)
+          this.loaders=false
           this.trendingProductsForm.reset()
-          this.addForm = false
+          this.addForm = true
           this.selectedItems = [];
           this.ngOnInit()
         }

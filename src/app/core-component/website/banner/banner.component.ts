@@ -241,7 +241,7 @@ export class BannerComponent implements OnInit {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.bannerForm.reset()
-          this.addForm = false
+          this.addForm = true;
           // window.location.reload()
           this.ngOnInit()
         }
