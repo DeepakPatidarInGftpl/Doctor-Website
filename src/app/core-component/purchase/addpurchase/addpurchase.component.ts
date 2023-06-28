@@ -174,8 +174,8 @@ export class AddpurchaseComponent implements OnInit {
           this.loader = false;
           this.toastrService.success(this.getRes.msg);
           this.router.navigate(['//purchase/purchaselist'])
-        }else{
-          this.loader=false
+        } else {
+          this.loader = false
         }
       })
     } else {
@@ -247,7 +247,7 @@ export class AddpurchaseComponent implements OnInit {
   v_id: any;
   variantChanged(value: any, index) {
     console.log(value);
-    
+
     console.log(index);
     console.log(value?.sku);
     this.barcode[index] = value.sku;
@@ -259,24 +259,24 @@ export class AddpurchaseComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery','');
+    this.searchProduct('someQuery', '');
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
   productName: any[] = [];
   isProduct = true;
 
-  searchProduct(event: any,index:any) {
+  searchProduct(event: any, index: any) {
     console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
-  
+
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
         this.productOption = res;
         console.log(this.searchs);
-        this.productName[index]= this.searchs[0].product_title;
+        this.productName[index] = this.searchs[0].product_title;
         console.log(this.productName);
         this.check = true;
         const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;

@@ -32,7 +32,7 @@ export class UpdateSupplierComponent implements OnInit {
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       telephone_no: new FormControl('',),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl(''),
+      email: new FormControl('',[Validators.email]),
       remark: new FormControl(''),
       date_of_birth: new FormControl('',),
       anniversary_date: new FormControl('',),
@@ -46,7 +46,7 @@ export class UpdateSupplierComponent implements OnInit {
       // bank_id: new FormArray<any>([], ),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      opening_balance: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       supplier_type: new FormControl('', [Validators.required])
     });
 
@@ -54,8 +54,8 @@ export class UpdateSupplierComponent implements OnInit {
       this.getRes = res;
       this.supplierForm.patchValue(res);
       this.supplierForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id)
-     
-      this.supplierForm.setControl('address', this.udateAddress(this.getRes?.address));
+
+      this.supplierForm.setControl('address', this.updateAddress(this.getRes?.address));
       this.supplierForm.setControl('bank_id', this.udateBank(this.getRes?.bank_id));
     });
 
@@ -65,33 +65,62 @@ export class UpdateSupplierComponent implements OnInit {
     this.getgstType();
     this.getPaymentTerms();
   }
-  paymentTerms:any;
-  getPaymentTerms(){
-    this.contactService.getPaymentTerms().subscribe(res=>{
-      this.paymentTerms=res;
+  paymentTerms: any;
+  getPaymentTerms() {
+    this.contactService.getPaymentTerms().subscribe(res => {
+      this.paymentTerms = res;
     })
   }
-  // updated data
-  udateAddress(add: any): FormArray {
-    console.log(add);
-    
-    let formarr = new FormArray([]);
+
+  updateAddress(add: any[]): FormArray {
+    const formArr = new FormArray([]);
+
     add.forEach((j: any) => {
-      formarr.push(this.fb.group({
+      console.log(j);
+
+      const addressGroup = this.fb.group({
         address_line_1: j.address_line_1,
         address_line_2: j.address_line_2,
         country: j.country.id,
-        state: j.state.id,
-        city: j.city.id,
+        state: null,
+        city: null,
         pincode: j.pincode,
         address_type: j.address_type
-      })
-      )
-      this.selectState(j.country.id);
-      this.selectCity(j.state.id);
-    })
-    return formarr
+      });
+
+      formArr.push(addressGroup);
+    });
+
+    formArr.controls.forEach((control, index) => {
+      const countryId = control.get('country').value;
+
+      control.get('country').valueChanges.subscribe((newCountryId) => {
+        this.selectedState(newCountryId, index);
+        control.get('state').setValue(null); // Reset state value when country changes
+        control.get('city').setValue(null); // Reset city value when country changes
+      });
+
+      control.get('state').valueChanges.subscribe((newStateId) => {
+        this.selectedCity(newStateId, index);
+        control.get('city').setValue(null); // Reset city value when state changes
+      });
+
+      const stateId = add[index].state.id;
+      const cityId = add[index].city.id;
+
+      control.get('state').setValue(stateId);
+      control.get('city').setValue(cityId);
+
+      this.selectedState(countryId, index);
+      this.selectedCity(stateId, index);
+    });
+
+    return formArr;
   }
+
+
+
+
 
   // updated data
   udateBank(add: any): FormArray {
@@ -124,7 +153,7 @@ export class UpdateSupplierComponent implements OnInit {
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
-      pincode: (''),
+      pincode: new FormControl('',[Validators.maxLength(6),Validators.minLength(6),Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -143,7 +172,7 @@ export class UpdateSupplierComponent implements OnInit {
       bank_ifsc_code: new FormControl('', [Validators.required]),
       bank_name: new FormControl('', [Validators.required]),
       branch_name: new FormControl(''),
-      account_no: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      account_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       account_holder_name: new FormControl('', [Validators.required])
     })
   }
@@ -160,28 +189,63 @@ export class UpdateSupplierComponent implements OnInit {
 
   dateError = null
   addRes: any;
-  country: any
+  country: any[] = [];
+  state: any[][] = []; // Array of arrays to store states for each formArray item
+  city: any[][] = []; // Array of arrays to store cities for each formArray item
+
   getCountry() {
-    this.coreService.countryList().subscribe(res => {
+    this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
       console.log(this.country);
-    })
+    });
   }
-  state: any
-  selectState(val: any) {
-    console.log(val);
+  selectState(val: any, i) {
+    console.log(val, i);
+    const addressArray = this.getAddresss();
+    const addressControl = addressArray.at(i).get('country');
+    addressControl.setValue(val);
+
     this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state = res;
-      console.log(this.state);
-    })
+      this.state[i] = res;
+      console.log(this.state[i]);
+      // Reset city for the current formArray item
+      this.city[i] = [];
+    });
   }
-  city: any;
-  selectCity(val: any) {
-    console.log(val);
+  selectedState(val, i) {
+    console.log(val, i);
+    if (val) {
+      this.coreService.getStateByCountryId(val).subscribe(res => {
+        this.state[i] = res;
+        console.log(this.state[i]);
+        // this.city[i] = [];
+      });
+    }
+
+  }
+  selectCity(val: any, i) {
+    console.log(val, i);
+    const addressArray = this.getAddresss();
+    const addressControl = addressArray.at(i).get('state');
+    addressControl.setValue(val);
+
     this.coreService.getCityByStateId(val).subscribe(res => {
-      this.city = res;
-    })
+      this.city[i] = res;
+      console.log(this.city[i]);
+    });
+
   }
+  selectedCity(val: any, i) {
+    console.log(val, i);
+    if (val) {
+      this.coreService.getCityByStateId(val).subscribe(res => {
+        this.city[i] = res;
+        console.log(this.city[i]);
+      });
+    }
+
+  }
+  loader=false;
   submit() {
     console.log(this.id);
 
@@ -234,29 +298,33 @@ export class UpdateSupplierComponent implements OnInit {
     });
     formdata.append('bank_id', JSON.stringify(bankData));
 
-    // if (this.supplierForm.valid) {
-      this.contactService.updateSupplier(formdata,this.id).subscribe(res => {
+    if (this.supplierForm.valid) {
+      this.loader=true;
+      this.contactService.updateSupplier(formdata, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Supplier updated successfully") {
+          this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.supplierForm.reset()
           this.router.navigate(['//contacts/supplier'])
-        }else{
+        } else {
+          this.loader=false
           this.toastr.error(this.addRes?.opening_balance[0]);
-          if(this.addRes?.email){
+          if (this.addRes?.email) {
             this.toastr.error(this.addRes?.error?.email[0])
-          }}
+          }
+        }
       }, err => {
         console.log(err.error.gst);
         if (err.error.email) {
           this.toastr.error(err.error.email[0])
         }
-        else if(err.error){
+        else if (err.error) {
           this.toastr.error(err.error?.opening_balance[0]);
           this.toastr.error(err.error?.email[0])
         }
-       else if (err.error.dob) {
+        else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
             this.dateError = ''
@@ -268,9 +336,9 @@ export class UpdateSupplierComponent implements OnInit {
           }, 2000);
         }
       })
-    // } else {
+    } else {
       this.supplierForm.markAllAsTouched()
-    // }
+    }
   }
 
   get login_access() {
@@ -333,20 +401,20 @@ export class UpdateSupplierComponent implements OnInit {
   get credit_limit() {
     return this.supplierForm.get('credit_limit')
   }
-  get countryy() {
-    return this.supplierForm.get('country')
+  countryy(index: number) {
+    return this.getAddresss().controls[index].get('country');
   }
-  get statee() {
-    return this.supplierForm.get('state')
+  statee(index: number) {
+    return this.getAddresss().controls[index].get('state');
   }
-  get cityy() {
-    return this.supplierForm.get('city')
+  cityy(index: number) {
+    return this.getAddresss().controls[index].get('city');
   }
-  get pincode() {
-    return this.supplierForm.get('pincode')
+  pincode(index: number) {
+    return this.getAddresss().controls[index].get('pincode')
   }
 
-  
+
   // nested bank error
 
   getBankHolderName(index: number) {

@@ -17,7 +17,11 @@ const routes: Routes = [
       { path: 'addressStore', loadChildren: () => import('./address-store/address-store.module').then((m) => m.AddressStoreModule) },
       { path: 'add-addressStore', loadChildren: () => import('./add-address-store/add-address-store.module').then((m) => m.AddAddressStoreModule) },
       { path: 'update-addressStore/:id', loadChildren: () => import('./update-address-store/update-address-store.module').then((m) => m.UpdateAddressStoreModule) },
-   
+      { path: 'footerList', loadChildren: () => import('./footer-list/footer-list.module').then((m) => m.FooterListModule) },
+      { path: 'addfooter', loadChildren: () => import('./add-footer/add-footer.module').then((m) => m.AddFooterModule) },
+      { path: 'updatefooter/:id', loadChildren: () => import('./update-footer/update-footer.module').then((m) => m.UpdateFooterModule) },
+      { path: 'detailsfooter/:id', loadChildren: () => import('./details-footer/details-footer.module').then((m) => m.DetailsFooterModule) },
+      { path: 'couponList', loadChildren: () => import('./coupon/coupon.module').then((m) => m.CouponModule) },
     ]
   }
 ];

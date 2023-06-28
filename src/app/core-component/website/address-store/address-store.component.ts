@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { WebsiteService } from 'src/app/Services/website/website.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2';

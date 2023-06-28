@@ -149,4 +149,57 @@ export class WebsiteService {
     let url = this.apiUrl + '/pv-api/store_address/?id=';
     return this.http.delete(`${url}${id}`)
   }
+
+  // deal of the day
+  // /pv-api/coupon_dashboard/
+  getFooter(){
+    let url =this.apiUrl+'/pv-api/footer/';
+    return this.http.get(url);
+  }
+  addFooter(data:any){
+    let url = this.apiUrl+'/pv-api/footer/';
+    return this.http.post(url,data);
+  }
+  getFooterById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/footer/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  FooterIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/footer/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  updateFooter(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/footer/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  deleteFooter(id: number) {
+    let url = this.apiUrl + '/pv-api/footer/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
+   // coupon dashboard 
+   getCoupon(){
+    let url =this.apiUrl+'/pv-api/coupon_dashboard/';
+    return this.http.get(url);
+  }
+  addCoupon(data:any){
+    let url = this.apiUrl+'/pv-api/coupon_dashboard/';
+    return this.http.post(url,data);
+  }
+  getCouponById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/coupon_dashboard/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  CouponIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/coupon_dashboard/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  updateCoupon(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/coupon_dashboard/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  deleteCoupon(id: number) {
+    let url = this.apiUrl + '/pv-api/coupon_dashboard/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
 }
