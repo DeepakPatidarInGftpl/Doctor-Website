@@ -57,6 +57,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       this.materialForm.get('supplier')?.patchValue(res.supplier.id);
       this.materialForm.get('purchase_order')?.patchValue(res.purchase_order.id);
       this.materialForm.setControl('material_inward_cart', this.udateCart(res.cart));
+      
     })
     this.materialForm = this.fb.group({
       supplier: new FormControl('', [Validators.required]),

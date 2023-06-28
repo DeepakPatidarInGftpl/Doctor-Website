@@ -1,0 +1,94 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Update Footer</h4>
+        <h6>Create new Footer </h6>
+    </div>
+</div>
+<!-- /add -->
+<div class="card">
+    <div class="card-body"> 
+        <form [formGroup]="footerForm" (ngSubmit)="submit()">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Phone*</label>
+                        <input type="text" formControlName="phone" maxlength="10" minlength="10" id="phone" [ngClass]="{'is-invalid': f['phone'].touched && f['phone'].invalid}">
+                        <span class="text-danger" *ngIf="phone && phone.invalid && phone.touched">Enter your 10 digits mobile phone number</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Email*</label>
+                        <input type="text" formControlName="email" id="email" [ngClass]="{'is-invalid': f['email'].touched && f['email'].invalid}">
+                        <span class="text-danger" *ngIf="email && email.invalid && email.touched">Enter your email address in format abc@example.com</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Facebook Url*</label>
+                        <input type="text" formControlName="facebook" id="facebook" [ngClass]="{ 'is-invalid': f['facebook'].touched && f['facebook'].invalid }">
+                        <span class="text-danger" *ngIf="facebook && facebook.invalid && facebook.touched">Enter Facebook url</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Instagram Url*</label>
+                        <input type="text" formControlName="instagram" id="instagram" [ngClass]="{'is-invalid': f['instagram'].touched && f['instagram'].invalid}">
+                        <span class="text-danger" *ngIf="instagram && instagram.invalid && instagram.touched">Enter Instagram url</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Twitter Url*</label>
+                        <input type="text" formControlName="twitter" id="twitter" [ngClass]="{'is-invalid': f['twitter'].touched && f['twitter'].invalid}">
+                        <span class="text-danger" *ngIf="twitter && twitter.invalid && twitter.touched">Enter Twitter url</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Whatsapp Url*</label>
+                        <input type="text" formControlName="whatsapp" id="whatsapp" [ngClass]="{'is-invalid': f['whatsapp'].touched && f['whatsapp'].invalid}">
+                        <span class="text-danger" *ngIf="whatsapp && whatsapp.invalid && whatsapp.touched">Enter Whatsapp url</span>
+                         <span class="text-danger" *ngIf="whatsError">{{whatsError}}</span>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Address*</label>
+                        <textarea class="form-control textarea" formControlName="address" id="address" [ngClass]="{'is-invalid': f['address'].touched && f['address'].invalid}"></textarea>
+                        <span class="text-danger" *ngIf="address && address.invalid && address.touched">Enter your address</span>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Description*</label>
+                        <ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
+                        </ngx-editor-menu>
+                        <ngx-editor [editor]="editor" formControlName="description" id="slug" [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}">
+                        </ngx-editor>
+                        <span class="text-danger" *ngIf="description && description.invalid && description.touched">Enter Description </span>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Logo*</label>
+                        <div class="image-upload mt-3">
+                            <input type="file" formControlName="logo" (change)="selectImg($event)" [ngClass]="{'is-invalid': f['logo'].touched && f['logo'].invalid}">
+                            <div class="image-uploads">
+                                <img src="assets/img/icons/upload.svg" alt="img">
+                                <h4>Drag and drop a file to upload</h4>
+                            </div>
+                            <span class="text-danger" *ngIf="logo && logo.invalid && logo.touched">Select logo</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                    <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
+                    <a routerLink="//website/footerList" class="btn btn-cancel">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

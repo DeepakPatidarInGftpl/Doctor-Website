@@ -25,9 +25,9 @@ export class AddTransportComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       company_name: new FormControl('',),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      telephone_no: new FormControl('',),
+      telephone_no: new FormControl('',[Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl(''),
+      email: new FormControl('',[Validators.email]),
       remark: new FormControl(''),
       date_of_birth: new FormControl('',),
       anniversary_date: new FormControl('',),
@@ -70,7 +70,7 @@ export class AddTransportComponent implements OnInit {
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
-      pincode: (''),
+      pincode:new FormControl('',[Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -105,28 +105,43 @@ export class AddTransportComponent implements OnInit {
 
   dateError = null
   addRes: any;
-  country: any
+  country: any[] = [];
+  state: any[][] = []; // Array of arrays to store states for each formArray item
+  city: any[][] = []; // Array of arrays to store cities for each formArray item
+  
   getCountry() {
-    this.coreService.countryList().subscribe(res => {
+    this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
       console.log(this.country);
-    })
+    });
   }
-  state: any
-  selectState(val: any) {
+  
+  selectState(val: any, i) {
     console.log(val);
+    const addressArray = this.getAddresss();
+    const addressControl = addressArray.at(i).get('country');
+    addressControl.setValue(val);
+  
     this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state = res;
-      console.log(this.state);
-    })
+      this.state[i] = res;
+      console.log(this.state[i]);
+      // Reset city for the current formArray item
+      this.city[i] = [];
+    });
   }
-  city: any;
-  selectCity(val: any) {
+  
+  selectCity(val: any, i) {
     console.log(val);
+    const addressArray = this.getAddresss();
+    const addressControl = addressArray.at(i).get('state');
+    addressControl.setValue(val);
+  
     this.coreService.getCityByStateId(val).subscribe(res => {
-      this.city = res;
-    })
+      this.city[i] = res;
+      console.log(this.city[i]);
+    });
   }
+  loader=false;
   submit() {
     console.log(this.transportForm.value);
 
@@ -177,21 +192,25 @@ export class AddTransportComponent implements OnInit {
     });
     formdata.append('bank_id', JSON.stringify(bankData));
 
-    // if (this.transportForm.valid) {
+    if (this.transportForm.valid) {
+      this.loader=true;
       this.contactService.addTransport(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.transportForm.reset()
           this.router.navigate(['//contacts/transport'])
         }else{
+          this.loader=false;
           this.toastr.error(this.addRes?.opening_balance[0]);
           if(this.addRes?.email){
             this.toastr.error(this.addRes?.error?.email[0])
           }
         }
       }, err => {
+        this.loader=false;
         console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
@@ -212,11 +231,11 @@ export class AddTransportComponent implements OnInit {
           }, 2000);
         }
       })
-    // } else {
+    } else {
       this.transportForm.markAllAsTouched()
       console.log('hhhhhh');
 
-    // }
+    }
   }
 
   get login_access() {
@@ -278,18 +297,20 @@ export class AddTransportComponent implements OnInit {
   get credit_limit() {
     return this.transportForm.get('credit_limit')
   }
-  get countryy() {
-    return this.transportForm.get('country')
+  countryy(index: number) {
+    return this.getAddresss().controls[index].get('country');
   }
-  get statee() {
-    return this.transportForm.get('state')
+  statee(index: number) {
+    return this.getAddresss().controls[index].get('state');
   }
-  get cityy() {
-    return this.transportForm.get('city')
+  cityy(index: number) {
+    return this.getAddresss().controls[index].get('city');
   }
-  get pincode() {
-    return this.transportForm.get('pincode')
+  pincode(index: number) {
+    return this.getAddresss().controls[index].get('pincode')
   }
+
+
 
   // nested bank error
 

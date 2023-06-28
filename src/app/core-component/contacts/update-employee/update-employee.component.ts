@@ -33,8 +33,8 @@ export class UpdateEmployeeComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl(),
-      remark: new FormControl(),
+      email: new FormControl('',[Validators.email]),
+      remark: new FormControl(''),
       dob: new FormControl('',),
       anniversary: new FormControl('',),
       apply_tds: new FormControl(''),
@@ -43,10 +43,10 @@ export class UpdateEmployeeComponent implements OnInit {
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
 
-      commission: new FormControl('',),
-      wages: new FormControl(''),
-      extra_wages: new FormControl(''),
-      target: new FormControl(''),
+      commission: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      target: new FormControl('',Validators.pattern(/^[0-9]*$/)),
       username: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
       permission_group: new FormControl('')
@@ -56,7 +56,7 @@ export class UpdateEmployeeComponent implements OnInit {
       this.getRes = res;
       this.employeeForm.patchValue(this.getRes);
 
-      this.employeeForm.setControl('address', this.udateAddress(this.getRes.address));
+      this.employeeForm.setControl('address', this.updateAddress(this.getRes.address));
       this.employeeForm.setControl('bank_id', this.udateBank(this.getRes.bank_id));
     })
 
@@ -66,23 +66,50 @@ export class UpdateEmployeeComponent implements OnInit {
   }
 
    // updated data
-   udateAddress(add: any): FormArray {
-    let formarr = new FormArray([]);
+   updateAddress(add: any[]): FormArray {
+    const formArr = new FormArray([]);
+
     add.forEach((j: any) => {
-      formarr.push(this.fb.group({
+      console.log(j);
+
+      const addressGroup = this.fb.group({
         address_line_1: j.address_line_1,
         address_line_2: j.address_line_2,
         country: j.country.id,
-        state: j.state.id,
-        city: j.city.id,
+        state: null,
+        city: null,
         pincode: j.pincode,
         address_type: j.address_type
-      })
-      )
-      this.selectState(j.country.id);
-      this.selectCity(j.state.id);
-    })
-    return formarr
+      });
+
+      formArr.push(addressGroup);
+    });
+
+    formArr.controls.forEach((control, index) => {
+      const countryId = control.get('country').value;
+
+      control.get('country').valueChanges.subscribe((newCountryId) => {
+        this.selectedState(newCountryId, index);
+        control.get('state').setValue(null); // Reset state value when country changes
+        control.get('city').setValue(null); // Reset city value when country changes
+      });
+
+      control.get('state').valueChanges.subscribe((newStateId) => {
+        this.selectedCity(newStateId, index);
+        control.get('city').setValue(null); // Reset city value when state changes
+      });
+
+      const stateId = add[index].state.id;
+      const cityId = add[index].city.id;
+
+      control.get('state').setValue(stateId);
+      control.get('city').setValue(cityId);
+
+      this.selectedState(countryId, index);
+      this.selectedCity(stateId, index);
+    });
+
+    return formArr;
   }
 
   // updated data
@@ -107,7 +134,7 @@ export class UpdateEmployeeComponent implements OnInit {
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
-      pincode: (''),
+      pincode:new FormControl('',[Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -126,7 +153,7 @@ export class UpdateEmployeeComponent implements OnInit {
       bank_ifsc_code: new FormControl('', [Validators.required]),
       bank_name: new FormControl('', [Validators.required]),
       branch_name: new FormControl(''),
-      account_no: new FormControl('', Validators.required),
+      account_no: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
       account_holder_name: new FormControl('', [Validators.required])
     })
   }
@@ -143,26 +170,63 @@ export class UpdateEmployeeComponent implements OnInit {
 
   dateError = null
   addRes: any;
-  country: any
+  country: any[] = [];
+  state: any[][] = []; // Array of arrays to store states for each formArray item
+  city: any[][] = []; // Array of arrays to store cities for each formArray item
+
   getCountry() {
-    this.coreService.countryList().subscribe(res => {
+    this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
-    })
+      console.log(this.country);
+    });
   }
-  state: any
-  selectState(val: any) {
-    console.log(val);
+
+  selectState(val: any, i) {
+    console.log(val, i);
+    const addressArray = this.getAddresss();
+    const addressControl = addressArray.at(i).get('country');
+    addressControl.setValue(val);
+
     this.coreService.getStateByCountryId(val).subscribe(res => {
-      this.state = res;
-      console.log(this.state);
-    })
+      this.state[i] = res;
+      console.log(this.state[i]);
+      // Reset city for the current formArray item
+      this.city[i] = [];
+    });
   }
-  city: any;
-  selectCity(val: any) {
-    console.log(val);
+  selectedState(val, i) {
+    console.log(val, i);
+    if (val) {
+      this.coreService.getStateByCountryId(val).subscribe(res => {
+        this.state[i] = res;
+        console.log(this.state[i]);
+        // this.city[i] = [];
+      });
+    }
+
+  }
+  selectCity(val: any, i) {
+    console.log(val, i);
+    const addressArray = this.getAddresss();
+    const addressControl = addressArray.at(i).get('state');
+    addressControl.setValue(val);
+
     this.coreService.getCityByStateId(val).subscribe(res => {
-      this.city = res;
-    })
+      this.city[i] = res;
+      console.log(this.city[i]);
+    });
+
+  }
+
+  selectedCity(val: any, i) {
+    console.log(val, i);
+    if (val) {
+      this.coreService.getCityByStateId(val).subscribe(res => {
+        this.city[i] = res;
+        console.log(this.city[i]);
+      });
+    }
+
   }
 loader=false;
   submit() {
@@ -301,17 +365,17 @@ loader=false;
     return this.employeeForm.get('credit_limit')
   }
 
-  get countryy() {
-    return this.employeeForm.get('country')
+  countryy(index: number) {
+    return this.getAddresss().controls[index].get('country');
   }
-  get statee() {
-    return this.employeeForm.get('state')
+  statee(index: number) {
+    return this.getAddresss().controls[index].get('state');
   }
-  get cityy() {
-    return this.employeeForm.get('city')
+  cityy(index: number) {
+    return this.getAddresss().controls[index].get('city');
   }
-  get pincode() {
-    return this.employeeForm.get('pincode')
+  pincode(index: number) {
+    return this.getAddresss().controls[index].get('pincode')
   }
  
   // nested bank error
