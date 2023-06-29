@@ -123,7 +123,7 @@ export class WebsiteService {
     return this.http.delete(`${url}${id}`)
   }
 
-  // deal of the day
+  // store_address
 
   getAddressStore(){
     let url =this.apiUrl+'/pv-api/store_address/';
@@ -150,8 +150,7 @@ export class WebsiteService {
     return this.http.delete(`${url}${id}`)
   }
 
-  // deal of the day
-  // /pv-api/coupon_dashboard/
+  // coupon dashboard
   getFooter(){
     let url =this.apiUrl+'/pv-api/footer/';
     return this.http.get(url);
@@ -202,4 +201,105 @@ export class WebsiteService {
     let url = this.apiUrl + '/pv-api/coupon_dashboard/?id=';
     return this.http.delete(`${url}${id}`)
   }
+
+     // reason dashboard 
+     getReason(){
+      let url =this.apiUrl+'/pv-api/reason/';
+      return this.http.get(url);
+    }
+    addReason(data:any){
+      let url = this.apiUrl+'/pv-api/reason/';
+      return this.http.post(url,data);
+    }
+    getReasonById(id: number): Observable<any> {
+      let url = this.apiUrl + '/pv-api/reason/?id='
+      return this.http.get<any>(`${url}${id}`)
+    }
+    ReasonIsActive(id: any, data) {
+      let url = this.apiUrl + '/pv-api/reason/?id=';
+      return this.http.patch(`${url}${id}`, data);
+    }
+    updateReason(data: any, id: number) {
+      let url = this.apiUrl + '/pv-api/reason/?id=';
+      return this.http.put(`${url}${id}`,data)
+    }
+    deleteReason(id: number) {
+      let url = this.apiUrl + '/pv-api/reason/?id=';
+      return this.http.delete(`${url}${id}`)
+    }
+    // about banner 
+    getaboutBanner(){
+      let url =this.apiUrl+'/pv-api/about_banner/';
+      return this.http.get(url);
+    }
+    addaboutBanner(data:any){
+      let url = this.apiUrl+'/pv-api/about_banner/';
+      return this.http.post(url,data);
+    }
+    getaboutBannerById(id: number): Observable<any> {
+      let url = this.apiUrl + '/pv-api/about_banner/?id='
+      return this.http.get<any>(`${url}${id}`)
+    }
+    aboutBannerIsActive(id: any, data) {
+      let url = this.apiUrl + '/pv-api/about_banner/?id=';
+      return this.http.patch(`${url}${id}`, data);
+    }
+    updateaboutBanner(data: any, id: number) {
+      let url = this.apiUrl + '/pv-api/about_banner/?id=';
+      return this.http.put(`${url}${id}`,data)
+    }
+    deleteaboutBanner(id: number) {
+      let url = this.apiUrl + '/pv-api/about_banner/?id=';
+      return this.http.delete(`${url}${id}`)
+    }
+     // about footer banner 
+     getaboutFooterBanner(){
+      let url =this.apiUrl+'/pv-api/about_footer_banner/';
+      return this.http.get(url);
+    }
+    addaboutFooterBanner(data:any){
+      let url = this.apiUrl+'/pv-api/about_footer_banner/';
+      return this.http.post(url,data);
+    }
+    getaboutFooterBannerById(id: number): Observable<any> {
+      let url = this.apiUrl + '/pv-api/about_footer_banner/?id='
+      return this.http.get<any>(`${url}${id}`)
+    }
+    aboutFooterBannerIsActive(id: any, data) {
+      let url = this.apiUrl + '/pv-api/about_footer_banner/?id=';
+      return this.http.patch(`${url}${id}`, data);
+    }
+    updateaboutFooterBanner(data: any, id: number) {
+      let url = this.apiUrl + '/pv-api/about_footer_banner/?id=';
+      return this.http.put(`${url}${id}`,data)
+    }
+    deleteaboutFooterBanner(id: number) {
+      let url = this.apiUrl + '/pv-api/about_footer_banner/?id=';
+      return this.http.delete(`${url}${id}`)
+    }
+       // new arrival banner 
+       getnewArrivalBanner(){
+        let url =this.apiUrl+'/pv-api/new_arrivals_banner/';
+        return this.http.get(url);
+      }
+      addnewArrivalBanner(data:any){
+        let url = this.apiUrl+'/pv-api/new_arrivals_banner/';
+        return this.http.post(url,data);
+      }
+      getnewArrivalBannerById(id: number): Observable<any> {
+        let url = this.apiUrl + '/pv-api/new_arrivals_banner/?id='
+        return this.http.get<any>(`${url}${id}`)
+      }
+      newArrivalBannerIsActive(id: any, data) {
+        let url = this.apiUrl + '/pv-api/new_arrivals_banner/?id=';
+        return this.http.patch(`${url}${id}`, data);
+      }
+      updatenewArrivalBanner(data: any, id: number) {
+        let url = this.apiUrl + '/pv-api/new_arrivals_banner/?id=';
+        return this.http.put(`${url}${id}`,data)
+      }
+      deletenewArrivalBanner(id: number) {
+        let url = this.apiUrl + '/pv-api/new_arrivals_banner/?id=';
+        return this.http.delete(`${url}${id}`)
+      }
 }

@@ -3,8 +3,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
-import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { WebsiteService } from 'src/app/Services/website/website.service';
 
 import { Editor, Toolbar } from 'ngx-editor';
