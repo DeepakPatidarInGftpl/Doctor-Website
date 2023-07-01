@@ -23,19 +23,19 @@ export class AboutBannerComponent implements OnInit {
     return this.bannerForm.controls;
   }
 
-    //editor 
-    editordoc = jsonDoc;
-    editor: Editor | any;
-    toolbar: Toolbar = [
-      ['bold', 'italic'],
-      ['underline', 'strike'],
-      ['code', 'blockquote'],
-      ['ordered_list', 'bullet_list'],
-      [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
-      ['link', 'image'],
-      ['text_color', 'background_color'],
-      ['align_left', 'align_center', 'align_right', 'align_justify'],
-    ];
+  //editor 
+  editordoc = jsonDoc;
+  editor: Editor | any;
+  toolbar: Toolbar = [
+    ['bold', 'italic'],
+    ['underline', 'strike'],
+    ['code', 'blockquote'],
+    ['ordered_list', 'bullet_list'],
+    [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
+    ['link', 'image'],
+    ['text_color', 'background_color'],
+    ['align_left', 'align_center', 'align_right', 'align_justify'],
+  ];
   titlee: any;
   p: number = 1
   pageSize: number = 5;
@@ -141,11 +141,11 @@ export class AboutBannerComponent implements OnInit {
   ngOnInit(): void {
     this.editor = new Editor();
     this.bannerForm = this.fb.group({
-      image: new FormControl('', [Validators.required]),
+      image: new FormControl('',),
       title: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
     })
-   
+
     this.websiteService.getaboutBanner().subscribe(res => {
       this.loader = false;
       this.tableData = res;
@@ -169,10 +169,17 @@ export class AboutBannerComponent implements OnInit {
       })
     }
   }
-
+  url: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
     this.bannerForm.patchValue({
       image: file
     })
@@ -181,7 +188,7 @@ export class AboutBannerComponent implements OnInit {
 
   addRes: any
   loaders = false;
-  imgError:any;
+  imgError: any;
   submit() {
     console.log(this.bannerForm.value);
     if (this.bannerForm.valid) {
@@ -195,7 +202,7 @@ export class AboutBannerComponent implements OnInit {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "ABOUT BANNER CREATED SUCESSFULLY") {
-          this.loaders=false;
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.bannerForm.reset()
           // window.location.reload();
@@ -203,10 +210,10 @@ export class AboutBannerComponent implements OnInit {
         }
       }, err => {
         console.log(err.error);
-        this.loaders=false;
-        this.imgError=err.error.image;
+        this.loaders = false;
+        this.imgError = err.error.image;
         setTimeout(() => {
-          this.imgError=''
+          this.imgError = ''
         }, 5000);
       })
     } else {
@@ -218,30 +225,59 @@ export class AboutBannerComponent implements OnInit {
   update() {
     console.log(this.id);
     if (this.bannerForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       var formdata: any = new FormData()
       formdata.append('title', this.bannerForm.get('title')?.value);
       formdata.append('description', this.bannerForm.get('description')?.value);
-      formdata.append('image', this.bannerForm.get('image')?.value);
-      this.websiteService.updateaboutBanner(formdata, this.id).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        if (this.addRes.msg == "About Banner Updated Sucessfully") {
-          this.loaders=false;
-          this.toastr.success(this.addRes.msg)
-          this.bannerForm.reset()
-          this.addForm = true;
-          // window.location.reload()
-          this.ngOnInit()
-        }
-      }, err => {
-        console.log(err.error);
-        this.loaders=false;
-        this.imgError=err.error.image;
-        setTimeout(() => {
-          this.imgError=''
-        }, 5000);
-      })
+      // formdata.append('image', this.bannerForm.get('image')?.value);
+
+      const imageFile = this.bannerForm.get('image')?.value;
+      if (imageFile && imageFile instanceof File) {
+        formdata.append('image', imageFile);
+        this.websiteService.updateaboutBanner(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "About Banner Updated Sucessfully") {
+            this.loaders = false;
+            this.updateData=''
+            this.toastr.success(this.addRes.msg)
+            this.bannerForm.reset()
+            this.addForm = true;
+            // window.location.reload()
+            this.ngOnInit()
+          }
+        }, err => {
+          console.log(err.error);
+          this.loaders = false;
+          this.imgError = err.error.image;
+          setTimeout(() => {
+            this.imgError = ''
+          }, 5000);
+        })
+      } else {
+        this.websiteService.updateaboutBanner(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "About Banner Updated Sucessfully") {
+            this.loaders = false;
+            this.updateData=''
+            this.toastr.success(this.addRes.msg)
+            this.bannerForm.reset()
+            this.addForm = true;
+            // window.location.reload()
+            this.ngOnInit()
+          }
+        }, err => {
+          console.log(err.error);
+          this.loaders = false;
+          this.imgError = err.error.image;
+          setTimeout(() => {
+            this.imgError = ''
+          }, 5000);
+        })
+      }
+
+
 
     } else {
       this.bannerForm.markAllAsTouched()
@@ -263,8 +299,10 @@ export class AboutBannerComponent implements OnInit {
   id: any
   editFormdata: any;
   resEdit: any
+  updateData: any;
   editForm(id: number) {
-    this.id = id
+    this.id = id;
+    this.url=''
     this.websiteService.getaboutBannerById(id).subscribe(res => {
       console.log(res);
       this.resEdit = res;
@@ -272,11 +310,12 @@ export class AboutBannerComponent implements OnInit {
         console.log(data);
         if (id == data.id) {
           console.log(data);
+          this.updateData = data;
           this.addForm = false
           this.bannerForm.patchValue({
             title: data.title,
             description: data.description,
-            image:data.image
+            // image: data.image
           });
           this.editFormdata = res
         }
@@ -286,6 +325,7 @@ export class AboutBannerComponent implements OnInit {
   openaddForm() {
     this.addForm = true;
     this.bannerForm.reset();
+    this.updateData=''
   }
 
   search() {

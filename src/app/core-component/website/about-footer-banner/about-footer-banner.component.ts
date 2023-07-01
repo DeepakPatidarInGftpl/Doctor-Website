@@ -140,7 +140,7 @@ export class AboutFooterBannerComponent implements OnInit {
   ngOnInit(): void {
     this.editor = new Editor();
     this.bannerForm = this.fb.group({
-      image: new FormControl('', [Validators.required]),
+      image: new FormControl('',),
       title: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
     })
@@ -168,10 +168,17 @@ export class AboutFooterBannerComponent implements OnInit {
       })
     }
   }
-
+  url:any
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
     this.bannerForm.patchValue({
       image: file
     })
@@ -221,26 +228,54 @@ export class AboutFooterBannerComponent implements OnInit {
       var formdata: any = new FormData()
       formdata.append('title', this.bannerForm.get('title')?.value);
       formdata.append('description', this.bannerForm.get('description')?.value);
-      formdata.append('image', this.bannerForm.get('image')?.value);
-      this.websiteService.updateaboutFooterBanner(formdata, this.id).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        if (this.addRes.msg == "About Footer Banner Updated Sucessfully") {
+      // formdata.append('image', this.bannerForm.get('image')?.value);
+
+      const imageFile = this.bannerForm.get('image')?.value;
+      if (imageFile && imageFile instanceof File) {
+        formdata.append('image', imageFile);
+        this.websiteService.updateaboutFooterBanner(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "About Footer Banner Updated Sucessfully") {
+            this.loaders=false;
+            this.updateData='';
+            this.toastr.success(this.addRes.msg)
+            this.bannerForm.reset()
+            this.addForm = true;
+            // window.location.reload()
+            this.ngOnInit()
+          }
+        }, err => {
+          console.log(err.error);
           this.loaders=false;
-          this.toastr.success(this.addRes.msg)
-          this.bannerForm.reset()
-          this.addForm = true;
-          // window.location.reload()
-          this.ngOnInit()
-        }
-      }, err => {
-        console.log(err.error);
-        this.loaders=false;
-        this.imgError=err.error.image;
-        setTimeout(() => {
-          this.imgError=''
-        }, 5000);
-      })
+          this.imgError=err.error.image;
+          setTimeout(() => {
+            this.imgError=''
+          }, 5000);
+        })
+      }else{
+        this.websiteService.updateaboutFooterBanner(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "About Footer Banner Updated Sucessfully") {
+            this.loaders=false;
+            this.updateData='';
+            this.toastr.success(this.addRes.msg)
+            this.bannerForm.reset()
+            this.addForm = true;
+            // window.location.reload()
+            this.ngOnInit()
+          }
+        }, err => {
+          console.log(err.error);
+          this.loaders=false;
+          this.imgError=err.error.image;
+          setTimeout(() => {
+            this.imgError=''
+          }, 5000);
+        })
+      }
+   
 
     } else {
       this.bannerForm.markAllAsTouched()
@@ -262,8 +297,10 @@ export class AboutFooterBannerComponent implements OnInit {
   id: any
   editFormdata: any;
   resEdit: any
+  updateData:any;
   editForm(id: number) {
-    this.id = id
+    this.id = id;
+    this.url=''
     this.websiteService.getaboutFooterBannerById(id).subscribe(res => {
       console.log(res);
       this.resEdit = res;
@@ -271,11 +308,12 @@ export class AboutFooterBannerComponent implements OnInit {
         console.log(data);
         if (id == data.id) {
           console.log(data);
+          this.updateData=data;
           this.addForm = false
           this.bannerForm.patchValue({
             title: data.title,
             description: data.description,
-            image:data.image
+            // image:data.image
           });
           this.editFormdata = res
         }
@@ -283,6 +321,7 @@ export class AboutFooterBannerComponent implements OnInit {
     })
   }
   openaddForm() {
+    this.updateData='';
     this.addForm = true;
     this.bannerForm.reset();
   }

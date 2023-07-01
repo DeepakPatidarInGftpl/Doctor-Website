@@ -27,7 +27,7 @@ export class UpdateFooterComponent implements OnInit {
     ['underline', 'strike'],
     ['code', 'blockquote'],
     ['ordered_list', 'bullet_list'],
-    [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
+    // [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
     ['link', 'image'],
     ['text_color', 'background_color'],
     ['align_left', 'align_center', 'align_right', 'align_justify'],
@@ -42,6 +42,7 @@ export class UpdateFooterComponent implements OnInit {
   imgUrl = 'https://pv.greatfuturetechno.com';
 
   getId:any;
+  updateData:any;
   ngOnInit(): void {
     this.editor = new Editor();
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -53,7 +54,7 @@ export class UpdateFooterComponent implements OnInit {
       instagram: new FormControl('', [Validators.required]),
       twitter: new FormControl('', [Validators.required]),
       whatsapp: new FormControl('', [Validators.required]),
-      logo: new FormControl('', [Validators.required,]),
+      logo: new FormControl(''),
       description: new FormControl('', [Validators.required])
     });
 
@@ -62,22 +63,39 @@ export class UpdateFooterComponent implements OnInit {
       res.map((res:any)=>{
         if(this.id==res.id){
           console.log(res);
-          this.footerForm.patchValue(res);
+          this.updateData=res;
+          
+          // this.footerForm.patchValue(res);
           // this.footerForm.get('logo')?.patchValue(res.logo);
           this.getId=res;
           console.log(this.getId);
           
-          // this.footerForm.patchValue({
-          //   logo:res.logo
-          // })
+          this.footerForm.patchValue({
+            // logo:res.logo,
+            address:res.address,
+            email:res.email,
+            phone:res.phone,
+            facebook:res.facebook,
+            instagram:res.instagram,
+            twitter:res.twitter,
+            whatsapp:res.whatsapp,
+            description:res.description,
+          })
         }
       })
     })
   }
-
+url:any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
     this.footerForm.patchValue({
       logo: file
     })
@@ -97,31 +115,57 @@ export class UpdateFooterComponent implements OnInit {
     formdata.append('twitter', this.footerForm.get('twitter')?.value);
     formdata.append('whatsapp', this.footerForm.get('whatsapp')?.value);
     formdata.append('address', this.footerForm.get('address')?.value);
-    formdata.append('logo', this.footerForm.get('logo')?.value);
+    // formdata.append('logo', this.footerForm.get('logo')?.value);
     formdata.append('description', this.footerForm.get('description')?.value);
 
     if (this.footerForm.valid) {
       this.loaders = true;
-      this.websiteService.updateFooter(formdata,this.id).subscribe((res: any) => {
-        console.log(res);
-        this.addRes = res;
-        if (this.addRes.msg == "Footer Updated Sucessfully") {
-          this.loaders = false;
-          this.toastr.success(this.addRes.msg)
-          this.footerForm.reset()
-          this.router.navigate(['//website/footerList'])
-        } else {
-          this.loaders = false;
-          if (this.addRes.whatsapp) {
-            this.whatsError = this.addRes.whatsapp[0];
-            setTimeout(() => {
-              this.whatsError = ''
-            }, 300);
+      const imageFile = this.footerForm.get('logo')?.value;
+      if (imageFile && imageFile instanceof File) {
+        formdata.append('logo', imageFile);
+        this.websiteService.updateFooter(formdata,this.id).subscribe((res: any) => {
+          console.log(res);
+          this.addRes = res;
+          if (this.addRes.msg == "Footer Updated Sucessfully") {
+            this.loaders = false;
+            this.toastr.success(this.addRes.msg)
+            this.footerForm.reset()
+            this.router.navigate(['//website/footerList'])
+          } else {
+            this.loaders = false;
+            if (this.addRes.whatsapp) {
+              this.whatsError = this.addRes.whatsapp[0];
+              setTimeout(() => {
+                this.whatsError = ''
+              }, 300);
+            }
           }
-        }
-      }, err => {
-        console.log(err.error.gst);
-      })
+        }, err => {
+          console.log(err.error.gst);
+        })
+      }else{
+        this.websiteService.updateFooter(formdata,this.id).subscribe((res: any) => {
+          console.log(res);
+          this.addRes = res;
+          if (this.addRes.msg == "Footer Updated Sucessfully") {
+            this.loaders = false;
+            this.toastr.success(this.addRes.msg)
+            this.footerForm.reset()
+            this.router.navigate(['//website/footerList'])
+          } else {
+            this.loaders = false;
+            if (this.addRes.whatsapp) {
+              this.whatsError = this.addRes.whatsapp[0];
+              setTimeout(() => {
+                this.whatsError = ''
+              }, 300);
+            }
+          }
+        }, err => {
+          console.log(err.error.gst);
+        })
+      }
+    
     } else {
       this.footerForm.markAllAsTouched()
       console.log('hhhhhh');

@@ -61,6 +61,7 @@ export class EditproductComponent implements OnInit {
   dat: any
   editRes: any;
   imgUrl = 'https://pv.greatfuturetechno.com';
+  coloList: any
   ngOnInit(): void {
     this.editor = new Editor();
 
@@ -102,8 +103,9 @@ export class EditproductComponent implements OnInit {
         this.colorTitle = res.color.map((res: any) => res.title)
         this.sizeTitle = res.size.map((res: any) => res.title)
 
+        this.coloList = res.color
         this.selectColor = res.variant_product.map(res => res.color).filter(Boolean);
-  
+
         this.selectSize = res.variant_product.map((res) => res.size).filter(Boolean);
 
         this.productForm.patchValue({
@@ -116,8 +118,8 @@ export class EditproductComponent implements OnInit {
           sale_tax_including: res.sale_tax_including,
           is_active: res.is_active,
           category: res.category.id,
-          subcategory_group: res.subcategory_group.id,
-          subcategory: res.subcategory.id,
+          subcategory_group: res?.subcategory_group?.id,
+          subcategory: res?.subcategory?.id,
           brand: res.brand.id,
           unit: res.unit.id,
           sales_tax_including: res.sales_tax_including
@@ -265,9 +267,9 @@ export class EditproductComponent implements OnInit {
   variants(): FormGroup {
     return this.fb.group({
       product_title: (''),
-      variant_name: new FormControl('',[Validators.required]),
-      variant_size:new FormControl('',[Validators.required]),
-      variant_color:(''),
+      variant_name: new FormControl('', [Validators.required]),
+      variant_size: new FormControl('', [Validators.required]),
+      variant_color: (''),
       sku: new FormControl(''),
     })
   }
@@ -519,7 +521,7 @@ export class EditproductComponent implements OnInit {
     if (this.colorTitle.length == 0) {
       this.colorTitle.push(title)
       this.selectColor.push({ id: id, title: title })
-      
+
     } else {
       if (!this.colorTitle.includes(title)) {
         this.colorTitle.push(title)
@@ -613,7 +615,7 @@ export class EditproductComponent implements OnInit {
       userGroup.patchValue({
         variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`,
         variant_color: user.color == undefined ? user.color : `${user.color}`,
-        variant_size:  user.size == undefined ? user.size : `${user.size}`,
+        variant_size: user.size == undefined ? user.size : `${user.size}`,
       });
     });
     // display updated value
@@ -922,7 +924,7 @@ export class EditproductComponent implements OnInit {
       userGroup.patchValue({
         variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`,
         variant_color: user.color == undefined ? user.color : `${user.color}`,
-        variant_size:  user.size == undefined ? user.size : `${user.size}`,
+        variant_size: user.size == undefined ? user.size : `${user.size}`,
       });
     });
   }
@@ -1056,11 +1058,11 @@ export class EditproductComponent implements OnInit {
     // }
 
     // price calculation
-  
+
     const sku = '';
     const color = '';
     const size = '';
-    this.variantProducts[index] = { color, size, sku,  };
+    this.variantProducts[index] = { color, size, sku, };
 
   }
 

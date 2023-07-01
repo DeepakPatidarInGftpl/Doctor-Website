@@ -73,8 +73,7 @@
                 </div>
                 <div class="d-flex align-items-center my-3 mx-3">
                     <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                    <span
-                        [ngClass]="{'bg-lightgreen': trendingDetail?.is_active === true, 'bg-lightred' : trendingDetail?.is_active === false,'bg-lightyellow' : trendingDetail?.is_active === 'Partial' }"
+                    <span [ngClass]="{'bg-lightgreen': trendingDetail?.is_active === true, 'bg-lightred' : trendingDetail?.is_active === false,'bg-lightyellow' : trendingDetail?.is_active === 'Partial' }"
                         class="badges">{{trendingDetail?.is_active}}</span>
                 </div>
             </div>

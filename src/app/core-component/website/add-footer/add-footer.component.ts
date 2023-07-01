@@ -37,7 +37,7 @@ export class AddFooterComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private websiteService: WebsiteService) { }
-    date = new Date();
+  date = new Date();
 
   ngOnInit(): void {
     this.editor = new Editor();
@@ -53,16 +53,23 @@ export class AddFooterComponent implements OnInit {
       description: new FormControl('', [Validators.required])
     })
   }
-
+  url: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
     this.footerForm.patchValue({
       logo: file
     })
     this.footerForm.get('logo')?.updateValueAndValidity();
   }
-  
+
   dateError = null;
   addRes: any;
   loaders = false;

@@ -146,7 +146,7 @@ export class SubcategorylistComponent implements OnInit {
     // };
     this.subcategoryForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      image: new FormControl('', [Validators.required]),
+      image: new FormControl('',),
       category_id: new FormControl('', [Validators.required]),
       discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
       // brand_id: new FormArray([],)
@@ -254,10 +254,17 @@ export class SubcategorylistComponent implements OnInit {
       });
     }
   }
+  url:any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
-
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
     this.subcategoryForm.patchValue({
       image: file
     })
@@ -364,33 +371,64 @@ export class SubcategorylistComponent implements OnInit {
     var formdata: any = new FormData()
 
     formdata.append('title', this.subcategoryForm.get('title')?.value);
-    formdata.append('image', this.subcategoryForm.get('image')?.value);
+    // formdata.append('image', this.subcategoryForm.get('image')?.value);
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
     formdata.append('discount', this.subcategoryForm.get('discount')?.value);
 
     if (this.subcategoryForm.valid) {
       this.loader = true;
-      this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        this.loader = false;
-        if (this.addRes.msg == "Product Subcategory updated successfully") {
-          this.toastr.success(this.addRes.msg)
-          this.subcategoryForm.reset()
-          this.addForm = true
-          this.loader = false
-          // window.location.reload()
-          this.ngOnInit()
-        }
-      }, err => {
-        console.log(err.error.gst);
-        if (err.error.image) {
-          this.imgError = true
-          // setTimeout(() => {
-          //   this.imgError=false;
-          // }, 3000);
-        }
-      })
+      const imageFile = this.subcategoryForm.get('image')?.value;
+      if (imageFile && imageFile instanceof File) {
+        formdata.append('image', imageFile);
+        this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          this.loader = false;
+          if (this.addRes.msg == "Product Subcategory updated successfully") {
+            this.toastr.success(this.addRes.msg);
+            this.updateData='';
+            this.subcategoryForm.reset();
+            this.addForm = true
+            this.loader = false
+            // window.location.reload()
+            this.ngOnInit()
+          }
+        }, err => {
+          console.log(err.error.gst);
+          if (err.error.image) {
+            this.imgError = true
+            // setTimeout(() => {
+            //   this.imgError=false;
+            // }, 3000);
+          }
+        })
+      }else{
+        this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          this.loader = false;
+          if (this.addRes.msg == "Product Subcategory updated successfully") {
+            this.toastr.success(this.addRes.msg);
+            this.subcategoryForm.reset();
+            this.updateData=''
+            this.addForm = true
+            this.loader = false
+            // window.location.reload()
+            this.ngOnInit()
+          }
+        }, err => {
+          console.log(err.error.gst);
+          if (err.error.image) {
+            this.imgError = true
+            // setTimeout(() => {
+            //   this.imgError=false;
+            // }, 3000);
+          }
+        })
+      }
+
+      
+    
 
     } else {
       this.subcategoryForm.markAllAsTouched()
@@ -416,7 +454,8 @@ export class SubcategorylistComponent implements OnInit {
   addForm = true
   id: any
   brandEdit: any;
-  brands: any = []
+  brands: any = [];
+  updateData: any;
   editForm(id: number) {
     this.id = id
     this.coreService.getProductSubcategoryById(id).subscribe(res => {
@@ -426,7 +465,7 @@ export class SubcategorylistComponent implements OnInit {
         this.addForm = false;
         // this.getbrand()
         // this.brandEdit = res.brand_id;
-
+        this.updateData = res;
         console.log(res.category_id.title);
         console.log(res?.discount);
         // this.brands = res.brand_id.map((res: any) => res.id);
@@ -434,9 +473,9 @@ export class SubcategorylistComponent implements OnInit {
 
         this.subcategoryForm.patchValue({
           title: res.title,
-          category_id: res.category_id.title,
+          category_id: res.category_id.id,
           discount: res?.discount,
-          image: res.image,
+          // image: res.image,
         });
       }
     })
