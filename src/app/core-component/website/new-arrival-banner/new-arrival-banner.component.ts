@@ -140,7 +140,7 @@ export class NewArrivalBannerComponent implements OnInit {
   ngOnInit(): void {
     this.editor = new Editor();
     this.bannerForm = this.fb.group({
-      image: new FormControl('', [Validators.required]),
+      image: new FormControl(''),
       title1: new FormControl('', [Validators.required]),
       title2: new FormControl('', [Validators.required]),
       design: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
@@ -170,10 +170,17 @@ export class NewArrivalBannerComponent implements OnInit {
       })
     }
   }
-
+url:any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
     this.bannerForm.patchValue({
       image: file
     })
@@ -229,28 +236,57 @@ export class NewArrivalBannerComponent implements OnInit {
       formdata.append('title2', this.bannerForm.get('title2')?.value);
       formdata.append('design', this.bannerForm.get('design')?.value);
       formdata.append('short_description', this.bannerForm.get('short_description')?.value);
-      formdata.append('image', this.bannerForm.get('image')?.value);
-      this.websiteService.updatenewArrivalBanner(formdata, this.id).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        if (this.addRes.msg == "New Arrivals Banner Updated Sucessfully") {
+      // formdata.append('image', this.bannerForm.get('image')?.value);
+      const imageFile = this.bannerForm.get('image')?.value;
+      if (imageFile && imageFile instanceof File) {
+        formdata.append('image', imageFile);
+        this.websiteService.updatenewArrivalBanner(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "New Arrivals Banner Updated Sucessfully") {
+            this.loaders=false;
+            this.updateData=''
+            this.toastr.success(this.addRes.msg)
+            this.bannerForm.reset()
+            this.addForm = true;
+            // window.location.reload()
+            this.ngOnInit()
+          }else{
+            this.loaders=false;
+          }
+        }, err => {
+          console.log(err.error);
           this.loaders=false;
-          this.toastr.success(this.addRes.msg)
-          this.bannerForm.reset()
-          this.addForm = true;
-          // window.location.reload()
-          this.ngOnInit()
-        }else{
+          this.imgError=err.error.image;
+          setTimeout(() => {
+            this.imgError=''
+          }, 5000);
+        })
+      }else{
+        this.websiteService.updatenewArrivalBanner(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "New Arrivals Banner Updated Sucessfully") {
+            this.loaders=false;
+            this.updateData=''
+            this.toastr.success(this.addRes.msg)
+            this.bannerForm.reset()
+            this.addForm = true;
+            // window.location.reload()
+            this.ngOnInit()
+          }else{
+            this.loaders=false;
+          }
+        }, err => {
+          console.log(err.error);
           this.loaders=false;
-        }
-      }, err => {
-        console.log(err.error);
-        this.loaders=false;
-        this.imgError=err.error.image;
-        setTimeout(() => {
-          this.imgError=''
-        }, 5000);
-      })
+          this.imgError=err.error.image;
+          setTimeout(() => {
+            this.imgError=''
+          }, 5000);
+        })
+      }
+  
 
     } else {
       this.bannerForm.markAllAsTouched()
@@ -276,9 +312,11 @@ export class NewArrivalBannerComponent implements OnInit {
   addForm = true
   id: any
   editFormdata: any;
-  resEdit: any
+  resEdit: any;
+  updateData:any;
   editForm(id: number) {
-    this.id = id
+    this.id = id;
+    this.url=''
     this.websiteService.getnewArrivalBannerById(id).subscribe(res => {
       console.log(res);
       this.resEdit = res;
@@ -286,14 +324,21 @@ export class NewArrivalBannerComponent implements OnInit {
         console.log(data);
         if (id == data.id) {
           console.log(data);
+          this.updateData=data;
           this.addForm = false
-          this.bannerForm.patchValue(data);
+          this.bannerForm.patchValue({
+            title1:data.title1,
+            title2:data.title2,
+            short_description:data.short_description,
+            design:data.design
+          });
           this.editFormdata = res
         }
       })
     })
   }
   openaddForm() {
+    this.updateData=''
     this.addForm = true;
     this.bannerForm.reset();
   }

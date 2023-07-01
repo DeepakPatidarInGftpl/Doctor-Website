@@ -123,7 +123,7 @@ export class BannerComponent implements OnInit {
   loader = true;
   ngOnInit(): void {
     this.bannerForm = this.fb.group({
-      image: new FormControl('', [Validators.required]),
+      image: new FormControl('',),
       title: new FormControl('', [Validators.required]),
       url: new FormControl('', [Validators.required]),
     })
@@ -181,10 +181,17 @@ export class BannerComponent implements OnInit {
 
     })
   }
-
+  imgurl: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.imgurl = reader.result as string;
+      };
+    }
     this.bannerForm.patchValue({
       image: file
     })
@@ -208,7 +215,7 @@ export class BannerComponent implements OnInit {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
-          this.loaders=false;
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.bannerForm.reset()
           // window.location.reload();
@@ -226,35 +233,58 @@ export class BannerComponent implements OnInit {
 
   update() {
     console.log(this.id);
-
+  
     if (this.bannerForm.valid) {
-      this.loaders=true;
-      var formdata: any = new FormData()
+      this.loaders = true;
+      const formdata: FormData = new FormData();
       formdata.append('title', this.bannerForm.get('title')?.value);
       formdata.append('url', this.bannerForm.get('url')?.value);
-      formdata.append('image', this.bannerForm.get('image')?.value);
+  
+      const imageFile = this.bannerForm.get('image')?.value;
 
-      this.websiteService.updateBanner(formdata, this.id).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        if (this.addRes.msg == "Banner Updated Sucessfully") {
-          this.loaders=false;
-          this.toastr.success(this.addRes.msg)
-          this.bannerForm.reset()
-          this.addForm = true;
-          // window.location.reload()
-          this.ngOnInit()
-        }
-      }, err => {
-        console.log(err.error.gst);
-      })
-
+      if (imageFile && imageFile instanceof File) {
+        formdata.append('image', imageFile);
+        this.websiteService.updateBanner(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res;
+          if (this.addRes.msg == "Banner Updated Sucessfully") {   
+            this.loaders = false;
+            this.updateData='';
+            this.toastr.success(this.addRes.msg);
+            this.bannerForm.reset();
+            this.addForm = true;
+            this.ngOnInit();
+          }else{
+            this.loader=false;
+          }
+        }, err => {
+          console.log(err.error.gst);
+        });
+      } else {
+      //  formdata.append('image', ''); // Append an empty string for image if not selected
+        this.websiteService.updateBanner(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res;
+          if (this.addRes.msg == "Banner Updated Sucessfully") {
+            this.loaders = false;
+            this.updateData='';
+            this.toastr.success(this.addRes.msg);
+            this.bannerForm.reset();
+            this.addForm = true;
+            this.ngOnInit();
+          }else{
+            this.loader=false;
+          }
+        }, err => {
+          console.log(err.error.gst);
+        });
+      }
     } else {
-      this.bannerForm.markAllAsTouched()
+      this.bannerForm.markAllAsTouched();
       console.log('forms invalid');
     }
   }
-
+  
   get image() {
     return this.bannerForm.get('image')
   }
@@ -268,8 +298,10 @@ export class BannerComponent implements OnInit {
   addForm = true
   id: any
   editFormdata: any;
-  resEdit: any
+  resEdit: any;
+  updateData: any;
   editForm(id: number) {
+    this.imgurl=''
     this.id = id
     this.websiteService.getBannerbById(id).subscribe(res => {
       console.log(res);
@@ -278,7 +310,7 @@ export class BannerComponent implements OnInit {
         console.log(data);
         if (id == data.id) {
           console.log(data);
-
+          this.updateData = data;
           this.addForm = false
           this.bannerForm.patchValue({
             title: data.title,
@@ -292,6 +324,8 @@ export class BannerComponent implements OnInit {
   openaddForm() {
     this.addForm = true;
     this.bannerForm.reset();
+    this.imgurl='';
+    this.updateData='';
   }
 
   search() {

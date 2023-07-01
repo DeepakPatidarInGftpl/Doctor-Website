@@ -20,7 +20,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   apiUrl = environment.api
 
   public tableData: any = []
-
+  imgUrl = 'https://pv.greatfuturetechno.com';
   form: FormGroup
   titlee: any;
   p: number = 1
@@ -149,6 +149,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   errormessFSubC
   errormessFFG;
   loader = true;
+  updateData:any;
   ngOnInit() {
     // this.coreServ.subCategoryGroupGet()
 
@@ -193,7 +194,10 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
         eTitle = res.title
         eCategory = res?.category?.id
         this.subcatEdit = res.subcategories
-        this.featureCategoryEdit = res.feature_group
+        this.featureCategoryEdit = res.feature_group;
+        this.updateData=res;
+        console.log(this.updateData);
+        
         // this.selectedSubCats = this.subcatEdit.map(res => res.id,
         //   console.log(res));
         this.selectedSubCats = res.subcategories.map(res => res.id,
@@ -206,26 +210,11 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
         category: new FormControl(eCategory, Validators.required),
         subcategories: new FormControl(subCategory),
         feature_group: new FormControl(featureCategory),
+        image: new FormControl('')
       })
-
-
     })
 
     console.log(this.subcategories);
-
-    // this.dtOptions = {
-    //   dom: 'Btlpif',
-    //   pagingType: 'numbers',
-    //   language: {
-    //     search: ' ',
-    //     searchPlaceholder: 'Search...',
-    //     info: '_START_ - _END_ of _TOTAL_ items',
-    //   },
-    //   initComplete: (settings, json) => {
-    //     $('.dt-buttons').appendTo('.none');
-    //     $('.dataTables_filter').appendTo('.search-input');
-    //   },
-    // };
   }
 
   allSelected: boolean = false;
@@ -274,6 +263,24 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
       this.subcatbyCategory = res;
     })
   }
+
+  url: any;
+  selectImg(event: Event) {
+    const file = (event.target as HTMLInputElement).files![0];
+    console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
+    this.form.patchValue({
+      image: file
+    })
+    this.form.get('image')?.updateValueAndValidity();
+  }
+
   loaders = false;
   submitForm() {
     console.log(this.form.value);
@@ -286,30 +293,62 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
     } else {
       this.loaders = true;
       var formdata: any = new FormData();
-      formdata.append("title", this.form.controls['title'].value);
-      formdata.append("category", this.form.controls['category'].value);
-      formdata.append("subcategories", `[${this.selectedSubCats}]`);
-      formdata.append("feature_group", `[${this.selectedFeature}]`);
-
       if (this.editMode) {
-        this.coreServ.editSubCategoryGroup(formdata, this.editMode.id).subscribe((res: any) => {
-          if (res.msg == 'SubCategory Group updated successfully') {
-            this.loaders = false;
-            this.editMode = false
-            this.coreServ.editThings.unsubscribe()
-            this.selectedSubCats = []
-            this.selectedFeature = []
-            this.addForm = true;
-            this.form.reset()
-            this.toastr.success(res.msg)
-            this.ngOnInit()
-            this.selectedSubCat = 0;
-            this.selectedFeatureGrp = 0;
-          }
-        })
+        formdata.append("title", this.form.controls['title'].value);
+        formdata.append("category", this.form.controls['category'].value);
+        // formdata.append("image", this.form.controls['image'].value);
+        formdata.append("subcategories", `[${this.selectedSubCats}]`);
+        formdata.append("feature_group", `[${this.selectedFeature}]`);
+        
+        const imageFile = this.form.get('image')?.value;
+        if (imageFile && imageFile instanceof File) {
+          formdata.append('image', imageFile);
+          this.coreServ.editSubCategoryGroup(formdata, this.editMode.id).subscribe((res: any) => {
+            if (res.msg == 'SubCategory Group updated successfully') {
+              this.loaders = false;
+              this.editMode = false;
+              this.url='';
+              this.updateData='';
+              this.coreServ.editThings.unsubscribe()
+              this.selectedSubCats = []
+              this.selectedFeature = []
+              this.addForm = true;
+              this.form.reset()
+              this.toastr.success(res.msg)
+              this.ngOnInit()
+              this.selectedSubCat = 0;
+              this.selectedFeatureGrp = 0;
+            }
+          })
+        }else{
+          this.coreServ.editSubCategoryGroup(formdata, this.editMode.id).subscribe((res: any) => {
+            if (res.msg == 'SubCategory Group updated successfully') {
+              this.loaders = false;
+              this.url='';
+              this.updateData='';
+              this.editMode = false
+              this.coreServ.editThings.unsubscribe()
+              this.selectedSubCats = []
+              this.selectedFeature = []
+              this.addForm = true;
+              this.form.reset()
+              this.toastr.success(res.msg)
+              this.ngOnInit()
+              this.selectedSubCat = 0;
+              this.selectedFeatureGrp = 0;
+            }
+          })
+        }
       } else {
+        formdata.append("title", this.form.controls['title'].value);
+        formdata.append("category", this.form.controls['category'].value);
+        formdata.append("image", this.form.controls['image'].value);
+        formdata.append("subcategories", `[${this.selectedSubCats}]`);
+        formdata.append("feature_group", `[${this.selectedFeature}]`);
         this.coreServ.postCategoriesGroup(formdata).subscribe((res: any) => {
           if (res.msg == 'Data Created') {
+            this.url='';
+            this.updateData='';
             this.loaders = false;
             this.form.reset()
             this.selectedSubCats = []
@@ -337,8 +376,9 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
     }
   }
   id: any;
-
   editThis(prod) {
+    this.url='';
+    this.updateData='';
     this.id = prod.id;
     this.coreServ.editThisData(prod)
     this.editForm()
@@ -383,15 +423,17 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   }
 
   openaddForm() {
+    this.updateData='';
+    this.url=''
     this.addForm = true;
     this.form.reset();
   }
   addForm = true
   editForm() {
+    this.url='';
+    this.updateData='';
     this.addForm = false
   }
-
-
   search() {
     if (this.titlee == "") {
       this.ngOnInit();

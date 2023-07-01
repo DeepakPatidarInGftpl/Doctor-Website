@@ -7,7 +7,7 @@
             </div>
             <div class="page-btn" *ngIf="!addForm">
                 <a class="btn btn-added" (click)="openaddForm()">
-                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add About Banner
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add About Banner
                 </a>
             </div>
 
@@ -17,17 +17,17 @@
 
                 <div class="table-top">
                     <div class="search-set">
-                     
+
                         <div class="search-input">
                             <a class="btn btn-searchset">
-                              <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                              <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
-                              placeholder="search">
-                            </label>
-                          </div>
-            
-                          </div>
+                                    <input type="search" class="form-control form-control-sm" placeholder="Search..."
+                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                </label>
+                            </div>
+
+                        </div>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -65,7 +65,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                            <tr
+                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -75,13 +76,17 @@
                                 <td> <a class="product-img">
                                         <img [src]="imgUrl+products.image" alt="product">
                                     </a></td>
-                                <td >
+                                <td>
                                     {{products.title}}
                                 </td>
-                                <td><div [innerHTML]="products.description"></div> </td>
                                 <td>
-                                     <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>                         
-                                    </td>
+                                    <div [innerHTML]="products.description"></div>
+                                </td>
+                                <td>
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td>
                                 <td>
                                     <a class="me-3" (click)="editForm(products.id)">
                                         <img src="assets/img/icons/edit.svg" alt="img">
@@ -100,22 +105,23 @@
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
-                            <select [(ngModel)]="itemsPerPage" class="pagination">
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="-1">All</option>
-                              </select>
+                                <select [(ngModel)]="itemsPerPage" class="pagination">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="-1">All</option>
+                                </select>
                             </div>
                         </div>
-                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                        <div class="f-right">
-                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}}
+                                    entries</div>
+                            </div>
                         </div>
-                       </div>
-                     </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -150,9 +156,11 @@
                                 <label>Description*</label>
                                 <ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
                                 </ngx-editor-menu>
-                                <ngx-editor [editor]="editor" formControlName="description" id="slug" [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}">
+                                <ngx-editor [editor]="editor" formControlName="description" id="slug"
+                                    [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}">
                                 </ngx-editor>
-                                <span class="text-danger" *ngIf="description && description.invalid && description.touched">Enter description
+                                <span class="text-danger"
+                                    *ngIf="description && description.invalid && description.touched">Enter description
                                 </span>
 
                             </div>
@@ -160,15 +168,28 @@
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label>About Banner Image*</label>
-                                <div class="image-upload">
-                                    <input type="file" formControlName="image" (change)="selectImg($event)">
-                                    <div class="image-uploads">
-                                        <img src="assets/img/icons/upload.svg" alt="img">
-                                        <h4>Drag and drop a file to upload</h4>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="image-upload">
+                                            <input type="file" formControlName="image" (change)="selectImg($event)" required>
+                                            <div class="image-uploads">
+                                                <img src="assets/img/icons/upload.svg" alt="img">
+                                                <h4>Drag and drop a file to upload</h4>
+                                            </div>
+                                            <span class="text-danger"
+                                                *ngIf="image && image.invalid && image.touched">Select image</span>
+                                            <span class="text-danger" *ngIf="imgError">Select image</span>
+                                        </div>
                                     </div>
-                                    <span class="text-danger" *ngIf="image && image.invalid && image.touched">Select
-                                        image
-                                    </span>
+                                    <div class="col-lg-6">
+                                            <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                            class="bi bi-image mx-5 svg" viewBox="0 0 16 16" style="height: 100px; width: 100px;">
+                                            <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                            <path
+                                                d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
+                                        </svg>
+                                        <img [src]="url" *ngIf="url" alt="" class="p_img">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -187,7 +208,8 @@
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
+                                <input type="text" formControlName="title" id="title"
+                                    [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
                                 <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
                                 </span>
                             </div>
@@ -197,27 +219,38 @@
                                 <label>Description*</label>
                                 <ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
                                 </ngx-editor-menu>
-                                <ngx-editor [editor]="editor" formControlName="description" id="slug" [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}">
+                                <ngx-editor [editor]="editor" formControlName="description" id="slug"
+                                    [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}">
                                 </ngx-editor>
-                                <span class="text-danger" *ngIf="description && description.invalid && description.touched">Enter description
+                                <span class="text-danger"
+                                    *ngIf="description && description.invalid && description.touched">Enter description
                                 </span>
                             </div>
                         </div>
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label>About Banner Image*</label>
-                                <div class="image-upload">
-                                    <input type="file" formControlName="image" (change)="selectImg($event)">
-                                    <div class="image-uploads">
-                                        <img src="assets/img/icons/upload.svg" alt="img">
-                                        <h4>Drag and drop a file to upload</h4>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="image-upload">
+                                            <input type="file" formControlName="image" (change)="selectImg($event)">
+                                            <div class="image-uploads">
+                                                <img src="assets/img/icons/upload.svg" alt="img">
+                                                <h4>Drag and drop a file to upload</h4>
+                                            </div>
+                                            <span class="text-danger"
+                                                *ngIf="image && image.invalid && image.touched">Select image</span>
+                                            <span class="text-danger" *ngIf="imgError">Select image</span>
+                                        </div>
                                     </div>
-                                    <span class="text-danger" *ngIf="image && image.invalid && image.touched">Select image</span>
-                                    <span class="text-danger" *ngIf="imgError">Select image</span>
+                                    <div class="col-lg-6">
+                                        <img [src]="url" *ngIf="url" alt="" class="p_img">
+                                        <img [src]="imgUrl+updateData.image" *ngIf="!url" alt="" class="p_img">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                            <div class="col-lg-12">
                             <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                             <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>

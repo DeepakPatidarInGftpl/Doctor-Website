@@ -26,6 +26,7 @@ const routes: Routes = [
       { path: 'aboutBanner', loadChildren: () => import('./about-banner/about-banner.module').then((m) => m.AboutBannerModule) },
       { path: 'aboutFooterBanner', loadChildren: () => import('./about-footer-banner/about-footer-banner.module').then((m) => m.AboutFooterBannerModule) },
       { path: 'newArrivalBanner', loadChildren: () => import('./new-arrival-banner/new-arrival-banner.module').then((m) => m.NewArrivalBannerModule) },
+      { path: 'ratingAndReview', loadChildren: () => import('./rating-and-review/rating-and-review.module').then((m) => m.RatingAndReviewModule) },
 
 
 
