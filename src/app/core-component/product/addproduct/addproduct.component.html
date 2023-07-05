@@ -457,6 +457,8 @@
 											<span class="text-danger" *ngIf="unit && unit.invalid && unit.touched">Select Unit </span>
 										</div>
 									</div>
+
+	
 									<div class="col-lg-6 col-sm-6 col-12">
 										<div class="form-group">
 											<div class="d_flex">
@@ -468,10 +470,14 @@
 													<input type="checkbox" formControlName="is_measurable" [id]="'checkboxMeasure-'">
 													<label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Measurable</label>
 												</div>
+												<div class="d-flex">
+													<input type="checkbox" formControlName="cod_available" [id]="'checkboxcod-'" [ngModel]="true">
+													<label [for]="'checkboxcod-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Cod Available</label>
+												</div>
 											</div>
 											<div class="d_flex">
 												<div class="d-flex">
-													<input type="checkbox" formControlName="sales_tax_including" [id]="'checkboxSale-'" [ngModel]="true">
+													<input type="checkbox" formControlName="sale_tax_including" [id]="'checkboxSale-'" [ngModel]="true">
 													<label [for]="'checkboxSale-'" class="d_flex"
 														style="margin-bottom: 0; margin-left: 5px;">Sales Tax
 														Including</label>
@@ -484,7 +490,24 @@
 											</div>
 										</div>
 									</div>
-
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Product or Service*</label>
+											<select class="form-select" formControlName="product_or_service" [ngClass]="{'is-invalid': f['product_or_service'].touched && f['product_or_service'].invalid}">
+												<option value="" selected disabled>Select Product or Service</option>
+												<option value="Product">Product</option>
+												<option value="Service">Service</option>
+											</select>
+											<span class="text-danger" *ngIf="product_or_service && product_or_service.invalid && product_or_service.touched">Select Product or Service </span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Return Time*</label>
+											<input type="text" formControlName="return_time" [ngClass]="{'is-invalid': f['return_time'].touched && f['return_time'].invalid}">
+											<span class="text-danger" *ngIf="return_time && return_time.invalid && return_time.touched">Enter Return Time</span>
+										</div>
+									</div>
 									<div class="col-lg-12">
 										<div class="form-group">
 											<label>Description</label>
@@ -522,8 +545,7 @@
 																	</div>
 																	<div class="col-sm-8">
 																		<select formControlName="feature" class="inp">
-																			<option value="" selected disabled>Select
-																				Tax</option>
+																			<option value="" selected disabled>Select Feature</option>
 																			<option value="{{feature.id}}"
 																				*ngFor="let feature of featureList">
 																				{{feature.title}}
@@ -571,15 +593,15 @@
 																formControlName="variant_name" [readonly]="true"></td>
 																<span class="text-danger" *ngIf="getvariant_name(i)?.invalid && getvariant_name(i)?.touched">Enter Variant name</span>
 														<td>
-															<input type="text" class="inp" formControlName="variant_color" [readonly]="true">
+															<input type="text" class="inp" [value]="varntColor[i] !== undefined ? varntColor[i] : ''" [readonly]="true">
 															<!-- <select class="variant_color" formControlName="variant_color">
 																	<option value="" selected disabled>Select Color</option>
 																	<option value="{{color.id}}" *ngFor="let color of selectColor">{{color.title}}
 																	</option>
 																</select> -->
 														</td>
-														<td>
-															<input type="text" class="inp" formControlName="variant_size" [readonly]="true">
+														<td> 
+															<input type="text" class="inp" [value]="varntSize[i] !== undefined ? varntSize[i] : ''" [readonly]="true">
 															<!-- <select class="variant_size" formControlName="variant_size">
 																	<option value="" selected disabled>Select Size</option>
 																	<option value="{{size.id}}" *ngFor="let size of selectSize">{{size.title}}
@@ -593,7 +615,7 @@
 															<svg (click)="removeVariant(i)" style="color:red" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
 																<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
 																<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-															  </svg>
+															</svg>
 														</td>
 													</tr>
 												</ng-container>
@@ -622,7 +644,7 @@
 													<td>
 														<select class="variant_color" formControlName="product_colour">
 															<option value="" selected disabled>Select Color</option>
-															<option value="{{color.id}}" *ngFor="let color of selectColor">{{color.title}}
+															<option value="{{color.id}}" *ngFor="let color of currentColors">{{color.title}}
 															</option>
 														</select> 
 														<!-- <input type="text" class="inp" placeholder="Color Name" formControlName="product_colour" style="width: 100px;"> -->
