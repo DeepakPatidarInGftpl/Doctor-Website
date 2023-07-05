@@ -41,13 +41,20 @@ export class ProductDetailsComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Batch Deleted successfully") {
             this.ngOnInit()
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+         
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
 
       }
     });

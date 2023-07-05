@@ -2,3 +2,10 @@
 {
     height: 40px;
 }
+.ng-dirty.ng-invalid.is-invalid.ng-touched {
+    border: 1px solid red;
+}
+.p_img{
+    margin-right: 5rem!important;
+    height: 100px;
+}

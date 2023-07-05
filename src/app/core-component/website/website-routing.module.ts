@@ -22,6 +22,15 @@ const routes: Routes = [
       { path: 'updatefooter/:id', loadChildren: () => import('./update-footer/update-footer.module').then((m) => m.UpdateFooterModule) },
       { path: 'detailsfooter/:id', loadChildren: () => import('./details-footer/details-footer.module').then((m) => m.DetailsFooterModule) },
       { path: 'couponList', loadChildren: () => import('./coupon/coupon.module').then((m) => m.CouponModule) },
+      { path: 'reason', loadChildren: () => import('./reason/reason.module').then((m) => m.ReasonModule) },
+      { path: 'aboutBanner', loadChildren: () => import('./about-banner/about-banner.module').then((m) => m.AboutBannerModule) },
+      { path: 'aboutFooterBanner', loadChildren: () => import('./about-footer-banner/about-footer-banner.module').then((m) => m.AboutFooterBannerModule) },
+      { path: 'newArrivalBanner', loadChildren: () => import('./new-arrival-banner/new-arrival-banner.module').then((m) => m.NewArrivalBannerModule) },
+      { path: 'ratingAndReview', loadChildren: () => import('./rating-and-review/rating-and-review.module').then((m) => m.RatingAndReviewModule) },
+
+
+
+
     ]
   }
 ];
