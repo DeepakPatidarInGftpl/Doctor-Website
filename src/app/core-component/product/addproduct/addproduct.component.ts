@@ -73,12 +73,14 @@ export class AddproductComponent implements OnInit {
       unit: new FormControl('', [Validators.required]),
       purchase_tax_including: new FormControl(''),
       is_measurable: new FormControl(''),
-      sales_tax_including: new FormControl(''),
+      sale_tax_including: new FormControl(''),
       is_active: new FormControl(''),
-      // tax_slab: new FormControl(''),
       description: new FormControl(''),
-      // hsncode: new FormControl(''),
-
+      // new field add 5-7
+      return_time: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      cod_available: new FormControl('', [Validators.required]),
+      product_or_service: new FormControl('', [Validators.required]),
+      //end
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
       product_images: this.fb.array([])
@@ -419,9 +421,13 @@ export class AddproductComponent implements OnInit {
     // formdata.append('style_code', this.productForm.get('style_code')?.value);
     formdata.append('is_measurable', this.productForm.get('is_measurable')?.value);
     formdata.append('purchase_tax_including', this.productForm.get('purchase_tax_including')?.value);
-    formdata.append('sales_tax_including', this.productForm.get('sales_tax_including')?.value);
+    formdata.append('sale_tax_including', this.productForm.get('sale_tax_including')?.value);
     formdata.append('is_active', this.productForm.get('is_active')?.value);
-
+    // new field add 5-7
+    formdata.append('return_time', this.productForm.get('return_time')?.value);
+    formdata.append('cod_available', this.productForm.get('cod_available')?.value);
+    formdata.append('product_or_service', this.productForm.get('product_or_service')?.value);
+    // end
 
     // nested formdata 
     // working also
@@ -592,10 +598,12 @@ export class AddproductComponent implements OnInit {
   get tax_slab() {
     return this.productForm.get('tax_slab')
   }
-  get hsn_code() {
-    return this.productForm.get('hsncode')
+  get return_time() {
+    return this.productForm.get('return_time')
   }
-
+  get product_or_service() {
+    return this.productForm.get('product_or_service')
+  }
   getvariant_name(index: number) {
     return this.getVarinatsForm().controls[index].get('variant_name');
   }
@@ -610,47 +618,44 @@ export class AddproductComponent implements OnInit {
   selectSize: any = [];
 
   onCheckSizes(e: any, id: any) {
-    if (this.currentSizes.length == 0) {
-      this.currentSizes.push(e);
-      // push data to selectSize
-      this.selectSize.push({ id: id, title: e })
+    if (this.currentSizes.length === 0) {
+      this.currentSizes.push({ id: id, title: e });
+      this.selectSize.push({ id: id, title: e });
     } else {
-      if (!this.currentSizes.includes(e)) {
-        this.currentSizes.push(e)
-        // push data to selectSize
-        this.selectSize.push({ id: id, title: e })
+      const existingItem = this.currentSizes.find(item => item.id === id && item.title === e);
+      if (!existingItem) {
+        this.currentSizes.push({ id: id, title: e });
+        this.selectSize.push({ id: id, title: e });
       } else {
-        this.currentSizes = this.currentSizes.filter(item => item !== e);
-        this.selectSize = this.selectSize.filter(item => item.id !== id || item.title !== e);
-
+        this.currentSizes = this.currentSizes.filter(item => item !== existingItem);
+        this.selectSize = this.selectSize.filter(item => item !== existingItem);
       }
     }
     console.log(this.selectSize);
-
     this.variantCheck();
   }
 
   selectColor: any = [];
   onCheckColors(e: any, id: any) {
-    if (this.currentColors.length == 0) {
-      this.currentColors.push(e);
-      // push data to selectColor 
-      this.selectColor.push({ id: id, title: e })
+    if (this.currentColors.length === 0) {
+      this.currentColors.push({ id: id, title: e });
+      this.selectColor.push({ id: id, title: e });
     } else {
-      if (!this.currentColors.includes(e)) {
-        this.currentColors.push(e)
-        // push data to selectColor 
-        this.selectColor.push({ id: id, title: e })
+      const existingItem = this.currentColors.find(item => item.id === id && item.title === e);
+      if (!existingItem) {
+        this.currentColors.push({ id: id, title: e });
+        this.selectColor.push({ id: id, title: e });
       } else {
-        this.currentColors = this.currentColors.filter(item => item !== e);
-        this.selectColor = this.selectColor.filter(item => item.id !== id || item.title !== e);
+        this.currentColors = this.currentColors.filter(item => item !== existingItem);
+        this.selectColor = this.selectColor.filter(item => item !== existingItem);
       }
     }
-    console.log(this.selectColor);
-
-
+    console.log(this.currentColors, 'currentColors');
+    console.log(this.selectColor, 'selectColor');
     this.variantCheck();
   }
+  varntColor: any = [];
+  varntSize: any = [];
 
   variantCheck() {
     this.currentVariants = [];
@@ -702,24 +707,34 @@ export class AddproductComponent implements OnInit {
     this.currentVariants.map((user, index) => {
       console.log(user);
       console.log(index);
-
       const userGroup = userArray.at(index) as FormGroup;
       console.log(userGroup);
       userGroup.patchValue({
-        variant_name: user.color == undefined ? user.size : user.size == undefined ? user.color : `${user.color} - ${user.size}`,
-        variant_color: user.color == undefined ? user.color : `${user.color}`,
-        variant_size: user.size == undefined ? user.size : `${user.size}`,
+        variant_name: user.color?.title == undefined ? user.size?.title : user.size?.title == undefined ? user.color?.title : `${user.color?.title} - ${user.size?.title}`,
+        variant_color: user.color?.id == undefined ? user.color?.id : `${user.color?.id}`,
+        variant_size: user.size?.id == undefined ? user.size?.id : `${user.size?.id}`,
       });
     });
+    this.currentVariants.forEach((j: any, i: any) => {
+      console.log(j?.color);
+      this.varntColor[i] = j?.color.title == undefined ? j?.color.title : `${j?.color.title}`;
+      console.log(this.varntColor[i]);
+    })
+    this.currentVariants.forEach((j: any, i: any) => {
+      console.log(j?.size);
+      this.varntSize[i] = j?.size?.title == undefined ? j?.size?.title : `${j?.size?.title}`;
+      console.log(this.varntSize[i]);
+    })
   }
-
   variantForm() {
     const variants = this.productForm.get('variant_product') as FormArray;
     variants.clear();
     for (let i = 0; i < this.currentVariants.length; i++) {
       this.getVarinatsForm().push(this.variants());
     }
+
   }
+
 
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
