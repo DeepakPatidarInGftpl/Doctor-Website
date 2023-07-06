@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -24,7 +25,8 @@ export class BatchVariantProductUpdateComponent implements OnInit {
 
   constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService,
      private router: Router,
-     private Arout:ActivatedRoute) {
+     private Arout:ActivatedRoute,
+     private location:Location) {
   }
   id: number;
 batchRes:any;
@@ -43,8 +45,7 @@ batchRes:any;
     })
     this.id = +this.Arout.snapshot.paramMap.get('id');
 
-  
-    this.coreService.getBatchById(this.id).subscribe(res=>{
+    this.coreService.getBatchById(this?.id).subscribe(res=>{
       this.batchRes=res;
       this.batchForm.patchValue(res)
       this.batchForm.get('variant')?.patchValue(this.id)
@@ -52,16 +53,22 @@ batchRes:any;
   }
 
   // form submit
-  addRes: any
+  addRes: any;
+  loader=false;
   submit() {
     console.log(this.batchForm.value);
     if (this.batchForm.valid) {
+      this.loader=true;
       this.coreService.updateBatch(this.batchForm.value,this.id).subscribe(res => {
         this.addRes = res
-        if (this.addRes.msg == "Batch Policy Updated Sucessfully") {
+        if (this.addRes.msg == "Batch Updated Sucessfully") {
+          this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.batchForm.reset()
-          this.router.navigate([`//product/product-details/${this.batchRes.variant.product}`])
+          // this.router.navigate([`//product/product-details/${this.batchRes.variant.product}`])
+          this.location.back();
+        }else{
+          this.loader=false;
         }
       }, err => {
         console.log(err.error.gst);
