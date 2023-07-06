@@ -101,7 +101,10 @@ const routes: Routes = [
     path: 'transportDetails/:id',
     loadChildren: () => import('./detail-transport/detail-transport.module').then((m) => m.DetailTransportModule)
   },
-
+  {
+    path: 'permissionGroup',
+    loadChildren: () => import('./permission-group/permission-group.module').then((m) => m.PermissionGroupModule)
+  },
 ];
 
 @NgModule({

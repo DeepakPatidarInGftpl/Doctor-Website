@@ -151,6 +151,10 @@ deleteEmployee(id: number) {
   return this.http.delete(`${url}${id}`)
 }
 
+getPermission() {
+  let url = this.apiUrl +'/pv-api/permissions/';
+  return this.http.get(url)
+}
 // Customer apis
 
 getCustomer() {
@@ -202,6 +206,28 @@ updateUser(data: any, id: number) {
 }
 deleteUser(id: number) {
   let url = this.apiUrl + '/pv-api/user/?id=';
+  return this.http.delete(`${url}${id}`)
+}
+// /pv-api/group/
+
+getPermissionGroup() {
+  let url = this.apiUrl + '/pv-api/group/';
+  return this.http.get(url)
+}
+getPermissionGroupById(id: number): Observable<any> {
+  let url = this.apiUrl + '/pv-api/group/?group_id='
+  return this.http.get<any>(`${url}${id}`)
+}
+addPermissionGroup(data:any) {
+  let url = this.apiUrl + '/pv-api/group/';
+  return this.http.post(url, data)
+}
+updatePermissionGroup(data: any, id: number) {
+  let url = this.apiUrl + '/pv-api/group/?group_id=';
+  return this.http.put(`${url}${id}`,data)
+}
+deletePermissionGroup(id: number) {
+  let url = this.apiUrl + '/pv-api/group/?group_id=';
   return this.http.delete(`${url}${id}`)
 }
 }

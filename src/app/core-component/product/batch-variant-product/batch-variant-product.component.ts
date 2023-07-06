@@ -51,17 +51,22 @@ export class BatchVariantProductComponent implements OnInit {
   }
 
   // form submit
-  addRes: any
+  addRes: any;
+  loader=false;
   submit() {
     console.log(this.batchForm.value);
     if (this.batchForm.valid) {
+      this.loader=true;
       this.coreService.addBatch(this.batchForm.value,this.id).subscribe(res => {
         this.addRes = res
         if (this.addRes.Is_Sucess == "True") {
+          this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.batchForm.reset()
           // this.router.navigate([`//product/product-details/${this.vid}`])
           this.location.back();
+        }else{
+          this.loader=false;
         }
       }, err => {
         console.log(err.error);

@@ -494,6 +494,7 @@ export class EditproductComponent implements OnInit {
   }
   // open feature or subact after select subcatGroup 
   oncheck(val: any) {
+    console.log(val);
     this.getSubcategoryBySubcategoryGroup(val)
     this.getFeaturegroupBySubcategory(val);
     // this.getHsncodeBySubcategory(val)
