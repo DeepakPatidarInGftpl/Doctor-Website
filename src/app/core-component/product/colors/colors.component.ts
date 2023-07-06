@@ -138,7 +138,7 @@ export class ColorsComponent implements OnInit {
 
     this.colorForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      color_code: new FormControl('', [Validators.required,Validators.pattern(/^#[0-9a-fA-F]$/)]),
+      color_code: new FormControl('', [Validators.required]),
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',

@@ -337,9 +337,46 @@
                                             <td class="td">{{productDetail?.brand.title}}</td>
                                           </tr>
                                           <tr>
-                                            <td class="th">Measurable</td>
-                                            <td class="td">{{productDetail?.is_measurable}}</td>
+                                            <td class="th">Return Time</td>
+                                            <td class="td">{{productDetail?.return_time}}</td>
                                           </tr>
+                                          <tr>
+                                            <td class="th">Product or Service</td>
+                                            <td class="td">{{productDetail?.product_or_service}}</td>
+                                          </tr>
+                                          <tr>
+                                            <td class="th">Measurable</td>
+                                            <td class="td">
+                                                <span [ngClass]="{'bg-lightgreen': productDetail?.is_measurable === true, 'bg-lightred' : productDetail?.is_measurable === false,'bg-lightyellow' : productDetail?.is_measurable === 'Partial' }"
+                                                class="badges">{{productDetail?.is_measurable}}</span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td class="th">Sale Tax Including</td>
+                                            <td class="td">
+                                                <span [ngClass]="{'bg-lightgreen': productDetail?.sale_tax_including === true, 'bg-lightred' : productDetail?.sale_tax_including === false,'bg-lightyellow' : productDetail?.sale_tax_including === 'Partial' }"
+                                                class="badges">{{productDetail?.sale_tax_including}}</span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td class="th">Purchase Tax Including</td>
+                                            <td class="td">
+                                                <span [ngClass]="{'bg-lightgreen': productDetail?.purchase_tax_including === true, 'bg-lightred' : productDetail?.purchase_tax_including === false,'bg-lightyellow' : productDetail?.purchase_tax_including === 'Partial' }"
+                                                class="badges">{{productDetail?.purchase_tax_including}}</span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td class="th">COD Available</td>
+                                            <td class="td">
+                                                <span [ngClass]="{'bg-lightgreen': productDetail?.cod_available === true, 'bg-lightred' : productDetail?.cod_available === false,'bg-lightyellow' : productDetail?.cod_available === 'Partial' }"
+                                                class="badges">{{productDetail?.cod_available}}</span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td class="th">Product Store</td>
+                                            <td class="td">{{productDetail?.product_store}}</td>
+                                          </tr>
+                                         
                                           <tr>
                                             <td class="th">Description</td>
                                             <td class="td"> <ul *ngIf="sho ">
@@ -355,32 +392,11 @@
                                       </table>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-sm-12" *ngIf="productDetail?.product_feature_product && productDetail.product_feature_product.length !== 0">
+                                <div class="col-lg-4 col-sm-12">
                                     <div class="table-responsive mb-5">
                                     <table class="table"> 
                                         <tbody>
-                                           <tr>
-                                            <td class="th">Features</td>
-                                            <td class="td">
-                                                <div class="table-responsive">
-                                                    <table datatable class="table datanew">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Feature Group</th>
-                                                                <th>Feature</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr
-                                                                *ngFor="let feature of productDetail?.product_feature_product let i = index">
-                                                                <td>{{feature?.feature_group.title}}</td>
-                                                                <td>{{feature?.feature.title}}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </td>
-                                           </tr>
+                                         
                                            <tr>
                                             <td class="th">Sizes</td>
                                             <td class="td">
@@ -402,6 +418,28 @@
                                                 </div>
                                             </td>
                                            </tr>
+
+                                           <tr>
+                                            <td class="th">Colors</td>
+                                            <td class="td">
+                                                <div class="table-responsive">
+                                                    <table datatable class="table datanew">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Code</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let color of productDetail?.color; let i = index">
+                                                                <td>{{color?.title}}</td>
+                                                                <td>{{color?.color_code}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                           </tr>
                                         </tbody>
                                       </table>
                                     </div>
@@ -410,27 +448,28 @@
                                     <div class="table-responsive mb-5">
                                         <table class="table"> 
                                             <tbody>
-                                               <tr>
-                                                <td class="th">Colors</td>
-                                                <td class="td">
-                                                    <div class="table-responsive">
-                                                        <table datatable class="table datanew">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Name</th>
-                                                                    <th>Code</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr *ngFor="let color of productDetail?.color; let i = index">
-                                                                    <td>{{color?.title}}</td>
-                                                                    <td>{{color?.color_code}}</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </td>
-                                               </tr>
+                                                <tr>
+                                                    <td class="th">Features</td>
+                                                    <td class="td">
+                                                        <div class="table-responsive">
+                                                            <table datatable class="table datanew">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Feature Group</th>
+                                                                        <th>Feature</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr
+                                                                        *ngFor="let feature of productDetail?.product_feature_product let i = index">
+                                                                        <td>{{feature?.feature_group.title}}</td>
+                                                                        <td>{{feature?.feature.title}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                   </tr>
                                             </tbody>
                                           </table>
                                         </div>

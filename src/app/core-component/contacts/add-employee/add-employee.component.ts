@@ -37,13 +37,15 @@ export class AddEmployeeComponent implements OnInit {
       wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       target: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
-      username: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-      permission_group: new FormControl('')
+      username: new FormControl(''),
+      password: new FormControl(''),
+      permission_group: new FormControl(''),
+      permissions:new FormArray([],),
     })
-    this.addAddress()
-    this.addBank()
+    this.addAddress();
+    this.addBank();
     this.getCountry();
+    this.getPermission();
   }
  
   addressAdd(): FormGroup {
@@ -124,7 +126,42 @@ export class AddEmployeeComponent implements OnInit {
       console.log(this.city[i]);
     });
   }
-  
+  permissionDetails:any;
+  getPermission(){
+    this.contactService.getPermission()?.subscribe((res:any)=>{
+      console.log(res);
+      this.permissionDetails=res;
+// console.log(this.permissionDetails[0].name);
+    })
+  }
+
+  selectedPermission = 0;
+  onCheckChange(event: any) {
+    const formArray: any = this.employeeForm.get('permissions') as FormArray;
+
+    /* Selected */
+    if (event.target.checked) {
+      // Add a new control in the arrayForm
+      formArray.push(new FormControl(parseInt(event.target.value)));
+      // parseInt(formArray.push(new FormControl(event.target.value)))
+      this.selectedPermission++;
+    }
+    /* unselected */
+    else {
+      // find the unselected element
+      let i: number = 0;
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          this.selectedPermission--;
+          return;
+        }
+        i++;
+      });
+    }
+  }
+
   loader=false;
   submit() {
     console.log(this.employeeForm.value);
@@ -150,7 +187,8 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('username', this.employeeForm.get('username')?.value);
     formdata.append('password', this.employeeForm.get('password')?.value);
     formdata.append('permission_group', this.employeeForm.get('permission_group')?.value);
-
+    formdata.append('permissions', JSON.stringify(this.employeeForm.get('permissions')?.value));
+    
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];
@@ -188,9 +226,10 @@ export class AddEmployeeComponent implements OnInit {
           this.loader=false
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
-          this.router.navigate(['//contacts/supplier'])
+          this.router.navigate(['//contacts/employee'])
         }else{
           this.loader=false;
+            this.toastr.error(this.addRes.msg)
         }
       }, err => {
         this.loader=false;
@@ -279,7 +318,7 @@ export class AddEmployeeComponent implements OnInit {
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
   }
-
+ 
   
   // nested bank error
 
@@ -307,6 +346,9 @@ export class AddEmployeeComponent implements OnInit {
   }
   get permission_group() {
     return this.employeeForm.get('permission_group')
+  }
+  permissions(){
+    return this.employeeForm.get('permissions')
   }
   selectedSubCatGrp = 0;
 

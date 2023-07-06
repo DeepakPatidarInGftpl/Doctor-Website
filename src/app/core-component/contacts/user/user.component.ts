@@ -157,7 +157,6 @@ select=false
       if (this.delRes.msg == "Employee Deleted successfully") {
         // this.getcompanyList()
       }
-
     })
   }
   
@@ -167,9 +166,9 @@ select=false
     } else {
       this.tableData = this.tableData.filter(res => {
         console.log(res);
-        console.log(res.name.toLocaleLowerCase());
-        console.log(res.name.match(this.titlee));
-        return res.name.match(this.titlee);
+        console.log(res?.name.toLocaleLowerCase());
+        console.log(res?.name.match(this.titlee));
+        return res?.name.match(this.titlee);
       })
     }
   }

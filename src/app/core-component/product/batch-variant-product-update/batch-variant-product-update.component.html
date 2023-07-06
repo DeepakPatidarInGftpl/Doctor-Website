@@ -1,7 +1,7 @@
 <div class="page-header">
     <div class="page-title">
-        <h4> Add Batch</h4>
-        <h6>Create new Batch </h6>
+        <h4>Update Batch</h4>
+        <h6>Edit new Batch </h6>
     </div>
 </div>
 <!-- /add -->
@@ -13,7 +13,7 @@
                     <div class="form-group">
                         <label>Variant id*</label>
                         <input type="text" formControlName="variant" id="variant" [ngClass]="{
-                      'is-invalid': f['variant'].touched && f['variant'].invalid}" [ngModel]="batchRes.variant.id" readonly placeholder="0"> 
+                      'is-invalid': f['variant'].touched && f['variant'].invalid}" readonly placeholder="0"> 
                         <span class="text-danger" *ngIf="variant && variant.invalid && variant.touched">Enter variant</span>
                     </div>
                 </div>
@@ -95,11 +95,18 @@
                     </div>
                 </div>
 
-                <div class="col-lg-12">
+                <!-- <div class="col-lg-12">
                     <button class="btn btn-submit me-2">Submit</button>
                     <a routerLink="//product/{{id}}" class="btn btn-cancel">Cancel</a>
-                </div>
+                </div> -->
 
+                <div class="col-lg-12">    
+                    <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                    <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status"
+                            aria-hidden="true"></span>Submit</button>
+                            <a routerLink="//product/{{id}}" class="btn btn-cancel">Cancel</a>
+                </div>
             </div>
         </form>
     </div>

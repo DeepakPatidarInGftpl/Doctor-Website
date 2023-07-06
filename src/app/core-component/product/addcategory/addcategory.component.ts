@@ -39,7 +39,7 @@ export class AddcategoryComponent implements OnInit {
       }
       this.formaddCateg = new FormGroup({
         title: new FormControl(ftitle, [Validators.required]),
-        discount: new FormControl(fdiscount, Validators.pattern(/^[0-9]*$/)),
+        discount: new FormControl(fdiscount, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
         image: new FormControl('',)
       })
       console.log(this.formaddCateg);
