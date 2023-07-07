@@ -192,7 +192,7 @@
                     <label>Credit Amount</label>
                     <input type="text" formControlName="credit_amount" id="credit_amount"
                     [ngClass]="{'is-invalid': f['credit_amount'].touched && f['credit_amount'].invalid}">
-                    <span class="text-danger"*ngIf="credit_amount && credit_amount.invalid && credit_amount.touched">Enter credit amount</span>
+                    <span class="text-danger"*ngIf="credit_amount && credit_amount.invalid && credit_amount.touched">Enter credit amount (ex-123)</span>
                 </div>
             </div>
             

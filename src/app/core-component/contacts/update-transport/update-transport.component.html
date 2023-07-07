@@ -320,7 +320,7 @@
                         <label>Payment Terms</label>
                         <select formControlName="payment_terms" class="w-100 h-100 border" id="payment_terms" [ngClass]="{
                             'is-invalid': f['payment_terms'].touched && f['payment_terms'].invalid}">
-                                <option value="" selected disabled>payment_terms</option>
+                                <option value="" selected disabled>Select Payment Terms</option>
                                 <option value="{{payment.id}}" *ngFor="let payment of paymentTerms">{{payment.title}}</option>
                             </select>
                         <span class="text-danger"

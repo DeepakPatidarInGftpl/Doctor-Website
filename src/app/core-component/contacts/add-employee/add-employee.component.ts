@@ -33,14 +33,14 @@ export class AddEmployeeComponent implements OnInit {
       credit_limit: new FormControl(''),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
-      commission: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      commision: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       target: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       username: new FormControl(''),
       password: new FormControl(''),
-      permission_group: new FormControl(''),
-      permissions:new FormArray([],),
+      // permission_group: new FormControl(''),
+      // permissions:new FormArray([],),
     })
     this.addAddress();
     this.addBank();
@@ -135,32 +135,32 @@ export class AddEmployeeComponent implements OnInit {
     })
   }
 
-  selectedPermission = 0;
-  onCheckChange(event: any) {
-    const formArray: any = this.employeeForm.get('permissions') as FormArray;
+  // selectedPermission = 0;
+  // onCheckChange(event: any) {
+  //   const formArray: any = this.employeeForm.get('permissions') as FormArray;
 
-    /* Selected */
-    if (event.target.checked) {
-      // Add a new control in the arrayForm
-      formArray.push(new FormControl(parseInt(event.target.value)));
-      // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.selectedPermission++;
-    }
-    /* unselected */
-    else {
-      // find the unselected element
-      let i: number = 0;
-      formArray.controls.forEach((ctrl: any) => {
-        if (ctrl.value == event.target.value) {
-          // Remove the unselected element from the arrayForm
-          formArray.removeAt(i);
-          this.selectedPermission--;
-          return;
-        }
-        i++;
-      });
-    }
-  }
+  //   /* Selected */
+  //   if (event.target.checked) {
+  //     // Add a new control in the arrayForm
+  //     formArray.push(new FormControl(parseInt(event.target.value)));
+  //     // parseInt(formArray.push(new FormControl(event.target.value)))
+  //     this.selectedPermission++;
+  //   }
+  //   /* unselected */
+  //   else {
+  //     // find the unselected element
+  //     let i: number = 0;
+  //     formArray.controls.forEach((ctrl: any) => {
+  //       if (ctrl.value == event.target.value) {
+  //         // Remove the unselected element from the arrayForm
+  //         formArray.removeAt(i);
+  //         this.selectedPermission--;
+  //         return;
+  //       }
+  //       i++;
+  //     });
+  //   }
+  // }
 
   loader=false;
   submit() {
@@ -179,15 +179,15 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('pan_no', this.employeeForm.get('pan_no')?.value);
     formdata.append('credit_limit', this.employeeForm.get('credit_limit')?.value);
    
-    formdata.append('commission', this.employeeForm.get('commission')?.value);
+    formdata.append('commision', this.employeeForm.get('commision')?.value);
     formdata.append('wages', this.employeeForm.get('wages')?.value);
     formdata.append('extra_wages', this.employeeForm.get('extra_wages')?.value);
    
     formdata.append('target', this.employeeForm.get('target')?.value);
     formdata.append('username', this.employeeForm.get('username')?.value);
     formdata.append('password', this.employeeForm.get('password')?.value);
-    formdata.append('permission_group', this.employeeForm.get('permission_group')?.value);
-    formdata.append('permissions', JSON.stringify(this.employeeForm.get('permissions')?.value));
+    // formdata.append('permission_group', this.employeeForm.get('permission_group')?.value);
+    // formdata.append('permissions', JSON.stringify(this.employeeForm.get('permissions')?.value));
     
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
@@ -344,12 +344,12 @@ export class AddEmployeeComponent implements OnInit {
   get password() {
     return this.employeeForm.get('password')
   }
-  get permission_group() {
-    return this.employeeForm.get('permission_group')
-  }
-  permissions(){
-    return this.employeeForm.get('permissions')
-  }
+  // get permission_group() {
+  //   return this.employeeForm.get('permission_group')
+  // }
+  // permissions(){
+  //   return this.employeeForm.get('permissions')
+  // }
   selectedSubCatGrp = 0;
 
   onCheckAddress(event: any) {

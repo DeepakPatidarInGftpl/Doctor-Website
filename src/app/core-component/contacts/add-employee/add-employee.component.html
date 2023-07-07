@@ -258,12 +258,12 @@
 
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
-                    <label>Commission</label>
-                    <input type="text" formControlName="commission" id="commission"
+                    <label>Commision</label>
+                    <input type="text" formControlName="commision" id="commision"
                     [ngClass]="{
-                      'is-invalid': f['commission'].touched && f['commission'].invalid
+                      'is-invalid': f['commision'].touched && f['commision'].invalid
                     }">
-                    <span class="text-danger"*ngIf="commision && commision.invalid && commision.touched">Enter your Commission</span>            
+                    <span class="text-danger"*ngIf="commision && commision.invalid && commision.touched">Enter your Commision</span>            
                 </div>
             </div>
             <div class="col-lg-3 col-sm-3 col-12">
@@ -318,7 +318,7 @@
                     <span class="text-danger"*ngIf="password && password.invalid && password.touched">Enter your password</span>            
                 </div>
             </div>
-            <div class="col-lg-3 col-sm-3 col-12">
+            <!-- <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label>Permission Group</label>
                     <input type="text" formControlName="permission_group" id="permission_group"
@@ -345,9 +345,8 @@
                         </ul>
                     </div>
                     <p *ngIf="selectedPermission>0">{{selectedPermission + ' Subcategory Selected'}}</p>
-                    <!-- <span class="text-danger" *ngIf="permissions && permissions.invalid && permissions.touched">Enter Permission group</span>        -->
-                </div>
-            </div> 
+               </div>
+            </div>  -->
 
             <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
                 <div class="form-group mt-4">

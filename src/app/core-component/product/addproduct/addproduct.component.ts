@@ -99,7 +99,7 @@ export class AddproductComponent implements OnInit {
     this.getSubcatGroup()
     this.getColor()
     this.getSize()
-    this.getVariant()
+    // this.getVariant()
     this.getUnit()
     this.getUnitConversion()
     this.getTaxSlab()
