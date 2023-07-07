@@ -43,19 +43,18 @@ export class UpdateEmployeeComponent implements OnInit {
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
 
-      commission: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      commision: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       target: new FormControl('',Validators.pattern(/^[0-9]*$/)),
-      username: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-      permission_group: new FormControl('')
+      // username: new FormControl(''),
+      // password: new FormControl(''),
+      // permission_group: new FormControl('')
     });
 
     this.contactService.getEmployeeById(this.id).subscribe(res => {
       this.getRes = res;
       this.employeeForm.patchValue(this.getRes);
-
       this.employeeForm.setControl('address', this.updateAddress(this.getRes.address));
       this.employeeForm.setControl('bank_id', this.udateBank(this.getRes.bank_id));
     })
@@ -244,14 +243,14 @@ loader=false;
     formdata.append('pan_no', this.employeeForm.get('pan_no')?.value);
     formdata.append('credit_limit', this.employeeForm.get('credit_limit')?.value);
 
-    formdata.append('commission', this.employeeForm.get('commission')?.value);
+    formdata.append('commision', this.employeeForm.get('commision')?.value);
     formdata.append('wages', this.employeeForm.get('wages')?.value);
     formdata.append('extra_wages', this.employeeForm.get('extra_wages')?.value);
 
     formdata.append('target', this.employeeForm.get('target')?.value);
-    formdata.append('username', this.employeeForm.get('username')?.value);
-    formdata.append('password', this.employeeForm.get('password')?.value);
-    formdata.append('permission_group', this.employeeForm.get('permission_group')?.value);
+    // formdata.append('username', this.employeeForm.get('username')?.value);
+    // formdata.append('password', this.employeeForm.get('password')?.value);
+    // formdata.append('permission_group', this.employeeForm.get('permission_group')?.value);
 
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
@@ -402,9 +401,9 @@ loader=false;
   get password() {
     return this.employeeForm.get('password')
   }
-  get permission_group() {
-    return this.employeeForm.get('permission_group')
-  }
+  // get permission_group() {
+  //   return this.employeeForm.get('permission_group')
+  // }
   selectedSubCatGrp = 0;
 
   onCheckAddress(event: any) {

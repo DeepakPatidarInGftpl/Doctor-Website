@@ -318,53 +318,38 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Payment Terms</label>
-                        <select formControlName="payment_terms" class="w-100 h-100 border" id="payment_terms" [ngClass]="{
-                            'is-invalid': f['payment_terms'].touched && f['payment_terms'].invalid}">
-                            <option value="" selected disabled>payment_terms</option>
-                            <option value="{{payment.id}}" *ngFor="let payment of paymentTerms">{{payment.title}}
-                            </option>
+                        <select formControlName="payment_terms" class="w-100 h-100 border" id="payment_terms" [ngClass]="{'is-invalid': f['payment_terms'].touched && f['payment_terms'].invalid}">
+                            <option value="" selected disabled>Select Payment Terms</option>
+                            <option value="{{payment.id}}" *ngFor="let payment of paymentTerms">{{payment.title}}</option>
                         </select>
-                        <span class="text-danger"
-                            *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select Payment
-                            Terms</span>
+                        <span class="text-danger" *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select Payment Terms</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Opening Balance</label>
-                        <input type="text" formControlName="opening_balance" id="opening_balance" maxlength="10"
-                            minlength="1" [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
-                        <span class="text-danger"
-                            *ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">Enter Opening
-                            Balance</span>
+                        <input type="text" formControlName="opening_balance" id="opening_balance" maxlength="10" minlength="1" [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
+                        <span class="text-danger" *ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">Enter Opening Balance</span>
                     </div>
                 </div>
-
                 <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
                     <div class="form-group mt-4">
                         <div class="d-flex ">
                             <input type="checkbox" formControlName="login_access" [id]="'checkboxTax-'">
-                            <label [for]="'checkboxTax-'" class="d_flex"
-                                style="margin-bottom: 0; margin-left: 5px;">Login Access</label>
+                            <label [for]="'checkboxTax-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Login Access</label>
                         </div>
                         <div class="d-flex ">
                             <input type="checkbox" formControlName="apply_tds" [id]="'checkboxMeasure-'">
-                            <label [for]="'checkboxMeasure-'" class="d_flex"
-                                style="margin-bottom: 0; margin-left: 5px;">Apply TDS</label>
+                            <label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Apply TDS</label>
                         </div>
-
                     </div>
                 </div>
 
-                <!-- <div class="col-lg-12">
-                    <button class="btn btn-submit me-2">Submit</button>
-                    <a routerLink="//employee/employeelist" class="btn btn-cancel">Cancel</a>
-                </div> -->
                 <div class="col-lg-12">
                     <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
-                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
-                        <a routerLink="//contacts/transform" class="btn btn-cancel">Cancel</a>
+                    <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
+                    <a routerLink="//contacts/transform" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>
         </form>
