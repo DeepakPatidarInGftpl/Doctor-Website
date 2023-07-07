@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject } from 'rxjs';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 
@@ -41,7 +40,12 @@ export class EditcompanyComponent implements OnInit {
 
       // this.companyForm.patchValue(this.data)
 
-      // this.companyForm.get('state')?.setValue(this.data.state)
+      this.companyForm.get('country')?.patchValue(this.data.country.id)
+      this.selectState(this.data.country.id)
+      this.companyForm.get('state')?.patchValue(this.data.state.id)
+      this.selectCity(this.data.state.id)
+      this.companyForm.get('city')?.patchValue(this.data.city.id)
+      this.companyForm.get('financial_year')?.patchValue(this.data?.financial_year?.id)
       // this.companyForm.controls['state'].setValue(this.data.state)
       // this.companyForm.patchValue({
       //   state:this.data.state

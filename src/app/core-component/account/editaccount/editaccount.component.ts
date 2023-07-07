@@ -42,6 +42,11 @@ export class EditaccountComponent implements OnInit {
         credit_amount:this.data.credit_amount,
         address:this.data.address
       })
+      this.accountForm.get('country')?.patchValue(this.data.country.id)
+      this.selectState(this.data.country.id)
+      this.accountForm.get('state')?.patchValue(this.data.state.id)
+      this.selectCity(this.data.state.id)
+      this.accountForm.get('city')?.patchValue(this.data.city.id)
     })
 
     this.accountForm = this.fb.group({
@@ -58,7 +63,7 @@ export class EditaccountComponent implements OnInit {
       opening_balance_type: new FormControl('', [Validators.required]),
       type_of_customer: new FormControl('', [Validators.required]),
       credit_days: new FormControl('',),
-      credit_amount: new FormControl('',),
+      credit_amount: new FormControl('',Validators.pattern(/^[0-9]*$/)),
       country: new FormControl('', ),
       state: new FormControl('', ),
       city: new FormControl('', ),
@@ -131,10 +136,9 @@ export class EditaccountComponent implements OnInit {
           // .then(() => {
           //   window.location.reload()
           // })
-
-
         }
       }, err => {
+        this.loaders=false;
         console.log(err.error.gst);
         if (err.error.anniversary) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
@@ -161,6 +165,8 @@ export class EditaccountComponent implements OnInit {
           setTimeout(() => {
             this.stateError=''
           }, 2000);
+        }else if(err.error.accounts_type){
+          this.toastr.error(err.error.accounts_type[0])
         }
       })
     } else {

@@ -33,7 +33,7 @@ export class AddaccountComponent implements OnInit {
       opening_balance_type: new FormControl('', [Validators.required]),
       type_of_customer: new FormControl('', [Validators.required]),
       credit_days: new FormControl('',),
-      credit_amount: new FormControl('',),
+      credit_amount: new FormControl('',Validators.pattern(/^[0-9]*$/)),
       country: new FormControl('', ),
       state: new FormControl('', ),
       city:new FormControl('',),

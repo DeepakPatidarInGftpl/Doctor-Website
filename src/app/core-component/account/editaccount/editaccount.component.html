@@ -1,7 +1,7 @@
 <div class="page-header">
     <div class="page-title">
-        <h4> Add Account</h4>
-        <h6>Create new Account </h6>
+        <h4> Update Account</h4>
+        <!-- <h6>Edit new Account </h6> -->
     </div>
 </div>
 <!-- /add -->
@@ -211,7 +211,7 @@
                         <label>Credit Amount</label>
                         <input type="text" formControlName="credit_amount" id="credit_amount"
                         [ngClass]="{'is-invalid': f['credit_amount'].touched && f['credit_amount'].invalid}">
-                        <span class="text-danger"*ngIf="credit_amount && credit_amount.invalid && credit_amount.touched">Enter credit amount</span>
+                        <span class="text-danger"*ngIf="credit_amount && credit_amount.invalid && credit_amount.touched">Enter credit amount (ex-123)</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">

@@ -85,7 +85,7 @@
                         <td>{{products.mobile_no}}</td>
                         <td>{{products.commision}}</td>
                         <td>{{products.pan_no}}</td>
-                        <td>{{products.permission_group}}</td>
+                        <td>{{products.permission_group?.name}}</td>
                         <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
