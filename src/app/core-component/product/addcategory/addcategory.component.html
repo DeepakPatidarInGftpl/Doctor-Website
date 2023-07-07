@@ -32,8 +32,7 @@
                                             <img src="assets/img/icons/upload.svg" alt="img">
                                             <h4>Drag and drop a file to upload</h4>
                                         </div>
-                                        <span class="text-danger"
-                                            *ngIf="image && image.invalid && image.touched">Select image</span> 
+                                        <!-- <span class="text-danger" *ngIf="image && image.invalid && image.touched">Select image</span>  -->
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -55,17 +54,14 @@
                                             <img src="assets/img/icons/upload.svg" alt="img">
                                             <h4>Drag and drop a file to upload</h4>
                                         </div>
-                                        <span class="text-danger"
-                                            *ngIf="image && image.invalid && image.touched">Select image</span> 
+                                        <!-- <span class="text-danger" *ngIf="image && image.invalid && image.touched">Select image</span>  -->
                                     </div>
                                 </div>
                                 <div class="col-lg-6" >
                                     <img [src]="url" *ngIf="url" alt="" class="p_img">
                                     <img [src]="imgUrl+updateData.image" *ngIf="!url" alt="" class="p_img">
                                 </div>
-                                
                             </div>
-                          
                               <span class="text-danger"*ngIf="image && image.invalid && image.touched">Upload an image</span>
                         </div>
                     </div>
