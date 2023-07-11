@@ -43,10 +43,12 @@ export class UpdateVendorComponent implements OnInit {
       credit_limit: new FormControl('', [Validators.required]),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
+      bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
       opening_balance: new FormControl('', [Validators.required]),
       invite_code: new FormControl('', [Validators.required]),
-      membership: new FormControl('', [Validators.required])
+      membership: new FormControl('', [Validators.required]),
+      opening_balance_type:new FormControl('',[Validators.required])
     })
 
     this.addAddress()
@@ -58,10 +60,9 @@ export class UpdateVendorComponent implements OnInit {
       this.vendorForm.patchValue(this.getRes);
       this.vendorForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id);
       this.vendorForm.setControl('address', this.updateAddress(this.getRes?.address));
+      this.vendorForm.setControl('bank_id', this.udateBank(this.getRes?.bank_id));
     });
-
     this.getPaymentTerms();
-
   }
   paymentTerms: any;
   getPaymentTerms() {
@@ -73,10 +74,8 @@ export class UpdateVendorComponent implements OnInit {
   // updated data
   updateAddress(add: any[]): FormArray {
     const formArr = new FormArray([]);
-
     add.forEach((j: any) => {
       console.log(j);
-
       const addressGroup = this.fb.group({
         address_line_1: j.address_line_1,
         address_line_2: j.address_line_2,
@@ -117,7 +116,21 @@ export class UpdateVendorComponent implements OnInit {
     return formArr;
   }
 
-
+  // updated data
+  udateBank(add: any): FormArray {
+    let formarr = new FormArray([]);
+    add.forEach((j: any) => {
+      formarr.push(this.fb.group({
+        bank_ifsc_code: j.bank_ifsc_code,
+        bank_name: j.bank_name,
+        branch_name: j.branch_name,
+        account_no: j.account_no,
+        account_holder_name: j.account_holder_name
+      })
+      )
+    })
+    return formarr
+  }
   gstType: any;
   getgstType() {
     this.contactService.getTypeOfGst().subscribe(res => {
@@ -144,6 +157,25 @@ export class UpdateVendorComponent implements OnInit {
   }
   removeAddress(i: any) {
     this.getAddresss().removeAt(i)
+  }
+
+  bankAdd(): FormGroup {
+    return this.fb.group({
+      bank_ifsc_code: new FormControl('', [Validators.required]),
+      bank_name: new FormControl('', [Validators.required]),
+      branch_name: new FormControl(''),
+      account_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      account_holder_name: new FormControl('', [Validators.required])
+    })
+  }
+  getBanks(): FormArray {
+    return this.vendorForm.get('bank_id') as FormArray;
+  }
+  addBank() {
+    this.getBanks().push(this.bankAdd())
+  }
+  removeBank(i: number) {
+    this.getBanks().removeAt(i)
   }
 
 
@@ -230,6 +262,7 @@ export class UpdateVendorComponent implements OnInit {
     formdata.append('opening_balance', this.vendorForm.get('opening_balance')?.value);
     formdata.append('invite_code', this.vendorForm.get('invite_code')?.value);
     formdata.append('membership', this.vendorForm.get('membership')?.value);
+    formdata.append('opening_balance_type',this.vendorForm.get('opening_balance_type')?.value)
     // nested addrs data 
     const addressArray = this.vendorForm.get('address') as FormArray;
     const addressData = [];
@@ -243,6 +276,20 @@ export class UpdateVendorComponent implements OnInit {
       addressData.push(featureObj);
     });
     formdata.append('address', JSON.stringify(addressData));
+
+     // nested bank data 
+     const bankArray = this.vendorForm.get('bank_id') as FormArray;
+     const bankData = [];
+     bankArray.controls.forEach((bank) => {
+       const featuresGroup = bank as FormGroup;
+       const featureObj = {};
+       Object.keys(featuresGroup.controls).forEach((key) => {
+         const control = featuresGroup.controls[key];
+         featureObj[key] = control.value;
+       });
+       bankData.push(featureObj);
+     });
+     formdata.append('bank_id', JSON.stringify(bankData));
 
     if (this.vendorForm.valid) {
       this.loader=true;
@@ -356,6 +403,22 @@ export class UpdateVendorComponent implements OnInit {
   }
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
+  }
+
+  getBankHolderName(index: number) {
+    return this.getBanks().controls[index].get('account_holder_name');
+  }
+  getAccountNo(index: number) {
+    return this.getBanks().controls[index].get('account_no');
+  }
+  getIfscCode(index: number) {
+    return this.getBanks().controls[index].get('bank_ifsc_code');
+  }
+  getBankName(index: number) {
+    return this.getBanks().controls[index].get('bank_name');
+  }
+  get opening_balance_type(){
+    return this.vendorForm.get('opening_balance_type')
   }
 }
 

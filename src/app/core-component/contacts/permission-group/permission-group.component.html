@@ -73,9 +73,6 @@
                                    {{products?.name}}
                                 </td>
                                 <td>
-                                    <!-- <ng-container *ngFor="let permission of products?.permissions; let last = last">
-                                        {{ permission?.name }}{{ last ? '' : ', ' }}
-                                      </ng-container> -->
                                       <tr *ngFor="let permission of products?.permissions; let last = last">
                                         <td>{{permission?.name +','}}</td>
                                     </tr>

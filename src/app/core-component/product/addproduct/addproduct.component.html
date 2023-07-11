@@ -462,9 +462,11 @@
 									<div class="col-lg-6 col-sm-6 col-12">
 										<div class="form-group">
 											<div class="d_flex">
-												<div class="d-flex">
-													<input type="checkbox" formControlName="purchase_tax_including" [id]="'checkboxTax-'" [ngModel]="true">
-													<label [for]="'checkboxTax-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Purchase Tax Including</label>
+			
+												<div class="d_flex">
+													<input type="checkbox" formControlName="is_active" [id]="'checkboxActive-'" [ngModel]="true">
+													<label [for]="'checkboxActive-'" class="d_flex"
+														style="margin-bottom: 0; margin-left: 5px;">Active</label>
 												</div>
 												<div class="d-flex">
 													<input type="checkbox" formControlName="is_measurable" [id]="'checkboxMeasure-'">
@@ -478,14 +480,11 @@
 											<div class="d_flex">
 												<div class="d-flex">
 													<input type="checkbox" formControlName="sale_tax_including" [id]="'checkboxSale-'" [ngModel]="true">
-													<label [for]="'checkboxSale-'" class="d_flex"
-														style="margin-bottom: 0; margin-left: 5px;">Sales Tax
-														Including</label>
+													<label [for]="'checkboxSale-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Sales Tax Including</label>
 												</div>
-												<div class="d_flex">
-													<input type="checkbox" formControlName="is_active" [id]="'checkboxActive-'" [ngModel]="true">
-													<label [for]="'checkboxActive-'" class="d_flex"
-														style="margin-bottom: 0; margin-left: 5px;">Active</label>
+												<div class="d-flex">
+													<input type="checkbox" formControlName="purchase_tax_including" [id]="'checkboxTax-'" [ngModel]="true">
+													<label [for]="'checkboxTax-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Purchase Tax Including</label>
 												</div>
 											</div>
 										</div>

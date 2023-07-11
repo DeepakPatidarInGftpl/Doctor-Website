@@ -30,9 +30,18 @@ export class AddUserComponent implements OnInit {
       // role:new FormControl(''),
       // user_permissions:new FormControl(''),
       // groups:new FormControl('')
+      branch:new FormControl(''),
+
+    })
+    this.getBranch();
+  }
+branchList:any;
+  getBranch(){
+    this.contactService.getBranch().subscribe(res=>{
+      console.log(res);
+      this.branchList=res;
     })
   }
-
   dateError = null
   addRes: any;
   loader = false;
@@ -88,6 +97,9 @@ export class AddUserComponent implements OnInit {
   }
   get name() {
     return this.userForm.get('name')
+  }
+  get branch(){
+    return this.userForm.get('branch')
   }
 }
 
