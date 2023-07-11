@@ -22,25 +22,26 @@ export class AddCustomerComponent implements OnInit {
 
   ngOnInit(): void {
     this.customerForm = this.fb.group({
-      login_access: new FormControl('',[Validators.required]),
+      login_access: new FormControl('', [Validators.required]),
       name: new FormControl('',),
       company_name: new FormControl('',),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       telephone_no: new FormControl('',),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl('',[Validators.email]),
+      email: new FormControl('', [Validators.email]),
       remark: new FormControl(''),
-      date_of_birth: new FormControl('',[Validators.required]),
-      anniversary_date: new FormControl('',[Validators.required]),
+      date_of_birth: new FormControl('', [Validators.required]),
+      anniversary_date: new FormControl('', [Validators.required]),
       gst_type: new FormControl('',),
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
-      apply_tds: new FormControl('',[Validators.required]),
-      credit_limit: new FormControl('',[Validators.required]),
+      apply_tds: new FormControl('', [Validators.required]),
+      credit_limit: new FormControl('', [Validators.required]),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      opening_balance: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      opening_balance_type:new FormControl('',[Validators.required]),
       invite_code: new FormControl(''),
       membership: new FormControl('')
     });
@@ -71,7 +72,7 @@ export class AddCustomerComponent implements OnInit {
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
-      pincode:new FormControl('',[Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      pincode: new FormControl('', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -90,20 +91,20 @@ export class AddCustomerComponent implements OnInit {
   country: any[] = [];
   state: any[][] = []; // Array of arrays to store states for each formArray item
   city: any[][] = []; // Array of arrays to store cities for each formArray item
-  
+
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
       console.log(this.country);
     });
   }
-  
+
   selectState(val: any, i) {
     console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
-  
+
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
       console.log(this.state[i]);
@@ -111,13 +112,13 @@ export class AddCustomerComponent implements OnInit {
       this.city[i] = [];
     });
   }
-  
+
   selectCity(val: any, i) {
     console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
-  
+
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
       console.log(this.city[i]);
@@ -147,7 +148,7 @@ export class AddCustomerComponent implements OnInit {
     formdata.append('opening_balance', this.customerForm.get('opening_balance')?.value);
     formdata.append('invite_code', this.customerForm.get('invite_code')?.value);
     formdata.append('membership', this.customerForm.get('membership')?.value);
-
+    formdata.append('opening_balance_type', this.customerForm.get('opening_balance_type')?.value)
     // nested addrs data 
     const addressArray = this.customerForm.get('address') as FormArray;
     const addressData = [];
@@ -168,22 +169,22 @@ export class AddCustomerComponent implements OnInit {
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
         this.toastr.success(this.addRes.msg)
-        this.loaders=false;
+        this.loaders = false;
         this.customerForm.reset()
         this.router.navigate(['//contacts/customer'])
-      }else if(this.addRes.msg=="Username already exists"){
-        this.loaders=false;
+      } else if (this.addRes.msg == "Username already exists") {
+        this.loaders = false;
         this.toastr.success(this.addRes.msg)
       }
-       else {
-        this.loaders=false;
+      else {
+        this.loaders = false;
         this.toastr.error(this.addRes?.opening_balance[0]);
         if (this.addRes?.email) {
           this.toastr.error(this.addRes?.email[0])
         }
       }
     }, err => {
-      this.loaders=false
+      this.loaders = false
       console.log(err.error.gst);
       if (err.error) {
         this.toastr.error(err.error?.opening_balance[0]);
@@ -226,6 +227,9 @@ export class AddCustomerComponent implements OnInit {
   }
   get anniversary() {
     return this.customerForm.get('anniversary_date');
+  }
+  get opening_balance_type() {
+    return this.customerForm.get('opening_balance_type')
   }
   get email() {
     return this.customerForm.get('email')

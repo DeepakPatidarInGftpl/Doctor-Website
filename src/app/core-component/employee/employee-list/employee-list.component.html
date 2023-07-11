@@ -6,7 +6,7 @@
                 <h6>View/Search Employee</h6>
             </div>
             <div class="page-btn">
-                <a routerLink="//employee/addemployee" class="btn btn-added">
+                <a routerLink="//masters/addemployee" class="btn btn-added">
                     <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Employee
                 </a>
             </div>
@@ -124,7 +124,7 @@
                                     <!-- <a href="javascript:void(0);" class="product-img">
                                         <img [src]="products.img" alt="product">
                                     </a> -->
-                                    <a routerLink="//employee/employee-details/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
+                                    <a routerLink="//masters/employee-details/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
                                 </td>
                                 <td>{{products.fathers_name}}</td>
                                 <td>{{products.dob}}</td>
@@ -140,10 +140,10 @@
                                 
                                 </td>
                                 <td>
-                                    <a class="me-1" routerLink="//employee/employee-details/{{products.id}}">
+                                    <a class="me-1" routerLink="//masters/employee-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-1" routerLink="//employee/editemployee/{{products.id}}">
+                                    <a class="me-1" routerLink="//masters/editemployee/{{products.id}}">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);">

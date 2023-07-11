@@ -127,7 +127,7 @@ export class EditcompanyComponent implements OnInit {
           this.loaders=false;
           this.toastr.success(res.msg);
           this.companyForm.reset();
-          this.router.navigate(['//company/companylist'])
+          this.router.navigate(['//masters/companylist'])
           // .then(()=>{
           //   window.location.reload()
           // })

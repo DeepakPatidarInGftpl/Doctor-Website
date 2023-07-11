@@ -105,6 +105,26 @@ const routes: Routes = [
     path: 'permissionGroup',
     loadChildren: () => import('./permission-group/permission-group.module').then((m) => m.PermissionGroupModule)
   },
+  {
+    path: 'addPermissionGroup',
+    loadChildren: () => import('./add-permission-group/add-permission-group.module').then((m) => m.AddPermissionGroupModule)
+  },
+  {
+    path: 'dealerList',
+    loadChildren: () => import('./dealer-list/dealer-list.module').then((m) => m.DealerListModule)
+  },
+  {
+    path: 'addDealer',
+    loadChildren: () => import('./add-dealer/add-dealer.module').then((m) => m.AddDealerModule)
+  },
+  {
+    path: 'updateDealer/:id',
+    loadChildren: () => import('./update-dealer/update-dealer.module').then((m) => m.UpdateDealerModule)
+  },
+  {
+    path: 'detailDealer/:id',
+    loadChildren: () => import('./detail-dealer/detail-dealer.module').then((m) => m.DetailDealerModule)
+  },
 ];
 
 @NgModule({

@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { WarehouseComponent } from './warehouse.component';
 
 const routes: Routes = [
-  {path:'warehouse',component:WarehouseComponent}
+  {path:'',component:WarehouseComponent}
 ];
 
 @NgModule({

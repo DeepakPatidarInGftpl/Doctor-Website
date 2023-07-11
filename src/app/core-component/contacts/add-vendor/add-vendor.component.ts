@@ -37,12 +37,15 @@ export class AddVendorComponent implements OnInit {
       credit_limit: new FormControl('', [Validators.required]),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
+      bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
       opening_balance: new FormControl('', [Validators.required]),
       invite_code: new FormControl('', [Validators.required]),
-      membership: new FormControl('', [Validators.required])
+      membership: new FormControl('', [Validators.required]),
+      opening_balance_type:new FormControl('',[Validators.required])
     })
     this.addAddress();
+    this.addBank();
     this.getCountry();
     this.getgstType();
     this.getPaymentTerms();
@@ -88,7 +91,24 @@ export class AddVendorComponent implements OnInit {
     //   remove.reset()
     // }
   }
-
+  bankAdd(): FormGroup {
+    return this.fb.group({
+      bank_ifsc_code: new FormControl('', [Validators.required]),
+      bank_name: new FormControl('', [Validators.required]),
+      branch_name: new FormControl(''),
+      account_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      account_holder_name: new FormControl('', [Validators.required])
+    })
+  }
+  getBanks(): FormArray {
+    return this.vendorForm.get('bank_id') as FormArray;
+  }
+  addBank() {
+    this.getBanks().push(this.bankAdd())
+  }
+  removeBank(i: number) {
+    this.getBanks().removeAt(i)
+  }
 
   dateError = null
   addRes: any;
@@ -153,6 +173,7 @@ loader=false;
     formdata.append('opening_balance', this.vendorForm.get('opening_balance')?.value);
     formdata.append('invite_code', this.vendorForm.get('invite_code')?.value);
     formdata.append('membership', this.vendorForm.get('membership')?.value);
+    formdata.append('opening_balance_type',this.vendorForm.get('opening_balance_type')?.value)
     // nested addrs data 
     const addressArray = this.vendorForm.get('address') as FormArray;
     const addressData = [];
@@ -166,6 +187,21 @@ loader=false;
       addressData.push(featureObj);
     });
     formdata.append('address', JSON.stringify(addressData));
+
+     // nested bank data 
+     const bankArray = this.vendorForm.get('bank_id') as FormArray;
+     const bankData = [];
+     bankArray.controls.forEach((bank) => {
+       const featuresGroup = bank as FormGroup;
+       const featureObj = {};
+       Object.keys(featuresGroup.controls).forEach((key) => {
+         const control = featuresGroup.controls[key];
+         featureObj[key] = control.value;
+       });
+       bankData.push(featureObj);
+     });
+     formdata.append('bank_id', JSON.stringify(bankData));
+
     if (this.vendorForm.valid) {
       this.loader=true;
     this.contactService.addVendor(formdata).subscribe(res => {
@@ -268,7 +304,9 @@ loader=false;
   get credit_limit() {
     return this.vendorForm.get('credit_limit')
   }
-
+get opening_balance_type(){
+  return this.vendorForm.get('opening_balance_type')
+}
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');
   }
@@ -280,6 +318,19 @@ loader=false;
   }
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
+  }
+  
+  getBankHolderName(index: number) {
+    return this.getBanks().controls[index].get('account_holder_name');
+  }
+  getAccountNo(index: number) {
+    return this.getBanks().controls[index].get('account_no');
+  }
+  getIfscCode(index: number) {
+    return this.getBanks().controls[index].get('bank_ifsc_code');
+  }
+  getBankName(index: number) {
+    return this.getBanks().controls[index].get('bank_name');
   }
 }
 

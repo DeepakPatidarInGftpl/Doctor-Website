@@ -81,6 +81,18 @@
                             User Type</span>
                     </div>
                 </div>
+
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Branch</label>
+                        <select formControlName="branch" id="branch" [ngClass]="{
+                        'is-invalid': f['branch'].touched && f['branch'].invalid}">
+                            <option value="" selected disabled>Select Branch</option>
+                            <option value="{{branch?.id}}" *ngFor="let branch of branchList">{{branch?.title}}</option>
+                        </select>
+                        <span class="text-danger" *ngIf="branch && branch.invalid && branch.touched">Select branch</span>
+                    </div>
+                </div>
                 <!-- <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Role</label>

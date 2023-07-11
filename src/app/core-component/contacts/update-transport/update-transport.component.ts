@@ -46,6 +46,7 @@ export class UpdateTransportComponent implements OnInit {
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
       opening_balance: new FormControl('',[ Validators.pattern(/^[0-9]*$/)]),
+      opening_balance_type:new FormControl('',[Validators.required])
     })
     this.addAddress()
     this.addBank()
@@ -261,7 +262,7 @@ export class UpdateTransportComponent implements OnInit {
     formdata.append('credit_limit', this.transportForm.get('credit_limit')?.value);
     formdata.append('payment_terms', this.transportForm.get('payment_terms')?.value);
     formdata.append('opening_balance', this.transportForm.get('opening_balance')?.value);
-
+    formdata.append('opening_balance_type',this.transportForm.get('opening_balance_type')?.value)
     // nested addrs data 
     const addressArray = this.transportForm.get('address') as FormArray;
     const addressData = [];
@@ -415,6 +416,9 @@ export class UpdateTransportComponent implements OnInit {
   }
   getBankName(index: number) {
     return this.getBanks().controls[index].get('bank_name');
+  }
+  get opening_balance_type(){
+    return this.transportForm.get('opening_balance_type')
   }
 }
 
