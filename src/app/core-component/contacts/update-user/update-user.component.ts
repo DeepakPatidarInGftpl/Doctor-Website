@@ -33,13 +33,23 @@ id:any;
       // role:new FormControl(''),
       // user_permissions:new FormControl(''),
       // groups:new FormControl('')
+      branch:new FormControl('')
     })
     this.contactService.getUserById(this.id).subscribe(res=>{
       console.log(res);
       this.userForm.patchValue(res)
+      this.userForm.get('branch')?.patchValue(res?.branch)
     })
+    this.getBranch()
   }
 
+  branchList:any;
+  getBranch(){
+    this.contactService.getBranch().subscribe(res=>{
+      console.log(res);
+      this.branchList=res;
+    })
+  }
   dateError = null
   addRes: any;
   loader = false;
@@ -64,9 +74,8 @@ id:any;
           }
         }
       }, err => {
-        console.log(err.error.gst);
-       
-        
+        this.loader=false;
+        this.toastr.error('password',err?.error?.password[0]) 
       })
     } else {
       this.userForm.markAllAsTouched()
@@ -95,6 +104,9 @@ id:any;
   }
   get name() {
     return this.userForm.get('name')
+  }
+  get branch(){
+    return this.userForm.get('branch')
   }
 }
 

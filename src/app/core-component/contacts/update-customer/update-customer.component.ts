@@ -44,7 +44,8 @@ export class UpdateCustomerComponent implements OnInit {
       payment_terms: new FormControl(''),
       opening_balance: new FormControl(''),
       invite_code: new FormControl(''),
-      membership: new FormControl('')
+      membership: new FormControl(''),
+      opening_balance_type:new FormControl('',[Validators.required])
     });
 
     this.contactService.getCustomerById(this.id).subscribe(res => {
@@ -229,7 +230,7 @@ export class UpdateCustomerComponent implements OnInit {
     formdata.append('opening_balance', this.customerForm.get('opening_balance')?.value);
     formdata.append('invite_code', this.customerForm.get('invite_code')?.value);
     formdata.append('membership', this.customerForm.get('membership')?.value);
-
+    formdata.append('opening_balance_type',this.customerForm.get('opening_balance_type')?.value)
     // nested addrs data 
     const addressArray = this.customerForm.get('address') as FormArray;
     const addressData = [];
@@ -353,5 +354,8 @@ export class UpdateCustomerComponent implements OnInit {
   }
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
+  }
+  get opening_balance_type(){
+    return this.customerForm.get('opening_balance_type');
   }
 }

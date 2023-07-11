@@ -136,13 +136,11 @@ const routes: Routes = [
 
       {path: 'activities',loadChildren: () =>import('./activities/activities.module').then((m) => m.ActivitiesModule),},
 
-      {path:'company', loadChildren:()=>import('./company/company.module').then((m)=>m.CompanyModule)},
-      {path:'employee',loadChildren:()=>import('./employee/employee.module').then((m)=>m.EmployeeModule)},
-      {path:'account',loadChildren:()=>import('./account/account.module').then((m)=>m.AccountModule)},
-      {path:'warehouse',loadChildren:()=>import('./warehouse/warehouse.module').then((m)=>m.WarehouseModule)},
+
+      
       {path:'website',loadChildren:()=>import('./website/website.module').then((m)=>m.WebsiteModule)},
       {path:'contacts',loadChildren:()=>import('./contacts/contacts.module').then((m)=>m.ContactsModule)},
-   
+      {path:'masters',loadChildren:()=>import('./master/master.module').then((m)=>m.MasterModule)}
   ],
   },
 

@@ -39,6 +39,7 @@ export class AddSupplierComponent implements OnInit {
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
       opening_balance: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      opening_balance_type:new FormControl('',[Validators.required]),
       supplier_type: new FormControl('', [Validators.required])
     });
 
@@ -168,6 +169,7 @@ export class AddSupplierComponent implements OnInit {
     formdata.append('credit_limit', this.supplierForm.get('credit_limit')?.value);
     formdata.append('payment_terms', this.supplierForm.get('payment_terms')?.value);
     formdata.append('opening_balance', this.supplierForm.get('opening_balance')?.value);
+    formdata.append('opening_balance_type', this.supplierForm.get('opening_balance_type')?.value);
     formdata.append('supplier_type', this.supplierForm.get('supplier_type')?.value);
 
     // nested addrs data 
@@ -225,6 +227,7 @@ export class AddSupplierComponent implements OnInit {
           }
         }
       }, err => {
+        this.loader=false
         console.log(err.error);
         if(err.error.msg){
           this.toastr.error(err.error.msg)
@@ -308,6 +311,9 @@ export class AddSupplierComponent implements OnInit {
   }
   get credit_limit() {
     return this.supplierForm.get('credit_limit')
+  }
+  get opening_balance_type(){
+    return this.supplierForm.get('opening_balance_type')
   }
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');

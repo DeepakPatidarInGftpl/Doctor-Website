@@ -47,7 +47,8 @@ export class UpdateSupplierComponent implements OnInit {
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
       opening_balance: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      supplier_type: new FormControl('', [Validators.required])
+      supplier_type: new FormControl('', [Validators.required]),
+      opening_balance_type:new FormControl('',[Validators.required])
     });
 
     this.contactService.getSupplierById(this.id).subscribe(res => {
@@ -117,10 +118,6 @@ export class UpdateSupplierComponent implements OnInit {
 
     return formArr;
   }
-
-
-
-
 
   // updated data
   udateBank(add: any): FormArray {
@@ -269,7 +266,7 @@ export class UpdateSupplierComponent implements OnInit {
     formdata.append('payment_terms', this.supplierForm.get('payment_terms')?.value);
     formdata.append('opening_balance', this.supplierForm.get('opening_balance')?.value);
     formdata.append('supplier_type', this.supplierForm.get('supplier_type')?.value);
-
+    formdata.append('opening_balance_type', this.supplierForm.get('opening_balance_type')?.value);
     // nested addrs data 
     const addressArray = this.supplierForm.get('address') as FormArray;
     const addressData = [];
@@ -397,6 +394,9 @@ export class UpdateSupplierComponent implements OnInit {
   }
   get apply_tds() {
     return this.supplierForm.get('apply_tds')
+  }
+  get opening_balance_type(){
+    return this.supplierForm.get('opening_balance_type')
   }
   get credit_limit() {
     return this.supplierForm.get('credit_limit')

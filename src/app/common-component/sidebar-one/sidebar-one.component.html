@@ -53,12 +53,14 @@
             </li> -->
 
             <li class="submenu" >
-                <a [ngClass]="activePath === 'company' || activePath === 'account' || activePath === 'warehouse' ? 'active' : ''"><img src="assets/img/icons/product.svg" alt="img"><span> Master</span> <span class="menu-arrow"></span></a>
+                <a [ngClass]="{'active': activePath === 'masters'}"><img src="assets/img/icons/product.svg" alt="img"><span> Master</span> <span class="menu-arrow"></span></a>
                 <ul>
-                    <li><a routerLink="/company/companylist" routerLinkActive="active">Company</a></li>
-                    <li><a routerLink="/account/accountlist" routerLinkActive="active">Account</a></li>
-                    <!-- <li><a routerLink="/employee/employeelist" routerLinkActive="active">Employee</a></li> -->
-                    <li><a routerLink="/warehouse/warehouse" routerLinkActive="active">Warehouse</a></li>
+                    <li><a routerLink="/masters/companylist" routerLinkActive="active">Company</a></li>
+                    <li><a routerLink="/masters/accountlist" routerLinkActive="active">Account</a></li>
+                    <li><a routerLink="/masters/employeelist" routerLinkActive="active">Employee</a></li>
+                    <li><a routerLink="/masters/warehouse" routerLinkActive="active">Warehouse</a></li>
+                    <li><a routerLink="/masters/branch" routerLinkActive="active">Branch</a></li>
+                    <li><a routerLink="/masters/account_subtype" routerLinkActive="active">Account Sub Type</a></li>
                 </ul>
             </li> 
 
@@ -129,6 +131,7 @@
                     <li><a routerLink="/contacts/customer" routerLinkActive="active">Customer</a></li>
                     <li><a routerLink="/contacts/user" routerLinkActive="active">User</a></li>
                     <li><a routerLink="/contacts/transport" routerLinkActive="active">Transport</a></li>
+                    <li><a routerLink="/contacts/dealerList" routerLinkActive="active">Dealer</a></li>
                 </ul>
             </li> 
             <!-- <li class="submenu">

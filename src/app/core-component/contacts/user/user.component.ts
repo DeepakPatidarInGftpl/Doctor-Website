@@ -21,6 +21,7 @@ export class UserComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage:number=10;
 
+  isAscending: boolean = true;
   constructor(private contactService: ContactService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
   }
