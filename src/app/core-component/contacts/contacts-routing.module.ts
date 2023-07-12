@@ -110,14 +110,6 @@ const routes: Routes = [
     loadChildren: () => import('./add-permission-group/add-permission-group.module').then((m) => m.AddPermissionGroupModule)
   },
   {
-    path: 'updatePermissionGroup/:id',
-    loadChildren: () => import('./update-permission-group/update-permission-group.module').then((m) => m.UpdatePermissionGroupModule)
-  },
-  {
-    path: 'detailsPermissionGroup/:id',
-    loadChildren: () => import('./details-permission-group/details-permission-group.module').then((m) => m.DetailsPermissionGroupModule)
-  },
-  {
     path: 'dealerList',
     loadChildren: () => import('./dealer-list/dealer-list.module').then((m) => m.DealerListModule)
   },
