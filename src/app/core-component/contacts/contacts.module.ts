@@ -8,7 +8,7 @@ import { ToastrModule } from 'ngx-toastr';
 @NgModule({
   declarations: [
     ContactsComponent,
-  ],
+      ],
   imports: [
     CommonModule,
     ContactsRoutingModule,
