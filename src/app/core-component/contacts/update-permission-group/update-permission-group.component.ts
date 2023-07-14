@@ -1,5 +1,7 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 @Component({
@@ -10,128 +12,105 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
 export class UpdatePermissionGroupComponent implements OnInit {
   permissionForm!: FormGroup;
 
-  constructor(private contactService: ContactService, private fb: FormBuilder, private toastr:ToastrService) { }
+  constructor(private contactService: ContactService, private fb: FormBuilder, private toastr: ToastrService,
+    private Arout: ActivatedRoute,private router:Router,private location:Location) { }
 
+  id: any;
+  permissions: any = [];
+  gName: any;
   ngOnInit(): void {
-   this.permissionForm= this.fb.group({
+    this.id = this.Arout.snapshot.paramMap.get('id');
+    this.permissionForm = this.fb.group({
       group_name: new FormControl(''),
       permissions: new FormArray([]),
     })
+
+    this.contactService.getPermissionGroupById(this.id).subscribe(res => {
+      console.log(res);
+      this.gName = res.group[0].group_name;
+      //1st steps - store permissions id into permssions
+      this.permissions = res.group[0].permissions.map((res: any) => res.id);
+      console.log(this.permissions);
+      console.log(this.gName);
+      this.permissionForm.patchValue({
+        group_name:res.group[0].group_name
+      })
+    })
     this.getPermissionGroup();
-    // this.getPermission();
-    // this.getPermissions();
-  
   }
-// Component code
-// selectAllPermissions(permissions: any[], i: number, model_name: string, event: any) {
-//   const checked = event.target.checked;
-//   for (let perm of permissions) {
-//     console.log(perm);
-    
-//     perm.selected = checked;
-//   }
-// }
+  // Component code
+  // selectAllPermissions(permissions: any[], i: number, model_name: string, event: any) {
+  //   const checked = event.target.checked;
+  //   for (let perm of permissions) {
+  //     console.log(perm);
 
-selectAllPermissions(permissions: any[], i: number, model_name: string, event: any) {
-  const checked = event.target.checked;
-  const formArray: any = this.permissionForm.get('permissions') as FormArray;
- 
-  for (let perm of permissions) {
-    perm.selected = checked;
+  //     perm.selected = checked;
+  //   }
+  // }
 
-    // Selected
-    if (checked) {
-      if (!this.isPermissionSelected(perm.id)) {
-        formArray.push(new FormControl(perm.id));
-        this.selectedSubcat++;
+  selectAllPermissions(permissions: any[], i: number, model_name: string, event: any) {
+    const checked = event.target.checked;
+    const formArray: any = this.permissionForm.get('permissions') as FormArray;
+
+    for (let perm of permissions) {
+      perm.selected = checked;
+
+      // Selected
+      if (checked) {
+        if (!this.isPermissionSelected(perm.id)) {
+          formArray.push(new FormControl(perm.id));
+          this.selectedSubcat++;
+        }
       }
-    }
-    // Unselected
-    else {
-      if (this.isPermissionSelected(perm.id)) {
-        const index = formArray.controls.findIndex((control: any) => control.value === perm.id);
-        if (index !== -1) {
-          formArray.removeAt(index);
-          this.selectedSubcat--;
+      // Unselected
+      else {
+        if (this.isPermissionSelected(perm.id)) {
+          const index = formArray.controls.findIndex((control: any) => control.value === perm.id);
+          if (index !== -1) {
+            formArray.removeAt(index);
+            this.selectedSubcat--;
+          }
         }
       }
     }
   }
-}
 
-isPermissionSelected(permissionId: number): boolean {
-  const formArray: any = this.permissionForm.get('permissions') as FormArray;
-  return formArray.controls.some((control: any) => control.value === permissionId);
-}
+  isPermissionSelected(permissionId: number): boolean {
+    const formArray: any = this.permissionForm.get('permissions') as FormArray;
+    return formArray.controls.some((control: any) => control.value === permissionId);
+  }
 
   groupList: any;
+
   getPermissionGroup() {
-    this.contactService.getPermission().subscribe((response:any) => {
+    this.contactService.getPermission().subscribe((response: any) => {
       console.log(response);
       this.groupList = response?.data;
+      this.groupList.forEach((res: any) => {
+        let group = []
+        group = res?.model;
+        group.forEach((group: any) => {
+          //2steps- steps pemissions checkbox auto selected data 
+          group.permissions.map((map: any) => {
+            //3steps- check data is available or not
+            console.log(this.permissions.includes(map.id));
+            console.log(map);
+            //4steps- if data available then display true & patching into permissions formarray id
+            //5steps in input tag - [checked]="permissions.includes(perm.id)"
+            if (this.permissions.includes(map.id)) {
+              console.log(map);
+              let formArray: any = this.permissionForm.get('permissions') as FormArray;
+              formArray.push(new FormControl(map.id))
+            }
+          })
+        })
+      })
     })
   }
 
   permmisionList: any;
 
-  getPermissions() {
-    this.contactService.getPermission().subscribe((res: any) => {
-      const transformedData = res.map((permission: any) => ({
-        id: permission.id,
-        content_type: permission.content_type,
-        model: [{
-          id: permission.content_type.id,
-          model: permission.content_type.model,
-          permissions: [
-            {
-              name: permission.name,
-              codename: permission.codename
-            }
-          ]
-        }]
-      }));
-      this.permmisionList = transformedData;
-      console.log(this.permmisionList); 
-    });
-  }
-  
-// if  content_type model is equal then assign in permission
-  getPermission() {
-    this.contactService.getPermission().subscribe((res: any) => {
-      const groupedPermissions = [];
-      res.forEach((permission) => {
-        const existingModel = groupedPermissions.find((groupedPermission) => groupedPermission.content_type.model === permission.content_type.model);
-  
-        if (existingModel) {
-          existingModel.model[0].permissions.push({
-            name: permission.name,
-            codename: permission.codename
-          });
-        } else {
-          groupedPermissions.push({
-            id: permission.content_type.id,
-            content_type: permission.content_type,
-            model: [
-              {
-                id: permission.content_type.id,
-                model: permission.content_type.model,
-                permissions: [
-                  {
-                    name: permission.name,
-                    codename: permission.codename
-                  }
-                ]
-              }
-            ]
-          });
-        }
-      });
-  
-      this.permmisionList = groupedPermissions;
-      console.log(this.permmisionList);
-    });
-  }
-  
+
   selectedSubcat = 0;
   onCheckChange(event: any) {
     const formArray: any = this.permissionForm.get('permissions') as FormArray;
@@ -166,23 +145,22 @@ isPermissionSelected(permissionId: number): boolean {
       this.loaders = true
       console.log('valid');
       var formdata: any = new FormData();
-      formdata.append('group_name', this.permissionForm.get('group_name')?.value);
+      // formdata.append('group_name', this.permissionForm.get('group_name')?.value);
 
       // Filter out null values from the variant array
       const permissionsArray = this.permissionForm.get('permissions')?.value.filter((value: any) => value !== null);
       formdata.append('permissions', JSON.stringify(permissionsArray));
 
-      // formdata.append('datetime',this.permissionForm.get('datetime')?.value);
-
-      this.contactService.addPermissionGroup(formdata).subscribe(res => {
+      this.contactService.updatePermissionGroup(formdata,this.id).subscribe(res => {
         console.log(res);
         this.loaders = false;
         this.addRes = res;
-        if (this.addRes.IsSuccess == 'True') {
+        if (this.addRes.msg == 'Group updated successfully') {
           this.toastr.success(this.addRes.msg);
           this.loaders = false
           this.permissionForm.reset()
-          this.ngOnInit()
+          this.location.back();
+          // this.router.navigate(['//contacts/detailsPermissionGroup'])
         }
       }, err => {
         console.log(err.error.gst);

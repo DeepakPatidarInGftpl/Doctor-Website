@@ -1,67 +1,71 @@
 <div class="page-header">
-    <div class="page-title">
-        <h4>User Role</h4>
-        <h6>Manage your User</h6>
-    </div>
+  <div class="page-title">
+    <h4>{{modelName}}</h4>
+    <h6>Manage your User</h6>
+  </div>
 </div>
 
 <div class="card">
-    <div class="card-body">
-        <form [formGroup]="permissionForm" (ngSubmit)="submit()">
-        <input type="text" placeholder="User Role Name" class="form-control w-30" formControlName="group_name">
-        <ul class="nav nav-pills mb-4 mt-3" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
-                    type="button" role="tab" aria-controls="pills-home" aria-selected="true">User Role Details</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile"
-                    type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Report Details</button>
-            </li>
-        </ul>
-        <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                <div>
-                    <div class="heading" *ngFor="let group of groupList; let i = index">
-                      <div class="accordion" id="accordionExample">
-                        <div class="accordion-item">
-                          <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + i" [attr.aria-expanded]="false" [attr.aria-controls]="'collapse' + i" [attr.id]="'heading' + i">{{group.content_type.app_label | titlecase}}</button>
-                          </h2>
-                          <div [id]="'collapse' + i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading' + i" data-bs-parent="#accordionExample">
-                            <div class="row w-100 m-0">
-                              <div class="col-sm-3 mb-3" *ngFor="let permision of group?.model;">
-                                <h4 class="f-18 mb-2">{{permision?.model_name}}</h4>
-                                <div class="form-check">
-                                  <input class="form-check-input" type="checkbox" [id]="'selectAll_' + i + '_' + permision.model_name" (change)="selectAllPermissions(permision.permissions, i, permision.model_name, $event)">
-                                  <label class="form-check-label" [for]="'selectAll_' + i + '_' + permision.model_name">Select all</label>
-                                </div>
-                                <div *ngFor="let perm of permision?.permissions; let j=index;">
-                                  <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" [id]="'permission_' + perm?.id" [checked]="perm.selected" formArrayName="permissions" [value]="perm.id" (change)="onCheckChange($event)">
-                                    <label class="form-check-label" [for]="'permission_' + perm?.id">{{perm?.name}}</label>
-                                <!-- <input class="form-check-input" type="checkbox" [id]="'permission_' + i + '_' + j" [checked]="perm.selected" formArrayName="permissions" [value]="perm.id" (change)="onCheckChange($event)">
-                                    <label class="form-check-label" [for]="'permission_' + i + '_' + j">{{perm?.name}}</label> -->   
-                                </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start">
+      <strong>User Role Name : {{modelName}}</strong>
+      <a routerLink="//contacts/updatePermissionGroup/{{groupId}}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+        </svg>
+      </a>
+    </div>
+    <ul class="nav nav-pills mb-4 mt-3" id="pills-tab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+          type="button" role="tab" aria-controls="pills-home" aria-selected="true">User Role Details</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile"
+          type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Report Details</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+      <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div>
+          <div class="heading" *ngFor="let group of groupList; let i = index">
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    [attr.data-bs-target]="'#collapse' + i" [attr.aria-expanded]="false"
+                    [attr.aria-controls]="'collapse' + i" [attr.id]="'heading' + i">{{group?.content_type?.app_label | titlecase}}</button>
+                </h2>
+                <div [id]="'collapse' + i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading' + i"
+                  data-bs-parent="#accordionExample">
+                  <div class="row w-100 m-0">
+                    <div class="col-sm-3 mb-3" *ngFor="let permision of group?.group;">
+                      <h4 class="f-18 mb-2">{{permision?.group_name}}</h4>
+                      <div *ngIf="permision?.group_name!==modeln">
+                        <div class="form-check" *ngFor="let perm of permision?.permissions; let j=index;">
+                          <mat-icon style="color: red;padding-top: 5px;">cancel</mat-icon>
+                          <label class="form-check-label" [for]="'permission_' + perm?.id">{{perm?.name}}</label>
+                      </div>
+                      </div>
+                      <div *ngIf="permision?.group_name==modeln" >
+                        <div class="form-check" *ngFor="let perm of permision?.permissions; let j=index;">
+                          <mat-icon style="color: green;padding-top: 5px;">check</mat-icon>
+                          <label class="form-check-label" [for]="'permission_' + perm?.id">{{perm?.name}}</label>
+                      </div>
                       </div>
                     </div>
                   </div>
-    
+                </div>
+              </div>
             </div>
-            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                
-            </div>
-            <div class="col-lg-12">
-                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
-            </div>
+          </div>
         </div>
-  </form>
+
+      </div>
+      <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+
+      </div>
     </div>
+  </div>
 </div>

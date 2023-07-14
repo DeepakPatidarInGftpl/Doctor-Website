@@ -214,7 +214,7 @@ export class ContactService {
     return this.http.get(url)
   }
   getPermissionGroupById(id: number): Observable<any> {
-    let url = this.apiUrl + '/pv-api/group/?group_id='
+    let url = this.apiUrl + '/pv-api/group/?id='
     return this.http.get<any>(`${url}${id}`)
   }
   addPermissionGroup(data: any) {

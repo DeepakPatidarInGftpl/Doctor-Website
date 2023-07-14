@@ -525,7 +525,8 @@
 									<div class="col-lg-6 col-sm-6 col-12">
 										<div class="form-group">
 											<label>Return Time*</label>
-											<input type="text" formControlName="return_time" [ngClass]="{'is-invalid': f['return_time'].touched && f['return_time'].invalid}">
+											<input type="text" formControlName="return_time" [ngClass]="{
+												'is-invalid': f['return_time'].touched && f['return_time'].invalid}">
 											<span class="text-danger" *ngIf="return_time && return_time.invalid && return_time.touched">Enter Return Time</span>
 										</div>
 									</div>
@@ -558,7 +559,8 @@
 																	<div class="col-sm-4">
 																		<input type="text"
 																			formControlName="feature_group"
-																			class="feature-input" [readonly]="true">
+																			class="feature-input" [readonly]="true" style="display:none">
+																			<label>{{featureGrpBysubcatGroupList.feature_group[i].title}}</label>	
 																	</div>
 																	<div class="col-sm-8">
 																		<select formControlName="feature" class="inp">

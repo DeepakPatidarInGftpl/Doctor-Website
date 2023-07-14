@@ -43,6 +43,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.LoadScript('assets/js/header.js');
+    this.profile()
   }
 
 
@@ -74,6 +75,12 @@ export class HeaderComponent implements OnInit {
   profile() {
     this.coreService.getProfile().subscribe(res => {
       this.userDetails = res;
+    },err=>{
+      console.log(err.error.detail=='Invalid token.');
+      if(err.error.detail=='Invalid token.'){
+        localStorage.clear();
+        window.location.reload();
+      }
     })
   }
   LoadScript(js: string) {

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DetailsPermissionGroupRoutingModule } from './details-permission-group-routing.module';
 import { DetailsPermissionGroupComponent } from './details-permission-group.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
-
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -13,7 +13,8 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
   imports: [
     CommonModule,
     DetailsPermissionGroupRoutingModule,
-    SharedModuleModule
+    SharedModuleModule,
+    MatIconModule
   ]
 })
 export class DetailsPermissionGroupModule { }
