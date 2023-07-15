@@ -27,14 +27,20 @@ export class UpdatePermissionGroupComponent implements OnInit {
 
     this.contactService.getPermissionGroupById(this.id).subscribe(res => {
       console.log(res);
-      this.gName = res.group[0].group_name;
-      //1st steps - store permissions id into permssions
-      this.permissions = res.group[0].permissions.map((res: any) => res.id);
-      console.log(this.permissions);
-      console.log(this.gName);
+      this.gName = res.Group;
       this.permissionForm.patchValue({
-        group_name:res.group[0].group_name
+        group_name:res.Group
       })
+      //1st steps - store permissions id into permssions
+      this.permissions = [];
+      res.data.forEach((group: any) => {
+        group.model.forEach((model: any) => {
+          model.permissions.forEach((permission: any) => {
+            this.permissions.push(permission.id);
+          });
+        });
+      });
+      console.log(this.permissions);
     })
     this.getPermissionGroup();
   }
@@ -160,7 +166,7 @@ export class UpdatePermissionGroupComponent implements OnInit {
           this.loaders = false
           this.permissionForm.reset()
           this.location.back();
-          // this.router.navigate(['//contacts/detailsPermissionGroup'])
+          // this.router.navigate(['//contacts/permissionGroup'])
         }
       }, err => {
         console.log(err.error.gst);

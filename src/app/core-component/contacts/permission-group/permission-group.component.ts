@@ -125,8 +125,7 @@ export class PermissionGroupComponent implements OnInit {
       this.tableData = res;
       console.log(res);
       this.tableData.forEach((res: any) => {
-        console.log(res.group);
-        this.groupList.push(...res.group);
+       console.log(res);
       });
       console.log(this.groupList);
       this.loader = false;
@@ -153,16 +152,7 @@ export class PermissionGroupComponent implements OnInit {
       })
     }
   }
-  deleteId(id: number) {
-    this.contactService.deleteSupplier(id).subscribe(res => {
-      this.delRes = res
-      if (this.delRes.msg == "Employee Deleted successfully") {
-        // this.getcompanyList()
-      }
-
-    })
-  }
-
+ 
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
@@ -182,5 +172,4 @@ export class PermissionGroupComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-  
 }

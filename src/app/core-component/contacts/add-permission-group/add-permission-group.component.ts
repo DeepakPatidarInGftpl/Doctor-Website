@@ -429,8 +429,7 @@ export class AddPermissionGroupComponent implements OnInit {
           this.loaders = false
           // this.permissionForm.reset()
           // this.ngOnInit()
-         
-          this.router.navigate([`//contacts/detailsPermissionGroup/${this.permissionForm.value.group_name}`])
+          this.router.navigate(['//settings/permissionGroup'])
         }
       }, err => {
         this.loaders=false;

@@ -101,22 +101,22 @@ const routes: Routes = [
     path: 'transportDetails/:id',
     loadChildren: () => import('./detail-transport/detail-transport.module').then((m) => m.DetailTransportModule)
   },
-  {
-    path: 'permissionGroup',
-    loadChildren: () => import('./permission-group/permission-group.module').then((m) => m.PermissionGroupModule)
-  },
-  {
-    path: 'addPermissionGroup',
-    loadChildren: () => import('./add-permission-group/add-permission-group.module').then((m) => m.AddPermissionGroupModule)
-  },
-  {
-    path: 'updatePermissionGroup/:id',
-    loadChildren: () => import('./update-permission-group/update-permission-group.module').then((m) => m.UpdatePermissionGroupModule)
-  },
-  {
-    path: 'detailsPermissionGroup/:id',
-    loadChildren: () => import('./details-permission-group/details-permission-group.module').then((m) => m.DetailsPermissionGroupModule)
-  },
+  // {
+  //   path: 'permissionGroup',
+  //   loadChildren: () => import('./permission-group/permission-group.module').then((m) => m.PermissionGroupModule)
+  // },
+  // {
+  //   path: 'addPermissionGroup',
+  //   loadChildren: () => import('./add-permission-group/add-permission-group.module').then((m) => m.AddPermissionGroupModule)
+  // },
+  // {
+  //   path: 'updatePermissionGroup/:id',
+  //   loadChildren: () => import('./update-permission-group/update-permission-group.module').then((m) => m.UpdatePermissionGroupModule)
+  // },
+  // {
+  //   path: 'detailsPermissionGroup/:id',
+  //   loadChildren: () => import('./details-permission-group/details-permission-group.module').then((m) => m.DetailsPermissionGroupModule)
+  // },
   {
     path: 'dealerList',
     loadChildren: () => import('./dealer-list/dealer-list.module').then((m) => m.DealerListModule)

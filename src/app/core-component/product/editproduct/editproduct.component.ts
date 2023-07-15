@@ -136,18 +136,18 @@ export class EditproductComponent implements OnInit {
           cod_available:res?.cod_available,
           product_or_service:res?.product_or_service
         })
-        // this.productForm.setControl('product_features', this.udateFeature(this.editRes?.product_feature_product));
+        this.productForm.setControl('product_features', this.udateFeature(this.editRes?.product_feature_product));
         // this.productForm.setControl('product_images', this.updateImage(this.editRes?.product_images));
         // Patch the `product_features` form array
-        const productFeaturesFormArray = this.productForm.get('product_features') as FormArray;
-        productFeaturesFormArray.clear(); // Remove existing form groups
-        res.product_feature_product.forEach((feature: any) => {
-          const featureFormGroup = this.fb.group({
-            feature_group: feature.feature_group.title,
-            feature: feature.id
-          });
-          productFeaturesFormArray.push(featureFormGroup); // Add new form group to form array
-        });
+        // const productFeaturesFormArray = this.productForm.get('product_features') as FormArray;
+        // productFeaturesFormArray.clear(); // Remove existing form groups
+        // res.product_feature_product.forEach((feature: any) => {
+        //   const featureFormGroup = this.fb.group({
+        //     feature_group: feature.feature_group.title,
+        //     feature: feature.feature.id
+        //   });
+        //   productFeaturesFormArray.push(featureFormGroup); // Add new form group to form array
+        // });
 
         // Patch the `product_images` form array
         const productImagesFormArray = this.productForm.get('product_images') as FormArray;
@@ -171,6 +171,7 @@ export class EditproductComponent implements OnInit {
 
         this.getSubcategoryGroupByCategory(res.category.id);
         this.oncheck(res.subcategory_group.id);
+        this.getFeaturegroupBySubcategory(res.subcategory_group.id,'')
         this.checkSubact(res.subcategory.id);
         console.log(this.editRes.variant_product);
         console.log(this.colorTitle, 'colorarray ');
@@ -221,9 +222,10 @@ export class EditproductComponent implements OnInit {
     console.log(add);
     let formarr = new FormArray([]);
     add.forEach((j: any) => {
+      console.log(j); 
       formarr.push(this.fb.group({
         feature_group: j.feature_group,
-        feature: j.feature.title,
+        feature: j.feature.id,
       }))
     })
     return formarr
@@ -466,11 +468,14 @@ export class EditproductComponent implements OnInit {
   // subcategory wise tax slab
   featureGrpBysubcatGroupList: any;
   featureData: any;
-  getFeaturegroupBySubcategory(val: any) {
+  getFeaturegroupBySubcategory(val: any,event:any) {
+    console.log(event);
+    
     this.coreService.getFeaturegroupBySubcategoryGroup(val).subscribe(res => {
       console.log(res);
       this.featureGrpBysubcatGroupList = res;
-      // open feature form 
+      if(event){
+        // open feature form 
       const feature = this.productForm.get('product_features') as FormArray;
       feature.clear();
       for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
@@ -483,6 +488,8 @@ export class EditproductComponent implements OnInit {
           feature_group: res.id
         });
       })
+      }
+     
     })
   }
 
@@ -496,13 +503,12 @@ export class EditproductComponent implements OnInit {
   oncheck(val: any) {
     console.log(val);
     this.getSubcategoryBySubcategoryGroup(val)
-    this.getFeaturegroupBySubcategory(val);
+    // this.getFeaturegroupBySubcategory(val,'');
     // this.getHsncodeBySubcategory(val)
   }
   // open hsn or taxslab or brand after select subcat
   checkSubact(val: any) {
     console.log(val);
-
     this.selectBrand(val);
     // this.getTaxslabBySubcategory(val);
     // this.getHsncodeBySubcategory(val);

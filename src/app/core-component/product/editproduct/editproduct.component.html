@@ -323,7 +323,7 @@
 											<label>Subcategory Group*</label>
 											<select class="form-select" formControlName="subcategory_group" [ngClass]="{
 											'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
-										  }" #subCategoryGroupValue (change)="oncheck(subCategoryGroupValue.value)">
+										  }" #subCategoryGroupValue (change)="oncheck(subCategoryGroupValue.value)" (change)="getFeaturegroupBySubcategory(subCategoryGroupValue.value,$event)">
 												<option value="" selected disabled>Select Subcategory Group</option>
 												<option value="{{subcatgroup.id}}"
 													*ngFor="let subcatgroup of subcatGroupByCategory">
