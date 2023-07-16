@@ -39,15 +39,22 @@ itemsPerPage:number=10;
         this.coreService.deleteProduct(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Prodct Deleted successfully") {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
            this.ngOnInit()
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
       }
     });
   }

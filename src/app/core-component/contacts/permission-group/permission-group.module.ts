@@ -14,6 +14,7 @@ import { OrderModule } from 'ngx-order-pipe';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+
 @NgModule({
   declarations: [
     PermissionGroupComponent

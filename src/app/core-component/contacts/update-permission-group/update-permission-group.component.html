@@ -3,12 +3,12 @@
         <h4>User Role</h4>
         <h6>Manage your User</h6>
     </div>
-</div>
-
-<div class="card">
+  </div>
+  
+  <div class="card">
     <div class="card-body">
         <form [formGroup]="permissionForm" (ngSubmit)="submit()">
-        <input type="text" placeholder="User Role Name" class="form-control w-30" formControlName="group_name">
+        <input type="text" placeholder="User Role Name" class="form-control w-30" formControlName="group_name" readonly>
         <ul class="nav nav-pills mb-4 mt-3" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
@@ -38,7 +38,7 @@
                                 </div>
                                 <div *ngFor="let perm of permision?.permissions; let j=index;">
                                   <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" [id]="'permission_' + perm?.id" [checked]="perm.selected" formArrayName="permissions" [value]="perm.id" (change)="onCheckChange($event)">
+                                    <input class="form-check-input" type="checkbox" [id]="'permission_' + perm?.id" [checked]="perm.selected" formArrayName="permissions" [value]="perm.id" [checked]="permissions.includes(perm.id)" (change)="onCheckChange($event)">
                                     <label class="form-check-label" [for]="'permission_' + perm?.id">{{perm?.name}}</label>
                                 <!-- <input class="form-check-input" type="checkbox" [id]="'permission_' + i + '_' + j" [checked]="perm.selected" formArrayName="permissions" [value]="perm.id" (change)="onCheckChange($event)">
                                     <label class="form-check-label" [for]="'permission_' + i + '_' + j">{{perm?.name}}</label> -->   
@@ -64,4 +64,4 @@
         </div>
   </form>
     </div>
-</div>
+  </div>

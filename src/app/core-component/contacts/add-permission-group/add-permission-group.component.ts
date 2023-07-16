@@ -15,7 +15,7 @@ export class AddPermissionGroupComponent implements OnInit {
     return this.permissionForm.controls;
   }
   constructor(private contactService: ContactService, private fb: FormBuilder, private toastr: ToastrService,
-    private router: Router) { }
+    private router: Router,) { }
 
   data1 = [
     {
@@ -406,20 +406,20 @@ export class AddPermissionGroupComponent implements OnInit {
 
   addRes: any;
   loaders = false;
+  modelName:any;
   submit() {
+    console.log(this.modelName);
+    console.log(this.permissionForm.value.group_name);
     console.log(this.permissionForm.value);
     if (this.permissionForm.valid) {
       this.loaders = true
       console.log('valid');
       var formdata: any = new FormData();
       formdata.append('group_name', this.permissionForm.get('group_name')?.value);
-
       // Filter out null values from the variant array
       const permissionsArray = this.permissionForm.get('permissions')?.value.filter((value: any) => value !== null);
       formdata.append('permissions', JSON.stringify(permissionsArray));
-
       // formdata.append('datetime',this.permissionForm.get('datetime')?.value);
-
       this.contactService.addPermissionGroup(formdata).subscribe(res => {
         console.log(res);
         this.loaders = false;
@@ -427,11 +427,16 @@ export class AddPermissionGroupComponent implements OnInit {
         if (this.addRes.IsSuccess == 'True') {
           this.toastr.success(this.addRes.msg);
           this.loaders = false
-          this.permissionForm.reset()
-          this.ngOnInit()
+          // this.permissionForm.reset()
+          // this.ngOnInit()
+          this.router.navigate(['//settings/permissionGroup'])
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders=false;
+        if(err.error.IsSuccess==false){
+          this.toastr.error(err.error.Error)
+          // this.toastr.error(`${this.modelName} already exists`)
+        }
       });
     } else {
       this.permissionForm.markAllAsTouched();
@@ -445,6 +450,7 @@ export class AddPermissionGroupComponent implements OnInit {
   get permissions() {
     return this.permissionForm.get('permissions')
   }
+
   detailsPage(val) {
     console.log(val);
     this.router.navigate([`//contacts/detailsPermissionGroup/${val}`])

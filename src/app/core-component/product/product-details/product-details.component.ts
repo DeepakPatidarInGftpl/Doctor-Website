@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import Swal from 'sweetalert2';
-
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
@@ -13,11 +12,6 @@ export class ProductDetailsComponent implements OnInit {
 
   constructor(private Arout: ActivatedRoute, private coreService: CoreService, private location: Location) { }
 
-  images = [
-    { image: 'https://i0.wp.com/www.flutterbeads.com/wp-content/uploads/2022/01/add-image-in-flutter-hero.png?fit=2850%2C1801&ssl=1', color: 'blue' },
-    { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9Lp_vpjcJFZDWE_C0lyv5SjGWuZR3J_AtP7_ydmA2mqnRRlXdmwzVsdaCjp8LbIM-6Qk&usqp=CAU', color: 'red' },
-    { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4qTg6fFDyOZqICjlmXpRpHZvBH-ugax9FwjYYfWuJ&s', color: 'green' },
-  ]
   id: any
   imgUrl = 'https://pv.greatfuturetechno.com';
 
@@ -59,8 +53,6 @@ export class ProductDetailsComponent implements OnInit {
       }
     });
   }
-
-
 
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -185,4 +177,6 @@ export class ProductDetailsComponent implements OnInit {
       }
     });
   }
+
+
 }

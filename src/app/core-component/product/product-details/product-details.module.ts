@@ -13,11 +13,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 
-
 @NgModule({
   declarations: [
-    ProductDetailsComponent,
-   
+    ProductDetailsComponent, 
   ],
   imports: [
     CommonModule,
@@ -28,7 +26,7 @@ import { FormsModule } from '@angular/forms';
     MatSelectModule,
     MatCheckboxModule,
     MatSlideToggleModule,
-    FormsModule
+    FormsModule,
   ]
 })
 export class ProductDetailsModule { }
