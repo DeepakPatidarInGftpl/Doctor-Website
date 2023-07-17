@@ -1,10 +1,11 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Observer, fromEvent, merge, Subscription, of } from 'rxjs';
 import { map, startWith, filter, distinctUntilChanged, debounceTime, tap, switchMap, finalize, catchError } from 'rxjs/operators';
 import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 import { SyncServiceService } from 'src/app/Services/sync-service.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { ToastrService } from 'ngx-toastr';
 import { __values } from 'tslib';
 @Component({
@@ -32,6 +33,15 @@ export class PosComponent implements OnInit {
     { id: 5, name: 'Option 5', value: 'option5', price: 50 },
   ];
 
+  gstType = [
+    {label: 'UnRegistered', value: 'UnRegistered'},
+    {label: 'Registered Regular', value: 'Registered Regular'},
+    {label: 'Registered Composition', value: 'Registered Composition'},
+    {label: 'Input Service Distributor', value: 'Input Service Distributor'},
+    {label: 'Ecommerce Operator', value: 'Ecommerce Operator'},
+
+  ]
+
   selectedOptions: any[] = [];
   productsAutocompleteControl = new FormControl();
   //filteredOptions$: Observable<any[]> | undefined;
@@ -58,9 +68,15 @@ export class PosComponent implements OnInit {
   filteredCustomer: any;
   currentItems: any[] = [];
   customerForm: FormGroup;
+  registrationForm: FormGroup;
+  customerRegistrationNumberSame: boolean = false;
+  currentCountry: any;
+  currentState:any;
+  stateList:any;
+  currentCities:any;
+  cityList:any;
 
-
-  constructor(public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService) { 
+  constructor(public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
     // this.cartItems = this.cartService.getCartItems();
     this.currentItems = this.cartService.getCurrentItems();
     this.customerForm = this.fb.group({
@@ -94,6 +110,22 @@ export class PosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.registrationForm = this.fb.group({
+      name: [''],
+      mobile_no: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      whatsapp_no: ['', [Validators.pattern(/^[0-9]{10}$/)]],
+      date_of_birth: [''],
+      anniversary_date: [''],
+      email: ['', [Validators.email]],
+      gstin: [''],
+      gst_type: [''],
+      address_line_1: [''],
+      address_line_2: [''],
+      state: [''],
+      city: [''],
+      pincode: ['', [Validators.pattern(/^[0-9]{6}$/)]]
+    });
+
     window.addEventListener('online', () => {
       if(this.showSyncButton){
         document.getElementById("exampleModal7").classList.add('show');      
@@ -187,9 +219,10 @@ export class PosComponent implements OnInit {
       )
       .subscribe((data: any) => {
         console.log('data', data)
-        if(data.variants.length > 0){
-          this.filteredProducts = data.variants;
-        }
+        // if(data.variants.length > 0){
+        //   this.filteredProducts = data.variants;
+        // }
+        this.filteredProducts = data;
         // if (data['Search'] == undefined) {
         //   this.errorMsg = data['Error'];
         //   this.filteredProducts = [];
@@ -215,7 +248,7 @@ export class PosComponent implements OnInit {
           this.filteredCustomer = [];
           this.cusIsLoading = true;
         }),
-        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/product_search/?search=${value}`, requestOptions)
+        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/customer_filter/?search=${value}`, requestOptions)
           .pipe(
             catchError(err => {
               // handleError(err);
@@ -233,9 +266,15 @@ export class PosComponent implements OnInit {
       )
       .subscribe((data: any) => {
         console.log('data', data)
-        if(data.variants.length > 0){
-          this.filteredCustomer = data.variants;
+
+        if(data.length > 0){
+          console.log('data', data)
+          this.filteredCustomer = data;
+        } else {
+          this.filteredCustomer = [];
+          this.cusErrorMsg = 'No Customers Found';
         }
+        
         // if (data['Search'] == undefined) {
         //   this.errorMsg = data['Error'];
         //   this.filteredProducts = [];
@@ -245,8 +284,6 @@ export class PosComponent implements OnInit {
         //   this.filteredProducts = data['Search'];
         //   console.log('else');
         // }
-        console.log(this.filteredCustomer, 'Cus');
-        console.log(this.cusErrorMsg, 'errmgcus');
       });
   
 
@@ -254,12 +291,28 @@ export class PosComponent implements OnInit {
     //   startWith(''),
     //   map(value => this.filterOptions(value))
     // );
-    this.http.get('/assets/data.json').subscribe(data => {
-      console.log(data);
-      this.customers = data;
-    });
+    
     this.addMoreDetails = false;
     console.log(this.addMoreDetails);
+    this.coreService.getCountry().subscribe({
+      next: (response) => {
+        console.log(response, 'countries')
+        this.currentCountry = response[0];
+        this.coreService.getStateByCountryId(response[0].id).subscribe({
+          next: (response) => {
+            console.log(response, 'state');
+            this.stateList = response
+          },
+          error: (error) => {
+            console.log('state', error)
+          }
+        })
+      },
+      error: (error) => {
+        console.log('country', error);
+      }
+    });
+    
   }
 
   // productInputValue() {
@@ -383,6 +436,10 @@ export class PosComponent implements OnInit {
     return item ? item.product_title : '';
   }
 
+  displayCus(item: any): string {
+    return item ? item.name : '';
+  }
+
   addMoreDetailsHandler() {
     return this.addMoreDetails = !this.addMoreDetails;
   }
@@ -468,17 +525,49 @@ export class PosComponent implements OnInit {
   }
 
   submitCustomerForm() {
+    let address = {
+      "address_line_1": this.registrationForm.get('address_line_1').value,
+      "address_line_2": this.registrationForm.get('address_line_2').value,
+      "country": this.currentCountry.id,
+      "state": Number(this.registrationForm.get('state').value),
+      "city": Number(this.registrationForm.get('city').value),
+      "pincode": this.registrationForm.get('pincode').value,
+      "address_type": ""
+    }
     let formData: any = new FormData();
-    formData.append('name', this.customerForm.get('name').value);
-    formData.append('mobile_no', this.customerForm.get('mobile_no').value);
-    formData.append('whatsapp_no', this.customerForm.get('whatsapp_no').value);
-    formData.append('date_of_birth', this.customerForm.get('date_of_birth').value);
-    formData.append('anniversary_date', this.customerForm.get('anniversary_date').value);
-    formData.append('address_line_1', this.customerForm.get('address_line_1').value);
-    formData.append('state', this.customerForm.get('state').value);
-    formData.append('city', this.customerForm.get('city').value);
-    formData.append('gst_type', this.customerForm.get('gst_type').value);
-    formData.append('gstin', this.customerForm.get('gstin').value);
+    formData.append('name', this.registrationForm.get('name').value);
+    formData.append('mobile_no', this.registrationForm.get('mobile_no').value);
+    formData.append('whatsapp_no', this.registrationForm.get('whatsapp_no').value);
+    formData.append('date_of_birth', this.registrationForm.get('date_of_birth').value);
+    formData.append('anniversary_date', this.registrationForm.get('anniversary_date').value);
+    formData.append('email', this.registrationForm.get('email').value);
+    formData.append('gstin', this.registrationForm.get('gstin').value);
+    formData.append('gst_type', this.registrationForm.get('gst_type').value);
+    if(this.address_line_1.value !== '' && this.address_line_2.value !== '' && this.state.value !== '' && this.city.value !== '' && this.pincode.value !== ''){
+      formData.append('address', '');
+    } else {
+      formData.append('address', JSON.stringify(address))
+    }
+
+     this.cartService
+     .addCustomer(formData)
+     .subscribe({
+        next: (response:any) => {
+          if(response.isSuccess){
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.addCusModal');
+            clicking.click();
+            this.registrationForm.reset()
+            this.addMoreDetails = false;
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
 
     // for(let x of formData){
     //   console.log('formdata cus', x);
@@ -491,7 +580,158 @@ export class PosComponent implements OnInit {
     //   });
   }
 
+  get formControls() {
+    return this.registrationForm.controls;
+  }
+
+  onStateChange(event:any) {
+    this.currentState = event.target.value;
+    const selectedState = event.target.value;
+    // const stateCode = this.stateList.find(state => state.id == selectedState.id);
+    // console.log(stateCode.id, '...');
+      this.coreService.getCityByStateId(selectedState).subscribe({
+        next: (res) => {
+          console.log(res, 'cites');
+          this.cityList = res;
+          this.currentCities = this.cityList?.id
+        },
+        error: (err) => {
+          console.log('cities', err);
+        }
+      })
+
+  }
+
+  onCityChange(event:any) {
+    this.currentCities = event.target.value;    
+  }  
+
+
+
+  onSubmit() {
+    if (this.registrationForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.registrationForm.controls).forEach(key => {
+        this.registrationForm.controls[key].markAsTouched();
+      });
+      return;
+    }
+    if(this.customerRegistrationNumberSame){
+      this.toastr.error("Mobile number already exists.")
+      return;
+    }
+    // if(this.address_line_1.value !== '' || this.address_line_2.value !== '' || this.state.value !== '' || this.city.value !== '' || this.pincode.value !== ''){
+    //   this.setAddressValidators();
+    //   Object.keys(this.registrationForm.controls).forEach(key => {
+    //     this.registrationForm.controls[key].markAsTouched();
+    //   });
+    //   return;
+    // } else {
+    //   this.clearAddressValidators();
+    //   Object.keys(this.registrationForm.controls).forEach(key => {
+    //     this.registrationForm.controls[key].markAsTouched();
+    //   });
+    //   return;
+    // }
+    
+
+    // Form is valid, proceed with submission
+    console.log(this.registrationForm.value);
+    this.submitCustomerForm();
+    // Perform additional actions like API calls or data processing here
+  }
+
+  get name() { return this.registrationForm.get('name'); }
+  get mobile_no() { return this.registrationForm.get('mobile_no'); }
+  get whatsapp_no() { return this.registrationForm.get('whatsapp_no'); }
+  get date_of_birth() { return this.registrationForm.get('date_of_birth'); }
+
+  get anniversary_date() { return this.registrationForm.get('anniversary_date'); }
+  get email() { return this.registrationForm.get('email'); }
+  get gstin() { return this.registrationForm.get('gstin'); }
+  get gst_type() { return this.registrationForm.get('gst_type'); }
+  get address_line_1() { return this.registrationForm.get('address_line_1'); }
+  get address_line_2() { return this.registrationForm.get('address_line_2'); }
+  get country() { return this.registrationForm.get('country'); }
+  get state() { return this.registrationForm.get('state'); }
+  get city() { return this.registrationForm.get('city'); }
+  get pincode() { return this.registrationForm.get('pincode'); }
+
+  handleMobileInputChange(event: any) {
+    const inputValue = event.target.value;
+    if(this.mobile_no.valid){
+      this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/mobile_no_check_of_customer/?search=${inputValue}`).subscribe({
+      next: (response:any) => {
+        console.log(response, 'mobile check');
+        if(response.Same){
+          this.customerRegistrationNumberSame = true;
+        } else {
+          this.customerRegistrationNumberSame = false;
+        }
+      },
+      error: (err) => {
+        console.log(err, 'mobile check');
+      }
+    })
+    }
+  }
+
+  onGstTypeChange() {
+    const optionValue = this.gst_type.value;
+
+    if (optionValue === 'Registered Regular') {
+      this.gstin.setValidators([Validators.required]);
+    } else {
+      this.gstin.clearValidators();
+    }
+
+    this.gstin.updateValueAndValidity();
+  }
+
+  onAddress1Change() {
+    const optionValue = this.address_line_1.value;
+
+    if (optionValue === 'Registered Regular') {
+      this.gstin.setValidators([Validators.required]);
+    } else {
+      this.gstin.clearValidators();
+    }
+
+    this.gstin.updateValueAndValidity();
+  }
+
+  setAddressValidators() {
+    this.address_line_1.setValidators(Validators.required);
+    this.address_line_2.setValidators(Validators.required);
+    this.state.setValidators(Validators.required);
+    this.city.setValidators(Validators.required);
+    this.pincode.setValidators([Validators.required, Validators.pattern(/^[0-9]{6}$/)]);
+
+    this.address_line_1.updateValueAndValidity();
+    this.address_line_2.updateValueAndValidity();
+    this.state.updateValueAndValidity();
+    this.city.updateValueAndValidity();
+    this.pincode.updateValueAndValidity();
+  }
+
+  clearAddressValidators() {
+    this.address_line_1.clearValidators();
+    this.address_line_2.clearValidators();
+    this.state.clearValidators();
+    this.city.clearValidators();
+    this.pincode.clearValidators();
+    this.pincode.setValidators(Validators.pattern(/^[0-9]{6}$/));
+
+    this.address_line_1.updateValueAndValidity();
+    this.address_line_2.updateValueAndValidity();
+    this.state.updateValueAndValidity();
+    this.city.updateValueAndValidity();
+    this.pincode.updateValueAndValidity();
+  }
+
 }
+
+
 
 
 export enum KEY_CODE {

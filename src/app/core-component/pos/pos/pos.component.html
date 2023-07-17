@@ -111,14 +111,15 @@
                                    [formControl]="customerAutoCompleteControl"
                                    [matAutocomplete]="auto1"
                                    class="form-control">
-                            <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="optionSelected1($event)">
+                            <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelected1($event)">
+                                <mat-option class="is-loading">
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal1">Add New Customer</button>
+                                </mat-option>
                                 <mat-option *ngIf="customerAutoCompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
                                 <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
-                                <mat-option value="Walk-In">
-                                    Walk-In Customer
-                                </mat-option>
+                                <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
                               <mat-option *ngFor="let customer of filteredCustomer" [value]="customer">
-                                {{ displayFn(customer) }}
+                                {{ displayCus(customer) }}
                               </mat-option>
                             </mat-autocomplete>
                           </form>
@@ -532,12 +533,15 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Customer Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close addCusModal" data-bs-dismiss="modal" aria-label="Close">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
-        <form [formGroup]="customerForm" (ngSubmit)="submitCustomerForm()">
+        
+          
         <div class="modal-body">
+            <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -546,14 +550,34 @@
                         placeholder="Name"
                         formControlName="name">
                     </div>
+                    <div *ngIf="name.invalid && (name.dirty || name.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="name.errors?.['required']">
+    Name is required.
+  </div>
+</div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Mobile No.</label>
                         <input type="text" class="form-control" 
                         placeholder="Mobile No."
-                        formControlName="mobile_no">
+                        formControlName="mobile_no"
+                        (input)="handleMobileInputChange($event)"
+                        >
                     </div>
+                    <div class="alert alert-danger" *ngIf="mobile_no.valid && customerRegistrationNumberSame">Mobile No. already exists.</div>
+                    <div *ngIf="mobile_no.invalid && (mobile_no.dirty || mobile_no.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="mobile_no.errors?.['required']">
+    Mobile No is required.
+  </div>
+  <div *ngIf="mobile_no.errors?.['pattern']">
+    Mobile No pattern not match.
+  </div>
+</div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -562,6 +586,16 @@
                         placeholder="Whatsapp No."
                         formControlName="whatsapp_no">
                     </div>
+                    <div *ngIf="whatsapp_no.invalid && (whatsapp_no.dirty || whatsapp_no.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="whatsapp_no.errors?.['required']">
+    Whatsapp No is required.
+  </div>
+  <div *ngIf="whatsapp_no.errors?.['pattern']">
+    Whatsapp No pattern not match.
+  </div>
+</div>
                 </div>
             </div>
             <div class="row">
@@ -572,6 +606,13 @@
                         placeholder="Date Of Birth"
                         formControlName="date_of_birth">
                     </div>
+                    <div *ngIf="date_of_birth.invalid && (date_of_birth.dirty || date_of_birth.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="date_of_birth.errors?.['required']">
+    DOB is required.
+  </div>
+  </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group mb-0">
@@ -580,6 +621,30 @@
                         placeholder="Anniversary"
                         formControlName="anniversary_date">
                     </div>
+                    <div *ngIf="anniversary_date.invalid && (anniversary_date.dirty || anniversary_date.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="anniversary_date.errors?.['required']">
+    Anniversary Date is required.
+  </div></div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control"
+                        placeholder="Email"
+                        formControlName="email">
+                    </div>
+                    <div *ngIf="email.invalid && (email.dirty || email.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="email.errors?.['required']">
+    Email is required.
+  </div>
+  <div *ngIf="email.errors?.['email']">
+    Email pattern not match.
+  </div>
+</div>
                 </div>
             </div>
             <button type="button" class="add-more-details-btn my-3" (click)="addMoreDetailsHandler()">{{addMoreDetails ? 'Hide More Details' : 'Add More Details'}}</button>
@@ -592,38 +657,100 @@
                             placeholder="Address Line1"
                             formControlName="address_line_1">
                         </div>
+                        <div *ngIf="address_line_1.invalid && (address_line_1.dirty || address_line_1.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="address_line_1.errors?.['required']">
+    Address 1 is required.
+  </div>
+</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Address Line</label>
+                            <input type="text" class="form-control" 
+                            placeholder="Address Line1"
+                            formControlName="address_line_2">
+                        </div>
+                        <div *ngIf="address_line_2.invalid && (address_line_2.dirty || address_line_2.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="address_line_2.errors?.['required']">
+    Address 2 is required.
+  </div>
+</div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>State</label>
-                            <select class="form-select" formControlName="state">
-                                <option>-- Select --</option>
-                                <option>Option 1</option>
-                                <option>Option 2</option>
+                            <select class="form-select" formControlName="state" (change)="onStateChange($event)">
+                                <option value="" disabled selected>Select State</option>
+      <option *ngFor="let state of stateList" [value]="state.id" [selected]="state.id == currentState">{{state?.state}}</option>
                             </select>
                         </div>
+                        <div *ngIf="state.invalid && (state.dirty || state.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="state.errors?.['required']">
+    State is required.
+  </div>
+</div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>City</label>
-                            <select class="form-select" formControlName="city">
-                                <option>-- Select --</option>
+                            <select class="form-select" formControlName="city" (change)="onCityChange($event)">
+                                <!-- <option>-- Select --</option>
                                 <option>Option 1</option>
-                                <option>Option 2</option>
+                                <option>Option 2</option> -->
+                                <option value="" disabled selected>Select City</option>
+                                <option  *ngFor="let city of cityList" [value]="city?.id"
+                                [selected]="city?.id == currentCities">{{city?.city}}</option>
                             </select>
                         </div>
+                        <div *ngIf="city.invalid && (city.dirty || city.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="city.errors?.['required']">
+    City is required.
+  </div>
+</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Pincode</label>
+                            <input type="text" class="form-control" 
+                            placeholder="Pincode"
+                            formControlName="pincode">
+                        </div>
+                        <div *ngIf="pincode.invalid && (pincode.dirty || pincode.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="pincode.errors?.['required']">
+    Pincode is required.
+  </div>
+  <div *ngIf="pincode.errors?.['pattern']">
+    Pincode pattern not match.
+  </div>
+</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>GST Type</label>
-                            <select class="form-select" formControlName="gst_type">
-                                <option>-- Select --</option>
-                                <option>Option 1</option>
-                                <option>Option 2</option>
+                            <select class="form-select" formControlName="gst_type" (change)="onGstTypeChange()">
+                                <option value="" disabled selected>Select GST Type</option>
+      <option value="{{gst.value}}" *ngFor="let gst of gstType">{{gst.label}}</option>
                             </select>
                         </div>
+                        <div *ngIf="gst_type.invalid && (gst_type.dirty || gst_type.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="gst_type.errors?.['required']">
+    GST Type is required.
+  </div>
+</div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
@@ -632,20 +759,29 @@
                             placeholder="GSTIN"
                             formControlName="gstin">
                         </div>
+                        <div *ngIf="gstin.invalid && (gstin.dirty || gstin.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="gstin.errors?.['required']">
+    GSTIN is required.
+  </div>
+</div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer mt-2">
-            <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
-            <!-- <div class="row w-100">
-                <div class="col-sm-12 text-center">
-                    <button type="button" class="btn btn-dark">Save</button>
+            <div class="row">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
+
                 </div>
-            </div> -->
-          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-        </div>
+            </div>
+
         </form>
+
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
+        </div> -->
       </div>
     </div>
   </div>  

@@ -1,14 +1,18 @@
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PosCartService {
+  apiUrl = `${environment.api}`;
+
   currentItems:any[] = [];
   private cartItems: any[] = [];
   private orders: any[] = [];
 
-  constructor() { 
+  constructor(private http: HttpClient) { 
     const orders = localStorage.getItem('orders');
     const items = localStorage.getItem('cartItems');
     if (items) {
@@ -111,5 +115,23 @@ export class PosCartService {
   generateOrder(order: any) {
     this.orders.push(order);
     localStorage.setItem('orders', JSON.stringify(this.orders));
+  }
+
+  addCustomer(data:any) {
+    let url = this.apiUrl + '/pv-api/pos/Addcustomers/';
+    return this.http.post(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getCustomer(data:any) {
+    let url = this.apiUrl + '/pv-api/pos/customer_filter/?search=' + data;
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
   }
 }
