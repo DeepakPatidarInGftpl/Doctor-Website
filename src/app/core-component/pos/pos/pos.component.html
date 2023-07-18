@@ -176,8 +176,8 @@
                                             <span class="input-group-text" id="basic-addon1">%</span>
                                             <input type="text" value="0.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                                         </div></td>
-                                        <td>{{cart.mrp}}</td>
-                                        <td>{{cart.mrp * cart.quantity}}</td>
+                                        <td>{{cart?.batch[0].selling_price_offline}}</td>
+                                        <td>{{cart?.batch[0].selling_price_offline * cart.quantity}}</td>
                                         <td><button (click)="removeOptionCurrent(cart)" class="table-cross-btn">
                                             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                                         </button></td>
@@ -211,7 +211,7 @@
                                     </li>
                                     <li>
                                         <p>0.000</p>
-                                        <button type="button" class="btn btn-dark"> 
+                                        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addChargesModal"> 
                                             Add Charges <i class="fas fa-plus" data-bs-toggle="tooltip" title="fa fa-plus"></i>
                                         </button>
                                     </li>
@@ -1489,6 +1489,110 @@
         <div class="modal-footer mt-5">
           <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
           <button type="button" class="btn btn-dark modal1BtnPos">Sync Orders</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade posmodal" id="batchModal" tabindex="-1" aria-labelledby="batchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="batchModalLabel">Select Product Batch</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div> 
+        <div class="modal-body">
+            <div class="radio" *ngFor="let batch of currentProduct?.batch">
+                <label>
+                    <input type="radio" name="batchProduct" value="{{batch?.id}}" [(ngModel)]="currentBatch" > Price: {{batch?.selling_price_offline}}
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer mt-5">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-dark modal1BtnPos" (click)="confirmBatch()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade posmodal" id="addChargesModal" tabindex="-1" aria-labelledby="addChargesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addChargesModalLabel">Add Additional Charges</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div> 
+        <div class="modal-body">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Additional Charge</th>
+                        <th>Value</th>
+                        <th>Tax</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <form class="form-ex">
+                                <input type="text"
+                                       placeholder="Select Additional Charge"
+                                       [formControl]="chargesAutoCompleteControl"
+                                       [matAutocomplete]="auto2" 
+                                       class="form-control">
+                                       <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayCharge" (optionSelected)="optionSelectedCharge($event)">
+                                        <mat-option *ngIf="chargesIsLoading" class="is-loading">Loading...</mat-option>
+                                        <mat-option *ngIf="chargesAutoCompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                        <mat-option *ngIf="chargesErrorMsg" class="is-loading">{{errorMsg}}</mat-option>
+                                        <mat-option *ngFor="let option of filteredCharges | async" [value]="option">{{ displayCharge(option) }}</mat-option>
+                                      </mat-autocomplete>
+                              </form>
+                        </td>
+                        <td>Doe</td>
+                        <td>
+                            <form class="form-ex">
+                                <input type="text"
+                                       placeholder="Scan Barcode/Enter Product Name"
+                                       [formControl]="productsAutocompleteControl"
+                                       [matAutocomplete]="auto" 
+                                       class="form-control">
+                                       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)">
+                                        <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                                        <mat-option *ngIf="productsAutocompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                        <mat-option *ngIf="errorMsg" class="is-loading">{{errorMsg}}</mat-option>
+                                        <mat-option *ngFor="let option of filteredProducts" [value]="option">{{ displayFn(option) }}</mat-option>
+                                      </mat-autocomplete>
+                              </form>
+                        </td>
+                        <td>john@example.com</td>
+                        <td><button class="table-cross-btn">
+                            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                        </button></td>
+                    </tr>
+                    
+                </tbody>
+                <tfoot>
+                    <th>
+                        <button class="me-1 btn btn-link">Add More Additional Charge</button>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th>42.00</th>
+                    <th></th>
+                </tfoot>
+            </table>
+            
+        </div>
+        <div class="modal-footer mt-5">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-dark modal1BtnPos">Confirm</button>
         </div>
       </div>
     </div>

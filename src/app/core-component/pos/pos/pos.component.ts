@@ -8,6 +8,8 @@ import { SyncServiceService } from 'src/app/Services/sync-service.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { ToastrService } from 'ngx-toastr';
 import { __values } from 'tslib';
+import { Modal } from 'bootstrap';
+
 @Component({
   selector: 'app-pos',
   templateUrl: './pos.component.html',
@@ -50,6 +52,8 @@ export class PosComponent implements OnInit {
   cartItems: any[] = [];
   addMoreDetails: any;
   customerAutoCompleteControl = new FormControl('');
+  chargesAutoCompleteControl = new FormControl('');
+
   streets: string[] = ['Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow'];
   filteredStreets: Observable<string[]>;
   currentCustomer:any;
@@ -65,7 +69,10 @@ export class PosComponent implements OnInit {
   cusMinLengthTerm = 3;
   cusErrorMsg!: string;
   cusIsLoading = false;
+  chargesErrorMsg!:string;
+  chargesIsLoading = false;
   filteredCustomer: any;
+  filteredCharges!: Observable<any[]>;
   currentItems: any[] = [];
   customerForm: FormGroup;
   registrationForm: FormGroup;
@@ -75,6 +82,19 @@ export class PosComponent implements OnInit {
   stateList:any;
   currentCities:any;
   cityList:any;
+  currentProduct: any;
+  currentBatch:any;
+  additionalChargesList:any = [
+    {"additional_charge": "Package"}, 
+    {"additional_charge": "GST"}, 
+    {"additional_charge": "Transport"}, 
+    {"additional_charge": "VIP"}, 
+    {"additional_charge": "Extra"}, 
+    {"additional_charge": "Package 2"}, 
+    {"additional_charge": "GST 18"}, 
+  ];
+
+  currentAdditionalCharges:any = [];
 
   constructor(public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
     // this.cartItems = this.cartService.getCartItems();
@@ -201,7 +221,7 @@ export class PosComponent implements OnInit {
           this.filteredProducts = [];
           this.isLoading = true;
         }),
-        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/product_search/?search=${value}`, requestOptions)
+        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/product_search/?search=${value}`, requestOptions)
           .pipe(
             catchError(err => {
               // handleError(err);
@@ -222,7 +242,12 @@ export class PosComponent implements OnInit {
         // if(data.variants.length > 0){
         //   this.filteredProducts = data.variants;
         // }
-        this.filteredProducts = data;
+        if(data.length > 0){
+          this.filteredProducts = data;
+        } else {
+          this.filteredProducts = [];
+          this.errorMsg = "No Products Available"
+        }
         // if (data['Search'] == undefined) {
         //   this.errorMsg = data['Error'];
         //   this.filteredProducts = [];
@@ -285,7 +310,8 @@ export class PosComponent implements OnInit {
         //   console.log('else');
         // }
       });
-  
+
+    
 
     // ).pipe(
     //   startWith(''),
@@ -312,6 +338,22 @@ export class PosComponent implements OnInit {
         console.log('country', error);
       }
     });
+
+    this.cartService.getAdditionalCharge().subscribe({
+      next: (response) => {
+        console.log(response, 'addt charge')
+        // this.additionalChargesList = response;
+      },
+      error: (error) => {
+        console.log('addt charge', error);
+      }
+    })
+
+    this.filteredCharges = this.chargesAutoCompleteControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter2(value || '')),
+    );
+
     
   }
 
@@ -319,6 +361,12 @@ export class PosComponent implements OnInit {
   //   let pValue = this.productsAutocompleteControl.value;
   //   return pValue.length < 3 ? true : false;
   // }
+
+  private _filter2(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.additionalChargesList.filter(option => option.additional_charge.toLowerCase().includes(filterValue));
+  }
 
   private _filter(value: string): string[] {
     const filterValue = this._normalizeValue(value);
@@ -355,22 +403,57 @@ export class PosComponent implements OnInit {
   //   }
   // }
 
-  optionSelected(event){
-    const selectedOption = event.option.value;
-    let product1 = {
+  confirmBatch(){
+    let product1;
+    let product = this.currentProduct.batch;
+    let batch = this.currentBatch;
+    let newbatch = [];
+    for (let index = 0; index < product.length; index++) {
+      const element = product[index];
+      if(element.id == batch){
+        newbatch.push(element);
+      }
+    }
+    this.currentProduct.batch = newbatch;
+    let selectedOption = this.currentProduct;
+
+    product1 = {
       ...selectedOption,
       quantity: 1,
     }
-    let product = {
-            id: selectedOption.id,
-            product_title: selectedOption.product_title,
-            mrp: selectedOption.mrp,
-            quantity: 1,
-            sku: selectedOption.sku
-          }
+
     this.addToCurrent(product1);
     this.selectedOptions.push(product1);
     this.productsAutocompleteControl.setValue('');
+    var myModalEl = document.getElementById('batchModal')
+    var modal = Modal.getInstance(myModalEl)
+    modal.hide();
+  }
+
+  optionSelected(event){
+    let product1;
+    const selectedOption = event.option.value;
+    console.log('prod', selectedOption);
+    if(selectedOption.batch.length > 1){
+      this.currentProduct = selectedOption;
+      const element = document.getElementById('batchModal') as HTMLElement;
+      const myModal = new Modal(element);
+      myModal.show();
+    } else {
+      product1 = {
+        ...selectedOption,
+        quantity: 1,
+      }
+      this.addToCurrent(product1);
+    this.selectedOptions.push(product1);
+    this.productsAutocompleteControl.setValue('');
+    }
+    
+  }
+  
+  optionSelectedCharge(event){
+    const selectedOption = event.option.value;
+    console.log('charge', selectedOption);
   }
 
   optionSelected1(event){
@@ -437,7 +520,11 @@ export class PosComponent implements OnInit {
   }
 
   displayCus(item: any): string {
-    return item ? item.name : '';
+    return item ? item.mobile_no : '';
+  }
+
+  displayCharge(item: any): string {
+    return item ? item.additional_charge : '';
   }
 
   addMoreDetailsHandler() {
@@ -450,7 +537,7 @@ export class PosComponent implements OnInit {
     //let cartItems = this.selectedOptions;
     let totalPrice = 0;
     for(let cart of cartItems){
-      totalPrice += cart.mrp * cart.quantity;
+      totalPrice += cart?.mrp || 10 * cart?.quantity;
     }
     return totalPrice;
   }
@@ -524,29 +611,35 @@ export class PosComponent implements OnInit {
     }
   }
 
+  checkSubmitCus(){
+    
+  }
+
   submitCustomerForm() {
     let address = {
       "address_line_1": this.registrationForm.get('address_line_1').value,
       "address_line_2": this.registrationForm.get('address_line_2').value,
-      "country": this.currentCountry.id,
+      "country": Number(this.currentCountry.id),
       "state": Number(this.registrationForm.get('state').value),
       "city": Number(this.registrationForm.get('city').value),
       "pincode": this.registrationForm.get('pincode').value,
       "address_type": ""
     }
     let formData: any = new FormData();
-    formData.append('name', this.registrationForm.get('name').value);
-    formData.append('mobile_no', this.registrationForm.get('mobile_no').value);
-    formData.append('whatsapp_no', this.registrationForm.get('whatsapp_no').value);
-    formData.append('date_of_birth', this.registrationForm.get('date_of_birth').value);
-    formData.append('anniversary_date', this.registrationForm.get('anniversary_date').value);
-    formData.append('email', this.registrationForm.get('email').value);
-    formData.append('gstin', this.registrationForm.get('gstin').value);
-    formData.append('gst_type', this.registrationForm.get('gst_type').value);
-    if(this.address_line_1.value !== '' && this.address_line_2.value !== '' && this.state.value !== '' && this.city.value !== '' && this.pincode.value !== ''){
-      formData.append('address', '');
-    } else {
+    formData.append('name', this.registrationForm.get('name').value || '');
+    formData.append('mobile_no', this.registrationForm.get('mobile_no').value || '');
+    formData.append('whatsapp_no', this.registrationForm.get('whatsapp_no').value || '');
+    formData.append('date_of_birth', this.registrationForm.get('date_of_birth').value || '');
+    formData.append('anniversary_date', this.registrationForm.get('anniversary_date').value || '');
+    formData.append('email', this.registrationForm.get('email').value || '');
+    formData.append('gstin', this.registrationForm.get('gstin').value || '');
+    formData.append('gst_type', this.registrationForm.get('gst_type').value || '');
+    //formData.append('address', '');
+
+    if(this.address_line_1.value && this.address_line_2.value && this.state.value && this.city.value && this.pincode.value){
       formData.append('address', JSON.stringify(address))
+    } else {
+      formData.append('address', '');
     }
 
      this.cartService

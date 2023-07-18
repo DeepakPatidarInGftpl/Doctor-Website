@@ -134,4 +134,22 @@ export class PosCartService {
       })
     })
   }
+
+  getAdditionalCharge() {
+    let url = this.apiUrl + '/pv-api/pos/additional_charge_pos/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getTaxes(){
+    let url = this.apiUrl + '/pv-api/pos/tax_pos/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
 }
