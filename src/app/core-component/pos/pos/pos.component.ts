@@ -84,15 +84,9 @@ export class PosComponent implements OnInit {
   cityList:any;
   currentProduct: any;
   currentBatch:any;
-  additionalChargesList:any = [
-    {"additional_charge": "Package"}, 
-    {"additional_charge": "GST"}, 
-    {"additional_charge": "Transport"}, 
-    {"additional_charge": "VIP"}, 
-    {"additional_charge": "Extra"}, 
-    {"additional_charge": "Package 2"}, 
-    {"additional_charge": "GST 18"}, 
-  ];
+  additionalChargesList:any = [];
+  taxesList:any = [];
+  currentOrderAdditionalCharges:any = [];
 
   currentAdditionalCharges:any = [];
 
@@ -342,31 +336,31 @@ export class PosComponent implements OnInit {
     this.cartService.getAdditionalCharge().subscribe({
       next: (response) => {
         console.log(response, 'addt charge')
-        // this.additionalChargesList = response;
+        this.additionalChargesList = response;
       },
       error: (error) => {
         console.log('addt charge', error);
       }
     })
 
-    this.filteredCharges = this.chargesAutoCompleteControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter2(value || '')),
-    );
+    this.cartService.getTaxes().subscribe({
+      next: (response) => {
+        console.log(response, 'taxes')
+        this.taxesList = response;
+      },
+      error: (error) => {
+        console.log('taxes', error);
+      }
+    })
 
     
   }
+
 
   // productInputValue() {
   //   let pValue = this.productsAutocompleteControl.value;
   //   return pValue.length < 3 ? true : false;
   // }
-
-  private _filter2(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.additionalChargesList.filter(option => option.additional_charge.toLowerCase().includes(filterValue));
-  }
 
   private _filter(value: string): string[] {
     const filterValue = this._normalizeValue(value);
@@ -402,6 +396,69 @@ export class PosComponent implements OnInit {
   //     this.autocompleteControl.setValue('');
   //   }
   // }
+
+  // add row to current additional charges
+  addRowToCAC(){
+      let newObject = { additional_charge: "", value: "", value_type: "percentage", tax: "", total: 0 };
+      this.currentOrderAdditionalCharges.push(newObject)
+  }
+
+  // update row in current additional charges
+  updateRowInCAC(){
+
+  }
+
+  // delete row in current additional charges
+  deleteRowInCAC(index:number, event: Event){
+    event.stopPropagation();
+
+    if (!this.currentOrderAdditionalCharges || this.currentOrderAdditionalCharges.length === 0) {
+    return;
+    }
+    if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
+      this.currentOrderAdditionalCharges.splice(index, 1);
+      console.log("Element deleted successfully!");
+    } else {
+      console.log("Invalid index. Element not deleted.");
+    }
+  }
+
+  // update additional charges of an element in current order additional charges
+  updateACInCAC(index:number, event: Event){
+    let value = (event.target as HTMLSelectElement).value;
+    if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
+      this.currentOrderAdditionalCharges[index].additional_charge = value;
+    }
+  }
+
+   // update tax of an element in current order additional charges
+   updateTaxInCAC(index:number, event: Event){
+    let value = (event.target as HTMLSelectElement).value;
+    if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
+      this.currentOrderAdditionalCharges[index].tax = value;
+    }
+   }
+
+   // update value of an element in current order additional charges
+   updateValueInCAC(index:number, event: Event){
+    let valuee = (event.target as HTMLInputElement).value;
+    if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
+      this.currentOrderAdditionalCharges[index].value = valuee;
+    }
+   }
+
+   // update value type of an element in current order additional charges
+   updateValueTypeInCAC(index:number, valueType:any){
+    if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
+      if(valueType === 'percentage'){
+        this.currentOrderAdditionalCharges[index].value_type = 'rupee';
+      } else {
+        this.currentOrderAdditionalCharges[index].value_type = 'percentage';
+      }
+    }
+   }
+
+
 
   confirmBatch(){
     let product1;

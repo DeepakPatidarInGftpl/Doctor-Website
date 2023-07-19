@@ -1539,48 +1539,35 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr *ngFor="let charges of currentOrderAdditionalCharges;let ci=index">
                         <td>
-                            <form class="form-ex">
-                                <input type="text"
-                                       placeholder="Select Additional Charge"
-                                       [formControl]="chargesAutoCompleteControl"
-                                       [matAutocomplete]="auto2" 
-                                       class="form-control">
-                                       <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayCharge" (optionSelected)="optionSelectedCharge($event)">
-                                        <mat-option *ngIf="chargesIsLoading" class="is-loading">Loading...</mat-option>
-                                        <mat-option *ngIf="chargesAutoCompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
-                                        <mat-option *ngIf="chargesErrorMsg" class="is-loading">{{errorMsg}}</mat-option>
-                                        <mat-option *ngFor="let option of filteredCharges | async" [value]="option">{{ displayCharge(option) }}</mat-option>
-                                      </mat-autocomplete>
-                              </form>
+                            <select class="form-select" (change)="updateACInCAC(ci, $event)">
+                                <option>-- Select --</option>
+                                <option value="{{d.id}}" *ngFor="let d of additionalChargesList">{{d.additional_charge}}</option>
+                            </select>
                         </td>
-                        <td>Doe</td>
+                        <td>    
+                                    <div class="input-group" >
+                                        <input type="text" (change)="updateValueInCAC(ci, $event)" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                        <span class="input-group-text" id="basic-addon2" (click)="updateValueTypeInCAC(ci, charges.value_type)" >{{charges.value_type === 'percentage' ? '%' : '&#8377;'}}</span>
+                                    </div>
+                        </td>
                         <td>
-                            <form class="form-ex">
-                                <input type="text"
-                                       placeholder="Scan Barcode/Enter Product Name"
-                                       [formControl]="productsAutocompleteControl"
-                                       [matAutocomplete]="auto" 
-                                       class="form-control">
-                                       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)">
-                                        <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
-                                        <mat-option *ngIf="productsAutocompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
-                                        <mat-option *ngIf="errorMsg" class="is-loading">{{errorMsg}}</mat-option>
-                                        <mat-option *ngFor="let option of filteredProducts" [value]="option">{{ displayFn(option) }}</mat-option>
-                                      </mat-autocomplete>
-                              </form>
+                            <select class="form-select" (change)="updateTaxInCAC(ci, $event)">
+                                <option>-- Select --</option>
+                                <option value="{{d.id}}" *ngFor="let d of taxesList">{{d.title}}</option>
+                            </select>
                         </td>
-                        <td>john@example.com</td>
-                        <td><button class="table-cross-btn">
-                            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                        <td>{{charges.total}}</td>
+                        <td><button class="table-cross-btn" (click)="deleteRowInCAC(ci, $event)">
+                            <i class="fa fa-times" title="fa fa-times"></i>
                         </button></td>
                     </tr>
                     
                 </tbody>
                 <tfoot>
                     <th>
-                        <button class="me-1 btn btn-link">Add More Additional Charge</button>
+                        <button class="me-1 btn btn-link" (click)="addRowToCAC()">Add More Additional Charge</button>
                     </th>
                     <th></th>
                     <th></th>
