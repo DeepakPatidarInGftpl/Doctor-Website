@@ -409,12 +409,13 @@ export class PosComponent implements OnInit {
   addRowToCAC(){
       let newObject = { additional_charge: "", value: 0, value_type: "percentage", tax: "", total: 0 };
       this.currentOrderAdditionalCharges.push(newObject);
-      this.updateRowInCAC()
   }
 
   // update row in current additional charges
-  updateRowInCAC(){
+  updateRowInCAC(index: number){
     console.log(this.currentOrderAdditionalCharges, 'coac');
+    if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
+    }
   }
 
   // delete row in current additional charges
@@ -430,25 +431,64 @@ export class PosComponent implements OnInit {
     } else {
       console.log("Invalid index. Element not deleted.");
     }
-    this.updateRowInCAC()
+    this.updateRowInCAC(index)
   }
 
   // update additional charges of an element in current order additional charges
   updateACInCAC(index:number, event: Event){
     let value = (event.target as HTMLSelectElement).value;
-    if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
-      this.currentOrderAdditionalCharges[index].additional_charge = value;
+    const acindex = this.additionalChargesList.findIndex(currentItem => currentItem.id == value);
+
+    if (acindex !== -1) {
+      if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
+        if(this.currentOrderAdditionalCharges[index].tax){
+ 
+          const tindex = this.taxesList.findIndex(currentItem => currentItem.id == this.currentOrderAdditionalCharges[index].tax);
+          let total = this.additionalChargesList[acindex].value;
+          let percentage = this.taxesList[tindex].tax_percentage;
+          let result = ((percentage / 100) * total) + total;
+          this.currentOrderAdditionalCharges[index].additional_charge = value;
+          this.currentOrderAdditionalCharges[index].total = result;
+        } else {
+          this.currentOrderAdditionalCharges[index].additional_charge = value;
+          this.currentOrderAdditionalCharges[index].total = this.additionalChargesList[acindex].value; 
+        }
+     
+      }
     }
-    this.updateRowInCAC()
+    this.currentTotalAdditionalCharges()
+
   }
 
    // update tax of an element in current order additional charges
    updateTaxInCAC(index:number, event: Event){
     let value = (event.target as HTMLSelectElement).value;
+    const tindex = this.taxesList.findIndex(currentItem => currentItem.id == value);
+
+    
+    if (tindex !== -1) {
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
-      this.currentOrderAdditionalCharges[index].tax = value;
+      if(this.currentOrderAdditionalCharges[index].additional_charge){
+        const acindex = this.additionalChargesList.findIndex(currentItem => currentItem.id == this.currentOrderAdditionalCharges[index].additional_charge);
+
+        let total = this.additionalChargesList[acindex].value;
+        let percentage = this.taxesList[tindex].tax_percentage;
+        let result = ((percentage / 100) * total) + total;
+  
+        this.currentOrderAdditionalCharges[index].tax = value;
+        this.currentOrderAdditionalCharges[index].total = result;
+      } else {
+        let total = this.currentOrderAdditionalCharges[index].total;
+        let percentage = this.taxesList[tindex].tax_percentage;
+        const result = (percentage / 100) * total;
+  
+        this.currentOrderAdditionalCharges[index].tax = value;
+        this.currentOrderAdditionalCharges[index].total = result;
+      }
+      
     }
-    this.updateRowInCAC()
+  }
+    this.currentTotalAdditionalCharges()
    }
 
    // update value of an element in current order additional charges
@@ -457,7 +497,7 @@ export class PosComponent implements OnInit {
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
       this.currentOrderAdditionalCharges[index].value = Number(valuee);
     }
-    this.updateRowInCAC()
+    this.updateRowInCAC(index)
    }
 
    // update value type of an element in current order additional charges
@@ -469,7 +509,23 @@ export class PosComponent implements OnInit {
         this.currentOrderAdditionalCharges[index].value_type = 'percentage';
       }
     }
-    this.updateRowInCAC()
+    this.updateRowInCAC(index)
+   }
+
+   // current total additional charges
+   currentTotalAdditionalCharges(){
+    console.log(this.currentOrderAdditionalCharges, 'coac');
+
+    let total = 0;
+    if(this.currentOrderAdditionalCharges.length > 0){
+      for (let index = 0; index < this.currentOrderAdditionalCharges.length; index++) {
+        const element = this.currentOrderAdditionalCharges[index];
+        total += element.total;
+      }
+    } else {
+      total = 0;
+    }
+    return total;
    }
 
 
