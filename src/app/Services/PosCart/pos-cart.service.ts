@@ -36,30 +36,39 @@ export class PosCartService {
   }
 
   addToCurrent(item: any): void {
-    const found = this.currentItems.find(currentItem => currentItem.id === item.id);
-    if (found) {
-      found.quantity += item.quantity;
+    const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
+
+     if (index !== -1) {
+      this.currentItems[index].quantity += 1;
     } else {
       this.currentItems.push(item);
     }
   }
 
   increaseCurrent(item: any):void {
-    const found = this.currentItems.find(currentItem => currentItem.id === item.id);
-    found.quantity += 1;
-  }
-
-  decreaseCurrent(item: any):void {
-    const found = this.currentItems.find(currentItem => currentItem.id === item.id);
-    if(found.quantity == 1){
-      this.removeFromCurrent(found);
-    } else {
-      found.quantity -= 1;
+    const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
+    
+    if (index !== -1) {
+      this.currentItems[index].quantity += 1;
     }
   }
 
+  decreaseCurrent(item: any):void {
+    const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
+    
+    if (index !== -1) {
+      if(this.currentItems[index].quantity == 1){
+        this.removeFromCurrent(item);
+      } else {
+        this.currentItems[index].quantity -= 1;
+      }
+    }
+    
+  }
+
   removeFromCurrent(item: any): void {
-    const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id);
+    
+    const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
     if (index !== -1) {
       this.currentItems.splice(index, 1);
     }

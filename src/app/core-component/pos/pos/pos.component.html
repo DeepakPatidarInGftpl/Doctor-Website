@@ -89,7 +89,7 @@
                                    [formControl]="productsAutocompleteControl"
                                    [matAutocomplete]="auto" 
                                    class="form-control">
-                                   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)">
+                                   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)" (keydown)="onInputKeydown($event)">
                                     <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
                                     <mat-option *ngIf="productsAutocompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
                                     <mat-option *ngIf="errorMsg" class="is-loading">{{errorMsg}}</mat-option>
@@ -1548,7 +1548,7 @@
                         </td>
                         <td>    
                                     <div class="input-group" >
-                                        <input type="text" (change)="updateValueInCAC(ci, $event)" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                        <input type="text" (change)="updateValueInCAC(ci, $event)" class="form-control" placeholder="value" [(ngModel)]="charges.value" aria-label="value" aria-describedby="basic-addon2">
                                         <span class="input-group-text" id="basic-addon2" (click)="updateValueTypeInCAC(ci, charges.value_type)" >{{charges.value_type === 'percentage' ? '%' : '&#8377;'}}</span>
                                     </div>
                         </td>

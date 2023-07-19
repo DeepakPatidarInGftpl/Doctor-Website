@@ -62,7 +62,7 @@ export class PosComponent implements OnInit {
   dueAmount:any;
   online: any;
   loader: any;
-  minLengthTerm = 3;
+  minLengthTerm = 1;
   errorMsg!: string;
   isLoading = false;
   filteredProducts: any;
@@ -362,6 +362,14 @@ export class PosComponent implements OnInit {
   //   return pValue.length < 3 ? true : false;
   // }
 
+  onInputKeydown(event: KeyboardEvent): void {
+    // Check if the backspace key is pressed (keyCode 8) and the input is empty
+    if (event.key === 'Backspace' && this.productsAutocompleteControl.value === '') {
+      // Clear the selection or perform other actions as needed
+      console.log('Backspace key pressed, clear previous selection here.');
+    }
+  }
+
   private _filter(value: string): string[] {
     const filterValue = this._normalizeValue(value);
     return this.streets.filter(street => this._normalizeValue(street).includes(filterValue));
@@ -399,13 +407,14 @@ export class PosComponent implements OnInit {
 
   // add row to current additional charges
   addRowToCAC(){
-      let newObject = { additional_charge: "", value: "", value_type: "percentage", tax: "", total: 0 };
-      this.currentOrderAdditionalCharges.push(newObject)
+      let newObject = { additional_charge: "", value: 0, value_type: "percentage", tax: "", total: 0 };
+      this.currentOrderAdditionalCharges.push(newObject);
+      this.updateRowInCAC()
   }
 
   // update row in current additional charges
   updateRowInCAC(){
-
+    console.log(this.currentOrderAdditionalCharges, 'coac');
   }
 
   // delete row in current additional charges
@@ -421,6 +430,7 @@ export class PosComponent implements OnInit {
     } else {
       console.log("Invalid index. Element not deleted.");
     }
+    this.updateRowInCAC()
   }
 
   // update additional charges of an element in current order additional charges
@@ -429,6 +439,7 @@ export class PosComponent implements OnInit {
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
       this.currentOrderAdditionalCharges[index].additional_charge = value;
     }
+    this.updateRowInCAC()
   }
 
    // update tax of an element in current order additional charges
@@ -437,14 +448,16 @@ export class PosComponent implements OnInit {
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
       this.currentOrderAdditionalCharges[index].tax = value;
     }
+    this.updateRowInCAC()
    }
 
    // update value of an element in current order additional charges
    updateValueInCAC(index:number, event: Event){
     let valuee = (event.target as HTMLInputElement).value;
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
-      this.currentOrderAdditionalCharges[index].value = valuee;
+      this.currentOrderAdditionalCharges[index].value = Number(valuee);
     }
+    this.updateRowInCAC()
    }
 
    // update value type of an element in current order additional charges
@@ -456,6 +469,7 @@ export class PosComponent implements OnInit {
         this.currentOrderAdditionalCharges[index].value_type = 'percentage';
       }
     }
+    this.updateRowInCAC()
    }
 
 
@@ -471,8 +485,9 @@ export class PosComponent implements OnInit {
         newbatch.push(element);
       }
     }
-    this.currentProduct.batch = newbatch;
+    // this.currentProduct.batch = newbatch;
     let selectedOption = this.currentProduct;
+    selectedOption.batch = newbatch
 
     product1 = {
       ...selectedOption,
@@ -490,21 +505,24 @@ export class PosComponent implements OnInit {
   optionSelected(event){
     let product1;
     const selectedOption = event.option.value;
-    console.log('prod', selectedOption);
+    console.log('prod', selectedOption?.batch);
     if(selectedOption.batch.length > 1){
+      console.log('length > 1');
       this.currentProduct = selectedOption;
       const element = document.getElementById('batchModal') as HTMLElement;
       const myModal = new Modal(element);
       myModal.show();
     } else {
+      console.log('length < 1');
       product1 = {
         ...selectedOption,
         quantity: 1,
       }
-      this.addToCurrent(product1);
+    this.addToCurrent(product1);
     this.selectedOptions.push(product1);
     this.productsAutocompleteControl.setValue('');
     }
+    this.filteredProducts = [];
     
   }
   
@@ -594,7 +612,7 @@ export class PosComponent implements OnInit {
     //let cartItems = this.selectedOptions;
     let totalPrice = 0;
     for(let cart of cartItems){
-      totalPrice += cart?.mrp || 10 * cart?.quantity;
+      totalPrice += cart?.batch[0]?.selling_price_offline * cart?.quantity;
     }
     return totalPrice;
   }
