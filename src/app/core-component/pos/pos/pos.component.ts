@@ -448,9 +448,11 @@ export class PosComponent implements OnInit {
           let percentage = this.taxesList[tindex].tax_percentage;
           let result = ((percentage / 100) * total) + total;
           this.currentOrderAdditionalCharges[index].additional_charge = value;
+          this.currentOrderAdditionalCharges[index].value = this.additionalChargesList[acindex].value;
           this.currentOrderAdditionalCharges[index].total = result;
         } else {
           this.currentOrderAdditionalCharges[index].additional_charge = value;
+          this.currentOrderAdditionalCharges[index].value = this.additionalChargesList[acindex].value;
           this.currentOrderAdditionalCharges[index].total = this.additionalChargesList[acindex].value; 
         }
      
@@ -495,13 +497,24 @@ export class PosComponent implements OnInit {
    updateValueInCAC(index:number, event: Event){
     let valuee = (event.target as HTMLInputElement).value;
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
-      this.currentOrderAdditionalCharges[index].value = Number(valuee);
+      if(this.currentOrderAdditionalCharges[index].tax){
+        const tindex = this.taxesList.findIndex(currentItem => currentItem.id == this.currentOrderAdditionalCharges[index].tax);
+          let total = Number(valuee);
+          let percentage = this.taxesList[tindex].tax_percentage;
+          let result = ((percentage / 100) * total) + total;
+          this.currentOrderAdditionalCharges[index].value = Number(valuee);
+          this.currentOrderAdditionalCharges[index].total = result;
+      } else {
+        this.currentOrderAdditionalCharges[index].value = Number(valuee);
+        this.currentOrderAdditionalCharges[index].total = Number(valuee); 
+      }
     }
-    this.updateRowInCAC(index)
+    this.currentTotalAdditionalCharges();
    }
 
    // update value type of an element in current order additional charges
    updateValueTypeInCAC(index:number, valueType:any){
+
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
       if(valueType === 'percentage'){
         this.currentOrderAdditionalCharges[index].value_type = 'rupee';
@@ -514,7 +527,6 @@ export class PosComponent implements OnInit {
 
    // current total additional charges
    currentTotalAdditionalCharges(){
-    console.log(this.currentOrderAdditionalCharges, 'coac');
 
     let total = 0;
     if(this.currentOrderAdditionalCharges.length > 0){
@@ -666,11 +678,33 @@ export class PosComponent implements OnInit {
     //let cartItems = this.cartService.getCartItems();
     let cartItems = this.cartService.getCurrentItems();
     //let cartItems = this.selectedOptions;
-    let totalPrice = 0;
+    let totalPrice = 0 + this.currentTotalAdditionalCharges();
     for(let cart of cartItems){
       totalPrice += cart?.batch[0]?.selling_price_offline * cart?.quantity;
     }
     return totalPrice;
+  }
+
+  totalMrp(){
+    //let cartItems = this.cartService.getCartItems();
+    let cartItems = this.cartService.getCurrentItems();
+    //let cartItems = this.selectedOptions;
+    let totalPrice = 0;
+    for(let cart of cartItems){
+      totalPrice += cart?.batch[0]?.mrp * cart?.quantity;
+    }
+    return totalPrice;
+  }
+
+  totalQty(){
+    //let cartItems = this.cartService.getCartItems();
+    let cartItems = this.cartService.getCurrentItems();
+    //let cartItems = this.selectedOptions;
+    let totalQty = 0;
+    for(let cart of cartItems){
+      totalQty += cart?.quantity;
+    }
+    return totalQty;
   }
 
   tenderedAmt(event){

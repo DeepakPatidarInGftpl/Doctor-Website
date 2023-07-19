@@ -158,12 +158,12 @@
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp qty-input">
                                                 <span (click)="decreaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
-                                                <input type="text" value={{cart.quantity}} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                                                <input type="text" value={{cart?.quantity}} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                                                 <span (click)="increaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">+</span>
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" value="{{cart.mrp}}" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1">
+                                            <input type="text" disabled value="{{cart?.batch[0]?.mrp}}" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1">
                                         </td>
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp">
@@ -176,8 +176,8 @@
                                             <span class="input-group-text" id="basic-addon1">%</span>
                                             <input type="text" value="0.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                                         </div></td>
-                                        <td>{{cart?.batch[0].selling_price_offline}}</td>
-                                        <td>{{cart?.batch[0].selling_price_offline * cart.quantity}}</td>
+                                        <td>{{cart?.batch[0]?.selling_price_offline}}</td>
+                                        <td>{{cart?.batch[0]?.selling_price_offline * cart?.quantity}}</td>
                                         <td><button (click)="removeOptionCurrent(cart)" class="table-cross-btn">
                                             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                                         </button></td>
@@ -198,11 +198,11 @@
                             <div class="amt-info-div">
                                 <ul>
                                     <li>
-                                        <p>0.000</p>
+                                        <p>{{this.totalQty()}}</p>
                                         <h5>Quantity</h5>
                                     </li>
                                     <li>
-                                        <p>0.000</p>
+                                        <p>{{this.totalMrp()}}</p>
                                         <h5>MRP</h5>
                                     </li>
                                     <li>
