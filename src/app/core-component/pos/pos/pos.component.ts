@@ -1001,7 +1001,13 @@ export class PosComponent implements OnInit {
     if (selectedBill) {
       // Assign the properties of the selected bill to the active bill
       //this.billHoldService.setActiveBill(selectedBill);
-      this.currentItems = selectedBill.currentItems;
+      this.cartService.clearCurrent();
+      this.currentItems = this.cartService.getCurrentItems();
+      for (let index = 0; index < selectedBill.currentItems.length; index++) {
+        const element = selectedBill.currentItems[index];
+        this.cartService.addToCurrent(element);
+      }
+      //this.currentItems = selectedBill.currentItems;
       // Remove the selected bill from the list of held bills
       this.billHoldService.removeFromHold(billId);
       // Update the local heldBills array
