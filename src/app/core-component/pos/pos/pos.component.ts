@@ -9,6 +9,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { ToastrService } from 'ngx-toastr';
 import { __values } from 'tslib';
 import { Modal } from 'bootstrap';
+import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 
 @Component({
   selector: 'app-pos',
@@ -19,6 +20,9 @@ import { Modal } from 'bootstrap';
 
 
 export class PosComponent implements OnInit {
+  heldBills: any[] = [];
+  
+
   //options: string[] = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry'];
   onlineEvent: Observable<Event>;
   offlineEvent: Observable<Event>;
@@ -89,8 +93,10 @@ export class PosComponent implements OnInit {
   currentOrderAdditionalCharges:any = [];
 
   currentAdditionalCharges:any = [];
+  activeBill: any;
 
-  constructor(public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
+
+  constructor(private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
     // this.cartItems = this.cartService.getCartItems();
     this.currentItems = this.cartService.getCurrentItems();
     this.customerForm = this.fb.group({
@@ -124,6 +130,8 @@ export class PosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.heldBills = this.billHoldService.getHeldBills();
+
     this.registrationForm = this.fb.group({
       name: [''],
       mobile_no: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
@@ -986,6 +994,41 @@ export class PosComponent implements OnInit {
     this.city.updateValueAndValidity();
     this.pincode.updateValueAndValidity();
   }
+
+  resumeBill(billId: number) {
+    // Implement logic to retrieve and resume the selected bill
+    const selectedBill = this.heldBills.find((bill) => bill.id === billId);
+    if (selectedBill) {
+      // Assign the properties of the selected bill to the active bill
+      //this.billHoldService.setActiveBill(selectedBill);
+      this.currentItems = selectedBill.currentItems;
+      // Remove the selected bill from the list of held bills
+      this.billHoldService.removeFromHold(billId);
+      // Update the local heldBills array
+      this.heldBills = this.billHoldService.getHeldBills();
+    }
+  }
+
+  removeFromHold(billId: number) {
+    this.billHoldService.removeFromHold(billId);
+    this.heldBills = this.billHoldService.getHeldBills();
+  }
+
+  holdBill() {
+    if(this.currentItems.length > 0){
+      let activeBill:any = {};
+      activeBill.currentItems = this.currentItems;
+      this.billHoldService.addToHold(activeBill);
+      this.cartService.clearCurrent();
+      this.currentItems = this.cartService.getCurrentItems();
+      // this.totalAmount();
+      // this.totalMrp();
+      // this.totalQty();
+      // Clear or reset the activeBill for a new transaction
+      // this.activeBill = ...
+    } 
+  }
+
 
 }
 

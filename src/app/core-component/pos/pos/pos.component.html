@@ -368,7 +368,7 @@
                     <div class="cus-details-wrapper right-btns-wrapper">
                         <ul>
                             <li>
-                                <button type="button" class="btn-pos"> 
+                                <button type="button" class="btn-pos" (click)="holdBill()"> 
                                     <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                         Hold Bill</button> 
                             </li>
@@ -1596,18 +1596,22 @@
       </button>
     </div>
     <div class="offcanvas-body">
-        <div class="row">
+        <div class="row" *ngFor="let bill of heldBills">
             <div class="col-sm-12">
                 <div class="on-hold-card">
                     <div class="on-hold-card-header">
-                        <h5>ORD: 6766</h5>
+                        <h5>ORD: {{bill?.id}}</h5>
                         <h5>Amt: ₹766</h5>
                     </div>
                     <h5 class="mb-1">Contact Name: Aditi Kapoor- 8389299999</h5>
                     <h5>Created On: 2023-02-23 1:21pm</h5>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <button class="btn btn-dark" (click)="resumeBill(bill.id)">Resume</button>
+  <button  class="btn btn-dark" (click)="removeFromHold(bill.id)">Remove</button>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-12 mt-3">
+            <!-- <div class="col-sm-12 mt-3">
                 <div class="on-hold-card">
                     <div class="on-hold-card-header">
                         <h5>ORD: 6766</h5>
@@ -1616,7 +1620,7 @@
                     <h5 class="mb-1">Contact Name: Aditi Kapoor- 8389299999</h5>
                     <h5>Created On: 2023-02-23 1:21pm</h5>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
   </div>  
