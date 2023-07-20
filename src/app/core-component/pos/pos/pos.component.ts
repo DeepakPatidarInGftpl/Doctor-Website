@@ -202,6 +202,7 @@ export class PosComponent implements OnInit {
     // this.productsAutocompleteControl.valueChanges.subscribe(value => {
     //   this.filterArray(value);
     // });
+    
 
     let api_token = "4d586523c3dbbc989192bec34006e72a4edebf00";
     const headers = new HttpHeaders({
@@ -1007,6 +1008,11 @@ export class PosComponent implements OnInit {
         const element = selectedBill.currentItems[index];
         this.cartService.addToCurrent(element);
       }
+      if(selectedBill.currentOrderAdditionalCharges.length > 0) {
+        this.currentOrderAdditionalCharges = selectedBill.currentOrderAdditionalCharges
+      } else {
+        this.currentOrderAdditionalCharges = [];
+      }
       //this.currentItems = selectedBill.currentItems;
       // Remove the selected bill from the list of held bills
       this.billHoldService.removeFromHold(billId);
@@ -1024,9 +1030,15 @@ export class PosComponent implements OnInit {
     if(this.currentItems.length > 0){
       let activeBill:any = {};
       activeBill.currentItems = this.currentItems;
+      if(this.currentOrderAdditionalCharges.length > 0){
+        activeBill.currentOrderAdditionalCharges = this.currentOrderAdditionalCharges;
+      } else {
+        activeBill.currentOrderAdditionalCharges = [];
+      }
       this.billHoldService.addToHold(activeBill);
       this.cartService.clearCurrent();
       this.currentItems = this.cartService.getCurrentItems();
+      this.currentOrderAdditionalCharges = [];
       // this.totalAmount();
       // this.totalMrp();
       // this.totalQty();

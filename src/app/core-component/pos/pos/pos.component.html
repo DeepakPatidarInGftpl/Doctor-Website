@@ -1541,7 +1541,7 @@
                 <tbody>
                     <tr *ngFor="let charges of currentOrderAdditionalCharges;let ci=index">
                         <td>
-                            <select class="form-select" (change)="updateACInCAC(ci, $event)">
+                            <select class="form-select" (change)="updateACInCAC(ci, $event)" [(ngModel)]="charges.additional_charge">
                                 <option>-- Select --</option>
                                 <option value="{{d.id}}" *ngFor="let d of additionalChargesList">{{d.additional_charge}}</option>
                             </select>
@@ -1553,7 +1553,7 @@
                                     </div>
                         </td>
                         <td>
-                            <select class="form-select" (change)="updateTaxInCAC(ci, $event)">
+                            <select class="form-select" (change)="updateTaxInCAC(ci, $event)" [(ngModel)]="charges.tax">
                                 <option>-- Select --</option>
                                 <option value="{{d.id}}" *ngFor="let d of taxesList">{{d.title}}</option>
                             </select>
