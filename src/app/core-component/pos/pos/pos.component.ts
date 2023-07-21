@@ -143,8 +143,8 @@ export class PosComponent implements OnInit {
       gst_type: [''],
       address_line_1: [''],
       address_line_2: [''],
-      state: [''],
-      city: [''],
+      state: ['', [Validators.required]],
+      city: ['', [Validators.required]],
       pincode: ['', [Validators.pattern(/^[0-9]{6}$/)]]
     });
 
