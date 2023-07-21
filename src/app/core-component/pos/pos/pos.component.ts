@@ -1059,18 +1059,57 @@ export class PosComponent implements OnInit {
   }
 
   cashPaymentGenerateOrder(){
+    let cartData = [];
+    for (let index = 0; index < this.currentItems.length; index++) {
+      const element = this.currentItems[index];
+      let item = {
+        "variant": element.id,
+        "qty": element.quantity,
+        "mrp": element.batch[0].mrp,
+        "discount": 0,
+        "add_discount": 0,
+        "unit_cost": element.batch[0]?.selling_price_offline,
+        "net_cost": element.batch[0]?.selling_price_offline * element.quantity,
+        "tax_amount": 0,
+        "remarks": "",
+        "tax_percentage": 0
+      };
+      cartData.push(item);
+    }
+
+    console.log(cartData, 'cash');
     const formData = new FormData();
-    formData.append('customer', JSON.stringify(10));
+    formData.append('customer', JSON.stringify(9));
     formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
     formData.append('total_amount', JSON.stringify(this.totalAmount()));
     formData.append('payment_mode', 'Cash');
-    formData.append('total_tax', '');
-    formData.append('cart_data', '');
+    formData.append('total_tax', JSON.stringify(0));
+    formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
     formData.append('PayLatter', '');
     formData.append('bank_detail', '');
     formData.append('upi_detail', '');
+
+    this.cartService
+     .generateOrderNew(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response order', response);
+          if(response.isSuccess){
+            this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.cashModalClose');
+            clicking.click();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
   }
 
 
