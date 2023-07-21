@@ -65,7 +65,7 @@
                                 <th (click)="sort('id')" class="thone">Start Year<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Close Year<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action<i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>

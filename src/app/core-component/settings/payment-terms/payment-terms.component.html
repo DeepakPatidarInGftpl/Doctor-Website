@@ -65,7 +65,7 @@
                                 <th (click)="sort('id')" class="thone">Title<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Days<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action<i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,12 +77,8 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-                                <td>
-                                    {{products.title}}
-                                </td>
-                                <td>
-                                    {{products.days}}
-                                </td>
+                                <td> {{products.title}} </td>
+                                <td> {{products.days}} </td>
                                 <td>
                                     <mat-slide-toggle
                                     (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"

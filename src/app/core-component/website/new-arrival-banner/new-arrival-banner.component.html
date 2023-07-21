@@ -56,7 +56,7 @@
                                 <th (click)="sort('id')" class="thone">Design<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Short Description<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>

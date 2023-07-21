@@ -64,7 +64,7 @@
                                 <th (click)="sort('id')" class="thone">GSTIN<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Address<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>
