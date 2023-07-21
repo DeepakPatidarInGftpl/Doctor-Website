@@ -60,7 +60,7 @@ export class PosComponent implements OnInit {
 
   streets: string[] = ['Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow'];
   filteredStreets: Observable<string[]>;
-  currentCustomer:any;
+  currentCustomer:any | null;
   changeAmount:any;
   tenderedAmount: number = 0;
   dueAmount:any;
@@ -215,7 +215,7 @@ export class PosComponent implements OnInit {
     this.productsAutocompleteControl.valueChanges
       .pipe(
         filter(res => {
-          return res !== null && res.length >= this.minLengthTerm
+          return res !== null && res?.length >= this.minLengthTerm
         }),
         distinctUntilChanged(),
         debounceTime(100),
@@ -267,7 +267,7 @@ export class PosComponent implements OnInit {
       this.customerAutoCompleteControl.valueChanges
       .pipe(
         filter(res => {
-          return res !== null && res.length >= this.cusMinLengthTerm
+          return res !== null && res?.length >= this.cusMinLengthTerm
         }),
         distinctUntilChanged(),
         debounceTime(100),
@@ -610,8 +610,8 @@ export class PosComponent implements OnInit {
 
   optionSelected1(event){
     this.currentCustomer = event.option.value;
-    console.log('clcik')
-    console.log(event);
+    this.customerAutoCompleteControl.setValue('');
+    console.log(event.option.value, 'cus');
   }
 
   removeOption(index: number) {
@@ -1056,10 +1056,15 @@ export class PosComponent implements OnInit {
       this.cartService.clearCurrent();
       this.currentItems = this.cartService.getCurrentItems();
       this.currentOrderAdditionalCharges = [];
+      this.currentCustomer = null;
   }
 
   cashPaymentGenerateOrder(){
-    let cartData = [];
+    if(this.currentItems.length > 0){
+      if(this.currentCustomer === null || this.currentCustomer === undefined){
+        this.toastr.error('Please Select/Add a Customer!');
+      } else {
+        let cartData = [];
     for (let index = 0; index < this.currentItems.length; index++) {
       const element = this.currentItems[index];
       let item = {
@@ -1079,7 +1084,7 @@ export class PosComponent implements OnInit {
 
     console.log(cartData, 'cash');
     const formData = new FormData();
-    formData.append('customer', JSON.stringify(9));
+    formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
     formData.append('total_amount', JSON.stringify(this.totalAmount()));
     formData.append('payment_mode', 'Cash');
@@ -1098,6 +1103,7 @@ export class PosComponent implements OnInit {
           console.log('response order', response);
           if(response.isSuccess){
             this.discardCurrentBill();
+            this.tenderedAmount = 0;
             this.toastr.success(response.msg)
             var clicking = <HTMLElement>document.querySelector('.cashModalClose');
             clicking.click();
@@ -1110,7 +1116,13 @@ export class PosComponent implements OnInit {
           this.toastr.error(error.message);
         },
       });
+      }
+    
+  } else {
+    this.toastr.error('Please Add Items To Cart');
   }
+
+}
 
 
 }
