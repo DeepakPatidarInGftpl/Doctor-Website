@@ -62,7 +62,7 @@ export class PosComponent implements OnInit {
   filteredStreets: Observable<string[]>;
   currentCustomer:any;
   changeAmount:any;
-  tenderedAmount: any;
+  tenderedAmount: number = 0;
   dueAmount:any;
   online: any;
   loader: any;
@@ -721,6 +721,11 @@ export class PosComponent implements OnInit {
     this.tenderedAmount = tenderedAmt;
   }
 
+  changeTenderedAmt(value:any){
+    let newAmt = Number(value);
+    this.tenderedAmount += newAmt;
+  }
+
   changeAmt(){
     let amt = +this.tenderedAmount - this.totalAmount();
     return amt;
@@ -1045,6 +1050,27 @@ export class PosComponent implements OnInit {
       // Clear or reset the activeBill for a new transaction
       // this.activeBill = ...
     } 
+  }
+
+  discardCurrentBill() {
+      this.cartService.clearCurrent();
+      this.currentItems = this.cartService.getCurrentItems();
+      this.currentOrderAdditionalCharges = [];
+  }
+
+  cashPaymentGenerateOrder(){
+    const formData = new FormData();
+    formData.append('customer', JSON.stringify(10));
+    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
+    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('payment_mode', 'Cash');
+    formData.append('total_tax', '');
+    formData.append('cart_data', '');
+    formData.append('card_detail', '');
+    formData.append('Multipay', '');
+    formData.append('PayLatter', '');
+    formData.append('bank_detail', '');
+    formData.append('upi_detail', '');
   }
 
 
