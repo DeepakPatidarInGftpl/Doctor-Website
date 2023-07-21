@@ -36,14 +36,14 @@ export class PermissionGroupComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.deleteEmployee(id).subscribe(res => {
+        this.contactService.deletePermissionGroup(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Deleted successfully") {
+          if (this.delRes.IsSuccess == true) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
           }else{

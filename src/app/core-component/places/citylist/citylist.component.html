@@ -6,14 +6,13 @@
                 <h6>Manage your City</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()">
-                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add City
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add City
                 </a>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-
                 <div class="table-top">
                     <div class="search-set">
                         <div class="search-path">
@@ -27,13 +26,13 @@
                         </div> -->
                         <div class="search-input">
                             <a class="btn btn-searchset">
-                              <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                              <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
-                              placeholder="search">
-                            </label>
-                          </div>
-                 </div>
+                                    <input type="search" class="form-control form-control-sm" placeholder="Search..."
+                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -72,7 +71,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                            <tr
+                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
 
                                 <td>
                                     <label class="checkboxs">
@@ -87,24 +87,22 @@
                                 <td>{{products.city_code}}</td>
                                 <td>{{products.state.state}}</td>
                                 <td>
-                                <mat-slide-toggle
-                                (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
-                                [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
-
-                                    <a class="me-3" (click)="editForm(products.id)">
+                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                        href="javascript:void(0);">
+                                        href="javascript:void(0);" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
                             </tr>
                         </tbody>
-                       
+
                     </table>
                     <div class="progressbar">
                         <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
@@ -112,160 +110,169 @@
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
-                            <select [(ngModel)]="itemsPerPage" class="pagination" >
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="-1">All</option>
-                              </select>
+                                <select [(ngModel)]="itemsPerPage" class="pagination">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="-1">All</option>
+                                </select>
                             </div>
                         </div>
-                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                        <div class="f-right">
-                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}}
+                                    entries</div>
+                            </div>
                         </div>
-             
-                       </div>
-                     </div>
+                    </div>
                 </div>
-
             </div>
         </div>
 
-
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
+
             <div class="page-title" *ngIf="addForm">
-                <h4>City </h4>
-                <h6>Create new City </h6>
+                <div *ngIf="isAdd">
+                    <h4>City </h4>
+                    <h6>Create new City </h6>
+                </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
-                <h4> City Edit</h4>
-                <h6> Update City </h6>
+                <div *ngIf="isEdit">
+                    <h4> City Edit</h4>
+                    <h6> Update City </h6>
+                </div>
             </div>
         </div>
         <div class="card">
-            <div class="card-body" *ngIf="addForm">
-                <form [formGroup]="cityForm" (ngSubmit)="submit()">
-                    <div class="row">
+            <div *ngIf="isAdd">
+                <div class="card-body" *ngIf="addForm">
+                    <form [formGroup]="cityForm" (ngSubmit)="submit()">
+                        <div class="row">
 
-                        <div class="col-lg-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label>City*</label>
-                                <input type="text" formControlName="city" id="city" [ngClass]="{
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>City*</label>
+                                    <input type="text" formControlName="city" id="city" [ngClass]="{
                                     'is-invalid': f['city'].touched && f['city'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter city
-                                </span>
+                                    <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter city
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label>City Code*</label>
-                                <input type="text" formControlName="city_code" id="city_code" [ngClass]="{
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>City Code*</label>
+                                    <input type="text" formControlName="city_code" id="city_code" [ngClass]="{
                                     'is-invalid': f['city_code'].touched && f['city_code'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="city_code && city_code.invalid && city_code.touched">Enter City Code
-                                </span>
+                                    <span class="text-danger"
+                                        *ngIf="city_code && city_code.invalid && city_code.touched">Enter City Code
+                                    </span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label>Select State*</label>
-                                <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Select State*</label>
+                                    <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
                                     'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
                                   }"> -->
-                                <select formControlName="state" class="w-100 h-100 border" required
-                                    #stateValue id="state" [ngClass]="{
+                                    <select formControlName="state" class="w-100 h-100 border" required #stateValue
+                                        id="state" [ngClass]="{
                             'is-invalid': f['state'].touched && f['state'].invalid
                           }">
-                                    <option value="" selected disabled>State</option>
-                                    <option value="{{state.id}}" *ngFor="let state of stateList">
-                                        {{state.state}}
-                                    </option>
-                                </select>
+                                        <option value="" selected disabled>State</option>
+                                        <option value="{{state.id}}" *ngFor="let state of stateList">
+                                            {{state.state}}
+                                        </option>
+                                    </select>
 
-                                <span class="text-danger"
-                                    *ngIf="state && state.invalid && state.touched">Select
-                                    state
-                                </span>
+                                    <span class="text-danger" *ngIf="state && state.invalid && state.touched">Select
+                                        state
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
+                            </div>
 
-                    </div>
-                </form>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="card-body" *ngIf="!addForm">
-                <form [formGroup]="cityForm" (ngSubmit)="update()">
-                    <div class="row">
+            <div *ngIf="isEdit">
+                <div class="card-body" *ngIf="!addForm">
+                    <form [formGroup]="cityForm" (ngSubmit)="update()">
+                        <div class="row">
 
-                        <div class="col-lg-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label>City*</label>
-                                <input type="text" formControlName="city" id="city" [ngClass]="{
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>City*</label>
+                                    <input type="text" formControlName="city" id="city" [ngClass]="{
                                     'is-invalid': f['city'].touched && f['city'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter city
-                                </span>
+                                    <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter city
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label>City Code*</label>
-                                <input type="text" formControlName="city_code" id="city_code" [ngClass]="{
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>City Code*</label>
+                                    <input type="text" formControlName="city_code" id="city_code" [ngClass]="{
                                     'is-invalid': f['city_code'].touched && f['city_code'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="city_code && city_code.invalid && city_code.touched">Enter City Code
-                                </span>
+                                    <span class="text-danger"
+                                        *ngIf="city_code && city_code.invalid && city_code.touched">Enter City Code
+                                    </span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label>Select State*</label>
-                                <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
+                            <div class="col-lg-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Select State*</label>
+                                    <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
                                     'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
                                   }"> -->
-                                <select formControlName="state" class="w-100 h-100 border" required
-                                    #stateValue id="state" [ngClass]="{
+                                    <select formControlName="state" class="w-100 h-100 border" required #stateValue
+                                        id="state" [ngClass]="{
                             'is-invalid': f['state'].touched && f['state'].invalid
                           }">
-                                    <option value="" selected disabled>State</option>
-                                    <option value="{{state.id}}" *ngFor="let state of stateList">
-                                        {{state.state}}
-                                    </option>
-                                </select>
-                                <span *ngIf="stateError" class="text-danger">{{stateError}}</span>
-                                <span class="text-danger"
-                                    *ngIf="state && state.invalid && state.touched">Select
-                                    state
-                                </span>
+                                        <option value="" selected disabled>State</option>
+                                        <option value="{{state.id}}" *ngFor="let state of stateList">
+                                            {{state.state}}
+                                        </option>
+                                    </select>
+                                    <span *ngIf="stateError" class="text-danger">{{stateError}}</span>
+                                    <span class="text-danger" *ngIf="state && state.invalid && state.touched">Select
+                                        state
+                                    </span>
 
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
                             </div>
                         </div>
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

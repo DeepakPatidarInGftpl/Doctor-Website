@@ -11,9 +11,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./feature-group.component.scss']
 })
 export class FeatureGroupComponent implements OnInit {
-
- 
-   
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any
@@ -133,6 +130,9 @@ export class FeatureGroupComponent implements OnInit {
    });
  }
  loader=true;
+ isAdd:any;
+ isEdit:any;
+ isDelete:any;
   ngOnInit(): void {
     this.featureForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -167,6 +167,22 @@ export class FeatureGroupComponent implements OnInit {
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getFeature();
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='add_featuregroup') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='change_featuregroup') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='delete_featuregroup') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
    //select table row

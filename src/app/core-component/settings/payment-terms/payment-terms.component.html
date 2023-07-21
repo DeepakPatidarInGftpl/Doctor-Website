@@ -6,7 +6,7 @@
                 <h6>Manage your Payment Terms</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
                     <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Payment Terms
                 </a>
             </div>
@@ -89,11 +89,11 @@
                                     [(ngModel)]="products.is_active"></mat-slide-toggle>
                                     </td>
                                 <td>
-                                    <a class="me-3" (click)="editForm(products.id)">
+                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                        href="javascript:void(0);">
+                                        href="javascript:void(0);" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -131,21 +131,25 @@
 
 
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
+                <div *ngIf="isAdd">
                 <h4> Add Payment Terms </h4>
                 <h6>Create new Payment Terms </h6>
+                </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
+                <div *ngIf="isEdit">
                 <h4> Update Payment Terms </h4>
+                </div>
             </div>
         </div>
         <div class="card">
+            <div *ngIf="isAdd">
             <div class="card-body" *ngIf="addForm">
                 <form [formGroup]="paymentTermsForm" (ngSubmit)="submit()">
                     <div class="row">
-
                         <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
@@ -176,10 +180,11 @@
                     </div>
                 </form>
             </div>
+            </div>
+            <div *ngIf="isEdit">
             <div class="card-body" *ngIf="!addForm">
                 <form [formGroup]="paymentTermsForm" (ngSubmit)="update()">
                     <div class="row">
-
                         <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
@@ -212,6 +217,7 @@
 
                     </div>
                 </form>
+            </div>
             </div>
         </div>
     </div>

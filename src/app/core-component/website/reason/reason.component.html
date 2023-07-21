@@ -6,7 +6,7 @@
                 <h6>Manage your Reason</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
                     <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Deal Of The Day
                 </a>
             </div>
@@ -73,7 +73,7 @@
                                     {{products?.title}}
 
                                 </td>
-                               
+
                                 <td>
                                     {{products?.type}}
                                 </td>
@@ -86,11 +86,11 @@
                                     <!-- <a class="me-1" routerLink="//website/details-dealoftheDay/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a> -->
-                                    <a class="me-1" (click)="editForm(products.id)">
+                                    <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-1 confirm-text"
-                                        href="javascript:void(0);">
+                                        href="javascript:void(0);" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -124,87 +124,99 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
-                <h4>Reason</h4>
-                <h6>Create new Reason</h6>
+                <div *ngIf="isAdd">
+                    <h4>Reason</h4>
+                    <h6>Create new Reason</h6>
+                </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
-                <h4>Update Reason</h4>
+                <div *ngIf="isEdit">
+                    <h4>Update Reason</h4>
+                </div>
             </div>
         </div>
         <div class="card">
-            <div class="card-body" *ngIf="addForm">
-                <form [formGroup]="reasonForm" (ngSubmit)="submit()">
-                    <div class="row">
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
+            <div *ngIf="isAdd">
+                <div class="card-body" *ngIf="addForm">
+                    <form [formGroup]="reasonForm" (ngSubmit)="submit()">
+                        <div class="row">
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Title*</label>
+                                    <input type="text" formControlName="title" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid}">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
-                                </span>
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Title
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Type*</label>
-                                <select form formControlName="type" id="type" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Type*</label>
+                                    <select form formControlName="type" id="type" [ngClass]="{
                                         'is-invalid': f['type'].touched && f['type'].invalid}">
-                                    <option value="" selected disabled>Select Type</option>
-                                    <option value="Cancel">Cancel</option>
-                                    <option value="Return">Return</option>
-                                </select>
-                                <span class="text-danger" *ngIf="type && type.invalid && type.touched">Select Type
-                                </span>
+                                        <option value="" selected disabled>Select Type</option>
+                                        <option value="Cancel">Cancel</option>
+                                        <option value="Return">Return</option>
+                                    </select>
+                                    <span class="text-danger" *ngIf="type && type.invalid && type.touched">Select Type
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
                             </div>
                         </div>
-
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
-            <div class="card-body" *ngIf="!addForm">
-                <form [formGroup]="reasonForm" (ngSubmit)="update()">
-                    <div class="row">
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
+            <div *ngIf="isEdit">
+                <div class="card-body" *ngIf="!addForm">
+                    <form [formGroup]="reasonForm" (ngSubmit)="update()">
+                        <div class="row">
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Title*</label>
+                                    <input type="text" formControlName="title" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid}">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
-                                </span>
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Title
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Type*</label>
-                                <select form formControlName="type" id="type" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Type*</label>
+                                    <select form formControlName="type" id="type" [ngClass]="{
                                         'is-invalid': f['type'].touched && f['type'].invalid}">
-                                    <option value="" selected disabled>Select Type</option>
-                                    <option value="Cancel">Cancel</option>
-                                    <option value="Return">Return</option>
-                                </select>
-                                <span class="text-danger" *ngIf="type && type.invalid && type.touched">Select Type
-                                </span>
+                                        <option value="" selected disabled>Select Type</option>
+                                        <option value="Cancel">Cancel</option>
+                                        <option value="Return">Return</option>
+                                    </select>
+                                    <span class="text-danger" *ngIf="type && type.invalid && type.touched">Select Type
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                      
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
 
-                    </div>
-                </form>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

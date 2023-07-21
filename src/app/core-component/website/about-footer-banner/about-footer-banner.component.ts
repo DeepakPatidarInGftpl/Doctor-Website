@@ -137,6 +137,9 @@ export class AboutFooterBannerComponent implements OnInit {
     });
   }
   loader = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.editor = new Editor();
     this.bannerForm = this.fb.group({
@@ -150,6 +153,23 @@ export class AboutFooterBannerComponent implements OnInit {
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'website'  && res.content_type.model === 'aboutfooterbanner' && res.codename=='add_aboutfooterbanner') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'website' && res.content_type.model === 'aboutfooterbanner' && res.codename=='change_aboutfooterbanner') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'website' && res.content_type.model === 'aboutfooterbanner' && res.codename=='delete_aboutfooterbanner') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
   allSelected: boolean = false;
   selectedRows: boolean[]

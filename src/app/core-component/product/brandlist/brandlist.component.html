@@ -6,7 +6,7 @@
                 <h6>Manage your Brand</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
                     <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Brand
                 </a>
             </div>
@@ -116,14 +116,11 @@
                                 <td>{{products.title}}</td>
                                 <td>{{products.code}}</td>
                                 <td>{{products.discount}}</td>
-
-
                                 <td>
                             <tr *ngFor="let subcatG of products.subcategory_group">
                                 <td>{{subcatG.title}}</td>
                             </tr>
                             </td>
-
                             <td>
                                 <tr *ngFor="let subcat of products.subcategory">
                                     <td>{{subcat.title}}</td>
@@ -133,14 +130,13 @@
                                 <mat-slide-toggle
                                     (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
                                     [(ngModel)]="products.is_active"></mat-slide-toggle>
-
                             </td>
                             <td>
-                                <a class="me-3" (click)="editForm(products.id)">
+                                <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
                                     <img src="assets/img/icons/edit.svg" alt="img">
                                 </a>
                                 <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                    href="javascript:void(0);">
+                                    href="javascript:void(0);" *ngIf="isDelete">
                                     <img src="assets/img/icons/delete.svg" alt="img">
                                 </a>
                             </td>
@@ -198,17 +194,22 @@
         </div>
         <!-- /product list -->
     </div>
-    <div class="col-lg-4 col-sm-4 col-12">
+    <div class="col-lg-4 col-sm-4 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
+                <div *ngIf="isAdd">
                 <h4> Add Brands </h4>
                 <h6>Create new Brands </h6>
+                </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
+                <div *ngIf="isEdit">
                 <h4> Update Brands </h4>
+                </div>
             </div>
         </div>
         <div class="card">
+            <div *ngIf="isAdd">
             <div class="card-body" *ngIf="addForm">
                 <form [formGroup]="brandForm" (ngSubmit)="submit()">
                     <div class="row">
@@ -349,6 +350,8 @@
                     </div>
                 </form>
             </div>
+            </div>
+            <div *ngIf="isEdit">
             <div class="card-body" *ngIf="!addForm">
                 <form [formGroup]="brandForm" (ngSubmit)="update()">
                     <div class="row">
@@ -496,6 +499,7 @@
                         </div>
                     </div>
                 </form>
+            </div>
             </div>
         </div>
     </div>

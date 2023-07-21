@@ -142,6 +142,9 @@ export class WarehouseComponent implements OnInit {
 
   editRoute
   loader = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit() {
 
     // this.queryService.getWarehouse()
@@ -201,6 +204,25 @@ export class WarehouseComponent implements OnInit {
     //     $('.dataTables_filter').appendTo('.search-input');
     //   },
     // };
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master'  && res.content_type.model === 'warehouse' && res.codename=='add_warehouse') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'warehouse' && res.codename=='change_warehouse') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+          
+        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'warehouse' && res.codename=='delete_warehouse') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+          
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

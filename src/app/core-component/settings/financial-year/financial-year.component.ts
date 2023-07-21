@@ -130,6 +130,9 @@ export class FinancialYearComponent implements OnInit {
    });
  }
  loader=true;
+ isAdd:any;
+ isEdit:any;
+ isDelete:any;
   ngOnInit(): void {
     this.FinancialYearForm = this.fb.group({
       start_year: new FormControl('', [Validators.required]),
@@ -141,6 +144,23 @@ export class FinancialYearComponent implements OnInit {
       this.tableData=res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='add_financialyear') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='change_financialyear') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        } else if(res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='delete_financialyear'){
+          this.isDelete=res.codename;
+          console.log(this.isDelete); 
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

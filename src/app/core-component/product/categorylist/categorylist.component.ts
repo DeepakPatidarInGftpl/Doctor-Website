@@ -129,8 +129,10 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   }
 
   loader = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit() {
-
     this.coreServ.getProductCategor().subscribe(res => {
       this.tableData = res;
       this.loader = false;
@@ -157,6 +159,23 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     //   },
 
     // };
+ 
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='add_productcategory') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='change_productcategory') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='delete_productcategory') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
 

@@ -117,12 +117,28 @@ export class MaterialInwardComponent implements OnInit {
       }
     });
   }
+  isAdd:any;
+  isEdit:any;
   ngOnInit(): void {
     this.purchaseService.getMaterial().subscribe(res => {
       console.log(res);
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'materialinward' && res.codename=='add_materialinward') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'materialinward' && res.codename=='change_materialinward') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

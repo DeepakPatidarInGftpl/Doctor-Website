@@ -6,14 +6,13 @@
                 <h6>Manage your Feature </h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
                     <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Feature Group
                 </a>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-
                 <div class="table-top">
                     <div class="search-set">
                         <div class="search-path">
@@ -92,12 +91,12 @@
                                     </td>
                                 <td>
 
-                                    <a class="me-3" (click)="editForm(products.id)">
+                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
 
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                        href="javascript:void(0);">
+                                        href="javascript:void(0);" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -155,18 +154,23 @@
 
 
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
+                <div *ngIf="isAdd">
                 <h4> Feature </h4>
                 <h6>Create new Feature </h6>
+                </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
+                <div *ngIf="isEdit">
                 <h4> Feature Edit</h4>
                 <h6> Update Feature </h6>
+                </div>
             </div>
         </div>
         <div class="card">
+            <div *ngIf="isAdd">
             <div class="card-body" *ngIf="addForm">
                 <form [formGroup]="featureForm" (ngSubmit)="submit()">
                     <div class="row">
@@ -213,6 +217,8 @@
                     </div>
                 </form>
             </div>
+            </div>
+            <div *ngIf="isEdit">
             <div class="card-body" *ngIf="!addForm">
                 <form [formGroup]="featureForm" (ngSubmit)="update()">
                     <div class="row">
@@ -258,6 +264,7 @@
 
                     </div>
                 </form>
+            </div>
             </div>
         </div>
     </div>

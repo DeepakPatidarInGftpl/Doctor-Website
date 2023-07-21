@@ -9,7 +9,6 @@ const routes: Routes = [
     path: '',
     component:CoreComponentComponent,
     canActivate:[AuthGuard],
-
     children: [
       {
         path: 'dashboard',
@@ -143,7 +142,6 @@ const routes: Routes = [
       {path:'masters',loadChildren:()=>import('./master/master.module').then((m)=>m.MasterModule)}
   ],
   },
-
 ];
 
 @NgModule({

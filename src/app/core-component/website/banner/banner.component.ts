@@ -121,6 +121,9 @@ export class BannerComponent implements OnInit {
     });
   }
   loader = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.bannerForm = this.fb.group({
       image: new FormControl('',),
@@ -154,6 +157,21 @@ export class BannerComponent implements OnInit {
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'website'  && res.content_type.model === 'banner' && res.codename=='add_banner') {
+          this.isAdd = res.codename;
+        } else if (res.content_type.app_label === 'website' && res.content_type.model === 'banner' && res.codename=='change_banner') {
+          this.isEdit = res.codename;
+        }else if (res.content_type.app_label === 'website' && res.content_type.model === 'banner' && res.codename=='delete_banner') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
   allSelected: boolean = false;
   selectedRows: boolean[]

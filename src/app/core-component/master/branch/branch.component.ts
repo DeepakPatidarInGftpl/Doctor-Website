@@ -18,9 +18,9 @@ export class BranchComponent implements OnInit {
   initChecked: boolean = false
   public tableData: any
 
-  colorForm!: FormGroup;
+  branchForm!: FormGroup;
   get f() {
-    return this.colorForm.controls;
+    return this.branchForm.controls;
   }
   titlee: any;
   p: number = 1
@@ -131,15 +131,23 @@ export class BranchComponent implements OnInit {
   }
   form!: FormGroup;
   loader=true
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.form = this.fb.group({
       img: new FormControl('')
     })
 
-    this.colorForm = this.fb.group({
+    this.branchForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
       gstin: new FormControl('', [Validators.required,Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
-      address: new FormControl('', [Validators.required]),
+      // address: new FormControl('', [Validators.required]),
+      country:new FormControl(''),
+      state:new FormControl(''),
+      city:new FormControl(''),
+      pincode:new FormControl(''),
+      address:new FormControl('')
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -172,12 +180,50 @@ export class BranchComponent implements OnInit {
     })
 
     this.getAddress();
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master'  && res.content_type.model === 'branch' && res.codename=='add_branch') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);      
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'branch' && res.codename=='change_branch') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'branch' && res.codename=='delete_branch') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
+    this.getCountry();
   }
   addressList:any;
   getAddress(){
     this.coreService.getAddress().subscribe(res=>{
       console.log(res);
       this.addressList=res;
+    })
+  }
+  country: any
+  getCountry() {
+    this.coreService.countryList().subscribe(res => {
+      this.country = res;
+    })
+  }
+  state:any;
+  selectState(val: any) {
+    console.log(val);
+    this.coreService.getStateByCountryId(val).subscribe(res => {
+      this.state = res;
+      console.log(this.state);
+    })
+  }
+  city:any;
+  selectCity(val: any) {
+    console.log(val);
+    this.coreService.getCityByStateId(val).subscribe(res => {
+      this.city = res;
     })
   }
   add() {
@@ -207,18 +253,18 @@ export class BranchComponent implements OnInit {
 
 loaders=false;
   submit() {
-    console.log(this.colorForm.value);
+    console.log(this.branchForm.value);
     console.log(this.id);
 
-    if (this.colorForm.valid) {
+    if (this.branchForm.valid) {
       this.loaders=true;
-      this.coreService.addBranch(this.colorForm.value).subscribe(res => {
+      this.coreService.addBranch(this.branchForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "BRANCH CREATED SUCESSFULLY") {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
-          this.colorForm.reset()
+          this.branchForm.reset()
           // window.location.reload();
           this.ngOnInit()
         }else{
@@ -229,21 +275,21 @@ loaders=false;
         console.log(err.error.gst);
       })
     } else {
-      this.colorForm.markAllAsTouched()
+      this.branchForm.markAllAsTouched()
       console.log('forms invalid');
     }
   }
 
   update() {
-    if (this.colorForm.valid) {
+    if (this.branchForm.valid) {
       this.loaders=true;
-      this.coreService.updateBranch(this.colorForm.value, this.id).subscribe(res => {
+      this.coreService.updateBranch(this.branchForm.value, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Branch Updated Sucessfully") {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
-          this.colorForm.reset()
+          this.branchForm.reset()
           this.addForm = true
           // window.location.reload()
           this.ngOnInit()
@@ -255,20 +301,33 @@ loaders=false;
         console.log(err.error.gst);
       })
     } else {
-      this.colorForm.markAllAsTouched()
+      this.branchForm.markAllAsTouched()
       console.log('forms invalid');
     }
   }
 
   get title() {
-    return this.colorForm.get('title')
+    return this.branchForm.get('title')
   }
   get gstin() {
-    return this.colorForm.get('gstin')
+    return this.branchForm.get('gstin')
   }
-  get address(){
-    return this.colorForm.get('address')
+  get address() {
+    return this.branchForm.get('address')
   }
+  get countryy() {
+    return this.branchForm.get('country')
+  }
+  get statee() {
+    return this.branchForm.get('state')
+  }
+  get cityy() {
+    return this.branchForm.get('city')
+  }
+  get pincode(){
+    return this.branchForm.get('pincode')
+  }
+  
   addForm = true
   id: any
   editFormdata: any
@@ -278,15 +337,17 @@ loaders=false;
       console.log(res);
       if (id == res.id) {
         this.addForm = false;
-        this.colorForm.patchValue(res);
-        this.colorForm.get('address')?.patchValue(res.address.id)
+        this.branchForm.patchValue(res);
+        this.branchForm.get('country')?.patchValue(res.country.id)
+        this.branchForm.get('state')?.patchValue(res.state.id)
+        this.branchForm.get('city')?.patchValue(res.city.id)
         this.editFormdata = res
       }
     })
   }
   openaddForm() {
     this.addForm = true;
-    this.colorForm.reset();
+    this.branchForm.reset();
   }
   search() {
     if (this.titlee == "") {
