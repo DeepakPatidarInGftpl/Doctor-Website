@@ -131,6 +131,9 @@ export class BrandlistComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage: number = 10;
   loader = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.brandForm = new FormGroup({
       title: new FormControl('', [Validators.required]),
@@ -169,6 +172,22 @@ export class BrandlistComponent implements OnInit {
     })
     this.getSubcatGroup();
 
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='add_brands') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='change_brands') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='delete_brands') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
   //select table row

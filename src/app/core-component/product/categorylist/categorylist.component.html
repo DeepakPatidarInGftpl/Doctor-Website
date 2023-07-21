@@ -103,7 +103,7 @@
                       <th (click)="sort('id')" class="thone">Category name <i class="fa fa-sort"></i></th>
                       <th (click)="sort('id')" class="thone">Discount<i class="fa fa-sort"></i></th>
                       <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                      <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                      <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -127,10 +127,10 @@
                         <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                       </td>
                       <td>
-                        <a class="me-3" (click)="editThis(products, i)">
+                        <a class="me-3" (click)="editThis(products, i)" *ngIf="isEdit">
                           <img src="assets/img/icons/edit.svg" alt="img">
                         </a>
-                        <a (click)="confirmText(i, products.id)" class="me-3 confirm-text" href="javascript:void(0);">
+                        <a (click)="confirmText(i, products.id)" class="me-3 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
                           <img src="assets/img/icons/delete.svg" alt="img">
                         </a>
                       </td>
@@ -199,14 +199,16 @@
         </div>
 
 
-        <div class="col-5">
+        <div class="col-5" *ngIf="isAdd || isEdit">
       <div class="page-btn d-flex justify-content-between">
       <div class="page-title pe-4">
         <h4>{{editMode? ' Edit Category': 'Product Add Category'}}</h4>
         <h6>{{editMode? 'Edit Product Category': 'Create new product Category'}}</h6>
       </div>
       </div>
+     
       <app-addcategory></app-addcategory>
+     
     </div>
       </div>
     </div>

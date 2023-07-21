@@ -124,6 +124,9 @@ export class FooterFeaturesComponent implements OnInit {
     });
   }
   loader = true;
+  isAdd:any
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.FooterFeaturesForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -136,6 +139,26 @@ export class FooterFeaturesComponent implements OnInit {
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'website'  && res.content_type.model === 'footerfeatures' && res.codename=='add_footerfeatures') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+          
+        } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footerfeatures' && res.codename=='change_footerfeatures') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+          
+        }else if (res.content_type.app_label === 'website' && res.content_type.model === 'footerfeatures' && res.codename=='delete_footerfeatures') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+          
+        }
+      });
+    } 
   }
   //select table row
   allSelected: boolean = false;

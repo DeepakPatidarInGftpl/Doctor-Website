@@ -33,16 +33,16 @@ export class UpdateCustomerComponent implements OnInit {
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl('',[Validators.email]),
       remark: new FormControl(''),
-      date_of_birth: new FormControl('',),
-      anniversary_date: new FormControl('',),
+      date_of_birth: new FormControl('',[Validators.required]),
+      anniversary_date: new FormControl('',[Validators.required]),
       gst_type: new FormControl('',),
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
       apply_tds: new FormControl(''),
-      credit_limit: new FormControl(''),
+      credit_limit: new FormControl('',[Validators.required]),
       address: this.fb.array([]),
-      payment_terms: new FormControl(''),
-      opening_balance: new FormControl(''),
+      payment_terms: new FormControl('',[Validators.required]),
+      opening_balance: new FormControl('',[Validators.required]),
       invite_code: new FormControl(''),
       membership: new FormControl(''),
       opening_balance_type:new FormControl('',[Validators.required])
@@ -257,11 +257,14 @@ export class UpdateCustomerComponent implements OnInit {
           this.customerForm.reset()
           this.router.navigate(['//contacts/customer'])
         }else{
+          this.loader=false
+          this.toastr.error(this.addRes.error)
           this.toastr.error(this.addRes?.opening_balance[0]);
           if(this.addRes?.email){
             this.toastr.error(this.addRes?.email[0])
           }}
       }, err => {
+        this.loader=false;
         console.log(err.error.gst);
         if(err.error.msg){
           this.toastr.error(err.error.msg)

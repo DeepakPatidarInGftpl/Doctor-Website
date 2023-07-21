@@ -6,7 +6,7 @@
                 <h6>Manage your Trending Products</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
                     <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Trending Products
                 </a>
             </div>
@@ -89,11 +89,11 @@
                                     <a class="me-1" routerLink="//website/details-trendingProducts/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-1" (click)="editForm(products.id)">
+                                    <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-1 confirm-text"
-                                        href="javascript:void(0);">
+                                        href="javascript:void(0);" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -127,18 +127,24 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
+                <div *ngIf="isAdd">
                 <h4> Trending Products </h4>
                 <h6>Create new Trending Products </h6>
+                </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
+                <div *ngIf="isEdit">
                 <h4> Update Trending Products </h4>
+                </div>
             </div>
         </div>
         <div class="card">
-            <div class="card-body" *ngIf="addForm">  
+            <div *ngIf="isAdd"> 
+            <div class="card-body" *ngIf="addForm"> 
+                
                 <form [formGroup]="trendingProductsForm" (ngSubmit)="submit()">
                     <div class="row">
                         <div class="col-lg-10 col-sm-10 col-12">
@@ -181,7 +187,9 @@
 
                     </div>
                 </form>
+                </div>
             </div>
+            <div *ngIf="isEdit"> 
             <div class="card-body" *ngIf="!addForm">
                     <div class="row">
                         <div class="col-lg-10 col-sm-10 col-12">
@@ -223,6 +231,7 @@
                         </div>
                         </form>
                     </div>
+            </div>
             </div>
         </div>
     </div>

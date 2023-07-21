@@ -120,6 +120,9 @@ export class ReasonComponent implements OnInit {
   }
 
   loader = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.reasonForm = this.fb.group({
       type: new FormControl('', [Validators.required]),
@@ -132,6 +135,22 @@ export class ReasonComponent implements OnInit {
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='add_reason') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='change_reason') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='delete_reason') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

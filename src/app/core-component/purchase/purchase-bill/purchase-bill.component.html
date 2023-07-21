@@ -4,7 +4,7 @@
         <h4>PURCHASE BILL LIST</h4>
         <h6>Manage your PURCHASE BILL</h6>
     </div>
-    <div class="page-btn">
+    <div class="page-btn" *ngIf="isAdd">
         <a routerLink="//purchase/addpurchase-bill" class="btn btn-added">
             <img src="assets/img/icons/plus.svg" alt="img">Add New Purchase Bill
         </a>
@@ -100,7 +100,7 @@
                             <a class="me-1" routerLink="//purchase/purchase-billDetails/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//purchase/editpurchase-bill/{{products.id}}">
+                            <a class="me-1" routerLink="//purchase/editpurchase-bill/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-1 confirm-text">

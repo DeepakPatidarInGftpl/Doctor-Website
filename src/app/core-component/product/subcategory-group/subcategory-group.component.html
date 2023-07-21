@@ -17,7 +17,7 @@
         <h6>View/Search Sub Category Group</h6>
       </div>
       <div class="page-btn" *ngIf="!addForm">
-        <a class="btn btn-added" (click)="openaddForm()">
+        <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
           <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Sub Category Group
         </a>
       </div>
@@ -159,10 +159,10 @@
                   <a class="me-2" routerLink="/product/subCategoryDetails/{{products.id}}">
                     <img src="assets/img/icons/eye.svg" alt="img">
                   </a>
-                  <a class="me-2" (click)="editThis(products)">
+                  <a class="me-2" (click)="editThis(products)" *ngIf="isEdit">
                     <img src="assets/img/icons/edit.svg" alt="img">
                   </a>
-                  <a (click)="confirmText(i, products.id)" class="me-2 confirm-text" href="javascript:void(0);">
+                  <a (click)="confirmText(i, products.id)" class="me-2 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
                     <img src="assets/img/icons/delete.svg" alt="img">
                   </a>
                 </td>
@@ -199,17 +199,21 @@
   <div class="col-lg-4 col-sm-4 col-12">
     <div class="page-header">
       <div class="page-title" *ngIf="addForm">
+        <div *ngIf="isAdd">
         <h4> Add Sub Category Group</h4>
         <h6>Create new Sub Category Group </h6>
+        </div>
       </div>
       <div class="page-title" *ngIf="!addForm">
+        <div *ngIf="isEdit">
         <h4>Edit Sub Category Group</h4>
         <h6>Update Sub Category Group </h6>
+        </div>
       </div>
     </div>
 
     <!-- /add -->
-    <div class="card">
+    <div class="card" *ngIf="isAdd || isEdit">
       <div class="card-body">
         <form [formGroup]="form" class="row">
           <div class="col-lg-12 col-sm-12 col-12">

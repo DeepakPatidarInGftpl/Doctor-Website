@@ -4,7 +4,7 @@
         <h4>Address Store list</h4>
         <h6>Manage your Address Store</h6>
     </div>
-    <div class="page-btn">
+    <div class="page-btn" *ngIf="isAdd">
         <a routerLink="//website/add-addressStore" class="btn btn-added">
             <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Address Store
         </a>
@@ -71,7 +71,7 @@
                         <th (click)="sort('id')" class="thone">Pincode <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Address <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,11 +104,11 @@
                             <!-- <a class="me-3" routerLink="//website/staticPage/details/{{products.slug}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a> -->
-                            <a class="me-3" routerLink="/website/update-addressStore/{{products.id}}">
+                            <a class="me-3" routerLink="/website/update-addressStore/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                href="javascript:void(0);">
+                                href="javascript:void(0);" *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
                         </td>

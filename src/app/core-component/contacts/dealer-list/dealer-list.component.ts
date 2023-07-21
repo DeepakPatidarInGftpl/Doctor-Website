@@ -122,6 +122,9 @@ export class DealerListComponent implements OnInit {
     });
   }
 loader=true;
+isAdd:any;
+isEdit:any;
+isDelete:any;
   ngOnInit(): void {
     this.contactService.getDealer().subscribe(res => {
       console.log(res);
@@ -129,6 +132,22 @@ loader=true;
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master'  && res.content_type.model === 'dealer' && res.codename=='add_dealer') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename=='change_dealer') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename=='delete_dealer') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

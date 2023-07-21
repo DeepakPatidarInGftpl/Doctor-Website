@@ -124,6 +124,9 @@ export class AccountlistComponent implements OnInit {
     });
   }
   loader=true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -142,11 +145,28 @@ export class AccountlistComponent implements OnInit {
       // this.coreService.accountBehavior.subscribe( () => {
       //   this.tableData = JSON.parse(localStorage.getItem('accountList')!);
       // })
+
     this.coreService.getAccount().subscribe(res=>{
       this.tableData=res;
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'add_account') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'change_account') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'delete_account') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

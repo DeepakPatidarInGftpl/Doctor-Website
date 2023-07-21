@@ -131,6 +131,9 @@ export class CountrieslistComponent implements OnInit {
     });
   }
   loader = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.countryForm = this.fb.group({
       country_name: new FormControl('', [Validators.required]),
@@ -161,6 +164,23 @@ export class CountrieslistComponent implements OnInit {
     })
     console.log(this.tableData);
     this.getFeatureGroup();
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'places' && res.content_type.model === 'country' && res.codename=='add_country') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'country' && res.codename=='change_country') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'places' && res.content_type.model === 'country' && res.codename=='delete_country') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
   //select table row
   allSelected: boolean = false;

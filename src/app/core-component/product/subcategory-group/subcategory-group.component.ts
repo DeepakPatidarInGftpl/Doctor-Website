@@ -150,6 +150,9 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   errormessFFG;
   loader = true;
   updateData:any;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit() {
     // this.coreServ.subCategoryGroupGet()
 
@@ -215,6 +218,23 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
     })
 
     console.log(this.subcategories);
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename=='add_subcategorygroup') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename=='change_subcategorygroup') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename=='delete_subcategorygroup') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

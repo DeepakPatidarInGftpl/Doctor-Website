@@ -25,8 +25,7 @@ export class CitylistComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService,
-    private service: CompanyService) {
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService,) {
     this.QueryService.filterToggle();
   }
 
@@ -122,6 +121,9 @@ export class CitylistComponent implements OnInit {
     });
   }
   loader=true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.cityForm = this.fb.group({
       city: new FormControl('', [Validators.required]),
@@ -154,6 +156,23 @@ export class CitylistComponent implements OnInit {
     })
     console.log(this.tableData);
     this.getstate();
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='add_city') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='change_city') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='delete_city') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
   //select table row
