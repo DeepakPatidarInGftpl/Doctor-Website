@@ -118,8 +118,23 @@ export class PurchaselistComponent implements OnInit {
       }
     });
   }
+  isAdd:any;
+  isEdit:any;
   ngOnInit(): void {
-   this.getPurchase()
+   this.getPurchase();
+   const localStorageData = JSON.parse(localStorage.getItem('auth'));
+   if (localStorageData && localStorageData.permission) {
+     const permission = localStorageData.permission;
+     permission.map((res: any) => {
+       if (res.content_type.app_label === 'master' && res.content_type.model === 'purchaseorder' && res.codename=='add_purchaseorder') {
+         this.isAdd = res.codename;
+         console.log(this.isAdd);
+       } else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchaseorder' && res.codename=='change_purchaseorder') {
+         this.isEdit = res.codename;
+         console.log(this.isEdit);
+       }
+     });
+   }
   }
   loader=true;
   getPurchase(){

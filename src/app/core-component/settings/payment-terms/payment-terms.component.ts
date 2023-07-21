@@ -131,6 +131,9 @@ export class PaymentTermsComponent implements OnInit {
    });
  }
  loader=true;
+ isAdd:any;
+ isEdit:any;
+ isDelete:any;
   ngOnInit(): void {
     this.paymentTermsForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -142,6 +145,23 @@ export class PaymentTermsComponent implements OnInit {
       this.tableData=res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'paymentterms' && res.codename=='add_paymentterms') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'paymentterms' && res.codename=='change_paymentterms') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        } else if(res.content_type.app_label === 'master' && res.content_type.model === 'paymentterms' && res.codename=='delete_paymentterms'){
+          this.isDelete=res.codename;
+          console.log(this.isDelete); 
+        }
+      });
+    }
+
   }
 
   allSelected: boolean = false;

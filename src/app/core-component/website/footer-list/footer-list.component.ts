@@ -131,12 +131,31 @@ export class FooterListComponent implements OnInit {
    });
  }
  loader=true;
+ isAdd:any;
+ isEdit:any;
+ isDelete:any;
   ngOnInit(): void {
   this.websiteService.getFooter().subscribe(res=>{
     this.tableData=res;
     this.loader=false;
     this.selectedRows = new Array(this.tableData.length).fill(false);
   })
+  const localStorageData = JSON.parse(localStorage.getItem('auth'));
+  if (localStorageData && localStorageData.permission) {
+    const permission = localStorageData.permission;
+    permission.map((res: any) => {
+      if (res.content_type.app_label === 'website'  && res.content_type.model === 'footer' && res.codename=='add_footer') {
+        this.isAdd = res.codename;
+        console.log(this.isAdd);    
+      } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename=='change_footer') {
+        this.isEdit = res.codename;
+        console.log(this.isEdit); 
+      }else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename=='delete_footer') {
+        this.isDelete = res.codename;
+        console.log(this.isDelete); 
+      }
+    });
+  } 
   }
 //select table row
 allSelected: boolean = false;

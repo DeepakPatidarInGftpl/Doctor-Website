@@ -52,15 +52,15 @@
                 </ul>
             </li> -->
 
-            <li class="submenu" >
+            <li class="submenu" *ngIf="isCompany || isAccount || isWarehouse || isBranch || isAccountSubType">
                 <a [ngClass]="{'active': activePath === 'masters'}"><img src="assets/img/icons/product.svg" alt="img"><span> Master</span> <span class="menu-arrow"></span></a>
                 <ul>
-                    <li><a routerLink="/masters/companylist" routerLinkActive="active">Company</a></li>
-                    <li><a routerLink="/masters/accountlist" routerLinkActive="active">Account</a></li>
-                    <li><a routerLink="/masters/employeelist" routerLinkActive="active">Employee</a></li>
-                    <li><a routerLink="/masters/warehouse" routerLinkActive="active">Warehouse</a></li>
-                    <li><a routerLink="/masters/branch" routerLinkActive="active">Branch</a></li>
-                    <li><a routerLink="/masters/account_subtype" routerLinkActive="active">Account Sub Type</a></li>
+                    <li *ngIf="isCompany"><a routerLink="/masters/companylist" routerLinkActive="active">Company</a></li>
+                    <li *ngIf="isAccount"><a routerLink="/masters/accountlist" routerLinkActive="active">Account</a></li>
+                    <!-- <li *ngIf="isEmployee"><a routerLink="/masters/employeelist" routerLinkActive="active">Employee</a></li> -->
+                    <li *ngIf="isWarehouse"><a routerLink="/masters/warehouse" routerLinkActive="active">Warehouse</a></li>
+                    <li *ngIf="isBranch"><a routerLink="/masters/branch" routerLinkActive="active">Branch</a></li>
+                    <li *ngIf="isAccountSubType"><a routerLink="/masters/account_subtype" routerLinkActive="active">Account Sub Type</a></li>
                 </ul>
             </li> 
 
@@ -119,19 +119,19 @@
               
             </li> -->
           
-            <li class="submenu" >
+            <li class="submenu" *ngIf="isSupplier || isVendor || isEmployee ||isCustomer || isUser || isTransport || isDealer">
                 <a [ngClass]="{'active': activePath === 'contacts'}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                 <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
                 </svg><span> Contacts</span> <span class="menu-arrow"></span></a>
                 <ul>
-                    <li><a routerLink="/contacts/supplier" routerLinkActive="active">Supplier</a></li>
-                    <li><a routerLink="/contacts/vendor" routerLinkActive="active">Vendor</a></li>
-                    <li><a routerLink="/contacts/employee" routerLinkActive="active">Employee</a></li>
+                    <li *ngIf="isSupplier"><a routerLink="/contacts/supplier" routerLinkActive="active">Supplier</a></li>
+                    <li *ngIf="isVendor"><a routerLink="/contacts/vendor" routerLinkActive="active">Vendor</a></li>
+                    <li *ngIf="isEmployee"><a routerLink="/contacts/employee" routerLinkActive="active">Employee</a></li>
                     <!-- <li><a routerLink="/contacts/addPermissionGroup" routerLinkActive="active">Permission Group</a></li> -->
-                    <li><a routerLink="/contacts/customer" routerLinkActive="active">Customer</a></li>
-                    <li><a routerLink="/contacts/user" routerLinkActive="active">User</a></li>
-                    <li><a routerLink="/contacts/transport" routerLinkActive="active">Transport</a></li>
-                    <li><a routerLink="/contacts/dealerList" routerLinkActive="active">Dealer</a></li>
+                    <li *ngIf="isCustomer"><a routerLink="/contacts/customer" routerLinkActive="active">Customer</a></li>
+                    <li *ngIf="isUser"><a routerLink="/contacts/user" routerLinkActive="active">User</a></li>
+                    <li *ngIf="isTransport"><a routerLink="/contacts/transport" routerLinkActive="active">Transport</a></li>
+                    <li *ngIf="isDealer"><a routerLink="/contacts/dealerList" routerLinkActive="active">Dealer</a></li>
                 </ul>
             </li> 
             <!-- <li class="submenu">
@@ -165,25 +165,25 @@
                 </div>
               </li> -->
 
-           <li class="submenu">
+           <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation">
                 <a  [ngClass]="{'active': activePath === 'product'}"><img src="assets/img/icons/product.svg" alt="img"><span> Product</span> <span
                         class="menu-arrow"></span></a>
                 <ul>
-                    <li><a routerLink="/product/productlist" routerLinkActive="active">Product</a></li>
+                    <li *ngIf="isProduct"><a routerLink="/product/productlist" routerLinkActive="active">Product</a></li>
                     <!-- <li><a routerLink="/product/addproduct" routerLinkActive="active">Add Product</a></li> -->
-                    <li><a routerLink="/product/categorylist" routerLinkActive="active">Category</a></li> 
-                    <li><a routerLink="/product/subcategorylist" routerLinkActive="active">Sub Category </a></li>
-                    <li><a routerLink="/product/subCategoryGroup" routerLinkActive="active">Sub Category Group</a></li>
-                    <li><a routerLink="/product/brandlist" routerLinkActive="active">Brand</a></li>
-                    <li><a routerLink="/product/colors" routerLinkActive="active">Colors</a></li>
-                    <li><a routerLink="/product/size" routerLinkActive="active">Sizes</a></li>
-                    <li><a routerLink="/product/tax" routerLinkActive="active">Tax</a></li>
-                    <li><a routerLink="/product/taxSlabList" routerLinkActive="active">Tax Slab List</a></li>
-                    <li><a routerLink="/product/feature" routerLinkActive="active">Feature </a></li>
-                    <li><a routerLink="/product/feature_group" routerLinkActive="active">Feature Group</a></li>
-                    <li><a routerLink="product/hsncode" routerLinkActive="active">HSN Code</a></li>
-                    <li><a routerLink="product/units" routerLinkActive="active">Units</a></li>
-                    <li><a routerLink="product/unitconversion" routerLinkActive="active">Unit Conversion</a></li>
+                    <li *ngIf="isCategory"><a routerLink="/product/categorylist" routerLinkActive="active">Category</a></li> 
+                    <li *ngIf="isSubcategory"><a routerLink="/product/subcategorylist" routerLinkActive="active">Sub Category </a></li>
+                    <li *ngIf="isSubcategoryGroup"><a routerLink="/product/subCategoryGroup" routerLinkActive="active">Sub Category Group</a></li>
+                    <li *ngIf="isBrand"><a routerLink="/product/brandlist" routerLinkActive="active">Brand</a></li>
+                    <li *ngIf="isColors"><a routerLink="/product/colors" routerLinkActive="active">Colors</a></li>
+                    <li *ngIf="isSize"><a routerLink="/product/size" routerLinkActive="active">Sizes</a></li>
+                    <li *ngIf="isTax"><a routerLink="/product/tax" routerLinkActive="active">Tax</a></li>
+                    <li *ngIf="isTaxSlab"><a routerLink="/product/taxSlabList" routerLinkActive="active">Tax Slab List</a></li>
+                    <li *ngIf="isFeature"><a routerLink="/product/feature" routerLinkActive="active">Feature </a></li>
+                    <li *ngIf="isFeatureGroup"><a routerLink="/product/feature_group" routerLinkActive="active">Feature Group</a></li>
+                    <li *ngIf="isHsnCode"><a routerLink="product/hsncode" routerLinkActive="active">HSN Code</a></li>
+                    <li *ngIf="isUnit"><a routerLink="product/units" routerLinkActive="active">Units</a></li>
+                    <li *ngIf="isUnitConversation"><a routerLink="product/unitconversion" routerLinkActive="active">Unit Conversion</a></li>
                     <!-- <li><a routerLink="/product/variant" routerLinkActive="active">Variant </a></li>
                     <li><a routerLink="/product/importproduct" routerLinkActive="active">Import Products</a></li>
                     <li><a routerLink="/product/barcode" routerLinkActive="active">Print Barcode</a></li>    -->
@@ -322,22 +322,22 @@
                 </div>
               </li> -->
              
-              <li class="submenu" >
+              <li class="submenu" *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview">
                 <a  [ngClass]="{'active': activePath === 'website'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Website</span> <span class="menu-arrow"></span></a>
                 <ul>
-                    <li><a routerLink="/website/banner" routerLinkActive="active">Banner</a></li>  
-                    <li><a routerLink="/website/staticPage" routerLinkActive="active">Static pages</a></li>
-                    <li><a routerLink="/website/footerFeature" routerLinkActive="active">Footer Feature</a></li>  
-                    <li><a routerLink="/website/footerList" routerLinkActive="active">Footer List</a></li>  
-                    <li><a routerLink="/website/trendingProducts" routerLinkActive="active">Trending Products</a></li>  
-                    <li><a routerLink="/website/dealOfTheDay" routerLinkActive="active">Deal of The Day</a></li>  
-                    <li><a routerLink="/website/addressStore" routerLinkActive="active">Address Store</a></li>  
-                    <li><a routerLink="/website/couponList" routerLinkActive="active">Coupon List</a></li>  
-                    <li><a routerLink="/website/reason" routerLinkActive="active">Reason</a></li>  
-                    <li><a routerLink="/website/aboutBanner" routerLinkActive="active">About Banner</a></li>  
-                    <li><a routerLink="/website/aboutFooterBanner" routerLinkActive="active">About Footer Banner</a></li>  
-                    <li><a routerLink="/website/newArrivalBanner" routerLinkActive="active">New Arrival Banner</a></li>  
-                    <li><a routerLink="/website/ratingAndReview" routerLinkActive="active">Rating And Review</a></li>  
+                    <li *ngIf="isBanner"><a routerLink="/website/banner" routerLinkActive="active">Banner</a></li>  
+                    <li *ngIf="isStaticPage"><a routerLink="/website/staticPage" routerLinkActive="active">Static pages</a></li>
+                    <li *ngIf="isFooterpage"><a routerLink="/website/footerFeature" routerLinkActive="active">Footer Feature</a></li>  
+                    <li *ngIf="isFooterList"><a routerLink="/website/footerList" routerLinkActive="active">Footer List</a></li>  
+                    <li *ngIf="isTrendingProducts"><a routerLink="/website/trendingProducts" routerLinkActive="active">Trending Products</a></li>  
+                    <li *ngIf="isDealoftheDay"><a routerLink="/website/dealOfTheDay" routerLinkActive="active">Deal of The Day</a></li>  
+                    <li *ngIf="isAddressStore"><a routerLink="/website/addressStore" routerLinkActive="active">Address Store</a></li>  
+                    <li *ngIf="isCouponList"><a routerLink="/website/couponList" routerLinkActive="active">Coupon List</a></li>  
+                    <li *ngIf="isReason"><a routerLink="/website/reason" routerLinkActive="active">Reason</a></li>  
+                    <li *ngIf="isAboutBanner"><a routerLink="/website/aboutBanner" routerLinkActive="active">About Banner</a></li>  
+                    <li *ngIf="isAboutFooterBanner"><a routerLink="/website/aboutFooterBanner" routerLinkActive="active">About Footer Banner</a></li>  
+                    <li *ngIf="isNewarrivalBanner"><a routerLink="/website/newArrivalBanner" routerLinkActive="active">New Arrival Banner</a></li>  
+                    <li *ngIf="isRatingReview"><a routerLink="/website/ratingAndReview" routerLinkActive="active">Rating And Review</a></li>  
                 </ul>
             </li>  
             <li class="submenu" >
@@ -392,20 +392,17 @@
         </div>
 </li> -->
               
-              <li class="submenu" >
+              <li class="submenu" *ngIf="isPurchase || isMaterialInward || isPurchaseBill || isDebitNotes">
                   <a  [ngClass]="{'active': activePath === 'purchase'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Purchase</span> <span
                           class="menu-arrow"></span></a>
                   <ul>
-                      <li><a routerLink="/purchase/purchaselist" routerLinkActive="active">Purchase
-                              List</a></li>
-                      <!-- <li><a routerLink="/purchase/addpurchase" routerLinkActive="active">Add
-                              Purchase</a></li> -->
-                      <!-- <li><a routerLink="/purchase/importpurchase" routerLinkActive="active">Import
-                              Purchase</a></li> -->
-                        <li><a routerLink="/purchase/material-Inward-list" routerLinkActive="active">Material Inward List</a></li>
-                      <li><a routerLink="/purchase/purchase-bill-list" routerLinkActive="active">Purchase Bill List</a></li>
-                      <li><a routerLink="/purchase/debit-notes-list" routerLinkActive="active">Debit Notes List</a></li>
-                 
+                      <li *ngIf="isPurchase"><a routerLink="/purchase/purchaselist" routerLinkActive="active">Purchase List</a></li>
+                      <!-- <li><a routerLink="/purchase/addpurchase" routerLinkActive="active">Add Purchase</a></li> -->
+                      <!-- <li><a routerLink="/purchase/importpurchase" routerLinkActive="active">Import Purchase</a></li> -->
+                      <li *ngIf="isMaterialInward"><a routerLink="/purchase/material-Inward-list" routerLinkActive="active">Material Inward List</a></li>
+                      <li *ngIf="isPurchaseBill"><a routerLink="/purchase/purchase-bill-list" routerLinkActive="active">Purchase Bill List</a></li>
+                      <li *ngIf="isDebitNotes"><a routerLink="/purchase/debit-notes-list" routerLinkActive="active">Debit Notes List</a></li>
+
                   </ul>
               </li>
 
@@ -648,22 +645,16 @@
 </li> -->
 
 
-              <li class="submenu">
-                  <a  [ngClass]="{'active': activePath === 'places'}"><img src="assets/img/icons/places.svg" alt="img"><span> Places</span> <span
-                          class="menu-arrow"></span></a>
+              <li class="submenu" *ngIf="isCountry || isState || isCity">
+                  <a  [ngClass]="{'active': activePath === 'places'}"><img src="assets/img/icons/places.svg" alt="img"><span> Places</span> <span class="menu-arrow"></span></a>
                   <ul >
-                      <!-- <li><a routerLink="/places/newcountry" routerLinkActive="active">New
-                              Country</a></li> -->
-                      <li><a routerLink="/places/countrieslist" routerLinkActive="active">Countries
-                              list </a></li>
-                      <!-- <li><a routerLink="/places/newstate" routerLinkActive="active">New State </a>
-                      </li> -->
-                      <li><a routerLink="/places/statelist" routerLinkActive="active">State list</a>
-                      </li>
-                      <li><a routerLink="/places/citylist" routerLinkActive="active">City list</a></li>
+                      <!-- <li><a routerLink="/places/newcountry" routerLinkActive="active">New Country</a></li> -->
+                      <li *ngIf="isCountry"><a routerLink="/places/countrieslist" routerLinkActive="active">Countries list </a></li>
+                      <!-- <li><a routerLink="/places/newstate" routerLinkActive="active">New State </a> </li> -->
+                      <li *ngIf="isState"><a routerLink="/places/statelist" routerLinkActive="active">State list</a></li>
+                      <li *ngIf="isCity"><a routerLink="/places/citylist" routerLinkActive="active">City list</a></li>
                   </ul>
               </li>
-
                  <!-- <li class="submenu">
                    <h6 class="sub-head">Places</h6>
                           <div class="sub-ul">
@@ -684,8 +675,6 @@
                     </div>
                   </div>
                 </li> -->
-
-
               <li>
                   <a routerLink="/components" routerLinkActive="active"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg><span> Components</span> </a>
               </li>
@@ -726,8 +715,7 @@
                   <a [ngClass]="{'active': activePath === 'element'}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg><span>Elements </span> <span class="menu-arrow"></span></a>
                   <ul >
-                      <li><a routerLink="/element/sweetalerts" routerLinkActive="active">Sweet
-                              Alerts</a></li>
+                      <li><a routerLink="/element/sweetalerts" routerLinkActive="active">Sweet Alerts</a></li>
                       <li><a routerLink="/element/tooltip" routerLinkActive="active">Tooltip</a>
                       </li>
                       <li><a routerLink="/element/popover" routerLinkActive="active">Popover</a>
@@ -735,30 +723,19 @@
                       <li><a routerLink="/element/ribbon" routerLinkActive="active">Ribbon</a></li>
                       <li><a routerLink="/element/clipboard" routerLinkActive="active">Clipboard</a>
                       </li>
-                      <li><a routerLink="/element/drag-drop" routerLinkActive="active">Drag &
-                              Drop</a></li>
-                      <li><a routerLink="/element/rangeslider" routerLinkActive="active">Range
-                              Slider</a></li>
+                      <li><a routerLink="/element/drag-drop" routerLinkActive="active">Drag & Drop</a></li>
+                      <li><a routerLink="/element/rangeslider" routerLinkActive="active">Range Slider</a></li>
                       <li><a routerLink="/element/rating" routerLinkActive="active">Rating</a></li>
                       <li><a routerLink="/element/toastr" routerLinkActive="active">Toastr</a></li>
-                      <li><a routerLink="/element/text-editor" routerLinkActive="active">Text
-                              Editor</a></li>
-                      <li><a routerLink="/element/counter" routerLinkActive="active">Counter</a>
-                      </li>
-                      <li><a routerLink="/element/scrollbar" routerLinkActive="active">Scrollbar</a>
-                      </li>
-                      <li><a routerLink="/element/spinner" routerLinkActive="active">Spinner</a>
-                      </li>
-                      <li><a routerLink="/element/notification"
-                              routerLinkActive="active">Notification</a></li>
-                      <li><a routerLink="/element/lightbox" routerLinkActive="active">Lightbox</a>
-                      </li>
-                      <li><a routerLink="/element/stickynote" routerLinkActive="active">Sticky
-                              Note</a></li>
-                      <li><a routerLink="/element/timeline" routerLinkActive="active">Timeline</a>
-                      </li>
-                      <li><a routerLink="/element/form-wizard" routerLinkActive="active">Form
-                              Wizard</a></li>
+                      <li><a routerLink="/element/text-editor" routerLinkActive="active">Text Editor</a></li>
+                      <li><a routerLink="/element/counter" routerLinkActive="active">Counter</a> </li>
+                      <li><a routerLink="/element/scrollbar" routerLinkActive="active">Scrollbar</a> </li>
+                      <li><a routerLink="/element/spinner" routerLinkActive="active">Spinner</a> </li>
+                      <li><a routerLink="/element/notification" routerLinkActive="active">Notification</a></li>
+                      <li><a routerLink="/element/lightbox" routerLinkActive="active">Lightbox</a></li>
+                      <li><a routerLink="/element/stickynote" routerLinkActive="active">Sticky Note</a></li>
+                      <li><a routerLink="/element/timeline" routerLinkActive="active">Timeline</a> </li>
+                      <li><a routerLink="/element/form-wizard" routerLinkActive="active">Form Wizard</a></li>
                   </ul>
               </li> 
 
@@ -1051,6 +1028,7 @@
                         </div>    
                  </ul>
               </li>  -->
+           
               <li class="submenu" >
                   <a  [ngClass]="{'active': activePath === 'charts'}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
@@ -1264,20 +1242,19 @@
                 </ul>
               </li> -->
             
-              <li class="submenu" >
+              <li class="submenu">
                   <a [ngClass]="{'active': activePath === 'settings'}"><img src="assets/img/icons/settings.svg" alt="img"><span> Settings</span> <span
                           class="menu-arrow"></span></a>
                   <ul [ngClass]="{'block': sideBarControls[18].value === true}">
-                        <li><a routerLink="/settings/finncialYear" routerLinkActive="active">Finncial Year</a></li>
-                        <li><a routerLink="/settings/paymentTerms" routerLinkActive="active">Payment Terms</a></li>
+                        <li *ngIf="isFinancialYear"><a routerLink="/settings/finncialYear" routerLinkActive="active">Finncial Year</a></li>
+                        <li *ngIf="isPaymentTerms"><a routerLink="/settings/paymentTerms" routerLinkActive="active">Payment Terms</a></li>
                         <li><a routerLink="/settings/permissionGroup" routerLinkActive="active">Permission Group</a></li>
                         <li><a routerLink="/settings/generalsettings" routerLinkActive="active">General Settings</a></li>
                       <li><a routerLink="/settings/emailsettings" routerLinkActive="active">Email Settings</a></li>
-                      <li><a routerLink="/settings/paymentsettings" routerLinkActive="active">Payment Settings</a></li>
+                      <!-- <li><a routerLink="/settings/paymentsettings" routerLinkActive="active">Payment Settings</a></li> -->
                       <li><a routerLink="/settings/currencysettings" routerLinkActive="active">Currency Settings</a></li>
                       <!-- <li><a routerLink="/settings/grouppermissions" routerLinkActive="active">Group Permissions</a></li> -->
-                      <li><a routerLink="/settings/taxrates" routerLinkActive="active">Tax Rates</a>
-                      </li>
+                      <li><a routerLink="/settings/taxrates" routerLinkActive="active">Tax Rates</a></li>
                   </ul>
               </li>      
               <!-- <li class="submenu">

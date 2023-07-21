@@ -123,6 +123,9 @@ export class CustomerComponent implements OnInit {
     });
   }
   loader=true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.contactService.getCustomer().subscribe(res => {
       console.log(res);
@@ -130,6 +133,25 @@ export class CustomerComponent implements OnInit {
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master'  && res.content_type.model === 'customer' && res.codename=='add_customer') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+          
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'customer' && res.codename=='change_customer') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+          
+        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'customer' && res.codename=='delete_customer') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+          
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

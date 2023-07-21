@@ -5,7 +5,7 @@
         <h4>Vendor list</h4>
         <h6>View/Search Vendor</h6>
     </div>
-    <div class="page-btn">
+    <div class="page-btn" *ngIf="isAdd">
         <a routerLink="//contacts/addVendor" class="btn btn-added">
             <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Vendor
         </a>
@@ -92,10 +92,10 @@
                             <a class="me-1" routerLink="//contacts/vendorDetails/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//contacts/updateVendor/{{products.id}}">
+                            <a class="me-1" routerLink="//contacts/updateVendor/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
-                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);">
+                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
                         </td>

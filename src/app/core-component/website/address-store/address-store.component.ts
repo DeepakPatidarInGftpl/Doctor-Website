@@ -118,6 +118,9 @@ export class AddressStoreComponent implements OnInit {
    });
  }
  loader=true;
+ isAdd:any;
+ isEdit:any;
+ isDelete:any;
   ngOnInit(): void {
  
   this.websiteService.getAddressStore().subscribe(res=>{
@@ -125,7 +128,24 @@ export class AddressStoreComponent implements OnInit {
     this.loader=false;
     this.selectedRows = new Array(this.tableData.length).fill(false);
   })
-  }
+  
+  const localStorageData = JSON.parse(localStorage.getItem('auth'));
+  if (localStorageData && localStorageData.permission) {
+    const permission = localStorageData.permission;
+    permission.map((res: any) => {
+      if (res.content_type.app_label === 'order'  && res.content_type.model === 'storeaddress' && res.codename=='add_storeaddress') {
+        this.isAdd = res.codename;
+        console.log(this.isAdd);
+      } else if(res.content_type.app_label === 'order' && res.content_type.model === 'storeaddress' && res.codename == 'change_storeaddress') {
+        this.isEdit = res.codename;
+        console.log(this.isEdit);
+      }else if(res.content_type.app_label === 'order' && res.content_type.model === 'storeaddress' && res.codename == 'delete_storeaddress') {
+        this.isDelete = res.codename;
+        console.log(this.isDelete);
+      }
+    });
+  } 
+}
 //select table row
 allSelected: boolean = false;
 selectedRows:boolean[]
@@ -150,7 +170,6 @@ selectAlll() {
       if (this.delRes.msg == "Colors Deleted successfully") {
         window.location.reload()
       }
-
     })
   }
 

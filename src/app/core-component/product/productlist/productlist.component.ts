@@ -121,7 +121,9 @@ itemsPerPage:number=10;
  loader=true;
 
  isAscending: boolean = true;
-
+isAdd:any;
+isEdit:any;
+isDelete:any;
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -144,7 +146,6 @@ itemsPerPage:number=10;
     //   }
     // })
     // this.QueryService.productList;
-    
     this.coreService.getProducts().subscribe(res=>{
       this.tableData=res;
       this.loader=false;
@@ -152,6 +153,22 @@ itemsPerPage:number=10;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     console.log(this.tableData);
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename=='add_product') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename=='change_product') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename=='delete_product') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

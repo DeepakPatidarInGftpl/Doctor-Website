@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subscription } from 'rxjs';
 import { company } from 'src/app/interfaces/company';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { QueryService } from 'src/app/shared/query.service';
@@ -57,27 +56,29 @@ export class CompanylistComponent implements OnInit {
       }
     });
   }
-
+  isAdd: any;
+  isEdit: any;
+  isDelete:any;
   ngOnInit(): void {
-    this.dtOptions = {
-      dom: 'Btlpif',
-      pagingType: 'numbers',
-      language: {
-        search: ' ',
-        searchPlaceholder: "Search...",
-        info: "_START_ - _END_ of _TOTAL_ items",
-      },
-      initComplete: (settings, json) => {
-        $('.dt-buttons').appendTo('.wordset');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
-
-    };
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'add_company') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'change_company') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'delete_company') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
     // this.companyService.getCompany()
     // this.companyService.companyBehaviour.subscribe( () => {
-
     //   this.tableData = JSON.parse(localStorage.getItem('companyList')!);
-
     // })
     this.companyService.getCompany().subscribe(res => {
       this.tableData = res;
@@ -94,6 +95,7 @@ export class CompanylistComponent implements OnInit {
         f.isSelected = false
       })
     }
+
   }
 
   // companyList: any

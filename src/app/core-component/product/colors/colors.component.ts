@@ -131,6 +131,9 @@ export class ColorsComponent implements OnInit {
   }
   form!: FormGroup;
   loader=true
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.form = this.fb.group({
       img: new FormControl('')
@@ -170,6 +173,22 @@ export class ColorsComponent implements OnInit {
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename=='add_color') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename=='change_color') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename=='delete_color') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
   add() {
     console.log('jj');

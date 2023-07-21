@@ -1,4 +1,3 @@
-
 <div class="row">
     <div class="col-lg-7 col-sm-7 col-12">
         <div class="page-header">
@@ -7,8 +6,8 @@
                 <h6>Manage your Account Sub Type</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()">
-                    <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Account Sub Type
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Account Sub Type
                 </a>
             </div>
         </div>
@@ -24,13 +23,13 @@
                         </div>
                         <div class="search-input">
                             <a class="btn btn-searchset">
-                              <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                              <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
-                              placeholder="search">
-                            </label>
-                          </div>
-                          </div>
+                                    <input type="search" class="form-control form-control-sm" placeholder="Search..."
+                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -51,7 +50,7 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table datatable  class="table  datanew">
+                    <table datatable class="table  datanew">
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">
@@ -65,11 +64,12 @@
                                 <th (click)="sort('id')" class="thone">Accounts Type<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Alias<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                            <tr
+                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
 
                                 <td>
                                     <label class="checkboxs">
@@ -84,15 +84,17 @@
                                 <td>{{products.accounts_type}}</td>
                                 <td>{{products?.alias}}</td>
                                 <td>
-                                        <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>          
-                                    </td>
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td>
                                 <td>
 
-                                    <a class="me-3" (click)="editForm(products.id)">
+                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                        href="javascript:void(0);">
+                                        href="javascript:void(0);" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -105,23 +107,24 @@
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
-                            <select [(ngModel)]="itemsPerPage" class="pagination" >
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="-1">All</option>
-                              </select>
+                                <select [(ngModel)]="itemsPerPage" class="pagination">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="-1">All</option>
+                                </select>
                             </div>
                         </div>
-                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                        <div class="f-right">
-                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}}
+                                    entries</div>
+                            </div>
+
                         </div>
-             
-                       </div>
-                     </div>
+                    </div>
                 </div>
 
             </div>
@@ -129,92 +132,118 @@
 
 
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
-                <h4> Add Account Sub Type </h4>
-                <h6>Create new Account Sub Type </h6>
+                <div *ngIf="isAdd">
+                    <h4> Add Account Sub Type </h4>
+                    <h6>Create new Account Sub Type </h6>
+                </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
-                <h4> Update Account Sub Type </h4>
+                <div *ngIf="isEdit">
+                    <h4> Update Account Sub Type </h4>
+                </div>
             </div>
         </div>
         <div class="card">
-            <div class="card-body" *ngIf="addForm">
-                <form [formGroup]="accountSubTypeForm" (ngSubmit)="submit()">
-                    <div class="row">
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
-                                </span>
+            <div *ngIf="isAdd">
+                <div class="card-body" *ngIf="addForm">
+                    <form [formGroup]="accountSubTypeForm" (ngSubmit)="submit()">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Title*</label>
+                                    <input type="text" formControlName="title" id="title"
+                                        [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Title
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Accounts Type*</label>
+                                    <select formControlName="accounts_type" required
+                                        [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}">
+                                        <option value="" selected disabled> Select Aaccounts Type</option>
+                                        <option value="{{accounts_type?.title}}"
+                                            *ngFor="let accounts_type of accountType">{{accounts_type?.title}}</option>
+                                    </select>
+                                    <span class="text-danger"
+                                        *ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select
+                                        Aaccounts Type</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Alias*</label>
+                                    <input type="text" formControlName="alias" id="alias" required
+                                        [ngClass]="{'is-invalid': f['alias'].touched && f['alias'].invalid}">
+                                    <span class="text-danger" *ngIf="alias && alias.invalid && alias.touched">Enter
+                                        Valid alias
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>Submit</button>
                             </div>
                         </div>
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Accounts Type*</label>
-                                <select formControlName="accounts_type" required [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}">
-                                    <option value="" selected disabled> Select Aaccounts Type</option>
-                                    <option value="{{accounts_type?.title}}" *ngFor="let accounts_type of accountType">{{accounts_type?.title}}</option>
-                                </select>    
-                                <span class="text-danger" *ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select Aaccounts Type</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Alias*</label>
-                                <input type="text" formControlName="alias" id="alias" required [ngClass]="{'is-invalid': f['alias'].touched && f['alias'].invalid}">
-                                <span class="text-danger"
-                                    *ngIf="alias && alias.invalid && alias.touched">Enter Valid alias
-                                </span>
-                            </div>
-                        </div>
-                       
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
-            <div class="card-body" *ngIf="!addForm">
-                <form [formGroup]="accountSubTypeForm" (ngSubmit)="update()">
-                    <div class="row">
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
-                                </span>
+            <div *ngIf="isEdit">
+                <div class="card-body" *ngIf="!addForm">
+                    <form [formGroup]="accountSubTypeForm" (ngSubmit)="update()">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Title*</label>
+                                    <input type="text" formControlName="title" id="title"
+                                        [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Title
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Alias*</label>
+                                    <input type="text" formControlName="alias" id="alias" readonly
+                                        [ngClass]="{'is-invalid': f['alias'].touched && f['alias'].invalid}">
+                                    <span class="text-danger" *ngIf="alias && alias.invalid && alias.touched">Enter
+                                        Valid Alias
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Accounts Type*</label>
+                                    <select formControlName="accounts_type"
+                                        [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}"
+                                        readonly>
+                                        <option value="{{editFormdata?.accounts_type}}" selected disabled>
+                                            {{editFormdata?.accounts_type}}</option>
+                                        <!-- <option value="{{accounts_type?.id}}" *ngFor="let accounts_type of accountType">{{accounts_type?.title}}</option> -->
+                                    </select>
+                                    <span class="text-danger"
+                                        *ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select
+                                        Aaccounts Type</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>Submit</button>
                             </div>
                         </div>
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Alias*</label>
-                                <input type="text" formControlName="alias" id="alias" readonly [ngClass]="{'is-invalid': f['alias'].touched && f['alias'].invalid}">  
-                                <span class="text-danger" *ngIf="alias && alias.invalid && alias.touched">Enter Valid Alias
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Accounts Type*</label>
-                                <select formControlName="accounts_type" [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}" readonly>
-                                    <option value="{{editFormdata?.accounts_type}}" selected disabled>{{editFormdata?.accounts_type}}</option>
-                                    <!-- <option value="{{accounts_type?.id}}" *ngFor="let accounts_type of accountType">{{accounts_type?.title}}</option> -->
-                                </select>    
-                                <span class="text-danger" *ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select Aaccounts Type</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

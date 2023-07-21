@@ -123,12 +123,31 @@ export class TaxSlabsListComponent implements OnInit {
     });
   }
   loader=true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.coreService.getTaxSlab().subscribe(res=>{
       this.tableData=res;
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'add_taxslabs') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'change_taxslabs') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'delete_taxslabs') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
   //select table row
  allSelected: boolean = false;

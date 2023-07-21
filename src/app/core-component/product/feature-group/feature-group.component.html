@@ -6,7 +6,7 @@
                 <h6>Manage your Feature Group</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
                     <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Feature Group
                 </a>
             </div>
@@ -67,7 +67,7 @@
                                 <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Feature<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,7 +81,6 @@
                                     </label>
                                 </td>
                                 <td>
-
                                     {{products.title}}
                                 </td>
                                 <td>
@@ -97,12 +96,12 @@
                                     [(ngModel)]="products.is_active"></mat-slide-toggle>
                             </td>
                             <td>
-                                <a class="me-3" (click)="editForm(products.id)">
+                                <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
                                     <img src="assets/img/icons/edit.svg" alt="img">
                                 </a>
 
                                 <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                    href="javascript:void(0);">
+                                    href="javascript:void(0);" *ngIf="isDelete">
                                     <img src="assets/img/icons/delete.svg" alt="img">
                                 </a>
                             </td>
@@ -162,113 +161,131 @@
 
 
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
-                <h4> Feature Group </h4>
-                <h6>Create new Feature Group </h6>
+                <div *ngIf="isAdd">
+                    <h4> Feature Group </h4>
+                    <h6>Create new Feature Group </h6>
+                </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
-                <h4> Feature Group Edit</h4>
-                <h6> Update Feature Group </h6>
+                <div *ngIf="isEdit">
+                    <h4> Feature Group Edit</h4>
+                    <h6> Update Feature Group </h6>
+                </div>
             </div>
         </div>
         <div class="card">
-            <div class="card-body" *ngIf="addForm">
-                <form [formGroup]="featureForm" (ngSubmit)="submit()">
-                    <div class="row">
+            <div *ngIf="isAdd">
+                <div class="card-body" *ngIf="addForm">
+                    <form [formGroup]="featureForm" (ngSubmit)="submit()">
+                        <div class="row">
 
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Title*</label>
+                                    <input type="text" formControlName="title" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
-                                </span>
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Title
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Feature*</label>
-                                <div class="dropdown">
-                                    <button type="button" class="dropdown-toggle button" type="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">Select Feature</button>
-                                    <ul class="dropdown-menu" style="width: 100%;">
-                                        <li><a class="dropdown-item" *ngFor="let feature of featureList; let i=index">
-                                                <input type="checkbox" [value]="feature.id"
-                                                    (change)="onCheckChange($event)" formArrayName="feature"
-                                                    style="margin-right: 5px;" [ngClass]="{
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Feature*</label>
+                                    <div class="dropdown">
+                                        <button type="button" class="dropdown-toggle button" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">Select Feature</button>
+                                        <ul class="dropdown-menu" style="width: 100%;">
+                                            <li><a class="dropdown-item"
+                                                    *ngFor="let feature of featureList; let i=index">
+                                                    <input type="checkbox" [value]="feature.id"
+                                                        (change)="onCheckChange($event)" formArrayName="feature"
+                                                        style="margin-right: 5px;" [ngClass]="{
                                                         'is-invalid': f['feature'].touched && f['feature'].invalid
                                                       }" [id]="'checkbox-' + i">
-                                                      <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{feature.title}}</label>			
-                     
-                                            </a></li>
-                                    </ul>
-                                </div>
-                                <span class="text-danger" *ngIf="feature && feature.invalid && feature.touched">Select
-                                    feature
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-lg-8 text-end mt-5">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
+                                                    <label [for]="'checkbox-' + i" style="margin-bottom: 0;"
+                                                        (click)="onLabelClick($event)">{{feature.title}}</label>
 
-                    </div>
-                </form>
+                                                </a></li>
+                                        </ul>
+                                    </div>
+                                    <span class="text-danger"
+                                        *ngIf="feature && feature.invalid && feature.touched">Select
+                                        feature
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 text-end mt-5">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="card-body" *ngIf="!addForm">
-                <form [formGroup]="featureForm" (ngSubmit)="update()">
-                    <div class="row">
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
+            <div *ngIf="isEdit">
+                <div class="card-body" *ngIf="!addForm">
+                    <form [formGroup]="featureForm" (ngSubmit)="update()">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Title*</label>
+                                    <input type="text" formControlName="title" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
-                                </span>
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Title
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12 col-sm-12 col-12">
-                            <div class="form-group">
-                                <label>Feature*</label>
-                                <div class="dropdown">
-                                    <button type="button" class="dropdown-toggle button" type="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">Select Feature</button>
-                                    <ul class="dropdown-menu" style="width: 100%;">
-                                        <li><a class="dropdown-item" *ngFor="let feature of featureList; let i=index">
-                                                <input type="checkbox" [value]="feature.id"
-                                                    [checked]="features.includes(feature.id)"
-                                                    (change)="onCheckChange($event)" formArrayName="feature"
-                                                    style="margin-right: 5px;" [ngClass]="{
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Feature*</label>
+                                    <div class="dropdown">
+                                        <button type="button" class="dropdown-toggle button" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">Select Feature</button>
+                                        <ul class="dropdown-menu" style="width: 100%;">
+                                            <li><a class="dropdown-item"
+                                                    *ngFor="let feature of featureList; let i=index">
+                                                    <input type="checkbox" [value]="feature.id"
+                                                        [checked]="features.includes(feature.id)"
+                                                        (change)="onCheckChange($event)" formArrayName="feature"
+                                                        style="margin-right: 5px;" [ngClass]="{
                                                         'is-invalid': f['feature'].touched && f['feature'].invalid
                                                       }" [id]="'checkbox-' + i">
-                                                      <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{feature.title}}</label>			
-                     
-                                            </a></li>
-                                    </ul>
-                                </div>
-                                <span class="text-danger" *ngIf="feature && feature.invalid && feature.touched">Select
-                                    feature
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-lg-8 text-end mt-5">
-                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
-                        </div>
+                                                    <label [for]="'checkbox-' + i" style="margin-bottom: 0;"
+                                                        (click)="onLabelClick($event)">{{feature.title}}</label>
 
-                    </div>
-                </form>
+                                                </a></li>
+                                        </ul>
+                                    </div>
+                                    <span class="text-danger"
+                                        *ngIf="feature && feature.invalid && feature.touched">Select
+                                        feature
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 text-end mt-5">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

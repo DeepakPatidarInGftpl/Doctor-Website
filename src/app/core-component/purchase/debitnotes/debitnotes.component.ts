@@ -120,6 +120,8 @@ export class DebitnotesComponent implements OnInit {
   }
 
   loader=true;
+  isAdd:any
+  isEdit:any;
   ngOnInit(): void {
     this.purchaseService.getDebitNotes().subscribe(res => {
       console.log(res);
@@ -127,6 +129,19 @@ export class DebitnotesComponent implements OnInit {
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename=='add_debitnote') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename=='change_debitnote') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

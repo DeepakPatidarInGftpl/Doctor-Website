@@ -129,6 +129,9 @@ export class SubcategorylistComponent implements OnInit {
     });
   }
   loaders = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -168,6 +171,22 @@ export class SubcategorylistComponent implements OnInit {
     this.productCategory();
     this.getbrand()
 
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='add_productsubcategory') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='change_productsubcategory') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='delete_productsubcategory') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
   // selected table roww
   allSelected: boolean = false;

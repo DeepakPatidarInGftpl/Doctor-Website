@@ -4,12 +4,10 @@
                 <h4>Product List</h4>
                 <h6>Manage your products</h6>
             </div>
-            <div class="page-btn">
+            <div class="page-btn" *ngIf="isAdd">
                 <a routerLink="//product/addproduct" class="btn btn-added"><img src="assets/img/icons/plus.svg" alt="img" class="me-1">Add New Product</a>
             </div>
         </div>
-
-
         <!-- /product list -->
         <div class="card">
             <div class="card-body">
@@ -174,10 +172,10 @@
                                     <a class="me-1" routerLink="//product/product-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-1" routerLink="//product/editproduct/{{products.id}}">
+                                    <a class="me-1" routerLink="//product/editproduct/{{products.id}}" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);">
+                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
                                         <img  src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>

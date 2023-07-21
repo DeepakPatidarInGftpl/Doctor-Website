@@ -4,7 +4,7 @@
         <h4>DEBIT NOTES LIST</h4>
         <h6>Manage your DEBIT NOTES</h6>
     </div>
-    <div class="page-btn">
+    <div class="page-btn" *ngIf="isAdd">
         <a routerLink="//purchase/adddebit-notes" class="btn btn-added">
             <img src="assets/img/icons/plus.svg" alt="img">Add New Debit Notes
         </a>
@@ -98,7 +98,7 @@
                             <a class="me-1" routerLink="//purchase/debit-notesDetails/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//purchase/editdebit-notes/{{products.id}}">
+                            <a class="me-1" routerLink="//purchase/editdebit-notes/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-1 confirm-text">
