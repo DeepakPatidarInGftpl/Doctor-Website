@@ -153,6 +153,7 @@
                                         <th>Discount</th>
                                         <th>Add Disc</th>
                                         <th>Unit Cost</th>
+                                        <th>Unit Cost With Taxes</th>
                                         <th>Net Amount</th>
                                         <th></th>
                                     </tr>
@@ -184,7 +185,8 @@
                                             <input type="text" value="0.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                                         </div></td>
                                         <td>{{cart?.batch[0]?.selling_price_offline}}</td>
-                                        <td>{{cart?.batch[0]?.selling_price_offline * cart?.quantity}}</td>
+                                        <td>{{getPriceAfterTaxes(cart?.batch[0])}}</td>
+                                        <td>{{getNetAmount(cart?.batch[0], cart?.quantity)}}</td>
                                         <td><button (click)="removeOptionCurrent(cart)" class="table-cross-btn">
                                             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                                         </button></td>
@@ -213,7 +215,7 @@
                                         <h5>MRP</h5>
                                     </li>
                                     <li>
-                                        <p>0.000</p>
+                                        <p>{{this.totalTaxAmount()}}</p>
                                         <h5>Tax Amount</h5>
                                     </li>
                                     <li>
@@ -1525,6 +1527,7 @@
       </div>
     </div>
   </div>
+
 
   <div class="modal fade posmodal" id="addChargesModal" tabindex="-1" aria-labelledby="addChargesModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">

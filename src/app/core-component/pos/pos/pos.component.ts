@@ -471,6 +471,22 @@ export class PosComponent implements OnInit {
 
   }
 
+  getPriceAfterTaxes(batch:any){
+    let originalAmount = batch.selling_price_offline;
+    let taxPercentage = batch.sale_tax;
+    if(taxPercentage < 0 || originalAmount < 0){
+      return originalAmount;
+    } else {
+      let taxAmount = (taxPercentage / 100) * originalAmount;
+      return (taxAmount + originalAmount)
+    }
+  }
+
+  getNetAmount(batch:any, qty:number){
+    let priceAfterTaxes = this.getPriceAfterTaxes(batch);
+    return (priceAfterTaxes * qty);
+  }
+
    // update tax of an element in current order additional charges
    updateTaxInCAC(index:number, event: Event){
     let value = (event.target as HTMLSelectElement).value;
@@ -704,6 +720,27 @@ export class PosComponent implements OnInit {
     }
     return totalPrice;
   }
+
+  getTaxAmt(batch:any){
+    let originalAmount = batch.selling_price_offline;
+    let taxPercentage = batch.sale_tax;
+    if(taxPercentage < 0 || originalAmount < 0){
+      return 0;
+    } else {
+      let taxAmount = (taxPercentage / 100) * originalAmount;
+      return taxAmount;
+    }
+  }
+
+  totalTaxAmount(){
+    let cartItems = this.cartService.getCurrentItems();
+    let totalPrice = 0;
+    for(let cart of cartItems){
+      totalPrice += this.getTaxAmt(cart?.batch[0]) * cart?.quantity;
+    }
+    return Number(totalPrice).toFixed(2);
+  }
+
 
   totalQty(){
     //let cartItems = this.cartService.getCartItems();
@@ -1074,10 +1111,10 @@ export class PosComponent implements OnInit {
         "discount": 0,
         "add_discount": 0,
         "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": element.batch[0]?.selling_price_offline * element.quantity,
-        "tax_amount": 0,
+        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
+        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
         "remarks": "",
-        "tax_percentage": 0
+        "tax_percentage": element?.batch[0]?.sale_tax
       };
       cartData.push(item);
     }
