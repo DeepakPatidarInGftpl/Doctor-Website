@@ -124,7 +124,8 @@
 
 							<ul class="dropdown-menu" style="width: 100%;">
 								<li><a class="dropdown-item" *ngFor="let color of colorList; let i=index">
-										<input type="checkbox" [value]="color.id" (change)="onCheckColor($event)"
+										<input type="checkbox" [value]="color.id"
+										(change)="onCheckColors($event)"
 											formArrayName="color" style="margin-right: 5px;" [ngClass]="{
 												'is-invalid': f['color'].touched && f['color'].invalid
 											  }">
@@ -146,7 +147,8 @@
 								aria-expanded="false">Choose Size</button>
 							<ul class="dropdown-menu" style="width: 100%;">
 								<li><a class="dropdown-item" *ngFor="let size of sizeList">
-										<input type="checkbox" [value]="size.id" (change)="onCheckSize($event)"
+										<input type="checkbox" [value]="size.id"
+										(change)="onCheckSizes($event)"
 											formArrayName="size" style="margin-right: 5px;" [ngClass]="{
 												'is-invalid': f['size'].touched && f['size'].invalid
 											  }">
