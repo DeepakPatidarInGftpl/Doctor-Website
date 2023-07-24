@@ -119,6 +119,7 @@ export class MaterialInwardComponent implements OnInit {
   }
   isAdd:any;
   isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.purchaseService.getMaterial().subscribe(res => {
       console.log(res);
@@ -136,6 +137,9 @@ export class MaterialInwardComponent implements OnInit {
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'materialinward' && res.codename=='change_materialinward') {
           this.isEdit = res.codename;
           console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'materialinward' && res.codename=='delete_materialinward') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
         }
       });
     }

@@ -118,14 +118,14 @@
     </div>
     <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
+            <div *ngIf="isAdd">
             <div class="page-title" *ngIf="addForm">
-                <div *ngIf="isAdd">
                 <h4> Coupon </h4>
                 <h6>Create new Coupon </h6>
                 </div>
             </div>
+            <div *ngIf="isEdit">
             <div class="page-title" *ngIf="!addForm">
-                <div *ngIf="isEdit">
                 <h4> Update Coupon </h4>
                 </div>
             </div>

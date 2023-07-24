@@ -198,14 +198,14 @@
 
   <div class="col-lg-4 col-sm-4 col-12">
     <div class="page-header">
-      <div class="page-title" *ngIf="addForm">
-        <div *ngIf="isAdd">
+      <div *ngIf="isAdd">
+        <div class="page-title" *ngIf="addForm">
         <h4> Add Sub Category Group</h4>
         <h6>Create new Sub Category Group </h6>
         </div>
       </div>
+      <div *ngIf="isEdit">
       <div class="page-title" *ngIf="!addForm">
-        <div *ngIf="isEdit">
         <h4>Edit Sub Category Group</h4>
         <h6>Update Sub Category Group </h6>
         </div>
