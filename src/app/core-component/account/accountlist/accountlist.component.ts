@@ -13,12 +13,10 @@ import { Account } from 'src/app/interfaces/account';
 })
 export class AccountlistComponent implements OnInit {
 
-
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any | Account
 
- 
   titlee: any;
   name:any
   p:number=1
@@ -47,15 +45,21 @@ export class AccountlistComponent implements OnInit {
         this.coreService.deleteAccount(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Account Deleted successfully") {
-            this.ngOnInit()
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          }else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
       }
     });
   }
@@ -119,6 +123,10 @@ export class AccountlistComponent implements OnInit {
       }
     });
   }
+  loader=true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -137,10 +145,28 @@ export class AccountlistComponent implements OnInit {
       // this.coreService.accountBehavior.subscribe( () => {
       //   this.tableData = JSON.parse(localStorage.getItem('accountList')!);
       // })
+
     this.coreService.getAccount().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'add_account') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'change_account') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'delete_account') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;

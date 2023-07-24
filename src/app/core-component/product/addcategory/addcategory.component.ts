@@ -1,7 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 
@@ -12,42 +12,63 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class AddcategoryComponent implements OnInit {
 
-  constructor(private CoreServ: CoreService, private toastr: ToastrService, private route: ActivatedRoute) { }
+  constructor(private CoreServ: CoreService, private toastr: ToastrService, private route: Router) { }
 
   formaddCateg: FormGroup
 
   token = localStorage.getItem('token')
-
-  editRoute
-
+  imgUrl = 'https://pv.greatfuturetechno.com';
+  editRoute: any;
+  updateData: any
+  isAdd:any;
+  isEdit:any;
   ngOnInit() {
-
-
     let ftitle = ''
     let fimage = null
-
-
+    let fdiscount = ''
     this.CoreServ.editThings.subscribe((data: any) => {
 
       this.editRoute = data
+      console.log(data);
 
       if (this.editRoute) {
-        ftitle = data.title
+        ftitle = data.title,
+          fdiscount = data.discount
+        this.updateData = data
       }
       this.formaddCateg = new FormGroup({
         title: new FormControl(ftitle, [Validators.required]),
-        discount: new FormControl('',Validators.pattern(/^[0-9]*$/)),
-        image: new FormControl(fimage, Validators.required)
+        discount: new FormControl(fdiscount, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+        image: new FormControl('',)
       })
       console.log(this.formaddCateg);
     })
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='add_productcategory') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='change_productcategory') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }
+      });
+    }
   }
 
-
+  url: any;
   onFileChange(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
-
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
     this.formaddCateg.patchValue({
       image: file
     });
@@ -66,18 +87,38 @@ export class AddcategoryComponent implements OnInit {
 
         formData.append("title", this.formaddCateg.get('title')?.value);
         formData.append("discount", this.formaddCateg.get('discount')?.value);
-        formData.append("image", this.formaddCateg.get('image')?.value);
+        // formData.append("image", this.formaddCateg.get('image')?.value);
 
-        this.CoreServ.editHttp(formData, this.editRoute.id).subscribe((res: any) => {
-          this.toastr.success(res.msg)
-          if (res.msg == 'Product Category updated successfully') {
-            this.formaddCateg.reset()
-            // this.ngOnInit();
-            window.location.reload()
-          }
-          console.log(res);
+        const imageFile = this.formaddCateg.get('image')?.value;
+        if (imageFile && imageFile instanceof File) {
+          formData.append('image', imageFile);
+          this.CoreServ.editHttp(formData, this.editRoute.id).subscribe((res: any) => {
+            this.toastr.success(res.msg)
+            if (res.msg == 'Product Category updated successfully') {
+              this.formaddCateg.reset();
+              this.updateData = '';
+              this.url = '';
+              // this.ngOnInit();
+              window.location.reload()
+            }
+            console.log(res);
+          })
+        } else {
+          this.CoreServ.editHttp(formData, this.editRoute.id).subscribe((res: any) => {
+            this.toastr.success(res.msg)
+            if (res.msg == 'Product Category updated successfully') {
+              this.formaddCateg.reset()
+              this.updateData = '';
+              this.url = '';
+              
+              // this.ngOnInit();
+              window.location.reload()
+            }
+            console.log(res);
 
-        })
+          })
+        }
+
       } else {
 
         var formData: any = new FormData();
@@ -106,7 +147,7 @@ export class AddcategoryComponent implements OnInit {
   get image() {
     return this.formaddCateg.get('image')
   }
-  get discount(){
+  get discount() {
     return this.formaddCateg.get('discount')
   }
 }

@@ -39,15 +39,22 @@ itemsPerPage:number=10;
         this.coreService.deleteProduct(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Prodct Deleted successfully") {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
            this.ngOnInit()
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
       }
     });
   }
@@ -111,6 +118,12 @@ itemsPerPage:number=10;
      }
    });
  }
+ loader=true;
+
+ isAscending: boolean = true;
+isAdd:any;
+isEdit:any;
+isDelete:any;
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -135,9 +148,27 @@ itemsPerPage:number=10;
     // this.QueryService.productList;
     this.coreService.getProducts().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
+      console.log(this.tableData);
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     console.log(this.tableData);
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename=='add_product') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename=='change_product') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename=='delete_product') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;
@@ -196,4 +227,19 @@ itemsPerPage:number=10;
     this.reverse = !this.reverse
   }
 
+
+  // read more or less
+  sho = true;
+  sho1 = false;
+  sho2 = false;
+  hide() {
+    this.sho = false;
+    this.sho1 = !this.sho1;
+    this.sho2 = false;
+  }
+  hide1() {
+    this.sho = true;
+    this.sho1 = false;
+    this.sho2 = !this.sho2;
+  }
 }

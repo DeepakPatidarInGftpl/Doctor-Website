@@ -122,7 +122,10 @@ export class StaticPagesComponent implements OnInit {
      }
    });
  }
-
+loader=true;
+isAdd:any;
+isEdit:any;
+isDelete:any;
   ngOnInit(): void {
     this.staticPgForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -154,10 +157,27 @@ export class StaticPagesComponent implements OnInit {
     //   }
     // })
   this.coreService.getStaicPages().subscribe(res=>{
+    this.loader=false;
     this.tableData=res;
     this.selectedRows = new Array(this.tableData.length).fill(false);
   })
-  }
+ const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'website'  && res.content_type.model === 'staticpages' && res.codename=='add_staticpages') {
+          this.isAdd = res.codename;
+        } else if (res.content_type.app_label === 'website' && res.content_type.model === 'staticpages' && res.codename=='change_staticpages') {
+          this.isEdit = res.codename;
+        }
+        else if (res.content_type.app_label === 'website' && res.content_type.model === 'staticpages' && res.codename=='delete_staticpages') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+          
+        }
+      });
+    }  
+}
 //select table row
 allSelected: boolean = false;
 selectedRows:boolean[]

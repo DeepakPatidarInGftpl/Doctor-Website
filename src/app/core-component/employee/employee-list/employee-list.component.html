@@ -5,8 +5,8 @@
                 <h4>Employee list</h4>
                 <h6>View/Search Employee</h6>
             </div>
-            <div class="page-btn">
-                <a routerLink="//employee/addemployee" class="btn btn-added">
+            <div class="page-btn" *ngIf="isAdd">
+                <a routerLink="//masters/addemployee" class="btn btn-added">
                     <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Employee
                 </a>
             </div>
@@ -105,8 +105,8 @@
                                 <th (click)="sort('id')" class="thone">Date of birth <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Phone Number <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Email <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Country <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">State <i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Country <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">State <i class="fa fa-sort"></i></th> -->
                                 <th (click)="sort('id')" class="thone">Pincode <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
@@ -124,15 +124,15 @@
                                     <!-- <a href="javascript:void(0);" class="product-img">
                                         <img [src]="products.img" alt="product">
                                     </a> -->
-                                    <a routerLink="//employee/employee-details/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
+                                    <a routerLink="//masters/employee-details/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
                                 </td>
-                                <td>{{products.fathers_name}}</td>
-                                <td>{{products.dob}}</td>
-                                <td>{{products.mobile}}</td>
-                                <td>{{products.email}}</td>
-                                <td>{{products.country.country_name}}</td>
-                                <td>{{products.state.state}}</td>
-                                <td>{{products.pincode}}</td>
+                                <td>{{products?.fathers_name}}</td>
+                                <td>{{products?.dob}}</td>
+                                <td>{{products?.mobile}}</td>
+                                <td>{{products?.email}}</td>
+                                <!-- <td>{{products?.country.country_name}}</td>
+                                <td>{{products?.state.state}}</td> -->
+                                <td>{{products?.pincode}}</td>
                                 <td>
                                     <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                     class="badges">{{products.is_active}}</span> -->
@@ -140,10 +140,10 @@
                                 
                                 </td>
                                 <td>
-                                    <a class="me-1" routerLink="//employee/employee-details/{{products.id}}">
+                                    <a class="me-1" routerLink="//masters/employee-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-1" routerLink="//employee/editemployee/{{products.id}}">
+                                    <a class="me-1" routerLink="//masters/editemployee/{{products.id}}" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);">

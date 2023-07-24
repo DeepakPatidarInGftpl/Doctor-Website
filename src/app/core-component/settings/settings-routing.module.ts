@@ -49,8 +49,8 @@ const routes: Routes = [
       },
       //financial year
       {
-        path:'finncialYear',
-        loadChildren:()=>import('./financial-year/financial-year.module').then((m)=>m.FinancialYearModule)
+        path: 'finncialYear',
+        loadChildren: () => import('./financial-year/financial-year.module').then((m) => m.FinancialYearModule)
       }
     ],
   },
@@ -68,10 +68,31 @@ const routes: Routes = [
         (m) => m.EditpermissionModule
       ),
   },
+  {
+    path: 'paymentTerms',
+    loadChildren: () => import('./payment-terms/payment-terms.module').then((m) => m.PaymentTermsModule)
+  },
+  {
+    path: 'permissionGroup',
+    loadChildren: () => import('../contacts/permission-group/permission-group.module').then((m) => m.PermissionGroupModule)
+  },
+  {
+    path: 'addPermissionGroup',
+    loadChildren: () => import('../contacts/add-permission-group/add-permission-group.module').then((m) => m.AddPermissionGroupModule)
+  },
+  {
+    path: 'updatePermissionGroup/:id',
+    loadChildren: () => import('../contacts/update-permission-group/update-permission-group.module').then((m) => m.UpdatePermissionGroupModule)
+  },
+  {
+    path: 'detailsPermissionGroup/:id',
+    loadChildren: () => import('../contacts/details-permission-group/details-permission-group.module').then((m) => m.DetailsPermissionGroupModule)
+  },
+
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class SettingsRoutingModule {}
+export class SettingsRoutingModule { }

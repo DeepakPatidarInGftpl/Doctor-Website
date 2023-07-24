@@ -51,14 +51,21 @@ export class FinancialYearComponent implements OnInit {
           if (this.delRes.msg == "Deleted successfully") {
             this.tableData
             this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+      
       }
     });
   }
@@ -122,6 +129,10 @@ export class FinancialYearComponent implements OnInit {
      }
    });
  }
+ loader=true;
+ isAdd:any;
+ isEdit:any;
+ isDelete:any;
   ngOnInit(): void {
     this.FinancialYearForm = this.fb.group({
       start_year: new FormControl('', [Validators.required]),
@@ -129,9 +140,27 @@ export class FinancialYearComponent implements OnInit {
     })
    
     this.coreService.getFinancialYear().subscribe(res=>{
+      this.loader=false;
       this.tableData=res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='add_financialyear') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='change_financialyear') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        } else if(res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='delete_financialyear'){
+          this.isDelete=res.codename;
+          console.log(this.isDelete); 
+        }
+      });
+    }
   }
 
   allSelected: boolean = false;
@@ -169,16 +198,18 @@ export class FinancialYearComponent implements OnInit {
   }
 
   addRes: any
-  
+  loaders=false;
  submit() {
   console.log(this.FinancialYearForm.value);
   console.log(this.id);
 
   if (this.FinancialYearForm.valid) {
+    this.loaders=true;
     this.coreService.addFinancialYear(this.FinancialYearForm.value).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.FinancialYearForm.reset()
         // window.location.reload();
@@ -195,10 +226,12 @@ export class FinancialYearComponent implements OnInit {
 
 update(){
   if (this.FinancialYearForm.valid) {
+    this.loaders=true;
     this.coreService.updateFinancialYear(this.FinancialYearForm.value, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Finincial Year Updated Sucessfully") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.FinancialYearForm.reset()
         this.addForm=true

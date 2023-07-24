@@ -1,3 +1,6 @@
 .NgxEditor__Content{
     height: 150px;
 }
+.ng-dirty.ng-invalid.is-invalid.ng-touched {
+    border: 1px solid red;
+}

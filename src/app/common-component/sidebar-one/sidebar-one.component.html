@@ -52,7 +52,19 @@
                 </ul>
             </li> -->
 
-            <li class="submenu">
+            <li class="submenu" *ngIf="isCompany || isAccount || isWarehouse || isBranch || isAccountSubType">
+                <a [ngClass]="{'active': activePath === 'masters'}"><img src="assets/img/icons/product.svg" alt="img"><span> Master</span> <span class="menu-arrow"></span></a>
+                <ul>
+                    <li *ngIf="isCompany"><a routerLink="/masters/companylist" routerLinkActive="active">Company</a></li>
+                    <li *ngIf="isAccount"><a routerLink="/masters/accountlist" routerLinkActive="active">Account</a></li>
+                    <!-- <li *ngIf="isEmployee"><a routerLink="/masters/employeelist" routerLinkActive="active">Employee</a></li> -->
+                    <li *ngIf="isWarehouse"><a routerLink="/masters/warehouse" routerLinkActive="active">Warehouse</a></li>
+                    <li *ngIf="isBranch"><a routerLink="/masters/branch" routerLinkActive="active">Branch</a></li>
+                    <li *ngIf="isAccountSubType"><a routerLink="/masters/account_subtype" routerLinkActive="active">Account Sub Type</a></li>
+                </ul>
+            </li> 
+
+            <!-- <li class="submenu">
                 <h6 class="sub-head mb-2">Master</h6> 
                 <div class="sub-ul">
                         <div class="sub-ul">
@@ -64,12 +76,12 @@
                                               Company
                                 </a></div>     
                         </div>  
-                        <!-- <div class="sub-ul">
+                        <div class="sub-ul">
                                 <div><a class="sub-li" routerLink="/company/addcompany" routerLinkActive="active">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
                                         Add Company
                                 </a></div>     
-                        </div>  -->
+                        </div> 
 
                         <div><a class="sub-li" routerLink="/employee/employeelist" routerLinkActive="active">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-vcard" viewBox="0 0 16 16">
@@ -79,12 +91,12 @@
                                       Employee
                         </a></div>     
                 </div>  
-                <!-- <div class="sub-ul">
+                <div class="sub-ul">
                         <div><a class="sub-li" routerLink="/employee/addemployee" routerLinkActive="active">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
                                 Add Employee
                         </a></div>     
-                </div>   -->
+                </div>  
                
                 <div class="sub-ul">
                         <div><a class="sub-li" routerLink="/account/accountlist" routerLinkActive="active">
@@ -92,72 +104,103 @@
                                 Account
                         </a></div>     
                 </div>  
-                <!-- <div class="sub-ul">
+                <div class="sub-ul">
                         <div><a class="sub-li" routerLink="/account/addaccount" routerLinkActive="active">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
                                 Add Account
                         </a></div>     
-                </div>   -->
+                </div>  
                 <div class="sub-ul">
-                        <div><a class="sub-li" routerLink="/warehouse/warehouse" routerLinkActive="active">
+                 <div><a class="sub-li" routerLink="/warehouse/warehouse" routerLinkActive="active">
                                 <img src="assets/img/icons/purchase1.svg" alt="img">
                                 Warehouse
                         </a></div>     
                 </div>  
               
-            </li>
+            </li> -->
+          
+            <li class="submenu" *ngIf="isSupplier || isVendor || isEmployee ||isCustomer || isUser || isTransport || isDealer">
+                <a [ngClass]="{'active': activePath === 'contacts'}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
+                </svg><span> Contacts</span> <span class="menu-arrow"></span></a>
+                <ul>
+                    <li *ngIf="isSupplier"><a routerLink="/contacts/supplier" routerLinkActive="active">Supplier</a></li>
+                    <li *ngIf="isVendor"><a routerLink="/contacts/vendor" routerLinkActive="active">Vendor</a></li>
+                    <li *ngIf="isEmployee"><a routerLink="/contacts/employee" routerLinkActive="active">Employee</a></li>
+                    <!-- <li><a routerLink="/contacts/addPermissionGroup" routerLinkActive="active">Permission Group</a></li> -->
+                    <li *ngIf="isCustomer"><a routerLink="/contacts/customer" routerLinkActive="active">Customer</a></li>
+                    <li *ngIf="isUser"><a routerLink="/contacts/user" routerLinkActive="active">User</a></li>
+                    <li *ngIf="isTransport"><a routerLink="/contacts/transport" routerLinkActive="active">Transport</a></li>
+                    <li *ngIf="isDealer"><a routerLink="/contacts/dealerList" routerLinkActive="active">Dealer</a></li>
+                </ul>
+            </li> 
             <!-- <li class="submenu">
+                <h6 class="sub-head">Contacts</h6>
+                <div class="sub-ul">
+                        <div>
+                          <a class="sub-li" routerLink="/contacts/supplier" routerLinkActive="active">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-minus"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="15" x2="15" y2="15"></line></svg>Supplier
+                            </a>
+                        </div>
+                        <div>
+                            <a class="sub-li" routerLink="/contacts/vendor" routerLinkActive="active">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Vendor</a>
+                        </div>
+                        <div>
+                              <a class="sub-li" routerLink="/contacts/employee" routerLinkActive="active">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Employee</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/contacts/customer" routerLinkActive="active">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Customer</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/contacts/user" routerLinkActive="active">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>User</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/contacts/transport" routerLinkActive="active">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Transport</a>
+                        </div>
+                </div>
+              </li> -->
+
+           <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation">
                 <a  [ngClass]="{'active': activePath === 'product'}"><img src="assets/img/icons/product.svg" alt="img"><span> Product</span> <span
                         class="menu-arrow"></span></a>
                 <ul>
-                    <li><a routerLink="/product/productlist" routerLinkActive="active">Product
-                            </a></li>
-                    <li><a routerLink="/product/addproduct" routerLinkActive="active">Add
-                            Product</a></li>
-                    <li><a routerLink="/product/categorylist" routerLinkActive="active">Category
-                            </a></li>
-                   
-                    <li><a routerLink="/product/subcategorylist" routerLinkActive="active">Sub
-                            Category </a></li>
-                           
-                            <li><a routerLink="/product/subCategoryGroup" routerLinkActive="active">Sub Category Group</a></li>
-                
-                    <li><a routerLink="/product/brandlist" routerLinkActive="active">Brand
-                            </a></li>
-                
-                    <li><a routerLink="/product/colors" routerLinkActive="active">Colors</a></li>
-                    <li><a routerLink="/product/size" routerLinkActive="active">Sizes</a></li>
-                    <li><a routerLink="/product/tax" routerLinkActive="active">Tax</a></li>
-                    <li><a routerLink="/product/feature" routerLinkActive="active">Feature </a></li>
-                    <li><a routerLink="/product/feature_group" routerLinkActive="active">Feature Group</a></li>
-                    <li><a routerLink="product/hsncode" routerLinkActive="active">HSN Code</a></li>
-                    <li><a routerLink="product/units" routerLinkActive="active">Units</a></li>
-                    <li><a routerLink="product/unitconversion" routerLinkActive="active">Unit Conversion</a></li>
-                    <li><a routerLink="/product/variant" routerLinkActive="active">Variant </a></li>
-                  <li><a routerLink="/product/importproduct" routerLinkActive="active">Import
-                            Products</a></li>
-                    <li><a routerLink="/product/barcode" routerLinkActive="active">Print
-                            Barcode</a></li>
-                       
+                    <li *ngIf="isProduct"><a routerLink="/product/productlist" routerLinkActive="active">Product</a></li>
+                    <!-- <li><a routerLink="/product/addproduct" routerLinkActive="active">Add Product</a></li> -->
+                    <li *ngIf="isCategory"><a routerLink="/product/categorylist" routerLinkActive="active">Category</a></li> 
+                    <li *ngIf="isSubcategory"><a routerLink="/product/subcategorylist" routerLinkActive="active">Sub Category </a></li>
+                    <li *ngIf="isSubcategoryGroup"><a routerLink="/product/subCategoryGroup" routerLinkActive="active">Sub Category Group</a></li>
+                    <li *ngIf="isBrand"><a routerLink="/product/brandlist" routerLinkActive="active">Brand</a></li>
+                    <li *ngIf="isColors"><a routerLink="/product/colors" routerLinkActive="active">Colors</a></li>
+                    <li *ngIf="isSize"><a routerLink="/product/size" routerLinkActive="active">Sizes</a></li>
+                    <li *ngIf="isTax"><a routerLink="/product/tax" routerLinkActive="active">Tax</a></li>
+                    <li *ngIf="isTaxSlab"><a routerLink="/product/taxSlabList" routerLinkActive="active">Tax Slab List</a></li>
+                    <li *ngIf="isFeature"><a routerLink="/product/feature" routerLinkActive="active">Feature </a></li>
+                    <li *ngIf="isFeatureGroup"><a routerLink="/product/feature_group" routerLinkActive="active">Feature Group</a></li>
+                    <li *ngIf="isHsnCode"><a routerLink="product/hsncode" routerLinkActive="active">HSN Code</a></li>
+                    <li *ngIf="isUnit"><a routerLink="product/units" routerLinkActive="active">Units</a></li>
+                    <li *ngIf="isUnitConversation"><a routerLink="product/unitconversion" routerLinkActive="active">Unit Conversion</a></li>
+                    <!-- <li><a routerLink="/product/variant" routerLinkActive="active">Variant </a></li>
+                    <li><a routerLink="/product/importproduct" routerLinkActive="active">Import Products</a></li>
+                    <li><a routerLink="/product/barcode" routerLinkActive="active">Print Barcode</a></li>    -->
                 </ul>
-            </li> -->
-              <li class="submenu">
+            </li> 
+            
+            <!-- <li class="submenu">
                  <h6 class="sub-head mb-2"> Products</h6> 
-                
                   <div class="sub-ul">
                       <div><a class="sub-li" routerLink="/product/productlist" routerLinkActive="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box" viewBox="0 0 16 16">
                         <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
                       </svg> Product
                               </a></div>
-                      <!-- <div><a class="sub-li" routerLink="/product/addproduct" routerLinkActive="active">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                         Add Product</a></div> -->
                       <div><a class="sub-li" routerLink="/product/categorylist" routerLinkActive="active">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-codepen"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon><line x1="12" y1="22" x2="12" y2="15.5"></line><polyline points="22 8.5 12 15.5 2 8.5"></polyline><polyline points="2 15.5 12 8.5 22 15.5"></polyline><line x1="12" y1="2" x2="12" y2="8.5"></line></svg>
                         Category
                               </a></div>
-                      <!-- <li><a routerLink="/product/addcategory" routerLinkActive="active">Add
-                              Category</a></li> -->
                       <div><a class="sub-li" routerLink="/product/subcategorylist" routerLinkActive="active">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-speaker"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><circle cx="12" cy="14" r="4"></circle><line x1="12" y1="6" x2="12.01" y2="6"></line></svg>
                         Sub Category </a></div>
@@ -165,14 +208,10 @@
                               <div><a class="sub-li" routerLink="/product/subCategoryGroup" routerLinkActive="active">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-speaker"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><circle cx="12" cy="14" r="4"></circle><line x1="12" y1="6" x2="12.01" y2="6"></line></svg>
                                 Sub Category Group</a></div>
-                      <!-- <li><a routerLink="/product/subaddcategory" routerLinkActive="active">Add Sub
-                              Category</a></li> -->
                       <div><a class="sub-li" routerLink="/product/brandlist" routerLinkActive="active">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                         Brand
                               </a></div>
-                      <!-- <li><a routerLink="/product/addbrand" routerLinkActive="active">Add Brand</a>
-                      </li> -->
                       <div><a class="sub-li" routerLink="/product/colors" routerLinkActive="active">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-palette" viewBox="0 0 16 16">
                                 <path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
@@ -189,10 +228,7 @@
                         <path d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z"/>
                         <path d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"/>
                       </svg> Tax</a></div> 
-                      <!-- <div><a class="sub-li" routerLink="/product/taxSlab" routerLinkActive="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-receipt" viewBox="0 0 16 16">
-                        <path d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z"/>
-                        <path d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"/>
-                      </svg> Tax Slab</a></div> -->
+                     
                       <div><a class="sub-li" routerLink="/product/taxSlabList" routerLinkActive="active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-receipt" viewBox="0 0 16 16">
                         <path d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z"/>
                         <path d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"/>
@@ -216,59 +252,96 @@
                                 <path d="M15 11.2V3.733L8.61 0v2.867l2.503 1.466c.099.067.099.2 0 .234L8.148 6.3c-.099.067-.197.033-.263 0L4.92 4.567c-.099-.034-.099-.2 0-.234l2.504-1.466V0L1 3.733V11.2v-.033.033l2.438-1.433V6.833c0-.1.131-.166.197-.133L6.6 8.433c.099.067.132.134.132.234v3.466c0 .1-.132.167-.198.134L4.031 10.8l-2.438 1.433L7.983 16l6.391-3.733-2.438-1.434L9.434 12.3c-.099.067-.198 0-.198-.133V8.7c0-.1.066-.2.132-.233l2.965-1.734c.099-.066.197 0 .197.134V9.8L15 11.2Z"/>
                               </svg>
                               Unit Conversion</a></div>
-                      <div><a class="sub-li" routerLink="/product/variant" routerLinkActive="active">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                        Variant </a></div>
-                      <!-- <li><a routerLink="/product/subcategory-group" routerLinkActive="active">Subcategory Group </a></li> -->
-                      <div><a class="sub-li" routerLink="/product/importproduct" routerLinkActive="active">
+                  <div><a class="sub-li" routerLink="/product/importproduct" routerLinkActive="active">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minimize-2"><polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
                         Import Products</a></div>
                       <div><a class="sub-li" routerLink="/product/barcode" routerLinkActive="active">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-align-justify"><line x1="21" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="3" y2="18"></line></svg>
                         Print Barcode</a></div>
-                              <!-- <li><a routerLink="/product/country" routerLinkActive="active">Country</a></li>
-                              <li><a routerLink="/product/state" routerLinkActive="active">State</a></li>
-                              <li><a routerLink="/product/city" routerLinkActive="active">City</a></li> -->
-                              <!-- <li><a routerLink="/product/warehouse" routerLinkActive="active">
-                                Warehouse</a></li> -->
+                        
                   </div>
-              </li>
-              <li class="submenu">
+              </li> -->
+
+              <!-- <li class="submenu">
                 <h6 class="sub-head">Website</h6>
                 <div class="sub-ul">
                         <div>
+                                <a class="sub-li" routerLink="/website/banner" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Banner</a>
+                        </div>
+                        <div>
                                 <a class="sub-li" routerLink="/website/staticPage" routerLinkActive="active">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-minus"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="15" x2="15" y2="15"></line></svg>
-                                        Static pages
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-minus"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="15" x2="15" y2="15"></line></svg>Static pages
                                 </a>
                         </div>
                         <div>
                                 <a class="sub-li" routerLink="/website/footerFeature" routerLinkActive="active">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                                        Footer Features</a>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Footer Features</a>
                         </div>
                         <div>
-                                <a class="sub-li" routerLink="/website/banner" routerLinkActive="active">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                                        Banner</a>
+                                <a class="sub-li" routerLink="/website/footerList" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Footer</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/website/trendingProducts" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Trending Products</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/website/dealOfTheDay" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Deal Of The Day</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/website/addressStore" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>address Store</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/website/couponList" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Coupon</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/website/reason" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Reason</a>
+                        </div>
+                       
+                        <div>
+                                <a class="sub-li" routerLink="/website/aboutBanner" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>About Banner</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/website/aboutFooterBanner" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>About Footer Banner</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/website/newArrivalBanner" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>New Arrival Banner</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/website/ratingAndReview" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>Rating And Review</a>
                         </div>
                 </div>
-              </li>
-
-              <!-- <li class="submenu" >
-                <a  [ngClass]="{'active': activePath === 'website'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Website</span> <span
-                        class="menu-arrow"></span></a>
+              </li> -->
+             
+              <li class="submenu" *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview">
+                <a  [ngClass]="{'active': activePath === 'website'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Website</span> <span class="menu-arrow"></span></a>
                 <ul>
-                    <li><a routerLink="/website/staticPage" routerLinkActive="active">Static pages
-                            </a></li>
-                            <li><a routerLink="/website/addStaticPage" routerLinkActive="active">Add Static pages
-                        </a></li>  
+                    <li *ngIf="isBanner"><a routerLink="/website/banner" routerLinkActive="active">Banner</a></li>  
+                    <li *ngIf="isStaticPage"><a routerLink="/website/staticPage" routerLinkActive="active">Static pages</a></li>
+                    <li *ngIf="isFooterpage"><a routerLink="/website/footerFeature" routerLinkActive="active">Footer Feature</a></li>  
+                    <li *ngIf="isFooterList"><a routerLink="/website/footerList" routerLinkActive="active">Footer List</a></li>  
+                    <li *ngIf="isTrendingProducts"><a routerLink="/website/trendingProducts" routerLinkActive="active">Trending Products</a></li>  
+                    <li *ngIf="isDealoftheDay"><a routerLink="/website/dealOfTheDay" routerLinkActive="active">Deal of The Day</a></li>  
+                    <li *ngIf="isAddressStore"><a routerLink="/website/addressStore" routerLinkActive="active">Address Store</a></li>  
+                    <li *ngIf="isCouponList"><a routerLink="/website/couponList" routerLinkActive="active">Coupon List</a></li>  
+                    <li *ngIf="isReason"><a routerLink="/website/reason" routerLinkActive="active">Reason</a></li>  
+                    <li *ngIf="isAboutBanner"><a routerLink="/website/aboutBanner" routerLinkActive="active">About Banner</a></li>  
+                    <li *ngIf="isAboutFooterBanner"><a routerLink="/website/aboutFooterBanner" routerLinkActive="active">About Footer Banner</a></li>  
+                    <li *ngIf="isNewarrivalBanner"><a routerLink="/website/newArrivalBanner" routerLinkActive="active">New Arrival Banner</a></li>  
+                    <li *ngIf="isRatingReview"><a routerLink="/website/ratingAndReview" routerLinkActive="active">Rating And Review</a></li>  
                 </ul>
-            </li>               -->
-
-              <!-- <li class="submenu" >
-                  <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span
-                          class="menu-arrow"></span></a>
+            </li>  
+            <li class="submenu" >
+                  <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span class="menu-arrow"></span></a>
                   <ul>
                       <li><a routerLink="/sales/saleslist" routerLinkActive="active">Sales List</a>
                       </li>
@@ -276,13 +349,13 @@
                       <li><a routerLink="/pos" target="_blank" routerLinkActive="active">POS New</a></li>
                       <li><a routerLink="/sales/add-sales" routerLinkActive="active">New Sales</a>
                       </li>
-                      <li><a routerLink="/sales/salesreturnlists" routerLinkActive="active">Sales
-                              Return List</a></li>
-                      <li><a routerLink="/sales/createsalesreturns" routerLinkActive="active">New
-                              Sales Return</a></li>
+                      <li><a routerLink="/sales/salesreturnlists" routerLinkActive="active">Sales Return List</a></li>
+                      <li><a routerLink="/sales/createsalesreturns" routerLinkActive="active">New Sales Return</a></li>
                   </ul>
-              </li> -->
-<li class="submenu">
+              </li> 
+
+
+              <!-- <li class="submenu">
         <h6 class="sub-head mb-2">Sales</h6>
         <div class="sub-ul">
                 <div>
@@ -317,22 +390,23 @@
                 </div>
 
         </div>
-</li>
+</li> -->
               
-              <!-- <li class="submenu" >
+              <li class="submenu" *ngIf="isPurchase || isMaterialInward || isPurchaseBill || isDebitNotes">
                   <a  [ngClass]="{'active': activePath === 'purchase'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Purchase</span> <span
                           class="menu-arrow"></span></a>
                   <ul>
-                      <li><a routerLink="/purchase/purchaselist" routerLinkActive="active">Purchase
-                              List</a></li>
-                      <li><a routerLink="/purchase/addpurchase" routerLinkActive="active">Add
-                              Purchase</a></li>
-                      <li><a routerLink="/purchase/importpurchase" routerLinkActive="active">Import
-                              Purchase</a></li>
-                  </ul>
-              </li> -->
+                      <li *ngIf="isPurchase"><a routerLink="/purchase/purchaselist" routerLinkActive="active">Purchase List</a></li>
+                      <!-- <li><a routerLink="/purchase/addpurchase" routerLinkActive="active">Add Purchase</a></li> -->
+                      <!-- <li><a routerLink="/purchase/importpurchase" routerLinkActive="active">Import Purchase</a></li> -->
+                      <li *ngIf="isMaterialInward"><a routerLink="/purchase/material-Inward-list" routerLinkActive="active">Material Inward List</a></li>
+                      <li *ngIf="isPurchaseBill"><a routerLink="/purchase/purchase-bill-list" routerLinkActive="active">Purchase Bill List</a></li>
+                      <li *ngIf="isDebitNotes"><a routerLink="/purchase/debit-notes-list" routerLinkActive="active">Debit Notes List</a></li>
 
-              <li class="submenu">
+                  </ul>
+              </li>
+
+              <!-- <li class="submenu">
                 <h6 class="sub-head mb-2">Purchase</h6>
                 <div class="sub-ul">
                         <div>
@@ -341,9 +415,16 @@
                                         Purchase List</a>
                         </div>
                         <div>
-                                <a class="sub-li" routerLink="/purchase/addpurchase" routerLinkActive="active">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                                        Add Purchase</a>
+                                <a class="sub-li" routerLink="/purchase/material-Inward-list" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>  Material Inward List</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/purchase/purchase-bill-list" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> Purchase Bill List</a>
+                        </div>
+                        <div>
+                                <a class="sub-li" routerLink="/purchase/debit-notes-list" routerLinkActive="active">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> Debit Notes List</a>
                         </div>
                         <div>
                                 <a class="sub-li" routerLink="/purchase/importpurchase" routerLinkActive="active">
@@ -351,9 +432,9 @@
                                         Import Purchase</a>
                         </div>
                 </div>
-              </li>
+              </li> -->
 
-              <!-- <li class="submenu" >
+              <li class="submenu" >
                   <a  [ngClass]="{'active': activePath === 'expense'}"><img src="assets/img/icons/expense1.svg" alt="img"><span> Expense</span> <span
                           class="menu-arrow"></span></a>
                   <ul>
@@ -366,8 +447,8 @@
                       <li><a routerLink="/expense/expensecategory" routerLinkActive="active">
                         Expense Category</a></li>
                   </ul>
-              </li> -->
-
+              </li>
+<!-- 
               <li class="submenu">
                 <h6 class="sub-head">Expense</h6>
                 <div class="sub-ul">
@@ -388,7 +469,7 @@
                           Expense Category</a>
                         </div>
                 </div>
-              </li>
+              </li> -->
 
               <!-- <li class="submenu" >
                   <a  [ngClass]="{'active': activePath === 'quotation'}"><img src="assets/img/icons/quotation1.svg" alt="img"><span> Quotation</span> <span
@@ -401,7 +482,7 @@
                   </ul>
               </li> -->
 
-              <li class="submenu">
+              <!-- <li class="submenu">
                 <h6 class="sub-head">Quotation</h6>
                 <div class="sub-ul">
                         <div>
@@ -415,8 +496,8 @@
                                         Add Quotation</a>
                         </div>
                 </div>
-              </li>
-              <!-- <li class="submenu" >
+              </li> -->
+               <li class="submenu" >
                   <a [ngClass]="{'active': activePath === 'transfer'}"><img src="assets/img/icons/transfer1.svg" alt="img"><span> Transfer</span> <span
                           class="menu-arrow"></span></a>
                   <ul>
@@ -427,9 +508,9 @@
                       <li><a routerLink="/transfer/importtransfer" routerLinkActive="active">Import
                               Transfer</a></li>
                   </ul>
-              </li> -->
+              </li> 
 
-              <li class="submenu">
+              <!-- <li class="submenu">
                 <h6 class="sub-head">Transfer</h6>
                 <div class="sub-ul">
                         <div>
@@ -448,8 +529,9 @@
                                         Import Transfer</a>
                         </div>
                 </div>
-              </li>
-              <!-- <li class="submenu">
+              </li> -->
+             
+              <li class="submenu">
                   <a  [ngClass]="{'active': activePath === 'return'}"><img src="assets/img/icons/return1.svg" alt="img"><span> Return</span> <span
                           class="menu-arrow"></span></a>
                   <ul >
@@ -462,8 +544,8 @@
                       <li><a routerLink="/return/createpurchasereturn" routerLinkActive="active">Add
                               Purchase Return</a></li>
                   </ul>
-              </li> -->
-              <li class="submenu">
+              </li>
+              <!-- <li class="submenu">
                 <h6 class="sub-head">Return</h6>
                 <div class="sub-ul">
                         <div>
@@ -488,8 +570,8 @@
                         </div>
                      
                 </div>
-              </li>
-
+              </li> -->
+<!-- yeh api already bani hai supplier module me bas store ko chhod kar ke -->
               <!-- <li class="submenu" >
                   <a  [ngClass]="{'active': activePath === 'people'}"><img src="assets/img/icons/users1.svg" alt="img"><span> People</span> <span
                           class="menu-arrow"></span></a>
@@ -513,7 +595,7 @@
                   </ul>
               </li> -->
 
-
+<!-- 
 <li class="submenu">
         <h6 class="sub-head">People</h6>
         <div class="sub-ul">
@@ -560,26 +642,20 @@
                 
 
         </div>
-</li>
+</li> -->
 
-<!-- 
-              <li class="submenu">
-                  <a  [ngClass]="{'active': activePath === 'places'}"><img src="assets/img/icons/places.svg" alt="img"><span> Places</span> <span
-                          class="menu-arrow"></span></a>
+
+              <li class="submenu" *ngIf="isCountry || isState || isCity">
+                  <a  [ngClass]="{'active': activePath === 'places'}"><img src="assets/img/icons/places.svg" alt="img"><span> Places</span> <span class="menu-arrow"></span></a>
                   <ul >
-                      <li><a routerLink="/places/newcountry" routerLinkActive="active">New
-                              Country</a></li>
-                      <li><a routerLink="/places/countrieslist" routerLinkActive="active">Countries
-                              list </a></li>
-                      <li><a routerLink="/places/newstate" routerLinkActive="active">New State </a>
-                      </li>
-                      <li><a routerLink="/places/statelist" routerLinkActive="active">State list</a>
-                      </li>
-                      <li><a routerLink="/places/citylist" routerLinkActive="active">City list</a></li>
+                      <!-- <li><a routerLink="/places/newcountry" routerLinkActive="active">New Country</a></li> -->
+                      <li *ngIf="isCountry"><a routerLink="/places/countrieslist" routerLinkActive="active">Countries list </a></li>
+                      <!-- <li><a routerLink="/places/newstate" routerLinkActive="active">New State </a> </li> -->
+                      <li *ngIf="isState"><a routerLink="/places/statelist" routerLinkActive="active">State list</a></li>
+                      <li *ngIf="isCity"><a routerLink="/places/citylist" routerLinkActive="active">City list</a></li>
                   </ul>
-              </li> -->
-
-                 <li class="submenu">
+              </li>
+                 <!-- <li class="submenu">
                    <h6 class="sub-head">Places</h6>
                           <div class="sub-ul">
                         <div>
@@ -598,9 +674,7 @@
                                 City list</a>
                     </div>
                   </div>
-                </li>
-
-
+                </li> -->
               <li>
                   <a routerLink="/components" routerLinkActive="active"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg><span> Components</span> </a>
               </li>
@@ -608,7 +682,7 @@
                   <a routerLink="/blank-page" routerLinkActive="active"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg><span> Blank Page</span> </a>
               </li>
 
-              <!-- <li class="submenu">
+              <li class="submenu">
                   <a  [ngClass]="{'active': activePath === 'errorpages'}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-octagon"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                         <span> Error Pages </span> <span
@@ -619,9 +693,9 @@
                       <li><a routerLink="/errorpages/error500" routerLinkActive="active">500 Error
                           </a></li>
                   </ul>
-              </li> -->
+              </li>
 
-              <li class="submenu">
+              <!-- <li class="submenu">
                 <h6 class="sub-head">Error Pages </h6>
                 <div class="sub-ul">
                         <div>
@@ -635,14 +709,13 @@
                                         500 Error</a>
                         </div>
                 </div>
-              </li>
+              </li> -->
 
-              <!-- <li class="submenu">
+             <li class="submenu">
                   <a [ngClass]="{'active': activePath === 'element'}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg><span>Elements </span> <span class="menu-arrow"></span></a>
                   <ul >
-                      <li><a routerLink="/element/sweetalerts" routerLinkActive="active">Sweet
-                              Alerts</a></li>
+                      <li><a routerLink="/element/sweetalerts" routerLinkActive="active">Sweet Alerts</a></li>
                       <li><a routerLink="/element/tooltip" routerLinkActive="active">Tooltip</a>
                       </li>
                       <li><a routerLink="/element/popover" routerLinkActive="active">Popover</a>
@@ -650,34 +723,23 @@
                       <li><a routerLink="/element/ribbon" routerLinkActive="active">Ribbon</a></li>
                       <li><a routerLink="/element/clipboard" routerLinkActive="active">Clipboard</a>
                       </li>
-                      <li><a routerLink="/element/drag-drop" routerLinkActive="active">Drag &
-                              Drop</a></li>
-                      <li><a routerLink="/element/rangeslider" routerLinkActive="active">Range
-                              Slider</a></li>
+                      <li><a routerLink="/element/drag-drop" routerLinkActive="active">Drag & Drop</a></li>
+                      <li><a routerLink="/element/rangeslider" routerLinkActive="active">Range Slider</a></li>
                       <li><a routerLink="/element/rating" routerLinkActive="active">Rating</a></li>
                       <li><a routerLink="/element/toastr" routerLinkActive="active">Toastr</a></li>
-                      <li><a routerLink="/element/text-editor" routerLinkActive="active">Text
-                              Editor</a></li>
-                      <li><a routerLink="/element/counter" routerLinkActive="active">Counter</a>
-                      </li>
-                      <li><a routerLink="/element/scrollbar" routerLinkActive="active">Scrollbar</a>
-                      </li>
-                      <li><a routerLink="/element/spinner" routerLinkActive="active">Spinner</a>
-                      </li>
-                      <li><a routerLink="/element/notification"
-                              routerLinkActive="active">Notification</a></li>
-                      <li><a routerLink="/element/lightbox" routerLinkActive="active">Lightbox</a>
-                      </li>
-                      <li><a routerLink="/element/stickynote" routerLinkActive="active">Sticky
-                              Note</a></li>
-                      <li><a routerLink="/element/timeline" routerLinkActive="active">Timeline</a>
-                      </li>
-                      <li><a routerLink="/element/form-wizard" routerLinkActive="active">Form
-                              Wizard</a></li>
+                      <li><a routerLink="/element/text-editor" routerLinkActive="active">Text Editor</a></li>
+                      <li><a routerLink="/element/counter" routerLinkActive="active">Counter</a> </li>
+                      <li><a routerLink="/element/scrollbar" routerLinkActive="active">Scrollbar</a> </li>
+                      <li><a routerLink="/element/spinner" routerLinkActive="active">Spinner</a> </li>
+                      <li><a routerLink="/element/notification" routerLinkActive="active">Notification</a></li>
+                      <li><a routerLink="/element/lightbox" routerLinkActive="active">Lightbox</a></li>
+                      <li><a routerLink="/element/stickynote" routerLinkActive="active">Sticky Note</a></li>
+                      <li><a routerLink="/element/timeline" routerLinkActive="active">Timeline</a> </li>
+                      <li><a routerLink="/element/form-wizard" routerLinkActive="active">Form Wizard</a></li>
                   </ul>
-              </li> -->
+              </li> 
 
-              <li class="submenu">
+             <!-- <li class="submenu">
                 <h6 class="sub-head">UI Interface</h6>
                 <a  [ngClass]="{'active': activePath === 'elements'}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
@@ -965,8 +1027,9 @@
                                       Data Table</a>
                         </div>    
                  </ul>
-              </li>
-              <!-- <li class="submenu" >
+              </li>  -->
+           
+              <li class="submenu" >
                   <a  [ngClass]="{'active': activePath === 'charts'}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                          <span> Charts </span> <span class="menu-arrow"></span></a>
@@ -982,8 +1045,8 @@
                       <li><a routerLink="/charts/chart-peity" routerLinkActive="active">Peity
                               Charts</a></li>
                   </ul>
-              </li> -->
-              <!-- <li class="submenu">
+              </li> 
+          <li class="submenu">
                   <a  [ngClass]="{'active': activePath === 'icons'}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                         <span> Icons </span> <span class="menu-arrow"></span></a>
@@ -1009,8 +1072,8 @@
                       <li><a routerLink="/icons/icon-flag" routerLinkActive="active">Flag Icons</a>
                       </li>
                   </ul>
-              </li> -->
-              <!-- <li class="submenu">
+              </li> 
+              <li class="submenu">
                   <a  [ngClass]="{'active': activePath === 'forms'}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-columns"><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path></svg> 
                         <span> Forms </span> <span class="menu-arrow"></span></a>
@@ -1032,8 +1095,8 @@
                       <li><a routerLink="/forms/form-fileupload" routerLinkActive="active">File
                               Upload</a></li>
                   </ul>
-              </li> -->
-              <!-- <li class="submenu">
+              </li> 
+            <li class="submenu">
                   <a  [ngClass]="{'active': activePath === 'table'}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg><span> Table </span> <span class="menu-arrow"></span></a>
                   <ul>
                       <li><a routerLink="/table/tables-basic" routerLinkActive="active">Basic
@@ -1041,10 +1104,8 @@
                       <li><a routerLink="/table/data-tables" routerLinkActive="active">Data
                               Table</a></li>
                   </ul>
-              </li> -->
-
-
-              <!-- <li class="submenu" >
+              </li> 
+           <li class="submenu" >
                   <a  [ngClass]="{'active': activePath === 'application'}"><img src="assets/img/icons/product.svg" alt="img"><span> Application</span> <span
                           class="menu-arrow"></span></a>
                   <ul>
@@ -1054,9 +1115,9 @@
                       <li><a routerLink="/application/email" routerLinkActive="active">Email</a>
                       </li>
                   </ul>
-              </li> -->
+              </li> 
 
-              <li class="submenu">
+              <!-- <li class="submenu">
                 <h6 class="sub-head">Application</h6>
                 <div class="sub-ul">
                      <div>
@@ -1083,9 +1144,9 @@
                                       Email</a>
                      </div>
                 </div>
-              </li>
+              </li> -->
 
-              <!-- <li class="submenu">
+              <li class="submenu">
                   <a  [ngClass]="{'active': activePath === 'report'}"><img src="assets/img/icons/time.svg" alt="img"><span> Report</span> <span
                           class="menu-arrow"></span></a>
                   <ul >
@@ -1104,9 +1165,9 @@
                       <li><a routerLink="/report/customerreport" routerLinkActive="active">Customer
                               Report</a></li>
                   </ul>
-              </li> -->
+              </li>
 
-              <li class="submenu">
+              <!-- <li class="submenu">
                 <h6 class="sub-head">Report</h6>
                 <div class="sub-ul">
                  <div>
@@ -1147,9 +1208,9 @@
                                 Customer Report</a>
                        </div>
                 </div>
-              </li>
+              </li> -->
 
-              <!-- <li class="submenu">
+              <li class="submenu">
                   <a  [ngClass]="{'active': activePath === 'users'}"><img src="assets/img/icons/users1.svg" alt="img"><span> Users</span> <span
                           class="menu-arrow"></span></a>
                   <ul>
@@ -1157,9 +1218,9 @@
                       <li><a routerLink="/users/userlists" routerLinkActive="active">Users List</a>
                       </li>
                   </ul>
-              </li> -->
+              </li>
 
-              <li class="submenu">
+              <!-- <li class="submenu">
                 <h6 class="sub-head">User Management</h6>
                 <a  [ngClass]="{'active': activePath === 'users'}"><img src="assets/img/icons/users1.svg" alt="img"><span> Users</span> <span
                         class="menu-arrow"></span></a>
@@ -1179,26 +1240,24 @@
                                               Users List</a>
                         </div>
                 </ul>
-              </li>
-              <!-- <li class="submenu" >
+              </li> -->
+            
+              <li class="submenu">
                   <a [ngClass]="{'active': activePath === 'settings'}"><img src="assets/img/icons/settings.svg" alt="img"><span> Settings</span> <span
                           class="menu-arrow"></span></a>
                   <ul [ngClass]="{'block': sideBarControls[18].value === true}">
-                      <li><a routerLink="/settings/generalsettings"
-                              routerLinkActive="active">General Settings</a></li>
-                      <li><a routerLink="/settings/emailsettings" routerLinkActive="active">Email
-                              Settings</a></li>
-                      <li><a routerLink="/settings/paymentsettings"
-                              routerLinkActive="active">Payment Settings</a></li>
-                      <li><a routerLink="/settings/currencysettings"
-                              routerLinkActive="active">Currency Settings</a></li>
-                      <li><a routerLink="/settings/grouppermissions" routerLinkActive="active">Group
-                              Permissions</a></li>
-                      <li><a routerLink="/settings/taxrates" routerLinkActive="active">Tax Rates</a>
-                      </li>
+                        <li *ngIf="isFinancialYear"><a routerLink="/settings/finncialYear" routerLinkActive="active">Finncial Year</a></li>
+                        <li *ngIf="isPaymentTerms"><a routerLink="/settings/paymentTerms" routerLinkActive="active">Payment Terms</a></li>
+                        <li><a routerLink="/settings/permissionGroup" routerLinkActive="active">Permission Group</a></li>
+                        <li><a routerLink="/settings/generalsettings" routerLinkActive="active">General Settings</a></li>
+                      <li><a routerLink="/settings/emailsettings" routerLinkActive="active">Email Settings</a></li>
+                      <!-- <li><a routerLink="/settings/paymentsettings" routerLinkActive="active">Payment Settings</a></li> -->
+                      <li><a routerLink="/settings/currencysettings" routerLinkActive="active">Currency Settings</a></li>
+                      <!-- <li><a routerLink="/settings/grouppermissions" routerLinkActive="active">Group Permissions</a></li> -->
+                      <li><a routerLink="/settings/taxrates" routerLinkActive="active">Tax Rates</a></li>
                   </ul>
-              </li> -->      
-              <li class="submenu">
+              </li>      
+              <!-- <li class="submenu">
                 <h6 class="sub-head mb-2">Settings</h6>
                 <a [ngClass]="{'active': activePath === 'settings'}"><img src="assets/img/icons/settings.svg" alt="img"><span> Settings</span> <span
                         class="menu-arrow"></span></a>
@@ -1206,19 +1265,16 @@
                         <div class="dot">
                                 <a class="sub-li" routerLink="/settings/finncialYear"
                                 routerLinkActive="active">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill dot-svg" viewBox="0 0 16 16">
-                                        <circle cx="8" cy="8" r="8"/>
-                                      </svg>
-                                      Financial Year</a>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill dot-svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8"/></svg> Financial Year</a>
                         </div>
 
                         <div class="dot">
-                                <a class="sub-li" routerLink="/settings/generalsettings"
+                                <a class="sub-li" routerLink="/settings/paymentTerms"
                                 routerLinkActive="active">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill dot-svg" viewBox="0 0 16 16">
                                         <circle cx="8" cy="8" r="8"/>
                                       </svg>
-                                      General Settings</a>
+                                      Payment Terms</a>
                         </div>
                         <div class="dot">
                                 <a class="sub-li" routerLink="/settings/emailsettings" routerLinkActive="active">
@@ -1258,7 +1314,7 @@
                                               Tax Rates</a>
                         </div>
                 </ul>
-              </li>
+              </li> -->
           </ul>
       </div>
   </perfect-scrollbar>

@@ -43,21 +43,31 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.LoadScript('assets/js/header.js');
+    this.profile()
   }
 
 
   logOut() {
     console.log(localStorage.getItem('token'));
-
     if (localStorage.getItem('token')) {
       this.authServ.logout().subscribe(res => {
         console.log(res);
         this.toastr.success('LogOut Successfull');
+        localStorage.clear()
         this.Router.navigate(['/auth/signin'])
         this.authServ.doLogout()
+      }, (err: any) => {
+        console.log(err.error.detail);
+        if (err.error.detail) {
+          localStorage.removeItem('token');
+          localStorage.clear()
+          this.toastr.success('LogOut Successfull');
+          this.Router.navigate(['/auth/signin'])
+        }
       })
     } else {
       localStorage.removeItem('token');
+      localStorage.clear()
       this.toastr.success('LogOut Successfull');
       this.Router.navigate(['/auth/signin'])
     }
@@ -67,6 +77,12 @@ export class HeaderComponent implements OnInit {
   profile() {
     this.coreService.getProfile().subscribe(res => {
       this.userDetails = res;
+    },err=>{
+      console.log(err.error.detail=='Invalid token.');
+      if(err.error.detail=='Invalid token.'){
+        localStorage.clear();
+        window.location.reload();
+      }
     })
   }
   LoadScript(js: string) {

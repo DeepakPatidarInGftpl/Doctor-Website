@@ -1,172 +1,213 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Purchase Add</h4>
+        <h6>Add/Update Purchase</h6>
+    </div>
+</div>
 
-        <div class="page-header">
-            <div class="page-title">
-                <h4>Purchase Add</h4>
-                <h6>Add/Update Purchase</h6>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Supplier Name</label>
-                            <div class="row">
-                                <div class="col-lg-10 col-sm-10 col-10">
-                                    <select class="form-select">
-                                        <option>Select</option>
-                                        <option>Supplier</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-2 col-sm-2 col-2 ps-0">
-                                    <div class="add-icon">
-                                        <a href="javascript:void(0);"><img src="assets/img/icons/plus1.svg" alt="img"></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Purchase Date </label>
-                            <div class="input-groupicon">
-                                <ngx-datepicker [(ngModel)]="date"></ngx-datepicker>
-                                <div class="addonset">
-                                    <img src="assets/img/icons/calendars.svg" alt="img">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Product Name</label>
-                            <select class="form-select">
-                                <option>Choose</option>
-                                <option>Supplier Name</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Reference No.</label>
-                            <input type="text" >
-                        </div>
-                    </div>
-                    <div class="col-lg-12 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Product Name</label>
-                            <div class="input-groupicon">
-                                <input type="text" placeholder="Scan/Search Product by code and select...">
-                                <div class="addonset">
-                                    <img src="assets/img/icons/scanners.svg" alt="img">
-                                </div>
-                            </div>
-                        </div>
+<div class="card">
+    <div class="card-body">
+        <form [formGroup]="purchaseForm" (ngSubmit)="submit()">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="form-group">
+                        <label>Supplier Name*</label>
+                        <mat-form-field class="w-100" style="padding: 0;
+                        width: 100%;
+                        min-width: 100%;border-top: none;">
+                            <input type="text" placeholder="Search supplier" aria-label="Supplier" matInput
+                                [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
+                                [ngClass]="{'is-invalid': f['supplier'].touched && f['supplier'].invalid}">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.name"
+                                    (onSelectionChange)="oncheck(supplier.id)">{{ supplier.name }}</mat-option>
+                                <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
+                                    <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
+                                        <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
+                                    </mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                        </mat-form-field>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Product Name</th>
-                                    <th>QTY</th>
-                                    <th>Purchase Price($)	</th>
-                                    <th>Discount($)	</th>
-                                    <th>Tax %</th>
-                                    <th>Tax Amount($)</th>
-                                    <th class="text-end">Unit Cost($)</th>
-                                    <th class="text-end">Total Cost ($)	</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr  *ngFor="let purchase of tableData; let i=index">
-                                    <td class="productimgname">
-                                        <a class="product-img">
-                                            <img [src]="purchase.img" alt="product">
-                                        </a>
-                                        <a href="javascript:void(0);">{{purchase.ProductName}}</a>
-                                    </td>
-                                    <td>{{purchase.QTY}}</td>
-                                    <td>{{purchase.PurchasePrice}}</td>
-                                    <td>{{purchase.Discount}}</td>
-                                    <td>{{purchase.Tax}}</td>
-                                    <td>{{purchase.TaxAmount}}</td>
-                                    <td class="text-end">{{purchase.UnitCost}}</td>
-                                    <td class="text-end">{{purchase.TotalCost}}</td>
-                                    <td>
-                                        <a (click)="delete(i)" class="delete-set"><img src="assets/img/icons/delete.svg" alt="svg"></a>
-                                    </td>
-                                </tr>
 
-                            </tbody>
-                        </table>
+                <div class="col-lg-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Purchase Date</label>
+                        <input type="date" formControlName="order_date">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-12 float-md-right">
-                        <div class="total-order">
-                            <ul>
-                                <li>
-                                    <h4>Order Tax</h4>
-                                    <h5>$ 0.00 (0.00%)</h5>
-                                </li>
-                                <li>
-                                    <h4>Discount	</h4>
-                                    <h5>$ 0.00</h5>
-                                </li>
-                                <li>
-                                    <h4>Shipping</h4>
-                                    <h5>$ 0.00</h5>
-                                </li>
-                                <li class="total">
-                                    <h4>Grand Total</h4>
-                                    <h5>$ 0.00</h5>
-                                </li>
-                            </ul>
-                        </div>
+
+                <div class="col-lg-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Purchase No. </label>
+                        <input type="text" formControlName="order_no">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Order Tax</label>
-                            <input type="text" >
-                        </div>
+
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Shipping Date </label>
+                        <input type="date" formControlName="shipping_date">
                     </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Discount</label>
-                            <input type="text" >
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Shipping</label>
-                            <input type="text" >
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select class="form-select">
-                                <option>Choose Status</option>
-                                <option>Completed</option>
-                                <option>Inprogress</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea class="form-control"></textarea>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <a href="javascript:void(0);" class="btn btn-submit me-2">Submit</a>
-                        <a routerLink="//purchase/purchaselist" class="btn btn-cancel">Cancel</a>
+                </div>
+
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Shipping Note </label>
+                        <input type="text" formControlName="shipping_note">
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Barcode/SKU</th>
+                                <th>Product Name</th>
+                                <th>QTY</th>
+                                <th>Purchase Price</th>
+                                <th>Mrp</th>
+                                <th>Discount</th>
+                                <th>Tax %</th>
+                                <th>Landing Cost</th>
+                                <th class="text-end">Total Cost</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container formArrayName="purchase_cart">
+                                <ng-container *ngFor="let d of getCart().controls; let i=index">
+                                    <tr [formGroupName]="i">
+                                        <td>
+                                            <div>
+                                                <div class="me-2">
+                                                    <svg (click)="removeCart(i)" style="color:red"
+                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                        <path
+                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                    </svg>
+                                                </div>
+                                                <svg *ngIf="isLastCart(i)" (click)="addCart()" style="color:green"
+                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                    <path
+                                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                </svg>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input class="input" type="text" placeholder="Search Barcode"
+                                                [attr.data-index]="i"
+                                                [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
+                                                (keyup)="searchProduct(id.value,i)" (blur)="hideSearch()">
+                                        </td>
+                                        <td>
+                                            <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
+                                                (click)="open()" placeholder="Search Product" *ngIf="isProduct"
+                                                class="input">
+
+                                            <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
+                                                <input type="text" placeholder="Search Product" aria-label="Produt"
+                                                    matInput [formControl]="variantControl" [matAutocomplete]="auto"
+                                                    style="height: 18px;">
+                                                <mat-autocomplete #auto="matAutocomplete">
+                                                    <mat-option *ngFor="let variant of filteredVariants | async"
+                                                        [value]="variant?.product_title"
+                                                        (onSelectionChange)="oncheckVariant(variant,i)"
+                                                        (onSelectionChange)="variantChanged(variant, i)">{{
+                                                        variant?.product_title}}</mat-option>
+                                                    <ng-container *ngIf="(filteredVariants | async) as variants">
+                                                        <mat-option *ngIf="variants?.length === 0"
+                                                            [value]="'No data found'">
+                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+
+                                                                add Product</a>
+                                                        </mat-option>
+                                                    </ng-container>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </td>
+                                        <td><input type="text" formControlName="qty" class="input"></td>
+                                        <td><input type="text" formControlName="purchase_rate" class="input"></td>
+                                        <td><input type="text" formControlName="mrp" class="input"></td>
+                                        <td><input type="text" formControlName="discount" class="input"></td>
+                                        <td><input type="text" formControlName="tax" class="input"></td>
+                                        <td class="text-end"><input type="text" formControlName="landing_cost"
+                                                class="input"></td>
+                                        <td class="text-end"><input type="text" formControlName="total" class="input"
+                                                [value]="calculateTotalEveryIndex(i).toString()"
+                                                [ngModel]="calculateTotalEveryIndex(i).toString()"></td>
+                                    </tr>
+                                </ng-container>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-12 my-3">
+                <div class="form-group">
+                    <label>Note</label>
+                    <textarea class="form-control" formControlName="note"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 float-md-right">
+                    <div class="total-order">
+                        <ul>
+                            <li>
+                                <h4>Total Qty</h4>
+                                <h5>{{ calculateTotalQty()}}</h5>
+                            </li>
+                            <li>
+                                <h4>Total Mrp</h4>
+                                <h5>{{calculateTotalMrp() | currency:'INR'}}</h5>
+                            </li>
+                            <li>
+                                <h4>Sub Total</h4>
+                                <h5>{{calculateSubtotal() | currency:'INR'}}</h5>
+                            </li>
+                            <li>
+                                <h4>Total Tax</h4>
+                                <h5>{{'₹'+calculateTotalTax() + '%'}}</h5>
+
+                            </li>
+                            <li>
+                                <h4>Total Discount </h4>
+                                <h5>{{'₹'+calculateTotalDiscount() + '%'}}</h5>
+                            </li>
+                            <li>
+                                <h4>Landing Cost</h4>
+                                <h5>{{calculateTotalLandingCost() | currency:'INR'}}</h5>
+                            </li>
+                            <li>
+                                <h4>Total Purchase </h4>
+                                <h5>{{calculateTotalPurchase() | currency:'INR'}}</h5>
+                            </li>
+
+                            <li class="total">
+                                <h4>Total</h4>
+                                <h5>{{ calculateTotal() }}</h5>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit()">Submit</button>
+
+                <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Submit</button>
+                <a routerLink="//purchase/purchaselist" class="btn btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

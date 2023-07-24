@@ -24,7 +24,7 @@ export class SubcategorylistComponent implements OnInit {
   titlee: any;
   p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
   }
@@ -48,79 +48,90 @@ export class SubcategorylistComponent implements OnInit {
         this.coreService.deleteProductSubcategory(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Product Subcategory Deleted successfully") {
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
+          }
+        })
+
+        // this.tableData.splice(index, 1);
+      }
+    });
+  }
+
+  select = false
+  // active deactive
+  deActivate(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this subcategory!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.subCategoryIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Product Subcategory Is active Updated Successfully") {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
+          title: 'Deactivate!',
+          text: 'Subcategory Is Deactivate Successfully.',
         });
-        this.tableData.splice(index, 1);
       }
     });
   }
-
-  select=false
-  // active deactive
-  deActivate(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Deactivate this subcategory!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Deactivate it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.subCategoryIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.msg == "Product Subcategory Is active Updated Successfully") {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Deactivate!',
-         text: 'Subcategory Is Deactivate Successfully.',
-       });
-     }
-   });
- }
- Active(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Active this subcategory!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Active it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.subCategoryIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.msg == "Product Subcategory Is active Updated Successfully") {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Active!',
-         text: 'Subcategory Is Active Successfully.',
-       });
-     }
-   });
- }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this subcategory!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.subCategoryIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Product Subcategory Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: 'Subcategory Is Active Successfully.',
+        });
+      }
+    });
+  }
+  loaders = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -138,9 +149,9 @@ export class SubcategorylistComponent implements OnInit {
     // };
     this.subcategoryForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      image: new FormControl('', [Validators.required]),
+      image: new FormControl('',),
       category_id: new FormControl('', [Validators.required]),
-      discount: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)])
+      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
       // brand_id: new FormArray([],)
     })
 
@@ -153,16 +164,33 @@ export class SubcategorylistComponent implements OnInit {
     // })
     this.coreService.getproductSubcategory().subscribe(res => {
       this.tableData = res;
+      this.loaders = false
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
     this.productCategory();
     this.getbrand()
 
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='add_productsubcategory') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='change_productsubcategory') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='delete_productsubcategory') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
   // selected table roww
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
@@ -245,10 +273,17 @@ export class SubcategorylistComponent implements OnInit {
       });
     }
   }
+  url:any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
-
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
     this.subcategoryForm.patchValue({
       image: file
     })
@@ -262,10 +297,10 @@ export class SubcategorylistComponent implements OnInit {
   //   control?.patchValue(file);
   //   control?.updateValueAndValidity();
   // }
-  
+
   addRes: any
   data: any
-  
+
   // submit() {
   //   console.log(this.subcategoryForm.value);
   //   console.log(this.id);
@@ -323,14 +358,14 @@ export class SubcategorylistComponent implements OnInit {
     formdata.append('title', this.subcategoryForm.get('title')?.value);
     formdata.append('image', this.subcategoryForm.get('image')?.value);
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
-    formdata.append('discount',this.subcategoryForm.get('discount')?.value);
+    formdata.append('discount', this.subcategoryForm.get('discount')?.value);
 
 
     if (this.subcategoryForm.valid) {
-
+      this.loader = true;
       this.coreService.addProductSubcategory(formdata).subscribe(res => {
         console.log(res);
-        this.loader = true;
+        this.loader = false;
         this.addRes = res
         if (this.addRes.msg == "Successfuly Added") {
           this.toastr.success(this.addRes.msg)
@@ -348,33 +383,71 @@ export class SubcategorylistComponent implements OnInit {
       console.log('forms invalid');
     }
   }
-
+  imgError = false;
   update() {
     console.log(this.subcategoryForm.value);
 
     var formdata: any = new FormData()
 
     formdata.append('title', this.subcategoryForm.get('title')?.value);
-    formdata.append('image', this.subcategoryForm.get('image')?.value);
+    // formdata.append('image', this.subcategoryForm.get('image')?.value);
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
-    formdata.append('discount',this.subcategoryForm.get('discount')?.value);
+    formdata.append('discount', this.subcategoryForm.get('discount')?.value);
 
     if (this.subcategoryForm.valid) {
-      this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        this.loader = true
-        if (this.addRes.msg == "Product Subcategory updated successfully") {
-          this.toastr.success(this.addRes.msg)
-          this.subcategoryForm.reset()
-          this.addForm = true
-          this.loader = false
-          // window.location.reload()
-          this.ngOnInit()
-        }
-      }, err => {
-        console.log(err.error.gst);
-      })
+      this.loader = true;
+      const imageFile = this.subcategoryForm.get('image')?.value;
+      if (imageFile && imageFile instanceof File) {
+        formdata.append('image', imageFile);
+        this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          this.loader = false;
+          if (this.addRes.msg == "Product Subcategory updated successfully") {
+            this.toastr.success(this.addRes.msg);
+            this.updateData='';
+            this.subcategoryForm.reset();
+            this.addForm = true
+            this.loader = false
+            // window.location.reload()
+            this.ngOnInit()
+          }
+        }, err => {
+          console.log(err.error.gst);
+          if (err.error.image) {
+            this.imgError = true
+            // setTimeout(() => {
+            //   this.imgError=false;
+            // }, 3000);
+          }
+        })
+      }else{
+        this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          this.loader = false;
+          if (this.addRes.msg == "Product Subcategory updated successfully") {
+            this.toastr.success(this.addRes.msg);
+            this.subcategoryForm.reset();
+            this.updateData=''
+            this.addForm = true
+            this.loader = false
+            // window.location.reload()
+            this.ngOnInit()
+          }
+        }, err => {
+          console.log(err.error.gst);
+          if (err.error.image) {
+            this.imgError = true
+            // setTimeout(() => {
+            //   this.imgError=false;
+            // }, 3000);
+          }
+        })
+      }
+
+      
+    
 
     } else {
       this.subcategoryForm.markAllAsTouched()
@@ -400,7 +473,8 @@ export class SubcategorylistComponent implements OnInit {
   addForm = true
   id: any
   brandEdit: any;
-  brands: any = []
+  brands: any = [];
+  updateData: any;
   editForm(id: number) {
     this.id = id
     this.coreService.getProductSubcategoryById(id).subscribe(res => {
@@ -410,16 +484,17 @@ export class SubcategorylistComponent implements OnInit {
         this.addForm = false;
         // this.getbrand()
         // this.brandEdit = res.brand_id;
-        
-        console.log(res);
+        this.updateData = res;
+        console.log(res.category_id.title);
+        console.log(res?.discount);
         // this.brands = res.brand_id.map((res: any) => res.id);
         // console.log(this.brands, 'this.brands');
 
         this.subcategoryForm.patchValue({
           title: res.title,
-          image:res.image,
-          category_id: res.category_id,
-         discount:res.discount
+          category_id: res.category_id.id,
+          discount: res?.discount,
+          // image: res.image,
         });
       }
     })

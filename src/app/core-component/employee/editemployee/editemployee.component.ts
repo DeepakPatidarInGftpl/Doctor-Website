@@ -101,7 +101,7 @@ export class EditemployeeComponent implements OnInit {
         if (this.addRes.msg == "Employee updated successfully") {
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
-          this.router.navigate(['//employee/employeelist'])
+          this.router.navigate(['//masters/employeelist'])
           // .then(() => {
           //   window.location.reload()
           // })

@@ -44,8 +44,11 @@
                                                 (change)="onCheckChange($event)" formArrayName="subcategory"
                                                 style="margin-right: 5px;" [ngClass]="{
                                                 'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
-                                              }">
-                                            {{subcategory.title}}
+                                              }" [id]="'checkboxSize-' + i">
+                                        
+                                            <label [for]="'checkboxSize-' + i"
+                                            (click)="onLabelClick($event)"
+                                            style="margin-bottom: 0;">{{subcategory.title}}</label>
                                         </a></li>
                                 </ul>
                             </div>
@@ -110,8 +113,12 @@
                             <span (click)="addAmount()" class="addMore">+ Add more</span>
                         </div>
                     </div> 
+                 
                     <div class="col-lg-8 text-end mt-5">
-                        <button class="btn btn-submit me-2">Submit</button>
+                        <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Submit</button>
                     </div>
                 </div>
             </div>

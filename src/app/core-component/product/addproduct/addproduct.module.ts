@@ -10,7 +10,7 @@ import {MatIconModule} from '@angular/material/icon';
 
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 @NgModule({
   declarations: [
     AddproductComponent
@@ -24,7 +24,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatTabsModule,
     MatIconModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    NgMultiSelectDropDownModule
   ]
 })
 export class AddproductModule { }

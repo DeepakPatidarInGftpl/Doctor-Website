@@ -51,15 +51,22 @@ export class UnitComponent implements OnInit {
         this.coreService.deleteUnits(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Unit Deleted successfully") {
-           this.ngOnInit()
+           this.ngOnInit();
+           Swal.fire({
+            icon: 'success',
+            title: 'Deleted!',
+            text: 'Your file has been deleted.',
+          });
+          this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
       }
     });
   }
@@ -123,6 +130,10 @@ export class UnitComponent implements OnInit {
      }
    });
  }
+ loader=true;
+ isAdd:any;
+ isEdit:any;
+ isDelete:any;
   ngOnInit(): void {
     this.unitsForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -155,9 +166,25 @@ export class UnitComponent implements OnInit {
     
     this.coreService.getUnit().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename=='add_unit') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename=='change_unit') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename=='delete_unit') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 //select table row
 allSelected: boolean = false;
@@ -229,16 +256,18 @@ selectAlll() {
     this.unitsForm.reset();
   }
 
-
+loaders=false;
  submit() {
     console.log(this.unitsForm.value);
     console.log(this.id);
 
     if (this.unitsForm.valid) {
+      this.loaders=true;
       this.coreService.addUnits(this.unitsForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()
           // window.location.reload()
@@ -255,10 +284,12 @@ selectAlll() {
 
   update(){
     if (this.unitsForm.valid) {
+      this.loaders=true;
       this.coreService.updateUnits(this.unitsForm.value, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Unit updated successfully") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()
         //  window.location.reload()

@@ -12,8 +12,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./unit-conversion.component.scss']
 })
 export class UnitConversionComponent implements OnInit {
-
-
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any
@@ -51,14 +49,21 @@ export class UnitConversionComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Unit Conversion Deleted successfully") {
             this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
       }
     });
   }
@@ -122,6 +127,10 @@ export class UnitConversionComponent implements OnInit {
      }
    });
  }
+ loader=true;
+ isAdd:any;
+ isEdit:any;
+ isDelete:any;
   ngOnInit(): void {
     this.unitConversionForm = this.fb.group({
       alternate_unit: new FormControl('', [Validators.required]),
@@ -148,11 +157,28 @@ export class UnitConversionComponent implements OnInit {
     // })
 
     this.coreService.getunitconversion().subscribe(res=>{
+      this.loader=false;
       this.tableData=res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     console.log(this.tableData);
     this.getUnits();
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename=='add_unitconversion') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename=='change_unitconversion') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename=='delete_unitconversion') {
+          this.isDelete = res.codename;
+          console.log(this.isEdit);
+        }
+      });
+    }
   }
 //select table row
 allSelected: boolean = false;
@@ -231,16 +257,18 @@ selectAlll() {
     this.unitConversionForm.reset();
   }
 
-
+loaders=false;
   submit() {
     console.log(this.unitConversionForm.value);
     console.log(this.id);
 
     if (this.unitConversionForm.valid) {
+      this.loaders=true;
       this.coreService.addUnitConversion(this.unitConversionForm.value).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.unitConversionForm.reset()
           this.ngOnInit()
@@ -256,10 +284,12 @@ selectAlll() {
 
   update() {
     if (this.unitConversionForm.valid) {
+      this.loaders=true;
       this.coreService.updateUnitConversion(this.unitConversionForm.value, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Unit Conversion updated successfully") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.unitConversionForm.reset()
           this.addForm = true

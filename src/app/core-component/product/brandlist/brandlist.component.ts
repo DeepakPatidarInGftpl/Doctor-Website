@@ -23,7 +23,7 @@ export class BrandlistComponent implements OnInit {
   }
 
   imgUrl = 'https://pv.greatfuturetechno.com';
-  
+
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
   }
@@ -47,88 +47,99 @@ export class BrandlistComponent implements OnInit {
         this.coreService.deletebrand(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Brands Deleted successfully") {
-            this.tableData
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.ngOnInit()
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
+          }
+        })
+
+        // this.tableData.splice(index, 1);
+      }
+    });
+  }
+  select = false
+  // active deactive
+  deActivate(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this brand!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.brandIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Brands Is active Updated Successfully") {
+            this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
+          title: 'Deactivate!',
+          text: 'Brand Is Deactivate Successfully.',
         });
-        this.tableData.splice(index, 1);
       }
     });
   }
-  select=false
-  // active deactive
-  deActivate(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Deactivate this brand!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Deactivate it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.brandIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.msg == "Brands Is active Updated Successfully") {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Deactivate!',
-         text: 'Brand Is Deactivate Successfully.',
-       });
-     }
-   });
- }
- Active(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Active this brand!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Active it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.brandIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.msg == "Brands Is active Updated Successfully") {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Active!',
-         text: 'Brand Is Active Successfully.',
-       });
-     }
-   });
- }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this brand!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.brandIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "Brands Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: 'Brand Is Active Successfully.',
+        });
+      }
+    });
+  }
   titlee: any;
-p:number=1
-pageSize: number = 10;
-itemsPerPage:number=10;
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage: number = 10;
+  loader = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.brandForm = new FormGroup({
       title: new FormControl('', [Validators.required]),
       code: new FormControl(''),
-      image: new FormControl('', Validators.required),
-      discount: new FormControl('',Validators.pattern(/^[0-9]*$/)),
+      image: new FormControl(''),
+      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       subcategory_group: new FormArray<any>([], [Validators.required]),
       subcategory: new FormArray([], [Validators.required]),
     })
@@ -147,27 +158,44 @@ itemsPerPage:number=10;
 
     // };
     // this.coreService.getbrand();
-    
+
 
     // this.coreService.brandBehavior.subscribe(() => {
     //   if (localStorage.getItem('brandsList')) {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("brandsList")!))
     //   }
     // })
-    this.coreService.getBrand().subscribe(res=>{
-      this.tableData=res;
+    this.coreService.getBrand().subscribe(res => {
+      this.tableData = res;
+      this.loader = false
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getSubcatGroup();
-  
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='add_brands') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='change_brands') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='delete_brands') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
-    //select table row
- allSelected: boolean = false;
- selectedRows:boolean[]
- selectAlll() {
-   this.selectedRows.fill(this.allSelected);
- }
+  //select table row
+  allSelected: boolean = false;
+  selectedRows: boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
+  }
 
   selectAll(initChecked: boolean) {
     if (!initChecked) {
@@ -189,11 +217,17 @@ itemsPerPage:number=10;
 
     })
   }
-
+  url: any;
   onSelect(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
-
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
     this.brandForm.patchValue({
       image: file
     });
@@ -206,35 +240,35 @@ itemsPerPage:number=10;
   getSubcatGroup() {
     this.coreService.getSubcategoryGroup().subscribe(res => {
       this.subcatGroupList = res;
-      if(!this.addForm){
-      setTimeout(() => {
-        this.subcatGroupList.map((map: any) => {
-          console.log(this.subcatGroup.includes(map.id), 'subcategory_group');
-          if (this.subcatGroup.includes(map.id)) {
-            console.log(map.id);
-            
-            const formArray = this.brandForm.get('subcategory_group') as FormArray;
-            formArray.push(new FormControl(map.id));
-          }
-        })
-      }, 1000);
-    }
+      if (!this.addForm) {
+        setTimeout(() => {
+          this.subcatGroupList.map((map: any) => {
+            console.log(this.subcatGroup.includes(map.id), 'subcategory_group');
+            if (this.subcatGroup.includes(map.id)) {
+              console.log(map.id);
+
+              const formArray = this.brandForm.get('subcategory_group') as FormArray;
+              formArray.push(new FormControl(map.id));
+            }
+          })
+        }, 1000);
+      }
     })
   }
- 
-  subcategories:any=[];
- 
+
+  subcategories: any = [];
+
   subcatbySubcatGroup: any;
-  getSubcategoryBySubcatGroup(val:any) {
+  getSubcategoryBySubcatGroup(val: any) {
     this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
-      console.log(res.subcategories); 
+      console.log(res.subcategories);
       this.subcatbySubcatGroup = res.subcategories;
 
       setTimeout(() => {
         this.subcatbySubcatGroup.map((map: any) => {
           console.log(this.selectSubcat.includes(map.id), 'subcategory');
           if (this.selectSubcat.includes(map.id)) {
-     
+
             const formArray = this.brandForm.get('subcategory') as FormArray;
             formArray.push(new FormControl(map.id));
           }
@@ -309,8 +343,8 @@ itemsPerPage:number=10;
   //   console.log(this.id);
 
   //   var formData: any = new FormData();
-    
-  
+
+
   //   formData.append("title",this.brandForm.get('title')?.value);
   //   formData.append("image",this.brandForm.get('image')?.value);
   //   formData.append("code",this.brandForm.get('code')?.value);
@@ -348,74 +382,109 @@ itemsPerPage:number=10;
   //     console.log('forms invalid');
   //   }
   // }
-
+  loaders = false;
   submit() {
     console.log(this.brandForm.value);
     console.log(this.id);
     var formData: any = new FormData();
 
-    formData.append("title",this.brandForm.get('title')?.value);
-    formData.append("image",this.brandForm.get('image')?.value);
-    formData.append("code",this.brandForm.get('code')?.value);
-    formData.append("discount",this.brandForm.get('discount')?.value);
+    formData.append("title", this.brandForm.get('title')?.value);
+    formData.append("image", this.brandForm.get('image')?.value);
+    formData.append("code", this.brandForm.get('code')?.value);
+    formData.append("discount", this.brandForm.get('discount')?.value);
     formData.append('subcategory_group', JSON.stringify(this.brandForm.get('subcategory_group')?.value));
     formData.append('subcategory', JSON.stringify(this.brandForm.get('subcategory')?.value));
 
     if (this.brandForm.valid) {
-    
+      this.loaders = true;
       this.coreService.addbrand(formData).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.updateData='';
+          this.url='';
+          this.loaders = false
           this.toastr.success(this.addRes.msg)
           this.brandForm.reset()
           // window.location.reload()
           this.ngOnInit()
-          this.selectedSubcat=0;
-          this.selectedSubCatGrp=0;
+          this.selectedSubcat = 0;
+          this.selectedSubCatGrp = 0;
         }
       }, err => {
         console.log(err.error.gst);
       })
-      
+
     } else {
       this.brandForm.markAllAsTouched()
       console.log('forms invalid');
     }
   }
 
-  show=true;
-  hid=false;
-  hide(){
-this.show=!this.show;
+  show = true;
+  hid = false;
+  hide() {
+    this.show = !this.show;
 
   }
-  update(){
+  update() {
     var formData: any = new FormData();
-    formData.append("title",this.brandForm.get('title')?.value);
-    formData.append("image",this.brandForm.get('image')?.value);
-    formData.append("code",this.brandForm.get('code')?.value);
-    formData.append("discount",this.brandForm.get('discount')?.value);
+    formData.append("title", this.brandForm.get('title')?.value);
+    // formData.append("image", this.brandForm.get('image')?.value);
+    formData.append("code", this.brandForm.get('code')?.value);
+    formData.append("discount", this.brandForm.get('discount')?.value);
     formData.append('subcategory_group', JSON.stringify(this.brandForm.get('subcategory_group')?.value));
     formData.append('subcategory', JSON.stringify(this.brandForm.get('subcategory')?.value));
 
     if (this.brandForm.valid) {
-      this.coreService.updatebrand(formData, this.id).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        if (this.addRes.msg == "Brands updated successfully") {
-          this.toastr.success(this.addRes.msg)
-          this.brandForm.reset()
-          this.addForm=true
-          // window.location.reload()
-          this.ngOnInit()
-          this.selectedSubcat=0;
-          this.selectedSubCatGrp=0;
-        }
-      }, err => {
-        console.log(err.error.gst);
-      })
-     
+      this.loaders = true;
+
+      const imageFile = this.brandForm.get('image')?.value;
+      if (imageFile && imageFile instanceof File) {
+        formData.append('image', imageFile);
+        this.coreService.updatebrand(formData, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "Brands updated successfully") {
+            this.loaders = false;
+            this.updateData='';
+            this.url='';
+            this.toastr.success(this.addRes.msg)
+            this.brandForm.reset()
+            this.addForm = true
+            // window.location.reload()
+            this.ngOnInit()
+            this.selectedSubcat = 0;
+            this.selectedSubCatGrp = 0;
+          }else{
+            this.loader=false;
+          }
+        }, err => {
+          console.log(err.error.gst);
+        })
+      }else{
+        this.coreService.updatebrand(formData, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res
+          if (this.addRes.msg == "Brands updated successfully") {
+            this.loaders = false;
+            this.updateData='';
+            this.url='';
+            this.toastr.success(this.addRes.msg)
+            this.brandForm.reset()
+            this.addForm = true
+            // window.location.reload()
+            this.ngOnInit()
+            this.selectedSubcat = 0;
+            this.selectedSubCatGrp = 0;
+          }else{
+            this.loader=false;
+          }
+        }, err => {
+          console.log(err.error.gst);
+        })
+      }
+
     } else {
       this.brandForm.markAllAsTouched()
       console.log('forms invalid');
@@ -431,54 +500,58 @@ this.show=!this.show;
   get code() {
     return this.brandForm.get('code')
   }
-  get subcategory_group(){
+  get subcategory_group() {
     return this.brandForm.get('subcategory_group')
   }
-  get subcategory(){
+  get subcategory() {
     return this.brandForm.get('subcategory');
   }
-  get discount(){
+  get discount() {
     return this.brandForm.get('discount')
   }
   addForm = true
   id: any;
-  subcatGroup:any=[];
-  selectSubcat:any=[];
-subcatId:any;
+  subcatGroup: any = [];
+  selectSubcat: any = [];
+  subcatId: any;
+  updateData:any;
   editForm(id: number) {
-    this.id = id
+    this.id = id;
+    this.url='';
     this.coreService.getbrandById(id).subscribe(res => {
       console.log(res);
       res.map((data: any) => {
         if (id == data.id) {
           console.log(data);
-          this.subcatId=data.subcategory_group[0].id
+          this.updateData=data;
+          this.subcatId = data.subcategory_group[0].id
           console.log(this.subcatId);
-          
-            this.subcatGroup = data.subcategory_group.map((res: any) => res.id);
-            this.selectSubcat = data.subcategory.map((res:any)=>res.id);
+
+          this.subcatGroup = data.subcategory_group.map((res: any) => res.id);
+          this.selectSubcat = data.subcategory.map((res: any) => res.id);
 
           // this.brandForm.patchValue(data);
           this.addForm = false
           this.brandForm.patchValue({
             title: data.title,
             code: data.code,
-           discount:data.discount
+            discount: data.discount
           })
           this.getSubcategoryBySubcatGroup(this.subcatId)
         }
       })
-     
+
     })
     this.getSubcatGroup();
-   
+
   }
   openaddForm() {
+    this.updateData='';
     this.addForm = true;
     this.brandForm.reset();
   }
 
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
@@ -496,5 +569,11 @@ subcatId:any;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
+  }
+
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
   }
 }

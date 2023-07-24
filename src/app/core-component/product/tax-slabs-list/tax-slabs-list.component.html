@@ -3,7 +3,7 @@
         <h4>Tax Slab list</h4>
         <h6>View/Search Tax Slab list</h6>
     </div>
-    <div class="page-btn">
+    <div class="page-btn" *ngIf="isAdd">
         <a routerLink="//product/taxSlab" class="btn btn-added">
             <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Tax Slab
         </a>
@@ -105,18 +105,21 @@
                             <a class="me-2" routerLink="//product/taxSlabDetail/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-2" routerLink="//product/taxSlabUpdate/{{products.id}}">
+                            <a class="me-2" routerLink="//product/taxSlabUpdate/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-2 confirm-text"
-                                href="javascript:void(0);">
+                                href="javascript:void(0);" *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <div class="row">
+            <div class="progressbar">
+                <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+            </div>
+            <div class="row" *ngIf="!loader">
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
                         <select [(ngModel)]="itemsPerPage" class="pagination">

@@ -51,14 +51,23 @@ export class FeatureComponent implements OnInit {
           if (this.delRes.msg == "Feature Deleted successfully") {
             this.tableData
             this.ngOnInit();
+            this.tableData.splice(index, 1);
+      
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+      
+        // this.tableData.splice(index, 1);
       }
     });
   }
@@ -123,6 +132,10 @@ export class FeatureComponent implements OnInit {
      }
    });
  }
+ loader=true;
+ isAdd:any;
+ isEdit:any;
+ isDelete:any;
   ngOnInit(): void {
     this.featureForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -153,9 +166,26 @@ export class FeatureComponent implements OnInit {
     // })
     this.coreService.getfeature().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getFeatureGroup();
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename=='add_productfeatures') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename=='change_productfeatures') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename=='delete_productfeatures') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
 
   //select table row
@@ -227,16 +257,18 @@ export class FeatureComponent implements OnInit {
   //   }
   // }
 
-  
+  loaders=false
  submit() {
   console.log(this.featureForm.value);
   console.log(this.id);
 
   if (this.featureForm.valid) {
+    this.loaders=true;
     this.coreService.addFeature(this.featureForm.value).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Feature Successfuly Added") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.featureForm.reset()
         // window.location.reload();
@@ -253,10 +285,12 @@ export class FeatureComponent implements OnInit {
 
 update(){
   if (this.featureForm.valid) {
+    this.loaders=true;
     this.coreService.updateFeature(this.featureForm.value, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Feature updated successfully") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.featureForm.reset()
         this.addForm=true;

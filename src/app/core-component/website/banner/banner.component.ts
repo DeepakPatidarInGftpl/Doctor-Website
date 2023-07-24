@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { WebsiteService } from 'src/app/Services/website/website.service';
 import Swal from 'sweetalert2';
-
 @Component({
   selector: 'app-banner',
   templateUrl: './banner.component.html',
@@ -26,7 +24,7 @@ export class BannerComponent implements OnInit {
   pageSize: number = 5;
 
   itemsPerPage = 5;
-  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService,) {
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,) {
 
   }
 
@@ -46,7 +44,7 @@ export class BannerComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.deleteBanner(id).subscribe(res => {
+        this.websiteService.deleteBanner(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Banner Deleted successfully") {
             this.tableData
@@ -79,7 +77,7 @@ export class BannerComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.bannerIsActive(id, '').subscribe(res => {
+        this.websiteService.bannerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Banner Is active Updated Successfully") {
             this.ngOnInit()
@@ -108,7 +106,7 @@ export class BannerComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.bannerIsActive(id, '').subscribe(res => {
+        this.websiteService.bannerIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Banner active Updated Successfully") {
             this.ngOnInit()
@@ -122,9 +120,13 @@ export class BannerComponent implements OnInit {
       }
     });
   }
+  loader = true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.bannerForm = this.fb.group({
-      image: new FormControl('', [Validators.required]),
+      image: new FormControl('',),
       title: new FormControl('', [Validators.required]),
       url: new FormControl('', [Validators.required]),
     })
@@ -142,18 +144,34 @@ export class BannerComponent implements OnInit {
     //   },
 
     // };
-    // this.coreService.gettax();
+    // this.websiteService.gettax();
     // // this.tableData = this.QueryService.taxList;
     // // console.log(this.tableData);
-    // this.coreService.taxBehavior.subscribe(() => {
+    // this.websiteService.taxBehavior.subscribe(() => {
     //   if (localStorage.getItem('taxList')) {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("taxList")!))
     //   }
     // })
-    this.coreService.getBanner().subscribe(res => {
+    this.websiteService.getBanner().subscribe(res => {
+      this.loader = false;
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'website'  && res.content_type.model === 'banner' && res.codename=='add_banner') {
+          this.isAdd = res.codename;
+        } else if (res.content_type.app_label === 'website' && res.content_type.model === 'banner' && res.codename=='change_banner') {
+          this.isEdit = res.codename;
+        }else if (res.content_type.app_label === 'website' && res.content_type.model === 'banner' && res.codename=='delete_banner') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
   allSelected: boolean = false;
   selectedRows: boolean[]
@@ -173,7 +191,7 @@ export class BannerComponent implements OnInit {
     }
   }
   deleteId(id: number) {
-    this.coreService.deleteBanner(id).subscribe(res => {
+    this.websiteService.deleteBanner(id).subscribe(res => {
       this.delRes = res
       if (this.delRes.msg == "Banner Deleted successfully") {
         window.location.reload()
@@ -181,10 +199,17 @@ export class BannerComponent implements OnInit {
 
     })
   }
-
+  imgurl: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.imgurl = reader.result as string;
+      };
+    }
     this.bannerForm.patchValue({
       image: file
     })
@@ -192,24 +217,23 @@ export class BannerComponent implements OnInit {
   }
 
   addRes: any
-
+  loaders = false;
   submit() {
     console.log(this.bannerForm.value);
-
-
     if (this.bannerForm.valid) {
       console.log('valid');
-
+      this.loaders = true;
       var formdata: any = new FormData()
       formdata.append('title', this.bannerForm.get('title')?.value);
       formdata.append('url', this.bannerForm.get('url')?.value);
       formdata.append('image', this.bannerForm.get('image')?.value);
 
 
-      this.coreService.addBanner(formdata).subscribe(res => {
+      this.websiteService.addBanner(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
+          this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.bannerForm.reset()
           // window.location.reload();
@@ -227,33 +251,58 @@ export class BannerComponent implements OnInit {
 
   update() {
     console.log(this.id);
-    
+  
     if (this.bannerForm.valid) {
-      var formdata: any = new FormData()
+      this.loaders = true;
+      const formdata: FormData = new FormData();
       formdata.append('title', this.bannerForm.get('title')?.value);
       formdata.append('url', this.bannerForm.get('url')?.value);
-      formdata.append('image', this.bannerForm.get('image')?.value);
+  
+      const imageFile = this.bannerForm.get('image')?.value;
 
-      this.coreService.updateBanner(formdata, this.id).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        if (this.addRes.msg == "Banner Updated Sucessfully") {
-          this.toastr.success(this.addRes.msg)
-          this.bannerForm.reset()
-          this.addForm = false
-          // window.location.reload()
-          this.ngOnInit()
-        }
-      }, err => {
-        console.log(err.error.gst);
-      })
-
+      if (imageFile && imageFile instanceof File) {
+        formdata.append('image', imageFile);
+        this.websiteService.updateBanner(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res;
+          if (this.addRes.msg == "Banner Updated Sucessfully") {   
+            this.loaders = false;
+            this.updateData='';
+            this.toastr.success(this.addRes.msg);
+            this.bannerForm.reset();
+            this.addForm = true;
+            this.ngOnInit();
+          }else{
+            this.loader=false;
+          }
+        }, err => {
+          console.log(err.error.gst);
+        });
+      } else {
+      //  formdata.append('image', ''); // Append an empty string for image if not selected
+        this.websiteService.updateBanner(formdata, this.id).subscribe(res => {
+          console.log(res);
+          this.addRes = res;
+          if (this.addRes.msg == "Banner Updated Sucessfully") {
+            this.loaders = false;
+            this.updateData='';
+            this.toastr.success(this.addRes.msg);
+            this.bannerForm.reset();
+            this.addForm = true;
+            this.ngOnInit();
+          }else{
+            this.loader=false;
+          }
+        }, err => {
+          console.log(err.error.gst);
+        });
+      }
     } else {
-      this.bannerForm.markAllAsTouched()
+      this.bannerForm.markAllAsTouched();
       console.log('forms invalid');
     }
   }
-
+  
   get image() {
     return this.bannerForm.get('image')
   }
@@ -267,21 +316,23 @@ export class BannerComponent implements OnInit {
   addForm = true
   id: any
   editFormdata: any;
-  resEdit:any
+  resEdit: any;
+  updateData: any;
   editForm(id: number) {
+    this.imgurl=''
     this.id = id
-    this.coreService.getBannerbById(id).subscribe(res => {
+    this.websiteService.getBannerbById(id).subscribe(res => {
       console.log(res);
-      this.resEdit=res;
+      this.resEdit = res;
       this.resEdit.map((data: any) => {
         console.log(data);
         if (id == data.id) {
           console.log(data);
-          
+          this.updateData = data;
           this.addForm = false
           this.bannerForm.patchValue({
-            title:data.title,
-            url:data.url
+            title: data.title,
+            url: data.url
           });
           this.editFormdata = res
         }
@@ -291,6 +342,8 @@ export class BannerComponent implements OnInit {
   openaddForm() {
     this.addForm = true;
     this.bannerForm.reset();
+    this.imgurl='';
+    this.updateData='';
   }
 
   search() {

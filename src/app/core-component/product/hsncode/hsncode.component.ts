@@ -52,15 +52,22 @@ export class HsncodeComponent implements OnInit {
         this.coreService.deleteHSNcode(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "HSNCode Deleted successfully") {
-            this.ngOnInit()
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+            this.tableData.splice(index, 1);
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+       
       }
     });
   }
@@ -124,6 +131,10 @@ export class HsncodeComponent implements OnInit {
       }
     });
   }
+  loader=true;
+  isAdd:any;
+  isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.hsncodeForm = this.fb.group({
       // title: new FormControl('', [Validators.required]),
@@ -155,12 +166,29 @@ export class HsncodeComponent implements OnInit {
     //   }
     // })
     this.coreService.getHSNCode().subscribe(res => {
+      this.loader=false;
       this.tableData = res
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getSubcategory();
     this.getTax();
 
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'hsncode' && res.codename=='add_hsncode') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'hsncode' && res.codename=='change_hsncode') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'hsncode' && res.codename=='delete_hsncode') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
   //select table row
   allSelected: boolean = false;
@@ -283,8 +311,7 @@ export class HsncodeComponent implements OnInit {
   //   }
   // }
 
-
-
+loaders=false;
   submit() {
     console.log(this.hsncodeForm.value);
     var formdata: any = new FormData()
@@ -294,10 +321,12 @@ export class HsncodeComponent implements OnInit {
 
 
     if (this.hsncodeForm.valid) {
+      this.loaders=true;
       this.coreService.addHSNcode(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "HSNCode Successfuly Added") {
+          this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.hsncodeForm.reset()
           this.addForm = true
@@ -321,10 +350,12 @@ export class HsncodeComponent implements OnInit {
     formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
 
     if (this.hsncodeForm.valid) {
+      this.loaders=true;
       this.coreService.updateHSNcode(formdata, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "HSNCode updated successfully") {
+          this.loaders=false
           this.toastr.success(this.addRes.msg)
           this.hsncodeForm.reset()
           this.addForm = true;
@@ -402,5 +433,10 @@ export class HsncodeComponent implements OnInit {
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
+  }
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
   }
 }

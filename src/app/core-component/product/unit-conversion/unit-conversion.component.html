@@ -7,7 +7,7 @@
                 <h6>View/Search Unit Conversion</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
                     <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add State
                 </a>
             </div>
@@ -69,12 +69,11 @@
                                 <th (click)="sort('id')" class="thone">Units <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Quantity <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
-
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -96,11 +95,11 @@
                                 </td>
                                 <td>
 
-                                    <a class="me-3" (click)="editForm(products.id)">
+                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                        href="javascript:void(0);">
+                                        href="javascript:void(0);" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -129,6 +128,9 @@
                             </td>
                         </tr> -->
                     </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                    </div>
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
@@ -156,17 +158,22 @@
 
 
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
+                <div *ngIf="isAdd">
                 <h4> Add Unit Conversion </h4>
                 <h6>Create new Unit Conversion</h6>
+                </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
+                <div *ngIf="isEdit">
                 <h4> Update Unit Conversion </h4>
+                </div>
             </div>
         </div>
         <div class="card">
+            <div *ngIf="isAdd">
             <div class="card-body" *ngIf="addForm">
                 <form [formGroup]="unitConversionForm" (ngSubmit)="submit()">
                     <div class="row">
@@ -216,16 +223,18 @@
 
                             </div>
                         </div>
-
-
                         <div class="col-lg-12">
-                            <button class="btn btn-submit me-2">Submit</button>
-                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Submit</button>
                         </div>
 
                     </div>
                 </form>
             </div>
+            </div>
+            <div *ngIf="isEdit">
             <div class="card-body" *ngIf="!addForm">
                 <form [formGroup]="unitConversionForm" (ngSubmit)="update()">
                     <div class="row">
@@ -275,11 +284,14 @@
                             </div>
                         </div>
                         <div class="col-lg-12">
-                            <button class="btn btn-submit me-2">Submit</button>
-                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Submit</button>
                         </div>
                     </div>
                 </form>
+            </div>
             </div>
         </div>
     </div>

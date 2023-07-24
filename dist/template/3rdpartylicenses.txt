@@ -29,10 +29,16 @@ THE SOFTWARE.
 @angular/common
 MIT
 
+@angular/compiler
+MIT
+
 @angular/core
 MIT
 
 @angular/forms
+MIT
+
+@angular/localize
 MIT
 
 @angular/material
@@ -261,6 +267,9 @@ terms above.
 
 
 ng-apexcharts
+MIT
+
+ng-multiselect-dropdown
 MIT
 
 ng2-charts

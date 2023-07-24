@@ -108,7 +108,7 @@ export class CoreService {
   }
 
   countryList() {
-    let url = this.apiUrl + '/country';
+    let url = this.apiUrl + '/country/';
     return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
@@ -141,6 +141,11 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/account_type/';
     return this.http.get(url)
   }
+  getAccountTypeById(type: any){
+    let url = this.apiUrl + '/pv-api/subtype_based_on_account_type/?type='
+    return this.http.get(`${url}${type}`)
+  }
+
   getAccount() {
     let url = this.apiUrl + '/pv-api/account/';
     return this.http.get(url, {
@@ -1091,7 +1096,7 @@ export class CoreService {
       })
     })
   }
-  getProductById(id: number): Observable<any> {
+  getProductById(id: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/product/?id='
     return this.http.get<any>(`${url}${id}`, {
       headers: new HttpHeaders({
@@ -1302,8 +1307,7 @@ export class CoreService {
       })
     })
   }
-
-
+  
   editSubCategoryGroup(data, id) {
     let url = this.apiUrl + '/pv-api/subcategory_group/?id='
     return this.http.put(`${url}${id}`, data, {
@@ -1358,31 +1362,7 @@ export class CoreService {
       })
     })
   }
-  // /pv-api/footer_features/
-  getFooterFeature() {
-    let url = this.apiUrl + '/pv-api/footer_features/';
-    return this.http.get(url)
-  }
-  getFooterFeatureById(id) {
-    let url = this.apiUrl + '/pv-api/footer_features/?id=';
-    return this.http.get(`${url}${id}`)
-  }
-  footerIsActive(id: any, data) {
-    let url = this.apiUrl + '/pv-api/footer_features/?id=';
-    return this.http.patch(`${url}${id}`, data);
-  }
-  addFooterFeature(data) {
-    let url = this.apiUrl + '/pv-api/footer_features/';
-    return this.http.post(url, data);
-  }
-  updateFooterFeature(data: any, id: any): Observable<any> {
-    let url = this.apiUrl + '/pv-api/footer_features/?id=';
-    return this.http.put<any>(`${url}${id}`, data)
-  }
-  deleteFooterFeature(id: number) {
-    let url = this.apiUrl + '/pv-api/footer_features/?id=';
-    return this.http.delete(`${url}${id}`)
-  }
+  
   // fnancial year
   getFinancialYear() {
     let url = this.apiUrl + '/pv-api/financial_year/';
@@ -1453,32 +1433,7 @@ export class CoreService {
     return this.http.delete(`${url}${id}`)
   }
 
-  // banner
-  getBanner() {
-    let url = this.apiUrl + '/pv-api/banner/';
-    return this.http.get(url)
-  }
-  getBannerbById(id: any) {
-    let url = this.apiUrl + '/pv-api/banner/?id=';
-    return this.http.get(`${url}${id}`)
-  }
-  addBanner(data: any) {
-    let url = this.apiUrl + '/pv-api/banner/';
-    return this.http.post(url, data)
-  }
-  updateBanner(data: any, id: number) {
-    let url = this.apiUrl + '/pv-api/banner/?id=';
-    return this.http.put(`${url}${id}`, data)
-  }
-
-  deleteBanner(id: any) {
-    let url = this.apiUrl + '/pv-api/banner/?id=';
-    return this.http.delete(`${url}${id}`)
-  }
-  bannerIsActive(id: any, data) {
-    let url = this.apiUrl + '/pv-api/banner/?id=';
-    return this.http.patch(`${url}${id}`, data);
-  }
+ 
 
   
   //category wise subcategory
@@ -1533,5 +1488,113 @@ export class CoreService {
   getFeaturegroupBySubcategoryGroup(id:number){
     let url = this.apiUrl+'/pv-api/subcategory_group_wise_feature_group/?subcategory_group_id=';
     return this.http.get(`${url}${id}`);
+  }
+
+
+  // batch Variant Product 
+
+  getBatch() {
+    let url = this.apiUrl + '/pv-api/batch/';
+    return this.http.get(url)
+  }
+  getBatchById(id: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/batch/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  BatchIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/batch/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addBatch(data: any,id:any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/batch/?variant_id=';
+    return this.http.post<any>(`${url}${id}`, data)
+  }
+  updateBatch(data: any, id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/batch/?id=';
+    return this.http.put<any>(`${url}${id}`, data)
+  }
+  deleteBatch(id: number) {
+    let url = this.apiUrl + '/pv-api/batch/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
+   // /pv-api/group/
+
+   getPermissionGroup() {
+    let url = this.apiUrl + '/pv-api/group/';
+    return this.http.get(url)
+  }
+  getPermissionGroupById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/group/?group_id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  addPermissionGroup(data: any) {
+    let url = this.apiUrl + '/pv-api/group/';
+    return this.http.post(url, data)
+  }
+  updatePermissionGroup(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/group/?group_id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deletePermissionGroup(id: number) {
+    let url = this.apiUrl + '/pv-api/group/?group_id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
+  // branch
+  getBranch() {
+    let url = this.apiUrl + '/pv-api/branch/';
+    return this.http.get(url)
+  }
+  getBranchById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/branch/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  BranchIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/branch/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addBranch(data:any) {
+    let url = this.apiUrl + '/pv-api/branch/';
+    return this.http.post(url, data)
+  }
+  updateBranch(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/branch/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  deleteBranch(id: number) {
+    let url = this.apiUrl + '/pv-api/branch/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
+   // dealer
+   getAccountSubType() {
+    let url = this.apiUrl + '/pv-api/account_subtypes/';
+    return this.http.get(url)
+  }
+  getAccountSubTypeById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/account_subtypes/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  AccountSubTypeIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/account_subtypes/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addAccountSubType(data:any) {
+    let url = this.apiUrl + '/pv-api/account_subtypes/';
+    return this.http.post(url, data)
+  }
+  updateAccountSubType(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/account_subtypes/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  deleteAccountSubType(id: number) {
+    let url = this.apiUrl + '/pv-api/account_subtypes/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
+  getAddress(){
+    let url = this.apiUrl+'/pv-api/address/';
+    return this.http.get(url);
   }
 }

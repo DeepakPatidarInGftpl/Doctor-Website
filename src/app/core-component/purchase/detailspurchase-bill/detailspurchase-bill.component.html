@@ -1,0 +1,136 @@
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                            style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                            Back to Material Inward </h6>
+                    <h4>New Material Inward</h4>
+                </div>
+                <div class="page-btn">
+                    <a routerLink="//purchase/editmaterial-Inward/{{purchaseBillDetail ?.id}}" class="btn btn-added">
+                        <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Material Inward
+                    </a>
+                </div>
+            </div>
+            <div class="company-details-card card" *ngIf="purchaseBillDetail">
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="Purchase Details">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="th">Supplier Name</td>
+                                            <td class="td">{{purchaseBillDetail?.supplier?.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Supplier Bill Date</td>
+                                            <td class="td">{{purchaseBillDetail?.supplier_bill_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Supplier Bill No</td>
+                                            <td class="td">{{purchaseBillDetail?.supplier_bill_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Refrence Bill No</td>
+                                            <td class="td">{{purchaseBillDetail?.refrence_bill_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Material Inward No</td>
+                                            <td class="td">{{purchaseBillDetail?.material_inward_no?.material_inward_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Payment Term</td>
+                                            <td class="td">{{purchaseBillDetail?.payment_term}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Due Date</td>
+                                            <td class="td">{{purchaseBillDetail?.due_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Reverse Charge</td>
+                                            <td class="td">{{purchaseBillDetail?.reverse_charge}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Shipping Date</td>
+                                            <td class="td">{{purchaseBillDetail?.shipping_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Export</td>
+                                            <td class="td">{{purchaseBillDetail?.export}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Selling Price Online</td>
+                                            <td class="td">{{purchaseBillDetail?.selling_price_online}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Selling Price Offline</td>
+                                            <td class="td">{{purchaseBillDetail?.selling_price_offline}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Dealer Price</td>
+                                            <td class="td">{{purchaseBillDetail?.dealer_price}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Employee Price</td>
+                                            <td class="td">{{purchaseBillDetail?.employee_price}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Notes</td>
+                                            <td class="td">{{purchaseBillDetail?.note}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Status</td>
+                                            <td class="td"><span
+                                                    [ngClass]="{'bg-lightgreen': purchaseBillDetail?.status === 'Received', 'bg-lightred' : purchaseBillDetail?.status === 'Pending','bg-lightyellow' : purchaseBillDetail?.status === 'Ordered'}"
+                                                    class="badges">{{purchaseBillDetail?.status}}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Purchase Cart">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <td class="th">Barcode</td>
+                                            <td class="th">Qty</td>
+                                            <td class="th">MRP</td>
+                                            <td class="th">Landing Cost</td>
+                                            <td class="th">Unit Cost</td>
+                                            <td class="th">Discount</td>
+                                            <td class="th">Tax</td>
+                                            <td class="th">Total</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let cart of purchaseBillDetail?.cart">
+                                            <td class="td">{{cart?.barcode?.sku}}</td>
+                                            <td class="td">{{cart?.qty}}</td>
+                                            <td class="td">{{cart?.mrp}}</td>
+                                            <td class="td">{{cart?.landing_cost}}</td>
+                                            <td class="td">{{cart?.unit_cost}}</td>
+                                            <td class="td">{{cart?.discount}}</td>
+                                            <td class="td">{{cart?.tax}}</td>
+                                            <td class="td">{{cart?.total}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+                <div class="d-flex align-items-center my-3 mx-3">
+                    <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                    <span
+                        [ngClass]="{'bg-lightgreen': purchaseBillDetail?.is_active === true, 'bg-lightred' : purchaseBillDetail?.is_active === false,'bg-lightyellow' : purchaseBillDetail?.is_active === 'Partial' }"
+                        class="badges">{{purchaseBillDetail?.is_active}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

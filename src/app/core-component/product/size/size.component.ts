@@ -28,7 +28,6 @@ export class SizeComponent implements OnInit {
   itemsPerPage = 5;
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
     this.QueryService.filterToggle();
-   
   }
 
   delRes: any
@@ -52,14 +51,21 @@ export class SizeComponent implements OnInit {
           if (this.delRes.msg == "Size Deleted successfully") {
             this.tableData
             this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+            });
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-        });
-        this.tableData.splice(index, 1);
+      
+        // this.tableData.splice(index, 1);
       }
     });
   }
@@ -123,10 +129,14 @@ export class SizeComponent implements OnInit {
      }
    });
  }
+ loader=true
+ isAdd:any;
+ isEdit:any;
+ isDelete:any;
   ngOnInit(): void {
     this.sizeForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      code: new FormControl('', [Validators.required]),   
+      code: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),   
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -154,8 +164,25 @@ export class SizeComponent implements OnInit {
     
     this.coreService.getSize().subscribe(res=>{
       this.tableData=res;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData && localStorageData.permission) {
+      const permission = localStorageData.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename=='add_size') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename=='change_size') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename=='delete_size') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
+      });
+    }
   }
  //select table row
  allSelected: boolean = false;
@@ -186,16 +213,18 @@ export class SizeComponent implements OnInit {
   }
 
   addRes: any
-  
+  loaders=false;
  submit() {
   console.log(this.sizeForm.value);
   console.log(this.id);
 
   if (this.sizeForm.valid) {
+    this.loaders=true;
     this.coreService.addsize(this.sizeForm.value).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.sizeForm.reset()
         // window.location.reload();
@@ -212,10 +241,12 @@ export class SizeComponent implements OnInit {
 
 update(){
   if (this.sizeForm.valid) {
+    this.loaders=true;
     this.coreService.updatesize(this.sizeForm.value, this.id).subscribe(res => {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Size updated successfully") {
+        this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.sizeForm.reset()
         this.addForm=true

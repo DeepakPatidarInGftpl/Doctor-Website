@@ -1,0 +1,247 @@
+<div class="row">
+    <div class="col-lg-7 col-sm-7 col-12">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Deal Of The Day list</h4>
+                <h6>Manage your Deal Of The Day</h6>
+            </div>
+            <div class="page-btn" *ngIf="!addForm">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Deal Of The Day
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-input">
+                            <a class="btn btn-searchset">
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                            <div class="dataTables_filter"><label>
+                                    <input type="search" class="form-control form-control-sm" placeholder="Search..."
+                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                                        src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                                        src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                                        src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table datatable [dtOptions]="dtOptions" class="table  datanew">
+                        <thead>
+                            <tr>
+                                <th (click)="sort('id')" class="thone">
+                                    <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                    <i class="fa fa-sort"></i>
+                                </th>
+                                <th (click)="sort('id')" class="thone">Discount <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Variant<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Expire Date<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox" [(ngModel)]="selectedRows[i]">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    {{products?.discount}}
+                                </td>
+                                <td>
+                                    <ng-container *ngFor="let variant of products?.variant; let last = last">
+                                        {{ variant?.product_title }}{{ last ? '' : ', ' }}
+                                    </ng-container>
+                                </td>
+                                <td>
+                                    {{products?.datetime | date:'dd-MM-yyyy'}}
+                                </td>
+                                <td>
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td>
+                                <td>
+                                    <a class="me-1" routerLink="//website/details-dealoftheDay/{{products.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
+                                        <img src="assets/img/icons/edit.svg" alt="img">
+                                    </a>
+                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text"
+                                        href="javascript:void(0);" *ngIf="isDelete">
+                                        <img src="assets/img/icons/delete.svg" alt="img">
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                    </div>
+                    <div class="row" *ngIf="!loader">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                                <select [(ngModel)]="itemsPerPage" class="pagination">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="-1">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}}
+                                    entries</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
+        <div class="page-header">
+            <div class="page-title" *ngIf="addForm">
+                <div *ngIf="isAdd">
+                <h4> Deal of The Day </h4>
+                <h6>Create new Deal of The Day </h6>
+                </div>
+            </div>
+            <div class="page-title" *ngIf="!addForm">
+                <div *ngIf="isEdit">
+                <h4> Update Deal of The Day </h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div *ngIf="isAdd">
+            <div class="card-body" *ngIf="addForm">
+                
+                <form [formGroup]="dealOfTheDayForm" (ngSubmit)="submit()">
+                    <div class="row">
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Select Variants*</label>
+                                <ng-multiselect-dropdown [placeholder]="'Select Variants'" formArrayName="variant"
+                                    [settings]="dropdownSettings" [data]="variantList" [(ngModel)]="selectedItems"
+                                    (onSelect)="onItemSelect($event)" (onDeSelect)="onItemDeselect($event)"
+                                    (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeselectAll($event)">
+                                </ng-multiselect-dropdown>
+                                <span class="text-danger" *ngIf="variant && variant.invalid && variant.touched">Enter
+                                    variant
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Discount*</label>
+                                <input type="text" formControlName="discount" id="discount" [ngClass]="{
+                                    'is-invalid': f['discount'].touched && f['discount'].invalid}">
+                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter
+                                    Discount ex: 1-100
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Date Time*</label>
+                                <input type="datetime-local" formControlName="datetime" id="datetime" [ngClass]="{'is-invalid': f['datetime'].touched && f['datetime'].invalid}">
+                                <div *ngIf="f['datetime'].touched && f['datetime'].errors?.['pastDate']"
+                                    class="invalid-feedback">
+                                    Please select a future date.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Submit</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+            <div *ngIf="isEdit">
+            <div class="card-body" *ngIf="!addForm">
+                <div class="row">
+                    <div class="col-lg-10 col-sm-10 col-12">
+                        <div class="form-group">
+                            <label>Select Variants*</label>
+                            <ng-multiselect-dropdown [placeholder]="'Select Variants'" [settings]="dropdownSettings"
+                                [data]="variantList" [(ngModel)]="selectedItems" (onSelect)="onItemSelect($event)"
+                                (onDeSelect)="onItemDeselect($event)" (onSelectAll)="onSelectAll($event)"
+                                (onDeSelectAll)="onDeselectAll($event)">
+                            </ng-multiselect-dropdown>
+                            <span class="text-danger" *ngIf="variant && variant.invalid && variant.touched">Select
+                                Variants
+                            </span>
+                        </div>
+                    </div>
+                    <form [formGroup]="dealOfTheDayForm" (ngSubmit)="update()">
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Discount*</label>
+                                <input type="text" formControlName="discount" id="discount" [ngClass]="{
+                                    'is-invalid': f['discount'].touched && f['discount'].invalid}">
+                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter
+                                    Discount ex: 1-100
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                                <label>Date Time*</label>
+                                <input type="datetime-local" formControlName="datetime" id="datetime" [ngClass]="{
+                                    'is-invalid': f['datetime'].touched && f['datetime'].invalid}">
+                                <div *ngIf="f['datetime'].touched && f['datetime'].errors?.['pastDate']"
+                                    class="invalid-feedback">
+                                    Please select a future date.
+                                </div>
+                                <span class="text-danger"
+                                    *ngIf="datetime && datetime.invalid && datetime.touched">Select Date Time
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,12 +4,10 @@
                 <h4>Product List</h4>
                 <h6>Manage your products</h6>
             </div>
-            <div class="page-btn">
+            <div class="page-btn" *ngIf="isAdd">
                 <a routerLink="//product/addproduct" class="btn btn-added"><img src="assets/img/icons/plus.svg" alt="img" class="me-1">Add New Product</a>
             </div>
         </div>
-
-
         <!-- /product list -->
         <div class="card">
             <div class="card-body">
@@ -108,7 +106,7 @@
                 </div> -->
                 <!-- /Filter -->
                 <div class="table-responsive">
-                    <table datatable [dtOptions]="dtOptions" class="table" id="printTable">
+                    <table class="table" id="printTable">
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">
@@ -127,17 +125,17 @@
                                 <!-- <th (click)="sort('id')" class="thone">Unit Conversion <i class="fa fa-sort"></i></th> -->
                                 <!-- <th (click)="sort('id')" class="thone">Features Subcategory <i class="fa fa-sort"></i></th> -->
                                 <th (click)="sort('id')" class="thone">Product Store <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Description <i class="fa fa-sort"></i></th>                           
-                                <th (click)="sort('id')" class="thone">Is Measurable <i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Description <i class="fa fa-sort"></i></th>                            -->
+                                <!-- <th (click)="sort('id')" class="thone">Is Measurable <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Sale Tax Including <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Purchase Tax Including<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Purchase Tax Including<i class="fa fa-sort"></i></th> -->
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                                 
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                        <tbody>   
+                            <tr *ngFor="let products of tableData | orderBy:key:isAscending | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox"  [(ngModel)]="selectedRows[i]">
@@ -145,7 +143,6 @@
                                     </label>
                                 </td>
                                 <td class="productimgname">
-                                   
                                     <a routerLink="//product/product-details/{{products.id}}" style="line-height: 3;">{{products.title}}</a>
                                 </td>
                                 <td>{{products.category.title}}</td>
@@ -153,14 +150,9 @@
                                 <td>{{products.subcategory_group.title}}</td>
                                 <td>{{products.brand.title}}</td>
                                 <td>{{products.unit.title}}</td>
-                                <!-- <td>{{products.unit_conversion}}</td> -->
-                                <!-- <td>{{products.features_subcategory}}</td> -->
                                 <td>{{products.product_store}}</td>
-                                <td [innerHTML]="products.description"></td>
-                                
-                                <td>
-                                    <span
-                                    [ngClass]="{'bg-lightgreen': products.is_measurable === true, 'bg-lightred' : products.is_measurable === false,'bg-lightyellow' : products.is_measurable === 'Partial' }"
+                              <!-- <td>
+                                    <span [ngClass]="{'bg-lightgreen': products.is_measurable === true, 'bg-lightred' : products.is_measurable === false,'bg-lightyellow' : products.is_measurable === 'Partial' }"
                                     class="badges">{{products.is_measurable}}</span>
                                 </td>
                                 <td>
@@ -172,51 +164,28 @@
                                     <span
                                         [ngClass]="{'bg-lightgreen': products.purchase_tax_including === true, 'bg-lightred' : products.purchase_tax_including === false,'bg-lightyellow' : products.purchase_tax_including === 'Partial' }"
                                         class="badges">{{products.purchase_tax_including}}</span>
-                                </td>
+                                </td> -->
                                 <td>
-                                    <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
-                                    class="badges">{{products.is_active}}</span> -->
                                     <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
-                         
                                 </td>
                                 <td>
                                     <a class="me-1" routerLink="//product/product-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-1" routerLink="//product/editproduct/{{products.id}}">
+                                    <a class="me-1" routerLink="//product/editproduct/{{products.id}}" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-
-                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);">
+                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
                                         <img  src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
-                            </tr>
-                        </tbody>
-                        <!-- <tr>
-                            <td colspan="5">
-                                <div class="dataTables_length">
-                                    <label class="labelSize">Show :&nbsp;
-                                        <select [(ngModel)]="pageSize">
-                                            <option [ngValue]="10">10</option>
-                                            <option [ngValue]="25">25</option>
-                                            <option [ngValue]="50">50</option>
-                                            <option [ngValue]="100">100</option>
-                                        </select>
-                                        entries</label>
-                                </div>
-                                <div>
-                                    <ul class="pagination"></ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">
-                                <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
-                            </td>
-                        </tr> -->
-                    </table>
-                    <div class="row">
+                            </tr>  
+                        </tbody>   
+                     </table>
+                     <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                     </div>
+                    <div class="row" *ngIf="!loader">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                             <select [(ngModel)]="itemsPerPage" class="pagination" >

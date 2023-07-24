@@ -1,0 +1,130 @@
+
+
+<div class="page-header">
+    <div class="page-title">
+        <h4>Supplier list</h4>
+        <h6>View/Search Supplier</h6>
+    </div>
+    <div class="page-btn" *ngIf="isAdd">
+        <a routerLink="//contacts/addSupplier" class="btn btn-added">
+            <img src="assets/img/icons/plus.svg"  class="me-1" alt="img">Add Supplier
+        </a>
+    </div>
+</div>
+
+
+<!-- /product list -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-top">
+            <div class="search-set">
+                <div class="search-path">
+                    <a class="btn btn-filter" id="filter_search">
+                        <img src="assets/img/icons/filter.svg" alt="img">
+                        <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                    </a>
+                </div>
+                <div class="search-input">
+                    <a class="btn btn-searchset">
+                      <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                    <div class="dataTables_filter"><label>
+                      <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
+                      placeholder="search">
+                    </label>
+                  </div>
+         </div>
+            </div>
+            <div class="wordset">
+                <ul>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table datanew">
+                <thead>
+                    <tr>
+                        <th (click)="sort('id')" class="thone">
+                            <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
+                                <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
+                                <span class="checkmarks"></span>
+                            </label>
+                            <i class="fa fa-sort"></i>
+                        </th>
+                        <th (click)="sort('id')" class="thone">Name <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Company Name <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Mobile Number <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">GSTIN <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">PanCard <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Supplier Type<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                        <td>
+                            <label class="checkboxs">
+                                <input type="checkbox" [(ngModel)]="selectedRows[i]">
+                                <span class="checkmarks"></span>
+                            </label>
+                        </td>
+                        <td class="productimgname">
+                            <a routerLink="//contacts/supplierDetails/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
+                        </td>
+                        <td>{{products.company_name}}</td>
+                        <td>{{products.mobile_no}}</td>
+                        <td>{{products.gstin}}</td>
+                        <td>{{products.pan_no}}</td>
+                        <td>{{products.supplier_type}}</td>
+                        <td>
+                            <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                        </td>
+                        <td>
+                            <a class="me-1" routerLink="//contacts/supplierDetails/{{products.id}}">
+                                <img src="assets/img/icons/eye.svg" alt="img">
+                            </a>
+                            <a class="me-1" routerLink="//contacts/updateSupplier/{{products.id}}" *ngIf="isEdit">
+                                <img src="assets/img/icons/edit.svg" alt="img">
+                            </a>
+                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
+                                <img src="assets/img/icons/delete.svg" alt="img">
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+             </table>
+             <div class="progressbar">
+                <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                    <div class="entries"> Show per page
+                    <select [(ngModel)]="itemsPerPage" class="pagination" >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="-1">All</option>
+                      </select>
+                    </div>
+                </div>
+               <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                <div class="f-right">
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                    <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                </div>
+               </div>
+             </div>
+        </div>
+    </div>
+</div>
+<!-- /product list -->

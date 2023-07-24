@@ -7,7 +7,7 @@
                 <h6>View/Search product Category</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
                     <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Product Sub Category
                 </a>
             </div>
@@ -117,19 +117,20 @@
                                 <td>{{products.category_id.title}}</td>
                                 <td>{{products.discount}}</td>
                                 <td>
-                                    <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
-                         
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
                                     <a class="me-2" routerLink="/product/subcategory-details/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
 
-                                    <a class="me-2" (click)="editForm(products.id)">
+                                    <a class="me-2" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                        href="javascript:void(0);">
+                                        href="javascript:void(0);" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
@@ -158,86 +159,98 @@
                             </td>
                         </tr> -->
                     </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loaders"></mat-progress-bar>
+                    </div>
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
-                            <select [(ngModel)]="itemsPerPage" class="pagination" >
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="-1">All</option>
-                              </select>
+                                <select [(ngModel)]="itemsPerPage" class="pagination">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="-1">All</option>
+                                </select>
                             </div>
                         </div>
-                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                        <div class="f-right">
-                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}}
+                                    entries</div>
+                            </div>
+
                         </div>
-             
-                       </div>
-                     </div>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- /product list -->
     </div>
-    <div class="col-lg-5 col-sm-5 col-12">
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
-                <h4>Add Product Sub Category</h4>
-                <h6>Create new Product Sub Category</h6>
+                <div *ngIf="isAdd">
+                    <h4>Add Product Sub Category</h4>
+                    <h6>Create new Product Sub Category</h6>
+                </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
-                <h4>Product Sub Category Edit</h4>
-                <h6>Update Product Sub Category</h6>
+                <div *ngIf="isEdit">
+                    <h4>Product Sub Category Edit</h4>
+                    <h6>Update Product Sub Category</h6>
+                </div>
             </div>
         </div>
         <div class="card">
-            <div class="card-body" *ngIf="addForm">
-                <form [formGroup]="subcategoryForm" (ngSubmit)="submit()">
-                    <div class="row">
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
+            <div *ngIf="isAdd">
+                <div class="card-body" *ngIf="addForm">
+                    <form [formGroup]="subcategoryForm" (ngSubmit)="submit()">
+                        <div class="row">
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Title*</label>
+                                    <input type="text" formControlName="title" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
-                                </span>
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Title
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Discount*</label>
-                                <input type="text" formControlName="discount" id="discount" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Discount*</label>
+                                    <input type="text" formControlName="discount" id="discount" [ngClass]="{
                                     'is-invalid': f['discount'].touched && f['discount'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex-432)
-                                </span>
+                                    <span class="text-danger"
+                                        *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex:
+                                        1-100)
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Category*</label>
-                                <select formControlName="category_id" class="w-100 h-100 border" required
-                                    #category_idValue id="category_id" [ngClass]="{
-                              'is-invalid': f['category_id'].touched && f['category_id'].invalid
-                            }">
-                                    <option value="" selected disabled>Select category</option>
-                                    <option value="{{category.id}}" *ngFor="let category of categoryList">
-                                        {{category.title}}
-                                    </option>
-                                </select>
-                                <span class="text-danger"
-                                    *ngIf="category_id && category_id.invalid && category_id.touched">Select Category
-                                </span>
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Category*</label>
+                                    <select formControlName="category_id" class="w-100 h-100 border" required
+                                        #category_idValue id="category_id" [ngClass]="{
+                              'is-invalid': f['category_id'].touched && f['category_id'].invalid}">
+                                        <option value="" selected disabled>Select category</option>
+                                        <option value="{{category.id}}" *ngFor="let category of categoryList">
+                                            {{category.title}}
+                                        </option>
+                                    </select>
+                                    <span class="text-danger"
+                                        *ngIf="category_id && category_id.invalid && category_id.touched">Select
+                                        Category
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <!-- <div class="col-lg-10 col-sm-10 col-12">
+                            <!-- <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Brands</label>
                                 <div class="dropdown">
@@ -262,10 +275,10 @@
 
                             </div>
                         </div> -->
-                        <div class="col-lg-12">
-                            <div class="form-group">
-                                <label>Sub Category Image*</label>
-                                <div class="image-upload">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Sub Category Image*</label>
+                                    <!-- <div class="image-upload">
                                     <input type="file" formControlName="image" (change)="selectImg($event)">
                                     <div class="image-uploads">
                                         <img src="assets/img/icons/upload.svg" alt="img">
@@ -274,62 +287,98 @@
                                     <span class="text-danger" *ngIf="image && image.invalid && image.touched">Select
                                         image
                                     </span>
+                                </div> -->
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="image-upload">
+                                                <input type="file" formControlName="image" (change)="selectImg($event)"
+                                                    required>
+                                                <div class="image-uploads">
+                                                    <img src="assets/img/icons/upload.svg" alt="img">
+                                                    <h4>Drag and drop a file to upload</h4>
+                                                </div>
+                                                <span class="text-danger"
+                                                    *ngIf="image && image.invalid && image.touched">Select image</span>
+                                                <span class="text-danger" *ngIf="imgError">Select image</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="currentColor" class="bi bi-image mx-5 svg" viewBox="0 0 16 16"
+                                                style="height: 100px; width: 100px;">
+                                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                                <path
+                                                    d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
+                                            </svg>
+                                            <img [src]="url" *ngIf="url" alt="" class="p_img">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-12">
+                            <!-- <div class="col-lg-12">
                             <button class="btn btn-submit me-2">Submit </button>
-                            <!-- <a routerLink="/product/subcategorylist" class="btn btn-cancel">Cancel</a> -->
-                        </div>
-
-                    </div>
-                </form>
-            </div>
-            <div class="card-body" *ngIf="!addForm">
-                <form [formGroup]="subcategoryForm" (ngSubmit)="update()">
-                    <div class="row">
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
-                                    'is-invalid': f['title'].touched && f['title'].invalid
-                                  }">
-                                <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
-                                </span>
-
+                            <a routerLink="/product/subcategorylist" class="btn btn-cancel">Cancel</a>
+                        </div> -->
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Submit</button>
                             </div>
                         </div>
+                    </form>
+                </div>
+            </div>
+            <div *ngIf="isEdit">
+                <div class="card-body" *ngIf="!addForm">
+                    <form [formGroup]="subcategoryForm" (ngSubmit)="update()">
+                        <div class="row">
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Title*</label>
+                                    <input type="text" formControlName="title" id="title" [ngClass]="{
+                                    'is-invalid': f['title'].touched && f['title'].invalid}">
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
+                                        Title
+                                    </span>
+                                </div>
+                            </div>
 
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Discount*</label>
-                                <input type="text" formControlName="discount" id="discount" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Discount*</label>
+                                    <input type="text" formControlName="discount" id="discount" [ngClass]="{
                                     'is-invalid': f['discount'].touched && f['discount'].invalid
                                   }">
-                                <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex-432)
-                                </span>
+                                    <span class="text-danger"
+                                        *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex:
+                                        1-100)
+                                    </span>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label>Category*</label>
-                                <select formControlName="category_id" class="w-100 h-100 border" required
-                                    #category_idValue id="category_id" [ngClass]="{
+                            <div class="col-lg-10 col-sm-10 col-12">
+                                <div class="form-group">
+                                    <label>Category*</label>
+                                    <select formControlName="category_id" class="w-100 h-100 border" required
+                                        #category_idValue id="category_id" [ngClass]="{
                               'is-invalid': f['category_id'].touched && f['category_id'].invalid
                             }">
-                                    <option value="" selected disabled>Select category</option>
-                                    <option value="{{category.id}}" *ngFor="let category of categoryList">
-                                        {{category.title}}
-                                    </option>
-                                </select>
-                                <span class="text-danger"
-                                    *ngIf="category_id && category_id.invalid && category_id.touched">Select Category
-                                </span>
+                                        <option value="" selected disabled>Select category</option>
+                                        <option value="{{category.id}}" *ngFor="let category of categoryList">
+                                            {{category.title}}
+                                        </option>
+                                    </select>
+                                    <span class="text-danger"
+                                        *ngIf="category_id && category_id.invalid && category_id.touched">Select
+                                        Category
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <!-- <div class="col-lg-10 col-sm-10 col-12">
+                            <!-- <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Brand</label>
                                 <div class="dropdown">
@@ -355,10 +404,10 @@
 
                             </div>
                         </div> -->
-                        <div class="col-lg-12">
-                            <div class="form-group">
-                                <label> Sub Category Image*</label>
-                                <div class="image-upload">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label> Sub Category Image*</label>
+                                    <!-- <div class="image-upload">
                                     <input type="file" formControlName="image" (change)="selectImg($event)">
                                     <div class="image-uploads">
                                         <img src="assets/img/icons/upload.svg" alt="img">
@@ -367,17 +416,41 @@
                                     <span class="text-danger" *ngIf="image && image.invalid && image.touched">Select
                                         image
                                     </span>
+                                    <span class="text-danger" *ngIf="imgError">Select image
+                                    </span>
+                                </div> -->
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="image-upload">
+                                                <input type="file" formControlName="image" (change)="selectImg($event)">
+                                                <div class="image-uploads">
+                                                    <img src="assets/img/icons/upload.svg" alt="img">
+                                                    <h4>Drag and drop a file to upload</h4>
+                                                </div>
+                                                <span class="text-danger"
+                                                    *ngIf="image && image.invalid && image.touched">Select image</span>
+                                                <span class="text-danger" *ngIf="imgError">Select image</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <img [src]="url" *ngIf="url" alt="" class="p_img">
+                                            <img [src]="imgUrl+updateData.image" *ngIf="!url" alt="" class="p_img">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-12">
-                            <button class="btn btn-submit me-2">Submit</button>
-                            <!-- <a routerLink="/product/units" class="btn btn-cancel">Cancel</a> -->
-                        </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>Submit</button>
+                            </div>
 
-                    </div>
-                </form>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
