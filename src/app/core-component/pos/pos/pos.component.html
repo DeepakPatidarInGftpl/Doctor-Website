@@ -1602,7 +1602,7 @@
   <div class="offcanvas offcanvas-end pos-offcanvas" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasExampleLabel">On Hold</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close">
+      <button type="button" class="btn-close text-reset holdClose" data-bs-dismiss="offcanvas" aria-label="Close">
         <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
       </button>
     </div>
@@ -1612,9 +1612,9 @@
                 <div class="on-hold-card">
                     <div class="on-hold-card-header">
                         <h5>ORD: {{bill?.id}}</h5>
-                        <h5>Amt: ₹766</h5>
+                        <h5>Amt: ₹{{bill.totalAmt}}</h5>
                     </div>
-                    <h5 class="mb-1">Contact Name: Aditi Kapoor- 8389299999</h5>
+                    <h5 class="mb-1">Contact: {{bill.currentCustomer.mobile_no}}</h5>
                     <h5>Created On: 2023-02-23 1:21pm</h5>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <button class="btn btn-dark" (click)="resumeBill(bill.id)">Resume</button>

@@ -1055,21 +1055,29 @@ export class PosComponent implements OnInit {
       } else {
         this.currentOrderAdditionalCharges = [];
       }
+      this.currentCustomer = selectedBill.currentCustomer;
       //this.currentItems = selectedBill.currentItems;
       // Remove the selected bill from the list of held bills
       this.billHoldService.removeFromHold(billId);
       // Update the local heldBills array
       this.heldBills = this.billHoldService.getHeldBills();
+      var clicking = <HTMLElement>document.querySelector('.holdClose');
+      clicking.click();
     }
   }
 
   removeFromHold(billId: number) {
     this.billHoldService.removeFromHold(billId);
     this.heldBills = this.billHoldService.getHeldBills();
+    var clicking = <HTMLElement>document.querySelector('.holdClose');
+    clicking.click();
   }
 
   holdBill() {
     if(this.currentItems.length > 0){
+      if(this.currentCustomer === null || this.currentCustomer === undefined){
+        this.toastr.error('Please Select/Add a Customer!');
+      } else {
       let activeBill:any = {};
       activeBill.currentItems = this.currentItems;
       if(this.currentOrderAdditionalCharges.length > 0){
@@ -1077,17 +1085,20 @@ export class PosComponent implements OnInit {
       } else {
         activeBill.currentOrderAdditionalCharges = [];
       }
+      activeBill.totalAmt = this.totalAmount();
+      activeBill.currentCustomer = this.currentCustomer;
       this.billHoldService.addToHold(activeBill);
-      this.cartService.clearCurrent();
-      this.currentItems = this.cartService.getCurrentItems();
-      this.currentOrderAdditionalCharges = [];
-      // this.totalAmount();
-      // this.totalMrp();
-      // this.totalQty();
-      // Clear or reset the activeBill for a new transaction
-      // this.activeBill = ...
-    } 
+      // this.cartService.clearCurrent();
+      // this.currentItems = this.cartService.getCurrentItems();
+      // this.currentOrderAdditionalCharges = [];
+      // this.currentCustomer = null;
+      this.discardCurrentBill();
+    }
+    } else {
+      this.toastr.error("Please Items To Cart!");
+    }
   }
+
 
   discardCurrentBill() {
       this.cartService.clearCurrent();
