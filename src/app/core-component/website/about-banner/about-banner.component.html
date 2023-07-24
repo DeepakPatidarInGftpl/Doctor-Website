@@ -128,14 +128,15 @@
     </div>
     <div class="col-lg-5 col-sm-5 col-12">
         <div class="page-header">
+            <div *ngIf="isAdd">
             <div class="page-title" *ngIf="addForm">
-                <div *ngIf="isAdd">
                 <h4>About Banner </h4>
                 <h6>Create new About Banner </h6>
                 </div>
             </div>
+            <div *ngIf="isEdit">
             <div class="page-title" *ngIf="!addForm">
-                <div *ngIf="isEdit">
+                
                 <h4> Update About Banner </h4>
                 </div>
             </div>

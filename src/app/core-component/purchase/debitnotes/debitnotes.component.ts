@@ -122,6 +122,7 @@ export class DebitnotesComponent implements OnInit {
   loader=true;
   isAdd:any
   isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
     this.purchaseService.getDebitNotes().subscribe(res => {
       console.log(res);
@@ -139,6 +140,9 @@ export class DebitnotesComponent implements OnInit {
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename=='change_debitnote') {
           this.isEdit = res.codename;
           console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename=='delete_debitnote') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
         }
       });
     }

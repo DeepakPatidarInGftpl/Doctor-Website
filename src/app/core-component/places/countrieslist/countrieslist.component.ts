@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
@@ -164,7 +163,6 @@ export class CountrieslistComponent implements OnInit {
     })
     console.log(this.tableData);
     this.getFeatureGroup();
-
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData && localStorageData.permission) {
       const permission = localStorageData.permission;

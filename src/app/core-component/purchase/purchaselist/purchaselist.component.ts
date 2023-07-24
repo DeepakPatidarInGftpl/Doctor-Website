@@ -120,6 +120,7 @@ export class PurchaselistComponent implements OnInit {
   }
   isAdd:any;
   isEdit:any;
+  isDelete:any;
   ngOnInit(): void {
    this.getPurchase();
    const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -132,7 +133,10 @@ export class PurchaselistComponent implements OnInit {
        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchaseorder' && res.codename=='change_purchaseorder') {
          this.isEdit = res.codename;
          console.log(this.isEdit);
-       }
+       }else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchaseorder' && res.codename=='delete_purchaseorder') {
+        this.isDelete = res.codename;
+        console.log(this.isDelete);
+      }
      });
    }
   }

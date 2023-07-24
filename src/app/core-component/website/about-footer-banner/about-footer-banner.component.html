@@ -125,14 +125,14 @@
     </div>
     <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
+            <div *ngIf="isAdd">
             <div class="page-title" *ngIf="addForm">
-                <div *ngIf="isAdd">
                     <h4>About Footer Banner</h4>
                     <h6>Create new About Footer Banner </h6>
                 </div>
             </div>
+            <div *ngIf="isEdit">
             <div class="page-title" *ngIf="!addForm">
-                <div *ngIf="isEdit">
                     <h4> Update About Footer Banner </h4>
                 </div>
             </div>
@@ -199,9 +199,7 @@
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>
-                                    Submit</button>
+                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submit</button>
                             </div>
                         </div>
                     </form>
