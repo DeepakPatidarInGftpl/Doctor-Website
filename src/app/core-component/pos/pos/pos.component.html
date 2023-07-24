@@ -14,16 +14,23 @@
                         </label>
                     </div>
                 </div>
-                <div class="salesman-div">
-                    Salesman:
-                    <select class="form-select">
-                        <option>-- Select --</option>
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                        <option>Option 3</option>
-                        <option>Option 4</option>
-                        <option>Option 5</option>
-                    </select>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="salesman-div">
+                        Salesman:
+                        <select class="form-select">
+                            <option>-- Select --</option>
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                            <option>Option 3</option>
+                            <option>Option 4</option>
+                            <option>Option 5</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-dark" (click)="discardCurrentBill()"> 
+                                Discard</button>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -86,11 +93,14 @@
                         <form class="form-ex">
                             <input type="text"
                                    placeholder="Scan Barcode/Enter Product Name"
-                                   [formControl]="autocompleteControl"
-                                   [matAutocomplete]="auto"
+                                   [formControl]="productsAutocompleteControl"
+                                   [matAutocomplete]="auto" 
                                    class="form-control">
-                                   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)">
-                                    <mat-option *ngFor="let option of filteredOptions$" [value]="option">{{ displayFn(option) }}</mat-option>
+                                   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)" (keydown)="onInputKeydown($event)">
+                                    <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                                    <mat-option *ngIf="productsAutocompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                    <mat-option *ngIf="errorMsg" class="is-loading">{{errorMsg}}</mat-option>
+                                    <mat-option *ngFor="let option of filteredProducts" [value]="option">{{ displayFn(option) }}</mat-option>
                                   </mat-autocomplete>
                           </form>
                         <!-- <mat-form-field>
@@ -105,15 +115,18 @@
                         <form class="exam-form">
                             <input type="text"
                                    placeholder="Search for a Customer"
-                                   [formControl]="userCompleteControl"
+                                   [formControl]="customerAutoCompleteControl"
                                    [matAutocomplete]="auto1"
                                    class="form-control">
-                            <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="optionSelected1($event)">
-                                <mat-option value="Walk-In">
-                                    Walk-In Customer
+                            <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelected1($event)">
+                                <mat-option class="is-loading">
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal1">Add New Customer</button>
                                 </mat-option>
-                              <mat-option *ngFor="let street of filteredStreets | async" [value]="street">
-                                {{street}}
+                                <mat-option *ngIf="customerAutoCompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
+                                <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+                              <mat-option *ngFor="let customer of filteredCustomer" [value]="customer">
+                                {{ displayCus(customer) }}
                               </mat-option>
                             </mat-autocomplete>
                           </form>
@@ -140,24 +153,25 @@
                                         <th>Discount</th>
                                         <th>Add Disc</th>
                                         <th>Unit Cost</th>
+                                        <th>Unit Cost With Taxes</th>
                                         <th>Net Amount</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="table-light" *ngFor="let cart of selectedOptions; let i = index">
+                                    <tr class="table-light" *ngFor="let cart of currentItems; let i = index">
                                         <td>{{i}}</td>
-                                        <td>01</td>
-                                        <td>{{cart.name}}</td>
+                                        <td>{{cart.sku}}</td>
+                                        <td>{{cart.product_title}}</td>
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp qty-input">
-                                                <span (click)="decreaseQty(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
-                                                <input type="text" value={{cart.quantity}} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
-                                                <span (click)="increaseQty(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">+</span>
+                                                <span (click)="decreaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
+                                                <input type="text" value={{cart?.quantity}} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                                                <span (click)="increaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">+</span>
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" value="650.00" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1">
+                                            <input type="text" disabled value="{{cart?.batch[0]?.mrp}}" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1">
                                         </td>
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp">
@@ -170,9 +184,10 @@
                                             <span class="input-group-text" id="basic-addon1">%</span>
                                             <input type="text" value="0.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
                                         </div></td>
-                                        <td>{{cart.price}}</td>
-                                        <td>{{cart.price * cart.quantity}}</td>
-                                        <td><button (click)="removeOption(i)" class="table-cross-btn">
+                                        <td>{{cart?.batch[0]?.selling_price_offline}}</td>
+                                        <td>{{getPriceAfterTaxes(cart?.batch[0])}}</td>
+                                        <td>{{getNetAmount(cart?.batch[0], cart?.quantity)}}</td>
+                                        <td><button (click)="removeOptionCurrent(cart)" class="table-cross-btn">
                                             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                                         </button></td>
                                     </tr>
@@ -192,20 +207,20 @@
                             <div class="amt-info-div">
                                 <ul>
                                     <li>
-                                        <p>0.000</p>
+                                        <p>{{this.totalQty()}}</p>
                                         <h5>Quantity</h5>
                                     </li>
                                     <li>
-                                        <p>0.000</p>
+                                        <p>{{this.totalMrp()}}</p>
                                         <h5>MRP</h5>
                                     </li>
                                     <li>
-                                        <p>0.000</p>
+                                        <p>{{this.totalTaxAmount()}}</p>
                                         <h5>Tax Amount</h5>
                                     </li>
                                     <li>
-                                        <p>0.000</p>
-                                        <button type="button" class="btn btn-dark"> 
+                                        <p>{{currentTotalAdditionalCharges()}}</p>
+                                        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addChargesModal"> 
                                             Add Charges <i class="fas fa-plus" data-bs-toggle="tooltip" title="fa fa-plus"></i>
                                         </button>
                                     </li>
@@ -245,13 +260,13 @@
                             <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal3"> 
                                 <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
                                     Redeem Credit</button>
-                                    <button type="button" class="btn btn-dark" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"> 
+                                    <button type="button" class="btn btn-dark" (click)="holdBill()"> 
                                         <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                             Hold(F6)</button>
                                             <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal2"> 
                                                 <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                                     UPI(F5)</button>
-                                                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal1"> 
+                                                    <button type="button" class="btn btn-dark"> 
                                                         <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
                                                             Card(F3)</button>
                                                             <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal5"> 
@@ -362,8 +377,8 @@
                     <div class="cus-details-wrapper right-btns-wrapper">
                         <ul>
                             <li>
-                                <button type="button" class="btn-pos"> 
-                                    <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
+                                <button type="button" class="btn-pos" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"> 
+                                    <i class="fas fa-pause"></i>
                                         Hold Bill</button> 
                             </li>
                             <li>
@@ -523,41 +538,122 @@
 
 <!-- Modal 2-->
   <div class="modal fade modalCusDetails posmodal" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModal1Label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Customer Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <h5 class="modal-title" id="exampleModalLabel">Add Customer Details</h5>
+          <button type="button" class="btn-close addCusModal" data-bs-dismiss="modal" aria-label="Close">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
+        
+          
         <div class="modal-body">
+            <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" placeholder="Name">
+                        <input type="text" class="form-control"
+                        placeholder="Name"
+                        formControlName="name">
                     </div>
+                    <div *ngIf="name.invalid && (name.dirty || name.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="name.errors?.['required']">
+    Name is required.
+  </div>
+</div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Mobile No.</label>
-                        <input type="text" class="form-control" placeholder="Mobile No.">
+                        <input type="text" class="form-control" 
+                        placeholder="Mobile No."
+                        formControlName="mobile_no"
+                        (input)="handleMobileInputChange($event)"
+                        >
                     </div>
+                    <div class="alert alert-danger" *ngIf="mobile_no.valid && customerRegistrationNumberSame">Mobile No. already exists.</div>
+                    <div *ngIf="mobile_no.invalid && (mobile_no.dirty || mobile_no.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="mobile_no.errors?.['required']">
+    Mobile No is required.
+  </div>
+  <div *ngIf="mobile_no.errors?.['pattern']">
+    Mobile No pattern not match.
+  </div>
+</div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Whatsapp No.</label>
-                        <input type="text" class="form-control" placeholder="Whatsapp No.">
+                        <input type="text" class="form-control"
+                        placeholder="Whatsapp No."
+                        formControlName="whatsapp_no">
                     </div>
+                    <div *ngIf="whatsapp_no.invalid && (whatsapp_no.dirty || whatsapp_no.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="whatsapp_no.errors?.['required']">
+    Whatsapp No is required.
+  </div>
+  <div *ngIf="whatsapp_no.errors?.['pattern']">
+    Whatsapp No pattern not match.
+  </div>
+</div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group mb-0">
                         <label>Date Of Birth</label>
-                        <input type="text" disabled class="form-control" placeholder="Date Of Birth">
+                        <input type="date" class="form-control" 
+                        placeholder="Date Of Birth"
+                        formControlName="date_of_birth">
                     </div>
+                    <div *ngIf="date_of_birth.invalid && (date_of_birth.dirty || date_of_birth.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="date_of_birth.errors?.['required']">
+    DOB is required.
+  </div>
+  </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group mb-0">
+                        <label>Anniversary Date</label>
+                        <input type="date" class="form-control" 
+                        placeholder="Anniversary"
+                        formControlName="anniversary_date">
+                    </div>
+                    <div *ngIf="anniversary_date.invalid && (anniversary_date.dirty || anniversary_date.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="anniversary_date.errors?.['required']">
+    Anniversary Date is required.
+  </div></div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control"
+                        placeholder="Email"
+                        formControlName="email">
+                    </div>
+                    <div *ngIf="email.invalid && (email.dirty || email.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="email.errors?.['required']">
+    Email is required.
+  </div>
+  <div *ngIf="email.errors?.['email']">
+    Email pattern not match.
+  </div>
+</div>
                 </div>
             </div>
             <button type="button" class="add-more-details-btn my-3" (click)="addMoreDetailsHandler()">{{addMoreDetails ? 'Hide More Details' : 'Add More Details'}}</button>
@@ -566,59 +662,136 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Address Line</label>
-                            <input type="text" class="form-control" placeholder="Address Line1">
+                            <input type="text" class="form-control" 
+                            placeholder="Address Line1"
+                            formControlName="address_line_1">
                         </div>
+                        <div *ngIf="address_line_1.invalid && (address_line_1.dirty || address_line_1.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="address_line_1.errors?.['required']">
+    Address 1 is required.
+  </div>
+</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Address Line</label>
+                            <input type="text" class="form-control" 
+                            placeholder="Address Line2"
+                            formControlName="address_line_2">
+                        </div>
+                        <div *ngIf="address_line_2.invalid && (address_line_2.dirty || address_line_2.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="address_line_2.errors?.['required']">
+    Address 2 is required.
+  </div>
+</div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>State</label>
-                            <select class="form-select">
-                                <option>-- Select --</option>
-                                <option>Option 1</option>
-                                <option>Option 2</option>
+                            <select class="form-select" formControlName="state" (change)="onStateChange($event)">
+                                <option value="" disabled selected>Select State</option>
+      <option *ngFor="let state of stateList" [value]="state.id" [selected]="state.id == currentState">{{state?.state}}</option>
                             </select>
                         </div>
+                        <div *ngIf="state.invalid && (state.dirty || state.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="state.errors?.['required']">
+    State is required.
+  </div>
+</div>
+
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>City</label>
-                            <select class="form-select">
-                                <option>-- Select --</option>
+                            <select class="form-select" formControlName="city" (change)="onCityChange($event)">
+                                <!-- <option>-- Select --</option>
                                 <option>Option 1</option>
-                                <option>Option 2</option>
+                                <option>Option 2</option> -->
+                                <option value="" disabled selected>Select City</option>
+                                <option  *ngFor="let city of cityList" [value]="city?.id"
+                                [selected]="city?.id == currentCities">{{city?.city}}</option>
                             </select>
                         </div>
+                        <div *ngIf="city.invalid && (city.dirty || city.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="city.errors?.['required']">
+    City is required.
+  </div>
+</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Pincode</label>
+                            <input type="text" class="form-control" 
+                            placeholder="Pincode"
+                            formControlName="pincode">
+                        </div>
+                        <div *ngIf="pincode.invalid && (pincode.dirty || pincode.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="pincode.errors?.['required']">
+    Pincode is required.
+  </div>
+  <div *ngIf="pincode.errors?.['pattern']">
+    Pincode pattern not match.
+  </div>
+</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>GST Type</label>
-                            <select class="form-select">
-                                <option>-- Select --</option>
-                                <option>Option 1</option>
-                                <option>Option 2</option>
+                            <select class="form-select" formControlName="gst_type" (change)="onGstTypeChange()">
+                                <option value="" disabled selected>Select GST Type</option>
+      <option value="{{gst.value}}" *ngFor="let gst of gstType">{{gst.label}}</option>
                             </select>
                         </div>
+                        <div *ngIf="gst_type.invalid && (gst_type.dirty || gst_type.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="gst_type.errors?.['required']">
+    GST Type is required.
+  </div>
+</div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>GSTIN</label>
-                            <input type="text" disabled class="form-control" placeholder="GSTIN">
+                            <input type="text" class="form-control" 
+                            placeholder="GSTIN"
+                            formControlName="gstin">
                         </div>
+                        <div *ngIf="gstin.invalid && (gstin.dirty || gstin.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="gstin.errors?.['required']">
+    GSTIN is required.
+  </div>
+</div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer mt-2">
-            <button type="button" class="btn btn-dark modal2BtnPos">Save</button>
-            <!-- <div class="row w-100">
-                <div class="col-sm-12 text-center">
-                    <button type="button" class="btn btn-dark">Save</button>
+            <div class="row">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
+
                 </div>
-            </div> -->
-          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+            </div>
+
+        </form>
+
         </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
+        </div> -->
       </div>
     </div>
   </div>  
@@ -1067,7 +1240,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Tendered</label>
-                        <input type="number" value="0" (change)="tenderedAmt($event)" class="form-control" placeholder="Tendered">
+                        <input type="number" [(ngModel)]="tenderedAmount" class="form-control" placeholder="Tendered">
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -1083,44 +1256,44 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="cal-div-wrapper">
-                                    <div class="cal-div">1</div>
-                                    <div class="cal-div">2</div>
-                                    <div class="cal-div">3</div>
-                                    <div class="cal-div">+05</div>
-                                    <div class="cal-div">+100</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(1)">1</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(2)">2</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(3)">3</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(100)">+100</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="cal-div-wrapper">
-                                    <div class="cal-div">1</div>
-                                    <div class="cal-div">2</div>
-                                    <div class="cal-div">3</div>
-                                    <div class="cal-div">+05</div>
-                                    <div class="cal-div">+100</div>
+                                    <div class="cal-div"(click)="changeTenderedAmt(4)">4</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(5)">5</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(6)">6</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(200)">+200</div>
+                                    <div class="cal-div"(click)="changeTenderedAmt(2000)">+2000</div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="cal-div-wrapper">
-                                    <div class="cal-div">1</div>
-                                    <div class="cal-div">2</div>
-                                    <div class="cal-div">3</div>
-                                    <div class="cal-div">+05</div>
-                                    <div class="cal-div">+100</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(7)">7</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(8)">8</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(9)">9</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(500)">+500</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(5000)">+5000</div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="cal-div-wrapper">
-                                    <div class="cal-div">1</div>
-                                    <div class="cal-div">2</div>
-                                    <div class="cal-div">3</div>
-                                    <div class="cal-div">+05</div>
-                                    <div class="cal-div">+100</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(10)">10</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(20)">20</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(50)">50</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(10000)">+10000</div>
                                 </div>
                             </div>
                         </div>
@@ -1128,10 +1301,11 @@
                 </div>
                 <div class="col-sm-7">
                     <div>
-                        <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.generateOrder()">Submit</button>
+                        <!-- <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.generateOrder()">Submit</button> -->
+                        <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.cashPaymentGenerateOrder()">Submit</button>
                     </div>
                     <div>
-                        <button  id="exampleModal5Close" type="button" class="btn btn-dark w-100" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button  id="exampleModal5Close" type="button" class="btn btn-dark w-100 cashModalClose" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -1331,19 +1505,129 @@
     </div>
   </div>
 
+  <div class="modal fade posmodal" id="batchModal" tabindex="-1" aria-labelledby="batchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="batchModalLabel">Select Product Batch</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div> 
+        <div class="modal-body">
+            <div class="radio" *ngFor="let batch of currentProduct?.batch">
+                <label>
+                    <input type="radio" name="batchProduct" value="{{batch?.id}}" [(ngModel)]="currentBatch" > Price: {{batch?.selling_price_offline}}
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer mt-5">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-dark modal1BtnPos" (click)="confirmBatch()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade posmodal" id="addChargesModal" tabindex="-1" aria-labelledby="addChargesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addChargesModalLabel">Add Additional Charges</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div> 
+        <div class="modal-body">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Additional Charge</th>
+                        <th>Value</th>
+                        <th>Tax</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let charges of currentOrderAdditionalCharges;let ci=index">
+                        <td>
+                            <select class="form-select" (change)="updateACInCAC(ci, $event)" [(ngModel)]="charges.additional_charge">
+                                <option>-- Select --</option>
+                                <option value="{{d.id}}" *ngFor="let d of additionalChargesList">{{d.additional_charge}}</option>
+                            </select>
+                        </td>
+                        <td>    
+                                    <div class="input-group" >
+                                        <input type="text" (change)="updateValueInCAC(ci, $event)" class="form-control" placeholder="value" [(ngModel)]="charges.value" aria-label="value" aria-describedby="basic-addon2">
+                                        <span class="input-group-text" id="basic-addon2" (click)="updateValueTypeInCAC(ci, charges.value_type)" >{{charges.value_type === 'percentage' ? '%' : '&#8377;'}}</span>
+                                    </div>
+                        </td>
+                        <td>
+                            <select class="form-select" (change)="updateTaxInCAC(ci, $event)" [(ngModel)]="charges.tax">
+                                <option>-- Select --</option>
+                                <option value="{{d.id}}" *ngFor="let d of taxesList">{{d.title}}</option>
+                            </select>
+                        </td>
+                        <td>{{charges.total}}</td>
+                        <td><button class="table-cross-btn" (click)="deleteRowInCAC(ci, $event)">
+                            <i class="fa fa-times" title="fa fa-times"></i>
+                        </button></td>
+                    </tr>
+                    
+                </tbody>
+                <tfoot>
+                    <th>
+                        <button class="me-1 btn btn-link" (click)="addRowToCAC()">Add More Additional Charge</button>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th>{{currentTotalAdditionalCharges()}}</th>
+                    <th></th>
+                </tfoot>
+            </table>
+            
+        </div>
+        <div class="modal-footer mt-5">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-dark modal1BtnPos" data-bs-dismiss="modal">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   
 
   <!-- Hold Off Canvas -->
   <div class="offcanvas offcanvas-end pos-offcanvas" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasExampleLabel">On Hold</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close">
+      <button type="button" class="btn-close text-reset holdClose" data-bs-dismiss="offcanvas" aria-label="Close">
         <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
       </button>
     </div>
     <div class="offcanvas-body">
-        <div class="row">
+        <div class="row" *ngFor="let bill of heldBills" (click)="resumeBill(bill.id)">
             <div class="col-sm-12">
+
+                <div class="on-hold-card">
+                    <button type="button" class="holdRemove" (click)="removeFromHold(bill.id)">
+                        <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                      </button>
+                    <div class="on-hold-card-header">
+                        <h5>ORD: {{bill?.id}}</h5>
+                        <h5>Amt: ₹{{bill.totalAmt}}</h5>
+                    </div>
+                    <h5 class="mb-1">Contact: {{bill.currentCustomer.mobile_no}}</h5>
+                    <h5>Created On: 2023-02-23 1:21pm</h5>
+                    <!-- <div class="d-flex justify-content-between align-items-center mt-3">
+                        <button class="btn btn-dark" (click)="resumeBill(bill.id)">Resume</button>
+  <button  class="btn btn-dark" (click)="removeFromHold(bill.id)">Remove</button>
+                    </div> -->
+                </div>
+            </div>
+            <!-- <div class="col-sm-12 mt-3">
                 <div class="on-hold-card">
                     <div class="on-hold-card-header">
                         <h5>ORD: 6766</h5>
@@ -1352,17 +1636,7 @@
                     <h5 class="mb-1">Contact Name: Aditi Kapoor- 8389299999</h5>
                     <h5>Created On: 2023-02-23 1:21pm</h5>
                 </div>
-            </div>
-            <div class="col-sm-12 mt-3">
-                <div class="on-hold-card">
-                    <div class="on-hold-card-header">
-                        <h5>ORD: 6766</h5>
-                        <h5>Amt: ₹766</h5>
-                    </div>
-                    <h5 class="mb-1">Contact Name: Aditi Kapoor- 8389299999</h5>
-                    <h5>Created On: 2023-02-23 1:21pm</h5>
-                </div>
-            </div>
+            </div> -->
         </div>
     </div>
   </div>  
