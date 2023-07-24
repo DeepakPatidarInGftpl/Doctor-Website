@@ -28,7 +28,6 @@ export class FooterFeaturesComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage: number = 10;
   constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
-
   }
 
   delRes: any
@@ -132,7 +131,6 @@ export class FooterFeaturesComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       image: new FormControl(''),
     })
-
 
     this.websiteService.getFooterFeature().subscribe(res => {
       this.loader = false;

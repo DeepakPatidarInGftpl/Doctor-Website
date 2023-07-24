@@ -96,7 +96,7 @@
                                     <a class="me-1" routerLink="//purchase/editpurchase/{{products.id}}" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text">
+                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>

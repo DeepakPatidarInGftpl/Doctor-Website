@@ -41,7 +41,6 @@ export class NewArrivalBannerComponent implements OnInit {
 
   itemsPerPage = 5;
   constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,) {
-
   }
 
   delRes: any
