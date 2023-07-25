@@ -382,7 +382,7 @@
                                         Hold Bill</button> 
                             </li>
                             <li>
-                                <button type="button" class="btn-pos"> 
+                                <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#exampleModal2"> 
                                     <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
                                         Payments</button> 
                             </li>
@@ -807,6 +807,8 @@
           </button>
         </div>
         <div class="modal-body">
+            <form [formGroup]="receiptPaymentForm" (ngSubmit)="receiptFormSubmit()">
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -814,21 +816,10 @@
                         <div class="row justify-center">
                             <div class="col-sm-12">
                                 <div class="radio-payments-modal-wrapper d-flex justify-content-around">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Sales</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Purchase</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Expense</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Cash In Hand</label>
+
+                                    <div class="form-check" *ngFor="let option of voucherType">
+                                        <input class="form-check-input" type="radio" formControlName="voucher_type" [value]="option.value">
+                                        <label class="form-check-label">{{option.label}}</label>
                                     </div>
                                 </div>
                             </div>
@@ -843,90 +834,56 @@
                         <div class="row justify-center">
                             <div class="col-sm-12 mb-3">
                                 <div class="radio-payments-modal-wrapper d-flex justify-content-around">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Sales</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Purchase</label>
+                                    <div class="form-check" *ngFor="let option of paymentType">
+                                        <input class="form-check-input" type="radio" formControlName="payment_type" [value]="option.value">
+                                        <label class="form-check-label">{{option.label}}</label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Vendor</label>
-                                    <select class="form-select">
-                                        <option>-- Select --</option>
-                                        <option>Option 1</option>
-                                        <option>Option 2</option>
+                                    <label>Payment Mode</label>
+                                    <select class="form-select" formControlName="payment_mode">
+                                        <option disabled selected value="">-- Select Payment Mode --</option>
+                                        <option *ngFor="let option of paymentMode" [value]="option.value">{{option.label}}</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_type').value === 'Against Bill'">
                                 <div class="form-group">
-                                    <label>Account</label>
-                                    <select class="form-select">
-                                        <option>-- Select --</option>
-                                        <option>Option 1</option>
-                                        <option>Option 2</option>
+                                    <label>Select Sales</label>
+                                    <select class="form-select" formControlName="receipt_sales">
+                                        <option disabled selected value="">-- Select Sales --</option>
+                                        <option *ngFor="let option of receiptSales" [value]="option?.id">Option 1</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Amount</label>
-                                    <input type="text" class="form-control" placeholder="Enter Amount">
+                                    <input type="number" formControlName="amount_receipt" class="form-control" placeholder="Enter Amount">
                                 </div>
                             </div>
+            
                             <div class="row">
+                                
                                 <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Vendor</label>
-                                        <select class="form-select">
-                                            <option>-- Select --</option>
-                                            <option>Option 1</option>
-                                            <option>Option 2</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Account</label>
-                                        <select class="form-select">
-                                            <option>-- Select --</option>
-                                            <option>Option 1</option>
-                                            <option>Option 2</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Amount</label>
-                                        <input type="text" class="form-control" placeholder="Enter Amount">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Vendor</label>
-                                        <select class="form-select">
-                                            <option>-- Select --</option>
-                                            <option>Option 1</option>
-                                            <option>Option 2</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Account</label>
-                                        <select class="form-select">
-                                            <option>-- Select --</option>
-                                            <option>Option 1</option>
-                                            <option>Option 2</option>
-                                        </select>
-                                    </div>
+                                    <input type="text"
+                                   placeholder="Search for a Customer"
+                                   [formControl]="receiptPaymentForm.get('customer_receipt')"
+                                   [matAutocomplete]="autoReceipt"
+                                   class="form-control">
+                            <mat-autocomplete #autoReceipt="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelectedReceipt($event)">
+                                <!-- <mat-option class="is-loading">
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal1">Add New Customer</button>
+                                </mat-option> -->
+                                <mat-option *ngIf="receiptPaymentForm.get('customer_receipt').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
+                                <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+                              <mat-option *ngFor="let customer of filteredCustomer2" [value]="customer">
+                                {{ displayCus(customer) }}
+                              </mat-option>
+                            </mat-autocomplete>
                                 </div>
                             </div>
                         </div>
@@ -969,16 +926,17 @@
                     </div>
                 </div>
             </div>
+            </form>
         </div>
-        <div class="modal-footer mt-2">
-            <button type="button" class="btn btn-dark modal2BtnPos">Save</button>
+        <!-- <div class="modal-footer mt-2"> -->
+            <!-- <button type="button" class="btn btn-dark modal2BtnPos">Save</button> -->
             <!-- <div class="row w-100">
                 <div class="col-sm-12 text-center">
                     <button type="button" class="btn btn-dark">Save</button>
                 </div>
             </div> -->
           <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-        </div>
+        <!-- </div> -->
       </div>
     </div>
   </div>    

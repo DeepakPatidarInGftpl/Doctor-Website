@@ -45,7 +45,27 @@ export class PosComponent implements OnInit {
     {label: 'Registered Composition', value: 'Registered Composition'},
     {label: 'Input Service Distributor', value: 'Input Service Distributor'},
     {label: 'Ecommerce Operator', value: 'Ecommerce Operator'},
+  ]
 
+  voucherType = [
+    { id: 1, label: 'Sales', value: 'sales' },
+    { id: 2, label: 'Purchase', value: 'purchase' },
+    { id: 3, label: 'Expense', value: 'expense' },
+    { id: 4, label: 'Cash in Hand', value: 'cash in hand'}
+  ];
+
+  paymentType = [
+    {id: 1, label: 'Advance Payment', value: 'Advance Payment'},
+    {id: 2, label: 'Against Bill', value: 'Against Bill'}
+  ];
+
+  paymentMode = [
+    {id: 1, label: 'UPI', value: 'UPI'},
+    {id: 2, label: 'Card', value: 'Card'},
+    {id: 3, label: 'Cash', value: 'Cash'},
+    {id: 4, label: 'Bank', value: 'Bank'},
+    {id: 5, label: 'Pay Later', value: 'Paylater'},
+    {id: 6, label: 'Multiple Pay', value: 'Multiplepay'},
   ]
 
   selectedOptions: any[] = [];
@@ -57,10 +77,12 @@ export class PosComponent implements OnInit {
   addMoreDetails: any;
   customerAutoCompleteControl = new FormControl('');
   chargesAutoCompleteControl = new FormControl('');
+  customerAutoCompleteControl2 = new FormControl('');
 
   streets: string[] = ['Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow'];
   filteredStreets: Observable<string[]>;
   currentCustomer:any | null;
+  currentCustomerPayment:any | null;
   changeAmount:any;
   tenderedAmount: number = 0;
   dueAmount:any;
@@ -76,6 +98,7 @@ export class PosComponent implements OnInit {
   chargesErrorMsg!:string;
   chargesIsLoading = false;
   filteredCustomer: any;
+  filteredCustomer2: any;
   filteredCharges!: Observable<any[]>;
   currentItems: any[] = [];
   customerForm: FormGroup;
@@ -83,6 +106,7 @@ export class PosComponent implements OnInit {
   upiPaymentMethodForm: FormGroup;
   cardPaymentMethodForm: FormGroup;
   payLaterMethodForm: FormGroup;
+  receiptPaymentForm: FormGroup;
   customerRegistrationNumberSame: boolean = false;
   currentCountry: any;
   currentState:any;
@@ -93,6 +117,7 @@ export class PosComponent implements OnInit {
   currentBatch:any;
   additionalChargesList:any = [];
   taxesList:any = [];
+  receiptSales:any = [];
   companyBankList:any = [];
   paymentTermsList: any = [];
   currentOrderAdditionalCharges:any = [];
@@ -171,6 +196,24 @@ export class PosComponent implements OnInit {
       day: ['', [Validators.required]],
       date: ['', [Validators.required]],
       is_send_reminder: ['', [Validators.required]],
+    });
+
+    this.receiptPaymentForm = this.fb.group({
+      voucher_type: ['', [Validators.required]],
+      payment_type: ['', [Validators.required]],
+      payment_mode: ['', [Validators.required]],
+      receipt_sales: [''],
+      amount_receipt: ['', [Validators.required]],
+      customer_receipt: ['', [Validators.required]]
+    })
+
+    this.receiptPaymentForm.get('payment_type').valueChanges.subscribe((value) => {
+      if (value === 'Against Bill') { // Show the conditional field only if Option 1 is selected
+        this.receiptPaymentForm.get('receipt_sales').setValidators(Validators.required);
+      } else {
+        this.receiptPaymentForm.get('receipt_sales').clearValidators();
+      }
+      this.receiptPaymentForm.get('receipt_sales').updateValueAndValidity();
     });
  
     window.addEventListener('online', () => {
@@ -340,6 +383,55 @@ export class PosComponent implements OnInit {
       });
 
     
+      this.receiptPaymentForm.get('customer_receipt').valueChanges
+      .pipe(
+        filter(res => {
+          return res !== null && res?.length >= this.cusMinLengthTerm
+        }),
+        distinctUntilChanged(),
+        debounceTime(100),
+        tap(() => {
+          this.cusErrorMsg = "";
+          this.filteredCustomer2 = [];
+          this.cusIsLoading = true;
+        }),
+        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/customer_filter/?search=${value}`, requestOptions)
+          .pipe(
+            catchError(err => {
+              // handleError(err);
+              console.log('err catch', err);
+              this.cusErrorMsg = 'No Customer Found';
+              this.cusIsLoading = false;
+              return [];
+            }),
+            finalize(() => {
+              this.cusIsLoading = false
+              console.log('search', value)
+            }),
+          )
+        )
+      )
+      .subscribe((data: any) => {
+        console.log('data', data)
+
+        if(data.length > 0){
+          console.log('data', data)
+          this.filteredCustomer2 = data;
+        } else {
+          this.filteredCustomer2 = [];
+          this.cusErrorMsg = 'No Customers Found';
+        }
+        
+        // if (data['Search'] == undefined) {
+        //   this.errorMsg = data['Error'];
+        //   this.filteredProducts = [];
+        //   console.log('if');
+        // } else {
+        //   this.errorMsg = "";
+        //   this.filteredProducts = data['Search'];
+        //   console.log('else');
+        // }
+      });
 
     // ).pipe(
     //   startWith(''),
@@ -675,6 +767,11 @@ export class PosComponent implements OnInit {
     this.currentCustomer = event.option.value;
     this.customerAutoCompleteControl.setValue('');
     console.log(event.option.value, 'cus');
+  }
+
+  optionSelectedReceipt(event){
+    let customer = event.option.value;
+
   }
 
   removeOption(index: number) {
@@ -1169,6 +1266,16 @@ export class PosComponent implements OnInit {
       this.currentItems = this.cartService.getCurrentItems();
       this.currentOrderAdditionalCharges = [];
       this.currentCustomer = null;
+  }
+
+  receiptFormSubmit(){
+    if (this.receiptPaymentForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.receiptPaymentForm.controls).forEach(key => {
+        this.receiptPaymentForm.controls[key].markAsTouched();
+      });
+      return;
+    }
   }
 
   payLaterGenerateOrder(){
