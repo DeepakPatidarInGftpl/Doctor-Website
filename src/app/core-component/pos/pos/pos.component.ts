@@ -82,6 +82,7 @@ export class PosComponent implements OnInit {
   registrationForm: FormGroup;
   upiPaymentMethodForm: FormGroup;
   cardPaymentMethodForm: FormGroup;
+  payLaterMethodForm: FormGroup;
   customerRegistrationNumberSame: boolean = false;
   currentCountry: any;
   currentState:any;
@@ -93,6 +94,7 @@ export class PosComponent implements OnInit {
   additionalChargesList:any = [];
   taxesList:any = [];
   companyBankList:any = [];
+  paymentTermsList: any = [];
   currentOrderAdditionalCharges:any = [];
 
   currentAdditionalCharges:any = [];
@@ -163,7 +165,12 @@ export class PosComponent implements OnInit {
       card_payment_amount: ['', [Validators.required]],
       card_holder_name: ['', [Validators.required]],
       cart_transactions_no: ['', [Validators.required]],
+    });
 
+    this.payLaterMethodForm = this.fb.group({
+      day: ['', [Validators.required]],
+      date: ['', [Validators.required]],
+      is_send_reminder: ['true', [Validators.required]],
     });
  
     window.addEventListener('online', () => {
@@ -387,6 +394,16 @@ export class PosComponent implements OnInit {
       },
       error: (error) => {
         console.log('company bank', error);
+      }
+    })
+
+    this.cartService.getPaymentTerms().subscribe({
+      next: (response) => {
+        console.log(response, 'payment terms')
+        this.paymentTermsList = response;
+      },
+      error: (error) => {
+        console.log('payment terms', error);
       }
     })
 
@@ -1008,6 +1025,11 @@ export class PosComponent implements OnInit {
   get cart_transactions_no() { return this.cardPaymentMethodForm.get('cart_transactions_no'); }
 
 
+  get pay_later_day() { return this.payLaterMethodForm.get('day'); }
+  get pay_later_date() { return this.payLaterMethodForm.get('date'); }
+  get is_send_reminder() { return this.payLaterMethodForm.get('is_send_reminder'); }
+
+
   handleMobileInputChange(event: any) {
     const inputValue = event.target.value;
     if(this.mobile_no.valid){
@@ -1147,6 +1169,88 @@ export class PosComponent implements OnInit {
       this.currentItems = this.cartService.getCurrentItems();
       this.currentOrderAdditionalCharges = [];
       this.currentCustomer = null;
+  }
+
+  payLaterGenerateOrder(){
+    if (this.payLaterMethodForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.payLaterMethodForm.controls).forEach(key => {
+        this.payLaterMethodForm.controls[key].markAsTouched();
+      });
+      return;
+    }
+
+    if(this.currentItems.length > 0){
+      if(this.currentCustomer === null || this.currentCustomer === undefined){
+        this.toastr.error('Please Select/Add a Customer!');
+      } else {
+        let cartData = [];
+    for (let index = 0; index < this.currentItems.length; index++) {
+      const element = this.currentItems[index];
+      let item = {
+        "variant": element.id,
+        "qty": element.quantity,
+        "mrp": element.batch[0].mrp,
+        "discount": 0,
+        "add_discount": 0,
+        "unit_cost": element.batch[0]?.selling_price_offline,
+        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
+        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "remarks": "",
+        "tax_percentage": element?.batch[0]?.sale_tax
+      };
+      cartData.push(item);
+    }
+
+    let pay_later_data = {
+      "date": this.pay_later_date.value,
+      "day": this.pay_later_day.value,
+      "is_send_reminder": this.is_send_reminder.value,
+    };
+
+
+
+    console.log(cartData, 'cash');
+    const formData = new FormData();
+    formData.append('customer', JSON.stringify(this.currentCustomer.id));
+    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
+    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('payment_mode', 'PAYLATER');
+    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('cart_data', JSON.stringify(cartData));
+    formData.append('card_detail', '');
+    formData.append('Multipay', '');
+    formData.append('PayLatter', JSON.stringify(pay_later_data));
+    formData.append('bank_detail', '');
+    formData.append('upi_detail', '');
+
+    this.cartService
+     .generateOrderNew(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response order', response);
+          if(response.isSuccess){
+            this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.payLaterModalClose');
+            clicking.click();
+            this.payLaterMethodForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+      }
+    
+  } else {
+    this.toastr.error('Please Add Items To Cart');
+  }
+
+
   }
 
   cardPaymentGenerateOrder(){

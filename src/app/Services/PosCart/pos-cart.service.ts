@@ -171,6 +171,15 @@ export class PosCartService {
     })
   }
 
+  getPaymentTerms(){
+    let url = this.apiUrl + '/pv-api/pos/payment_terms_pos/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
   generateOrderNew(data:any) {
     let url = this.apiUrl + '/pv-api/pos/pos_new_order/';
     return this.http.post(url, data, {

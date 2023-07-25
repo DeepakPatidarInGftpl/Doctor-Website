@@ -285,7 +285,7 @@
                                 <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#exampleModal6"> 
                                     <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
                                         Apply Coupon</button>
-                                        <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#exampleModal"> 
+                                        <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#payLaterMethodModal"> 
                                             <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
                                                 Pay Later(F11)</button>
                                                 <button type="button" class="btn btn-dark w-100"> 
@@ -1674,6 +1674,95 @@
       </div>
     </div>
   </div>  
+
+  <!-- Modal Pay Later-->
+<div class="modal fade posmodal" id="payLaterMethodModal" tabindex="-1" aria-labelledby="payLaterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="payLaterModalLabel">Invoice</h5>
+          <button type="button" class="btn-close payLaterModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="payLaterMethodForm" (ngSubmit)="payLaterGenerateOrder()">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Terms</label>
+                            <select class="form-select" formControlName="day">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let terms of paymentTermsList" [value]="terms.days">{{terms?.title}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="pay_later_day.invalid && (pay_later_day.dirty || pay_later_day.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="pay_later_day.errors?.['required']">
+    Payment Terms is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Due Date</label>
+                            <input type="date" class="form-control"
+                            placeholder="Due Date"
+                            formControlName="date">
+                        </div>
+                        <div *ngIf="pay_later_date.invalid && (pay_later_date.dirty || pay_later_date.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="pay_later_date.errors?.['required']">
+        Due Date is required.
+      </div>
+    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">Send Reminder</label>
+                            <div class="col-lg-9">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="reminder" formControlName="is_send_reminder" id="reminder_true" value="true">
+                                    <label class="form-check-label" for="reminder_true">
+                                    Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" formControlName="is_send_reminder" name="reminder" id="reminder_false" value="false">
+                                    <label class="form-check-label" for="reminder_false">
+                                    No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="is_send_reminder.invalid && (is_send_reminder.dirty || is_send_reminder.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="is_send_reminder.errors?.['required']">
+        Send Reminder is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
 
    <!-- Modal Card Payment-->
 <div class="modal fade posmodal" id="cardMethodModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
