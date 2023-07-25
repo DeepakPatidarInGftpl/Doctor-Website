@@ -170,7 +170,7 @@ export class PosComponent implements OnInit {
     this.payLaterMethodForm = this.fb.group({
       day: ['', [Validators.required]],
       date: ['', [Validators.required]],
-      is_send_reminder: ['true', [Validators.required]],
+      is_send_reminder: ['', [Validators.required]],
     });
  
     window.addEventListener('online', () => {
@@ -1202,20 +1202,20 @@ export class PosComponent implements OnInit {
       cartData.push(item);
     }
 
-    let pay_later_data = {
+    let pay_later_data = {      
+      "day": Number(this.pay_later_day.value),
       "date": this.pay_later_date.value,
-      "day": this.pay_later_day.value,
-      "is_send_reminder": this.is_send_reminder.value,
+      "is_send_reminder": this.is_send_reminder.value == 'false' ? 'False' : 'True',
     };
 
 
 
-    console.log(cartData, 'cash');
+    console.log(cartData, 'cash', pay_later_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
     formData.append('total_amount', JSON.stringify(this.totalAmount()));
-    formData.append('payment_mode', 'PAYLATER');
+    formData.append('payment_mode', 'Paylater');
     formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
