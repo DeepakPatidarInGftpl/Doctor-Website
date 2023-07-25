@@ -263,10 +263,10 @@
                                     <button type="button" class="btn btn-dark" (click)="holdBill()"> 
                                         <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                             Hold(F6)</button>
-                                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal2"> 
+                                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#upiMethodModal"> 
                                                 <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                                     UPI(F5)</button>
-                                                    <button type="button" class="btn btn-dark"> 
+                                                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#cardMethodModal"> 
                                                         <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
                                                             Card(F3)</button>
                                                             <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal5"> 
@@ -1597,7 +1597,193 @@
     </div>
   </div>
 
-  
+  <!-- Modal UPI-->
+<div class="modal fade posmodal" id="upiMethodModal" tabindex="-1" aria-labelledby="upiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="upiModalLabel">UPI Details</h5>
+          <button type="button" class="btn-close upiModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="upiPaymentMethodForm" (ngSubmit)="upiPaymentGenerateOrder()">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Account</label>
+                            <select class="form-select" formControlName="payment_account">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="payment_account_upi.invalid && (payment_account_upi.dirty || payment_account_upi.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_account_upi.errors?.['required']">
+    Payment Account is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>UPI Id</label>
+                            <input type="text" class="form-control"
+                            placeholder="UPI ID"
+                            formControlName="upi_id">
+                        </div>
+                        <div *ngIf="upi_id.invalid && (upi_id.dirty || upi_id.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="upi_id.errors?.['required']">
+        UPI ID is required.
+      </div>
+    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Transaction ID</label>
+                            <input type="text" class="form-control" 
+                            placeholder="Transaction ID"
+                            formControlName="transaction_id">
+                        </div>
+                        <div *ngIf="transaction_id.invalid && (transaction_id.dirty || transaction_id.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="transaction_id.errors?.['required']">
+        Transaction ID is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>  
+
+   <!-- Modal Card Payment-->
+<div class="modal fade posmodal" id="cardMethodModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cardModalLabel">Card Details</h5>
+          <button type="button" class="btn-close cardModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="cardPaymentMethodForm" (ngSubmit)="cardPaymentGenerateOrder()">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Account</label>
+                            <select class="form-select" formControlName="payment_account">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="payment_account_card.invalid && (payment_account_card.dirty || payment_account_card.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_account_card.errors?.['required']">
+    Payment Account is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Customer Bank Name</label>
+                            <input type="text" class="form-control"
+                            placeholder="Customer Bank Name"
+                            formControlName="customer_bank_name">
+                        </div>
+                        <div *ngIf="customer_bank_name.invalid && (customer_bank_name.dirty || customer_bank_name.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="customer_bank_name.errors?.['required']">
+        Customer Bank Name is required.
+      </div>
+    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Card Payment Amount</label>
+                            <input type="number" class="form-control" 
+                            placeholder="Card Payment Amount"
+                            formControlName="card_payment_amount">
+                        </div>
+                        <div *ngIf="card_payment_amount.invalid && (card_payment_amount.dirty || card_payment_amount.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="card_payment_amount.errors?.['required']">
+        Card Payment Amount is required.
+      </div>
+    </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Card Holder Name</label>
+                            <input type="text" class="form-control" 
+                            placeholder="Card Holder Name"
+                            formControlName="card_holder_name">
+                        </div>
+                        <div *ngIf="card_holder_name.invalid && (card_holder_name.dirty || card_holder_name.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="card_holder_name.errors?.['required']">
+        Card Holder Name is required.
+      </div>
+    </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Card Transaction No</label>
+                            <input type="number" class="form-control" 
+                            placeholder="Card Transaction No"
+                            formControlName="cart_transactions_no">
+                        </div>
+                        <div *ngIf="cart_transactions_no.invalid && (cart_transactions_no.dirty || cart_transactions_no.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="cart_transactions_no.errors?.['required']">
+        Card Transaction No. is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
 
   <!-- Hold Off Canvas -->
   <div class="offcanvas offcanvas-end pos-offcanvas" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">

@@ -162,6 +162,15 @@ export class PosCartService {
     })
   }
 
+  getCompanyBank(){
+    let url = this.apiUrl + '/pv-api/pos/company_bank/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
   generateOrderNew(data:any) {
     let url = this.apiUrl + '/pv-api/pos/pos_new_order/';
     return this.http.post(url, data, {

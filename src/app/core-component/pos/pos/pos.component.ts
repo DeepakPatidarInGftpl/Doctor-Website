@@ -80,6 +80,8 @@ export class PosComponent implements OnInit {
   currentItems: any[] = [];
   customerForm: FormGroup;
   registrationForm: FormGroup;
+  upiPaymentMethodForm: FormGroup;
+  cardPaymentMethodForm: FormGroup;
   customerRegistrationNumberSame: boolean = false;
   currentCountry: any;
   currentState:any;
@@ -90,6 +92,7 @@ export class PosComponent implements OnInit {
   currentBatch:any;
   additionalChargesList:any = [];
   taxesList:any = [];
+  companyBankList:any = [];
   currentOrderAdditionalCharges:any = [];
 
   currentAdditionalCharges:any = [];
@@ -148,6 +151,21 @@ export class PosComponent implements OnInit {
       pincode: ['', [Validators.pattern(/^[0-9]{6}$/)]]
     });
 
+    this.upiPaymentMethodForm = this.fb.group({
+      payment_account: ['', [Validators.required]],
+      upi_id: ['', [Validators.required]],
+      transaction_id: ['']
+    });
+
+    this.cardPaymentMethodForm = this.fb.group({
+      payment_account: ['', [Validators.required]],
+      customer_bank_name: ['', [Validators.required]],
+      card_payment_amount: ['', [Validators.required]],
+      card_holder_name: ['', [Validators.required]],
+      cart_transactions_no: ['', [Validators.required]],
+
+    });
+ 
     window.addEventListener('online', () => {
       if(this.showSyncButton){
         document.getElementById("exampleModal7").classList.add('show');      
@@ -362,6 +380,16 @@ export class PosComponent implements OnInit {
       }
     })
 
+    this.cartService.getCompanyBank().subscribe({
+      next: (response) => {
+        console.log(response, 'company bank')
+        this.companyBankList = response;
+      },
+      error: (error) => {
+        console.log('company bank', error);
+      }
+    })
+
     
   }
 
@@ -517,6 +545,8 @@ export class PosComponent implements OnInit {
   }
     this.currentTotalAdditionalCharges()
    }
+
+
 
    // update value of an element in current order additional charges
    updateValueInCAC(index:number, event: Event){
@@ -966,6 +996,18 @@ export class PosComponent implements OnInit {
   get city() { return this.registrationForm.get('city'); }
   get pincode() { return this.registrationForm.get('pincode'); }
 
+  get upi_id() { return this.upiPaymentMethodForm.get('upi_id'); }
+  get transaction_id() { return this.upiPaymentMethodForm.get('transaction_id'); }
+  get payment_account_upi() { return this.upiPaymentMethodForm.get('payment_account'); }
+
+
+  get payment_account_card() { return this.cardPaymentMethodForm.get('payment_account'); }
+  get customer_bank_name() { return this.cardPaymentMethodForm.get('customer_bank_name'); }
+  get card_payment_amount() { return this.cardPaymentMethodForm.get('card_payment_amount'); }
+  get card_holder_name() { return this.cardPaymentMethodForm.get('card_holder_name'); }
+  get cart_transactions_no() { return this.cardPaymentMethodForm.get('cart_transactions_no'); }
+
+
   handleMobileInputChange(event: any) {
     const inputValue = event.target.value;
     if(this.mobile_no.valid){
@@ -1105,6 +1147,171 @@ export class PosComponent implements OnInit {
       this.currentItems = this.cartService.getCurrentItems();
       this.currentOrderAdditionalCharges = [];
       this.currentCustomer = null;
+  }
+
+  cardPaymentGenerateOrder(){
+    if (this.cardPaymentMethodForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.cardPaymentMethodForm.controls).forEach(key => {
+        this.cardPaymentMethodForm.controls[key].markAsTouched();
+      });
+      return;
+    }
+
+    if(this.currentItems.length > 0){
+      if(this.currentCustomer === null || this.currentCustomer === undefined){
+        this.toastr.error('Please Select/Add a Customer!');
+      } else {
+        let cartData = [];
+    for (let index = 0; index < this.currentItems.length; index++) {
+      const element = this.currentItems[index];
+      let item = {
+        "variant": element.id,
+        "qty": element.quantity,
+        "mrp": element.batch[0].mrp,
+        "discount": 0,
+        "add_discount": 0,
+        "unit_cost": element.batch[0]?.selling_price_offline,
+        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
+        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "remarks": "",
+        "tax_percentage": element?.batch[0]?.sale_tax
+      };
+      cartData.push(item);
+    }
+
+    let card_data = {
+      "payment_account": this.payment_account_card.value,
+      "customer_bank_name": this.customer_bank_name.value,
+      "card_payment_amount": this.card_payment_amount.value,
+      "card_holder_name": this.card_holder_name.value,
+      "cart_transactions_no": this.cart_transactions_no.value
+    };
+
+
+
+    console.log(cartData, 'cash');
+    const formData = new FormData();
+    formData.append('customer', JSON.stringify(this.currentCustomer.id));
+    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
+    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('payment_mode', 'Card');
+    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('cart_data', JSON.stringify(cartData));
+    formData.append('card_detail', JSON.stringify(card_data));
+    formData.append('Multipay', '');
+    formData.append('PayLatter', '');
+    formData.append('bank_detail', '');
+    formData.append('upi_detail', '');
+
+    this.cartService
+     .generateOrderNew(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response order', response);
+          if(response.isSuccess){
+            this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.cardModalClose');
+            clicking.click();
+            this.cardPaymentMethodForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+      }
+    
+  } else {
+    this.toastr.error('Please Add Items To Cart');
+  }
+
+
+  }
+
+  upiPaymentGenerateOrder(){
+    if (this.upiPaymentMethodForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.upiPaymentMethodForm.controls).forEach(key => {
+        this.upiPaymentMethodForm.controls[key].markAsTouched();
+      });
+      return;
+    }
+
+    if(this.currentItems.length > 0){
+      if(this.currentCustomer === null || this.currentCustomer === undefined){
+        this.toastr.error('Please Select/Add a Customer!');
+      } else {
+        let cartData = [];
+    for (let index = 0; index < this.currentItems.length; index++) {
+      const element = this.currentItems[index];
+      let item = {
+        "variant": element.id,
+        "qty": element.quantity,
+        "mrp": element.batch[0].mrp,
+        "discount": 0,
+        "add_discount": 0,
+        "unit_cost": element.batch[0]?.selling_price_offline,
+        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
+        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "remarks": "",
+        "tax_percentage": element?.batch[0]?.sale_tax
+      };
+      cartData.push(item);
+    }
+
+    let upi_data = {
+      "upi_no": Number(this.upi_id.value),
+      "payment_account": Number(this.payment_account_upi.value)
+    };
+
+
+
+    console.log(cartData, 'cash', upi_data);
+    const formData = new FormData();
+    formData.append('customer', JSON.stringify(this.currentCustomer.id));
+    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
+    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('payment_mode', 'UPI');
+    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('cart_data', JSON.stringify(cartData));
+    formData.append('card_detail', '');
+    formData.append('Multipay', '');
+    formData.append('PayLatter', '');
+    formData.append('bank_detail', '');
+    formData.append('upi_detail', JSON.stringify(upi_data));
+
+    this.cartService
+     .generateOrderNew(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response order', response);
+          if(response.isSuccess){
+            this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.upiModalClose');
+            clicking.click();
+            this.upiPaymentMethodForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+      }
+    
+  } else {
+    this.toastr.error('Please Add Items To Cart');
+  }
+
+
   }
 
   cashPaymentGenerateOrder(){
