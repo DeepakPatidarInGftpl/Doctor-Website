@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, Observer, fromEvent, merge, Subscription, of } from 'rxjs';
+import { Observable, Observer, fromEvent, merge, Subscription, OperatorFunction } from 'rxjs';
 import { map, startWith, filter, distinctUntilChanged, debounceTime, tap, switchMap, finalize, catchError } from 'rxjs/operators';
 import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 import { SyncServiceService } from 'src/app/Services/sync-service.service';
@@ -11,16 +11,20 @@ import { __values } from 'tslib';
 import { Modal } from 'bootstrap';
 import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 
+
+
 @Component({
   selector: 'app-pos',
   templateUrl: './pos.component.html',
-  styleUrls: ['./pos.component.scss']
+  styleUrls: ['./pos.component.scss'],
 })
-
 
 
 export class PosComponent implements OnInit {
   heldBills: any[] = [];
+
+  streetcontrol = new FormControl('');
+
   
 
   //options: string[] = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry'];
@@ -79,7 +83,7 @@ export class PosComponent implements OnInit {
   chargesAutoCompleteControl = new FormControl('');
   customerAutoCompleteControl2 = new FormControl('');
 
-  streets: string[] = ['Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow'];
+  streets: string[] = ['Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow'];
   filteredStreets: Observable<string[]>;
   currentCustomer:any | null;
   currentCustomerPayment:any | null;
@@ -160,6 +164,12 @@ export class PosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.filteredStreets = this.streetcontrol.valueChanges.pipe(
+      startWith(''),
+      map(value => this.__filter(value || '')),
+    );
+
+   
     this.heldBills = this.billHoldService.getHeldBills();
 
     this.registrationForm = this.fb.group({
@@ -516,6 +526,15 @@ export class PosComponent implements OnInit {
     }
   }
 
+  private __filter(value: string): string[] {
+    const filterValue = this.__normalizeValue(value);
+    return this.streets.filter(street => this.__normalizeValue(street).includes(filterValue));
+  }
+
+  private __normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
+  }
+
   private _filter(value: string): string[] {
     const filterValue = this._normalizeValue(value);
     return this.streets.filter(street => this._normalizeValue(street).includes(filterValue));
@@ -550,6 +569,7 @@ export class PosComponent implements OnInit {
   //     this.autocompleteControl.setValue('');
   //   }
   // }
+
 
   // add row to current additional charges
   addRowToCAC(){
@@ -771,6 +791,15 @@ export class PosComponent implements OnInit {
 
   optionSelectedReceipt(event){
     let customer = event.option.value;
+    this.cartService.getReceiptDueOrder(customer.id).subscribe({
+      next: (response) => {
+        console.log(response, 'receipt sales')
+        this.receiptSales = response;
+      },
+      error: (error) => {
+        console.log('receipt sales', error);
+      }
+    })
 
   }
 

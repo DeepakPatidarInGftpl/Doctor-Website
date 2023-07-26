@@ -858,32 +858,65 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Amount</label>
                                     <input type="number" formControlName="amount_receipt" class="form-control" placeholder="Enter Amount">
                                 </div>
                             </div>
+
+                            <!-- <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="typeahead-basic">Search for a state:</label>
+<input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="modelPayments" [ngbTypeahead]="search" (selectItem)="onItemSelect($event)"/>
+                                </div>
+                            </div> -->
             
                             <div class="row">
                                 
-                                <div class="col-sm-4">
+                                <div class="col-sm-8">
                                     <input type="text"
-                                   placeholder="Search for a Customer"
-                                   [formControl]="receiptPaymentForm.get('customer_receipt')"
-                                   [matAutocomplete]="autoReceipt"
-                                   class="form-control">
-                            <mat-autocomplete #autoReceipt="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelectedReceipt($event)">
-                                <!-- <mat-option class="is-loading">
-                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal1">Add New Customer</button>
-                                </mat-option> -->
-                                <mat-option *ngIf="receiptPaymentForm.get('customer_receipt').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
-                                <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
-                                <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
-                              <mat-option *ngFor="let customer of filteredCustomer2" [value]="customer">
-                                {{ displayCus(customer) }}
-                              </mat-option>
-                            </mat-autocomplete>
+                                        placeholder="Search for a Customer"
+                                        [formControl]="receiptPaymentForm.get('customer_receipt')"
+                                        [matAutocomplete]="autoReceipt"
+                                        class="form-control">
+                                 <mat-autocomplete #autoReceipt="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelectedReceipt($event)">
+                                     
+                                     <mat-option *ngIf="receiptPaymentForm.get('customer_receipt').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                     <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
+                                     <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+                                   <mat-option *ngFor="let customer of filteredCustomer2" [value]="customer">
+                                     {{ displayCus(customer) }}
+                                   </mat-option>
+                                 </mat-autocomplete>
+                                        <!-- <input type="text"
+                                               placeholder="Search for a street"
+                                               [formControl]="streetcontrol"
+                                               [matAutocomplete]="auto5"
+                                               class="example-input">
+                                        <mat-autocomplete #auto5="matAutocomplete">
+                                          <mat-option *ngFor="let street of filteredStreets | async" [value]="street">
+                                            {{street}}
+                                          </mat-option>
+                                        </mat-autocomplete> -->
+                                      
+                                    <!-- <form>
+                                        <input type="text"
+                                        placeholder="Search for a Customer"
+                                        [formControl]="receiptPaymentForm.get('customer_receipt')"
+                                        [matAutocomplete]="autoReceipt"
+                                        class="form-control">
+                                 <mat-autocomplete #autoReceipt="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelectedReceipt($event)">
+                                     
+                                     <mat-option *ngIf="receiptPaymentForm.get('customer_receipt').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                     <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
+                                     <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+                                   <mat-option *ngFor="let customer of filteredCustomer2" [value]="customer">
+                                     {{ displayCus(customer) }}
+                                   </mat-option>
+                                 </mat-autocomplete>
+                                    </form> -->
+                                    
                                 </div>
                             </div>
                         </div>
@@ -924,6 +957,12 @@
                         <label>Remark</label>
                         <input type="text" class="form-control" placeholder="Enter Remark">
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
+
                 </div>
             </div>
             </form>

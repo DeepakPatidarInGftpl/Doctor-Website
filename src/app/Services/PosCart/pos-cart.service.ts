@@ -188,4 +188,13 @@ export class PosCartService {
       })
     })
   }
+
+  getReceiptDueOrder(id:any){
+    let url = this.apiUrl + '/pv-api/pos/receipt_due_order/?customer_id='+ id;
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
 }
