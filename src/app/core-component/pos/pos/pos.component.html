@@ -802,7 +802,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModal2Label">Payment</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close receiptModalClose" data-bs-dismiss="modal" aria-label="Close">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -874,7 +874,7 @@
                                     <label>Select Sales</label>
                                     <select class="form-select" formControlName="receipt_sales">
                                         <option disabled selected value="">-- Select Sales --</option>
-                                        <option *ngFor="let option of receiptSales" [value]="option?.id">Option 1</option>
+                                        <option *ngFor="let option of receiptSales" [value]="option?.id">{{option?.dueAmount}}</option>
                                     </select>
                                 </div>
                                 <div *ngIf="receipt_sales.invalid && (receipt_sales.dirty || receipt_sales.touched)"

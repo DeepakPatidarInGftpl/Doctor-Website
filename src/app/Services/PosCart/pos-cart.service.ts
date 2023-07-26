@@ -189,6 +189,15 @@ export class PosCartService {
     })
   }
 
+  receiptPayment(data:any) {
+    let url = this.apiUrl + '/pv-api/pos/receipt_advance_payment_or_againest_bill/';
+    return this.http.post(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
   getReceiptDueOrder(id:any){
     let url = this.apiUrl + '/pv-api/pos/receipt_due_order/?customer_id='+ id;
     return this.http.get(url, {

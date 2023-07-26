@@ -59,7 +59,7 @@ export class PosComponent implements OnInit {
   ];
 
   paymentType = [
-    {id: 1, label: 'Advance Payment', value: 'Advance Payment'},
+    {id: 1, label: 'Advance Payment', value: 'Advance'},
     {id: 2, label: 'Against Bill', value: 'Against Bill'}
   ];
 
@@ -1315,6 +1315,53 @@ export class PosComponent implements OnInit {
       });
       return;
     }
+
+    let formData = new FormData();
+
+    if(this.payment_type.value == 'Advance'){
+      formData.append('customer', this.customer_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', '');
+      formData.append('card_detail', '');
+      formData.append('bank_detail', '');
+      formData.append('upi_detail', '');
+    } else {
+    formData.append('customer', this.customer_receipt?.value?.id);
+    formData.append('receipt_method', this.payment_type.value);
+    formData.append('payment_mode', this.payment_mode.value);
+    formData.append('amount', this.amount_receipt.value);
+    formData.append('description', this.receipt_remark.value);
+    formData.append('bill_no', this.receipt_sales.value);
+    formData.append('card_detail', '');
+    formData.append('bank_detail', '');
+    formData.append('upi_detail', '');
+    }
+    
+
+    this.cartService
+     .receiptPayment(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response receipt', response);
+          if(response.isSuccess){
+            // this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.receiptModalClose');
+            clicking.click();
+            this.receiptPaymentForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+
   }
 
   payLaterGenerateOrder(){
