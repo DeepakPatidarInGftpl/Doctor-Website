@@ -215,7 +215,9 @@ export class PosComponent implements OnInit {
       receipt_sales: [''],
       amount_receipt: ['', [Validators.required]],
       customer_receipt: ['', [Validators.required]],
-      receipt_remark: ['', [Validators.required]]
+      receipt_remark: ['', [Validators.required]],
+      payment_account: [''],
+      upi_id: [''],
     })
 
     this.receiptPaymentForm.get('payment_type').valueChanges.subscribe((value) => {
@@ -225,6 +227,18 @@ export class PosComponent implements OnInit {
         this.receiptPaymentForm.get('receipt_sales').clearValidators();
       }
       this.receiptPaymentForm.get('receipt_sales').updateValueAndValidity();
+    });
+
+    this.receiptPaymentForm.get('payment_mode').valueChanges.subscribe((value) => {
+      if (value === 'UPI') { // Show the conditional field only if Option 1 is selected
+        this.receiptPaymentForm.get('upi_id').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+      } else {
+        this.receiptPaymentForm.get('upi_id').clearValidators();
+        this.receiptPaymentForm.get('payment_account').clearValidators();
+      }
+      this.receiptPaymentForm.get('upi_id').updateValueAndValidity();
+      this.receiptPaymentForm.get('payment_account').updateValueAndValidity;
     });
  
     window.addEventListener('online', () => {
@@ -584,6 +598,7 @@ export class PosComponent implements OnInit {
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
     }
   }
+
 
   // delete row in current additional charges
   deleteRowInCAC(index:number, event: Event){
@@ -1144,6 +1159,10 @@ export class PosComponent implements OnInit {
   get transaction_id() { return this.upiPaymentMethodForm.get('transaction_id'); }
   get payment_account_upi() { return this.upiPaymentMethodForm.get('payment_account'); }
 
+  get upi_id_receipt() { return this.receiptPaymentForm.get('upi_id'); }
+  get transaction_id_receipt() { return this.receiptPaymentForm.get('transaction_id'); }
+  get payment_account_receipt() { return this.receiptPaymentForm.get('payment_account'); }
+
 
   get payment_account_card() { return this.cardPaymentMethodForm.get('payment_account'); }
   get customer_bank_name() { return this.cardPaymentMethodForm.get('customer_bank_name'); }
@@ -1318,6 +1337,36 @@ export class PosComponent implements OnInit {
 
     let formData = new FormData();
 
+    if(this.payment_mode.value === 'UPI'){
+      let upi_data = {
+        "upi_no": Number(this.upi_id_receipt.value),
+        "payment_account": Number(this.payment_account_receipt.value)
+      };
+
+      if(this.payment_type.value == 'Advance'){
+        formData.append('customer', this.customer_receipt?.value?.id);
+        formData.append('receipt_method', this.payment_type.value);
+        formData.append('payment_mode', this.payment_mode.value);
+        formData.append('amount', this.amount_receipt.value);
+        formData.append('description', this.receipt_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', JSON.stringify(upi_data));
+      } else {
+      formData.append('customer', this.customer_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('card_detail', '');
+      formData.append('bank_detail', '');
+      formData.append('upi_detail', JSON.stringify(upi_data));
+      }
+
+    } else {
+
     if(this.payment_type.value == 'Advance'){
       formData.append('customer', this.customer_receipt?.value?.id);
       formData.append('receipt_method', this.payment_type.value);
@@ -1340,6 +1389,7 @@ export class PosComponent implements OnInit {
     formData.append('upi_detail', '');
     }
     
+  }
 
     this.cartService
      .receiptPayment(formData)

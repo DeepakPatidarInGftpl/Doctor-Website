@@ -965,7 +965,41 @@
                                 </div>
                             </div>
             </div>
-                    
+            
+            <div class="row" *ngIf="receiptPaymentForm.get('payment_mode').value !== 'Cash'">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Payment Account</label>
+                        <select class="form-select" formControlName="payment_account">
+                            <option value="" disabled selected>Select Payment Account</option>
+    <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                        </select>
+                    </div>
+                    <div *ngIf="payment_account_receipt.invalid && (payment_account_receipt.dirty || payment_account_receipt.touched)"
+    class="alert alert-danger">
+    
+    <div *ngIf="payment_account_receipt.errors?.['required']">
+    Payment Account is required.
+    </div>
+    </div>
+                </div>
+                <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_mode').value === 'UPI'">
+                    <div class="form-group">
+                        <label>UPI Id</label>
+                        <input type="text" class="form-control"
+                        placeholder="UPI ID"
+                        formControlName="upi_id">
+                    </div>
+                    <div *ngIf="upi_id_receipt.invalid && (upi_id_receipt.dirty || upi_id_receipt.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="upi_id_receipt.errors?.['required']">
+    UPI ID is required.
+  </div>
+</div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group mb-0">
