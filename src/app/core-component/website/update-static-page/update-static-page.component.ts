@@ -82,13 +82,19 @@ export class UpdateStaticPageComponent implements OnInit, OnDestroy {
           this.staticPgForm.reset()
           // window.location.reload();
         this.router.navigate(['/website/staticPage'])
+        }else if(this.addRes.slug[0]=="Static Pages with this slug already exists."){
+          this.loaders=false;
+          this.toastr.error(this.addRes.slug[0])
+        }
+        else{
+          this.loaders=false;
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders=false;
+        console.log(err.error);
       })
-
-
     } else {
+      this.loaders=false;
       this.staticPgForm.markAllAsTouched()
       console.log('forms invalid');
     }

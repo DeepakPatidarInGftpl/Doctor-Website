@@ -50,13 +50,17 @@ export class FooterFeaturesComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Footer Features Deleted successfully") {
             this.tableData
-            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
           }
         })
         Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
+          icon: 'error',
+          title: 'Not Deleted!',
+          text: this.delRes.error,
         });
         this.tableData.splice(index, 1);
       }
@@ -226,10 +230,12 @@ export class FooterFeaturesComponent implements OnInit {
           this.ngOnInit()
         }
         else{
+          this.loaders=false;
           this.url='';
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders=false;
+        console.log(err.error);
       })
     } else {
       this.FooterFeaturesForm.markAllAsTouched()
@@ -259,8 +265,11 @@ export class FooterFeaturesComponent implements OnInit {
             this.addForm = true
             // window.location.reload()
             this.ngOnInit()
+          }else{
+            this.loaders=false;
           }
         }, err => {
+          this.loaders=false;
           console.log(err.error.gst);
         })
       } else {
@@ -275,9 +284,9 @@ export class FooterFeaturesComponent implements OnInit {
             this.addForm = true
             // window.location.reload()
             this.ngOnInit()
-          }
+          }else{this.loaders=false;}
         }, err => {
-          console.log(err.error.gst);
+          console.log(err.error);
         })
       }
     } else {
@@ -323,16 +332,27 @@ export class FooterFeaturesComponent implements OnInit {
     this.updateData='';
   }
 
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.title.toLocaleLowerCase());
+  //       console.log(res.title.match(this.titlee));
+  //       return res.title.match(this.titlee);
+  //     })
+  //   }
+  // }
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
-      })
+        const nameLower = res.title.toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
   key = 'id'

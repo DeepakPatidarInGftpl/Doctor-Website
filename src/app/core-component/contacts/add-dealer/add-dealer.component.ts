@@ -249,6 +249,7 @@ export class AddDealerComponent implements OnInit {
         }
       })
     } else {
+      this.loader=false;
       this.dealerForm.markAllAsTouched()
       console.log('hhhhhh');
     }

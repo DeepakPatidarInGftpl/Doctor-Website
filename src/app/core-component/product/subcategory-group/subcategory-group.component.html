@@ -107,7 +107,7 @@
         </div>
         <!-- /Filter -->
         <div class="table-responsive">
-          <table datatable [dtOptions]="dtOptions" class="table  datanew">
+          <table class="table datanew">
             <thead>
               <tr>
                 <th (click)="sort('id')" class="thone">
@@ -126,7 +126,7 @@
                 <th (click)="sort('id')" class="thone">Actions <i class="fa fa-sort"></i></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody *ngIf="tableData?.length>=0">
               <tr
                 *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                 <td>
@@ -136,35 +136,43 @@
                   </label>
                 </td>
                 <td class="productimgname">
-                  <a routerLink="/product/subCategoryDetails/{{products.id}}"
-                    style="line-height: 3;"><img [src]="imgUrl+products.image" alt="product"></a>
+                  <a routerLink="/product/subCategoryDetails/{{products.id}}" style="line-height: 3;"><img
+                      [src]="imgUrl+products.image" alt="product"></a>
                 </td>
                 <td>{{products.title}}</td>
                 <td>{{products.category.title}}</td>
                 <td>
-                <tr *ngFor="let data of products?.subcategories">
-                  <td>{{data.title+','}}</td>
+              <tr *ngFor="let data of products?.subcategories">
+                <td>{{data.title+','}}</td>
               </tr>
-                </td>
-                <td>
-                  <tr *ngFor="let data of products.feature_group">
-                    <td>{{data.title+','}}</td>
+              </td>
+              <td>
+                <tr *ngFor="let data of products.feature_group">
+                  <td>{{data.title+','}}</td>
                 </tr>
-                </td>
-                <td>
-                  <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
-                    [(ngModel)]="products.is_active"></mat-slide-toggle>
-                </td>
-                <td>
-                  <a class="me-2" routerLink="/product/subCategoryDetails/{{products.id}}">
-                    <img src="assets/img/icons/eye.svg" alt="img">
-                  </a>
-                  <a class="me-2" (click)="editThis(products)" *ngIf="isEdit">
-                    <img src="assets/img/icons/edit.svg" alt="img">
-                  </a>
-                  <a (click)="confirmText(i, products.id)" class="me-2 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
-                    <img src="assets/img/icons/delete.svg" alt="img">
-                  </a>
+              </td>
+              <td>
+                <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                  [(ngModel)]="products.is_active"></mat-slide-toggle>
+              </td>
+              <td>
+                <a class="me-2" routerLink="/product/subCategoryDetails/{{products.id}}">
+                  <img src="assets/img/icons/eye.svg" alt="img">
+                </a>
+                <a class="me-2" (click)="editThis(products)" *ngIf="isEdit">
+                  <img src="assets/img/icons/edit.svg" alt="img">
+                </a>
+                <a (click)="confirmText(i, products.id)" class="me-2 confirm-text" href="javascript:void(0);"
+                  *ngIf="isDelete">
+                  <img src="assets/img/icons/delete.svg" alt="img">
+                </a>
+              </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="tableData?.length===0 && !loader">
+              <tr>
+                <td colspan="10">
+                  <p class="center-textt">Data not available</p>
                 </td>
               </tr>
             </tbody>
@@ -200,14 +208,14 @@
     <div class="page-header">
       <div *ngIf="isAdd">
         <div class="page-title" *ngIf="addForm">
-        <h4> Add Sub Category Group</h4>
-        <h6>Create new Sub Category Group </h6>
+          <h4> Add Sub Category Group</h4>
+          <h6>Create new Sub Category Group </h6>
         </div>
       </div>
       <div *ngIf="isEdit">
-      <div class="page-title" *ngIf="!addForm">
-        <h4>Edit Sub Category Group</h4>
-        <h6>Update Sub Category Group </h6>
+        <div class="page-title" *ngIf="!addForm">
+          <h4>Edit Sub Category Group</h4>
+          <h6>Update Sub Category Group </h6>
         </div>
       </div>
     </div>
@@ -240,7 +248,7 @@
             </div>
           </div>
           <div class="col-lg-12 col-sm-12 col-12">
-            
+
             <div class="form-group">
               <label>Sub Category*</label>
               <div class="dropdown">
@@ -268,7 +276,7 @@
             <span class="text-danger" *ngIf="errormessFSubC">{{errormessFSubC}}</span>
           </div>
           <div class="col-lg-12 col-sm-12 col-12">
-          
+
             <div class="form-group">
               <label>Feature Group*</label>
               <div class="dropdown">
@@ -294,43 +302,44 @@
 
           <div class="col-lg-12">
             <div class="form-group">
-                <label>Subcategory Group Image*</label>
-                <div class="row" *ngIf="!this.editMode">
-                    <div class="col-lg-6">
-                        <div class="image-upload">
-                            <input type="file" formControlName="image" (change)="selectImg($event)">
-                            <div class="image-uploads">
-                                <img src="assets/img/icons/upload.svg" alt="img">
-                                <h4>Drag and drop a file to upload</h4>
-                            </div>
-                        </div>
+              <label>Subcategory Group Image*</label>
+              <div class="row" *ngIf="!this.editMode">
+                <div class="col-lg-6">
+                  <div class="image-upload">
+                    <input type="file" formControlName="image" (change)="selectImg($event)">
+                    <div class="image-uploads">
+                      <img src="assets/img/icons/upload.svg" alt="img">
+                      <h4>Drag and drop a file to upload</h4>
                     </div>
-                    <div class="col-lg-6">
-                            <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                            class="bi bi-image mx-5 svg" viewBox="0 0 16 16" style="height: 100px; width: 100px;">
-                            <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                            <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
-                        </svg>
-                        <img [src]="url" *ngIf="url" alt="" class="p_img">
-                    </div>
+                  </div>
                 </div>
-                <div class="row" *ngIf="this.editMode">
-                  <div class="col-lg-6">
-                      <div class="image-upload">
-                          <input type="file" formControlName="image" (change)="selectImg($event)">
-                          <div class="image-uploads">
-                              <img src="assets/img/icons/upload.svg" alt="img">
-                              <h4>Drag and drop a file to upload</h4>
-                          </div>
-                      </div>
+                <div class="col-lg-6">
+                  <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                    class="bi bi-image mx-5 svg" viewBox="0 0 16 16" style="height: 100px; width: 100px;">
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                    <path
+                      d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
+                  </svg>
+                  <img [src]="url" *ngIf="url" alt="" class="p_img">
+                </div>
+              </div>
+              <div class="row" *ngIf="this.editMode">
+                <div class="col-lg-6">
+                  <div class="image-upload">
+                    <input type="file" formControlName="image" (change)="selectImg($event)">
+                    <div class="image-uploads">
+                      <img src="assets/img/icons/upload.svg" alt="img">
+                      <h4>Drag and drop a file to upload</h4>
+                    </div>
                   </div>
-                  <div class="col-lg-6">
-                      <img [src]="url" *ngIf="url" alt="" class="p_img">
-                      <img [src]="imgUrl+updateData.image" *ngIf="!url" alt="" class="p_img">
-                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <img [src]="url" *ngIf="url" alt="" class="p_img">
+                  <img [src]="imgUrl+updateData.image" *ngIf="!url" alt="" class="p_img">
+                </div>
               </div>
             </div>
-        </div>
+          </div>
           <div class="col-lg-12">
             <a (click)="submitForm()" class="btn btn-submit me-2">{{this.editMode? 'Save Changes': 'Submit'}}</a>
           </div>

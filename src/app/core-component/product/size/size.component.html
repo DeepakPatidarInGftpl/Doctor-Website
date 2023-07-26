@@ -72,7 +72,7 @@
                                 <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody *ngIf="tableData?.length>=0">
                             <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{ itemsPerPage: itemsPerPage, currentPage: p } let i = index">
                                 <td>
                                     <label class="checkboxs">
@@ -101,7 +101,13 @@
                                 </td>
                             </tr>
                         </tbody>
-                   
+                        <tbody *ngIf="tableData?.length===0 && !loader">
+                            <tr>
+                              <td colspan="10">
+                                <p class="center-textt">Data not available</p>
+                              </td>
+                            </tr>
+                          </tbody>
                        
                        
                         <!-- <tr>
@@ -181,7 +187,7 @@
                             <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                             <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
+                               &nbsp; Submit</button>
                         </div>
                     </div>
                 </form>
@@ -216,7 +222,7 @@
                             <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                             <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
+                                &nbsp; Submit</button>
                         </div>
                     </div>
                 </form>

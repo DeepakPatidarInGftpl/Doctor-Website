@@ -134,6 +134,7 @@ url:any;
           } else {
             this.loaders = false;
             if (this.addRes.whatsapp) {
+              this.loaders = false;
               this.whatsError = this.addRes.whatsapp[0];
               setTimeout(() => {
                 this.whatsError = ''
@@ -141,7 +142,8 @@ url:any;
             }
           }
         }, err => {
-          console.log(err.error.gst);
+          this.loaders = false;
+          console.log(err.error);
         })
       }else{
         this.websiteService.updateFooter(formdata,this.id).subscribe((res: any) => {
@@ -155,6 +157,7 @@ url:any;
           } else {
             this.loaders = false;
             if (this.addRes.whatsapp) {
+              this.loaders = false;
               this.whatsError = this.addRes.whatsapp[0];
               setTimeout(() => {
                 this.whatsError = ''
@@ -162,7 +165,8 @@ url:any;
             }
           }
         }, err => {
-          console.log(err.error.gst);
+          this.loaders = false;
+          console.log(err.error);
         })
       }
     

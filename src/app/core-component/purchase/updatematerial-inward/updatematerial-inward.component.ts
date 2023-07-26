@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
-
+import { tap } from 'rxjs/operators';
 @Component({
   selector: 'app-updatematerial-inward',
   templateUrl: './updatematerial-inward.component.html',
@@ -57,7 +57,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       this.materialForm.get('supplier')?.patchValue(res.supplier.id);
       this.materialForm.get('purchase_order')?.patchValue(res.purchase_order.id);
       this.materialForm.setControl('material_inward_cart', this.udateCart(res.cart));
-      
+      this.displaySupplierName(res.supplier.id);
     })
     this.materialForm = this.fb.group({
       supplier: new FormControl('', [Validators.required]),
@@ -87,7 +87,18 @@ export class UpdatematerialInwardComponent implements OnInit {
     this.getVariants();
     this.getPurchase();
   }
-
+displaySupplierName(supplierId: number): void {
+  this.filteredSuppliers
+    .pipe(
+      tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
+      map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
+    )
+    .subscribe(matchedSuppliers => {
+      if (matchedSuppliers.length > 0) {
+        this.supplierControl.setValue(matchedSuppliers[0].name);
+      }
+    });
+}
   get supplier() {
     return this.materialForm.get('supplier') as FormControl;
   }
@@ -213,10 +224,32 @@ export class UpdatematerialInwardComponent implements OnInit {
         }else{
           this.loader=false;
         }
+      },err=>{
+        this.loader=false;
       })
     } else {
       this.materialForm.markAllAsTouched()
     }
+  }
+
+  discountt(index: number) {
+    return this.getCart().controls[index].get('discount');
+  }
+  
+  get material_inward_date() {
+    return this.materialForm.get('material_inward_date') ;
+  }
+  get material_inward_no() {
+    return this.materialForm.get('material_inward_no') ;
+  }
+  get recieved_by() {
+    return this.materialForm.get('recieved_by') ;
+  }
+  get shipping_note() {
+    return this.materialForm.get('shipping_note');
+  }
+  get purchase_order() {
+    return this.materialForm.get('purchase_order');
   }
   private _filter(value: string | number, include: boolean): any[] {
     console.log(value);

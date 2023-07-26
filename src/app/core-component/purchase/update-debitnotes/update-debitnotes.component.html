@@ -14,7 +14,7 @@
                         <mat-form-field class="w-100">
                             <input type="text" placeholder="Search supplier" aria-label="Supplier" matInput
                                 [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;" 
-                                [ngClass]="{'is-invalid': f['supplier'].touched && f['supplier'].invalid}">
+                                [ngClass]="{'is-invalid': f['supplier'].touched && f['supplier'].invalid}" [readonly]="true">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.name"
                                     (onSelectionChange)="oncheck(supplier.id)">{{ supplier.name }}</mat-option>
@@ -27,30 +27,29 @@
                         </mat-form-field>
                     </div>
                 </div>
-
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Debit Note Date*</label>
-                        <input type="date" formControlName="debit_note_date" [ngClass]="{'is-invalid': f['debit_note_date'].touched && f['debit_note_date'].invalid}">
+                        <input type="date" formControlName="debit_note_date" [ngClass]="{'is-invalid': f['debit_note_date'].touched && f['debit_note_date'].invalid}" readonly>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Debit Note No</label>
-                        <input type="text" formControlName="debit_note_no" [ngClass]="{'is-invalid': f['debit_note_no'].touched && f['debit_note_no'].invalid}">
+                        <input type="text" formControlName="debit_note_no" [ngClass]="{'is-invalid': f['debit_note_no'].touched && f['debit_note_no'].invalid}" readonly>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Refrence Bill No*</label>
-                        <input type="text" formControlName="refrence_bill_no" [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}">
+                        <input type="text" formControlName="refrence_bill_no" [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}" readonly>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Payment Terms</label>
-                       <select formControlName="payment_term" [ngClass]="{'is-invalid': f['payment_term'].touched && f['payment_term'].invalid}">
+                       <select formControlName="payment_term" [ngClass]="{'is-invalid': f['payment_term'].touched && f['payment_term'].invalid}" readonly>
                             <option value="" selected disabled>Select Payment Term</option>
                             <option value="{{payment.id}}" *ngFor="let payment of paymentList">{{payment.title}}</option>
                         </select>
@@ -59,20 +58,20 @@
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Due Date*</label>
-                        <input type="date" formControlName="due_date" [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}">
+                        <input type="date" formControlName="due_date" [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}" readonly>
                     </div>
                 </div>
              
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Reverse Charge</label>
-                        <input type="text" formControlName="reverse_charge" [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}">
+                        <input type="text" formControlName="reverse_charge" [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}" readonly>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Purchase* </label>
-                       <select formControlName="purchase" [ngClass]="{'is-invalid': f['purchase'].touched && f['purchase'].invalid}">
+                       <select formControlName="purchase" [ngClass]="{'is-invalid': f['purchase'].touched && f['purchase'].invalid}" readonly>
                             <option value="" selected disabled>Select Purchase</option>
                             <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase.order_no}}</option>
                         </select>
@@ -81,21 +80,21 @@
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Shipping Date* </label>
-                        <input type="date" formControlName="shipping_date" [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}">
+                        <input type="date" formControlName="shipping_date" [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}" readonly>
                     </div>
                 </div>
               
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Reason</label>
-                        <input type="text" formControlName="reason" [ngClass]="{'is-invalid': f['reason'].touched && f['reason'].invalid}">
+                        <input type="text" formControlName="reason" [ngClass]="{'is-invalid': f['reason'].touched && f['reason'].invalid}" readonly>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Status</label>
-                        <select formControlName="status" [ngClass]="{'is-invalid': f['status'].touched && f['status'].invalid}">
+                        <select formControlName="status" [ngClass]="{'is-invalid': f['status'].touched && f['status'].invalid}" readonly>
                             <option value="" selected disabled>Select Status</option>
                             <option value="Complete">Complete</option>
                             <option value="Pending">Pending</option>
@@ -105,7 +104,7 @@
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group my-4">
                         <div class="d-flex">
-                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true">
+                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true" readonly>
                             <label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Export</label>
                         </div>
                     </div>
@@ -164,9 +163,9 @@
                                         </td>
                                         <td>  
                                             <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
-                                                (click)="open()" placeholder="Search Product" *ngIf="isProduct"
-                                                class="input">
-                                            <mat-form-field class="w-100" *ngIf="!isProduct">
+                                            (click)="open()" placeholder="Search Product" *ngIf="isProduct"
+                                            class="input">
+                                        <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
                                                 <input type="text" placeholder="Search Product" aria-label="Produt"
                                                     matInput [formControl]="variantControl" [matAutocomplete]="auto"
                                                     style="height: 18px;">
@@ -187,7 +186,9 @@
                                         <td><input type="text" formControlName="qty" class="input"></td>
                                         <td><input type="text" formControlName="unit_cost" class="input"></td>
                                         <td><input type="text" formControlName="mrp" class="input"></td>
-                                        <td><input type="text" formControlName="discount" class="input"></td>
+                                        <td><input type="text" formControlName="discount" class="input">
+                                            <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched"> Enter Discount ex: 1-100
+                                            </span></td>
                                         <td><input type="text" formControlName="tax" class="input"></td>
                                         <td class="text-end"><input type="text" formControlName="landing_cost" class="input"></td>
                                         <td class="text-end">
@@ -195,6 +196,8 @@
                                                 <option value="" selected disabled>Select Batch</option>
                                                 <option value="{{batch.id}}" *ngFor="let batch of batchList">{{batch.mrp}}</option>
                                             </select>
+                                            <span class="text-danger" style="display: block;" *ngIf="batch(i) && batch(i).invalid && batch(i).touched"> Select batch
+                                            </span>
                                         </td>
                                         <td class="text-end"><input type="text"  class="input" [value]="calculateTotalEveryIndex(i).toString()" [ngModel]="calculateTotalEveryIndex(i).toString()"></td>
                                     </tr>

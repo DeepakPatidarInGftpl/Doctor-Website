@@ -50,7 +50,7 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table datatable class="table  datanew">
+                    <table class="table datanew">
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">
@@ -67,10 +67,8 @@
                                 <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr
-                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
-
+                        <tbody *ngIf="tableData?.length>=0">
+                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -82,14 +80,13 @@
                                     <a href="javascript:void(0);" style="line-height: 3;">{{products.title}}</a>
                                 </td>
                                 <td>{{products.gstin}}</td>
-                                <td>{{products?.address?.address_type}}</td>
+                                <td>{{products?.address}}</td>
                                 <td>
                                     <mat-slide-toggle
                                         (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
-
                                     <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
@@ -100,6 +97,13 @@
                                 </td>
                             </tr>
                         </tbody>
+                        <tbody *ngIf="tableData?.length==0">
+                            <tr>
+                              <td colspan="10">
+                                <p class="center-textt">Data not available</p>
+                              </td>
+                            </tr>
+                          </tbody>
                     </table>
                     <div class="progressbar">
                         <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>

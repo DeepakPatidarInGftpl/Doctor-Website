@@ -100,6 +100,7 @@ export class AddFooterComponent implements OnInit {
         } else {
           this.loaders = false;
           if (this.addRes.whatsapp) {
+            this.loaders = false;
             this.whatsError = this.addRes.whatsapp[0];
             setTimeout(() => {
               this.whatsError = ''
@@ -107,7 +108,8 @@ export class AddFooterComponent implements OnInit {
           }
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders = false;
+        console.log(err.error);
       })
     } else {
       this.footerForm.markAllAsTouched()

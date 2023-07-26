@@ -12,15 +12,15 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
 })
 export class SupplierComponent implements OnInit {
 
- 
+
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any | employee;
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
 
   constructor(private contactService: ContactService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
@@ -45,14 +45,14 @@ export class SupplierComponent implements OnInit {
         this.contactService.deleteSupplier(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Supplier Deleted successfully") {
-           this.ngOnInit();
-           Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: 'Your file has been deleted.',
-          });
-          this.tableData.splice(index, 1);
-          }else {
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
+            this.tableData.splice(index, 1);
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -80,7 +80,7 @@ export class SupplierComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.SupplierIsActive(id,'').subscribe(res => {
+        this.contactService.SupplierIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Employee Is active Updated Successfully") {
             this.ngOnInit()
@@ -109,7 +109,7 @@ export class SupplierComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.SupplierIsActive(id,'').subscribe(res => {
+        this.contactService.SupplierIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Employee Is active Updated Successfully") {
             this.ngOnInit()
@@ -123,28 +123,28 @@ export class SupplierComponent implements OnInit {
       }
     });
   }
-loader=true;
-isAdd:any;
-isEdit:any;
-isDelete:any
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any
   ngOnInit(): void {
     this.contactService.getSupplier().subscribe(res => {
       console.log(res);
       this.tableData = res;
-      this.loader=false;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData && localStorageData.permission) {
       const permission = localStorageData.permission;
       permission.map((res: any) => {
-        if (res.content_type.app_label === 'master'  && res.content_type.model === 'supplier' && res.codename=='add_supplier') {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'supplier' && res.codename == 'add_supplier') {
           this.isAdd = res.codename;
-          console.log(this.isAdd); 
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'supplier' && res.codename=='change_supplier') {
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'supplier' && res.codename == 'change_supplier') {
           this.isEdit = res.codename;
           console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'supplier' && res.codename=='delete_supplier') {
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'supplier' && res.codename == 'delete_supplier') {
           this.isDelete = res.codename;
           console.log(this.isDelete);
         }
@@ -153,12 +153,12 @@ isDelete:any
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
 
-select=false
+  select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -179,19 +179,25 @@ select=false
 
     })
   }
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.name.toLocaleLowerCase());
-        console.log(res.name.match(this.titlee));
-        return res.name.match(this.titlee);
-      })
+        const nameLower = res.name.toLocaleLowerCase();
+        const companyNameLower = res.company_name.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)) {
+          return true;
+        } else if (companyNameLower.match(searchTerm)) {
+          return true;
+        }
+        return false;
+      });
     }
   }
+
   key = 'id'
   reverse: boolean = false;
   sort(key) {

@@ -81,7 +81,7 @@
                 </div> -->
                 <!-- /Filter -->
                 <div class="table-responsive">
-                    <table datatable [dtOptions]="dtOptions" class="table datanew">
+                    <table class="table datanew">
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">
@@ -94,12 +94,12 @@
                                 <th (click)="sort('id')" class="thone">Image <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Category <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Discount <i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Discount <i class="fa fa-sort"></i></th> -->
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody *ngIf="tableData?.length>=0 && !loader">
                             <tr
                                 *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                                 <td>
@@ -115,7 +115,7 @@
                                 </td>
                                 <td routerLink="/product/subcategory-details/{{products.id}}">{{products.title}}</td>
                                 <td>{{products.category_id.title}}</td>
-                                <td>{{products.discount}}</td>
+                                <!-- <td>{{products.discount}}</td> -->
                                 <td>
                                     <mat-slide-toggle
                                         (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
@@ -136,6 +136,13 @@
                                 </td>
                             </tr>
                         </tbody>
+                        <tbody *ngIf="tableData?.length==0 && !loader">
+                            <tr>
+                              <td colspan="10">
+                                <p class="center-textt">Data not available</p>
+                              </td>
+                            </tr>
+                          </tbody>
                         <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">
@@ -220,7 +227,7 @@
 
                                 </div>
                             </div>
-                            <div class="col-lg-10 col-sm-10 col-12">
+                            <!-- <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Discount*</label>
                                     <input type="text" formControlName="discount" id="discount" [ngClass]="{
@@ -232,7 +239,7 @@
                                     </span>
 
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Category*</label>
@@ -347,7 +354,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-10 col-sm-10 col-12">
+                            <!-- <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Discount*</label>
                                     <input type="text" formControlName="discount" id="discount" [ngClass]="{
@@ -359,7 +366,7 @@
                                     </span>
 
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Category*</label>
