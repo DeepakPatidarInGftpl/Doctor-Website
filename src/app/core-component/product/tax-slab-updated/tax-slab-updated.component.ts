@@ -18,7 +18,7 @@ export class TaxSlabUpdatedComponent implements OnInit {
   }
 
   constructor(private fb: FormBuilder, private coreService: CoreService, private Arout: ActivatedRoute,
-    private router:Router,
+    private router: Router,
     private toastrService: ToastrService) { }
   id: any;
   getRes: any;
@@ -49,7 +49,7 @@ export class TaxSlabUpdatedComponent implements OnInit {
     this.addAmount()
     this.getSubcateGroup()
     this.getTax();
-  
+
   }
 
   // updated data
@@ -59,22 +59,22 @@ export class TaxSlabUpdatedComponent implements OnInit {
       formarr.push(this.fb.group({
         from_amount: j.from_amount,
         to_amount: j.to_amount,
-        tax: j.tax
+        tax: j.tax.id
       }))
     })
     return formarr
   }
 
   udateSubcat(add: any) {
- 
+
     add.forEach((j: any) => {
       console.log(j);
-        subcategory:j.id
+      subcategory: j.id
     })
-  
+
   }
 
- 
+
   amount_tax_slabs(): FormGroup {
     return this.fb.group({
       from_amount: (''),
@@ -171,17 +171,19 @@ export class TaxSlabUpdatedComponent implements OnInit {
     }
   }
   updateRes: any;
-  loaders=false;
+  loaders = false;
   submit() {
     console.log(this.taxSlabForm.value);
+    console.log(this.id);
+    
     let form = this.taxSlabForm.value;
     if (this.taxSlabForm.valid) {
-      this.loaders=true;
-      this.coreService.updateTaxSlab(this.id, form).subscribe(res => {
+      this.loaders = true;
+      this.coreService.updateTaxSlab(form,this.id).subscribe(res => {
         console.log(res);
         this.updateRes = res;
-        if(this.updateRes.msg=="Tax Slabs Updated"){
-          this.loaders=false;
+        if (this.updateRes.msg == "Tax Slabs Updated") {
+          this.loaders = false;
           this.toastrService.success(this.updateRes.msg)
           this.router.navigate(['product/taxSlabList']);
         }

@@ -42,6 +42,7 @@ export class AddTransportComponent implements OnInit {
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
       opening_balance: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      opening_balance_type:new FormControl('',[Validators.required])
     })
     this.addAddress()
     this.addBank()
@@ -205,6 +206,7 @@ export class AddTransportComponent implements OnInit {
         }else{
           this.loader=false;
           this.toastr.error(this.addRes?.opening_balance[0]);
+          this.toastr.error(this.addRes.opening_balance_type[0])
           if(this.addRes?.email){
             this.toastr.error(this.addRes?.error?.email[0])
           }

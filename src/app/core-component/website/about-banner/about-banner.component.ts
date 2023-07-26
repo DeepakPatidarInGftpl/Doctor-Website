@@ -64,14 +64,18 @@ export class AboutBannerComponent implements OnInit {
         this.websiteService.deleteaboutBanner(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "About Banner Deleted successfully") {
-            this.tableData
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
             this.ngOnInit();
           }
         })
         Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
+          icon: 'error',
+          title: 'Not Deleted!',
+          text: this.delRes.error,
         });
         this.tableData.splice(index, 1);
       }
@@ -227,6 +231,8 @@ export class AboutBannerComponent implements OnInit {
           this.bannerForm.reset()
           // window.location.reload();
           this.ngOnInit()
+        }else{
+          this.loaders=false
         }
       }, err => {
         console.log(err.error);
@@ -265,6 +271,8 @@ export class AboutBannerComponent implements OnInit {
             this.addForm = true;
             // window.location.reload()
             this.ngOnInit()
+          }else{
+            this.loader=false;
           }
         }, err => {
           console.log(err.error);
@@ -286,6 +294,8 @@ export class AboutBannerComponent implements OnInit {
             this.addForm = true;
             // window.location.reload()
             this.ngOnInit()
+          }else{
+            this.loaders=false;
           }
         }, err => {
           console.log(err.error);
@@ -349,15 +359,14 @@ export class AboutBannerComponent implements OnInit {
   }
 
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
-      })
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
   key = 'id'

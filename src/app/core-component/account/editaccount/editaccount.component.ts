@@ -53,6 +53,8 @@ export class EditaccountComponent implements OnInit {
 
     this.coreService.getAccountById(this.id).subscribe(res => {
       this.data = res
+      // console.log(this.data?.account_subtype?.id);
+      
       this.accountForm.patchValue({
         title:this.data.title,
         accounts_type:this.data?.accounts_type,

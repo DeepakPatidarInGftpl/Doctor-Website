@@ -71,7 +71,7 @@
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody *ngIf="tableData?.length>=0">
                             <tr
                                 *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                                 <td>
@@ -111,6 +111,13 @@
                             </td>
                             </tr>
                         </tbody>
+                        <tbody *ngIf="tableData?.length===0 && !loader">
+                            <tr>
+                              <td colspan="10">
+                                <p class="center-textt">Data not available</p>
+                              </td>
+                            </tr>
+                          </tbody>
                         <!-- <tr>
                             <td colspan="5">
                                 <div class="dataTables_length">

@@ -335,8 +335,7 @@
                         <label>Opening Balance*</label>
                         <div class="input-group">
                           <div>
-                            <select formControlName="opening_balance_type" class=" border hov" required id="opening_balance_type"
-                              [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">
+                            <select formControlName="opening_balance_type" class=" border hov" required id="opening_balance_type">
                               <option class="unhov" value="" selected disabled>Balance type</option>
                               <option class="unhov" value="Cr">Cr</option>
                               <option class="unhov" value="Dr">Dr</option>
@@ -359,11 +358,11 @@
                 <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
                     <div class="form-group mt-4">
                         <div class="d-flex ">
-                            <input type="checkbox" formControlName="login_access" [id]="'checkboxTax-'">
+                            <input type="checkbox" formControlName="login_access" [id]="'checkboxTax-'" [ngModel]="true">
                             <label [for]="'checkboxTax-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Login Access</label>
                         </div>
                         <div class="d-flex ">
-                            <input type="checkbox" formControlName="apply_tds" [id]="'checkboxMeasure-'">
+                            <input type="checkbox" formControlName="apply_tds" [id]="'checkboxMeasure-'" [ngModel]="true">
                             <label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Apply TDS</label>
                         </div>
                     </div>
@@ -372,7 +371,7 @@
                 <div class="col-lg-12">
                     <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
                     <a routerLink="//contacts/transform" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>

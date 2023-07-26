@@ -37,14 +37,14 @@ export class BatchVariantProductComponent implements OnInit {
     this.batchForm = this.fb.group({
       // variant: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       mrp: new FormControl('', [Validators.required]),
-      cost_price: new FormControl('', Validators.pattern(/^[0-9]*$/)),
-      selling_price_online: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      selling_price_offline: new FormControl('', Validators.pattern(/^[0-9]*$/)),
-      selling_price_vendor: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      selling_price_employee: new FormControl('', Validators.pattern(/^[0-9]*$/)),
+      cost_price: new FormControl(0,Validators.pattern(/^[0-9]*$/)),
+      selling_price_online: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
+      selling_price_offline: new FormControl(0, Validators.pattern(/^[0-9]*$/)),
+      selling_price_vendor: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
+      selling_price_employee: new FormControl(0, Validators.pattern(/^[0-9]*$/)),
       stock: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       minimum_stock_threshold: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      max_order_quantity: new FormControl('', [Validators.pattern(/^[0-9]*$/)])
+      max_order_quantity: new FormControl(0, [Validators.pattern(/^[0-9]*$/)])
     })
     this.id = +this.Arout.snapshot.paramMap.get('id');
     // this.vid = +this.Arout.snapshot.paramMap.get('vid');
@@ -69,7 +69,9 @@ export class BatchVariantProductComponent implements OnInit {
           this.loader=false;
         }
       }, err => {
+        this.loader=false;
         console.log(err.error);
+
       })
     } else {
       this.batchForm.markAllAsTouched()

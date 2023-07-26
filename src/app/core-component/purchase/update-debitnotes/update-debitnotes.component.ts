@@ -6,6 +6,7 @@ import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
+import { tap } from 'rxjs/operators';
 @Component({
   selector: 'app-update-debitnotes',
   templateUrl: './update-debitnotes.component.html',
@@ -64,7 +65,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       purchase: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       shipping_date: new FormControl('', [Validators.required]),
       export: new FormControl(''),
-      reason: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      reason: new FormControl(''),
       status: new FormControl(''),
       cart: this.fb.array([]),
     });
@@ -76,8 +77,9 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.debitNotesForm.get('supplier')?.patchValue(res.supplier.id);
       // this.debitNotesForm.get('purchase')?.patchValue(res.purchase_order.id);
       this.debitNotesForm.get('payment_term')?.patchValue(res.payment_term.id);
-      this.debitNotesForm.get('purchase')?.patchValue(res.purchase);
+      this.debitNotesForm.get('purchase')?.patchValue(res.purchase?.id);
       this.debitNotesForm.setControl('cart', this.udateCart(res.cart));
+      this.displaySupplierName(res.supplier.id);
     })
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
@@ -93,9 +95,26 @@ export class UpdateDebitnotesComponent implements OnInit {
     this.getPurchase();
     this.getPaymentTerms()
   }
-
+  displaySupplierName(supplierId: number): void {
+    this.filteredSuppliers
+      .pipe(
+        tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
+        map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
+      )
+      .subscribe(matchedSuppliers => {
+        if (matchedSuppliers.length > 0) {
+          this.supplierControl.setValue(matchedSuppliers[0].name);
+        }
+      });
+  }
   get supplier() {
     return this.debitNotesForm.get('supplier') as FormControl;
+  }
+  discountt(index: number) {
+    return this.getCart().controls[index].get('discount');
+  }
+  batch(index: number) {
+    return this.getCart().controls[index].get('batch');
   }
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
@@ -121,10 +140,10 @@ export class UpdateDebitnotesComponent implements OnInit {
       qty: (''),
       unit_cost: (''),
       mrp: (''),
-      discount: (''),
+      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
-      batch: ('')
+      batch: new FormControl('',[Validators.required])
     })
   }
   getCart(): FormArray {
@@ -236,7 +255,11 @@ export class UpdateDebitnotesComponent implements OnInit {
           this.loader = false;
           this.toastrService.success(this.getRes.msg);
           this.router.navigate(['//purchase/debit-notes-list'])
+        }else{
+          this.loader=false;
         }
+      },err=>{
+        this.loader=false
       })
     } else {
       this.debitNotesForm.markAllAsTouched()

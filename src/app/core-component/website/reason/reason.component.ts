@@ -45,14 +45,19 @@ export class ReasonComponent implements OnInit {
         this.websiteService.deleteReason(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Reason Deleted successfully") {
-            this.tableData
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
             this.ngOnInit();
           }
+
         })
         Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
+          icon: 'error',
+          title: 'Not Deleted!',
+          text: this.delRes.error,
         });
         this.tableData.splice(index, 1);
       }
@@ -187,10 +192,10 @@ export class ReasonComponent implements OnInit {
           this.ngOnInit()
         }
         else {
-
           this.loaders = false
-
         }
+      },err=>{
+        this.loaders=false
       })
     }
     else {
@@ -208,7 +213,8 @@ export class ReasonComponent implements OnInit {
         console.log("response", res);
         this.addRes = res
         if (this.addRes.Is_Success == 'True') {
-          this.loaders = false
+          this.loaders = false;
+          this.addForm=true
           this.toastr.success(this.addRes.msg);
           this.reasonForm.reset();
           this.ngOnInit()
@@ -216,6 +222,8 @@ export class ReasonComponent implements OnInit {
         else {
           this.loaders = false
         }
+      },err=>{
+        this.loaders=false
       })
     }
     else {
@@ -255,15 +263,14 @@ export class ReasonComponent implements OnInit {
     this.reasonForm.reset();
   }
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
-      })
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
 

@@ -49,7 +49,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
           } else {
             console.log(this.delRes.error);
@@ -206,21 +206,30 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     }
   }
 
+  // search() {
+  //   if (this.title == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.title.toLocaleLowerCase());
+  //       console.log(res.title.toLocaleLowerCase().match(this.title.toLocaleLowerCase()));
+  //       return res.title.match(this.title);
+  //     })
+  //   }
+  // }
   search() {
-    if (this.title == "") {
+    if (this.title === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.title.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.toLocaleLowerCase().match(this.title.toLocaleLowerCase()));
-
-        return res.title.match(this.title);
-
-
-      })
+        const nameLower = res.title.toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
+
   key = 'id'
   reverse: boolean = false;
   sort(key) {
@@ -229,5 +238,9 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     this.coreServ.editThisData(null)
+  }
+  openaddForm() {
+    this.editMode = false;
+    window.location.reload()
   }
 }

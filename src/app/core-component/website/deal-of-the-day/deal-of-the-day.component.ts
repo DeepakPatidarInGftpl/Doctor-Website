@@ -67,13 +67,18 @@ export class DealOfTheDayComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Deals Of The Day Deleted successfully") {
             this.tableData
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
             this.ngOnInit();
           }
         })
         Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
+          icon: 'error',
+          title: 'Not Deleted!',
+          text: this.delRes.error,
         });
         this.tableData.splice(index, 1);
       }
@@ -266,9 +271,13 @@ export class DealOfTheDayComponent implements OnInit {
           this.selectedItems = [];
           this.dealOfTheDayForm.reset();
           this.ngOnInit()
+        }else{
+          this.loaders=false;
+          this.toastr.error(this.addRes.msg)
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders=false;
+        console.log(err.error);
       })
     } else {
       this.dealOfTheDayForm.markAllAsTouched()
@@ -299,9 +308,13 @@ export class DealOfTheDayComponent implements OnInit {
           this.addForm = true
           this.selectedItems = [];
           this.ngOnInit()
+        }else{
+          this.loaders=false;
+          this.toastr.error(this.addRes.msg)
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders=false;
+        console.log(err.error);
       })
     } else {
       this.dealOfTheDayForm.markAllAsTouched()
@@ -367,11 +380,9 @@ export class DealOfTheDayComponent implements OnInit {
     } else {
       this.tableData = this.tableData.filter((res: any) => {
         console.log(res);
-
         const matchingVariants = res.variant.filter((variant: any) =>
           variant.product_title.toLowerCase().includes(this.titlee.toLowerCase())
         );
-
         return matchingVariants.length > 0;
       });
     }

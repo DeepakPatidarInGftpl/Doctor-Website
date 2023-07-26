@@ -302,6 +302,11 @@ export class UpdateTransportComponent implements OnInit {
           this.router.navigate(['//contacts/transport'])
         }else{
           this.loader=false;
+          this.toastr.error(this.addRes?.opening_balance[0]);
+          this.toastr.error(this.addRes.opening_balance_type[0])
+          if(this.addRes?.email){
+            this.toastr.error(this.addRes?.error?.email[0])
+          }
         }
       }, err => {
         this.loader=false;
@@ -326,9 +331,9 @@ export class UpdateTransportComponent implements OnInit {
         }
       })
     } else {
+      this.loader=false;
       this.transportForm.markAllAsTouched()
       console.log('hhhhhh');
-
     }
   }
 

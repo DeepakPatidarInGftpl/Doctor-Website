@@ -57,7 +57,7 @@ export class ProductDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
-    this.getBatch();
+    // this.getBatch();
   }
   batchList: any
   getBatch() {
@@ -89,6 +89,8 @@ export class ProductDetailsComponent implements OnInit {
       if (this.id == res.id) {
         this.productDetail = res
         console.log(res);
+        console.log(res.variant_product);
+
       }
     })
   }
