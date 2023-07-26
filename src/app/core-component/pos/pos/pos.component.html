@@ -825,20 +825,33 @@
                             </div>
                         </div>
                     </div>
+                    <div *ngIf="voucher_type.invalid && (voucher_type.dirty || voucher_type.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="voucher_type.errors?.['required']">
+    Voucher Type is required.
+  </div>
+</div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <label class="d-block">Select Voucher Type</label>
-                        <div class="row justify-center">
-                            <div class="col-sm-12 mb-3">
+                        <label class="d-block">Select Payment Type</label>
                                 <div class="radio-payments-modal-wrapper d-flex justify-content-around">
                                     <div class="form-check" *ngFor="let option of paymentType">
                                         <input class="form-check-input" type="radio" formControlName="payment_type" [value]="option.value">
                                         <label class="form-check-label">{{option.label}}</label>
                                     </div>
                                 </div>
+                            </div>
+                            <div *ngIf="payment_type.invalid && (payment_type.dirty || payment_type.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_type.errors?.['required']">
+    Payment Type is required.
+  </div>
+</div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -848,6 +861,13 @@
                                         <option *ngFor="let option of paymentMode" [value]="option.value">{{option.label}}</option>
                                     </select>
                                 </div>
+                                <div *ngIf="payment_mode.invalid && (payment_mode.dirty || payment_mode.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_mode.errors?.['required']">
+    Payment Mode is required.
+  </div>
+</div>
                             </div>
                             <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_type').value === 'Against Bill'">
                                 <div class="form-group">
@@ -857,12 +877,26 @@
                                         <option *ngFor="let option of receiptSales" [value]="option?.id">Option 1</option>
                                     </select>
                                 </div>
+                                <div *ngIf="receipt_sales.invalid && (receipt_sales.dirty || receipt_sales.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="receipt_sales.errors?.['required']">
+    Selecting Sales is required.
+  </div>
+</div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Amount</label>
                                     <input type="number" formControlName="amount_receipt" class="form-control" placeholder="Enter Amount">
                                 </div>
+                                <div *ngIf="amount_receipt.invalid && (amount_receipt.dirty || amount_receipt.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="amount_receipt.errors?.['required']">
+    Amount is required.
+  </div>
+</div>
                             </div>
 
                             <!-- <div class="row">
@@ -875,7 +909,9 @@
                             <div class="row">
                                 
                                 <div class="col-sm-8">
-                                    <input type="text"
+                                    <div class="form-group">
+                                        <label>Customer</label>
+                                        <input type="text"
                                         placeholder="Search for a Customer"
                                         [formControl]="receiptPaymentForm.get('customer_receipt')"
                                         [matAutocomplete]="autoReceipt"
@@ -889,6 +925,15 @@
                                      {{ displayCus(customer) }}
                                    </mat-option>
                                  </mat-autocomplete>
+                                    </div>
+                                    <div *ngIf="customer_receipt.invalid && (customer_receipt.dirty || customer_receipt.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="customer_receipt.errors?.['required']">
+    Customer is required.
+  </div>
+</div>
+                                    
                                         <!-- <input type="text"
                                                placeholder="Search for a street"
                                                [formControl]="streetcontrol"
@@ -919,47 +964,24 @@
                                     
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <!-- <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>Vendor</label>
-                        <select class="form-select">
-                            <option>-- Select --</option>
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>Account</label>
-                        <select class="form-select">
-                            <option>-- Select --</option>
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>Amount</label>
-                        <input type="text" class="form-control" placeholder="Enter Amount">
-                    </div>
-                </div>
-            </div> -->
+                    
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group mb-0">
                         <label>Remark</label>
-                        <input type="text" class="form-control" placeholder="Enter Remark">
+                        <input type="text" formControlName="receipt_remark" class="form-control" placeholder="Enter Remark">
                     </div>
+                    <div *ngIf="receipt_remark.invalid && (receipt_remark.dirty || receipt_remark.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="receipt_remark.errors?.['required']">
+    Remark is required.
+  </div>
+</div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-2">
                 <div class="col-sm-12 d-flex justify-content-center">
                     <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
 
@@ -967,15 +989,7 @@
             </div>
             </form>
         </div>
-        <!-- <div class="modal-footer mt-2"> -->
-            <!-- <button type="button" class="btn btn-dark modal2BtnPos">Save</button> -->
-            <!-- <div class="row w-100">
-                <div class="col-sm-12 text-center">
-                    <button type="button" class="btn btn-dark">Save</button>
-                </div>
-            </div> -->
-          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-        <!-- </div> -->
+       
       </div>
     </div>
   </div>    

@@ -214,7 +214,8 @@ export class PosComponent implements OnInit {
       payment_mode: ['', [Validators.required]],
       receipt_sales: [''],
       amount_receipt: ['', [Validators.required]],
-      customer_receipt: ['', [Validators.required]]
+      customer_receipt: ['', [Validators.required]],
+      receipt_remark: ['', [Validators.required]]
     })
 
     this.receiptPaymentForm.get('payment_type').valueChanges.subscribe((value) => {
@@ -1155,6 +1156,15 @@ export class PosComponent implements OnInit {
   get pay_later_date() { return this.payLaterMethodForm.get('date'); }
   get is_send_reminder() { return this.payLaterMethodForm.get('is_send_reminder'); }
 
+  get voucher_type() { return this.receiptPaymentForm.get('voucher_type')};
+  get payment_type() { return this.receiptPaymentForm.get('payment_type')};
+  get payment_mode() { return this.receiptPaymentForm.get('payment_mode')};
+  get receipt_sales() { return this.receiptPaymentForm.get('receipt_sales')};
+  get amount_receipt() { return this.receiptPaymentForm.get('amount_receipt')};
+  get customer_receipt() { return this.receiptPaymentForm.get('customer_receipt')};
+  get receipt_remark() { return this.receiptPaymentForm.get('receipt_remark')};
+
+  
 
   handleMobileInputChange(event: any) {
     const inputValue = event.target.value;
