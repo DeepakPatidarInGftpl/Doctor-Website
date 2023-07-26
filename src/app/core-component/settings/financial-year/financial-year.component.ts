@@ -54,7 +54,7 @@ export class FinancialYearComponent implements OnInit {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
           }else{
@@ -280,16 +280,28 @@ update(){
     this.FinancialYearForm.reset();
   }
 
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.title.toLocaleLowerCase());
+  //       console.log(res.start_year.match(this.titlee));
+  //       return res.start_year.match(this.titlee);
+  //     })
+  //   }
+  // }
+
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.start_year.match(this.titlee));
-        return res.start_year.match(this.titlee);
-      })
+        const nameLower = res.start_year.toString().toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
   key = 'id'

@@ -96,13 +96,29 @@ export class AddpurchaseBillComponent implements OnInit {
   get supplier() {
     return this.purchaseBillForm.get('supplier') as FormControl;
   }
+  get supplier_bill_date() {
+    return this.purchaseBillForm.get('supplier_bill_date');
+  }
+  get supplier_bill_no() {
+    return this.purchaseBillForm.get('supplier_bill_no');
+  }
+  get material_inward_no() {
+    return this.purchaseBillForm.get('material_inward_no');
+  }
+  get due_date() {
+    return this.purchaseBillForm.get('due_date');
+  }
+  get shipping_date() {
+    return this.purchaseBillForm.get('shipping_date');
+  }
+ 
   purchase_bill(): FormGroup {
     return this.fb.group({
       barcode: (''),
       qty: (''),
       unit_cost: (''),
       mrp: (''),
-      discount: (''),
+      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
       // total: ('')
@@ -123,6 +139,9 @@ export class AddpurchaseBillComponent implements OnInit {
       console.log(res);
       this.suppliers = res;
     })
+  }
+  discountt(index: number) {
+    return this.getCart().controls[index].get('discount');
   }
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
@@ -224,6 +243,8 @@ export class AddpurchaseBillComponent implements OnInit {
         }else{
           this.loader=false;
         }
+      },err=>{
+        this.loader=false
       })
     } else {
       this.purchaseBillForm.markAllAsTouched()

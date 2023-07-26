@@ -46,14 +46,14 @@ export class EmployeeComponent implements OnInit {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
-              title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              title: 'Deleted !',
+              text:this.delRes.msg,
             });
             this.tableData.splice(index, 1);
           }else{
             Swal.fire({
               icon: 'error',
-              title: 'Not Deleted!',
+              title: 'Not Deleted !',
               text: this.delRes.error,
             });
           }
@@ -191,17 +191,17 @@ export class EmployeeComponent implements OnInit {
   }
 
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.name.toLocaleLowerCase());
-        console.log(res.name.match(this.titlee));
-        return res.name.match(this.titlee);
-      })
+        const nameLower = res.name.toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
+  
   key = 'id'
   reverse: boolean = false;
   sort(key) {

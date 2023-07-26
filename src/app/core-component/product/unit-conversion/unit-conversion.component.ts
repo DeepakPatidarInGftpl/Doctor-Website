@@ -52,7 +52,7 @@ export class UnitConversionComponent implements OnInit {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
           }else{
@@ -324,25 +324,41 @@ loaders=false;
         console.log(data);
         if (id == data.id) {
           this.addForm = false
-          this.unitConversionForm.patchValue(data);
+          console.log(data.quantity);
+          
+          this.unitConversionForm.patchValue({
+            alternate_unit:data?.alternate_unit?.id,
+            quantity:data?.quantity,
+            unit:data?.unit?.id
+          });
           this.editFormdata = res
-          this.unitConversionForm.get('unit')?.setValue(data.id)
         }
       })
     })
   }
 
   
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.title.toLocaleLowerCase());
+  //       console.log(res.title.match(this.titlee));
+  //       return res.title.match(this.titlee);
+  //     })
+  //   }
+  // }
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
-      })
+        const nameLower = res.alternate_unit.title.toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
   key = 'id'

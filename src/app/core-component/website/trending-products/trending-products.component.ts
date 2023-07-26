@@ -67,13 +67,18 @@ export class TrendingProductsComponent implements OnInit {
           this.delRes = res
           if (this.delRes.msg == "Trending product Deleted successfully") {
             this.tableData
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
             this.ngOnInit();
           }
         })
         Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
+          icon: 'error',
+          title: 'Not Deleted!',
+          text: this.delRes.error,
         });
         this.tableData.splice(index, 1);
       }
@@ -266,9 +271,13 @@ export class TrendingProductsComponent implements OnInit {
           this.trendingProductsForm.reset();
           this.selectedItems = [];
           this.ngOnInit();
+        }else{
+          this.loaders=false
+          this.toastr.error(this.addRes.msg)
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders=false
+        console.log(err.error);
       });
     } else {
       this.trendingProductsForm.markAllAsTouched();
@@ -299,9 +308,13 @@ export class TrendingProductsComponent implements OnInit {
           this.addForm = true
           this.selectedItems = [];
           this.ngOnInit()
+        }else{
+          this.loaders=false;
+          this.toastr.error(this.addRes.msg)
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders=false
+        console.log(err.error);
       })
     } else {
       this.trendingProductsForm.markAllAsTouched()
@@ -373,6 +386,7 @@ export class TrendingProductsComponent implements OnInit {
       });
     }
   }
+ 
   key = 'id'
   reverse: boolean = false;
   sort(key) {

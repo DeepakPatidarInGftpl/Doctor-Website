@@ -42,7 +42,7 @@ export class CompanylistComponent implements OnInit {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
           } else {

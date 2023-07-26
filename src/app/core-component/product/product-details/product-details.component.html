@@ -395,8 +395,7 @@
                                 <div class="col-lg-4 col-sm-12">
                                     <div class="table-responsive mb-5">
                                     <table class="table"> 
-                                        <tbody>
-                                         
+                                        <tbody>     
                                            <tr>
                                             <td class="th">Sizes</td>
                                             <td class="td">
@@ -506,8 +505,9 @@
                                             <a routerLink="//product/batch/{{ variant?.id }}">add batch</a>
                                         </td>
                                       </tr>
-                                      <button *ngIf="!addbatch[i]" (click)="openBatch(i)" class="btn btn-submit mx-3 my-3" style="padding: 1px 2px;">Batch</button>                              
-                                      <tr *ngIf="addbatch[i]">
+                                      <!-- <button *ngIf="!addbatch[i]" (click)="openBatch(i)" class="btn btn-submit mx-3 my-3" style="padding: 1px 2px;">Batch</button>                               -->
+                                      <!-- <tr *ngIf="addbatch[i]"> -->
+                                        <tr>
                                         <td colspan="6">
                                           <table>
                                             <!-- <thead> -->
@@ -522,13 +522,15 @@
                                                 <th class="boder space-text">Stock</th>
                                                 <th class="boder space-text">Minimum Stock Threshold</th>
                                                 <th class="boder space-text">Max Order Quantity</th>
+                                                <th class="boder space-text">Purchase Tax</th>
+                                                <th class="boder space-text">Sale Tax</th>
                                                 <th class="boder space-text">Is Active</th>
                                                 <th class="boder space-text">Action</th>
                                               </tr>
                                             <!-- </thead> -->
                                             <tbody>
-                                              <tr *ngFor="let batch of batchList" class="bg-color">
-                                                <ng-container *ngIf="variant?.batch && variant?.batch.includes(batch?.id)">                                          
+                                              <tr *ngFor="let batch of variant?.batch" class="bg-color">
+                                                <!-- <ng-container *ngIf="variant?.batch && variant?.batch.includes(batch?.id)">                                           -->
                                                 <td class="boder">{{ batch?.mrp }}</td>
                                                 <td class="boder">{{ batch?.cost_price }}</td>
                                                 <td class="boder">{{ batch?.selling_price_online }}</td>
@@ -538,12 +540,11 @@
                                                 <td class="boder">{{ batch?.stock }}</td>
                                                 <td class="boder">{{ batch?.minimum_stock_threshold }}</td>
                                                 <td class="boder">{{ batch?.max_order_quantity }}</td>
+                                                <td class="boder">{{ batch?.purchase_tax + '%'}}</td>
+                                                <td class="boder">{{ batch?.sale_tax + '%'}}</td>
                                                 <td class="boder"><mat-slide-toggle (click)="batch?.is_active ? isActive(i,batch.id):Active(i,batch?.id)" [(ngModel)]="batch.is_active"></mat-slide-toggle>
                                                 </td>
                                                 <td class="boder">
-                                                    <!-- <a routerLink="//product/batchList/{{variant?.id}}">
-                                                        <img src="assets/img/icons/eye.svg" alt="img">
-                                                    </a> -->
                                                     <a routerLink="//product/batchUpdate/{{batch?.id}}">
                                                         <img src="assets/img/icons/edit.svg" alt="img">
                                                     </a>
@@ -551,13 +552,9 @@
                                                         <img src="assets/img/icons/delete.svg" alt="img">
                                                     </a>
                                                 </td>  
-                                                </ng-container>
+                                                <!-- </ng-container> -->
                                               </tr>
-                                              <!-- <svg *ngIf="addbatch[i]" (click)="closeBatch(i)" style="color:red" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                              </svg> -->
-                                              <button *ngIf="addbatch[i]" (click)="closeBatch(i)" class="btn">Hide Batch</button>  
+                                              <!-- <button *ngIf="addbatch[i]" (click)="closeBatch(i)" class="btn">Hide Batch</button>   -->
                                             </tbody>
                                           </table>
                                         </td>
@@ -572,8 +569,7 @@
                 </div>
                 <div class="d-flex align-items-center my-3 mx-3">
                     <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                    <span [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }"
-                        class="badges">{{productDetail?.is_active}}</span>
+                    <span [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }" class="badges">{{productDetail?.is_active}}</span>
                 </div>
             </div>
         </div>

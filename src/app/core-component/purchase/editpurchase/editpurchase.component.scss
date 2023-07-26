@@ -1,3 +1,12 @@
+.mat-autocomplete-trigger.mat-input-element.mat-form-field-autofill-control.ng-tns-c116-0.ng-untouched.ng-pristine.ng-valid.cdk-text-field-autofill-monitored.is-invalid{
+  border: 1px solid red;
+}
+.ng-dirty.ng-invalid.is-invalid.ng-touched {
+  border: 1px solid red;
+}
+.ng-pristine.ng-invalid.is-invalid.ng-touched{
+  border: 1px solid red;
+}
 select,
 input[type="date"],
 .input
@@ -59,26 +68,3 @@ input[type="date"],
 }
 
 
-.select-wrapper {
-    position: relative;
-  }
-  
-  .search-input {
-    width: 200px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  select {
-    width: 220px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    position: absolute;
-    top: 40px;
-    left: 0;
-  }
-  

@@ -60,10 +60,10 @@ export class WarehouseComponent implements OnInit {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
-          }else {
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -71,7 +71,7 @@ export class WarehouseComponent implements OnInit {
             });
           }
         })
-       
+
       }
     });
   }
@@ -142,9 +142,9 @@ export class WarehouseComponent implements OnInit {
 
   editRoute
   loader = true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
   ngOnInit() {
 
     // this.queryService.getWarehouse()
@@ -209,17 +209,17 @@ export class WarehouseComponent implements OnInit {
     if (localStorageData && localStorageData.permission) {
       const permission = localStorageData.permission;
       permission.map((res: any) => {
-        if (res.content_type.app_label === 'master'  && res.content_type.model === 'warehouse' && res.codename=='add_warehouse') {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'warehouse' && res.codename == 'add_warehouse') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'warehouse' && res.codename=='change_warehouse') {
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'warehouse' && res.codename == 'change_warehouse') {
           this.isEdit = res.codename;
           console.log(this.isEdit);
-          
-        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'warehouse' && res.codename=='delete_warehouse') {
+
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'warehouse' && res.codename == 'delete_warehouse') {
           this.isDelete = res.codename;
           console.log(this.isDelete);
-          
+
         }
       });
     }
@@ -379,16 +379,27 @@ export class WarehouseComponent implements OnInit {
   }
 
 
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.title.toLocaleLowerCase());
+  //       console.log(res.title.match(this.titlee));
+  //       return res.title.match(this.titlee);
+  //     })
+  //   }
+  // }
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
-      })
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
+      });
     }
   }
   key = 'id'

@@ -1,11 +1,19 @@
 <div class="page-header">
   <div class="row">
     <div class="col-7">
+    
+
+    <div class="page-header">
       <div class="page-title">
         <h4>Product Category list</h4>
         <h6>View/Search product Category</h6>
       </div>
-
+      <div class="page-btn" *ngIf="editMode">
+          <a class="btn btn-added" *ngIf="isAdd" (click)="openaddForm()">
+              <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add State
+          </a>
+      </div>
+  </div>
       <!-- /product list -->
       <div class="card">
         <div class="card-body">
@@ -25,10 +33,10 @@
                 <a class="btn btn-searchset">
                   <img src="assets/img/icons/search-white.svg" alt="img"></a>
                 <div class="dataTables_filter"><label>
-                  <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="title" (ngModelChange)="search()"
-                  placeholder="search">
-                </label>
-              </div>
+                    <input type="search" class="form-control form-control-sm" placeholder="Search..."
+                      [(ngModel)]="title" (ngModelChange)="search()" placeholder="search">
+                  </label>
+                </div>
 
               </div>
             </div>
@@ -49,7 +57,7 @@
               </ul>
             </div>
           </div>
-       
+
           <div class="card" id="filter_inputs">
             <div class="card-body pb-0">
               <div class="row">
@@ -85,68 +93,79 @@
               </div>
             </div>
           </div>
-   
 
-              <div class="table-responsive">
-                <table datatable [dtOptions]="dtOptions" class="table datanew">
-                  <thead>
-                    <tr>
-                      <th (click)="sort('id')" class="thone">
-                        <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
-                            <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
-                            <span class="checkmarks"></span>
-                        </label>
-                        <i class="fa fa-sort"></i>
-                    </th>
-                      <!-- <th (click)="sort('id')">id <i class="fa fa-sort"></i></th> -->
-                      <th (click)="sort('id')" class="thone">Image <i class="fa fa-sort"></i></th>
-                      <th (click)="sort('id')" class="thone">Category name <i class="fa fa-sort"></i></th>
-                      <th (click)="sort('id')" class="thone">Discount<i class="fa fa-sort"></i></th>
-                      <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                      <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
-                      <td>
-                        <label class="checkboxs">
-                          <input type="checkbox" [(ngModel)]="selectedRows[i]">
-                          <span class="checkmarks"></span>
-                        </label>
-                      </td>
-                      <!-- <td>{{products.id}}</td> -->
-                      <td class="productimgname">
-                        <a href="javascript:void(0);" class="product-img">
-                          <img [src]="apiUrl+products.image" alt="product">
-                        </a>
-                        
-                      </td>
-                      <td> <a href="javascript:void(0);">{{products.title}}</a></td>
-                      <td>{{products.discount}}</td>
-                      <td>
-                        <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
-                      </td>
-                      <td>
-                        <a class="me-3" (click)="editThis(products, i)" *ngIf="isEdit">
-                          <img src="assets/img/icons/edit.svg" alt="img">
-                        </a>
-                        <a (click)="confirmText(i, products.id)" class="me-3 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
-                          <img src="assets/img/icons/delete.svg" alt="img">
-                        </a>
-                      </td>
-                    </tr>
 
-                  </tbody>
-                  <!-- <pagination-controls (pageChange)="p=$event"></pagination-controls> -->
-                  <!-- <div class="col-md-offset-11">
+          <div class="table-responsive">
+            <table class="table datanew">
+              <thead>
+                <tr>
+                  <th (click)="sort('id')" class="thone">
+                    <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
+                      <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
+                      <span class="checkmarks"></span>
+                    </label>
+                    <i class="fa fa-sort"></i>
+                  </th>
+                  <!-- <th (click)="sort('id')">id <i class="fa fa-sort"></i></th> -->
+                  <th (click)="sort('id')" class="thone">Image <i class="fa fa-sort"></i></th>
+                  <th (click)="sort('id')" class="thone">Category name <i class="fa fa-sort"></i></th>
+                  <th (click)="sort('id')" class="thone">Discount<i class="fa fa-sort"></i></th>
+                  <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
+                  <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i>
+                  </th>
+                </tr>
+              </thead>
+              <tbody *ngIf="tableData?.length>=0">
+                <tr
+                  *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                  <td>
+                    <label class="checkboxs">
+                      <input type="checkbox" [(ngModel)]="selectedRows[i]">
+                      <span class="checkmarks"></span>
+                    </label>
+                  </td>
+                  <!-- <td>{{products.id}}</td> -->
+                  <td class="productimgname">
+                    <a href="javascript:void(0);" class="product-img">
+                      <img [src]="apiUrl+products.image" alt="product">
+                    </a>
+
+                  </td>
+                  <td> <a href="javascript:void(0);">{{products.title}}</a></td>
+                  <td>{{products.discount}}</td>
+                  <td>
+                    <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                      [(ngModel)]="products.is_active"></mat-slide-toggle>
+                  </td>
+                  <td>
+                    <a class="me-3" (click)="editThis(products, i)" *ngIf="isEdit">
+                      <img src="assets/img/icons/edit.svg" alt="img">
+                    </a>
+                    <a (click)="confirmText(i, products.id)" class="me-3 confirm-text" href="javascript:void(0);"
+                      *ngIf="isDelete">
+                      <img src="assets/img/icons/delete.svg" alt="img">
+                    </a>
+                  </td>
+                </tr>
+
+              </tbody>
+              <tbody *ngIf="tableData?.length==0 && !loader">
+                <tr>
+                  <td colspan="10">
+                    <p class="center-textt">Data not available</p>
+                  </td>
+                </tr>
+              </tbody>
+              <!-- <pagination-controls (pageChange)="p=$event"></pagination-controls> -->
+              <!-- <div class="col-md-offset-11">
                     <select id="PerPage" class="form-control" [(ngModel)]="pageSize">
                         <option [ngValue]="1">2</option>
                         <option [ngValue]="2">10</option>
                         <option [ngValue]="25">25</option>
                     </select>
                 </div> -->
-                
-                <!-- <tr>
+
+              <!-- <tr>
                   <td colspan="5">
                       <div class="dataTables_length">
                           <label class="labelSize">Show :&nbsp;
@@ -168,51 +187,46 @@
                       <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
                   </td>
               </tr> -->
-                </table>
+            </table>
 
-                <div class="progressbar">
-                  <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
-               </div>
-                <div class="row">
-                  <div class="col-lg-4 col-sm-4 col-12 mt-2">
-                      <div class="entries"> Show per page
-                      <select [(ngModel)]="itemsPerPage" class="pagination" >
-                          <option value="5">5</option>
-                          <option value="10">10</option>
-                          <option value="20">20</option>
-                          <option value="50">50</option>
-                          <option value="-1">All</option>
-                        </select>
-                      </div>
-                  </div>
-                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                  <div class="f-right">
-                      <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                      <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
-                  </div>
-       
-                 </div>
-               </div>
+            <div class="progressbar">
+              <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+            </div>
+            <div class="row">
+              <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                <div class="entries"> Show per page
+                  <select [(ngModel)]="itemsPerPage" class="pagination">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="-1">All</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                <div class="f-right">
+                  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                  <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
+                </div>
+
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
 
-        <div class="col-5" *ngIf="isAdd || isEdit">
+    <div class="col-5" *ngIf="isAdd || isEdit">
       <div class="page-btn d-flex justify-content-between">
-      <div class="page-title pe-4">
-        <h4>{{editMode? ' Edit Category': 'Product Add Category'}}</h4>
-        <h6>{{editMode? 'Edit Product Category': 'Create new product Category'}}</h6>
+        <div class="page-title pe-4">
+          <h4>{{editMode? ' Edit Category': 'Product Add Category'}}</h4>
+          <h6>{{editMode? 'Edit Product Category': 'Create new product Category'}}</h6>
+        </div>
       </div>
-      </div>
-     
       <app-addcategory></app-addcategory>
-     
     </div>
-      </div>
-    </div>
-    <!-- /product list -->
-
-  
-  
+  </div>
+</div>
+<!-- /product list -->

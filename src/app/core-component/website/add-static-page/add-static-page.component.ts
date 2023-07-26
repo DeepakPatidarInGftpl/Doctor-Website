@@ -61,7 +61,6 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
   }
 
   constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
-
   }
   editorStyle = {
     height: '200px'
@@ -70,21 +69,16 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.editor = new Editor();
-
     this.staticPgForm
-
     const javaScriptForQuillEditor = this.renderer.createElement('script');
     javaScriptForQuillEditor.src = `../../../assets/js/quill.js`;
     this.renderer.appendChild(document.head, javaScriptForQuillEditor);
-
-
   }
 
   addRes: any;
   loaders=false;
   submit() {
     console.log(this.staticPgForm.value);
-
     if (this.staticPgForm.valid) {
       this.loaders=true;
       this.coreService.addStatic(this.staticPgForm.value).subscribe(res => {
@@ -96,14 +90,17 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
           this.staticPgForm.reset()
           this.router.navigate(['/website/staticPage'])
         }else if(this.addRes.slug[0]=="Static Pages with this slug already exists."){
+          this.loaders=false;
           this.toastr.error(this.addRes.slug[0])
+        }else{
+          this.loaders=false;
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders=false;
+        console.log(err.error);
       })
-
-
     } else {
+      this.loaders=false;
       this.staticPgForm.markAllAsTouched()
       console.log('forms invalid');
     }
@@ -122,8 +119,6 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
   get choice_type():any{
     return this.staticPgForm.get('choice_type')
   }
-
-
 
   ngOnDestroy(): void {
     this.editor?.destroy();

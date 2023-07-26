@@ -313,16 +313,28 @@ export class StatelistComponent implements OnInit {
   }
 
 
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.state.toLocaleLowerCase());
+  //       console.log(res.state.match(this.titlee));
+  //       return res.state.match(this.titlee);
+  //     })
+  //   }
+  // }
+
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.state.toLocaleLowerCase());
-        console.log(res.state.match(this.titlee));
-        return res.state.match(this.titlee);
-      })
+        const nameLower = res.state.toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
   key = 'id'

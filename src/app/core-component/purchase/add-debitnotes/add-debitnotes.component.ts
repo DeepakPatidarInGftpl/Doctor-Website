@@ -58,13 +58,13 @@ export class AddDebitnotesComponent implements OnInit {
       debit_note_date: new FormControl('', [Validators.required]),
       debit_note_no: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       refrence_bill_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      payment_term: new FormControl(''),
+      payment_term: new FormControl('',[Validators.required]),
       due_date: new FormControl('', [Validators.required]),
       reverse_charge: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       purchase: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       shipping_date: new FormControl('', [Validators.required]),
       export: new FormControl(''),
-      reason: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      reason: new FormControl('',),
       status: new FormControl(''),
       cart: this.fb.array([]),
     });
@@ -85,16 +85,18 @@ export class AddDebitnotesComponent implements OnInit {
   get supplier() {
     return this.debitNotesForm.get('supplier') as FormControl;
   }
+ 
+
   cart(): FormGroup {
     return this.fb.group({
       barcode: (''),
       qty: (''),
       unit_cost: (''),
       mrp: (''),
-      discount: (''),
+      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
-      batch: ('')
+      batch: new FormControl('',Validators.required)
     })
   }
   getCart(): FormArray {
@@ -121,7 +123,7 @@ export class AddDebitnotesComponent implements OnInit {
   }
   purchaseList: any;
   getPurchase() {
-    this.purchaseService.getPurchaseBill().subscribe(res => {
+    this.purchaseService.getPurchase().subscribe(res => {
       this.purchaseList = res;
       console.log(this.purchaseList);
 
@@ -207,11 +209,39 @@ variantId:any;
           this.loader = false;
           this.toastrService.success(this.getRes.msg);
           this.router.navigate(['//purchase/debit-notes-list'])
+        }else{
+          this.loader=false
         }
+      },err=>{
+        this.loader=false
       })
     } else {
       this.debitNotesForm.markAllAsTouched()
     }
+  }
+  get debit_note_date() {
+    return this.debitNotesForm.get('debit_note_date') as FormControl;
+  }
+  get refrence_bill_no() {
+    return this.debitNotesForm.get('refrence_bill_no') as FormControl;
+  }
+  get payment_term() {
+    return this.debitNotesForm.get('payment_term') as FormControl;
+  }
+  get due_date() {
+    return this.debitNotesForm.get('due_date') as FormControl;
+  }
+  get purchase() {
+    return this.debitNotesForm.get('purchase') as FormControl;
+  }
+  get shipping_date() {
+    return this.debitNotesForm.get('shipping_date') as FormControl;
+  }
+  discountt(index: number) {
+    return this.getCart().controls[index].get('discount');
+  }
+  batch(index: number) {
+    return this.getCart().controls[index].get('batch');
   }
   private _filter(value: string | number, include: boolean): any[] {
     console.log(value);

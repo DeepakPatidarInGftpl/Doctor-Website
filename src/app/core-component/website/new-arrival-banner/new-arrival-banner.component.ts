@@ -61,15 +61,19 @@ export class NewArrivalBannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deletenewArrivalBanner(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "About Footer Banner Deleted successfully") {
-            this.tableData
+          if (this.delRes.msg == "New Arrivals Banner Deleted successfully") {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
             this.ngOnInit();
           }
         })
         Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
+          icon: 'error',
+          title: 'Not Deleted!',
+          text: this.delRes.error,
         });
         this.tableData.splice(index, 1);
       }
@@ -362,16 +366,45 @@ url:any;
     this.bannerForm.reset();
   }
 
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.title1.toLocaleLowerCase());
+  //       console.log(res.title1.match(this.titlee));
+  //       return res.title1.match(this.titlee);
+  //     })
+  //   }
+  // }
+  // search() {
+  //   if (this.titlee === "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     const searchTerm = this.titlee.toLocaleLowerCase(); 
+  //     this.tableData = this.tableData.filter(res => {
+  //       const nameLower = res.title1.toLocaleLowerCase();
+  //       return nameLower.includes(searchTerm); 
+  //     });
+  //   }
+  // }
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title1.toLocaleLowerCase());
-        console.log(res.title1.match(this.titlee));
-        return res.title1.match(this.titlee);
-      })
+        const nameLower = res.title1.toLocaleLowerCase();
+        const companyNameLower = res.title2.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)) {
+          return true;
+        } else if (companyNameLower.match(searchTerm)) {
+          return true;
+        }
+        return false;
+      });
     }
   }
   key = 'id'

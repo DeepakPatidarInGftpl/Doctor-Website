@@ -49,12 +49,17 @@ export class BannerComponent implements OnInit {
           if (this.delRes.msg == "Banner Deleted successfully") {
             this.tableData
             this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
           }
         })
         Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
+          icon: 'error',
+          title: 'Not Deleted!',
+          text: this.delRes.msg,
         });
         this.tableData.splice(index, 1);
       }
@@ -227,8 +232,6 @@ export class BannerComponent implements OnInit {
       formdata.append('title', this.bannerForm.get('title')?.value);
       formdata.append('url', this.bannerForm.get('url')?.value);
       formdata.append('image', this.bannerForm.get('image')?.value);
-
-
       this.websiteService.addBanner(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
@@ -238,12 +241,16 @@ export class BannerComponent implements OnInit {
           this.bannerForm.reset()
           // window.location.reload();
           this.ngOnInit()
+        }else{
+          this.loaders=false;  
+          this.toastr.error(this.addRes.url[0])
         }
       }, err => {
+        this.loaders=false
         console.log(err.error.gst);
       })
-
     } else {
+      this.loaders=false
       this.bannerForm.markAllAsTouched()
       console.log('forms invalid');
     }
@@ -273,10 +280,13 @@ export class BannerComponent implements OnInit {
             this.addForm = true;
             this.ngOnInit();
           }else{
-            this.loader=false;
+            this.loaders=false;
+            this.toastr.error(this.addRes.url[0])
           }
         }, err => {
-          console.log(err.error.gst);
+          this.loaders=false
+          console.log(err.error);
+          this.toastr.error(err.error.url[0])
         });
       } else {
       //  formdata.append('image', ''); // Append an empty string for image if not selected
@@ -291,10 +301,12 @@ export class BannerComponent implements OnInit {
             this.addForm = true;
             this.ngOnInit();
           }else{
-            this.loader=false;
+            this.loaders=false;
           }
         }, err => {
-          console.log(err.error.gst);
+          this.loaders=false
+          console.log(err.error);
+          this.toastr.error(err.error.url[0])
         });
       }
     } else {
@@ -346,16 +358,27 @@ export class BannerComponent implements OnInit {
     this.updateData='';
   }
 
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.title.toLocaleLowerCase());
+  //       console.log(res.title.match(this.titlee));
+  //       return res.title.match(this.titlee);
+  //     })
+  //   }
+  // }
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
-      })
+        const nameLower = res.title.toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
   key = 'id'
