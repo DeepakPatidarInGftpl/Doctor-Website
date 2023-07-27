@@ -218,7 +218,13 @@ export class PosComponent implements OnInit {
       receipt_remark: ['', [Validators.required]],
       payment_account: [''],
       upi_id: [''],
+      customer_bank_name: [''],
+      card_payment_amount: [''],
+      card_holder_name: [''],
+      cart_transactions_no: [''],
     })
+
+
 
     this.receiptPaymentForm.get('payment_type').valueChanges.subscribe((value) => {
       if (value === 'Against Bill') { // Show the conditional field only if Option 1 is selected
@@ -233,12 +239,25 @@ export class PosComponent implements OnInit {
       if (value === 'UPI') { // Show the conditional field only if Option 1 is selected
         this.receiptPaymentForm.get('upi_id').setValidators(Validators.required);
         this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+      } else if(value === 'Card') {
+        this.receiptPaymentForm.get('customer_bank_name').setValidators(Validators.required);
+        this.receiptPaymentForm.get('card_payment_amount').setValidators(Validators.required);
+        this.receiptPaymentForm.get('card_holder_name').setValidators(Validators.required);
+        this.receiptPaymentForm.get('cart_transactions_no').setValidators(Validators.required);
       } else {
         this.receiptPaymentForm.get('upi_id').clearValidators();
         this.receiptPaymentForm.get('payment_account').clearValidators();
+        this.receiptPaymentForm.get('customer_bank_name').clearValidators();
+        this.receiptPaymentForm.get('card_payment_amount').clearValidators();
+        this.receiptPaymentForm.get('card_holder_name').clearValidators();
+        this.receiptPaymentForm.get('cart_transactions_no').clearValidators();
       }
       this.receiptPaymentForm.get('upi_id').updateValueAndValidity();
-      this.receiptPaymentForm.get('payment_account').updateValueAndValidity;
+      this.receiptPaymentForm.get('payment_account').updateValueAndValidity();
+      this.receiptPaymentForm.get('customer_bank_name').updateValueAndValidity();
+      this.receiptPaymentForm.get('card_payment_amount').updateValueAndValidity();
+      this.receiptPaymentForm.get('card_holder_name').updateValueAndValidity();
+      this.receiptPaymentForm.get('cart_transactions_no').updateValueAndValidity();
     });
  
     window.addEventListener('online', () => {
@@ -739,6 +758,7 @@ export class PosComponent implements OnInit {
     }
     return total;
    }
+   
 
 
 
@@ -1183,6 +1203,10 @@ export class PosComponent implements OnInit {
   get customer_receipt() { return this.receiptPaymentForm.get('customer_receipt')};
   get receipt_remark() { return this.receiptPaymentForm.get('receipt_remark')};
 
+  get receipt_customer_bank_name() { return this.receiptPaymentForm.get('customer_bank_name')};
+  get receipt_card_payment_amount() { return this.receiptPaymentForm.get('card_payment_amount')};
+  get receipt_card_holder_name() { return this.receiptPaymentForm.get('card_holder_name')};
+  get receipt_cart_transactions_no() { return this.receiptPaymentForm.get('cart_transactions_no')};
   
 
   handleMobileInputChange(event: any) {
@@ -1365,6 +1389,37 @@ export class PosComponent implements OnInit {
       formData.append('upi_detail', JSON.stringify(upi_data));
       }
 
+    } else if(this.payment_mode.value === 'Card') {
+
+      let card_data = {
+        "payment_account": Number(this.payment_account_receipt.value),
+        "customer_bank_name": this.receipt_customer_bank_name.value,
+        "card_payment_amount": this.receipt_card_payment_amount.value,
+        "card_holder_name": this.receipt_card_holder_name.value,
+        "cart_transactions_no": this.receipt_cart_transactions_no.value
+      };
+
+      if(this.payment_type.value == 'Advance'){
+        formData.append('customer', this.customer_receipt?.value?.id);
+        formData.append('receipt_method', this.payment_type.value);
+        formData.append('payment_mode', this.payment_mode.value);
+        formData.append('amount', this.amount_receipt.value);
+        formData.append('description', this.receipt_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', JSON.stringify(card_data));
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
+      } else {
+      formData.append('customer', this.customer_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('card_detail', JSON.stringify(card_data));
+      formData.append('bank_detail', '');
+      formData.append('upi_detail', '');
+      }
     } else {
 
     if(this.payment_type.value == 'Advance'){
