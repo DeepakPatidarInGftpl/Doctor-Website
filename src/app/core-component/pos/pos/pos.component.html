@@ -835,7 +835,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-12" *ngIf="receiptPaymentForm.get('voucher_type').value === 'sales' || receiptPaymentForm.get('voucher_type').value === 'purchase'">
                     <div class="form-group">
                         <label class="d-block">Select Payment Type</label>
                                 <div class="radio-payments-modal-wrapper d-flex justify-content-around">
@@ -853,7 +853,7 @@
   </div>
 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" *ngIf="receiptPaymentForm.get('voucher_type').value === 'sales' || receiptPaymentForm.get('voucher_type').value === 'purchase'">
                                 <div class="form-group">
                                     <label>Payment Mode</label>
                                     <select class="form-select" formControlName="payment_mode">
@@ -963,7 +963,7 @@
                                     </form> -->
                                     
                                 </div>
-                                <div class="col-sm-8" *ngIf="receiptPaymentForm.get('voucher_type').value === 'purchase'">
+                                <div class="col-sm-8" *ngIf="receiptPaymentForm.get('voucher_type').value === 'purchase' || receiptPaymentForm.get('voucher_type').value === 'expense'">
                                     <div class="form-group">
                                         <label>Party</label>
                                         <input type="text"
@@ -1104,6 +1104,23 @@
   </div>
 </div>
                 </div>
+            </div>
+
+            <div class="row" *ngIf="receiptPaymentForm.get('voucher_type').value === 'expense'">
+                <div class="col-sm-6">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" formControlName="non_gst"> Non GST
+                        </label>
+                    </div>
+                    <div *ngIf="expense_non_gst.invalid && (expense_non_gst.dirty || expense_non_gst.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="expense_non_gst.errors?.['required']">
+    Non GST is required.
+  </div>
+                </div>
+            </div>
             </div>
 
             <div class="row">
@@ -1825,6 +1842,7 @@
       </div>
     </div>
   </div> 
+  
   
   <!-- Modal Bank-->
   <div class="modal fade posmodal" id="bankMethodModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">

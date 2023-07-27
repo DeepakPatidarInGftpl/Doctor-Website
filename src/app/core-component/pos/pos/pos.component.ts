@@ -230,7 +230,8 @@ export class PosComponent implements OnInit {
       card_payment_amount: [''],
       card_holder_name: [''],
       cart_transactions_no: [''],
-      account_no: ['']
+      account_no: [''],
+      non_gst: [true],
     })
 
 
@@ -238,15 +239,34 @@ export class PosComponent implements OnInit {
       if (value === 'sales') { // Show the conditional field only if Option 1 is selected
         this.receiptPaymentForm.get('customer_receipt').setValidators(Validators.required);
         this.receiptPaymentForm.get('party_receipt').clearValidators();
+        this.receiptPaymentForm.get('non_gst').clearValidators();
+        this.receiptPaymentForm.get('payment_type').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_mode').setValidators(Validators.required);
+
       } else if(value === 'purchase') {
+        this.receiptPaymentForm.get('payment_type').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_mode').setValidators(Validators.required);
         this.receiptPaymentForm.get('party_receipt').setValidators(Validators.required);
         this.receiptPaymentForm.get('customer_receipt').clearValidators();
+        this.receiptPaymentForm.get('non_gst').clearValidators();
+        
+      } else if(value === 'expense') {
+        this.receiptPaymentForm.get('non_gst').setValidators(Validators.required);
+        this.receiptPaymentForm.get('party_receipt').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_type').clearValidators();
+        this.receiptPaymentForm.get('payment_mode').clearValidators();
+
       } else {
         this.receiptPaymentForm.get('customer_receipt').clearValidators();
         this.receiptPaymentForm.get('party_receipt').clearValidators();
+        this.receiptPaymentForm.get('non_gst').clearValidators();
       }
       this.receiptPaymentForm.get('customer_receipt').updateValueAndValidity();
       this.receiptPaymentForm.get('party_receipt').updateValueAndValidity();
+      this.receiptPaymentForm.get('non_gst').updateValueAndValidity();
+      this.receiptPaymentForm.get('payment_type').updateValueAndValidity();
+      this.receiptPaymentForm.get('payment_mode').updateValueAndValidity();
+
     });
 
     this.receiptPaymentForm.get('payment_type').valueChanges.subscribe((value) => {
@@ -1281,6 +1301,7 @@ export class PosComponent implements OnInit {
   get receipt_cart_transactions_no() { return this.receiptPaymentForm.get('cart_transactions_no')};
   
   get receipt_account_no() { return this.receiptPaymentForm.get('account_no')};
+  get expense_non_gst() { return this.receiptPaymentForm.get('non_gst')};
 
   handleMobileInputChange(event: any) {
     const inputValue = event.target.value;
@@ -1433,9 +1454,45 @@ export class PosComponent implements OnInit {
     }
     if(this.voucher_type.value === 'sales'){
       this.formSubmitReceipt();
-    } else {
+    } else if(this.voucher_type.value === 'purchase') {
       this.formSubmitPurchase()
+    } else {
+      this.formSubmitExpense()
     }
+  }
+
+  formSubmitExpense(){ 
+
+    let formData = new FormData();
+
+    formData.append('party', this.party_receipt?.value?.id);
+    formData.append('amount', this.amount_receipt.value);
+    formData.append('remarks', this.receipt_remark.value);
+    formData.append('non_gst', this.expense_non_gst.value);
+    formData.append('payment_account', this.payment_account_receipt.value);
+    
+    this.cartService
+     .expensePayment(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response receipt', response);
+          if(response.isSuccess){
+            // this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.receiptModalClose');
+            clicking.click();
+            this.receiptPaymentForm.reset();
+            this.expense_non_gst.value(false);
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+
   }
 
   formSubmitPurchase(){ 

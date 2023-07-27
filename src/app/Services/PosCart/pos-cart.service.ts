@@ -207,6 +207,15 @@ export class PosCartService {
     })
   }
 
+  expensePayment(data:any) {
+    let url = this.apiUrl + '/pv-api/pos/expance/';
+    return this.http.post(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
   getReceiptDueOrder(id:any){
     let url = this.apiUrl + '/pv-api/pos/receipt_due_order/?customer_id='+ id;
     return this.http.get(url, {
