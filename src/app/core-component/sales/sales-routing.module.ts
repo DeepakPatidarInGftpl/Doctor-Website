@@ -57,6 +57,20 @@ const routes: Routes = [
             (m) => m.SalesDetailsModule
           ),
       },
+      {
+        path: 'posOrder',
+        loadChildren: () =>
+          import('./pos-order/pos-order.module').then(
+            (m) => m.PosOrderModule
+          ),
+      },
+      {
+        path: 'posOrderDetails/:id',
+        loadChildren: () =>
+          import('./details-pos-order/details-pos-order.module').then(
+            (m) => m.DetailsPosOrderModule
+          ),
+      },
     ],
   },
  

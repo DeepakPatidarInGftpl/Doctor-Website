@@ -1,0 +1,297 @@
+<div class="row">
+    <div class="col-lg-7 col-sm-7 col-12">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Additional Charge list</h4>
+                <h6>Manage your Additional Charge</h6>
+            </div>
+            <div class="page-btn" *ngIf="!addForm">
+                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Additional Charge
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="assets/img/icons/filter.svg" alt="img">
+                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset">
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                            <div class="dataTables_filter"><label>
+                                    <input type="search" class="form-control form-control-sm" placeholder="Search..."
+                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                                        src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                                        src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                                        src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table datanew">
+                        <thead>
+                            <tr>
+                                <th (click)="sort('id')" class="thone">
+                                    <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                    <i class="fa fa-sort"></i>
+                                </th>
+                                <th (click)="sort('id')" class="thone">Additional Charge<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Value Type<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Value<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Tax<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">HSN SAC<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Is Active<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="tableData?.length>=0">
+                            <tr
+                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox" [(ngModel)]="selectedRows[i]">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td class="productimgname">
+                                    <a href="javascript:void(0);"
+                                        style="line-height: 3;">{{products.additional_charge}}</a>
+                                </td>
+                                <td>{{products.value_type}}</td>
+                                <td>{{products?.value}}</td>
+                                <td>{{products?.tax}}</td>
+                                <td>{{products?.HSN_SAC}}</td>
+                                <td>
+                                    <mat-slide-toggle
+                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td>
+                                <td>
+                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
+                                        <img src="assets/img/icons/edit.svg" alt="img">
+                                    </a>
+                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
+                                        href="javascript:void(0);" *ngIf="isDelete">
+                                        <img src="assets/img/icons/delete.svg" alt="img">
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="tableData?.length==0">
+                            <tr>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                                <select [(ngModel)]="itemsPerPage" class="pagination">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="-1">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}}
+                                    entries</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
+        <div class="page-header">
+            <div class="page-title" *ngIf="addForm">
+                <div *ngIf="isAdd">
+                    <h4> Add Additional Charge </h4>
+                    <h6>Create new Additional Charge </h6>
+                </div>
+            </div>
+            <div class="page-title" *ngIf="!addForm">
+                <div *ngIf="isEdit">
+                    <h4> Update Additional Charge </h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div *ngIf="isAdd">
+                <div class="card-body" *ngIf="addForm">
+                    <form [formGroup]="additionForm" (ngSubmit)="submit()">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Additional Charge*</label>
+                                    <input type="text" formControlName="additional_charge" id="additional_charge"
+                                        [ngClass]="{'is-invalid': f['additional_charge'].touched && f['additional_charge'].invalid}">
+                                    <span class="text-danger"
+                                        *ngIf="additional_charge && additional_charge.invalid && additional_charge.touched">Enter
+                                        additional charge
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Value Type*</label>
+                                    
+                                        <select formControlName="value_type" [ngClass]="{'is-invalid': f['value_type'].touched && f['value_type'].invalid}">
+                                            <option value="" selected disabled> Select Tax</option>
+                                            <option value="Amount">Amount</option>
+                                            <option value="%">Percentage (%)</option>
+                                        </select>
+                                    <span class="text-danger"
+                                        *ngIf="value_type && value_type.invalid && value_type.touched">Select
+                                        Valid value type
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Value</label>
+                                    <input type="text" formControlName="value" id="value"
+                                        [ngClass]="{'is-invalid': f['value'].touched && f['value'].invalid}">
+                                    <span class="text-danger" *ngIf="value && value.invalid && value.touched">Enter
+                                        value</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Tax</label>
+                                    <!-- <input type="text" formControlName="tax" maxlength="6" minlength="6" id="tax"
+                                        [ngClass]="{'is-invalid': f['tax'].touched && f['tax'].invalid}"> -->
+                                        <select formControlName="tax" [ngClass]="{'is-invalid': f['tax'].touched && f['tax'].invalid}">
+                                            <option value="" selected disabled> Select Tax</option>
+                                            <option [value]="tax.id" *ngFor="let tax of taxList">{{tax.title}}</option>
+                                        </select>
+                                    <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Select tax</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>HSN SAC</label>
+                                    <input type="text" formControlName="HSN_SAC"
+                                        id="HSN_SAC"
+                                        [ngClass]="{'is-invalid': f['HSN_SAC'].touched && f['HSN_SAC'].invalid}">
+                                    <span class="text-danger"
+                                        *ngIf="HSN_SAC && HSN_SAC.invalid && HSN_SAC.touched">Enter HSN SAC</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div *ngIf="isEdit">
+                <div class="card-body" *ngIf="!addForm">
+                    <form [formGroup]="additionForm" (ngSubmit)="submit()">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Additional Charge*</label>
+                                    <input type="text" formControlName="additional_charge" id="additional_charge"
+                                        [ngClass]="{'is-invalid': f['additional_charge'].touched && f['additional_charge'].invalid}">
+                                    <span class="text-danger"
+                                        *ngIf="additional_charge && additional_charge.invalid && additional_charge.touched">Enter
+                                        additional charge
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Value Type*</label>
+                                    <select formControlName="value_type" [ngClass]="{'is-invalid': f['value_type'].touched && f['value_type'].invalid}">
+                                        <option value="" selected disabled> Select Tax</option>
+                                        <option value="Amount">Amount</option>
+                                        <option value="%">Percentage (%)</option>
+                                    </select>
+                                    <span class="text-danger"
+                                        *ngIf="value_type && value_type.invalid && value_type.touched">Select
+                                        Valid value type
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Value</label>
+                                    <input type="text" formControlName="value" id="value"
+                                        [ngClass]="{'is-invalid': f['value'].touched && f['value'].invalid}">
+                                    <span class="text-danger" *ngIf="value && value.invalid && value.touched">Enter
+                                        value</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Tax</label>
+                                    <select formControlName="tax" [ngClass]="{'is-invalid': f['tax'].touched && f['tax'].invalid}">
+                                        <option value="" selected disabled> Select Tax</option>
+                                        <option [value]="tax.id" *ngFor="let tax of taxList">{{tax.title}}</option>
+                                    </select>
+                                    <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter tax</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>HSN SAC</label>
+                                    <input type="text" formControlName="HSN_SAC"
+                                        id="HSN_SAC"
+                                        [ngClass]="{'is-invalid': f['HSN_SAC'].touched && f['HSN_SAC'].invalid}">
+                                    <span class="text-danger"
+                                        *ngIf="HSN_SAC && HSN_SAC.invalid && HSN_SAC.touched">Enter HSN SAC</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

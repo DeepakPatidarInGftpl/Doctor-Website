@@ -11,20 +11,26 @@
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="form-group">
                         <label>Supplier Name*</label>
-                        <mat-form-field class="w-100">
-                            <input type="text" placeholder="Search supplier" aria-label="Supplier" matInput
-                                [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;" 
-                                [ngClass]="{'is-invalid': f['supplier'].touched && f['supplier'].invalid}" [readonly]="true">
+                        <mat-form-field class="w-100" style="padding: 0;
+                        width: 100%;
+                        min-width: 100%;border-top: none;">
+                            <input type="text" placeholder="Search Supplier" aria-label="Supplier" matInput
+                                [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;" [readonly]="true">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.name"
-                                    (onSelectionChange)="oncheck(supplier.id)">{{ supplier.name }}</mat-option>
+                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.name }}</mat-option>
+
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
                                     </mat-option>
+                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
+                        <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select 
+                            supplier
+                        </span>
                     </div>
                 </div>
 

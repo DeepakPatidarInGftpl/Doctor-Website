@@ -39,6 +39,9 @@ export class SidebarOneComponent implements OnInit {
       }
     });
   }
+  //master
+  isCompanyBank:any;
+  isAdditional:any
   isAccount;
   isCompany;
   isEmployee;
@@ -96,7 +99,9 @@ export class SidebarOneComponent implements OnInit {
   isFinancialYear:any;
   isPaymentTerms:any;
   isPermissionGroup:any;
+//pos
 
+isPosOrder:any;
 
   ngOnInit(): void {
     this.LoadScript("assets/js/sidebar.js")
@@ -118,10 +123,16 @@ export class SidebarOneComponent implements OnInit {
           this.isBranch = res.codename
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'accountsubtypes' && res.codename == 'view_accountsubtypes') {
           this.isAccountSubType = res.codename
+        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'companybank' && res.codename == 'view_companybank') {
+          this.isCompanyBank = res.codename;
+        } else if (res.content_type.app_label === 'account' && res.content_type.model === 'additionalcharge' && res.codename == 'view_additionalcharge') {
+          this.isAdditional = res.codename;
         }
         //contacts
-        else if (res.content_type.app_label === 'master' && res.content_type.model === 'supplier' && res.codename == 'view_supplier') {
+        else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'view_supplier') {
           this.isSupplier = res.codename;
+          console.log(this.isSupplier);
+          
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'customer' && res.codename == 'view_customer') {
           this.isCustomer = res.codename
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'user' && res.codename == 'view_user') {
@@ -229,6 +240,10 @@ export class SidebarOneComponent implements OnInit {
           this.isPaymentTerms = res.codename;
         }else if (res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename == 'view_financialyear') {
           this.isFinancialYear = res.codename;
+        }
+        //pos
+       else if (res.content_type.app_label === 'pos' && res.content_type.model === 'posorder' && res.codename == 'view_posorder') {
+          this.isPosOrder = res.codename;
         }
       });
     }
