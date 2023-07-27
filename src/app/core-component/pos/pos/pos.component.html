@@ -908,7 +908,7 @@
             
                             <div class="row">
                                 
-                                <div class="col-sm-8">
+                                <div class="col-sm-8" *ngIf="receiptPaymentForm.get('voucher_type').value === 'sales'">
                                     <div class="form-group">
                                         <label>Customer</label>
                                         <input type="text"
@@ -961,6 +961,33 @@
                                    </mat-option>
                                  </mat-autocomplete>
                                     </form> -->
+                                    
+                                </div>
+                                <div class="col-sm-8" *ngIf="receiptPaymentForm.get('voucher_type').value === 'purchase'">
+                                    <div class="form-group">
+                                        <label>Party</label>
+                                        <input type="text"
+                                        placeholder="Search for a Party"
+                                        [formControl]="receiptPaymentForm.get('party_receipt')"
+                                        [matAutocomplete]="partyReceipt"
+                                        class="form-control">
+                                 <mat-autocomplete #partyReceipt="matAutocomplete" [displayWith]="displayParty" (optionSelected)="optionSelectedParty($event)">
+                                     
+                                     <mat-option *ngIf="receiptPaymentForm.get('party_receipt').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                     <mat-option *ngIf="partyIsLoading" class="is-loading">Loading...</mat-option>
+                                     <mat-option *ngIf="partyErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+                                   <mat-option *ngFor="let party of filteredParty" [value]="party">
+                                     {{ displayParty(party) }}
+                                   </mat-option>
+                                 </mat-autocomplete>
+                                    </div>
+                                    <div *ngIf="party_receipt.invalid && (party_receipt.dirty || party_receipt.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="party_receipt.errors?.['required']">
+    Party is required.
+  </div>
+</div>
                                     
                                 </div>
                             </div>
