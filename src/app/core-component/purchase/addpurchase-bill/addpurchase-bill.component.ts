@@ -29,7 +29,7 @@ export class AddpurchaseBillComponent implements OnInit {
     private contactService: ContactService) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
   filteredOptions: Observable<any>;
@@ -51,7 +51,7 @@ export class AddpurchaseBillComponent implements OnInit {
 
   ngOnInit(): void {
     this.purchaseBillForm = this.fb.group({
-      supplier: new FormControl('', [Validators.required]),
+      party: new FormControl('', [Validators.required]),
       supplier_bill_date: new FormControl('', [Validators.required]),
       refrence_bill_no: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       supplier_bill_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
@@ -94,7 +94,7 @@ export class AddpurchaseBillComponent implements OnInit {
   }
 
   get supplier() {
-    return this.purchaseBillForm.get('supplier') as FormControl;
+    return this.purchaseBillForm.get('party') as FormControl;
   }
   get supplier_bill_date() {
     return this.purchaseBillForm.get('supplier_bill_date');
@@ -180,7 +180,7 @@ export class AddpurchaseBillComponent implements OnInit {
     variants.clear();
     this.addCart();
     this.purchaseBillForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
   }
   oncheckVariant(event: any, index) {
@@ -199,7 +199,7 @@ export class AddpurchaseBillComponent implements OnInit {
 
       this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.purchaseBillForm.get('supplier')?.value);
+      formdata.append('party', this.purchaseBillForm.get('party')?.value);
       formdata.append('supplier_bill_date', this.purchaseBillForm.get('supplier_bill_date')?.value);
       formdata.append('refrence_bill_no', this.purchaseBillForm.get('refrence_bill_no')?.value);
       formdata.append('supplier_bill_no', this.purchaseBillForm.get('supplier_bill_no')?.value);

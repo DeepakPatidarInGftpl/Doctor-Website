@@ -26,7 +26,7 @@ export class AddpurchaseComponent implements OnInit {
     private toastrService: ToastrService) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
   filteredOptions: Observable<any>;
@@ -47,7 +47,7 @@ export class AddpurchaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.purchaseForm = this.fb.group({
-      supplier: new FormControl('', [Validators.required]),
+      party: new FormControl('', [Validators.required]),
       order_date: new FormControl(''),
       order_no: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
       shipping_date: new FormControl('',[Validators.required]),
@@ -75,7 +75,7 @@ export class AddpurchaseComponent implements OnInit {
     this.getVariants();
   }
   get supplier() {
-    return this.purchaseForm.get('supplier') as FormControl;
+    return this.purchaseForm.get('party') as FormControl;
   }
   purchase_cart(): FormGroup {
     return this.fb.group({
@@ -106,7 +106,7 @@ export class AddpurchaseComponent implements OnInit {
       this.suppliers = res;
       // this.variants=res;
     })
-  }
+  } 
 
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
@@ -122,7 +122,7 @@ export class AddpurchaseComponent implements OnInit {
     variants.clear();
     this.addCart();
     this.purchaseForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
   }
   oncheckVariant(event: any, index) {
@@ -140,7 +140,7 @@ export class AddpurchaseComponent implements OnInit {
     if (this.purchaseForm.valid) {
       this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.purchaseForm.get('supplier')?.value);
+      formdata.append('party', this.purchaseForm.get('party')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
       formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
       formdata.append('shipping_date', this.purchaseForm.get('shipping_date')?.value);

@@ -644,19 +644,11 @@ export class CoreService {
   }
   gettaxd(): Observable<any> {
     let url = this.apiUrl + '/pv-api/tax/'
-    return this.http.get<any>(url, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
+    return this.http.get<any>(url)
   }
   gettaxById(id: number): Observable<any> {
     let url = this.apiUrl + '/pv-api/tax/?id='
-    return this.http.get<any>(`${url}${id}`, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
+    return this.http.get<any>(`${url}${id}`)
   }
   taxIsActive(id: any, data) {
     let url = this.apiUrl + '/pv-api/tax/?id=';
@@ -739,8 +731,6 @@ export class CoreService {
       })
     })
   }
-
-
   //fuature section
   getFeature() {
     let url = this.apiUrl + '/pv-api/feature/';
@@ -1572,7 +1562,7 @@ export class CoreService {
     return this.http.delete(`${url}${id}`)
   }
 
-  // dealer
+  // accountsubtype
   getAccountSubType() {
     let url = this.apiUrl + '/pv-api/account_subtypes/';
     return this.http.get(url)
@@ -1601,5 +1591,83 @@ export class CoreService {
   getAddress() {
     let url = this.apiUrl + '/pv-api/address/';
     return this.http.get(url);
+  }
+
+  // additional charges
+  
+  getAdditionalCharges() {
+    let url = this.apiUrl + '/pv-api/additional_charge_dashboard/';
+    return this.http.get(url)
+  }
+  getAdditionalChargesById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/additional_charge_dashboard/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  AdditionalChargesIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/additional_charge_dashboard/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addAdditionalCharges(data: any) {
+    let url = this.apiUrl + '/pv-api/additional_charge_dashboard/';
+    return this.http.post(url, data)
+  }
+  updateAdditionalCharges(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/additional_charge_dashboard/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deleteAdditionalCharges(id: number) {
+    let url = this.apiUrl + '/pv-api/additional_charge_dashboard/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+  //company bank
+  getCompanyBank() {
+    let url = this.apiUrl + '/pv-api/company_bank_dashboard/';
+    return this.http.get(url)
+  }
+  getCompanyBankById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/company_bank_dashboard/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  CompanyBankIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/company_bank_dashboard/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addCompanyBank(data: any) {
+    let url = this.apiUrl + '/pv-api/company_bank_dashboard/';
+    return this.http.post(url, data)
+  }
+  updateCompanyBank(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/company_bank_dashboard/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deleteCompanyBank(id: number) {
+    let url = this.apiUrl + '/pv-api/company_bank_dashboard/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
+  //pos order
+  getPosOrder() {
+    let url = this.apiUrl + '/pv-api/pos/pos_orders/';
+    return this.http.get(url)
+  }
+  getPosOrderById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/pos/pos_orders/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  PosOrderIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/pos/pos_orders/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addPosOrder(data: any) {
+    let url = this.apiUrl + '/pv-api/pos/pos_orders/';
+    return this.http.post(url, data)
+  }
+  updatePosOrder(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/pos/pos_orders/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deletePosOrder(id: number) {
+    let url = this.apiUrl + '/pv-api/pos/pos_orders/?id=';
+    return this.http.delete(`${url}${id}`)
   }
 }

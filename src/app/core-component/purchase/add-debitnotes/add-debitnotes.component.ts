@@ -32,7 +32,7 @@ export class AddDebitnotesComponent implements OnInit {
   ) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
   filteredOptions: Observable<any>;
@@ -54,7 +54,7 @@ export class AddDebitnotesComponent implements OnInit {
 
   ngOnInit(): void {
     this.debitNotesForm = this.fb.group({
-      supplier: new FormControl('', [Validators.required]),
+      party: new FormControl('', [Validators.required]),
       debit_note_date: new FormControl('', [Validators.required]),
       debit_note_no: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       refrence_bill_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
@@ -68,6 +68,7 @@ export class AddDebitnotesComponent implements OnInit {
       status: new FormControl(''),
       cart: this.fb.array([]),
     });
+    this.getSuuplier();
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
@@ -76,14 +77,14 @@ export class AddDebitnotesComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getSuuplier();
+    
     this.getVariants();
     this.getPurchase();
     this.getPaymentTerms()
   }
 
   get supplier() {
-    return this.debitNotesForm.get('supplier') as FormControl;
+    return this.debitNotesForm.get('party') as FormControl;
   }
  
 
@@ -146,7 +147,7 @@ variantId:any;
     variants.clear();
     this.addCart();
     this.debitNotesForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
   
   }
@@ -176,7 +177,7 @@ variantId:any;
 
       this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.debitNotesForm.get('supplier')?.value);
+      formdata.append('party', this.debitNotesForm.get('party')?.value);
       formdata.append('debit_note_date', this.debitNotesForm.get('debit_note_date')?.value);
       formdata.append('debit_note_no', this.debitNotesForm.get('debit_note_no')?.value);
       formdata.append('refrence_bill_no', this.debitNotesForm.get('refrence_bill_no')?.value);
@@ -210,6 +211,7 @@ variantId:any;
           this.toastrService.success(this.getRes.msg);
           this.router.navigate(['//purchase/debit-notes-list'])
         }else{
+          this.toastrService.error(this.getRes.purchase[0])
           this.loader=false
         }
       },err=>{
