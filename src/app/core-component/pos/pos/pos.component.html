@@ -999,6 +999,22 @@
 </div>
                 </div>
 
+                <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_mode').value === 'Bank'">
+                    <div class="form-group">
+                        <label>Account No</label>
+                        <input type="text" class="form-control"
+                        placeholder="Account No"
+                        formControlName="account_no">
+                    </div>
+                    <div *ngIf="receipt_account_no.invalid && (receipt_account_no.dirty || receipt_account_no.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="receipt_account_no.errors?.['required']">
+    Account No is required.
+  </div>
+</div>
+                </div>
+
             </div>
             <div class="row" *ngIf="receiptPaymentForm.get('payment_mode').value === 'Card'">
                 <div class="col-sm-6">

@@ -67,9 +67,7 @@ export class PosComponent implements OnInit {
     {id: 1, label: 'UPI', value: 'UPI'},
     {id: 2, label: 'Card', value: 'Card'},
     {id: 3, label: 'Cash', value: 'Cash'},
-    {id: 4, label: 'Bank', value: 'Bank'},
-    {id: 5, label: 'Pay Later', value: 'Paylater'},
-    {id: 6, label: 'Multiple Pay', value: 'Multiplepay'},
+    {id: 4, label: 'Bank', value: 'Bank'}
   ]
 
   selectedOptions: any[] = [];
@@ -109,6 +107,7 @@ export class PosComponent implements OnInit {
   registrationForm: FormGroup;
   upiPaymentMethodForm: FormGroup;
   cardPaymentMethodForm: FormGroup;
+  bankPaymentMethodForm: FormGroup;
   payLaterMethodForm: FormGroup;
   receiptPaymentForm: FormGroup;
   customerRegistrationNumberSame: boolean = false;
@@ -194,6 +193,11 @@ export class PosComponent implements OnInit {
       transaction_id: ['']
     });
 
+    this.bankPaymentMethodForm = this.fb.group({
+      payment_account: ['', [Validators.required]],
+      account_no: ['', [Validators.required]],
+    });
+
     this.cardPaymentMethodForm = this.fb.group({
       payment_account: ['', [Validators.required]],
       customer_bank_name: ['', [Validators.required]],
@@ -222,6 +226,7 @@ export class PosComponent implements OnInit {
       card_payment_amount: [''],
       card_holder_name: [''],
       cart_transactions_no: [''],
+      account_no: ['']
     })
 
 
@@ -244,13 +249,17 @@ export class PosComponent implements OnInit {
         this.receiptPaymentForm.get('card_payment_amount').setValidators(Validators.required);
         this.receiptPaymentForm.get('card_holder_name').setValidators(Validators.required);
         this.receiptPaymentForm.get('cart_transactions_no').setValidators(Validators.required);
-      } else {
+        this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+     } else if(value === 'Bank') {
+      this.receiptPaymentForm.get('account_no').setValidators(Validators.required);
+     }  else {
         this.receiptPaymentForm.get('upi_id').clearValidators();
         this.receiptPaymentForm.get('payment_account').clearValidators();
         this.receiptPaymentForm.get('customer_bank_name').clearValidators();
         this.receiptPaymentForm.get('card_payment_amount').clearValidators();
         this.receiptPaymentForm.get('card_holder_name').clearValidators();
         this.receiptPaymentForm.get('cart_transactions_no').clearValidators();
+        this.receiptPaymentForm.get('account_no').clearValidators();
       }
       this.receiptPaymentForm.get('upi_id').updateValueAndValidity();
       this.receiptPaymentForm.get('payment_account').updateValueAndValidity();
@@ -258,6 +267,7 @@ export class PosComponent implements OnInit {
       this.receiptPaymentForm.get('card_payment_amount').updateValueAndValidity();
       this.receiptPaymentForm.get('card_holder_name').updateValueAndValidity();
       this.receiptPaymentForm.get('cart_transactions_no').updateValueAndValidity();
+      this.receiptPaymentForm.get('account_no').updateValueAndValidity();
     });
  
     window.addEventListener('online', () => {
@@ -1179,6 +1189,10 @@ export class PosComponent implements OnInit {
   get transaction_id() { return this.upiPaymentMethodForm.get('transaction_id'); }
   get payment_account_upi() { return this.upiPaymentMethodForm.get('payment_account'); }
 
+  get account_no() { return this.bankPaymentMethodForm.get('account_no')};
+  get payment_account_bank() { return this.bankPaymentMethodForm.get('payment_account')};
+
+
   get upi_id_receipt() { return this.receiptPaymentForm.get('upi_id'); }
   get transaction_id_receipt() { return this.receiptPaymentForm.get('transaction_id'); }
   get payment_account_receipt() { return this.receiptPaymentForm.get('payment_account'); }
@@ -1208,6 +1222,7 @@ export class PosComponent implements OnInit {
   get receipt_card_holder_name() { return this.receiptPaymentForm.get('card_holder_name')};
   get receipt_cart_transactions_no() { return this.receiptPaymentForm.get('cart_transactions_no')};
   
+  get receipt_account_no() { return this.receiptPaymentForm.get('account_no')};
 
   handleMobileInputChange(event: any) {
     const inputValue = event.target.value;
@@ -1387,6 +1402,34 @@ export class PosComponent implements OnInit {
       formData.append('card_detail', '');
       formData.append('bank_detail', '');
       formData.append('upi_detail', JSON.stringify(upi_data));
+      }
+
+    } else if(this.payment_mode.value === 'Bank'){
+      let bank_data = {
+        "payment_account": Number(this.payment_account_receipt.value),
+        "account_no": this.receipt_account_no.value,
+      };
+
+      if(this.payment_type.value == 'Advance'){
+        formData.append('customer', this.customer_receipt?.value?.id);
+        formData.append('receipt_method', this.payment_type.value);
+        formData.append('payment_mode', this.payment_mode.value);
+        formData.append('amount', this.amount_receipt.value);
+        formData.append('description', this.receipt_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', '');
+        formData.append('bank_detail', JSON.stringify(bank_data));
+        formData.append('upi_detail', '');
+      } else {
+      formData.append('customer', this.customer_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('card_detail', '');
+      formData.append('bank_detail', JSON.stringify(bank_data));
+      formData.append('upi_detail', '');
       }
 
     } else if(this.payment_mode.value === 'Card') {
