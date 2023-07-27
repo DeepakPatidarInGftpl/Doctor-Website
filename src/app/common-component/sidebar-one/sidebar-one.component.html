@@ -52,7 +52,7 @@
                 </ul>
             </li> -->
 
-            <li class="submenu" *ngIf="isCompany || isAccount || isWarehouse || isBranch || isAccountSubType">
+            <li class="submenu" *ngIf="isCompany || isAccount || isWarehouse || isBranch || isAccountSubType || isCompanyBank || isAdditional">
                 <a [ngClass]="{'active': activePath === 'masters'}"><img src="assets/img/icons/product.svg" alt="img"><span> Master</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isCompany"><a routerLink="/masters/companylist" routerLinkActive="active">Company</a></li>
@@ -61,6 +61,8 @@
                     <li *ngIf="isWarehouse"><a routerLink="/masters/warehouse" routerLinkActive="active">Warehouse</a></li>
                     <li *ngIf="isBranch"><a routerLink="/masters/branch" routerLinkActive="active">Branch</a></li>
                     <li *ngIf="isAccountSubType"><a routerLink="/masters/account_subtype" routerLinkActive="active">Account Sub Type</a></li>
+                    <li *ngIf="isCompanyBank"><a routerLink="/masters/companyBank" routerLinkActive="active">Company Bank</a></li>
+                    <li *ngIf="isAdditional"><a routerLink="/masters/additionalCharge" routerLinkActive="active">Additional Charges</a></li>            
                 </ul>
             </li> 
 
@@ -344,7 +346,8 @@
                   <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span class="menu-arrow"></span></a>
                   <ul>
                       <li><a routerLink="/sales/saleslist" routerLinkActive="active">Sales List</a>
-                      </li>
+                      </li> 
+                      <li *ngIf="isPosOrder"><a routerLink="/sales/posOrder" routerLinkActive="active">POS Order</a></li>
                       <li><a routerLink="/sales/pos" routerLinkActive="active">POS</a></li>
                       <li><a routerLink="/pos" target="_blank" routerLinkActive="active">POS New</a></li>
                       <li><a routerLink="/sales/add-sales" routerLinkActive="active">New Sales</a>

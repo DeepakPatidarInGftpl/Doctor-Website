@@ -31,7 +31,7 @@ export class EditpurchaseComponent implements OnInit {
     private toastrService: ToastrService, private Arout: ActivatedRoute) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   suppliers: any[] = [];
 
@@ -73,9 +73,9 @@ export class EditpurchaseComponent implements OnInit {
       console.log(res);
       this.getresbyId=res;
       this.purchaseForm.patchValue(res);
-      this.purchaseForm.get('supplier')?.patchValue(res.supplier.id)
+      this.purchaseForm.get('party')?.patchValue(res.party.id)
       this.purchaseForm.setControl('purchase_cart', this.udateCart(res.cart));
-      this.displaySupplierName(res.supplier.id);
+      this.displaySupplierName(res.party.id);
     })
     
     this.searchForm = this.fb.group({
@@ -148,7 +148,7 @@ displaySupplierName(supplierId: number): void {
     this.searchInputValue = (event.target as HTMLInputElement).value;
   }
   get supplier() {
-    return this.purchaseForm.get('supplier') as FormControl;
+    return this.purchaseForm.get('party') as FormControl;
   }
   purchase_cart(): FormGroup {
     return this.fb.group({
@@ -198,7 +198,7 @@ displaySupplierName(supplierId: number): void {
      }
     
     this.purchaseForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
     // this.displaySupplierName(event);
   }
@@ -217,7 +217,7 @@ loader=false;
     if (this.purchaseForm.valid) {
       this.loader=true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.purchaseForm.get('supplier')?.value);
+      formdata.append('party', this.purchaseForm.get('party')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
       formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
       formdata.append('shipping_date', this.purchaseForm.get('shipping_date')?.value);

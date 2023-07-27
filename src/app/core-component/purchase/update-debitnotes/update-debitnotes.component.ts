@@ -31,7 +31,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     private coreService:CoreService) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
   filteredOptions: Observable<any>;
@@ -55,7 +55,7 @@ export class UpdateDebitnotesComponent implements OnInit {
   ngOnInit(): void {
     this.id=this.Arout.snapshot.paramMap.get('id');
     this.debitNotesForm = this.fb.group({
-      supplier: new FormControl('', [Validators.required]),
+      party: new FormControl('', [Validators.required]),
       debit_note_date: new FormControl('', [Validators.required]),
       debit_note_no: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       refrence_bill_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
@@ -74,12 +74,12 @@ export class UpdateDebitnotesComponent implements OnInit {
       console.log(res);
       this.getresbyId = res;
       this.debitNotesForm.patchValue(res);
-      this.debitNotesForm.get('supplier')?.patchValue(res.supplier.id);
+      this.debitNotesForm.get('party')?.patchValue(res.party.id);
       // this.debitNotesForm.get('purchase')?.patchValue(res.purchase_order.id);
       this.debitNotesForm.get('payment_term')?.patchValue(res.payment_term.id);
       this.debitNotesForm.get('purchase')?.patchValue(res.purchase?.id);
       this.debitNotesForm.setControl('cart', this.udateCart(res.cart));
-      this.displaySupplierName(res.supplier.id);
+      this.displaySupplierName(res.party.id);
     })
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
@@ -108,7 +108,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       });
   }
   get supplier() {
-    return this.debitNotesForm.get('supplier') as FormControl;
+    return this.debitNotesForm.get('party') as FormControl;
   }
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
@@ -193,7 +193,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.addCart();
      }
     this.debitNotesForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
   }
   variantId:any;

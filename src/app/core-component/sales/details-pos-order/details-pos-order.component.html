@@ -1,0 +1,192 @@
+<div class="card bg">
+    <div class="card-body">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>POS Order Details</h4>
+                <h6>Full details of a POS Order</h6>
+            </div>
+            <!-- <div class="page-btn">
+                <a routerLink="//contacts/updateVendor/{{vendorDetail?.id}}" class="btn btn-added">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Vendor
+                </a>
+            </div> -->
+        </div>
+
+        <mat-tab-group animationDuration="0ms" *ngIf="vendorDetail">
+            <mat-tab label="General Details">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Payment mode</h4>
+                                            <h6>{{vendorDetail.payment_mode}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Total Amount</h4>
+                                            <h6>{{vendorDetail.total_amount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Total Tax</h4>
+                                            <h6>{{vendorDetail.total_tax}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Due Amount</h4>
+                                            <h6 *ngIf="vendorDetail.dueAmount<0" style="color: red;">{{vendorDetail.dueAmount}}</h6>
+                                            <h6 *ngIf="vendorDetail.dueAmount>0" style="color: green;">{{vendorDetail.dueAmount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>GST</h4>
+                                            <h6>{{vendorDetail.get_gst}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>SCGST</h4>
+                                            <h6>{{vendorDetail.get_scgst}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Place of Supply GST</h4>
+                                            <h6>{{vendorDetail.place_of_supply_gst_code}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>place of Supply State</h4>
+                                            <h6>{{vendorDetail.place_of_supply_state}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Additional Charge</h4>
+                                            <h6>{{vendorDetail.additional_charge}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Created Date</h4>
+                                            <h6>{{vendorDetail.created_date | date:'fullDate'}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Date</h4>
+                                            <h6>{{vendorDetail.date | date:'fullDate'}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Check SGSTCGST</h4>
+                                            <h6>
+                                                <span
+                                                    [ngClass]="{'bg-lightgreen': vendorDetail.Check_SGSTCGST === true, 'bg-lightred' : vendorDetail.Check_SGSTCGST === false,'bg-lightyellow' : vendorDetail.Check_SGSTCGST === 'Partial' }"
+                                                    class="badges">{{vendorDetail.Check_SGSTCGST}}</span>
+                                            </h6>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- <div class="d-flex align-items-center mx-4">
+                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                        <span [ngClass]="{'bg-lightgreen': vendorDetail.is_active === true, 'bg-lightred' : vendorDetail.is_active === false,'bg-lightyellow' : vendorDetail.is_active === 'Partial' }"
+                                            class="badges">{{vendorDetail.is_active}}</span>
+                    </div> -->
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Customer">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card-body">
+                            <div class="productdetails">
+                                <ul class="product-bar">
+                                    <li>
+                                        <h4>Name</h4>
+                                        <h6>{{vendorDetail?.customer.name}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Mobile no</h4>
+                                        <h6>{{vendorDetail?.customer.mobile_no}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Email</h4>
+                                        <h6>{{vendorDetail?.customer.email}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>whatsapp no</h4>
+                                        <h6>{{vendorDetail?.customer.whatsapp_no}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>GST Type</h4>
+                                        <h6>{{vendorDetail?.customer.gst_type}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>GSTIN</h4>
+                                        <h6>{{vendorDetail?.customer.gstin}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Date of birth</h4>
+                                        <h6>{{vendorDetail?.customer.date_of_birth | date:'fullDate'}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Anniversary date</h4>
+                                        <h6>{{vendorDetail?.customer.anniversary_date | date:'fullDate'}}</h6>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Receipts">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td class="th">Receipt Mode</td>
+                                <td class="th">Receipt method</td>
+                                <td class="th">Receipt upi id</td>
+                                <td class="th">Amount</td>
+                                <td class="th">Bill no</td>
+                                <td class="th">Receipt bank</td>
+                                <td class="th">Receipt card id</td>
+                                <td class="th">Receipt date</td>
+                                <td class="th">Description</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let cart of vendorDetail?.receipts">
+                                <td class="td">{{cart?.receipt_mode}}</td>
+                                <td class="td">{{cart?.receipt_method}}</td>
+                                <td class="td">{{cart?.receipt_upi_id}}</td>
+                                <td class="td">{{cart?.amount}}</td>
+                                <td class="td">{{cart?.bill_no}}</td>
+                                <td class="td">{{cart?.receipt_bank_id}}</td>
+                                <td class="td">{{cart?.receipt_card_id}}</td>
+                                <td class="td">{{cart?.receipt_date | date}}</td>
+                                <td class="td">{{cart?.description}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </mat-tab>
+            <mat-tab label="Order Paylatter">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td class="th">Day</td>
+                                <td class="th">Date</td>
+                                <td class="th">Create date</td>
+                                <td class="th">Send Reminder</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let cart of vendorDetail?.order_paylatter">
+                                <td class="td">{{cart?.day}}</td>
+                                <td class="td">{{cart?.date}}</td>
+                                <td class="td">{{cart?.create_date | date:'fullDate'}}</td>
+                                <td class="td">
+                                    <span [ngClass]="{'bg-lightgreen': vendorDetail.is_send_reminder === true, 'bg-lightred' : vendorDetail.is_send_reminder === false,'bg-lightyellow' : vendorDetail.is_send_reminder === 'Partial' }"
+                                    class="badges">{{vendorDetail.is_send_reminder}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
