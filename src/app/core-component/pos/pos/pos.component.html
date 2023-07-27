@@ -297,7 +297,7 @@
                                                                 <button type="button" class="btn btn-dark w-100"> 
                                                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
                                                                         Card&Print(F9)</button>
-                                                                        <button type="button" class="btn btn-dark w-100"> 
+                                                                        <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#bankMethodModal"> 
                                                                             <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                                                                 Cash&Print(F8)</button>
                             </div>
@@ -382,12 +382,12 @@
                                         Hold Bill</button> 
                             </li>
                             <li>
-                                <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#exampleModal2"> 
+                                <button type="button" class="btn-pos"> 
                                     <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
                                         Payments</button> 
                             </li>
                             <li>
-                                <button type="button" class="btn-pos"> 
+                                <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#exampleModal2"> 
                                     <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
                                         Add Payment</button> 
                             </li>
@@ -1824,7 +1824,70 @@
         </div> -->
       </div>
     </div>
-  </div>  
+  </div> 
+  
+  <!-- Modal Bank-->
+  <div class="modal fade posmodal" id="bankMethodModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bankModalLabel">Bank Details</h5>
+          <button type="button" class="btn-close bankModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="bankPaymentMethodForm" (ngSubmit)="bankPaymentGenerateOrder()">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Account</label>
+                            <select class="form-select" formControlName="payment_account">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="payment_account_bank.invalid && (payment_account_bank.dirty || payment_account_bank.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_account_bank.errors?.['required']">
+    Payment Account is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Account No</label>
+                            <input type="text" class="form-control"
+                            placeholder="Account No"
+                            formControlName="account_no">
+                        </div>
+                        <div *ngIf="account_no.invalid && (account_no.dirty || account_no.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="account_no.errors?.['required']">
+        Account No is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>   
 
   <!-- Modal Pay Later-->
 <div class="modal fade posmodal" id="payLaterMethodModal" tabindex="-1" aria-labelledby="payLaterModalLabel" aria-hidden="true">

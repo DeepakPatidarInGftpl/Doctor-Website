@@ -539,6 +539,7 @@ export class PosComponent implements OnInit {
       });
 
 
+
     
     this.addMoreDetails = false;
     console.log(this.addMoreDetails);
@@ -1884,6 +1885,87 @@ export class PosComponent implements OnInit {
 
 
   }
+
+  bankPaymentGenerateOrder(){
+    if (this.bankPaymentMethodForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.bankPaymentMethodForm.controls).forEach(key => {
+        this.bankPaymentMethodForm.controls[key].markAsTouched();
+      });
+      return;
+    }
+
+    if(this.currentItems.length > 0){
+      if(this.currentCustomer === null || this.currentCustomer === undefined){
+        this.toastr.error('Please Select/Add a Customer!');
+      } else {
+        let cartData = [];
+    for (let index = 0; index < this.currentItems.length; index++) {
+      const element = this.currentItems[index];
+      let item = {
+        "variant": element.id,
+        "qty": element.quantity,
+        "mrp": element.batch[0].mrp,
+        "discount": 0,
+        "add_discount": 0,
+        "unit_cost": element.batch[0]?.selling_price_offline,
+        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
+        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "remarks": "",
+        "tax_percentage": element?.batch[0]?.sale_tax
+      };
+      cartData.push(item);
+    }
+
+    let bank_data = {
+      "account_no": Number(this.account_no.value),
+      "payment_account": Number(this.payment_account_bank.value)
+    };
+
+
+
+    console.log(cartData, 'cash', bank_data);
+    const formData = new FormData();
+    formData.append('customer', JSON.stringify(this.currentCustomer.id));
+    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
+    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('payment_mode', 'Bank');
+    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('cart_data', JSON.stringify(cartData));
+    formData.append('card_detail', '');
+    formData.append('Multipay', '');
+    formData.append('PayLatter', '');
+    formData.append('bank_detail', JSON.stringify(bank_data));
+    formData.append('upi_detail', '');
+
+    this.cartService
+     .generateOrderNew(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response order', response);
+          if(response.isSuccess){
+            this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.bankModalClose');
+            clicking.click();
+            this.bankPaymentMethodForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+      }
+    
+  } else {
+    this.toastr.error('Please Add Items To Cart');
+  }
+
+
+  } 
 
   upiPaymentGenerateOrder(){
     if (this.upiPaymentMethodForm.invalid) {
