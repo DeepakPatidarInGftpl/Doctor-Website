@@ -392,6 +392,11 @@
                                         Add Payment</button> 
                             </li>
                             <li>
+                                <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#expenseModal"> 
+                                    <i class="fas fa-pause"></i>
+                                        Expense</button> 
+                            </li>
+                            <li>
                                 <button type="button" class="btn-pos"> 
                                     <i class="fas fa-sticky-note" data-bs-toggle="tooltip" title="fas fa-sticky-note"></i>
                                         Credit Notes</button> 
@@ -402,7 +407,7 @@
                                         Redeem Loyalty</button> 
                             </li>
                             <li>
-                                <button type="button" class="btn-pos"> 
+                                <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#posOrdersModal"> 
                                     <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
                                         Orders</button> 
                             </li>
@@ -900,12 +905,7 @@
 </div>
                             </div>
 
-                            <!-- <div class="row">
-                                <div class="col-sm-12">
-                                    <label for="typeahead-basic">Search for a state:</label>
-<input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="modelPayments" [ngbTypeahead]="search" (selectItem)="onItemSelect($event)"/>
-                                </div>
-                            </div> -->
+                        
             
                             <div class="row">
                                 
@@ -935,33 +935,7 @@
   </div>
 </div>
                                     
-                                        <!-- <input type="text"
-                                               placeholder="Search for a street"
-                                               [formControl]="streetcontrol"
-                                               [matAutocomplete]="auto5"
-                                               class="example-input">
-                                        <mat-autocomplete #auto5="matAutocomplete">
-                                          <mat-option *ngFor="let street of filteredStreets | async" [value]="street">
-                                            {{street}}
-                                          </mat-option>
-                                        </mat-autocomplete> -->
-                                      
-                                    <!-- <form>
-                                        <input type="text"
-                                        placeholder="Search for a Customer"
-                                        [formControl]="receiptPaymentForm.get('customer_receipt')"
-                                        [matAutocomplete]="autoReceipt"
-                                        class="form-control">
-                                 <mat-autocomplete #autoReceipt="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelectedReceipt($event)">
-                                     
-                                     <mat-option *ngIf="receiptPaymentForm.get('customer_receipt').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
-                                     <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
-                                     <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
-                                   <mat-option *ngFor="let customer of filteredCustomer2" [value]="customer">
-                                     {{ displayCus(customer) }}
-                                   </mat-option>
-                                 </mat-autocomplete>
-                                    </form> -->
+                                       
                                     
                                 </div>
                                 <div class="col-sm-8" *ngIf="receiptPaymentForm.get('voucher_type').value === 'purchase' || receiptPaymentForm.get('voucher_type').value === 'expense'">
@@ -1766,6 +1740,60 @@
     </div>
   </div>
 
+  <div class="modal fade posmodal" id="posOrdersModal" tabindex="-1" aria-labelledby="posOrdersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addChargesModalLabel">POS Orders</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div> 
+        <div class="modal-body">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <!-- <th>Sr.No.</th> -->
+                        <th>Invoice No.</th>
+                        <th>Date</th>
+                        <th>Customer Name</th>
+                        <th>Customer Ph.No</th>
+                        <th>Total Amt</th>
+                        <th>Due Amt</th>
+                        <!-- <th>Order Type</th> -->
+                        <th>Payment Mode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of posOrders | paginate: { itemsPerPage: 10, currentPage: page }">
+                        <!-- <td>{{order.index}}</td> -->
+                        <td>{{order.id}}</td>
+                        <td>{{order.date}}</td>
+                        <td>{{order.customer.name}}</td>
+                        <td>{{order.customer.mobile_no}}</td>
+                        <td>{{order.total_amount}}</td>
+                        <td>{{order.dueAmount}}</td>
+                        <td>{{order.payment_mode}}</td>                        
+                    </tr>
+                    
+                </tbody>
+                <!-- <tfoot>
+                </tfoot> -->
+            </table>
+            
+        </div>
+        <div class="modal-footer mt-5">
+            <div class="col-sm-12">
+                <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+            </div>
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-dark modal1BtnPos" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal UPI-->
 <div class="modal fade posmodal" id="upiMethodModal" tabindex="-1" aria-labelledby="upiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -2154,3 +2182,119 @@
     <circle r="20" cy="50" cx="50"></circle>
   </svg>  
   </div> -->
+
+  <!-- Expense Payment Modal -->
+  <div class="modal fade modalPayment posmodal" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="expenseModalLabel">Expense</h5>
+          <button type="button" class="btn-close expenseModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="expensePaymentForm" (ngSubmit)="formSubmitExpense()">
+
+            <div class="row">
+                
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <input type="number" formControlName="amount" class="form-control" placeholder="Enter Amount">
+                                </div>
+                                <div *ngIf="expense_amount.invalid && (expense_amount.dirty || expense_amount.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="expense_amount.errors?.['required']">
+    Amount is required.
+  </div>
+</div>
+</div>
+<div class="col-sm-6">
+    <div class="form-group">
+        <label>Party</label>
+        <input type="text"
+        placeholder="Search for a Party"
+        [formControl]="expensePaymentForm.get('party')"
+        [matAutocomplete]="partyExpense"
+        class="form-control">
+ <mat-autocomplete #partyExpense="matAutocomplete" [displayWith]="displayParty" (optionSelected)="optionSelectedPartyExpense($event)">
+     
+     <mat-option *ngIf="expensePaymentForm.get('party').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+     <mat-option *ngIf="partyIsLoading" class="is-loading">Loading...</mat-option>
+     <mat-option *ngIf="partyErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+   <mat-option *ngFor="let party of filteredPartyExpense" [value]="party">
+     {{ displayParty(party) }}
+   </mat-option>
+ </mat-autocomplete>
+    </div>
+    <div *ngIf="expense_party.invalid && (expense_party.dirty || expense_party.touched)"
+class="alert alert-danger">
+
+<div *ngIf="expense_party.errors?.['required']">
+Party is required.
+</div>
+</div>
+    
+</div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Payment Account</label>
+                    <select class="form-select" formControlName="payment_account">
+                        <option value="" disabled selected>Select Payment Account</option>
+<option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                    </select>
+                </div>
+                <div *ngIf="expense_payment_account.invalid && (expense_payment_account.dirty || expense_payment_account.touched)"
+class="alert alert-danger">
+
+<div *ngIf="expense_payment_account.errors?.['required']">
+Payment Account is required.
+</div>
+</div>
+            </div>
+           
+
+             
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Remark</label>
+                        <input type="text" formControlName="remark" class="form-control" placeholder="Enter Remark">
+                    </div>
+                    <div *ngIf="expense_remark.invalid && (expense_remark.dirty || expense_remark.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="expense_remark.errors?.['required']">
+    Remark is required.
+  </div>
+</div>
+                </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" formControlName="non_gst"> Non GST
+                        </label>
+                    </div>
+                    <div *ngIf="expense_nongst.invalid && (expense_nongst.dirty || expense_nongst.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="expense_nongst.errors?.['required']">
+    Non GST is required.
+  </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
+
+                </div>
+            </div>
+            </form>
+        </div>
+       
+      </div>
+    </div>
+  </div>    

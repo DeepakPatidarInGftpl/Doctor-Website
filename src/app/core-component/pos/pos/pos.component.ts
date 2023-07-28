@@ -21,6 +21,8 @@ import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 
 
 export class PosComponent implements OnInit {
+  page: number = 1;
+
   heldBills: any[] = [];
 
   streetcontrol = new FormControl('');
@@ -98,7 +100,8 @@ export class PosComponent implements OnInit {
   cusErrorMsg!: string;
   cusIsLoading = false;
   partyErrorMsg!: string;
-  filteredParty: any;
+  filteredParty: any;  
+  filteredPartyExpense: any;
   partyIsLoading:boolean = false
   chargesErrorMsg!:string;
   chargesIsLoading = false;
@@ -113,6 +116,7 @@ export class PosComponent implements OnInit {
   bankPaymentMethodForm: FormGroup;
   payLaterMethodForm: FormGroup;
   receiptPaymentForm: FormGroup;
+  expensePaymentForm: FormGroup;
   customerRegistrationNumberSame: boolean = false;
   currentCountry: any;
   currentState:any;
@@ -130,6 +134,8 @@ export class PosComponent implements OnInit {
 
   currentAdditionalCharges:any = [];
   activeBill: any;
+
+  posOrders:any = [];
 
 
   constructor(private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
@@ -166,6 +172,7 @@ export class PosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.filteredStreets = this.streetcontrol.valueChanges.pipe(
       startWith(''),
       map(value => this.__filter(value || '')),
@@ -214,6 +221,14 @@ export class PosComponent implements OnInit {
       date: ['', [Validators.required]],
       is_send_reminder: ['', [Validators.required]],
     });
+
+    this.expensePaymentForm = this.fb.group({
+      non_gst: [false],
+      payment_account: ['', [Validators.required]],
+      remark: ['', [Validators.required]],
+      amount: ['', [Validators.required]],
+      party: ['', [Validators.required]],
+    })
 
     this.receiptPaymentForm = this.fb.group({
       voucher_type: ['', [Validators.required]],
@@ -607,6 +622,46 @@ export class PosComponent implements OnInit {
       });
 
 
+      this.expensePaymentForm.get('party').valueChanges
+      .pipe(
+        filter(res => {
+          return res !== null && res?.length >= this.cusMinLengthTerm
+        }),
+        distinctUntilChanged(),
+        debounceTime(100),
+        tap(() => {
+          this.partyErrorMsg = "";
+          this.filteredPartyExpense = [];
+          this.partyIsLoading = true;
+        }),
+        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/party_filter/?search=${value}`, requestOptions)
+          .pipe(
+            catchError(err => {
+              // handleError(err);
+              console.log('err catch', err);
+              this.partyErrorMsg = 'No Party Found';
+              this.partyIsLoading = false;
+              return [];
+            }),
+            finalize(() => {
+              this.partyIsLoading = false
+              console.log('search', value)
+            }),
+          )
+        )
+      )
+      .subscribe((data: any) => {
+        console.log('data', data)
+
+        if(data.length > 0){
+          console.log('data', data)
+          this.filteredPartyExpense = data;
+        } else {
+          this.filteredPartyExpense = [];
+          this.partyErrorMsg = 'No Party Found';
+        }
+        
+      });
 
     
     this.addMoreDetails = false;
@@ -681,6 +736,16 @@ export class PosComponent implements OnInit {
       },
       error: (error) => {
         console.log('payment terms', error);
+      }
+    })
+
+    this.cartService.getPOSOrders().subscribe({
+      next: (response) => {
+        console.log(response, 'pos orders')
+        this.posOrders = response;
+      },
+      error: (error) => {
+        console.log('pos orders', error);
       }
     })
 
@@ -1003,6 +1068,10 @@ export class PosComponent implements OnInit {
   }
 
   optionSelectedParty(event){
+
+  }
+
+  optionSelectedPartyExpense(event){
 
   }
 
@@ -1391,6 +1460,16 @@ export class PosComponent implements OnInit {
   get receipt_account_no() { return this.receiptPaymentForm.get('account_no')};
   get expense_non_gst() { return this.receiptPaymentForm.get('non_gst')};
 
+
+  get expense_nongst() { return this.expensePaymentForm.get('non_gst')};
+  get expense_party() { return this.expensePaymentForm.get('party')};
+  get expense_amount() { return this.expensePaymentForm.get('amount')};
+  get expense_remark() { return this.expensePaymentForm.get('remark')};
+  get expense_payment_account() { return this.expensePaymentForm.get('payment_account')};
+
+
+
+
   handleMobileInputChange(event: any) {
     const inputValue = event.target.value;
     if(this.mobile_no.valid){
@@ -1555,14 +1634,26 @@ export class PosComponent implements OnInit {
   }
 
   formSubmitExpense(){ 
+    if (this.expensePaymentForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.expensePaymentForm.controls).forEach(key => {
+        const control = this.expensePaymentForm.controls[key];
+        if (control.invalid) {
+          console.log(key);
+        }
+
+        this.expensePaymentForm.controls[key].markAsTouched();
+      });
+      return;
+    }
 
     let formData = new FormData();
 
-    formData.append('party', this.party_receipt?.value?.id);
-    formData.append('amount', this.amount_receipt.value);
-    formData.append('remarks', this.receipt_remark.value);
-    formData.append('non_gst', this.expense_non_gst.value);
-    formData.append('payment_account', this.payment_account_receipt.value);
+    formData.append('party', this.expense_party?.value?.id);
+    formData.append('amount', this.expense_amount.value);
+    formData.append('remarks', this.expense_remark.value);
+    formData.append('non_gst', this.expense_nongst.value);
+    formData.append('payment_account', this.expense_payment_account.value);
     
     this.cartService
      .expensePayment(formData)
@@ -1572,10 +1663,10 @@ export class PosComponent implements OnInit {
           if(response.isSuccess){
             // this.discardCurrentBill();
             this.toastr.success(response.msg)
-            var clicking = <HTMLElement>document.querySelector('.receiptModalClose');
+            var clicking = <HTMLElement>document.querySelector('.expenseModalClose');
             clicking.click();
-            this.receiptPaymentForm.reset();
-            this.expense_non_gst.value(false);
+            this.expensePaymentForm.reset();
+            this.expense_nongst.setValue(false);
           } else {
             this.toastr.error(response.msg);
           }
@@ -2136,6 +2227,9 @@ export class PosComponent implements OnInit {
         let cartData = [];
     for (let index = 0; index < this.currentItems.length; index++) {
       const element = this.currentItems[index];
+      console.log((this.getTaxAmt(element.batch[0]) * element.quantity), 'tax amt');
+      console.log(this.getNetAmount(element?.batch[0], element?.quantity), 'net');
+
       let item = {
         "variant": element.id,
         "qty": element.quantity,
@@ -2143,10 +2237,10 @@ export class PosComponent implements OnInit {
         "discount": 0,
         "add_discount": 0,
         "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
-        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)),
+        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity),
         "remarks": "",
-        "tax_percentage": element?.batch[0]?.sale_tax
+        "tax_percentage": Number(element?.batch[0]?.sale_tax)
       };
       cartData.push(item);
     }
