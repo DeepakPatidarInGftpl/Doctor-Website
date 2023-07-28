@@ -397,6 +397,11 @@
                                         Expense</button> 
                             </li>
                             <li>
+                                <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#salesModal"> 
+                                    <i class="fas fa-pause"></i>
+                                        Sales</button> 
+                            </li>
+                            <li>
                                 <button type="button" class="btn-pos"> 
                                     <i class="fas fa-sticky-note" data-bs-toggle="tooltip" title="fas fa-sticky-note"></i>
                                         Credit Notes</button> 
@@ -2286,6 +2291,258 @@ Payment Account is required.
   </div>
                 </div>
             </div>
+            <div class="row mt-4">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
+
+                </div>
+            </div>
+            </form>
+        </div>
+       
+      </div>
+    </div>
+  </div>    
+
+   <!-- Expense Payment Modal -->
+   <div class="modal fade modalPayment posmodal" id="salesModal" tabindex="-1" aria-labelledby="salesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="salesModalLabel">Sales</h5>
+          <button type="button" class="btn-close salesModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="salesPaymentForm" (ngSubmit)="formSubmitReceipt()">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="d-block">Select Payment Type</label>
+                                <div class="radio-payments-modal-wrapper d-flex justify-content-around">
+                                    <div class="form-check" *ngFor="let option of paymentType">
+                                        <input class="form-check-input" type="radio" formControlName="payment_type" [value]="option.value">
+                                        <label class="form-check-label">{{option.label}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="sales_payment_type.invalid && (sales_payment_type.dirty || sales_payment_type.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="salespayment_type.errors?.['required']">
+    Payment Type is required.
+  </div>
+</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Customer</label>
+                                    <input type="text"
+                                    placeholder="Search for a Customer"
+                                    [formControl]="salesPaymentForm.get('customer')"
+                                    [matAutocomplete]="autoReceipt"
+                                    class="form-control">
+                             <mat-autocomplete #autoReceipt="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelectedReceipt($event)">
+                                 
+                                 <mat-option *ngIf="salesPaymentForm.get('customer').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                 <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
+                                 <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+                               <mat-option *ngFor="let customer of filteredCustomer2" [value]="customer">
+                                 {{ displayCus(customer) }}
+                               </mat-option>
+                             </mat-autocomplete>
+                                </div>
+                                <div *ngIf="sales_customer.invalid && (sales_customer.dirty || sales_customer.touched)"
+class="alert alert-danger">
+
+<div *ngIf="sales_customer.errors?.['required']">
+Customer is required.
+</div>
+</div>
+                                
+                                   
+                                
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Payment Mode</label>
+                                    <select class="form-select" formControlName="payment_mode">
+                                        <option disabled selected value="">-- Select Payment Mode --</option>
+                                        <option *ngFor="let option of paymentMode" [value]="option.value">{{option.label}}</option>
+                                    </select>
+                                </div>
+                                <div *ngIf="sales_payment_mode.invalid && (sales_payment_mode.dirty || sales_payment_mode.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="sales_payment_mode.errors?.['required']">
+    Payment Mode is required.
+  </div>
+</div>
+                            </div>
+                            <div class="col-sm-6" *ngIf="salesPaymentForm.get('payment_type').value === 'Against Bill'">
+                                <div class="form-group">
+                                    <label>Select Sales</label>
+                                    <select class="form-select" formControlName="sales">
+                                        <option disabled selected value="">-- Select Sales --</option>
+                                        <option *ngFor="let option of receiptSales" [value]="option?.id">{{option?.dueAmount}}</option>
+                                    </select>
+                                </div>
+                                <div *ngIf="sales_sales.invalid && (sales_sales.dirty || sales_sales.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="sales_sales.errors?.['required']">
+    Selecting Sales is required.
+  </div>
+</div>
+                            </div>
+                
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <input type="number" formControlName="amount" class="form-control" placeholder="Enter Amount">
+                                </div>
+                                <div *ngIf="sales_amount.invalid && (sales_amount.dirty || sales_amount.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="sales_amount.errors?.['required']">
+    Amount is required.
+  </div>
+</div>
+</div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Payment Account</label>
+                    <select class="form-select" formControlName="payment_account">
+                        <option value="" disabled selected>Select Payment Account</option>
+<option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                    </select>
+                </div>
+                <div *ngIf="sales_payment_account.invalid && (sales_payment_account.dirty || sales_payment_account.touched)"
+class="alert alert-danger">
+
+<div *ngIf="sales_payment_account.errors?.['required']">
+Payment Account is required.
+</div>
+</div>
+            </div>   
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Remark</label>
+                        <input type="text" formControlName="remark" class="form-control" placeholder="Enter Remark">
+                    </div>
+                    <div *ngIf="sales_remark.invalid && (sales_remark.dirty || sales_remark.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="sales_remark.errors?.['required']">
+    Remark is required.
+  </div>
+</div>
+                </div>
+
+            </div>
+            <div class="row" *ngIf="salesPaymentForm.get('payment_mode').value === 'UPI'">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>UPI Id</label>
+                        <input type="text" class="form-control"
+                        placeholder="UPI ID"
+                        formControlName="upi_id">
+                    </div>
+                    <div *ngIf="sales_upi_id.invalid && (sales_upi_id.dirty || sales_upi_id.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="sales_upi_id.errors?.['required']">
+    UPI ID is required.
+  </div>
+</div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="salesPaymentForm.get('payment_mode').value === 'Bank'">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Account No</label>
+                        <input type="text" class="form-control"
+                        placeholder="Account No"
+                        formControlName="account_no">
+                    </div>
+                    <div *ngIf="sales_account_no.invalid && (sales_account_no.dirty || sales_account_no.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="sales_account_no.errors?.['required']">
+    Account No is required.
+  </div>
+</div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="salesPaymentForm.get('payment_mode').value === 'Card'">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Customer Bank Name</label>
+                        <input type="text" class="form-control"
+                        placeholder="Customer Bank Name"
+                        formControlName="customer_bank_name">
+                    </div>
+                    <div *ngIf="sales_customer_bank_name.invalid && (sales_customer_bank_name.dirty || sales_customer_bank_name.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="sales_customer_bank_name.errors?.['required']">
+    Customer Bank Name is required.
+  </div>
+</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Card Payment Amount</label>
+                        <input type="number" class="form-control" 
+                        placeholder="Card Payment Amount"
+                        formControlName="card_payment_amount">
+                    </div>
+                    <div *ngIf="sales_card_payment_amount.invalid && (sales_card_payment_amount.dirty || sales_card_payment_amount.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="sales_card_payment_amount.errors?.['required']">
+    Card Payment Amount is required.
+  </div>
+</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Card Holder Name</label>
+                        <input type="text" class="form-control" 
+                        placeholder="Card Holder Name"
+                        formControlName="card_holder_name">
+                    </div>
+                    <div *ngIf="sales_card_holder_name.invalid && (sales_card_holder_name.dirty || sales_card_holder_name.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="sales_card_holder_name.errors?.['required']">
+    Card Holder Name is required.
+  </div>
+</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Card Transaction No</label>
+                        <input type="number" class="form-control" 
+                        placeholder="Card Transaction No"
+                        formControlName="cart_transactions_no">
+                    </div>
+                    <div *ngIf="sales_cart_transactions_no.invalid && (sales_cart_transactions_no.dirty || sales_cart_transactions_no.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="sales_cart_transactions_no.errors?.['required']">
+    Card Transaction No. is required.
+  </div>
+</div>
+                </div>
+            </div>
+                
             <div class="row mt-4">
                 <div class="col-sm-12 d-flex justify-content-center">
                     <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
