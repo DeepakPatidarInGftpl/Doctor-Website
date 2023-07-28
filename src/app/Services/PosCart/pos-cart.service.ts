@@ -162,9 +162,63 @@ export class PosCartService {
     })
   }
 
+  getCompanyBank(){
+    let url = this.apiUrl + '/pv-api/pos/company_bank/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getPaymentTerms(){
+    let url = this.apiUrl + '/pv-api/pos/payment_terms_pos/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
   generateOrderNew(data:any) {
     let url = this.apiUrl + '/pv-api/pos/pos_new_order/';
     return this.http.post(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  receiptPayment(data:any) {
+    let url = this.apiUrl + '/pv-api/pos/receipt_advance_payment_or_againest_bill/';
+    return this.http.post(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  purchasePayment(data:any) {
+    let url = this.apiUrl + '/pv-api/pos/party_advance_payment_or_againest_bill/';
+    return this.http.post(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  expensePayment(data:any) {
+    let url = this.apiUrl + '/pv-api/pos/expance/';
+    return this.http.post(url, data, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getReceiptDueOrder(id:any){
+    let url = this.apiUrl + '/pv-api/pos/receipt_due_order/?customer_id='+ id;
+    return this.http.get(url, {
       headers: new HttpHeaders({
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })

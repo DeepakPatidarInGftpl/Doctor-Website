@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, Observer, fromEvent, merge, Subscription, of } from 'rxjs';
+import { Observable, Observer, fromEvent, merge, Subscription, OperatorFunction } from 'rxjs';
 import { map, startWith, filter, distinctUntilChanged, debounceTime, tap, switchMap, finalize, catchError } from 'rxjs/operators';
 import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 import { SyncServiceService } from 'src/app/Services/sync-service.service';
@@ -11,16 +11,20 @@ import { __values } from 'tslib';
 import { Modal } from 'bootstrap';
 import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 
+
+
 @Component({
   selector: 'app-pos',
   templateUrl: './pos.component.html',
-  styleUrls: ['./pos.component.scss']
+  styleUrls: ['./pos.component.scss'],
 })
-
 
 
 export class PosComponent implements OnInit {
   heldBills: any[] = [];
+
+  streetcontrol = new FormControl('');
+
   
 
   //options: string[] = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry'];
@@ -45,7 +49,25 @@ export class PosComponent implements OnInit {
     {label: 'Registered Composition', value: 'Registered Composition'},
     {label: 'Input Service Distributor', value: 'Input Service Distributor'},
     {label: 'Ecommerce Operator', value: 'Ecommerce Operator'},
+  ]
 
+  voucherType = [
+    { id: 1, label: 'Sales', value: 'sales' },
+    { id: 2, label: 'Purchase', value: 'purchase' },
+    { id: 3, label: 'Expense', value: 'expense' },
+    { id: 4, label: 'Cash in Hand', value: 'cash in hand'}
+  ];
+
+  paymentType = [
+    {id: 1, label: 'Advance Payment', value: 'Advance'},
+    {id: 2, label: 'Against Bill', value: 'Against Bill'}
+  ];
+
+  paymentMode = [
+    {id: 1, label: 'UPI', value: 'UPI'},
+    {id: 2, label: 'Card', value: 'Card'},
+    {id: 3, label: 'Cash', value: 'Cash'},
+    {id: 4, label: 'Bank', value: 'Bank'}
   ]
 
   selectedOptions: any[] = [];
@@ -57,10 +79,12 @@ export class PosComponent implements OnInit {
   addMoreDetails: any;
   customerAutoCompleteControl = new FormControl('');
   chargesAutoCompleteControl = new FormControl('');
+  customerAutoCompleteControl2 = new FormControl('');
 
-  streets: string[] = ['Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow'];
+  streets: string[] = ['Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow'];
   filteredStreets: Observable<string[]>;
   currentCustomer:any | null;
+  currentCustomerPayment:any | null;
   changeAmount:any;
   tenderedAmount: number = 0;
   dueAmount:any;
@@ -73,13 +97,22 @@ export class PosComponent implements OnInit {
   cusMinLengthTerm = 3;
   cusErrorMsg!: string;
   cusIsLoading = false;
+  partyErrorMsg!: string;
+  filteredParty: any;
+  partyIsLoading:boolean = false
   chargesErrorMsg!:string;
   chargesIsLoading = false;
   filteredCustomer: any;
+  filteredCustomer2: any;
   filteredCharges!: Observable<any[]>;
   currentItems: any[] = [];
   customerForm: FormGroup;
   registrationForm: FormGroup;
+  upiPaymentMethodForm: FormGroup;
+  cardPaymentMethodForm: FormGroup;
+  bankPaymentMethodForm: FormGroup;
+  payLaterMethodForm: FormGroup;
+  receiptPaymentForm: FormGroup;
   customerRegistrationNumberSame: boolean = false;
   currentCountry: any;
   currentState:any;
@@ -90,6 +123,9 @@ export class PosComponent implements OnInit {
   currentBatch:any;
   additionalChargesList:any = [];
   taxesList:any = [];
+  receiptSales:any = [];
+  companyBankList:any = [];
+  paymentTermsList: any = [];
   currentOrderAdditionalCharges:any = [];
 
   currentAdditionalCharges:any = [];
@@ -130,6 +166,12 @@ export class PosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.filteredStreets = this.streetcontrol.valueChanges.pipe(
+      startWith(''),
+      map(value => this.__filter(value || '')),
+    );
+
+   
     this.heldBills = this.billHoldService.getHeldBills();
 
     this.registrationForm = this.fb.group({
@@ -148,6 +190,172 @@ export class PosComponent implements OnInit {
       pincode: ['', [Validators.pattern(/^[0-9]{6}$/)]]
     });
 
+    this.upiPaymentMethodForm = this.fb.group({
+      payment_account: ['', [Validators.required]],
+      upi_id: ['', [Validators.required]],
+      transaction_id: ['']
+    });
+
+    this.bankPaymentMethodForm = this.fb.group({
+      payment_account: ['', [Validators.required]],
+      account_no: ['', [Validators.required]],
+    });
+
+    this.cardPaymentMethodForm = this.fb.group({
+      payment_account: ['', [Validators.required]],
+      customer_bank_name: ['', [Validators.required]],
+      card_payment_amount: ['', [Validators.required]],
+      card_holder_name: ['', [Validators.required]],
+      cart_transactions_no: ['', [Validators.required]],
+    });
+
+    this.payLaterMethodForm = this.fb.group({
+      day: ['', [Validators.required]],
+      date: ['', [Validators.required]],
+      is_send_reminder: ['', [Validators.required]],
+    });
+
+    this.receiptPaymentForm = this.fb.group({
+      voucher_type: ['', [Validators.required]],
+      payment_type: [''],
+      payment_mode: [''],
+      receipt_sales: [''],
+      amount_receipt: [''],
+      customer_receipt: [''],
+      party_receipt: [''],
+      receipt_remark: [''],
+      payment_account: [''],
+      upi_id: [''],
+      customer_bank_name: [''],
+      card_payment_amount: [''],
+      card_holder_name: [''],
+      cart_transactions_no: [''],
+      account_no: [''],
+      non_gst: [false],
+    })
+
+
+    this.receiptPaymentForm.get('voucher_type').valueChanges.subscribe((value) => {
+      if (value === 'sales') {
+        this.receiptPaymentForm.get('non_gst').clearValidators();
+        this.receiptPaymentForm.get('party_receipt').clearValidators();
+
+        this.receiptPaymentForm.get('payment_type').setValue(this.paymentType[0].value)     
+        this.receiptPaymentForm.get('payment_type').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_mode').setValidators(Validators.required);
+        this.receiptPaymentForm.get('customer_receipt').setValidators(Validators.required);
+        this.receiptPaymentForm.get('amount_receipt').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+        this.receiptPaymentForm.get('receipt_remark').setValidators(Validators.required);        
+
+      } else if(value === 'purchase') {
+        this.receiptPaymentForm.get('non_gst').clearValidators();
+        this.receiptPaymentForm.get('customer_receipt').clearValidators();
+
+        this.receiptPaymentForm.get('payment_type').setValue(this.paymentType[0].value)     
+        this.receiptPaymentForm.get('payment_type').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_mode').setValidators(Validators.required);
+        this.receiptPaymentForm.get('party_receipt').setValidators(Validators.required);
+        this.receiptPaymentForm.get('receipt_remark').setValidators(Validators.required);        
+        this.receiptPaymentForm.get('amount_receipt').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+
+      } else if(value === 'expense') {
+        // this.receiptPaymentForm.get('upi_id').clearValidators();
+        // this.receiptPaymentForm.get('customer_bank_name').clearValidators();
+        // this.receiptPaymentForm.get('card_payment_amount').clearValidators();
+        // this.receiptPaymentForm.get('card_holder_name').clearValidators();
+        // this.receiptPaymentForm.get('cart_transactions_no').clearValidators();
+        // this.receiptPaymentForm.get('account_no').clearValidators();
+        // this.receiptPaymentForm.get('customer_receipt').clearValidators();
+        // this.receiptPaymentForm.get('receipt_sales').clearValidators();
+        this.clearValidatorsReceipt();
+
+        this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+        this.receiptPaymentForm.get('receipt_remark').setValidators(Validators.required);        
+        this.receiptPaymentForm.get('non_gst').setValidators(Validators.required);
+        this.receiptPaymentForm.get('party_receipt').setValidators(Validators.required);
+        this.receiptPaymentForm.get('amount_receipt').setValidators(Validators.required);
+
+      } else {
+        this.receiptPaymentForm.get('payment_type').clearValidators();
+        this.receiptPaymentForm.get('payment_mode').clearValidators();
+        this.receiptPaymentForm.get('customer_receipt').clearValidators();
+        this.receiptPaymentForm.get('amount_receipt').clearValidators();
+        this.receiptPaymentForm.get('payment_account').clearValidators();
+        this.receiptPaymentForm.get('receipt_remark').clearValidators();
+        this.receiptPaymentForm.get('upi_id').clearValidators();
+      }
+      this.receiptPaymentForm.get('party_receipt').updateValueAndValidity();
+      this.receiptPaymentForm.get('non_gst').updateValueAndValidity();
+      this.receiptPaymentForm.get('payment_type').updateValueAndValidity();
+      this.receiptPaymentForm.get('payment_mode').updateValueAndValidity();
+      this.receiptPaymentForm.get('payment_account').updateValueAndValidity();
+      this.receiptPaymentForm.get('customer_receipt').updateValueAndValidity();
+      this.receiptPaymentForm.get('receipt_remark').updateValueAndValidity();
+      this.receiptPaymentForm.get('amount_receipt').updateValueAndValidity();
+      this.receiptPaymentForm.get('upi_id').updateValueAndValidity();    
+      this.receiptPaymentForm.get('receipt_sales').updateValueAndValidity();      
+  
+    });
+
+    this.receiptPaymentForm.get('payment_type').valueChanges.subscribe((value) => {
+      this.receiptPaymentForm.get('payment_mode').setValue(this.paymentMode[2].value)     
+      if (value === 'Against Bill') {
+        this.receiptPaymentForm.get('receipt_sales').setValidators(Validators.required);
+      } else {
+        this.receiptPaymentForm.get('receipt_sales').clearValidators();
+      }
+      this.receiptPaymentForm.get('receipt_sales').updateValueAndValidity();
+      this.receiptPaymentForm.get('upi_id').updateValueAndValidity();      
+    });
+
+    this.receiptPaymentForm.get('payment_mode').valueChanges.subscribe((value) => {
+      if (value === 'UPI') {
+        this.receiptPaymentForm.get('customer_bank_name').clearValidators();
+        this.receiptPaymentForm.get('card_payment_amount').clearValidators();
+        this.receiptPaymentForm.get('card_holder_name').clearValidators();
+        this.receiptPaymentForm.get('cart_transactions_no').clearValidators();
+        this.receiptPaymentForm.get('account_no').clearValidators();
+
+        this.receiptPaymentForm.get('upi_id').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+      } else if(value === 'Card') {
+        this.receiptPaymentForm.get('upi_id').clearValidators();
+        this.receiptPaymentForm.get('account_no').clearValidators();
+
+        this.receiptPaymentForm.get('customer_bank_name').setValidators(Validators.required);
+        this.receiptPaymentForm.get('card_payment_amount').setValidators(Validators.required);
+        this.receiptPaymentForm.get('card_holder_name').setValidators(Validators.required);
+        this.receiptPaymentForm.get('cart_transactions_no').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+     } else if(value === 'Bank') {
+      this.receiptPaymentForm.get('upi_id').clearValidators();
+        this.receiptPaymentForm.get('customer_bank_name').clearValidators();
+        this.receiptPaymentForm.get('card_payment_amount').clearValidators();
+        this.receiptPaymentForm.get('card_holder_name').clearValidators();
+        this.receiptPaymentForm.get('cart_transactions_no').clearValidators();
+
+      this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+      this.receiptPaymentForm.get('account_no').setValidators(Validators.required);
+     }  else {
+        this.receiptPaymentForm.get('upi_id').clearValidators();
+        this.receiptPaymentForm.get('payment_account').clearValidators();
+        this.receiptPaymentForm.get('customer_bank_name').clearValidators();
+        this.receiptPaymentForm.get('card_payment_amount').clearValidators();
+        this.receiptPaymentForm.get('card_holder_name').clearValidators();
+        this.receiptPaymentForm.get('cart_transactions_no').clearValidators();
+        this.receiptPaymentForm.get('account_no').clearValidators();
+      }
+      this.receiptPaymentForm.get('upi_id').updateValueAndValidity();
+      this.receiptPaymentForm.get('payment_account').updateValueAndValidity();
+      this.receiptPaymentForm.get('customer_bank_name').updateValueAndValidity();
+      this.receiptPaymentForm.get('card_payment_amount').updateValueAndValidity();
+      this.receiptPaymentForm.get('card_holder_name').updateValueAndValidity();
+      this.receiptPaymentForm.get('cart_transactions_no').updateValueAndValidity();
+      this.receiptPaymentForm.get('account_no').updateValueAndValidity();
+    });
+ 
     window.addEventListener('online', () => {
       if(this.showSyncButton){
         document.getElementById("exampleModal7").classList.add('show');      
@@ -315,11 +523,91 @@ export class PosComponent implements OnInit {
       });
 
     
+      this.receiptPaymentForm.get('customer_receipt').valueChanges
+      .pipe(
+        filter(res => {
+          return res !== null && res?.length >= this.cusMinLengthTerm
+        }),
+        distinctUntilChanged(),
+        debounceTime(100),
+        tap(() => {
+          this.cusErrorMsg = "";
+          this.filteredCustomer2 = [];
+          this.cusIsLoading = true;
+        }),
+        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/customer_filter/?search=${value}`, requestOptions)
+          .pipe(
+            catchError(err => {
+              // handleError(err);
+              console.log('err catch', err);
+              this.cusErrorMsg = 'No Customer Found';
+              this.cusIsLoading = false;
+              return [];
+            }),
+            finalize(() => {
+              this.cusIsLoading = false
+              console.log('search', value)
+            }),
+          )
+        )
+      )
+      .subscribe((data: any) => {
+        console.log('data', data)
 
-    // ).pipe(
-    //   startWith(''),
-    //   map(value => this.filterOptions(value))
-    // );
+        if(data.length > 0){
+          console.log('data', data)
+          this.filteredCustomer2 = data;
+        } else {
+          this.filteredCustomer2 = [];
+          this.cusErrorMsg = 'No Customers Found';
+        }
+        
+      });
+
+
+      this.receiptPaymentForm.get('party_receipt').valueChanges
+      .pipe(
+        filter(res => {
+          return res !== null && res?.length >= this.cusMinLengthTerm
+        }),
+        distinctUntilChanged(),
+        debounceTime(100),
+        tap(() => {
+          this.partyErrorMsg = "";
+          this.filteredParty = [];
+          this.partyIsLoading = true;
+        }),
+        switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/party_filter/?search=${value}`, requestOptions)
+          .pipe(
+            catchError(err => {
+              // handleError(err);
+              console.log('err catch', err);
+              this.partyErrorMsg = 'No Party Found';
+              this.partyIsLoading = false;
+              return [];
+            }),
+            finalize(() => {
+              this.partyIsLoading = false
+              console.log('search', value)
+            }),
+          )
+        )
+      )
+      .subscribe((data: any) => {
+        console.log('data', data)
+
+        if(data.length > 0){
+          console.log('data', data)
+          this.filteredParty = data;
+        } else {
+          this.filteredParty = [];
+          this.partyErrorMsg = 'No Party Found';
+        }
+        
+      });
+
+
+
     
     this.addMoreDetails = false;
     console.log(this.addMoreDetails);
@@ -330,7 +618,21 @@ export class PosComponent implements OnInit {
         this.coreService.getStateByCountryId(response[0].id).subscribe({
           next: (response) => {
             console.log(response, 'state');
-            this.stateList = response
+            this.stateList = response;
+            this.state.setValue(response[0].id);
+            this.currentState = response[0].id;
+            this.coreService.getCityByStateId(response[0].id).subscribe({
+              next: (response) => {
+                console.log(response, 'city');
+                this.city.setValue(response[0].id)
+                this.currentCities = response[0].id
+                this.cityList = response
+              },
+              error: (error) => {
+                console.log('state', error)
+              }
+            })
+
           },
           error: (error) => {
             console.log('state', error)
@@ -362,6 +664,26 @@ export class PosComponent implements OnInit {
       }
     })
 
+    this.cartService.getCompanyBank().subscribe({
+      next: (response) => {
+        console.log(response, 'company bank')
+        this.companyBankList = response;
+      },
+      error: (error) => {
+        console.log('company bank', error);
+      }
+    })
+
+    this.cartService.getPaymentTerms().subscribe({
+      next: (response) => {
+        console.log(response, 'payment terms')
+        this.paymentTermsList = response;
+      },
+      error: (error) => {
+        console.log('payment terms', error);
+      }
+    })
+
     
   }
 
@@ -377,6 +699,27 @@ export class PosComponent implements OnInit {
       // Clear the selection or perform other actions as needed
       console.log('Backspace key pressed, clear previous selection here.');
     }
+  }
+
+  clearValidatorsReceipt() {
+    // for (let index = 0; index < this.receiptPaymentForm.controls[length]; index++) {
+    //   const element = array[index];
+      
+    // }
+    // Object.keys(this.receiptPaymentForm.controls).forEach(key => {
+    //   const control = this.receiptPaymentForm.controls[key];
+    //   control.clearValidators();
+    //   control.updateValueAndValidity();
+    // });
+  }
+
+  private __filter(value: string): string[] {
+    const filterValue = this.__normalizeValue(value);
+    return this.streets.filter(street => this.__normalizeValue(street).includes(filterValue));
+  }
+
+  private __normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
   }
 
   private _filter(value: string): string[] {
@@ -399,6 +742,15 @@ export class PosComponent implements OnInit {
     return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
+  clearValidators() {
+    const formControls = this.receiptPaymentForm.controls;
+    Object.keys(formControls).forEach(key => {
+      const control = formControls[key];
+      control.clearValidators();
+      control.updateValueAndValidity();
+    });
+  }
+
   // optionSelected(event) {
   //   console.log(event.option)
   //   const selectedOption = event.option.value;
@@ -414,6 +766,7 @@ export class PosComponent implements OnInit {
   //   }
   // }
 
+
   // add row to current additional charges
   addRowToCAC(){
       let newObject = { additional_charge: "", value: 0, value_type: "percentage", tax: "", total: 0 };
@@ -426,6 +779,7 @@ export class PosComponent implements OnInit {
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
     }
   }
+
 
   // delete row in current additional charges
   deleteRowInCAC(index:number, event: Event){
@@ -498,7 +852,8 @@ export class PosComponent implements OnInit {
       if(this.currentOrderAdditionalCharges[index].additional_charge){
         const acindex = this.additionalChargesList.findIndex(currentItem => currentItem.id == this.currentOrderAdditionalCharges[index].additional_charge);
 
-        let total = this.additionalChargesList[acindex].value;
+        // let total = this.additionalChargesList[acindex].value;
+        let total = this.currentOrderAdditionalCharges[index].value;
         let percentage = this.taxesList[tindex].tax_percentage;
         let result = ((percentage / 100) * total) + total;
   
@@ -517,6 +872,8 @@ export class PosComponent implements OnInit {
   }
     this.currentTotalAdditionalCharges()
    }
+
+
 
    // update value of an element in current order additional charges
    updateValueInCAC(index:number, event: Event){
@@ -564,6 +921,7 @@ export class PosComponent implements OnInit {
     }
     return total;
    }
+   
 
 
 
@@ -619,6 +977,7 @@ export class PosComponent implements OnInit {
     
   }
   
+  
   optionSelectedCharge(event){
     const selectedOption = event.option.value;
     console.log('charge', selectedOption);
@@ -626,8 +985,25 @@ export class PosComponent implements OnInit {
 
   optionSelected1(event){
     this.currentCustomer = event.option.value;
-    this.customerAutoCompleteControl.setValue('');
     console.log(event.option.value, 'cus');
+  }
+
+  optionSelectedReceipt(event){
+    let customer = event.option.value;
+    this.cartService.getReceiptDueOrder(customer.id).subscribe({
+      next: (response) => {
+        console.log(response, 'receipt sales')
+        this.receiptSales = response;
+      },
+      error: (error) => {
+        console.log('receipt sales', error);
+      }
+    })
+
+  }
+
+  optionSelectedParty(event){
+
   }
 
   removeOption(index: number) {
@@ -684,10 +1060,14 @@ export class PosComponent implements OnInit {
   }
 
   displayFn(item: any): string {
-    return item ? item.product_title : '';
+    return item ? `${item.variant_name} | ${item.batch[0].selling_price_offline}` : '';
   }
 
   displayCus(item: any): string {
+    return item ? item.mobile_no : '';
+  }
+
+  displayParty(item: any): string {
     return item ? item.mobile_no : '';
   }
 
@@ -868,6 +1248,10 @@ export class PosComponent implements OnInit {
             clicking.click();
             this.registrationForm.reset()
             this.addMoreDetails = false;
+            this.city.setValue(this.cityList[0].id)
+            this.currentCities = this.cityList[0].id;
+            this.state.setValue(this.stateList[0].id);
+            this.currentState = this.stateList[0].id;
           } else {
             this.toastr.error(response.msg);
           }
@@ -965,6 +1349,47 @@ export class PosComponent implements OnInit {
   get state() { return this.registrationForm.get('state'); }
   get city() { return this.registrationForm.get('city'); }
   get pincode() { return this.registrationForm.get('pincode'); }
+
+  get upi_id() { return this.upiPaymentMethodForm.get('upi_id'); }
+  get transaction_id() { return this.upiPaymentMethodForm.get('transaction_id'); }
+  get payment_account_upi() { return this.upiPaymentMethodForm.get('payment_account'); }
+
+  get account_no() { return this.bankPaymentMethodForm.get('account_no')};
+  get payment_account_bank() { return this.bankPaymentMethodForm.get('payment_account')};
+
+
+  get upi_id_receipt() { return this.receiptPaymentForm.get('upi_id'); }
+  get transaction_id_receipt() { return this.receiptPaymentForm.get('transaction_id'); }
+  get payment_account_receipt() { return this.receiptPaymentForm.get('payment_account'); }
+
+
+  get payment_account_card() { return this.cardPaymentMethodForm.get('payment_account'); }
+  get customer_bank_name() { return this.cardPaymentMethodForm.get('customer_bank_name'); }
+  get card_payment_amount() { return this.cardPaymentMethodForm.get('card_payment_amount'); }
+  get card_holder_name() { return this.cardPaymentMethodForm.get('card_holder_name'); }
+  get cart_transactions_no() { return this.cardPaymentMethodForm.get('cart_transactions_no'); }
+
+
+  get pay_later_day() { return this.payLaterMethodForm.get('day'); }
+  get pay_later_date() { return this.payLaterMethodForm.get('date'); }
+  get is_send_reminder() { return this.payLaterMethodForm.get('is_send_reminder'); }
+
+  get voucher_type() { return this.receiptPaymentForm.get('voucher_type')};
+  get payment_type() { return this.receiptPaymentForm.get('payment_type')};
+  get payment_mode() { return this.receiptPaymentForm.get('payment_mode')};
+  get receipt_sales() { return this.receiptPaymentForm.get('receipt_sales')};
+  get amount_receipt() { return this.receiptPaymentForm.get('amount_receipt')};
+  get customer_receipt() { return this.receiptPaymentForm.get('customer_receipt')};
+  get receipt_remark() { return this.receiptPaymentForm.get('receipt_remark')};
+  get party_receipt() { return this.receiptPaymentForm.get('party_receipt')};
+
+  get receipt_customer_bank_name() { return this.receiptPaymentForm.get('customer_bank_name')};
+  get receipt_card_payment_amount() { return this.receiptPaymentForm.get('card_payment_amount')};
+  get receipt_card_holder_name() { return this.receiptPaymentForm.get('card_holder_name')};
+  get receipt_cart_transactions_no() { return this.receiptPaymentForm.get('cart_transactions_no')};
+  
+  get receipt_account_no() { return this.receiptPaymentForm.get('account_no')};
+  get expense_non_gst() { return this.receiptPaymentForm.get('non_gst')};
 
   handleMobileInputChange(event: any) {
     const inputValue = event.target.value;
@@ -1107,6 +1532,676 @@ export class PosComponent implements OnInit {
       this.currentCustomer = null;
   }
 
+  receiptFormSubmit(){
+    if (this.receiptPaymentForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.receiptPaymentForm.controls).forEach(key => {
+        const control = this.receiptPaymentForm.controls[key];
+        if (control.invalid) {
+          console.log(key);
+        }
+
+        this.receiptPaymentForm.controls[key].markAsTouched();
+      });
+      return;
+    }
+    if(this.voucher_type.value === 'sales'){
+      this.formSubmitReceipt();
+    } else if(this.voucher_type.value === 'purchase') {
+      this.formSubmitPurchase()
+    } else {
+      this.formSubmitExpense()
+    }
+  }
+
+  formSubmitExpense(){ 
+
+    let formData = new FormData();
+
+    formData.append('party', this.party_receipt?.value?.id);
+    formData.append('amount', this.amount_receipt.value);
+    formData.append('remarks', this.receipt_remark.value);
+    formData.append('non_gst', this.expense_non_gst.value);
+    formData.append('payment_account', this.payment_account_receipt.value);
+    
+    this.cartService
+     .expensePayment(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response receipt', response);
+          if(response.isSuccess){
+            // this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.receiptModalClose');
+            clicking.click();
+            this.receiptPaymentForm.reset();
+            this.expense_non_gst.value(false);
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+
+  }
+
+  formSubmitPurchase(){ 
+
+    let formData = new FormData();
+
+    if(this.payment_mode.value === 'UPI'){
+      let upi_data = {
+        "upi_no": Number(this.upi_id_receipt.value),
+        "payment_account": Number(this.payment_account_receipt.value)
+      };
+
+      if(this.payment_type.value == 'Advance'){
+        formData.append('party', this.party_receipt?.value?.id);
+        formData.append('receipt_method', this.payment_type.value);
+        formData.append('payment_mode', this.payment_mode.value);
+        formData.append('amount', this.amount_receipt.value);
+        formData.append('description', this.receipt_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', JSON.stringify(upi_data));
+      } else {
+      formData.append('party', this.party_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('card_detail', '');
+      formData.append('bank_detail', '');
+      formData.append('upi_detail', JSON.stringify(upi_data));
+      }
+
+    } else if(this.payment_mode.value === 'Bank'){
+
+      let bank_data = {
+        "payment_account": Number(this.payment_account_receipt.value),
+        "account_no": this.receipt_account_no.value,
+      };
+
+      if(this.payment_type.value == 'Advance'){
+        formData.append('party', this.party_receipt?.value?.id);
+        formData.append('receipt_method', this.payment_type.value);
+        formData.append('payment_mode', this.payment_mode.value);
+        formData.append('amount', this.amount_receipt.value);
+        formData.append('description', this.receipt_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', '');
+        formData.append('bank_detail', JSON.stringify(bank_data));
+        formData.append('upi_detail', '');
+      } else {
+      formData.append('party', this.party_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('card_detail', '');
+      formData.append('bank_detail', JSON.stringify(bank_data));
+      formData.append('upi_detail', '');
+      }
+
+    } else if(this.payment_mode.value === 'Card') {
+
+      let card_data = {
+        "payment_account": Number(this.payment_account_receipt.value),
+        "customer_bank_name": this.receipt_customer_bank_name.value,
+        "card_payment_amount": this.receipt_card_payment_amount.value,
+        "card_holder_name": this.receipt_card_holder_name.value,
+        "cart_transactions_no": this.receipt_cart_transactions_no.value
+      };
+
+      if(this.payment_type.value == 'Advance'){
+        formData.append('party', this.party_receipt?.value?.id);
+        formData.append('receipt_method', this.payment_type.value);
+        formData.append('payment_mode', this.payment_mode.value);
+        formData.append('amount', this.amount_receipt.value);
+        formData.append('description', this.receipt_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', JSON.stringify(card_data));
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
+      } else {
+      formData.append('party', this.party_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('card_detail', JSON.stringify(card_data));
+      formData.append('bank_detail', '');
+      formData.append('upi_detail', '');
+      }
+    } else {
+
+    if(this.payment_type.value == 'Advance'){
+      formData.append('party', this.party_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', '');
+      formData.append('card_detail', '');
+      formData.append('bank_detail', '');
+      formData.append('upi_detail', '');
+    } else {
+    formData.append('party', this.party_receipt?.value?.id);
+    formData.append('receipt_method', this.payment_type.value);
+    formData.append('payment_mode', this.payment_mode.value);
+    formData.append('amount', this.amount_receipt.value);
+    formData.append('description', this.receipt_remark.value);
+    formData.append('bill_no', this.receipt_sales.value);
+    formData.append('card_detail', '');
+    formData.append('bank_detail', '');
+    formData.append('upi_detail', '');
+    }
+    
+  }
+
+    this.cartService
+     .purchasePayment(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response receipt', response);
+          if(response.isSuccess){
+            // this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.receiptModalClose');
+            clicking.click();
+            this.receiptPaymentForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+
+  }
+
+  formSubmitReceipt(){ 
+
+    let formData = new FormData();
+
+    if(this.payment_mode.value === 'UPI'){
+      let upi_data = {
+        "upi_no": Number(this.upi_id_receipt.value),
+        "payment_account": Number(this.payment_account_receipt.value)
+      };
+
+      if(this.payment_type.value == 'Advance'){
+        formData.append('customer', this.customer_receipt?.value?.id);
+        formData.append('receipt_method', this.payment_type.value);
+        formData.append('payment_mode', this.payment_mode.value);
+        formData.append('amount', this.amount_receipt.value);
+        formData.append('description', this.receipt_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', JSON.stringify(upi_data));
+      } else {
+      formData.append('customer', this.customer_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('card_detail', '');
+      formData.append('bank_detail', '');
+      formData.append('upi_detail', JSON.stringify(upi_data));
+      }
+
+    } else if(this.payment_mode.value === 'Bank'){
+
+      let bank_data = {
+        "payment_account": Number(this.payment_account_receipt.value),
+        "account_no": this.receipt_account_no.value,
+      };
+
+      if(this.payment_type.value == 'Advance'){
+        formData.append('customer', this.customer_receipt?.value?.id);
+        formData.append('receipt_method', this.payment_type.value);
+        formData.append('payment_mode', this.payment_mode.value);
+        formData.append('amount', this.amount_receipt.value);
+        formData.append('description', this.receipt_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', '');
+        formData.append('bank_detail', JSON.stringify(bank_data));
+        formData.append('upi_detail', '');
+      } else {
+      formData.append('customer', this.customer_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('card_detail', '');
+      formData.append('bank_detail', JSON.stringify(bank_data));
+      formData.append('upi_detail', '');
+      }
+
+    } else if(this.payment_mode.value === 'Card') {
+
+      let card_data = {
+        "payment_account": Number(this.payment_account_receipt.value),
+        "customer_bank_name": this.receipt_customer_bank_name.value,
+        "card_payment_amount": this.receipt_card_payment_amount.value,
+        "card_holder_name": this.receipt_card_holder_name.value,
+        "cart_transactions_no": this.receipt_cart_transactions_no.value
+      };
+
+      if(this.payment_type.value == 'Advance'){
+        formData.append('customer', this.customer_receipt?.value?.id);
+        formData.append('receipt_method', this.payment_type.value);
+        formData.append('payment_mode', this.payment_mode.value);
+        formData.append('amount', this.amount_receipt.value);
+        formData.append('description', this.receipt_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', JSON.stringify(card_data));
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
+      } else {
+      formData.append('customer', this.customer_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('card_detail', JSON.stringify(card_data));
+      formData.append('bank_detail', '');
+      formData.append('upi_detail', '');
+      }
+    } else {
+
+    if(this.payment_type.value == 'Advance'){
+      formData.append('customer', this.customer_receipt?.value?.id);
+      formData.append('receipt_method', this.payment_type.value);
+      formData.append('payment_mode', this.payment_mode.value);
+      formData.append('amount', this.amount_receipt.value);
+      formData.append('description', this.receipt_remark.value);
+      formData.append('bill_no', '');
+      formData.append('card_detail', '');
+      formData.append('bank_detail', '');
+      formData.append('upi_detail', '');
+    } else {
+    formData.append('customer', this.customer_receipt?.value?.id);
+    formData.append('receipt_method', this.payment_type.value);
+    formData.append('payment_mode', this.payment_mode.value);
+    formData.append('amount', this.amount_receipt.value);
+    formData.append('description', this.receipt_remark.value);
+    formData.append('bill_no', this.receipt_sales.value);
+    formData.append('card_detail', '');
+    formData.append('bank_detail', '');
+    formData.append('upi_detail', '');
+    }
+    
+  }
+
+    this.cartService
+     .receiptPayment(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response receipt', response);
+          if(response.isSuccess){
+            // this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.receiptModalClose');
+            clicking.click();
+            this.receiptPaymentForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+
+  }
+
+  payLaterGenerateOrder(){
+    if (this.payLaterMethodForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.payLaterMethodForm.controls).forEach(key => {
+        this.payLaterMethodForm.controls[key].markAsTouched();
+      });
+      return;
+    }
+
+    if(this.currentItems.length > 0){
+      if(this.currentCustomer === null || this.currentCustomer === undefined){
+        this.toastr.error('Please Select/Add a Customer!');
+      } else {
+        let cartData = [];
+    for (let index = 0; index < this.currentItems.length; index++) {
+      const element = this.currentItems[index];
+      let item = {
+        "variant": element.id,
+        "qty": element.quantity,
+        "mrp": element.batch[0].mrp,
+        "discount": 0,
+        "add_discount": 0,
+        "unit_cost": element.batch[0]?.selling_price_offline,
+        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
+        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "remarks": "",
+        "tax_percentage": element?.batch[0]?.sale_tax
+      };
+      cartData.push(item);
+    }
+
+    let pay_later_data = {      
+      "day": Number(this.pay_later_day.value),
+      "date": this.pay_later_date.value,
+      "is_send_reminder": this.is_send_reminder.value == 'false' ? 'False' : 'True',
+    };
+
+
+
+    console.log(cartData, 'cash', pay_later_data);
+    const formData = new FormData();
+    formData.append('customer', JSON.stringify(this.currentCustomer.id));
+    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
+    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('payment_mode', 'Paylater');
+    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('cart_data', JSON.stringify(cartData));
+    formData.append('card_detail', '');
+    formData.append('Multipay', '');
+    formData.append('PayLatter', JSON.stringify(pay_later_data));
+    formData.append('bank_detail', '');
+    formData.append('upi_detail', '');
+
+    this.cartService
+     .generateOrderNew(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response order', response);
+          if(response.isSuccess){
+            this.customerAutoCompleteControl.setValue('');
+            this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.payLaterModalClose');
+            clicking.click();
+            this.payLaterMethodForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+      }
+    
+  } else {
+    this.toastr.error('Please Add Items To Cart');
+  }
+
+
+  }
+
+  cardPaymentGenerateOrder(){
+    if (this.cardPaymentMethodForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.cardPaymentMethodForm.controls).forEach(key => {
+        this.cardPaymentMethodForm.controls[key].markAsTouched();
+      });
+      return;
+    }
+
+    if(this.currentItems.length > 0){
+      if(this.currentCustomer === null || this.currentCustomer === undefined){
+        this.toastr.error('Please Select/Add a Customer!');
+      } else {
+        let cartData = [];
+    for (let index = 0; index < this.currentItems.length; index++) {
+      const element = this.currentItems[index];
+      let item = {
+        "variant": element.id,
+        "qty": element.quantity,
+        "mrp": element.batch[0].mrp,
+        "discount": 0,
+        "add_discount": 0,
+        "unit_cost": element.batch[0]?.selling_price_offline,
+        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
+        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "remarks": "",
+        "tax_percentage": element?.batch[0]?.sale_tax
+      };
+      cartData.push(item);
+    }
+
+    let card_data = {
+      "payment_account": this.payment_account_card.value,
+      "customer_bank_name": this.customer_bank_name.value,
+      "card_payment_amount": this.card_payment_amount.value,
+      "card_holder_name": this.card_holder_name.value,
+      "cart_transactions_no": this.cart_transactions_no.value
+    };
+
+
+
+    console.log(cartData, 'cash');
+    const formData = new FormData();
+    formData.append('customer', JSON.stringify(this.currentCustomer.id));
+    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
+    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('payment_mode', 'Card');
+    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('cart_data', JSON.stringify(cartData));
+    formData.append('card_detail', JSON.stringify(card_data));
+    formData.append('Multipay', '');
+    formData.append('PayLatter', '');
+    formData.append('bank_detail', '');
+    formData.append('upi_detail', '');
+
+    this.cartService
+     .generateOrderNew(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response order', response);
+          if(response.isSuccess){
+            this.customerAutoCompleteControl.setValue('');
+            this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.cardModalClose');
+            clicking.click();
+            this.cardPaymentMethodForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+      }
+    
+  } else {
+    this.toastr.error('Please Add Items To Cart');
+  }
+
+
+  }
+
+  bankPaymentGenerateOrder(){
+    if (this.bankPaymentMethodForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.bankPaymentMethodForm.controls).forEach(key => {
+        this.bankPaymentMethodForm.controls[key].markAsTouched();
+      });
+      return;
+    }
+
+    if(this.currentItems.length > 0){
+      if(this.currentCustomer === null || this.currentCustomer === undefined){
+        this.toastr.error('Please Select/Add a Customer!');
+      } else {
+        let cartData = [];
+    for (let index = 0; index < this.currentItems.length; index++) {
+      const element = this.currentItems[index];
+      let item = {
+        "variant": element.id,
+        "qty": element.quantity,
+        "mrp": element.batch[0].mrp,
+        "discount": 0,
+        "add_discount": 0,
+        "unit_cost": element.batch[0]?.selling_price_offline,
+        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
+        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "remarks": "",
+        "tax_percentage": element?.batch[0]?.sale_tax
+      };
+      cartData.push(item);
+    }
+
+    let bank_data = {
+      "account_no": Number(this.account_no.value),
+      "payment_account": Number(this.payment_account_bank.value)
+    };
+
+
+
+    console.log(cartData, 'cash', bank_data);
+    const formData = new FormData();
+    formData.append('customer', JSON.stringify(this.currentCustomer.id));
+    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
+    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('payment_mode', 'Bank');
+    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('cart_data', JSON.stringify(cartData));
+    formData.append('card_detail', '');
+    formData.append('Multipay', '');
+    formData.append('PayLatter', '');
+    formData.append('bank_detail', JSON.stringify(bank_data));
+    formData.append('upi_detail', '');
+
+    this.cartService
+     .generateOrderNew(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response order', response);
+          if(response.isSuccess){
+            this.customerAutoCompleteControl.setValue('');
+            this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.bankModalClose');
+            clicking.click();
+            this.bankPaymentMethodForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+      }
+    
+  } else {
+    this.toastr.error('Please Add Items To Cart');
+  }
+
+
+  } 
+
+  upiPaymentGenerateOrder(){
+    if (this.upiPaymentMethodForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.upiPaymentMethodForm.controls).forEach(key => {
+        this.upiPaymentMethodForm.controls[key].markAsTouched();
+      });
+      return;
+    }
+
+    if(this.currentItems.length > 0){
+      if(this.currentCustomer === null || this.currentCustomer === undefined){
+        this.toastr.error('Please Select/Add a Customer!');
+      } else {
+        let cartData = [];
+    for (let index = 0; index < this.currentItems.length; index++) {
+      const element = this.currentItems[index];
+      let item = {
+        "variant": element.id,
+        "qty": element.quantity,
+        "mrp": element.batch[0].mrp,
+        "discount": 0,
+        "add_discount": 0,
+        "unit_cost": element.batch[0]?.selling_price_offline,
+        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
+        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "remarks": "",
+        "tax_percentage": element?.batch[0]?.sale_tax
+      };
+      cartData.push(item);
+    }
+
+    let upi_data = {
+      "upi_no": Number(this.upi_id.value),
+      "payment_account": Number(this.payment_account_upi.value)
+    };
+
+
+
+    console.log(cartData, 'cash', upi_data);
+    const formData = new FormData();
+    formData.append('customer', JSON.stringify(this.currentCustomer.id));
+    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
+    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('payment_mode', 'UPI');
+    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('cart_data', JSON.stringify(cartData));
+    formData.append('card_detail', '');
+    formData.append('Multipay', '');
+    formData.append('PayLatter', '');
+    formData.append('bank_detail', '');
+    formData.append('upi_detail', JSON.stringify(upi_data));
+
+    this.cartService
+     .generateOrderNew(formData)
+     .subscribe({
+        next: (response:any) => {
+          console.log('response order', response);
+          if(response.isSuccess){
+            this.customerAutoCompleteControl.setValue('');
+            this.discardCurrentBill();
+            this.toastr.success(response.msg)
+            var clicking = <HTMLElement>document.querySelector('.upiModalClose');
+            clicking.click();
+            this.upiPaymentMethodForm.reset();
+          } else {
+            this.toastr.error(response.msg);
+          }
+        },
+        error: (error) => {
+          console.log(error)
+          this.toastr.error(error.message);
+        },
+      });
+      }
+    
+  } else {
+    this.toastr.error('Please Add Items To Cart');
+  }
+
+
+  }
+
   cashPaymentGenerateOrder(){
     if(this.currentItems.length > 0){
       if(this.currentCustomer === null || this.currentCustomer === undefined){
@@ -1136,7 +2231,7 @@ export class PosComponent implements OnInit {
     formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
     formData.append('total_amount', JSON.stringify(this.totalAmount()));
     formData.append('payment_mode', 'Cash');
-    formData.append('total_tax', JSON.stringify(0));
+    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
@@ -1150,6 +2245,7 @@ export class PosComponent implements OnInit {
         next: (response:any) => {
           console.log('response order', response);
           if(response.isSuccess){
+            this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
             this.tenderedAmount = 0;
             this.toastr.success(response.msg)
