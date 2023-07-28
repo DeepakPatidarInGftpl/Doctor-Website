@@ -233,9 +233,11 @@ export class AddEmployeeComponent implements OnInit {
         }
       }, err => {
         this.loader=false;
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
         if(err.error.msg){
           this.toastr.error(err.error.msg)
+        }else if(err.error.detail){
+          this.toastr.error(err.error.detail)
         }
         else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
@@ -251,6 +253,7 @@ export class AddEmployeeComponent implements OnInit {
       })
     } 
     else {
+      this.loader=false;
       this.employeeForm.markAllAsTouched()
       console.log('hhhhhh');
     }

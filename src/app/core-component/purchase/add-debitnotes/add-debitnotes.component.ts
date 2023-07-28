@@ -32,7 +32,7 @@ export class AddDebitnotesComponent implements OnInit {
   ) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
   filteredOptions: Observable<any>;
@@ -54,20 +54,21 @@ export class AddDebitnotesComponent implements OnInit {
 
   ngOnInit(): void {
     this.debitNotesForm = this.fb.group({
-      supplier: new FormControl('', [Validators.required]),
+      party: new FormControl('', [Validators.required]),
       debit_note_date: new FormControl('', [Validators.required]),
       debit_note_no: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       refrence_bill_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      payment_term: new FormControl(''),
+      payment_term: new FormControl('',[Validators.required]),
       due_date: new FormControl('', [Validators.required]),
       reverse_charge: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       purchase: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       shipping_date: new FormControl('', [Validators.required]),
       export: new FormControl(''),
-      reason: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      reason: new FormControl('',),
       status: new FormControl(''),
       cart: this.fb.array([]),
     });
+    this.getSuuplier();
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
@@ -76,25 +77,27 @@ export class AddDebitnotesComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getSuuplier();
+    
     this.getVariants();
     this.getPurchase();
     this.getPaymentTerms()
   }
 
   get supplier() {
-    return this.debitNotesForm.get('supplier') as FormControl;
+    return this.debitNotesForm.get('party') as FormControl;
   }
+ 
+
   cart(): FormGroup {
     return this.fb.group({
       barcode: (''),
       qty: (''),
       unit_cost: (''),
       mrp: (''),
-      discount: (''),
+      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
-      batch: ('')
+      batch: new FormControl('',Validators.required)
     })
   }
   getCart(): FormArray {
@@ -121,7 +124,7 @@ export class AddDebitnotesComponent implements OnInit {
   }
   purchaseList: any;
   getPurchase() {
-    this.purchaseService.getPurchaseBill().subscribe(res => {
+    this.purchaseService.getPurchase().subscribe(res => {
       this.purchaseList = res;
       console.log(this.purchaseList);
 
@@ -144,7 +147,7 @@ variantId:any;
     variants.clear();
     this.addCart();
     this.debitNotesForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
   
   }
@@ -174,7 +177,7 @@ variantId:any;
 
       this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.debitNotesForm.get('supplier')?.value);
+      formdata.append('party', this.debitNotesForm.get('party')?.value);
       formdata.append('debit_note_date', this.debitNotesForm.get('debit_note_date')?.value);
       formdata.append('debit_note_no', this.debitNotesForm.get('debit_note_no')?.value);
       formdata.append('refrence_bill_no', this.debitNotesForm.get('refrence_bill_no')?.value);
@@ -207,11 +210,40 @@ variantId:any;
           this.loader = false;
           this.toastrService.success(this.getRes.msg);
           this.router.navigate(['//purchase/debit-notes-list'])
+        }else{
+          this.toastrService.error(this.getRes.purchase[0])
+          this.loader=false
         }
+      },err=>{
+        this.loader=false
       })
     } else {
       this.debitNotesForm.markAllAsTouched()
     }
+  }
+  get debit_note_date() {
+    return this.debitNotesForm.get('debit_note_date') as FormControl;
+  }
+  get refrence_bill_no() {
+    return this.debitNotesForm.get('refrence_bill_no') as FormControl;
+  }
+  get payment_term() {
+    return this.debitNotesForm.get('payment_term') as FormControl;
+  }
+  get due_date() {
+    return this.debitNotesForm.get('due_date') as FormControl;
+  }
+  get purchase() {
+    return this.debitNotesForm.get('purchase') as FormControl;
+  }
+  get shipping_date() {
+    return this.debitNotesForm.get('shipping_date') as FormControl;
+  }
+  discountt(index: number) {
+    return this.getCart().controls[index].get('discount');
+  }
+  batch(index: number) {
+    return this.getCart().controls[index].get('batch');
   }
   private _filter(value: string | number, include: boolean): any[] {
     console.log(value);

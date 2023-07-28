@@ -244,7 +244,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table datatable  class="table datanew">
+            <table class="table datanew">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">
@@ -259,7 +259,7 @@
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody *ngIf="tableData?.length>=0">
                     <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
@@ -281,6 +281,13 @@
                             <a (click)="confirmText(i,products.id)" class="me-3 confirm-text" href="javascript:void(0);">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="tableData?.length===0 && !loader">
+                    <tr>
+                        <td colspan="10">
+                            <p class="center-textt">Data not available</p>
                         </td>
                     </tr>
                 </tbody>

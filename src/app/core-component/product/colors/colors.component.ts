@@ -54,7 +54,7 @@ export class ColorsComponent implements OnInit {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
           }else{
             Swal.fire({
@@ -338,16 +338,28 @@ loaders=false;
     this.addForm = true;
     this.colorForm.reset();
   }
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.title.toLocaleLowerCase());
+  //       console.log(res.title.match(this.titlee));
+  //       return res.title.match(this.titlee);
+  //     })
+  //   }
+  // }
+
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
-      })
+        const nameLower = res.title.toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
   key = 'id'

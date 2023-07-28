@@ -13,7 +13,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { OrderModule } from 'ngx-order-pipe';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { DatepickerModule } from 'ng2-datepicker';
-
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 @NgModule({
   declarations: [
     MaterialInwardComponent
@@ -28,7 +28,8 @@ import { DatepickerModule } from 'ng2-datepicker';
     Ng2SearchPipeModule,
     NgxPaginationModule,
     OrderModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatProgressBarModule
   ]
 })
 export class MaterialInwardModule { }

@@ -47,7 +47,7 @@ export class VendorComponent implements OnInit {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
 
@@ -196,12 +196,17 @@ export class VendorComponent implements OnInit {
     if (this.titlee == "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.name.toLocaleLowerCase());
-        console.log(res.name.match(this.titlee));
-        return res.name.match(this.titlee);
-      })
+        const nameLower = res.name.toLocaleLowerCase();
+        const companyNameLower = res.company_name.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)) {
+          return true;
+        } else if (companyNameLower.match(searchTerm)) {
+          return true;
+        }
+        return false;
+      });
     }
   }
   key = 'id'

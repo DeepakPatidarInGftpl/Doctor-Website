@@ -44,23 +44,22 @@ export class TransportComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deleteTransport(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Transport Deleted successfully") {
+          if (this.delRes.msg == "TRANSPORT Deleted successfully") {
            this.ngOnInit();
            Swal.fire({
             icon: 'success',
-            title: 'Deleted!',
-            text: 'Your file has been deleted.',
+            title: 'Deleted !',
+            text: this.delRes.msg,
           });
           this.tableData.splice(index, 1);
           }else{
             Swal.fire({
               icon: 'error',
-              title: 'Not Deleted!',
+              title: 'Not Deleted !',
               text: this.delRes.error,
             });
           }
-        })
-       
+        }) 
       }
     });
   }
@@ -199,12 +198,17 @@ select=false
     if (this.titlee == "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.name.toLocaleLowerCase());
-        console.log(res.name.match(this.titlee));
-        return res.name.match(this.titlee);
-      })
+        const nameLower = res.name.toLocaleLowerCase();
+        const companyNameLower = res.company_name.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)) {
+          return true;
+        } else if (companyNameLower.match(searchTerm)) {
+          return true;
+        }
+        return false;
+      });
     }
   }
   key = 'id'

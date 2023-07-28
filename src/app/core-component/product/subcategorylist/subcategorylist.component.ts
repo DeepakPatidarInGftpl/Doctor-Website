@@ -52,7 +52,7 @@ export class SubcategorylistComponent implements OnInit {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
           } else {
             Swal.fire({
@@ -151,7 +151,7 @@ export class SubcategorylistComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       image: new FormControl('',),
       category_id: new FormControl('', [Validators.required]),
-      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
+      // discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
       // brand_id: new FormArray([],)
     })
 
@@ -358,7 +358,7 @@ export class SubcategorylistComponent implements OnInit {
     formdata.append('title', this.subcategoryForm.get('title')?.value);
     formdata.append('image', this.subcategoryForm.get('image')?.value);
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
-    formdata.append('discount', this.subcategoryForm.get('discount')?.value);
+    // formdata.append('discount', this.subcategoryForm.get('discount')?.value);
 
 
     if (this.subcategoryForm.valid) {
@@ -392,7 +392,7 @@ export class SubcategorylistComponent implements OnInit {
     formdata.append('title', this.subcategoryForm.get('title')?.value);
     // formdata.append('image', this.subcategoryForm.get('image')?.value);
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
-    formdata.append('discount', this.subcategoryForm.get('discount')?.value);
+    // formdata.append('discount', this.subcategoryForm.get('discount')?.value);
 
     if (this.subcategoryForm.valid) {
       this.loader = true;
@@ -486,14 +486,14 @@ export class SubcategorylistComponent implements OnInit {
         // this.brandEdit = res.brand_id;
         this.updateData = res;
         console.log(res.category_id.title);
-        console.log(res?.discount);
+        // console.log(res?.discount);
         // this.brands = res.brand_id.map((res: any) => res.id);
         // console.log(this.brands, 'this.brands');
 
         this.subcategoryForm.patchValue({
           title: res.title,
           category_id: res.category_id.id,
-          discount: res?.discount,
+          // discount: res?.discount,
           // image: res.image,
         });
       }
@@ -506,16 +506,27 @@ export class SubcategorylistComponent implements OnInit {
   }
 
 
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.title.toLocaleLowerCase());
+  //       console.log(res.title.match(this.titlee));
+  //       return res.title.match(this.titlee);
+  //     })
+  //   }
+  // }
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
-      })
+        const nameLower = res.title.toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
   key = 'id'

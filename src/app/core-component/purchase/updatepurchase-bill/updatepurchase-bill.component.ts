@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
-
+import { tap } from 'rxjs/operators';
 @Component({
   selector: 'app-updatepurchase-bill',
   templateUrl: './updatepurchase-bill.component.html',
@@ -31,7 +31,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
     private Arout: ActivatedRoute) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
   filteredOptions: Observable<any>;
@@ -54,9 +54,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
   getresbyId: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
-
     this.puchaseBillForm = this.fb.group({
-      supplier: new FormControl('', [Validators.required]),
+      party: new FormControl('', [Validators.required]),
       supplier_bill_date: new FormControl('', [Validators.required]),
       refrence_bill_no: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       supplier_bill_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
@@ -88,9 +87,10 @@ export class UpdatepurchaseBillComponent implements OnInit {
       console.log(res);
       this.getresbyId = res;
       this.puchaseBillForm.patchValue(res);
-      this.puchaseBillForm.get('supplier')?.patchValue(res.supplier.id);
+      this.puchaseBillForm.get('party')?.patchValue(res.party.id);
       this.puchaseBillForm.get('material_inward_no')?.patchValue(res.material_inward_no.id);
       this.puchaseBillForm.setControl('purchase_bill', this.udateCart(res.cart));
+      this.displaySupplierName(res.party.id);
     })
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
@@ -108,6 +108,18 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.getPaymentTerms()
   }
 
+  displaySupplierName(supplierId: number): void {
+    this.filteredSuppliers
+      .pipe(
+        tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
+        map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
+      )
+      .subscribe(matchedSuppliers => {
+        if (matchedSuppliers.length > 0) {
+          this.supplierControl.setValue(matchedSuppliers[0].name);
+        }
+      });
+  }
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
@@ -128,7 +140,10 @@ export class UpdatepurchaseBillComponent implements OnInit {
   }
 
   get supplier() {
-    return this.puchaseBillForm.get('supplier') as FormControl;
+    return this.puchaseBillForm.get('party') as FormControl;
+  }
+  discountt(index: number) {
+    return this.getCart().controls[index].get('discount');
   }
   purchase_bill(): FormGroup {
     return this.fb.group({
@@ -136,7 +151,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       qty: (''),
       unit_cost: (''),
       mrp: (''),
-      discount: (''),
+      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
       // total: ('')
@@ -197,7 +212,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
     }
 
     this.puchaseBillForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
   }
   oncheckVariant(event: any, index) {
@@ -216,7 +231,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
 
       this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.puchaseBillForm.get('supplier')?.value);
+      formdata.append('party', this.puchaseBillForm.get('party')?.value);
       formdata.append('supplier_bill_date', this.puchaseBillForm.get('supplier_bill_date')?.value);
       formdata.append('refrence_bill_no', this.puchaseBillForm.get('refrence_bill_no')?.value);
       formdata.append('supplier_bill_no', this.puchaseBillForm.get('supplier_bill_no')?.value);

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
-
+import { tap } from 'rxjs/operators';
 @Component({
   selector: 'app-updatematerial-inward',
   templateUrl: './updatematerial-inward.component.html',
@@ -27,7 +27,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     private Arout: ActivatedRoute) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
   filteredOptions: Observable<any>;
@@ -54,13 +54,13 @@ export class UpdatematerialInwardComponent implements OnInit {
       console.log(res);
       this.getresbyId=res;
       this.materialForm.patchValue(res);
-      this.materialForm.get('supplier')?.patchValue(res.supplier.id);
+      this.materialForm.get('party')?.patchValue(res.party.id);
       this.materialForm.get('purchase_order')?.patchValue(res.purchase_order.id);
       this.materialForm.setControl('material_inward_cart', this.udateCart(res.cart));
-      
+      this.displaySupplierName(res.party.id);
     })
     this.materialForm = this.fb.group({
-      supplier: new FormControl('', [Validators.required]),
+      party: new FormControl('', [Validators.required]),
       purchase_order: new FormControl('', [Validators.required]),
       po_date: new FormControl(''),
       material_inward_date: new FormControl('', [Validators.required]),
@@ -87,9 +87,20 @@ export class UpdatematerialInwardComponent implements OnInit {
     this.getVariants();
     this.getPurchase();
   }
-
+displaySupplierName(supplierId: number): void {
+  this.filteredSuppliers
+    .pipe(
+      tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
+      map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
+    )
+    .subscribe(matchedSuppliers => {
+      if (matchedSuppliers.length > 0) {
+        this.supplierControl.setValue(matchedSuppliers[0].name);
+      }
+    });
+}
   get supplier() {
-    return this.materialForm.get('supplier') as FormControl;
+    return this.materialForm.get('party') as FormControl;
   }
   material_inward_cart(): FormGroup {
     return this.fb.group({
@@ -98,7 +109,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       po_qty: (''),
       unit_cost: (''),
       mrp: (''),
-      discount: (''),
+      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
       total: ('')
@@ -163,7 +174,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     this.addCart();
     }
     this.materialForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
   }
   oncheckVariant(event: any, index) {
@@ -181,7 +192,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     if (this.materialForm.valid) {
       this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.materialForm.get('supplier')?.value);
+      formdata.append('party', this.materialForm.get('party')?.value);
       formdata.append('purchase_order', this.materialForm.get('purchase_order')?.value);
       formdata.append('po_date', this.materialForm.get('po_date')?.value);
       formdata.append('material_inward_date', this.materialForm.get('material_inward_date')?.value);
@@ -213,10 +224,32 @@ export class UpdatematerialInwardComponent implements OnInit {
         }else{
           this.loader=false;
         }
+      },err=>{
+        this.loader=false;
       })
     } else {
       this.materialForm.markAllAsTouched()
     }
+  }
+
+  discountt(index: number) {
+    return this.getCart().controls[index].get('discount');
+  }
+  
+  get material_inward_date() {
+    return this.materialForm.get('material_inward_date') ;
+  }
+  get material_inward_no() {
+    return this.materialForm.get('material_inward_no') ;
+  }
+  get recieved_by() {
+    return this.materialForm.get('recieved_by') ;
+  }
+  get shipping_note() {
+    return this.materialForm.get('shipping_note');
+  }
+  get purchase_order() {
+    return this.materialForm.get('purchase_order');
   }
   private _filter(value: string | number, include: boolean): any[] {
     console.log(value);

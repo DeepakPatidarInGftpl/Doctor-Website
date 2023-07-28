@@ -33,12 +33,12 @@ export class AddcategoryComponent implements OnInit {
 
       if (this.editRoute) {
         ftitle = data.title,
-          fdiscount = data.discount
+          // fdiscount = data.discount
         this.updateData = data
       }
       this.formaddCateg = new FormGroup({
         title: new FormControl(ftitle, [Validators.required]),
-        discount: new FormControl(fdiscount, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+        // discount: new FormControl(fdiscount, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
         image: new FormControl('',)
       })
       console.log(this.formaddCateg);
@@ -86,7 +86,7 @@ export class AddcategoryComponent implements OnInit {
         var formData: any = new FormData();
 
         formData.append("title", this.formaddCateg.get('title')?.value);
-        formData.append("discount", this.formaddCateg.get('discount')?.value);
+        // formData.append("discount", this.formaddCateg.get('discount')?.value);
         // formData.append("image", this.formaddCateg.get('image')?.value);
 
         const imageFile = this.formaddCateg.get('image')?.value;
@@ -125,7 +125,7 @@ export class AddcategoryComponent implements OnInit {
 
 
         formData.append("title", this.formaddCateg.get('title')?.value);
-        formData.append("discount", this.formaddCateg.get('discount')?.value);
+        // formData.append("discount", this.formaddCateg.get('discount')?.value);
         formData.append("image", this.formaddCateg.get('image')?.value);
 
         this.CoreServ.addCategory(formData).subscribe((res: any) => {

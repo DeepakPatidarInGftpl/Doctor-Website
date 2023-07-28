@@ -71,7 +71,8 @@ batchRes:any;
           this.loader=false;
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loader=false;
+        console.log(err.error);
       })
     } else {
       this.batchForm.markAllAsTouched()

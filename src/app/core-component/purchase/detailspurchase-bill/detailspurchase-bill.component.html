@@ -9,7 +9,7 @@
                     <h4>New Material Inward</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//purchase/editmaterial-Inward/{{purchaseBillDetail ?.id}}" class="btn btn-added">
+                    <a routerLink="//purchase/editpurchase-bill/{{purchaseBillDetail ?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Material Inward
                     </a>
                 </div>
@@ -23,7 +23,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="th">Supplier Name</td>
-                                            <td class="td">{{purchaseBillDetail?.supplier?.name}}</td>
+                                            <td class="td">{{purchaseBillDetail?.party?.name}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Supplier Bill Date</td>
@@ -84,7 +84,7 @@
                                         <tr>
                                             <td class="th">Status</td>
                                             <td class="td"><span
-                                                    [ngClass]="{'bg-lightgreen': purchaseBillDetail?.status === 'Received', 'bg-lightred' : purchaseBillDetail?.status === 'Pending','bg-lightyellow' : purchaseBillDetail?.status === 'Ordered'}"
+                                                    [ngClass]="{'bg-lightgreen': purchaseBillDetail?.status === 'Complete', 'bg-lightred' : purchaseBillDetail?.status === 'Pending','bg-lightyellow' : purchaseBillDetail?.status === 'Ordered'}"
                                                     class="badges">{{purchaseBillDetail?.status}}</span>
                                             </td>
                                         </tr>

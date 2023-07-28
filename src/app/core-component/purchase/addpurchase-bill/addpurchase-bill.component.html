@@ -1,7 +1,7 @@
 <div class="page-header">
     <div class="page-title">
-        <h4>Material Inward Add</h4>
-        <h6>Add/Update Material Inward</h6>
+        <h4>Purchase Bill Add</h4>
+        <h6>Add/Update Purchase Bill</h6>
     </div>
 </div>
 <div class="card">
@@ -11,20 +11,27 @@
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="form-group">
                         <label>Supplier Name*</label>
-                        <mat-form-field class="w-100">
-                            <input type="text" placeholder="Search supplier" aria-label="Supplier" matInput
+                        <mat-form-field class="w-100" style="padding: 0;
+                        width: 100%;
+                        min-width: 100%;border-top: none;">
+                            <input type="text" placeholder="Search Supplier" aria-label="Party" matInput
                                 [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
-                                [ngClass]="{'is-invalid': f['supplier'].touched && f['supplier'].invalid}">
+                                [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.name"
-                                    (onSelectionChange)="oncheck(supplier.id)">{{ supplier.name }}</mat-option>
+                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.name }}</mat-option>
+
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
                                     </mat-option>
+                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
+                        <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select 
+                            supplier
+                        </span>
                     </div>
                 </div>
 
@@ -33,6 +40,9 @@
                         <label>Supplier Bill Date*</label>
                         <input type="date" formControlName="supplier_bill_date"
                             [ngClass]="{'is-invalid': f['supplier_bill_date'].touched && f['supplier_bill_date'].invalid}">
+                            <span class="text-danger" *ngIf="supplier_bill_date && supplier_bill_date.invalid && supplier_bill_date.touched">Select 
+                                Supplier-bill date
+                            </span>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
@@ -40,6 +50,9 @@
                         <label>Supplier Bill No*</label>
                         <input type="text" formControlName="supplier_bill_no"
                             [ngClass]="{'is-invalid': f['supplier_bill_no'].touched && f['supplier_bill_no'].invalid}">
+                            <span class="text-danger" *ngIf="supplier_bill_no && supplier_bill_no.invalid && supplier_bill_no.touched">Enter 
+                                Supplier-bill no
+                            </span>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
@@ -59,6 +72,9 @@
                             <option value="{{material.id}}" *ngFor="let material of materialList">
                                 {{material.material_inward_no}}</option>
                         </select>
+                        <span class="text-danger" *ngIf="material_inward_no && material_inward_no.invalid && material_inward_no.touched">Enter 
+                            Material-inward no
+                        </span>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
@@ -77,6 +93,9 @@
                         <label>Due Date*</label>
                         <input type="date" formControlName="due_date"
                             [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}">
+                            <span class="text-danger" *ngIf="due_date && due_date.invalid && due_date.touched">Select 
+                                Due date
+                            </span>
                     </div>
                 </div>
 
@@ -92,6 +111,9 @@
                         <label>Shipping Date* </label>
                         <input type="date" formControlName="shipping_date"
                             [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}">
+                            <span class="text-danger" *ngIf="shipping_date && shipping_date.invalid && shipping_date.touched">Select 
+                                Shipping date
+                            </span>
                     </div>
                 </div>
 
@@ -138,7 +160,7 @@
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <div class="d-flex">
+                        <div class="d-flex mt-4">
                             <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true">
                             <label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Export</label>
                         </div>
@@ -196,33 +218,55 @@
                                                 (keyup)="searchProduct(id.value,i)" (blur)="hideSearch()">
                                         </td>
                                         <td>
-                                            <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
-                                                (click)="open()" placeholder="Search Product" *ngIf="isProduct"
-                                                class="input">
-                                            <mat-form-field class="w-100" *ngIf="!isProduct">
-                                                <input type="text" placeholder="Search Product" aria-label="Produt"
-                                                    matInput [formControl]="variantControl" [matAutocomplete]="auto"
-                                                    style="height: 18px;">
-                                                <mat-autocomplete #auto="matAutocomplete">
-                                                    <mat-option *ngFor="let variant of filteredVariants | async"
-                                                        [value]="variant?.product_title"
-                                                        (onSelectionChange)="oncheckVariant(variant,i)"
-                                                        (onSelectionChange)="variantChanged(variant, i)">{{
-                                                        variant?.product_title}}</mat-option>
-                                                    <ng-container *ngIf="(filteredVariants | async) as variants">
-                                                        <mat-option *ngIf="variants?.length === 0"
-                                                            [value]="'No data found'">
-                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+
-                                                                add Product</a>
-                                                        </mat-option>
-                                                    </ng-container>
-                                                </mat-autocomplete>
-                                            </mat-form-field>
+                                            <!-- <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
+                                            (click)="open()" placeholder="Search Product" *ngIf="isProduct"
+                                            class="input">
+
+                                        <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
+                                            <input type="text" placeholder="Search Product" aria-label="Produt"
+                                                matInput [formControl]="variantControl" [matAutocomplete]="auto"
+                                                style="height: 18px;">
+                                            <mat-autocomplete #auto="matAutocomplete">
+                                                <mat-option *ngFor="let variant of filteredVariants | async"
+                                                    [value]="variant?.product_title"
+                                                    (onSelectionChange)="oncheckVariant(variant,i)"
+                                                    (onSelectionChange)="variantChanged(variant, i)">{{
+                                                    variant?.product_title}}</mat-option>
+                                                <ng-container *ngIf="(filteredVariants | async) as variants">
+                                                    <mat-option *ngIf="variants?.length === 0"
+                                                        [value]="'No data found'">
+                                                        <a routerLink="//product/addproduct" style="color:#FF9F43">+
+                                                            add Product</a>
+                                                    </mat-option>
+                                                </ng-container>
+                                            </mat-autocomplete>
+                                        </mat-form-field> -->
+                                        <mat-form-field class="w-100" class="input">
+                                            <input type="text" placeholder="Search Product" aria-label="Produt"
+                                                matInput [formControl]="variantControl" [matAutocomplete]="auto"
+                                                style="height: 18px;">
+                                            <mat-autocomplete #auto="matAutocomplete">
+                                                <mat-option *ngFor="let variant of filteredVariants | async"
+                                                    [value]="variant?.product_title"
+                                                    (onSelectionChange)="oncheckVariant(variant,i)"
+                                                    (onSelectionChange)="variantChanged(variant, i)">{{
+                                                    variant?.product_title}}</mat-option>
+                                                <ng-container *ngIf="(filteredVariants | async) as variants">
+                                                    <mat-option *ngIf="variants?.length === 0"
+                                                        [value]="'No data found'">
+                                                        <a routerLink="//product/addproduct" style="color:#FF9F43">+
+                                                            add Product</a>
+                                                    </mat-option>
+                                                </ng-container>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
                                         </td>
                                         <td><input type="text" formControlName="qty" class="input"></td>
                                         <td><input type="text" formControlName="unit_cost" class="input"></td>
                                         <td><input type="text" formControlName="mrp" class="input"></td>
-                                        <td><input type="text" formControlName="discount" class="input"></td>
+                                        <td><input type="text" formControlName="discount" class="input">
+                                            <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched"> Enter Discount ex: 1-100
+                                            </span> </td>
                                         <td><input type="text" formControlName="tax" class="input"></td>
                                         <td class="text-end"><input type="text" formControlName="landing_cost"
                                                 class="input"></td>

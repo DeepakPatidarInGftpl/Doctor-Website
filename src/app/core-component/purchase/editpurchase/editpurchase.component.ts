@@ -7,6 +7,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { FormControl, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
 @Component({
   selector: 'app-editpurchase',
   templateUrl: './editpurchase.component.html',
@@ -30,12 +31,15 @@ export class EditpurchaseComponent implements OnInit {
     private toastrService: ToastrService, private Arout: ActivatedRoute) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   suppliers: any[] = [];
 
   filteredSuppliers: Observable<any[]>;
   purchaseForm!: FormGroup;
+  get f() {
+    return this.purchaseForm.controls;
+  }
   searchForm!: FormGroup;
   subcategoryList;
   id: any;
@@ -48,7 +52,8 @@ export class EditpurchaseComponent implements OnInit {
   getresbyId:any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
-
+    this.supplierControl.setValue('Loading...'); // or any other default value
+  
     this.purchaseForm = this.fb.group({
       supplier: new FormControl('', [Validators.required]),
       order_date: new FormControl(''),
@@ -68,9 +73,11 @@ export class EditpurchaseComponent implements OnInit {
       console.log(res);
       this.getresbyId=res;
       this.purchaseForm.patchValue(res);
-      this.purchaseForm.get('supplier')?.patchValue(res.supplier.id)
+      this.purchaseForm.get('party')?.patchValue(res.party.id)
       this.purchaseForm.setControl('purchase_cart', this.udateCart(res.cart));
+      this.displaySupplierName(res.party.id);
     })
+    
     this.searchForm = this.fb.group({
       search: new FormControl()
     })
@@ -85,7 +92,20 @@ export class EditpurchaseComponent implements OnInit {
     this.getSuuplier();
     this.getVariants();
   }
-
+ 
+displaySupplierName(supplierId: number): void {
+  this.filteredSuppliers
+    .pipe(
+      tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
+      map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
+    )
+    .subscribe(matchedSuppliers => {
+      if (matchedSuppliers.length > 0) {
+        this.supplierControl.setValue(matchedSuppliers[0].name);
+      }
+    });
+}
+  
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
     add.forEach((j: any,i) => {
@@ -128,7 +148,7 @@ export class EditpurchaseComponent implements OnInit {
     this.searchInputValue = (event.target as HTMLInputElement).value;
   }
   get supplier() {
-    return this.purchaseForm.get('supplier') as FormControl;
+    return this.purchaseForm.get('party') as FormControl;
   }
   purchase_cart(): FormGroup {
     return this.fb.group({
@@ -136,7 +156,7 @@ export class EditpurchaseComponent implements OnInit {
       qty: (''),
       purchase_rate: (''),
       mrp: (''),
-      discount: (''),
+      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
       total: ('')
@@ -178,8 +198,9 @@ export class EditpurchaseComponent implements OnInit {
      }
     
     this.purchaseForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
+    // this.displaySupplierName(event);
   }
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
@@ -196,7 +217,7 @@ loader=false;
     if (this.purchaseForm.valid) {
       this.loader=true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.purchaseForm.get('supplier')?.value);
+      formdata.append('party', this.purchaseForm.get('party')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
       formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
       formdata.append('shipping_date', this.purchaseForm.get('shipping_date')?.value);
@@ -231,11 +252,32 @@ loader=false;
         }else {
           this.loader = false
         }
+      },err=>{
+        this.loader = false
       })
     } else {
       this.purchaseForm.markAllAsTouched()
       console.log(this.purchaseForm.value);
     }
+  }
+
+  get order_no() {
+    return this.purchaseForm.get('order_no')
+  }
+  get order_date() {
+    return this.purchaseForm.get('order_date')
+  }
+  get shipping_date() {
+    return this.purchaseForm.get('shipping_date')
+  }
+  get shipping_note() {
+    return this.purchaseForm.get('shipping_note')
+  }
+  get note() {
+    return this.purchaseForm.get('note')
+  }
+ discountt(index: number) {
+    return this.getCart().controls[index].get('discount');
   }
   private _filter(value: string | number, include: boolean): any[] {
     console.log(value);

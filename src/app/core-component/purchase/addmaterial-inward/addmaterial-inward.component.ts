@@ -26,7 +26,7 @@ export class AddmaterialInwardComponent implements OnInit {
     private toastrService: ToastrService) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
   filteredOptions: Observable<any>;
@@ -48,13 +48,13 @@ export class AddmaterialInwardComponent implements OnInit {
 
   ngOnInit(): void {
     this.materialForm = this.fb.group({
-      supplier: new FormControl('', [Validators.required]),
+      party: new FormControl('', [Validators.required]),
       purchase_order: new FormControl('', [Validators.required]),
       po_date: new FormControl(''),
       material_inward_date: new FormControl('', [Validators.required]),
-      material_inward_no: new FormControl(''),
-      shipping_note: new FormControl(''),
-      recieved_by: new FormControl(''),
+      material_inward_no: new FormControl('',[Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      shipping_note: new FormControl('',[Validators.required,]),
+      recieved_by: new FormControl('',[Validators.required,]),
       material_inward_cart: this.fb.array([]),
       // total_tax: new FormControl('', ),
       // total_discount: new FormControl('', ),
@@ -77,7 +77,7 @@ export class AddmaterialInwardComponent implements OnInit {
   }
 
   get supplier() {
-    return this.materialForm.get('supplier') as FormControl;
+    return this.materialForm.get('party') as FormControl;
   }
   material_inward_cart(): FormGroup {
     return this.fb.group({
@@ -86,7 +86,7 @@ export class AddmaterialInwardComponent implements OnInit {
       po_qty: (''),
       unit_cost: (''),
       mrp: (''),
-      discount: (''),
+      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
       total: ('')
@@ -130,7 +130,7 @@ export class AddmaterialInwardComponent implements OnInit {
     variants.clear();
     this.addCart();
     this.materialForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
   }
   oncheckVariant(event: any, index) {
@@ -149,7 +149,7 @@ export class AddmaterialInwardComponent implements OnInit {
 
       this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.materialForm.get('supplier')?.value);
+      formdata.append('party', this.materialForm.get('party')?.value);
       formdata.append('purchase_order', this.materialForm.get('purchase_order')?.value);
       formdata.append('po_date', this.materialForm.get('po_date')?.value);
       formdata.append('material_inward_date', this.materialForm.get('material_inward_date')?.value);
@@ -178,11 +178,34 @@ export class AddmaterialInwardComponent implements OnInit {
           this.loader = false;
           this.toastrService.success(this.getRes.msg);
           this.router.navigate(['//purchase/material-Inward-list'])
+        }else{
+          this.loader=false;
         }
+      },err=>{
+        this.loader=false
       })
     } else {
       this.materialForm.markAllAsTouched()
     }
+  }
+  discountt(index: number) {
+    return this.getCart().controls[index].get('discount');
+  }
+  
+  get material_inward_date() {
+    return this.materialForm.get('material_inward_date') ;
+  }
+  get material_inward_no() {
+    return this.materialForm.get('material_inward_no') ;
+  }
+  get recieved_by() {
+    return this.materialForm.get('recieved_by') ;
+  }
+  get shipping_note() {
+    return this.materialForm.get('shipping_note');
+  }
+  get purchase_order() {
+    return this.materialForm.get('purchase_order');
   }
   private _filter(value: string | number, include: boolean): any[] {
     console.log(value);

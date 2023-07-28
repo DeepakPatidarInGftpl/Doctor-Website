@@ -290,8 +290,12 @@ loader=false;
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
           this.router.navigate(['//contacts/employee'])
+        }else{
+          this.loader=false;
+          this.toastr.error(this.addRes.error)
         }
       }, err => {
+        this.loader=false;
         console.log(err.error.gst);
         if(err.error.msg){
           this.toastr.error(err.error.msg)
@@ -309,6 +313,7 @@ loader=false;
         }
       })
     } else {
+      this.loader=false;
       this.employeeForm.markAllAsTouched()
       console.log('hhhhhh');
     }

@@ -58,17 +58,22 @@ export class CouponComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.websiteService.deleteBanner(id).subscribe(res => {
+        this.websiteService.deleteCoupon(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Banner Deleted successfully") {
+          if (this.delRes.msg == "Coupon Deleted successfully") {
             this.tableData
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
             this.ngOnInit();
           }
         })
         Swal.fire({
-          icon: 'success',
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
+          icon: 'error',
+          title: 'Not Deleted!',
+          text: this.delRes.error,
         });
         this.tableData.splice(index, 1);
       }
@@ -215,7 +220,6 @@ export class CouponComponent implements OnInit {
       formdata.append('code', this.couponForm.get('code')?.value);
       formdata.append('expiry_date', this.couponForm.get('expiry_date')?.value);
       formdata.append('discount', this.couponForm.get('discount')?.value);
-
       this.websiteService.addCoupon(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
@@ -225,11 +229,13 @@ export class CouponComponent implements OnInit {
           this.couponForm.reset()
           // window.location.reload();
           this.ngOnInit()
+        }else{
+          this.loaders = false;
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders = false;
+        console.log(err.error);
       })
-
     } else {
       this.couponForm.markAllAsTouched()
       console.log('forms invalid');
@@ -245,7 +251,6 @@ export class CouponComponent implements OnInit {
       formdata.append('code', this.couponForm.get('code')?.value);
       formdata.append('expiry_date', this.couponForm.get('expiry_date')?.value);
       formdata.append('discount', this.couponForm.get('discount')?.value);
-
       this.websiteService.updateCoupon(formdata, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
@@ -257,10 +262,11 @@ export class CouponComponent implements OnInit {
           // window.location.reload()
           this.ngOnInit()
         }else{
-          this.loader=false
+          this.loaders=false
         }
       }, err => {
-        console.log(err.error.gst);
+        this.loaders = false;
+        console.log(err.error);
       })
     } else {
       this.couponForm.markAllAsTouched()
@@ -305,16 +311,27 @@ export class CouponComponent implements OnInit {
     this.couponForm.reset();
   }
 
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+  //       console.log(res.title.toLocaleLowerCase());
+  //       console.log(res.title.match(this.titlee));
+  //       return res.title.match(this.titlee);
+  //     })
+  //   }
+  // }
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
-        return res.title.match(this.titlee);
-      })
+        const nameLower = res.title.toString().toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
+      });
     }
   }
   key = 'id'

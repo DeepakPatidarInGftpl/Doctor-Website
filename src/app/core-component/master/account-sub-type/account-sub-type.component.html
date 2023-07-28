@@ -50,7 +50,7 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table datatable class="table  datanew">
+                    <table datatable class="table datanew">
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">
@@ -64,10 +64,11 @@
                                 <th (click)="sort('id')" class="thone">Accounts Type<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Alias<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
+                                        class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody *ngIf="tableData?.length>=0">
                             <tr
                                 *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
 
@@ -97,6 +98,13 @@
                                         href="javascript:void(0);" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="tableData?.length==0">
+                            <tr>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
                                 </td>
                             </tr>
                         </tbody>

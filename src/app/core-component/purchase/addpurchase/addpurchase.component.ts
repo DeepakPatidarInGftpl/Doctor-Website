@@ -26,7 +26,7 @@ export class AddpurchaseComponent implements OnInit {
     private toastrService: ToastrService) {
   }
 
-  supplierControlName = 'supplier';
+  supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
   filteredOptions: Observable<any>;
@@ -47,18 +47,18 @@ export class AddpurchaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.purchaseForm = this.fb.group({
-      supplier: new FormControl('', [Validators.required]),
+      party: new FormControl('', [Validators.required]),
       order_date: new FormControl(''),
-      order_no: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      shipping_date: new FormControl(''),
-      shipping_note: new FormControl(''),
+      order_no: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      shipping_date: new FormControl('',[Validators.required]),
+      shipping_note: new FormControl('',[Validators.required]),
       sub_total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       purchase_cart: this.fb.array([]),
       total_tax: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       total_discount: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       round_off: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      note: new FormControl(''),
+      note: new FormControl('',[Validators.required]),
     });
     this.searchForm = this.fb.group({
       search: new FormControl()
@@ -74,9 +74,8 @@ export class AddpurchaseComponent implements OnInit {
     this.getSuuplier();
     this.getVariants();
   }
-
   get supplier() {
-    return this.purchaseForm.get('supplier') as FormControl;
+    return this.purchaseForm.get('party') as FormControl;
   }
   purchase_cart(): FormGroup {
     return this.fb.group({
@@ -84,7 +83,7 @@ export class AddpurchaseComponent implements OnInit {
       qty: (''),
       purchase_rate: (''),
       mrp: (''),
-      discount: (''),
+      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
       total: ('')
@@ -107,7 +106,7 @@ export class AddpurchaseComponent implements OnInit {
       this.suppliers = res;
       // this.variants=res;
     })
-  }
+  } 
 
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
@@ -123,7 +122,7 @@ export class AddpurchaseComponent implements OnInit {
     variants.clear();
     this.addCart();
     this.purchaseForm.patchValue({
-      supplier: selectedItemId
+      party: selectedItemId
     });
   }
   oncheckVariant(event: any, index) {
@@ -141,7 +140,7 @@ export class AddpurchaseComponent implements OnInit {
     if (this.purchaseForm.valid) {
       this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.purchaseForm.get('supplier')?.value);
+      formdata.append('party', this.purchaseForm.get('party')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
       formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
       formdata.append('shipping_date', this.purchaseForm.get('shipping_date')?.value);
@@ -177,11 +176,34 @@ export class AddpurchaseComponent implements OnInit {
         } else {
           this.loader = false
         }
+      },err=>{
+        this.loader=false
       })
     } else {
+      this.loader=false;
       this.purchaseForm.markAllAsTouched()
       console.log(this.purchaseForm.value);
     }
+  }
+
+
+  get order_no() {
+    return this.purchaseForm.get('order_no')
+  }
+  get order_date() {
+    return this.purchaseForm.get('order_date')
+  }
+  get shipping_date() {
+    return this.purchaseForm.get('shipping_date')
+  }
+  get shipping_note() {
+    return this.purchaseForm.get('shipping_note')
+  }
+  get note() {
+    return this.purchaseForm.get('note')
+  }
+ discountt(index: number) {
+    return this.getCart().controls[index].get('discount');
   }
   private _filter(value: string | number, include: boolean): any[] {
     console.log(value);

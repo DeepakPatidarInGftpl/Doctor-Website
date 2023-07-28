@@ -47,14 +47,13 @@ export class RatingAndReviewComponent implements OnInit {
         this.websiteService.deleteFooter(slug).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Footer Deleted successfully") {
-            this.tableData
-            this.ngOnInit();
+          
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
               text: 'Your file has been deleted.',
             });
-            this.tableData.splice(index, 1);
+            this.ngOnInit();
           } else {
             Swal.fire({
               icon: 'error',
