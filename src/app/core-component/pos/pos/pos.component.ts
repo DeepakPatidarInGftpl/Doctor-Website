@@ -570,7 +570,21 @@ export class PosComponent implements OnInit {
         this.coreService.getStateByCountryId(response[0].id).subscribe({
           next: (response) => {
             console.log(response, 'state');
-            this.stateList = response
+            this.stateList = response;
+            this.state.setValue(response[0].id);
+            this.currentState = response[0].id;
+            this.coreService.getCityByStateId(response[0].id).subscribe({
+              next: (response) => {
+                console.log(response, 'city');
+                this.city.setValue(response[0].id)
+                this.cityList = response
+                this.currentCities = response[0].id
+              },
+              error: (error) => {
+                console.log('state', error)
+              }
+            })
+
           },
           error: (error) => {
             console.log('state', error)
@@ -1836,6 +1850,7 @@ export class PosComponent implements OnInit {
         next: (response:any) => {
           console.log('response order', response);
           if(response.isSuccess){
+            this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
             this.toastr.success(response.msg)
             var clicking = <HTMLElement>document.querySelector('.payLaterModalClose');
@@ -1920,6 +1935,7 @@ export class PosComponent implements OnInit {
         next: (response:any) => {
           console.log('response order', response);
           if(response.isSuccess){
+            this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
             this.toastr.success(response.msg)
             var clicking = <HTMLElement>document.querySelector('.cardModalClose');
@@ -2001,6 +2017,7 @@ export class PosComponent implements OnInit {
         next: (response:any) => {
           console.log('response order', response);
           if(response.isSuccess){
+            this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
             this.toastr.success(response.msg)
             var clicking = <HTMLElement>document.querySelector('.bankModalClose');
@@ -2082,6 +2099,7 @@ export class PosComponent implements OnInit {
         next: (response:any) => {
           console.log('response order', response);
           if(response.isSuccess){
+            this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
             this.toastr.success(response.msg)
             var clicking = <HTMLElement>document.querySelector('.upiModalClose');
@@ -2134,7 +2152,7 @@ export class PosComponent implements OnInit {
     formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
     formData.append('total_amount', JSON.stringify(this.totalAmount()));
     formData.append('payment_mode', 'Cash');
-    formData.append('total_tax', JSON.stringify(0));
+    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
@@ -2148,6 +2166,7 @@ export class PosComponent implements OnInit {
         next: (response:any) => {
           console.log('response order', response);
           if(response.isSuccess){
+            this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
             this.tenderedAmount = 0;
             this.toastr.success(response.msg)
