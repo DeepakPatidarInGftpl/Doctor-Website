@@ -577,8 +577,8 @@ export class PosComponent implements OnInit {
               next: (response) => {
                 console.log(response, 'city');
                 this.city.setValue(response[0].id)
-                this.cityList = response
                 this.currentCities = response[0].id
+                this.cityList = response
               },
               error: (error) => {
                 console.log('state', error)
@@ -1178,6 +1178,10 @@ export class PosComponent implements OnInit {
             clicking.click();
             this.registrationForm.reset()
             this.addMoreDetails = false;
+            this.city.setValue(this.cityList[0].id)
+            this.currentCities = this.cityList[0].id;
+            this.state.setValue(this.stateList[0].id);
+            this.currentState = this.stateList[0].id;
           } else {
             this.toastr.error(response.msg);
           }
