@@ -893,6 +893,7 @@ export class PosComponent implements OnInit {
     
   }
   
+  
   optionSelectedCharge(event){
     const selectedOption = event.option.value;
     console.log('charge', selectedOption);
@@ -900,7 +901,6 @@ export class PosComponent implements OnInit {
 
   optionSelected1(event){
     this.currentCustomer = event.option.value;
-    this.customerAutoCompleteControl.setValue('');
     console.log(event.option.value, 'cus');
   }
 
@@ -976,7 +976,7 @@ export class PosComponent implements OnInit {
   }
 
   displayFn(item: any): string {
-    return item ? item.product_title : '';
+    return item ? `${item.variant_name} | ${item.batch[0].selling_price_offline}` : '';
   }
 
   displayCus(item: any): string {
