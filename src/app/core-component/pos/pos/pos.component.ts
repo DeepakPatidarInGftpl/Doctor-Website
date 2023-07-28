@@ -1837,7 +1837,7 @@ export class PosComponent implements OnInit {
         "account_no": this.sales_account_no.value,
       };
 
-      if(this.payment_type.value == 'Advance'){
+      if(this.sales_payment_type.value == 'Advance'){
         formData.append('customer', this.sales_customer?.value?.id);
         formData.append('receipt_method', this.sales_payment_type.value);
         formData.append('payment_mode', this.sales_payment_mode.value);
@@ -1859,7 +1859,7 @@ export class PosComponent implements OnInit {
       formData.append('upi_detail', '');
       }
 
-    } else if(this.payment_mode.value === 'Card') {
+    } else if(this.sales_payment_mode.value === 'Card') {
 
       let card_data = {
         "payment_account": Number(this.sales_payment_account.value),
@@ -1869,7 +1869,7 @@ export class PosComponent implements OnInit {
         "cart_transactions_no": this.sales_cart_transactions_no.value
       };
 
-      if(this.payment_type.value == 'Advance'){
+      if(this.sales_payment_type.value == 'Advance'){
         formData.append('customer', this.sales_customer?.value?.id);
         formData.append('receipt_method', this.sales_payment_type.value);
         formData.append('payment_mode', this.sales_payment_mode.value);
@@ -1892,7 +1892,7 @@ export class PosComponent implements OnInit {
       }
     } else {
 
-    if(this.payment_type.value == 'Advance'){
+    if(this.sales_payment_type.value == 'Advance'){
       formData.append('customer', this.sales_customer?.value?.id);
       formData.append('receipt_method', this.sales_payment_type.value);
       formData.append('payment_mode', this.sales_payment_mode.value);
