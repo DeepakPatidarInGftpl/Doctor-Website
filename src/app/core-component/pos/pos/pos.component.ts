@@ -217,13 +217,13 @@ export class PosComponent implements OnInit {
 
     this.receiptPaymentForm = this.fb.group({
       voucher_type: ['', [Validators.required]],
-      payment_type: ['', [Validators.required]],
-      payment_mode: ['', [Validators.required]],
+      payment_type: [''],
+      payment_mode: [''],
       receipt_sales: [''],
-      amount_receipt: ['', [Validators.required]],
+      amount_receipt: [''],
       customer_receipt: [''],
       party_receipt: [''],
-      receipt_remark: ['', [Validators.required]],
+      receipt_remark: [''],
       payment_account: [''],
       upi_id: [''],
       customer_bank_name: [''],
@@ -231,64 +231,112 @@ export class PosComponent implements OnInit {
       card_holder_name: [''],
       cart_transactions_no: [''],
       account_no: [''],
-      non_gst: [true],
+      non_gst: [false],
     })
 
 
     this.receiptPaymentForm.get('voucher_type').valueChanges.subscribe((value) => {
-      if (value === 'sales') { // Show the conditional field only if Option 1 is selected
-        this.receiptPaymentForm.get('customer_receipt').setValidators(Validators.required);
-        this.receiptPaymentForm.get('party_receipt').clearValidators();
+      if (value === 'sales') {
         this.receiptPaymentForm.get('non_gst').clearValidators();
+        this.receiptPaymentForm.get('party_receipt').clearValidators();
+
+        this.receiptPaymentForm.get('payment_type').setValue(this.paymentType[0].value)     
         this.receiptPaymentForm.get('payment_type').setValidators(Validators.required);
         this.receiptPaymentForm.get('payment_mode').setValidators(Validators.required);
+        this.receiptPaymentForm.get('customer_receipt').setValidators(Validators.required);
+        this.receiptPaymentForm.get('amount_receipt').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+        this.receiptPaymentForm.get('receipt_remark').setValidators(Validators.required);        
 
       } else if(value === 'purchase') {
+        this.receiptPaymentForm.get('non_gst').clearValidators();
+        this.receiptPaymentForm.get('customer_receipt').clearValidators();
+
+        this.receiptPaymentForm.get('payment_type').setValue(this.paymentType[0].value)     
         this.receiptPaymentForm.get('payment_type').setValidators(Validators.required);
         this.receiptPaymentForm.get('payment_mode').setValidators(Validators.required);
         this.receiptPaymentForm.get('party_receipt').setValidators(Validators.required);
-        this.receiptPaymentForm.get('customer_receipt').clearValidators();
-        this.receiptPaymentForm.get('non_gst').clearValidators();
-        
+        this.receiptPaymentForm.get('receipt_remark').setValidators(Validators.required);        
+        this.receiptPaymentForm.get('amount_receipt').setValidators(Validators.required);
+        this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+
       } else if(value === 'expense') {
+        // this.receiptPaymentForm.get('upi_id').clearValidators();
+        // this.receiptPaymentForm.get('customer_bank_name').clearValidators();
+        // this.receiptPaymentForm.get('card_payment_amount').clearValidators();
+        // this.receiptPaymentForm.get('card_holder_name').clearValidators();
+        // this.receiptPaymentForm.get('cart_transactions_no').clearValidators();
+        // this.receiptPaymentForm.get('account_no').clearValidators();
+        // this.receiptPaymentForm.get('customer_receipt').clearValidators();
+        // this.receiptPaymentForm.get('receipt_sales').clearValidators();
+        this.clearValidatorsReceipt();
+
+        this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
+        this.receiptPaymentForm.get('receipt_remark').setValidators(Validators.required);        
         this.receiptPaymentForm.get('non_gst').setValidators(Validators.required);
         this.receiptPaymentForm.get('party_receipt').setValidators(Validators.required);
-        this.receiptPaymentForm.get('payment_type').clearValidators();
-        this.receiptPaymentForm.get('payment_mode').clearValidators();
+        this.receiptPaymentForm.get('amount_receipt').setValidators(Validators.required);
 
       } else {
+        this.receiptPaymentForm.get('payment_type').clearValidators();
+        this.receiptPaymentForm.get('payment_mode').clearValidators();
         this.receiptPaymentForm.get('customer_receipt').clearValidators();
-        this.receiptPaymentForm.get('party_receipt').clearValidators();
-        this.receiptPaymentForm.get('non_gst').clearValidators();
+        this.receiptPaymentForm.get('amount_receipt').clearValidators();
+        this.receiptPaymentForm.get('payment_account').clearValidators();
+        this.receiptPaymentForm.get('receipt_remark').clearValidators();
+        this.receiptPaymentForm.get('upi_id').clearValidators();
       }
-      this.receiptPaymentForm.get('customer_receipt').updateValueAndValidity();
       this.receiptPaymentForm.get('party_receipt').updateValueAndValidity();
       this.receiptPaymentForm.get('non_gst').updateValueAndValidity();
       this.receiptPaymentForm.get('payment_type').updateValueAndValidity();
       this.receiptPaymentForm.get('payment_mode').updateValueAndValidity();
-
+      this.receiptPaymentForm.get('payment_account').updateValueAndValidity();
+      this.receiptPaymentForm.get('customer_receipt').updateValueAndValidity();
+      this.receiptPaymentForm.get('receipt_remark').updateValueAndValidity();
+      this.receiptPaymentForm.get('amount_receipt').updateValueAndValidity();
+      this.receiptPaymentForm.get('upi_id').updateValueAndValidity();    
+      this.receiptPaymentForm.get('receipt_sales').updateValueAndValidity();      
+  
     });
 
     this.receiptPaymentForm.get('payment_type').valueChanges.subscribe((value) => {
-      if (value === 'Against Bill') { // Show the conditional field only if Option 1 is selected
+      this.receiptPaymentForm.get('payment_mode').setValue(this.paymentMode[2].value)     
+      if (value === 'Against Bill') {
         this.receiptPaymentForm.get('receipt_sales').setValidators(Validators.required);
       } else {
         this.receiptPaymentForm.get('receipt_sales').clearValidators();
       }
       this.receiptPaymentForm.get('receipt_sales').updateValueAndValidity();
+      this.receiptPaymentForm.get('upi_id').updateValueAndValidity();      
     });
 
     this.receiptPaymentForm.get('payment_mode').valueChanges.subscribe((value) => {
-      if (value === 'UPI') { // Show the conditional field only if Option 1 is selected
+      if (value === 'UPI') {
+        this.receiptPaymentForm.get('customer_bank_name').clearValidators();
+        this.receiptPaymentForm.get('card_payment_amount').clearValidators();
+        this.receiptPaymentForm.get('card_holder_name').clearValidators();
+        this.receiptPaymentForm.get('cart_transactions_no').clearValidators();
+        this.receiptPaymentForm.get('account_no').clearValidators();
+
         this.receiptPaymentForm.get('upi_id').setValidators(Validators.required);
         this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
       } else if(value === 'Card') {
+        this.receiptPaymentForm.get('upi_id').clearValidators();
+        this.receiptPaymentForm.get('account_no').clearValidators();
+
         this.receiptPaymentForm.get('customer_bank_name').setValidators(Validators.required);
         this.receiptPaymentForm.get('card_payment_amount').setValidators(Validators.required);
         this.receiptPaymentForm.get('card_holder_name').setValidators(Validators.required);
         this.receiptPaymentForm.get('cart_transactions_no').setValidators(Validators.required);
         this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
      } else if(value === 'Bank') {
+      this.receiptPaymentForm.get('upi_id').clearValidators();
+        this.receiptPaymentForm.get('customer_bank_name').clearValidators();
+        this.receiptPaymentForm.get('card_payment_amount').clearValidators();
+        this.receiptPaymentForm.get('card_holder_name').clearValidators();
+        this.receiptPaymentForm.get('cart_transactions_no').clearValidators();
+
+      this.receiptPaymentForm.get('payment_account').setValidators(Validators.required);
       this.receiptPaymentForm.get('account_no').setValidators(Validators.required);
      }  else {
         this.receiptPaymentForm.get('upi_id').clearValidators();
@@ -653,6 +701,18 @@ export class PosComponent implements OnInit {
     }
   }
 
+  clearValidatorsReceipt() {
+    // for (let index = 0; index < this.receiptPaymentForm.controls[length]; index++) {
+    //   const element = array[index];
+      
+    // }
+    // Object.keys(this.receiptPaymentForm.controls).forEach(key => {
+    //   const control = this.receiptPaymentForm.controls[key];
+    //   control.clearValidators();
+    //   control.updateValueAndValidity();
+    // });
+  }
+
   private __filter(value: string): string[] {
     const filterValue = this.__normalizeValue(value);
     return this.streets.filter(street => this.__normalizeValue(street).includes(filterValue));
@@ -680,6 +740,15 @@ export class PosComponent implements OnInit {
     console.log('options', this.options[0].name);
     const filterValue = value.toLowerCase();
     return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+
+  clearValidators() {
+    const formControls = this.receiptPaymentForm.controls;
+    Object.keys(formControls).forEach(key => {
+      const control = formControls[key];
+      control.clearValidators();
+      control.updateValueAndValidity();
+    });
   }
 
   // optionSelected(event) {
@@ -783,7 +852,8 @@ export class PosComponent implements OnInit {
       if(this.currentOrderAdditionalCharges[index].additional_charge){
         const acindex = this.additionalChargesList.findIndex(currentItem => currentItem.id == this.currentOrderAdditionalCharges[index].additional_charge);
 
-        let total = this.additionalChargesList[acindex].value;
+        // let total = this.additionalChargesList[acindex].value;
+        let total = this.currentOrderAdditionalCharges[index].value;
         let percentage = this.taxesList[tindex].tax_percentage;
         let result = ((percentage / 100) * total) + total;
   
@@ -1466,6 +1536,11 @@ export class PosComponent implements OnInit {
     if (this.receiptPaymentForm.invalid) {
       console.log('invalid');
       Object.keys(this.receiptPaymentForm.controls).forEach(key => {
+        const control = this.receiptPaymentForm.controls[key];
+        if (control.invalid) {
+          console.log(key);
+        }
+
         this.receiptPaymentForm.controls[key].markAsTouched();
       });
       return;

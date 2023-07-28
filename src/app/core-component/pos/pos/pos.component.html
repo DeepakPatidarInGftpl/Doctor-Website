@@ -870,7 +870,7 @@
   </div>
 </div>
                             </div>
-                            <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_type').value === 'Against Bill'">
+                            <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_type').value === 'Against Bill' && receiptPaymentForm.get('voucher_type').value !== 'expense'">
                                 <div class="form-group">
                                     <label>Select Sales</label>
                                     <select class="form-select" formControlName="receipt_sales">
@@ -994,7 +994,7 @@
                             </div>
             </div>
             
-            <div class="row" *ngIf="receiptPaymentForm.get('payment_mode').value !== 'Cash'">
+            <div class="row" *ngIf="receiptPaymentForm.get('voucher_type').value !== 'cash in hand'">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Payment Account</label>
@@ -1011,7 +1011,7 @@
     </div>
     </div>
                 </div>
-                <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_mode').value === 'UPI'">
+                <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_mode').value === 'UPI' && receiptPaymentForm.get('voucher_type').value !== 'expense'">
                     <div class="form-group">
                         <label>UPI Id</label>
                         <input type="text" class="form-control"
