@@ -263,10 +263,10 @@
                                     <button type="button" class="btn btn-dark" (click)="holdBill()"> 
                                         <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                             Hold(F6)</button>
-                                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal2"> 
+                                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#upiMethodModal"> 
                                                 <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                                     UPI(F5)</button>
-                                                    <button type="button" class="btn btn-dark"> 
+                                                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#cardMethodModal"> 
                                                         <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
                                                             Card(F3)</button>
                                                             <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal5"> 
@@ -285,7 +285,7 @@
                                 <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#exampleModal6"> 
                                     <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
                                         Apply Coupon</button>
-                                        <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#exampleModal"> 
+                                        <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#payLaterMethodModal"> 
                                             <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
                                                 Pay Later(F11)</button>
                                                 <button type="button" class="btn btn-dark w-100"> 
@@ -297,7 +297,7 @@
                                                                 <button type="button" class="btn btn-dark w-100"> 
                                                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
                                                                         Card&Print(F9)</button>
-                                                                        <button type="button" class="btn btn-dark w-100"> 
+                                                                        <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#bankMethodModal"> 
                                                                             <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                                                                 Cash&Print(F8)</button>
                             </div>
@@ -387,7 +387,7 @@
                                         Payments</button> 
                             </li>
                             <li>
-                                <button type="button" class="btn-pos"> 
+                                <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#exampleModal2"> 
                                     <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
                                         Add Payment</button> 
                             </li>
@@ -796,17 +796,20 @@
     </div>
   </div>  
 
+
 <!-- Modal 3-->
 <div class="modal fade modalPayment posmodal" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModal2Label">Payment</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close receiptModalClose" data-bs-dismiss="modal" aria-label="Close">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
         <div class="modal-body">
+            <form [formGroup]="receiptPaymentForm" (ngSubmit)="receiptFormSubmit()">
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -814,171 +817,337 @@
                         <div class="row justify-center">
                             <div class="col-sm-12">
                                 <div class="radio-payments-modal-wrapper d-flex justify-content-around">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Sales</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Purchase</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Expense</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Cash In Hand</label>
+
+                                    <div class="form-check" *ngFor="let option of voucherType">
+                                        <input class="form-check-input" type="radio" formControlName="voucher_type" [value]="option.value">
+                                        <label class="form-check-label">{{option.label}}</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div *ngIf="voucher_type.invalid && (voucher_type.dirty || voucher_type.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="voucher_type.errors?.['required']">
+    Voucher Type is required.
+  </div>
+</div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-12" *ngIf="receiptPaymentForm.get('voucher_type').value === 'sales' || receiptPaymentForm.get('voucher_type').value === 'purchase'">
                     <div class="form-group">
-                        <label class="d-block">Select Voucher Type</label>
-                        <div class="row justify-center">
-                            <div class="col-sm-12 mb-3">
+                        <label class="d-block">Select Payment Type</label>
                                 <div class="radio-payments-modal-wrapper d-flex justify-content-around">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Sales</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender_male" value="option1">
-                                        <label class="form-check-label" for="gender_male">Purchase</label>
+                                    <div class="form-check" *ngFor="let option of paymentType">
+                                        <input class="form-check-input" type="radio" formControlName="payment_type" [value]="option.value">
+                                        <label class="form-check-label">{{option.label}}</label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div *ngIf="payment_type.invalid && (payment_type.dirty || payment_type.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_type.errors?.['required']">
+    Payment Type is required.
+  </div>
+</div>
+                            </div>
+                            <div class="col-sm-6" *ngIf="receiptPaymentForm.get('voucher_type').value === 'sales' || receiptPaymentForm.get('voucher_type').value === 'purchase'">
                                 <div class="form-group">
-                                    <label>Vendor</label>
-                                    <select class="form-select">
-                                        <option>-- Select --</option>
-                                        <option>Option 1</option>
-                                        <option>Option 2</option>
+                                    <label>Payment Mode</label>
+                                    <select class="form-select" formControlName="payment_mode">
+                                        <option disabled selected value="">-- Select Payment Mode --</option>
+                                        <option *ngFor="let option of paymentMode" [value]="option.value">{{option.label}}</option>
                                     </select>
                                 </div>
+                                <div *ngIf="payment_mode.invalid && (payment_mode.dirty || payment_mode.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_mode.errors?.['required']">
+    Payment Mode is required.
+  </div>
+</div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_type').value === 'Against Bill' && receiptPaymentForm.get('voucher_type').value !== 'expense'">
                                 <div class="form-group">
-                                    <label>Account</label>
-                                    <select class="form-select">
-                                        <option>-- Select --</option>
-                                        <option>Option 1</option>
-                                        <option>Option 2</option>
+                                    <label>Select Sales</label>
+                                    <select class="form-select" formControlName="receipt_sales">
+                                        <option disabled selected value="">-- Select Sales --</option>
+                                        <option *ngFor="let option of receiptSales" [value]="option?.id">{{option?.dueAmount}}</option>
                                     </select>
                                 </div>
+                                <div *ngIf="receipt_sales.invalid && (receipt_sales.dirty || receipt_sales.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="receipt_sales.errors?.['required']">
+    Selecting Sales is required.
+  </div>
+</div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Amount</label>
-                                    <input type="text" class="form-control" placeholder="Enter Amount">
+                                    <input type="number" formControlName="amount_receipt" class="form-control" placeholder="Enter Amount">
                                 </div>
+                                <div *ngIf="amount_receipt.invalid && (amount_receipt.dirty || amount_receipt.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="amount_receipt.errors?.['required']">
+    Amount is required.
+  </div>
+</div>
                             </div>
+
+                            <!-- <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="typeahead-basic">Search for a state:</label>
+<input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="modelPayments" [ngbTypeahead]="search" (selectItem)="onItemSelect($event)"/>
+                                </div>
+                            </div> -->
+            
                             <div class="row">
-                                <div class="col-sm-4">
+                                
+                                <div class="col-sm-8" *ngIf="receiptPaymentForm.get('voucher_type').value === 'sales'">
                                     <div class="form-group">
-                                        <label>Vendor</label>
-                                        <select class="form-select">
-                                            <option>-- Select --</option>
-                                            <option>Option 1</option>
-                                            <option>Option 2</option>
-                                        </select>
+                                        <label>Customer</label>
+                                        <input type="text"
+                                        placeholder="Search for a Customer"
+                                        [formControl]="receiptPaymentForm.get('customer_receipt')"
+                                        [matAutocomplete]="autoReceipt"
+                                        class="form-control">
+                                 <mat-autocomplete #autoReceipt="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelectedReceipt($event)">
+                                     
+                                     <mat-option *ngIf="receiptPaymentForm.get('customer_receipt').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                     <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
+                                     <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+                                   <mat-option *ngFor="let customer of filteredCustomer2" [value]="customer">
+                                     {{ displayCus(customer) }}
+                                   </mat-option>
+                                 </mat-autocomplete>
                                     </div>
+                                    <div *ngIf="customer_receipt.invalid && (customer_receipt.dirty || customer_receipt.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="customer_receipt.errors?.['required']">
+    Customer is required.
+  </div>
+</div>
+                                    
+                                        <!-- <input type="text"
+                                               placeholder="Search for a street"
+                                               [formControl]="streetcontrol"
+                                               [matAutocomplete]="auto5"
+                                               class="example-input">
+                                        <mat-autocomplete #auto5="matAutocomplete">
+                                          <mat-option *ngFor="let street of filteredStreets | async" [value]="street">
+                                            {{street}}
+                                          </mat-option>
+                                        </mat-autocomplete> -->
+                                      
+                                    <!-- <form>
+                                        <input type="text"
+                                        placeholder="Search for a Customer"
+                                        [formControl]="receiptPaymentForm.get('customer_receipt')"
+                                        [matAutocomplete]="autoReceipt"
+                                        class="form-control">
+                                 <mat-autocomplete #autoReceipt="matAutocomplete" [displayWith]="displayCus" (optionSelected)="optionSelectedReceipt($event)">
+                                     
+                                     <mat-option *ngIf="receiptPaymentForm.get('customer_receipt').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                     <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
+                                     <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+                                   <mat-option *ngFor="let customer of filteredCustomer2" [value]="customer">
+                                     {{ displayCus(customer) }}
+                                   </mat-option>
+                                 </mat-autocomplete>
+                                    </form> -->
+                                    
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-8" *ngIf="receiptPaymentForm.get('voucher_type').value === 'purchase' || receiptPaymentForm.get('voucher_type').value === 'expense'">
                                     <div class="form-group">
-                                        <label>Account</label>
-                                        <select class="form-select">
-                                            <option>-- Select --</option>
-                                            <option>Option 1</option>
-                                            <option>Option 2</option>
-                                        </select>
+                                        <label>Party</label>
+                                        <input type="text"
+                                        placeholder="Search for a Party"
+                                        [formControl]="receiptPaymentForm.get('party_receipt')"
+                                        [matAutocomplete]="partyReceipt"
+                                        class="form-control">
+                                 <mat-autocomplete #partyReceipt="matAutocomplete" [displayWith]="displayParty" (optionSelected)="optionSelectedParty($event)">
+                                     
+                                     <mat-option *ngIf="receiptPaymentForm.get('party_receipt').value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                     <mat-option *ngIf="partyIsLoading" class="is-loading">Loading...</mat-option>
+                                     <mat-option *ngIf="partyErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+                                   <mat-option *ngFor="let party of filteredParty" [value]="party">
+                                     {{ displayParty(party) }}
+                                   </mat-option>
+                                 </mat-autocomplete>
                                     </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Amount</label>
-                                        <input type="text" class="form-control" placeholder="Enter Amount">
-                                    </div>
+                                    <div *ngIf="party_receipt.invalid && (party_receipt.dirty || party_receipt.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="party_receipt.errors?.['required']">
+    Party is required.
+  </div>
+</div>
+                                    
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Vendor</label>
-                                        <select class="form-select">
-                                            <option>-- Select --</option>
-                                            <option>Option 1</option>
-                                            <option>Option 2</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Account</label>
-                                        <select class="form-select">
-                                            <option>-- Select --</option>
-                                            <option>Option 1</option>
-                                            <option>Option 2</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+            
+            <div class="row" *ngIf="receiptPaymentForm.get('voucher_type').value !== 'cash in hand'">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Payment Account</label>
+                        <select class="form-select" formControlName="payment_account">
+                            <option value="" disabled selected>Select Payment Account</option>
+    <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                        </select>
                     </div>
+                    <div *ngIf="payment_account_receipt.invalid && (payment_account_receipt.dirty || payment_account_receipt.touched)"
+    class="alert alert-danger">
+    
+    <div *ngIf="payment_account_receipt.errors?.['required']">
+    Payment Account is required.
+    </div>
+    </div>
+                </div>
+                <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_mode').value === 'UPI' && receiptPaymentForm.get('voucher_type').value !== 'expense'">
+                    <div class="form-group">
+                        <label>UPI Id</label>
+                        <input type="text" class="form-control"
+                        placeholder="UPI ID"
+                        formControlName="upi_id">
+                    </div>
+                    <div *ngIf="upi_id_receipt.invalid && (upi_id_receipt.dirty || upi_id_receipt.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="upi_id_receipt.errors?.['required']">
+    UPI ID is required.
+  </div>
+</div>
+                </div>
+
+                <div class="col-sm-6" *ngIf="receiptPaymentForm.get('payment_mode').value === 'Bank'">
+                    <div class="form-group">
+                        <label>Account No</label>
+                        <input type="text" class="form-control"
+                        placeholder="Account No"
+                        formControlName="account_no">
+                    </div>
+                    <div *ngIf="receipt_account_no.invalid && (receipt_account_no.dirty || receipt_account_no.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="receipt_account_no.errors?.['required']">
+    Account No is required.
+  </div>
+</div>
+                </div>
+
+            </div>
+            <div class="row" *ngIf="receiptPaymentForm.get('payment_mode').value === 'Card'">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Customer Bank Name</label>
+                        <input type="text" class="form-control"
+                        placeholder="Customer Bank Name"
+                        formControlName="customer_bank_name">
+                    </div>
+                    <div *ngIf="receipt_customer_bank_name.invalid && (receipt_customer_bank_name.dirty || receipt_customer_bank_name.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="receipt_customer_bank_name.errors?.['required']">
+    Customer Bank Name is required.
+  </div>
+</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Card Payment Amount</label>
+                        <input type="number" class="form-control" 
+                        placeholder="Card Payment Amount"
+                        formControlName="card_payment_amount">
+                    </div>
+                    <div *ngIf="receipt_card_payment_amount.invalid && (receipt_card_payment_amount.dirty || receipt_card_payment_amount.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="receipt_card_payment_amount.errors?.['required']">
+    Card Payment Amount is required.
+  </div>
+</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Card Holder Name</label>
+                        <input type="text" class="form-control" 
+                        placeholder="Card Holder Name"
+                        formControlName="card_holder_name">
+                    </div>
+                    <div *ngIf="receipt_card_holder_name.invalid && (receipt_card_holder_name.dirty || receipt_card_holder_name.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="receipt_card_holder_name.errors?.['required']">
+    Card Holder Name is required.
+  </div>
+</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Card Transaction No</label>
+                        <input type="number" class="form-control" 
+                        placeholder="Card Transaction No"
+                        formControlName="cart_transactions_no">
+                    </div>
+                    <div *ngIf="receipt_cart_transactions_no.invalid && (receipt_cart_transactions_no.dirty || receipt_cart_transactions_no.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="receipt_cart_transactions_no.errors?.['required']">
+    Card Transaction No. is required.
+  </div>
+</div>
                 </div>
             </div>
-            <!-- <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>Vendor</label>
-                        <select class="form-select">
-                            <option>-- Select --</option>
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                        </select>
+
+            <div class="row" *ngIf="receiptPaymentForm.get('voucher_type').value === 'expense'">
+                <div class="col-sm-6">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" formControlName="non_gst"> Non GST
+                        </label>
                     </div>
+                    <div *ngIf="expense_non_gst.invalid && (expense_non_gst.dirty || expense_non_gst.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="expense_non_gst.errors?.['required']">
+    Non GST is required.
+  </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>Account</label>
-                        <select class="form-select">
-                            <option>-- Select --</option>
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>Amount</label>
-                        <input type="text" class="form-control" placeholder="Enter Amount">
-                    </div>
-                </div>
-            </div> -->
+            </div>
+            </div>
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group mb-0">
                         <label>Remark</label>
-                        <input type="text" class="form-control" placeholder="Enter Remark">
+                        <input type="text" formControlName="receipt_remark" class="form-control" placeholder="Enter Remark">
                     </div>
+                    <div *ngIf="receipt_remark.invalid && (receipt_remark.dirty || receipt_remark.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="receipt_remark.errors?.['required']">
+    Remark is required.
+  </div>
+</div>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer mt-2">
-            <button type="button" class="btn btn-dark modal2BtnPos">Save</button>
-            <!-- <div class="row w-100">
-                <div class="col-sm-12 text-center">
-                    <button type="button" class="btn btn-dark">Save</button>
+            <div class="row mt-2">
+                <div class="col-sm-12 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-dark modal2BtnPos">Save</button>
+
                 </div>
-            </div> -->
-          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+            </div>
+            </form>
         </div>
+       
       </div>
     </div>
   </div>    
@@ -1597,7 +1766,346 @@
     </div>
   </div>
 
+  <!-- Modal UPI-->
+<div class="modal fade posmodal" id="upiMethodModal" tabindex="-1" aria-labelledby="upiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="upiModalLabel">UPI Details</h5>
+          <button type="button" class="btn-close upiModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="upiPaymentMethodForm" (ngSubmit)="upiPaymentGenerateOrder()">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Account</label>
+                            <select class="form-select" formControlName="payment_account">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="payment_account_upi.invalid && (payment_account_upi.dirty || payment_account_upi.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_account_upi.errors?.['required']">
+    Payment Account is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>UPI Id</label>
+                            <input type="text" class="form-control"
+                            placeholder="UPI ID"
+                            formControlName="upi_id">
+                        </div>
+                        <div *ngIf="upi_id.invalid && (upi_id.dirty || upi_id.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="upi_id.errors?.['required']">
+        UPI ID is required.
+      </div>
+    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Transaction ID</label>
+                            <input type="text" class="form-control" 
+                            placeholder="Transaction ID"
+                            formControlName="transaction_id">
+                        </div>
+                        <div *ngIf="transaction_id.invalid && (transaction_id.dirty || transaction_id.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="transaction_id.errors?.['required']">
+        Transaction ID is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div> 
   
+  
+  <!-- Modal Bank-->
+  <div class="modal fade posmodal" id="bankMethodModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bankModalLabel">Bank Details</h5>
+          <button type="button" class="btn-close bankModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="bankPaymentMethodForm" (ngSubmit)="bankPaymentGenerateOrder()">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Account</label>
+                            <select class="form-select" formControlName="payment_account">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="payment_account_bank.invalid && (payment_account_bank.dirty || payment_account_bank.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_account_bank.errors?.['required']">
+    Payment Account is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Account No</label>
+                            <input type="text" class="form-control"
+                            placeholder="Account No"
+                            formControlName="account_no">
+                        </div>
+                        <div *ngIf="account_no.invalid && (account_no.dirty || account_no.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="account_no.errors?.['required']">
+        Account No is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>   
+
+  <!-- Modal Pay Later-->
+<div class="modal fade posmodal" id="payLaterMethodModal" tabindex="-1" aria-labelledby="payLaterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="payLaterModalLabel">Invoice</h5>
+          <button type="button" class="btn-close payLaterModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="payLaterMethodForm" (ngSubmit)="payLaterGenerateOrder()">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Terms</label>
+                            <select class="form-select" formControlName="day">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let terms of paymentTermsList" [value]="terms.days">{{terms?.title}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="pay_later_day.invalid && (pay_later_day.dirty || pay_later_day.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="pay_later_day.errors?.['required']">
+    Payment Terms is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Due Date</label>
+                            <input type="date" class="form-control"
+                            placeholder="Due Date"
+                            formControlName="date">
+                        </div>
+                        <div *ngIf="pay_later_date.invalid && (pay_later_date.dirty || pay_later_date.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="pay_later_date.errors?.['required']">
+        Due Date is required.
+      </div>
+    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group row">
+                            <label class="col-lg-5">Send Reminder</label>
+                            <div class="col-lg-7">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" formControlName="is_send_reminder" id="reminder_true" value="true">
+                                    <label class="form-check-label" for="reminder_true">
+                                    Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" formControlName="is_send_reminder" id="reminder_false" value="false">
+                                    <label class="form-check-label" for="reminder_false">
+                                    No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="is_send_reminder.invalid && (is_send_reminder.dirty || is_send_reminder.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="is_send_reminder.errors?.['required']">
+        Send Reminder is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+   <!-- Modal Card Payment-->
+<div class="modal fade posmodal" id="cardMethodModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cardModalLabel">Card Details</h5>
+          <button type="button" class="btn-close cardModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="cardPaymentMethodForm" (ngSubmit)="cardPaymentGenerateOrder()">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Account</label>
+                            <select class="form-select" formControlName="payment_account">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="payment_account_card.invalid && (payment_account_card.dirty || payment_account_card.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_account_card.errors?.['required']">
+    Payment Account is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Customer Bank Name</label>
+                            <input type="text" class="form-control"
+                            placeholder="Customer Bank Name"
+                            formControlName="customer_bank_name">
+                        </div>
+                        <div *ngIf="customer_bank_name.invalid && (customer_bank_name.dirty || customer_bank_name.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="customer_bank_name.errors?.['required']">
+        Customer Bank Name is required.
+      </div>
+    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Card Payment Amount</label>
+                            <input type="number" class="form-control" 
+                            placeholder="Card Payment Amount"
+                            formControlName="card_payment_amount">
+                        </div>
+                        <div *ngIf="card_payment_amount.invalid && (card_payment_amount.dirty || card_payment_amount.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="card_payment_amount.errors?.['required']">
+        Card Payment Amount is required.
+      </div>
+    </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Card Holder Name</label>
+                            <input type="text" class="form-control" 
+                            placeholder="Card Holder Name"
+                            formControlName="card_holder_name">
+                        </div>
+                        <div *ngIf="card_holder_name.invalid && (card_holder_name.dirty || card_holder_name.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="card_holder_name.errors?.['required']">
+        Card Holder Name is required.
+      </div>
+    </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Card Transaction No</label>
+                            <input type="number" class="form-control" 
+                            placeholder="Card Transaction No"
+                            formControlName="cart_transactions_no">
+                        </div>
+                        <div *ngIf="cart_transactions_no.invalid && (cart_transactions_no.dirty || cart_transactions_no.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="cart_transactions_no.errors?.['required']">
+        Card Transaction No. is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
 
   <!-- Hold Off Canvas -->
   <div class="offcanvas offcanvas-end pos-offcanvas" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
