@@ -118,6 +118,7 @@ export class PosComponent implements OnInit {
   receiptPaymentForm: FormGroup;
   expensePaymentForm: FormGroup;
   salesPaymentForm: FormGroup;
+  purchasePaymentForm: FormGroup;
   customerRegistrationNumberSame: boolean = false;
   currentCountry: any;
   currentState:any;
@@ -247,6 +248,22 @@ export class PosComponent implements OnInit {
       account_no: [''],
     })
 
+    this.purchasePaymentForm = this.fb.group({
+      payment_type: ['', [Validators.required]],
+      payment_account: ['', [Validators.required]],
+      payment_mode: ['', [Validators.required]],
+      party: ['', [Validators.required]],
+      remark: ['', [Validators.required]],
+      amount: ['', [Validators.required]],
+      sales: [''],
+      upi_id: [''],
+      customer_bank_name: [''],
+      card_payment_amount: [''],
+      card_holder_name: [''],
+      cart_transactions_no: [''],
+      account_no: [''],
+    })
+
     this.receiptPaymentForm = this.fb.group({
       voucher_type: ['', [Validators.required]],
       payment_type: [''],
@@ -321,6 +338,61 @@ export class PosComponent implements OnInit {
       this.salesPaymentForm.get('card_holder_name').updateValueAndValidity();
       this.salesPaymentForm.get('cart_transactions_no').updateValueAndValidity();
       this.salesPaymentForm.get('account_no').updateValueAndValidity();
+    });
+
+    this.purchasePaymentForm.get('payment_type').valueChanges.subscribe((value) => {
+      if (value === 'Against Bill') {
+        this.purchasePaymentForm.get('sales').setValidators(Validators.required);
+      } else {
+        this.purchasePaymentForm.get('sales').clearValidators();
+      }
+      this.purchasePaymentForm.get('sales').updateValueAndValidity();
+    });
+
+    this.purchasePaymentForm.get('payment_mode').valueChanges.subscribe((value) => {
+      if (value === 'UPI') {
+        this.purchasePaymentForm.get('customer_bank_name').clearValidators();
+        this.purchasePaymentForm.get('card_payment_amount').clearValidators();
+        this.purchasePaymentForm.get('card_holder_name').clearValidators();
+        this.purchasePaymentForm.get('cart_transactions_no').clearValidators();
+        this.purchasePaymentForm.get('account_no').clearValidators();
+
+        this.purchasePaymentForm.get('upi_id').setValidators(Validators.required);
+        this.purchasePaymentForm.get('payment_account').setValidators(Validators.required);
+      } else if(value === 'Card') {
+        this.purchasePaymentForm.get('upi_id').clearValidators();
+        this.purchasePaymentForm.get('account_no').clearValidators();
+
+        this.purchasePaymentForm.get('customer_bank_name').setValidators(Validators.required);
+        this.purchasePaymentForm.get('card_payment_amount').setValidators(Validators.required);
+        this.purchasePaymentForm.get('card_holder_name').setValidators(Validators.required);
+        this.purchasePaymentForm.get('cart_transactions_no').setValidators(Validators.required);
+        this.purchasePaymentForm.get('payment_account').setValidators(Validators.required);
+     } else if(value === 'Bank') {
+        this.purchasePaymentForm.get('upi_id').clearValidators();
+        this.purchasePaymentForm.get('customer_bank_name').clearValidators();
+        this.purchasePaymentForm.get('card_payment_amount').clearValidators();
+        this.purchasePaymentForm.get('card_holder_name').clearValidators();
+        this.purchasePaymentForm.get('cart_transactions_no').clearValidators();
+
+      this.purchasePaymentForm.get('payment_account').setValidators(Validators.required);
+      this.purchasePaymentForm.get('account_no').setValidators(Validators.required);
+     }  else {
+        this.purchasePaymentForm.get('upi_id').clearValidators();
+        this.purchasePaymentForm.get('payment_account').clearValidators();
+        this.purchasePaymentForm.get('customer_bank_name').clearValidators();
+        this.purchasePaymentForm.get('card_payment_amount').clearValidators();
+        this.purchasePaymentForm.get('card_holder_name').clearValidators();
+        this.purchasePaymentForm.get('cart_transactions_no').clearValidators();
+        this.purchasePaymentForm.get('account_no').clearValidators();
+      }
+      this.purchasePaymentForm.get('upi_id').updateValueAndValidity();
+      this.purchasePaymentForm.get('payment_account').updateValueAndValidity();
+      this.purchasePaymentForm.get('customer_bank_name').updateValueAndValidity();
+      this.purchasePaymentForm.get('card_payment_amount').updateValueAndValidity();
+      this.purchasePaymentForm.get('card_holder_name').updateValueAndValidity();
+      this.purchasePaymentForm.get('cart_transactions_no').updateValueAndValidity();
+      this.purchasePaymentForm.get('account_no').updateValueAndValidity();
     });
  
     window.addEventListener('online', () => {
@@ -532,7 +604,7 @@ export class PosComponent implements OnInit {
       });
 
 
-      this.receiptPaymentForm.get('party_receipt').valueChanges
+      this.purchasePaymentForm.get('party').valueChanges
       .pipe(
         filter(res => {
           return res !== null && res?.length >= this.cusMinLengthTerm
@@ -1435,6 +1507,22 @@ export class PosComponent implements OnInit {
   get sales_upi_id() { return this.salesPaymentForm.get('upi_id'); }
   get sales_customer() { return this.salesPaymentForm.get('customer'); }
 
+  get purchase_amount() { return this.salesPaymentForm.get('amount')};
+  get purchase_remark() { return this.salesPaymentForm.get('remark')};
+  get purchase_payment_account() { return this.salesPaymentForm.get('payment_account')};
+  get purchase_payment_type() { return this.salesPaymentForm.get('payment_type')};
+  get purchase_payment_mode() { return this.salesPaymentForm.get('payment_mode')};
+  get purchase_sales() { return this.salesPaymentForm.get('sales')};
+
+  get purchase_customer_bank_name() { return this.salesPaymentForm.get('customer_bank_name')};
+  get purchase_card_payment_amount() { return this.salesPaymentForm.get('card_payment_amount')};
+  get purchase_card_holder_name() { return this.salesPaymentForm.get('card_holder_name')};
+  get purchase_cart_transactions_no() { return this.salesPaymentForm.get('cart_transactions_no')};
+  
+  get purchase_account_no() { return this.salesPaymentForm.get('account_no')};
+  get purchase_upi_id() { return this.salesPaymentForm.get('upi_id'); }
+  get purchase_party() { return this.salesPaymentForm.get('party'); }
+
 
   handleMobileInputChange(event: any) {
     const inputValue = event.target.value;
@@ -1646,32 +1734,44 @@ export class PosComponent implements OnInit {
   }
 
   formSubmitPurchase(){ 
+    if (this.purchasePaymentForm.invalid) {
+      console.log('invalid');
+      Object.keys(this.purchasePaymentForm.controls).forEach(key => {
+        const control = this.purchasePaymentForm.controls[key];
+        if (control.invalid) {
+          console.log(key);
+        }
+
+        this.purchasePaymentForm.controls[key].markAsTouched();
+      });
+      return;
+    }
 
     let formData = new FormData();
 
-    if(this.payment_mode.value === 'UPI'){
+    if(this.purchase_payment_mode.value === 'UPI'){
       let upi_data = {
-        "upi_no": Number(this.upi_id_receipt.value),
-        "payment_account": Number(this.payment_account_receipt.value)
+        "upi_no": Number(this.purchase_upi_id.value),
+        "payment_account": Number(this.purchase_payment_account.value)
       };
 
-      if(this.payment_type.value == 'Advance'){
-        formData.append('party', this.party_receipt?.value?.id);
-        formData.append('receipt_method', this.payment_type.value);
-        formData.append('payment_mode', this.payment_mode.value);
-        formData.append('amount', this.amount_receipt.value);
-        formData.append('description', this.receipt_remark.value);
+      if(this.purchase_payment_type.value == 'Advance'){
+        formData.append('party', this.purchase_party?.value?.id);
+        formData.append('receipt_method', this.purchase_payment_type.value);
+        formData.append('payment_mode', this.purchase_payment_mode.value);
+        formData.append('amount', this.purchase_amount.value);
+        formData.append('description', this.purchase_remark.value);
         formData.append('bill_no', '');
         formData.append('card_detail', '');
         formData.append('bank_detail', '');
         formData.append('upi_detail', JSON.stringify(upi_data));
       } else {
-      formData.append('party', this.party_receipt?.value?.id);
-      formData.append('receipt_method', this.payment_type.value);
-      formData.append('payment_mode', this.payment_mode.value);
-      formData.append('amount', this.amount_receipt.value);
-      formData.append('description', this.receipt_remark.value);
-      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('party', this.purchase_party?.value?.id);
+      formData.append('receipt_method', this.purchase_payment_type.value);
+      formData.append('payment_mode', this.purchase_payment_mode.value);
+      formData.append('amount', this.purchase_amount.value);
+      formData.append('description', this.purchase_remark.value);
+      formData.append('bill_no', this.purchase_sales.value);
       formData.append('card_detail', '');
       formData.append('bank_detail', '');
       formData.append('upi_detail', JSON.stringify(upi_data));
@@ -1680,27 +1780,27 @@ export class PosComponent implements OnInit {
     } else if(this.payment_mode.value === 'Bank'){
 
       let bank_data = {
-        "payment_account": Number(this.payment_account_receipt.value),
-        "account_no": this.receipt_account_no.value,
+        "payment_account": Number(this.purchase_payment_account.value),
+        "account_no": this.purchase_account_no.value,
       };
 
       if(this.payment_type.value == 'Advance'){
-        formData.append('party', this.party_receipt?.value?.id);
-        formData.append('receipt_method', this.payment_type.value);
-        formData.append('payment_mode', this.payment_mode.value);
-        formData.append('amount', this.amount_receipt.value);
-        formData.append('description', this.receipt_remark.value);
+        formData.append('party', this.purchase_party?.value?.id);
+        formData.append('receipt_method', this.purchase_payment_type.value);
+        formData.append('payment_mode', this.purchase_payment_mode.value);
+        formData.append('amount', this.purchase_amount.value);
+        formData.append('description', this.purchase_remark.value);
         formData.append('bill_no', '');
         formData.append('card_detail', '');
         formData.append('bank_detail', JSON.stringify(bank_data));
         formData.append('upi_detail', '');
       } else {
-      formData.append('party', this.party_receipt?.value?.id);
-      formData.append('receipt_method', this.payment_type.value);
-      formData.append('payment_mode', this.payment_mode.value);
-      formData.append('amount', this.amount_receipt.value);
-      formData.append('description', this.receipt_remark.value);
-      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('party', this.purchase_party?.value?.id);
+      formData.append('receipt_method', this.purchase_payment_type.value);
+      formData.append('payment_mode', this.purchase_payment_mode.value);
+      formData.append('amount', this.purchase_amount.value);
+      formData.append('description', this.purchase_remark.value);
+      formData.append('bill_no', this.purchase_sales.value);
       formData.append('card_detail', '');
       formData.append('bank_detail', JSON.stringify(bank_data));
       formData.append('upi_detail', '');
@@ -1709,30 +1809,30 @@ export class PosComponent implements OnInit {
     } else if(this.payment_mode.value === 'Card') {
 
       let card_data = {
-        "payment_account": Number(this.payment_account_receipt.value),
-        "customer_bank_name": this.receipt_customer_bank_name.value,
-        "card_payment_amount": this.receipt_card_payment_amount.value,
-        "card_holder_name": this.receipt_card_holder_name.value,
-        "cart_transactions_no": this.receipt_cart_transactions_no.value
+        "payment_account": Number(this.purchase_payment_account.value),
+        "customer_bank_name": this.purchase_customer_bank_name.value,
+        "card_payment_amount": this.purchase_card_payment_amount.value,
+        "card_holder_name": this.purchase_card_holder_name.value,
+        "cart_transactions_no": this.purchase_cart_transactions_no.value
       };
 
       if(this.payment_type.value == 'Advance'){
-        formData.append('party', this.party_receipt?.value?.id);
-        formData.append('receipt_method', this.payment_type.value);
-        formData.append('payment_mode', this.payment_mode.value);
-        formData.append('amount', this.amount_receipt.value);
-        formData.append('description', this.receipt_remark.value);
+        formData.append('party', this.purchase_party?.value?.id);
+        formData.append('receipt_method', this.purchase_payment_type.value);
+        formData.append('payment_mode', this.purchase_payment_mode.value);
+        formData.append('amount', this.purchase_amount.value);
+        formData.append('description', this.purchase_remark.value);
         formData.append('bill_no', '');
         formData.append('card_detail', JSON.stringify(card_data));
         formData.append('bank_detail', '');
         formData.append('upi_detail', '');
       } else {
-      formData.append('party', this.party_receipt?.value?.id);
-      formData.append('receipt_method', this.payment_type.value);
-      formData.append('payment_mode', this.payment_mode.value);
-      formData.append('amount', this.amount_receipt.value);
-      formData.append('description', this.receipt_remark.value);
-      formData.append('bill_no', this.receipt_sales.value);
+      formData.append('party', this.purchase_party?.value?.id);
+      formData.append('receipt_method', this.purchase_payment_type.value);
+      formData.append('payment_mode', this.purchase_payment_mode.value);
+      formData.append('amount', this.purchase_amount.value);
+      formData.append('description', this.purchase_remark.value);
+      formData.append('bill_no', this.purchase_sales.value);
       formData.append('card_detail', JSON.stringify(card_data));
       formData.append('bank_detail', '');
       formData.append('upi_detail', '');
@@ -1740,22 +1840,22 @@ export class PosComponent implements OnInit {
     } else {
 
     if(this.payment_type.value == 'Advance'){
-      formData.append('party', this.party_receipt?.value?.id);
-      formData.append('receipt_method', this.payment_type.value);
-      formData.append('payment_mode', this.payment_mode.value);
-      formData.append('amount', this.amount_receipt.value);
-      formData.append('description', this.receipt_remark.value);
+      formData.append('party', this.purchase_party?.value?.id);
+      formData.append('receipt_method', this.purchase_payment_type.value);
+      formData.append('payment_mode', this.purchase_payment_mode.value);
+      formData.append('amount', this.purchase_amount.value);
+      formData.append('description', this.purchase_remark.value);
       formData.append('bill_no', '');
       formData.append('card_detail', '');
       formData.append('bank_detail', '');
       formData.append('upi_detail', '');
     } else {
-    formData.append('party', this.party_receipt?.value?.id);
-    formData.append('receipt_method', this.payment_type.value);
-    formData.append('payment_mode', this.payment_mode.value);
-    formData.append('amount', this.amount_receipt.value);
-    formData.append('description', this.receipt_remark.value);
-    formData.append('bill_no', this.receipt_sales.value);
+    formData.append('party', this.purchase_party?.value?.id);
+    formData.append('receipt_method', this.purchase_payment_type.value);
+    formData.append('payment_mode', this.purchase_payment_mode.value);
+    formData.append('amount', this.purchase_amount.value);
+    formData.append('description', this.purchase_remark.value);
+    formData.append('bill_no', this.purchase_sales.value);
     formData.append('card_detail', '');
     formData.append('bank_detail', '');
     formData.append('upi_detail', '');
@@ -1771,9 +1871,9 @@ export class PosComponent implements OnInit {
           if(response.isSuccess){
             // this.discardCurrentBill();
             this.toastr.success(response.msg)
-            var clicking = <HTMLElement>document.querySelector('.receiptModalClose');
+            var clicking = <HTMLElement>document.querySelector('.purchaseModalClose');
             clicking.click();
-            this.receiptPaymentForm.reset();
+            this.purchasePaymentForm.reset();
           } else {
             this.toastr.error(response.msg);
           }
