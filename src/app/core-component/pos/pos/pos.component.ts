@@ -21,6 +21,12 @@ import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 
 
 export class PosComponent implements OnInit {
+  selectedPaymentsOption: string = 'sales'; 
+  
+  salesPayments:any = [];
+  purchasePayments:any = [];
+  expensePayments:any = [];
+
   page: number = 1;
 
   heldBills: any[] = [];
@@ -57,7 +63,14 @@ export class PosComponent implements OnInit {
     { id: 1, label: 'Sales', value: 'sales' },
     { id: 2, label: 'Purchase', value: 'purchase' },
     { id: 3, label: 'Expense', value: 'expense' },
-    { id: 4, label: 'Cash in Hand', value: 'cash in hand'}
+    // { id: 4, label: 'Cash in Hand', value: 'cash in hand'}
+  ];
+
+  voucherType2 = [
+    { id: 1, label: 'Receipt', value: 'sales' },
+    { id: 2, label: 'Payments', value: 'purchase' },
+    { id: 3, label: 'Expense', value: 'expense' },
+    // { id: 4, label: 'Cash in Hand', value: 'cash in hand'}
   ];
 
   paymentType = [
@@ -770,6 +783,36 @@ export class PosComponent implements OnInit {
       },
       error: (error) => {
         console.log('pos orders', error);
+      }
+    })
+
+    this.cartService.getExpensePayments().subscribe({
+      next: (response) => {
+        console.log(response, 'expense payments')
+        this.expensePayments = response;
+      },
+      error: (error) => {
+        console.log('expense payments', error);
+      }
+    })
+
+    this.cartService.getSalesPayments().subscribe({
+      next: (response) => {
+        console.log(response, 'sales payments')
+        this.salesPayments = response;
+      },
+      error: (error) => {
+        console.log('sales payments', error);
+      }
+    })
+
+    this.cartService.getPurchasePayments().subscribe({
+      next: (response) => {
+        console.log(response, 'purchase payments')
+        this.purchasePayments = response;
+      },
+      error: (error) => {
+        console.log('purchase payments', error);
       }
     })
 

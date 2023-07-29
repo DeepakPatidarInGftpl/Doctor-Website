@@ -294,7 +294,7 @@
                                                         <button type="button" class="btn btn-dark w-100"> 
                                                             <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                                                 UPI&Print(F10)</button>
-                                                                <button type="button" class="btn btn-dark w-100"> 
+                                                                <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#posPaymentsModal">  
                                                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
                                                                         Card&Print(F9)</button>
                                                                         <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#bankMethodModal"> 
@@ -2841,3 +2841,103 @@ Payment Account is required.
       </div>
     </div>
   </div> 
+
+
+  <div class="modal fade posmodal" id="posPaymentsModal" tabindex="-1" aria-labelledby="posPaymentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="posPaymentsModalLabel">POS Payments</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div> 
+        <div class="modal-body">
+            <div class="form-group">
+                <!-- <label class="d-block">Select Payment Type</label> -->
+                        <div class="radio-payments-modal-wrapper d-flex justify-content-around">
+                            <div class="form-check" *ngFor="let option of voucherType2">
+                                <input class="form-check-input" type="radio" [value]="option.value" [(ngModel)]="selectedPaymentsOption">
+                                <label class="form-check-label">{{option.label}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedPaymentsOption === 'sales'">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Receipt No.</th>
+                                    <th>Date</th>
+                                    <th>Mode</th>
+                                    <th>Method</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let order of salesPayments">
+                                    <td>{{order.id}}</td>
+                                    <td>{{getDateForOrders(order.receipt_date)}}</td>
+                                    <td>{{order.receipt_mode}}</td>  
+                                    <td>{{order.receipt_method}}</td>                      
+                                    <td>{{order.amount}}</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                      </div>
+                      <div *ngIf="selectedPaymentsOption === 'purchase'">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Receipt No.</th>
+                                    <th>Date</th>
+                                    <th>Mode</th>
+                                    <th>Method</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let order of purchasePayments">
+                                    <td>{{order.id}}</td>
+                                    <td>{{getDateForOrders(order.receipt_date)}}</td>
+                                    <td>{{order.receipt_mode}}</td>  
+                                    <td>{{order.receipt_method}}</td>                      
+                                    <td>{{order.amount}}</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div *ngIf="selectedPaymentsOption === 'expense'">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Receipt No.</th>
+                                    <th>Non-GST</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let order of expensePayments">
+                                    <td>{{order.id}}</td>
+                                    <td>{{order.non_gst}}</td>                                                        
+                                    <td>{{order.amount}}</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>  
+            
+            
+        </div>
+        <div class="modal-footer">
+            <!-- <div class="col-sm-12">
+                <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+            </div> -->
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-dark modal1BtnPos" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
