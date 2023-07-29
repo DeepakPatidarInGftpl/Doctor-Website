@@ -8,7 +8,7 @@ let allowedRoles;
 if (localStorageData && localStorageData.permission) {
   const permission = localStorageData.permission;
   permission.map((res:any)=>{
-    if(res.content_type.app_label === 'master' && res.content_type.model === 'vendor' && res.codename=='view_vendor'){
+    if(res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename=='view_vendor'){
       allowedRoles=res.codename;
       console.log(allowedRoles);  
     }

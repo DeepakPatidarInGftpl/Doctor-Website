@@ -90,7 +90,6 @@ export class ProductDetailsComponent implements OnInit {
         this.productDetail = res
         console.log(res);
         console.log(res.variant_product);
-
       }
     })
   }

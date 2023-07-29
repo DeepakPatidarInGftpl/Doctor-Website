@@ -139,15 +139,15 @@ export class TransportComponent implements OnInit {
     if (localStorageData && localStorageData.permission) {
       const permission = localStorageData.permission;
       permission.map((res: any) => {
-        if (res.content_type.app_label === 'master'  && res.content_type.model === 'transport' && res.codename=='add_transport') {
+        if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'transport' && res.codename=='add_transport') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
           
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'transport' && res.codename=='change_transport') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename=='change_transport') {
           this.isEdit = res.codename;
           console.log(this.isEdit);
           
-        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'transport' && res.codename=='delete_transport') {
+        }else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename=='delete_transport') {
           this.isDelete = res.codename;
           console.log(this.isDelete);
           

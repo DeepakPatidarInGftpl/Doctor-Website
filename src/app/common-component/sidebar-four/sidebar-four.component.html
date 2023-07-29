@@ -215,6 +215,29 @@
             </li>
             <li class="submenu">
               <a
+                (click)="showSubMenu('Pos')"
+                [class.subdrop]="opendSubMenu[1] === 'Pos'"
+                href="javascript:void(0);"
+                ><img src="assets/img/icons/sales1.svg" alt="img" /><span>
+                  Pos</span
+                >
+                <span class="menu-arrow"></span
+              ></a>
+              <ul
+                [ngClass]="{
+                  show: opendSubMenu[1] == 'Pos',
+                  hide: opendSubMenu[1] != 'Pos'
+                }"
+              >
+           
+                <li><a routerLink="/pos/posOrder" routerLinkActive="active">POS Order</a></li>
+            
+                <li><a routerLink="/pos/pos" target="_blank" routerLinkActive="active">POS New</a></li>
+            
+              </ul>
+            </li>
+            <li class="submenu">
+              <a
                 (click)="showSubMenu('Purchase')"
                 [class.subdrop]="opendSubMenu[1] === 'Purchase'"
                 href="javascript:void(0);"

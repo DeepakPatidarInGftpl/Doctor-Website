@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class DetailCustomerComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private coreService: CoreService) { }
+  constructor(private Arout: ActivatedRoute, private coreService: ContactService) { }
   id: any
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -34,7 +35,7 @@ export class DetailCustomerComponent implements OnInit {
   }
   productDetail: any
   getdata() {
-    this.coreService.getProductById(this.id).subscribe(res => {
+    this.coreService.getCustomerById(this.id).subscribe(res => {
         if(this.id==res.id){
           this.productDetail = res
           console.log(res); 
