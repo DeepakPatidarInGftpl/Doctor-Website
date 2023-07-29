@@ -126,6 +126,7 @@ export class CompanyBankComponent implements OnInit {
   isEdit:any;
   isDelete:any;
   ngOnInit(): void {
+console.log('');
 
     this.coreService.getCompanyBank().subscribe(res=>{
       this.tableData=res;
