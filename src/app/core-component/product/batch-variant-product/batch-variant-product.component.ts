@@ -40,12 +40,16 @@ export class BatchVariantProductComponent implements OnInit {
       cost_price: new FormControl(0,Validators.pattern(/^[0-9]*$/)),
       selling_price_online: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       selling_price_offline: new FormControl(0, Validators.pattern(/^[0-9]*$/)),
-      selling_price_vendor: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
+      selling_price_dealer: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       selling_price_employee: new FormControl(0, Validators.pattern(/^[0-9]*$/)),
       stock: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      opening_stock:new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       minimum_stock_threshold: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      max_order_quantity: new FormControl(0, [Validators.pattern(/^[0-9]*$/)])
+      max_order_quantity: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
+      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      additional_discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)])
     })
+
     this.id = +this.Arout.snapshot.paramMap.get('id');
     // this.vid = +this.Arout.snapshot.paramMap.get('vid');
   }
@@ -92,7 +96,7 @@ export class BatchVariantProductComponent implements OnInit {
     return this.batchForm.get('selling_price_online')
   }
   get selling_price_vendor() {
-    return this.batchForm.get('selling_price_vendor');
+    return this.batchForm.get('selling_price_dealer');
   }
   get selling_price_employee() {
     return this.batchForm.get('selling_price_employee')
@@ -109,5 +113,13 @@ export class BatchVariantProductComponent implements OnInit {
   get variant() {
     return this.batchForm.get('variant')
   }
-
+  get opening_stock(){
+    return this.batchForm.get('opening_stock')
+  }
+  get discount(){
+    return this.batchForm.get('discount')
+  }
+  get additional_discount(){
+    return this.batchForm.get('additional_discount')
+  }
 }

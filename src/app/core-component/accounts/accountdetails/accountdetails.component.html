@@ -1,0 +1,85 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Account Details</h4>
+        <h6>Full details of a Account</h6>
+    </div>
+    <div class="page-btn">
+        <a routerLink="//account/editaccount/{{employeeDetails.id}}" class="btn btn-added">
+            <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Account
+        </a>
+    </div>
+</div>
+
+<!-- /add -->
+<div class="row">
+    <div class="col-lg-12 col-sm-12" *ngIf="employeeDetails">
+        <div class="card">
+            <div class="card-body">
+                <!-- <div class="bar-code-view">
+                    <img src="assets/img/barcode1.png" alt="barcode">
+                    <a class="printimg">
+                        <img src="assets/img/icons/printer.svg" alt="print">
+                    </a>
+                </div> -->
+                <div class="productdetails">                  
+                    <ul class="product-bar">
+                       
+                        <li>
+                            <h4>Title</h4>
+                            <h6>{{employeeDetails?.title}}</h6>
+
+                        <li>
+                            <h4>Opening Balance</h4>
+                            <h6>{{employeeDetails?.opening_balance}}</h6>
+                        </li>
+                        <li>
+                            <h4>Opening Balance Type</h4>
+                            <h6>{{employeeDetails?.opening_balance_type}}</h6>
+                        </li>
+                        <li>
+                            <h4>Account Type</h4>
+                            <h6>{{employeeDetails?.accounts_type}}</h6>
+                        </li>
+                        <li>
+                            <h4>Account Sub Type</h4>
+                            <h6>{{employeeDetails?.account_subtype?.title}}</h6>
+                        </li>
+                        <li>
+                            <h4>Account ID</h4>
+                            <h6>{{employeeDetails?.account_id}}</h6>
+                        </li>
+                    </ul>
+                </div>
+    
+            </div>
+            <div class="d-flex align-items-center mx-4">
+                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                <span [ngClass]="{'bg-lightgreen': employeeDetails.is_active === true, 'bg-lightred' : employeeDetails.is_active === false,'bg-lightyellow' : employeeDetails.is_active === 'Partial' }"
+                                    class="badges">{{employeeDetails.is_active}}</span>
+            </div>
+        </div>
+    </div>
+    <!-- IMG -->
+    <!-- <div class="col-lg-4 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="slider-product-details">
+                    <div class="owl-carousel owl-theme product-slide">
+                        <div class="slider-product">
+                            <img src="src/assets/img/product/product69.jpg" alt="img">
+                            <h4>macbookpro.jpg</h4>
+                            <h6>581kb</h6>
+                        </div>
+                        <div class="slider-product">
+                            <img src="src/assets/img/product/product69.jpg" alt="img">
+                            <h4>macbookpro.jpg</h4>
+                            <h6>581kb</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+<!-- /add -->

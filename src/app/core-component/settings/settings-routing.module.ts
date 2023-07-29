@@ -88,6 +88,19 @@ const routes: Routes = [
     path: 'detailsPermissionGroup/:id',
     loadChildren: () => import('../contacts/details-permission-group/details-permission-group.module').then((m) => m.DetailsPermissionGroupModule)
   },
+  { path: 'additionalCharge', loadChildren: () => import('./additional-charge/additional-charge.module').then((m) => m.AdditionalChargeModule) },
+  {
+    path: 'user',
+    loadChildren: () => import('./user/user.module').then((m) => m.UserModule)
+  },
+  {
+    path: 'addUser',
+    loadChildren: () => import('./add-user/add-user.module').then((m) => m.AddUserModule)
+  },
+  {
+    path: 'updateUser/:id',
+    loadChildren: () => import('./update-user/update-user.module').then((m) => m.UpdateUserModule)
+  },
 
 ];
 

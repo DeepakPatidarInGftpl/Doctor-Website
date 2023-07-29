@@ -139,7 +139,10 @@ const routes: Routes = [
       
       {path:'website',loadChildren:()=>import('./website/website.module').then((m)=>m.WebsiteModule)},
       {path:'contacts',loadChildren:()=>import('./contacts/contacts.module').then((m)=>m.ContactsModule)},
-      {path:'masters',loadChildren:()=>import('./master/master.module').then((m)=>m.MasterModule)}
+      {path:'masters',loadChildren:()=>import('./master/master.module').then((m)=>m.MasterModule)},
+      {path:'poss',loadChildren:()=>import('./newpos/newpos.module').then((m)=>m.NewposModule)},
+      {path:'bank',loadChildren:()=>import('./bank/bank.module').then((m)=>m.BankModule)},
+      {path:'account',loadChildren:()=>import('./accounts/accounts.module').then((m)=>m.AccountsModule)},
   ],
   },
 ];
