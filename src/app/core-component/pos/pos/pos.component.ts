@@ -1153,19 +1153,19 @@ export class PosComponent implements OnInit {
   }
 
   displayFn(item: any): string {
-    return item ? `${item.variant_name} | ${item.batch[0].selling_price_offline}` : '';
+    return item ? `${item?.product_title} ${item?.variant_name} | ${item?.batch[0]?.selling_price_offline}` : '';
   }
 
   displayCus(item: any): string {
-    return item ? item.mobile_no : '';
+    return item ? item?.mobile_no : '';
   }
 
   displayParty(item: any): string {
-    return item ? item.mobile_no : '';
+    return item ? item?.mobile_no : '';
   }
 
   displayCharge(item: any): string {
-    return item ? item.additional_charge : '';
+    return item ? item?.additional_charge : '';
   }
 
   addMoreDetailsHandler() {
@@ -1238,7 +1238,7 @@ export class PosComponent implements OnInit {
 
   changeAmt(){
     let amt = +this.tenderedAmount - this.totalAmount();
-    return amt;
+    return amt.toFixed(2);
   }
 
   generateOrder1(){
@@ -1507,21 +1507,21 @@ export class PosComponent implements OnInit {
   get sales_upi_id() { return this.salesPaymentForm.get('upi_id'); }
   get sales_customer() { return this.salesPaymentForm.get('customer'); }
 
-  get purchase_amount() { return this.salesPaymentForm.get('amount')};
-  get purchase_remark() { return this.salesPaymentForm.get('remark')};
-  get purchase_payment_account() { return this.salesPaymentForm.get('payment_account')};
-  get purchase_payment_type() { return this.salesPaymentForm.get('payment_type')};
-  get purchase_payment_mode() { return this.salesPaymentForm.get('payment_mode')};
-  get purchase_sales() { return this.salesPaymentForm.get('sales')};
+  get purchase_amount() { return this.purchasePaymentForm.get('amount')};
+  get purchase_remark() { return this.purchasePaymentForm.get('remark')};
+  get purchase_payment_account() { return this.purchasePaymentForm.get('payment_account')};
+  get purchase_payment_type() { return this.purchasePaymentForm.get('payment_type')};
+  get purchase_payment_mode() { return this.purchasePaymentForm.get('payment_mode')};
+  get purchase_sales() { return this.purchasePaymentForm.get('sales')};
 
-  get purchase_customer_bank_name() { return this.salesPaymentForm.get('customer_bank_name')};
-  get purchase_card_payment_amount() { return this.salesPaymentForm.get('card_payment_amount')};
-  get purchase_card_holder_name() { return this.salesPaymentForm.get('card_holder_name')};
-  get purchase_cart_transactions_no() { return this.salesPaymentForm.get('cart_transactions_no')};
+  get purchase_customer_bank_name() { return this.purchasePaymentForm.get('customer_bank_name')};
+  get purchase_card_payment_amount() { return this.purchasePaymentForm.get('card_payment_amount')};
+  get purchase_card_holder_name() { return this.purchasePaymentForm.get('card_holder_name')};
+  get purchase_cart_transactions_no() { return this.purchasePaymentForm.get('cart_transactions_no')};
   
-  get purchase_account_no() { return this.salesPaymentForm.get('account_no')};
-  get purchase_upi_id() { return this.salesPaymentForm.get('upi_id'); }
-  get purchase_party() { return this.salesPaymentForm.get('party'); }
+  get purchase_account_no() { return this.purchasePaymentForm.get('account_no')};
+  get purchase_upi_id() { return this.purchasePaymentForm.get('upi_id'); }
+  get purchase_party() { return this.purchasePaymentForm.get('party'); }
 
 
   handleMobileInputChange(event: any) {
@@ -2333,8 +2333,8 @@ export class PosComponent implements OnInit {
     console.log(cartData, 'cash', upi_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
-    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
+    formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
     formData.append('payment_mode', 'UPI');
     formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2438,6 +2438,17 @@ export class PosComponent implements OnInit {
     this.toastr.error('Please Add Items To Cart');
   }
 
+}
+
+getDateForOrders(timestamp:any){
+  const dateObject = new Date(timestamp);
+
+const year = dateObject.getFullYear();
+const month = dateObject.getMonth() + 1; // Note: Months are zero-based, so we add 1 to get the correct month number.
+const day = dateObject.getDate();
+
+const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+return formattedDate;
 }
 
 

@@ -1775,10 +1775,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let order of posOrders | paginate: { itemsPerPage: 10, currentPage: page }">
+                    <tr *ngFor="let order of posOrders">
+                    <!-- <tr *ngFor="let order of posOrders | paginate: { itemsPerPage: 10, currentPage: page }"> -->
                         <!-- <td>{{order.index}}</td> -->
                         <td>{{order.id}}</td>
-                        <td>{{order.date}}</td>
+                        <td>{{getDateForOrders(order.date)}}</td>
                         <td>{{order.customer.name}}</td>
                         <td>{{order.customer.mobile_no}}</td>
                         <td>{{order.total_amount}}</td>
@@ -1792,11 +1793,11 @@
             </table>
             
         </div>
-        <div class="modal-footer mt-5">
-            <div class="col-sm-12">
+        <div class="modal-footer">
+            <!-- <div class="col-sm-12">
                 <pagination-controls (pageChange)="page = $event"></pagination-controls>
 
-            </div>
+            </div> -->
           <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
           <button type="button" class="btn btn-dark modal1BtnPos" data-bs-dismiss="modal">Close</button>
         </div>
@@ -2581,7 +2582,7 @@ Payment Account is required.
                         <label class="d-block">Select Payment Type</label>
                                 <div class="radio-payments-modal-wrapper d-flex justify-content-around">
                                     <div class="form-check" *ngFor="let option of paymentType">
-                                        <input class="form-check-input" type="radio" formControlName="payment_type" [disabled]="option.value === 'Against Bill' ? true : false" [value]="option.value">
+                                        <input class="form-check-input" type="radio" formControlName="payment_type" [value]="option.value">
                                         <label class="form-check-label">{{option.label}}</label>
                                     </div>
                                 </div>
