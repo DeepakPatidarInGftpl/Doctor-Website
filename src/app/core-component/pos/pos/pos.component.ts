@@ -1764,6 +1764,15 @@ export class PosComponent implements OnInit {
             clicking.click();
             this.expensePaymentForm.reset();
             this.expense_nongst.setValue(false);
+            this.cartService.getExpensePayments().subscribe({
+              next: (response) => {
+                console.log(response, 'expense payments')
+                this.expensePayments = response;
+              },
+              error: (error) => {
+                console.log('expense payments', error);
+              }
+            })
           } else {
             this.toastr.error(response.msg);
           }
@@ -1917,6 +1926,15 @@ export class PosComponent implements OnInit {
             var clicking = <HTMLElement>document.querySelector('.purchaseModalClose');
             clicking.click();
             this.purchasePaymentForm.reset();
+            this.cartService.getPurchasePayments().subscribe({
+              next: (response) => {
+                console.log(response, 'purchase payments')
+                this.purchasePayments = response;
+              },
+              error: (error) => {
+                console.log('purchase payments', error);
+              }
+            })
           } else {
             this.toastr.error(response.msg);
           }
@@ -2070,6 +2088,15 @@ export class PosComponent implements OnInit {
             var clicking = <HTMLElement>document.querySelector('.salesModalClose');
             clicking.click();
             this.salesPaymentForm.reset();
+            this.cartService.getSalesPayments().subscribe({
+              next: (response) => {
+                console.log(response, 'sales payments')
+                this.salesPayments = response;
+              },
+              error: (error) => {
+                console.log('sales payments', error);
+              }
+            })
           } else {
             this.toastr.error(response.msg);
           }
@@ -2147,6 +2174,15 @@ export class PosComponent implements OnInit {
             var clicking = <HTMLElement>document.querySelector('.payLaterModalClose');
             clicking.click();
             this.payLaterMethodForm.reset();
+            this.cartService.getPOSOrders().subscribe({
+              next: (response) => {
+                console.log(response, 'pos orders')
+                this.posOrders = response;
+              },
+              error: (error) => {
+                console.log('pos orders', error);
+              }
+            })
           } else {
             this.toastr.error(response.msg);
           }
@@ -2314,6 +2350,15 @@ export class PosComponent implements OnInit {
             var clicking = <HTMLElement>document.querySelector('.bankModalClose');
             clicking.click();
             this.bankPaymentMethodForm.reset();
+            this.cartService.getPOSOrders().subscribe({
+              next: (response) => {
+                console.log(response, 'pos orders')
+                this.posOrders = response;
+              },
+              error: (error) => {
+                console.log('pos orders', error);
+              }
+            })
           } else {
             this.toastr.error(response.msg);
           }
@@ -2399,6 +2444,15 @@ export class PosComponent implements OnInit {
             var clicking = <HTMLElement>document.querySelector('.upiModalClose');
             clicking.click();
             this.upiPaymentMethodForm.reset();
+            this.cartService.getPOSOrders().subscribe({
+              next: (response) => {
+                console.log(response, 'pos orders')
+                this.posOrders = response;
+              },
+              error: (error) => {
+                console.log('pos orders', error);
+              }
+            })
           } else {
             this.toastr.error(response.msg);
           }
@@ -2466,6 +2520,15 @@ export class PosComponent implements OnInit {
             this.toastr.success(response.msg)
             var clicking = <HTMLElement>document.querySelector('.cashModalClose');
             clicking.click();
+            this.cartService.getPOSOrders().subscribe({
+              next: (response) => {
+                console.log(response, 'pos orders')
+                this.posOrders = response;
+              },
+              error: (error) => {
+                console.log('pos orders', error);
+              }
+            })
           } else {
             this.toastr.error(response.msg);
           }
