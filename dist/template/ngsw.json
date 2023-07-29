@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1690635904229,
+  "timestamp": 1690636709572,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -343,6 +343,7 @@
         "/assets/css/style.css",
         "/assets/css/style.css.map",
         "/assets/dummy/Wavy_Tech-31_Single-04.jpg",
+        "/assets/dummy/fevicon.png",
         "/assets/dummy/pos.png",
         "/assets/dummy/profile.png",
         "/assets/fonts/CircularStd-Black.woff",
@@ -1909,6 +1910,7 @@
     "/assets/css/style.css": "c25a41e86eb7eb0ac2d4841c0ef8d9f27849083c",
     "/assets/css/style.css.map": "c1b930c1c7f22461ee95569f0208c0b329f0b11d",
     "/assets/dummy/Wavy_Tech-31_Single-04.jpg": "6d4902f92f5562604b203a5d197b82f444363a4e",
+    "/assets/dummy/fevicon.png": "47f671155f054a89c9a5ac36a86254f23aec5721",
     "/assets/dummy/pos.png": "a1a7914e64ff5e86b87e1aeef61f15f21775e5cb",
     "/assets/dummy/profile.png": "7a8ee61469eea0cee535a42e82f6937c306887a0",
     "/assets/fonts/CircularStd-Black.woff": "6fd706fba3c0fc3b8362b49dfba01f96331c587c",
@@ -3159,7 +3161,7 @@
     "/common.b16eff05123233ba.js": "6a1b05f432a131cb2730802aafdb94b3849fac64",
     "/dropdown.b04cd744b8bb66d5.svg": "5a1f186f9c396071fd205cc8a450ad65de8a003d",
     "/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "/index.html": "c0312e9ca9eed1c32279a2142b3992acaa4266d1",
+    "/index.html": "d590733be1bb37e63d76a212e9ec573e51400700",
     "/main.51485bbf01a7bf84.js": "58686f6ac5634f225a371cded43d3e5a3d4a03a2",
     "/manifest.webmanifest": "d9c46688b18468652a6e5db1079fcb82f3b4d701",
     "/polyfills.841391b4227771b9.js": "66d17376a46c4789a37f53cfd65fa366328c1468",
