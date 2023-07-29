@@ -179,6 +179,10 @@ mat-form-field {
   margin-bottom: 40px;
 }
 
+.cdk-overlay-container {
+  z-index: 10000;
+}
+
 .center-textt {
   text-align: center;
 }
