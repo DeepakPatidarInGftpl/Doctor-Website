@@ -73,18 +73,18 @@ const routes: Routes = [
     loadChildren: () => import('./detail-customer/detail-customer.module').then((m) => m.DetailCustomerModule)
   },
 
-  {
-    path: 'user',
-    loadChildren: () => import('./user/user.module').then((m) => m.UserModule)
-  },
-  {
-    path: 'addUser',
-    loadChildren: () => import('./add-user/add-user.module').then((m) => m.AddUserModule)
-  },
-  {
-    path: 'updateUser/:id',
-    loadChildren: () => import('./update-user/update-user.module').then((m) => m.UpdateUserModule)
-  },
+  // {
+  //   path: 'user',
+  //   loadChildren: () => import('./user/user.module').then((m) => m.UserModule)
+  // },
+  // {
+  //   path: 'addUser',
+  //   loadChildren: () => import('./add-user/add-user.module').then((m) => m.AddUserModule)
+  // },
+  // {
+  //   path: 'updateUser/:id',
+  //   loadChildren: () => import('./update-user/update-user.module').then((m) => m.UpdateUserModule)
+  // },
   {
     path: 'transport',
     loadChildren: () => import('./transport/transport.module').then((m) => m.TransportModule)

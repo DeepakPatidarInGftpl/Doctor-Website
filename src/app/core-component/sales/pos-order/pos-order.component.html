@@ -59,15 +59,17 @@
                             </label>
                             <i class="fa fa-sort"></i>
                         </th>
+                        <th (click)="sort('id')" class="thone">User id<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Customer<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Mode <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Total Amount<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Total Tax <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Due Amount <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">GST <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">SCFST<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supply GST<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supply State <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Customer<i class="fa fa-sort"></i></th>
+                       
+                        <th (click)="sort('id')" class="thone">Total Tax <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Total Amount<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
@@ -82,21 +84,23 @@
                             </label>
                         </td>
                         <td class="productimgname">
-                            <a routerLink="//sales/posOrderDetails/{{products.id}}" style="line-height: 3;">{{products.payment_mode}}</a>
+                            <a routerLink="//poss/posOrderDetails/{{products.id}}" style="line-height: 3;">{{products.id}}</a>
                         </td>
-                        <td>{{products.total_amount}}</td>
-                        <td>{{products.total_tax}}</td>
+                        <td>{{products.customer.name}}</td>
+                       <td>{{products.payment_mode}}</td>
                         <td>{{products.dueAmount}}</td>
                         <td>{{products.get_gst}}</td>
                         <td>{{products.get_scgst}}</td>
                         <td>{{products.place_of_supply_gst_code}}</td>
                         <td>{{products.place_of_supply_state}}</td>
-                        <td>{{products.customer.name}}</td>
+                        <td>{{products.total_tax}}</td>
+                        <td>{{products.total_amount}}</td>
+                       
                         <!-- <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td> -->
                         <td>
-                            <a class="me-1" routerLink="//sales/posOrderDetails/{{products.id}}">
+                            <a class="me-1" routerLink="//poss/posOrderDetails/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
                             <!-- <a class="me-1" routerLink="//contacts/updateDealer/{{products.id}}" *ngIf="isEdit">

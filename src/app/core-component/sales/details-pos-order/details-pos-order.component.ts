@@ -36,12 +36,7 @@ export class DetailsPosOrderComponent implements OnInit {
  vendorDetail: any
   getdata() {
     this.coreService.getPosOrderById(this.id).subscribe(res => {
-      res.map((res:any)=>{
-        if(this.id==res.id){
-          this.vendorDetail = res
-          console.log(this.vendorDetail); 
-        }
-      })
+      this.vendorDetail = res
     })
   }
 

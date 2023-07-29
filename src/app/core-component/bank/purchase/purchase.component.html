@@ -1,0 +1,328 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Purchase</h4>
+    </div>
+</div>
+<!-- /add -->
+<mat-tab-group>
+    <mat-tab label="Advance Payment"> 
+        <div class="card">
+            <div class="card-body">
+                <form [formGroup]="recieptAdvanceForm" (ngSubmit)="onSubmit()">
+                    <div class="row">  
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Payment Mode*</label>
+                                <select class="form-select" formControlName="payment_mode"
+                                    [ngClass]="{'is-invalid': f['payment_mode'].touched && f['payment_mode'].invalid}">
+                                    <option value="" selected disabled>Select Payment Mode</option>
+                                    <option value="Card">Card</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Bank">Bank</option>
+                                    <option value="UPI">UPI</option>
+                                </select>
+                                <span class="text-danger"
+                                    *ngIf="payment_mode && payment_mode.invalid && payment_mode.touched">Select Payment
+                                    Mode</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="form-group">
+                                <label>Party Name*</label>
+                                <mat-form-field class="w-100" style="padding: 0;
+                                width: 100%;
+                                min-width: 100%;border-top: none;">
+                                    <input type="text" placeholder="Search Party" aria-label="Party" matInput
+                                        [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
+                                        [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.name"
+                                            (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.name }}</mat-option>
+        
+                                        <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
+                                            <!-- <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
+                                                <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
+                                            </mat-option> -->
+                                            <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                        </ng-container>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select 
+                                    supplier
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Amount*</label>
+                                <input type="number" formControlName="amount" id="amount"
+                                    [ngClass]="{'is-invalid': f['amount'].touched && f['amount'].invalid}">
+                                <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span>
+                            </div>
+                        </div>
+                        <div *ngIf="f['payment_mode'].value === 'Card'">
+                            <div formGroupName="card_detail" class="row">
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Payment Account*</label>
+                                        <select class="form-select" formControlName="payment_account">
+                                            <option value="" selected disabled>Select Payment Account</option>
+                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                        </select>
+                                        <!-- <span class="text-danger"*ngIf="payment_account && payment_account.invalid && payment_account.touched">Select Bank</span> -->
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Bank Name*</label>
+                                        <input type="text" formControlName="customer_bank_name">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Card Holder Name*</label>
+                                        <input type="text" formControlName="card_holder_name">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Payment Amount*</label>
+                                        <input type="number" formControlName="card_payment_amount">
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Card Transactions no*</label>
+                                        <input type="text" formControlName="cart_transactions_no">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="f['payment_mode'].value === 'Bank'">
+                            <div formGroupName="bank_detail" class="row">
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Payment Account</label>
+                                        <select class="form-select" formControlName="payment_account">
+                                            <option value="" selected disabled>Select Payment Account</option>
+                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Account no</label>
+                                        <input type="text" formControlName="account_no">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="f['payment_mode'].value === 'UPI'">
+                            <div formGroupName="upi_detail" class="row">
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>UPI Id</label>
+                                        <input type="text" formControlName="upi_no">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Payment Account</label>
+                                        <select class="form-select" formControlName="payment_account">
+                                            <option value="" selected disabled>Select Payment Account</option>
+                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Description*</label>
+                                <textarea formControlName="description"
+                                    [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}"></textarea>
+                                <span class="text-danger"
+                                    *ngIf="description && description.invalid && description.touched">Enter description</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Submit</button>
+                            <a routerLink="//masters/companyBank" class="btn btn-cancel">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Against Bill"> 
+        <div class="card">
+            <div class="card-body">
+                <form [formGroup]="recieptAdvanceForm" (ngSubmit)="onAgainstSubmit()">
+                    <div class="row">  
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Payment Mode*</label>
+                                <select class="form-select" formControlName="payment_mode"
+                                    [ngClass]="{'is-invalid': f['payment_mode'].touched && f['payment_mode'].invalid}">
+                                    <option value="" selected disabled>Select Payment Mode</option>
+                                    <option value="Card">Card</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Bank">Bank</option>
+                                    <option value="UPI">UPI</option>
+                                </select>
+                                <span class="text-danger"
+                                    *ngIf="payment_mode && payment_mode.invalid && payment_mode.touched">Select Payment
+                                    Mode</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="form-group">
+                                <label>Party Name*</label>
+                                <mat-form-field class="w-100" style="padding: 0;
+                                width: 100%;
+                                min-width: 100%;border-top: none;">
+                                    <input type="text" placeholder="Search Party" aria-label="Party" matInput
+                                        [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
+                                        [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.name"
+                                            (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.name }}</mat-option>
+        
+                                        <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
+                                          
+                                            <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                        </ng-container>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select 
+                                    supplier
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Select Sales</label>
+                                    <select formControlName="bill_no" id="bill_no" [ngClass]="{'is-invalid': f['bill_no'].touched && f['bill_no'].invalid}" >
+                                        <option value="" selected disabled>Select sales</option>
+                                        <option value="{{sales.id}}" *ngFor="let sales of salesList">{{sales.dueAmount}}</option>
+                                    </select>
+                                <span class="text-danger" *ngIf="bill_no && bill_no.invalid && bill_no.touched && salesList?.length>=0"> Select Sales
+                                    </span>
+                                <span class="text-danger" *ngIf="salesList?.length<0">Sales not Available
+                                    </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Amount*</label>
+                                <input type="number" formControlName="amount" id="amount"
+                                    [ngClass]="{'is-invalid': f['amount'].touched && f['amount'].invalid}">
+                                <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span>
+                            </div>
+                        </div>
+
+                        <div *ngIf="f['payment_mode'].value === 'Card'">
+                            <div formGroupName="card_detail" class="row">
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Payment Account*</label>
+                                        <select class="form-select" formControlName="payment_account">
+                                            <option value="" selected disabled>Select Payment Account</option>
+                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                        </select>
+                                   </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Bank Name*</label>
+                                        <input type="text" formControlName="customer_bank_name">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Card Holder Name*</label>
+                                        <input type="text" formControlName="card_holder_name">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Payment Amount*</label>
+                                        <input type="number" formControlName="card_payment_amount">
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Card Transactions no*</label>
+                                        <input type="text" formControlName="cart_transactions_no">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="f['payment_mode'].value === 'Bank'">
+                            <div formGroupName="bank_detail" class="row">
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Payment Account</label>
+                                        <select class="form-select" formControlName="payment_account">
+                                            <option value="" selected disabled>Select Payment Account</option>
+                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Account no</label>
+                                        <input type="text" formControlName="account_no">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="f['payment_mode'].value === 'UPI'">
+                            <div formGroupName="upi_detail" class="row">
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>UPI Id</label>
+                                        <input type="text" formControlName="upi_no">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label>Payment Account</label>
+                                        <select class="form-select" formControlName="payment_account">
+                                            <option value="" selected disabled>Select Payment Account</option>
+                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Description*</label>
+                                <textarea formControlName="description"
+                                    [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}"></textarea>
+                                <span class="text-danger"
+                                    *ngIf="description && description.invalid && description.touched">Enter description</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Submit</button>
+                            <a routerLink="//masters/companyBank" class="btn btn-cancel">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </mat-tab>
+  </mat-tab-group>
+  
+
+<!-- /add -->

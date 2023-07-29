@@ -1651,7 +1651,8 @@ export class CoreService {
     return this.http.get(url)
   }
   getPosOrderById(id: number): Observable<any> {
-    let url = this.apiUrl + '/pv-api/pos/pos_orders/?id='
+    // let url = this.apiUrl + '/pv-api/pos/pos_orders/?id=';
+    let url = this.apiUrl+'/pv-api/pos/pos_order_detail/?order_id='
     return this.http.get<any>(`${url}${id}`)
   }
   PosOrderIsActive(id: any, data) {

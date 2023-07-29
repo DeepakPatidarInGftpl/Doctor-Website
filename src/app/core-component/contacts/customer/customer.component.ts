@@ -137,15 +137,15 @@ export class CustomerComponent implements OnInit {
     if (localStorageData && localStorageData.permission) {
       const permission = localStorageData.permission;
       permission.map((res: any) => {
-        if (res.content_type.app_label === 'master'  && res.content_type.model === 'customer' && res.codename=='add_customer') {
+        if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'customer' && res.codename=='add_customer') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
           
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'customer' && res.codename=='change_customer') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename=='change_customer') {
           this.isEdit = res.codename;
           console.log(this.isEdit);
           
-        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'customer' && res.codename=='delete_customer') {
+        }else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename=='delete_customer') {
           this.isDelete = res.codename;
           console.log(this.isDelete);
           

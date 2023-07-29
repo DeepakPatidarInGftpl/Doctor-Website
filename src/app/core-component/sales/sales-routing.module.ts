@@ -57,18 +57,26 @@ const routes: Routes = [
             (m) => m.SalesDetailsModule
           ),
       },
+      // {
+      //   path: 'posOrder',
+      //   loadChildren: () =>
+      //     import('./pos-order/pos-order.module').then(
+      //       (m) => m.PosOrderModule
+      //     ),
+      // },
+      // {
+      //   path: 'posOrderDetails/:id',
+      //   loadChildren: () =>
+      //     import('./details-pos-order/details-pos-order.module').then(
+      //       (m) => m.DetailsPosOrderModule
+      //     ),
+      // },
+  
       {
-        path: 'posOrder',
+        path: 'reciept',
         loadChildren: () =>
-          import('./pos-order/pos-order.module').then(
-            (m) => m.PosOrderModule
-          ),
-      },
-      {
-        path: 'posOrderDetails/:id',
-        loadChildren: () =>
-          import('./details-pos-order/details-pos-order.module').then(
-            (m) => m.DetailsPosOrderModule
+          import('./reciept/reciept.module').then(
+            (m) => m.RecieptModule
           ),
       },
     ],

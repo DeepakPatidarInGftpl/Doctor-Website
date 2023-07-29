@@ -169,24 +169,35 @@ select=false
     }
   }
  
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     const searchTerm = this.titlee.toLocaleLowerCase();
+  //     this.tableData = this.tableData.filter(res => {
+  //       const nameLower = res?.customer?.name.toLocaleLowerCase();
+  //       const companyNameLower = res.id.toString().toLocaleLowerCase();
+  //       if (nameLower.match(searchTerm)) {
+  //         return true;
+  //       } else if (companyNameLower.match(searchTerm)) {
+  //         return true;
+  //       }
+  //       return false;
+  //     });
+  //   }
+  // }
+
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase();
+      const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.name.toLocaleLowerCase();
-        const companyNameLower = res.company_name.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)) {
-          return true;
-        } else if (companyNameLower.match(searchTerm)) {
-          return true;
-        }
-        return false;
+        const nameLower = res.id.toString().toLocaleLowerCase(); 
+        return nameLower.includes(searchTerm); 
       });
     }
   }
-
   key = 'id'
   reverse: boolean = false;
   sort(key) {
