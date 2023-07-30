@@ -2132,8 +2132,8 @@ export class PosComponent implements OnInit {
         "discount": 0,
         "add_discount": 0,
         "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
-        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
+        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
         "remarks": "",
         "tax_percentage": element?.batch[0]?.sale_tax
       };
@@ -2151,10 +2151,10 @@ export class PosComponent implements OnInit {
     console.log(cartData, 'cash', pay_later_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
-    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
+    formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
     formData.append('payment_mode', 'Paylater');
-    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('total_tax', JSON.stringify(parseInt(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
@@ -2224,8 +2224,8 @@ export class PosComponent implements OnInit {
         "discount": 0,
         "add_discount": 0,
         "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
-        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
+        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
         "remarks": "",
         "tax_percentage": element?.batch[0]?.sale_tax
       };
@@ -2245,10 +2245,10 @@ export class PosComponent implements OnInit {
     console.log(cartData, 'cash');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
-    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
+    formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
     formData.append('payment_mode', 'Card');
-    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('total_tax', JSON.stringify(parseInt(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', JSON.stringify(card_data));
     formData.append('Multipay', '');
@@ -2309,8 +2309,8 @@ export class PosComponent implements OnInit {
         "discount": 0,
         "add_discount": 0,
         "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
-        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
+        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
         "remarks": "",
         "tax_percentage": element?.batch[0]?.sale_tax
       };
@@ -2327,10 +2327,10 @@ export class PosComponent implements OnInit {
     console.log(cartData, 'cash', bank_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
-    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
+    formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
     formData.append('payment_mode', 'Bank');
-    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('total_tax', JSON.stringify(parseInt(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
@@ -2403,8 +2403,8 @@ export class PosComponent implements OnInit {
         "discount": 0,
         "add_discount": 0,
         "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity),
+        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
+        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
         "remarks": "",
         "tax_percentage": Number(element?.batch[0]?.sale_tax)
       };
@@ -2424,7 +2424,7 @@ export class PosComponent implements OnInit {
     formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
     formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
     formData.append('payment_mode', 'UPI');
-    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('total_tax', JSON.stringify(parseInt(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
@@ -2486,8 +2486,8 @@ export class PosComponent implements OnInit {
         "discount": 0,
         "add_discount": 0,
         "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": this.getNetAmount(element?.batch[0], element?.quantity),
-        "tax_amount": (this.getTaxAmt(element.batch[0])) * element.quantity,
+        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
+        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
         "remarks": "",
         "tax_percentage": element?.batch[0]?.sale_tax
       };
@@ -2497,10 +2497,10 @@ export class PosComponent implements OnInit {
     console.log(cartData, 'cash');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(this.currentTotalAdditionalCharges()));
-    formData.append('total_amount', JSON.stringify(this.totalAmount()));
+    formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
+    formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
     formData.append('payment_mode', 'Cash');
-    formData.append('total_tax', JSON.stringify(Number(this.totalTaxAmount())));
+    formData.append('total_tax', JSON.stringify(parseInt(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
