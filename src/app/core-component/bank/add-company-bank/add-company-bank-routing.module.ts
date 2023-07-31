@@ -7,16 +7,18 @@ const localStorageData = JSON.parse(localStorage.getItem('auth'));
 let allowedRoles;
 if (localStorageData && localStorageData.permission) {
   const permission = localStorageData.permission;
-  permission.map((res:any)=>{
-    if(res.content_type.app_label === 'pos' && res.content_type.model === 'companybank' && res.codename == 'add_companybank'){
-      allowedRoles=res.codename;
-      console.log(allowedRoles);  
+  permission.map((res: any) => {
+    if (res.content_type.app_label === 'pos' && res.content_type.model === 'companybank' && res.codename == 'add_companybank') {
+      allowedRoles = res.codename;
+      console.log(allowedRoles);
     }
   });
 }
 const routes: Routes = [
-  {path:'',component:AddCompanyBankComponent,canActivate: [RolesGuardGuard], 
-  data: { allowedRoles: [allowedRoles] }}
+  {
+    path: '', component: AddCompanyBankComponent, canActivate: [RolesGuardGuard],
+    data: { allowedRoles: [allowedRoles] }
+  }
 ];
 
 @NgModule({

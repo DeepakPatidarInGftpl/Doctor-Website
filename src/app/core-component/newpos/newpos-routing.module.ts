@@ -5,14 +5,14 @@ const routes: Routes = [
     {
         path: 'posOrder',
         loadChildren: () =>
-          import('../sales/pos-order/pos-order.module').then(
+          import('./pos-order/pos-order.module').then(
             (m) => m.PosOrderModule
           ),
       },
       {
         path: 'posOrderDetails/:id',
         loadChildren: () =>
-          import('../sales/details-pos-order/details-pos-order.module').then(
+          import('./details-pos-order/details-pos-order.module').then(
             (m) => m.DetailsPosOrderModule
           ),
       },
