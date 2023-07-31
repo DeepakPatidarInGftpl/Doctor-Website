@@ -2950,15 +2950,21 @@ Payment Account is required.
                             <thead>
                                 <tr>
                                     <th>Receipt No.</th>
+                                    <th>Party Name</th>
+                                    <th>Branch Name</th>
                                     <th>Non-GST</th>
                                     <th>Amount</th>
+                                    <th>Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let order of expensePayments">
                                     <td>{{order?.id}}</td>
+                                    <td>{{order?.party?.name}}</td>
+                                    <td>{{order?.payment_account?.branch_name}}</td>
                                     <td>{{order?.non_gst}}</td>                                                        
                                     <td>{{order?.amount}}</td>
+                                    <td>{{order?.remarks}}</td>
                                 </tr>
                                 
                             </tbody>
