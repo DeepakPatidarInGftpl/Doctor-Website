@@ -294,12 +294,12 @@
                                                         <button type="button" class="btn btn-dark w-100"> 
                                                             <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                                                 UPI&Print(F10)</button>
-                                                                <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#posPaymentsModal">  
+                                                                <button type="button" class="btn btn-dark w-100">  
                                                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
-                                                                        Card&Print(F9)</button>
+                                                                        Cash&Print(F8)</button>
                                                                         <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#bankMethodModal"> 
                                                                             <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
-                                                                                Cash&Print(F8)</button>
+                                                                                Bank</button>
                             </div>
                         </div>
                     </div>
@@ -381,9 +381,10 @@
                                     <i class="fas fa-pause"></i>
                                         Hold Bill</button> 
                             </li>
+                            
                             <li>
-                                <button type="button" class="btn-pos"> 
-                                    <i class="fa fa-th-list" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
+                                <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#posPaymentsModal"> 
+                                    <i class="fa fa-cash-register" data-bs-toggle="tooltip" title="fa fa-th-list"></i>
                                         Payments</button> 
                             </li>
                             <!-- <li>
@@ -393,18 +394,18 @@
                             </li> -->
                             <li>
                                 <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#expenseModal"> 
-                                    <i class="fas fa-pause"></i>
+                                    <i class="fas fa-money-check" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
                                         Expense</button> 
                             </li>
                             <li>
                                 <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#salesModal"> 
-                                    <i class="fas fa-pause"></i>
-                                        Sales</button> 
+                                    <i class="fas fa-receipt" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
+                                        Receipts</button> 
                             </li>
                             <li>
                                 <button type="button" class="btn-pos" data-bs-toggle="modal" data-bs-target="#purchaseModal"> 
-                                    <i class="fas fa-pause"></i>
-                                        Purchase</button> 
+                                    <i class="fas fa-money-bill" data-bs-toggle="tooltip" title="fas fa-money-bill"></i>
+                                        Payments</button> 
                             </li>
                             <li>
                                 <button type="button" class="btn-pos"> 
@@ -2950,15 +2951,21 @@ Payment Account is required.
                             <thead>
                                 <tr>
                                     <th>Receipt No.</th>
+                                    <th>Party Name</th>
+                                    <th>Branch Name</th>
                                     <th>Non-GST</th>
                                     <th>Amount</th>
+                                    <th>Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let order of expensePayments">
                                     <td>{{order?.id}}</td>
+                                    <td>{{order?.party?.name}}</td>
+                                    <td>{{order?.payment_account?.branch_name}}</td>
                                     <td>{{order?.non_gst}}</td>                                                        
                                     <td>{{order?.amount}}</td>
+                                    <td>{{order?.remarks}}</td>
                                 </tr>
                                 
                             </tbody>
