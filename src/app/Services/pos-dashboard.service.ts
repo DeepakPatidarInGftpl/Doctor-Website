@@ -237,4 +237,25 @@ export class PosDashboardService {
     let url = this.apiUrl + '/pv-api/pos/receipt_due_order/?customer_id=';
     return this.http.get(`${url}${id}`);
   }
+  getRecipt(){
+    let url = this.apiUrl+'/pv-api/pos/all_receipts/';
+    return this.http.get(url)
+  }
+  getPurchase(){
+    let url = this.apiUrl+'/pv-api/pos/all_payments/';
+    return this.http.get(url)
+  }
+  getPurchaseById(id:any){
+    let url = this.apiUrl+'/pv-api/pos/all_payments?id=';
+    return this.http.get(`${url}${id}`)
+  }
+  getExpense(){
+    let url = this.apiUrl+'/pv-api/pos/expance/';
+    return this.http.get(url)
+  }
+  deleteExpence(id: number){
+    let url = this.apiUrl + '/pv-api/pos/expance/?id=';
+    return this.http.delete(`${url}${id}`)
+
+  }
 }
