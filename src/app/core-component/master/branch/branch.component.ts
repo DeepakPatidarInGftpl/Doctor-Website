@@ -338,9 +338,11 @@ loaders=false;
       if (id == res.id) {
         this.addForm = false;
         this.branchForm.patchValue(res);
-        this.branchForm.get('country')?.patchValue(res.country.id)
-        this.branchForm.get('state')?.patchValue(res.state.id)
-        this.branchForm.get('city')?.patchValue(res.city.id)
+        this.branchForm.get('country')?.patchValue(res.country)
+        this.selectState(res?.country)
+        this.branchForm.get('state')?.patchValue(res.state)
+        this.selectCity(res?.state)
+        this.branchForm.get('city')?.patchValue(res.city)
         this.editFormdata = res
       }
     })
