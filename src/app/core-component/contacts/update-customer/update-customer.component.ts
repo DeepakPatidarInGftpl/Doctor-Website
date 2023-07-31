@@ -73,10 +73,8 @@ export class UpdateCustomerComponent implements OnInit {
    // updated data
    updateAddress(add: any[]): FormArray {
     const formArr = new FormArray([]);
-
     add.forEach((j: any) => {
       console.log(j);
-
       const addressGroup = this.fb.group({
         address_line_1: j.address_line_1,
         address_line_2: j.address_line_2,
@@ -86,19 +84,16 @@ export class UpdateCustomerComponent implements OnInit {
         pincode: j.pincode,
         address_type: j.address_type
       });
-
       formArr.push(addressGroup);
     });
 
     formArr.controls.forEach((control, index) => {
       const countryId = control.get('country').value;
-
       control.get('country').valueChanges.subscribe((newCountryId) => {
         this.selectedState(newCountryId, index);
         control.get('state').setValue(null); // Reset state value when country changes
         control.get('city').setValue(null); // Reset city value when country changes
       });
-
       control.get('state').valueChanges.subscribe((newStateId) => {
         this.selectedCity(newStateId, index);
         control.get('city').setValue(null); // Reset city value when state changes
@@ -113,7 +108,6 @@ export class UpdateCustomerComponent implements OnInit {
       this.selectedState(countryId, index);
       this.selectedCity(stateId, index);
     });
-
     return formArr;
   }
   
@@ -259,14 +253,19 @@ export class UpdateCustomerComponent implements OnInit {
         }else{
           this.loader=false
           this.toastr.error(this.addRes.error)
+          // if(this.addRes.error== "'NoneType' object has no attribute 'name'"){
+          //   this.router.navigate(['//contacts/customer'])
+          // } 
           this.toastr.error(this.addRes?.opening_balance[0]);
           if(this.addRes?.email){
             this.toastr.error(this.addRes?.email[0])
-          }}
+          } 
+        }
       }, err => {
         this.loader=false;
-        console.log(err.error.gst);
-        if(err.error.msg){
+        if(err.error.error== "'NoneType' object has no attribute 'name'"){
+          this.router.navigate(['//contacts/customer'])
+        } else if(err.error.msg){
           this.toastr.error(err.error.msg)
         }
 

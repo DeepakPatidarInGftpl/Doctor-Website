@@ -30,7 +30,7 @@ export class AddEmployeeComponent implements OnInit {
       anniversary: new FormControl('',),
       apply_tds: new FormControl(''),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
-      credit_limit: new FormControl(''),
+      credit_limit: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
       commision: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
@@ -236,10 +236,10 @@ export class AddEmployeeComponent implements OnInit {
         // console.log(err.error.gst);
         if(err.error.msg){
           this.toastr.error(err.error.msg)
-        }else if(err.error.detail){
-          this.toastr.error(err.error.detail)
         }
-        else if (err.error.dob) {
+        else if(err.error.detail){
+          this.toastr.error(err.error.detail,'details')
+        } else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
             this.dateError = ''

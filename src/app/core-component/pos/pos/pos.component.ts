@@ -1694,6 +1694,7 @@ export class PosComponent implements OnInit {
       // this.currentOrderAdditionalCharges = [];
       // this.currentCustomer = null;
       this.discardCurrentBill();
+      this.customerAutoCompleteControl.setValue('');
     }
     } else {
       this.toastr.error("Please Items To Cart!");
@@ -2151,16 +2152,17 @@ export class PosComponent implements OnInit {
     console.log(cartData, 'cash', pay_later_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
+    formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
     formData.append('payment_mode', 'Paylater');
-    formData.append('total_tax', JSON.stringify(parseInt(this.totalTaxAmount().toString())));
+    formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
     formData.append('PayLatter', JSON.stringify(pay_later_data));
     formData.append('bank_detail', '');
     formData.append('upi_detail', '');
+
 
     this.cartService
      .generateOrderNew(formData)
@@ -2245,10 +2247,10 @@ export class PosComponent implements OnInit {
     console.log(cartData, 'cash');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
+    formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
     formData.append('payment_mode', 'Card');
-    formData.append('total_tax', JSON.stringify(parseInt(this.totalTaxAmount().toString())));
+    formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', JSON.stringify(card_data));
     formData.append('Multipay', '');
@@ -2327,10 +2329,10 @@ export class PosComponent implements OnInit {
     console.log(cartData, 'cash', bank_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
+    formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
     formData.append('payment_mode', 'Bank');
-    formData.append('total_tax', JSON.stringify(parseInt(this.totalTaxAmount().toString())));
+    formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
@@ -2421,10 +2423,10 @@ export class PosComponent implements OnInit {
     console.log(cartData, 'cash', upi_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
+    formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
     formData.append('payment_mode', 'UPI');
-    formData.append('total_tax', JSON.stringify(parseInt(this.totalTaxAmount().toString())));
+    formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
@@ -2497,10 +2499,10 @@ export class PosComponent implements OnInit {
     console.log(cartData, 'cash');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(parseInt(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(parseInt(this.totalAmount().toString())));
+    formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
     formData.append('payment_mode', 'Cash');
-    formData.append('total_tax', JSON.stringify(parseInt(this.totalTaxAmount().toString())));
+    formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
     formData.append('card_detail', '');
     formData.append('Multipay', '');
@@ -2555,6 +2557,12 @@ const day = dateObject.getDate();
 
 const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
 return formattedDate;
+}
+
+getNumberInDecimalPlaces(stringValue:any){
+const floatValue = parseFloat(stringValue);
+const roundedNumber = Math.round(floatValue * 100) / 100;
+return roundedNumber;
 }
 
 
