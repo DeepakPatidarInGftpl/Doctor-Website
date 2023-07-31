@@ -225,6 +225,33 @@ export class PosCartService {
     })
   }
 
+  getExpensePayments(){
+    let url = this.apiUrl + '/pv-api/pos/expance/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getPurchasePayments(){
+    let url = this.apiUrl + '/pv-api/pos/all_payments/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
+  getSalesPayments(){
+    let url = this.apiUrl + '/pv-api/pos/all_receipts/';
+    return this.http.get(url, {
+      headers: new HttpHeaders({
+        'Authorization': 'token ' + `${localStorage.getItem('token')}`
+      })
+    })
+  }
+
   getReceiptDueOrder(id:any){
     let url = this.apiUrl + '/pv-api/pos/receipt_due_order/?customer_id='+ id;
     return this.http.get(url, {

@@ -100,9 +100,8 @@ export class SidebarOneComponent implements OnInit {
   isPaymentTerms:any;
   isPermissionGroup:any;
 //pos
-
 isPosOrder:any;
-
+isReciept:any;
   ngOnInit(): void {
     this.LoadScript("assets/js/sidebar.js")
 
@@ -132,14 +131,13 @@ isPosOrder:any;
         else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'view_supplier') {
           this.isSupplier = res.codename;
           console.log(this.isSupplier);
-          
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'customer' && res.codename == 'view_customer') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename == 'view_customer') {
           this.isCustomer = res.codename
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'user' && res.codename == 'view_user') {
           this.isUser = res.codename
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'transport' && res.codename == 'view_transport') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename == 'view_transport') {
           this.isTransport = res.codename
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'vendor' && res.codename == 'view_vendor') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename == 'view_vendor') {
           this.isVendor = res.codename
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename == 'view_dealer') {
           this.isDealer = res.codename
@@ -244,6 +242,9 @@ isPosOrder:any;
         //pos
        else if (res.content_type.app_label === 'pos' && res.content_type.model === 'posorder' && res.codename == 'view_posorder') {
           this.isPosOrder = res.codename;
+        }
+        else if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'view_receipt') {
+          this.isReciept = res.codename;
         }
       });
     }

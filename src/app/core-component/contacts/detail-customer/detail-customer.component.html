@@ -16,129 +16,137 @@
 <mat-tab-group animationDuration="0ms">
     <mat-tab label="General Details">
         <div class="row">
-            <div class="col-lg-12 col-sm-12" >
-                <div class="card">
-                    <div class="card-body">
-                        <div class="productdetails">                  
-                            <ul class="product-bar">
-                                <li>
-                                    <h4>Name</h4>
-                                    <h6>Supplier</h6>
-                                </li>
-                                <li>
-                                    <h4>Company name</h4>
-                                    <h6>Parmod fashion</h6>
-                                </li>
-                                <li>
-                                    <h4>Date of Birth</h4>
-                                    <h6>10-2-2000</h6>
-                                </li>
-                                <li>
-                                    <h4>Anniversary</h4>
-                                    <h6>10-05-1997</h6>
-                                </li>
-                                <li>
-                                    <h4>Mobile Number</h4>
-                                    <h6>1234567890</h6>
-                                </li>
-                                <li>
-                                    <h4>Telephone Number</h4>
-                                    <h6>1234561230</h6>
-                                </li>
-                                <li>
-                                    <h4>WhatsApp Number</h4>
-                                    <h6>1020304050</h6>
-                                </li>
-                                <li>
-                                    <h4>Email</h4>
-                                    <h6>abc@gmail.com</h6>
-                                </li>
-                                <li>
-                                    <h4>Remark</h4>
-                                    <h6>remark</h6>
-                                </li>
-                                <li>
-                                    <h4>GST Type</h4>
-                                    <h6>Commerical</h6>
-                                </li>
-                                <li>
-                                    <h4>GSTIN</h4>
-                                    <h6>1236bghgjj123bb</h6>
-                                </li>
-                                <li>
-                                    <h4>Apply TDS</h4>
-                                    <h6>True</h6>
-                                </li>
-                                <li>
-                                    <h4>Pan card</h4>
-                                    <h6>12345abcde5</h6>
-                                </li>
-                                <li>
-                                    <h4>Credit Limit</h4>
-                                    <h6>12000</h6>
-                                </li>
-                                <li>
-                                    <h4>Payment Terms</h4>
-                                    <h6>online</h6>
-                                </li>
-                                <li>
-                                    <h4>Opening Balance</h4>
-                                    <h6>12000</h6>
-                                </li>
-                                <li>
-                                    <h4>Invite Code</h4>
-                                    <h6>Others</h6>
-                                </li>
-                                <li>
-                                    <h4>Membership</h4>
-                                    <h6>Others</h6>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center mx-4">
-                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                        <!-- <span [ngClass]="{'bg-lightgreen': employeeDetails.is_active === true, 'bg-lightred' : employeeDetails.is_active === false,'bg-lightyellow' : employeeDetails.is_active === 'Partial' }"
-                                            class="badges">{{employeeDetails.is_active}}</span> -->
+            <div class="col-lg-12 col-sm-12">
+                <div class="card-body">
+                    <div class="productdetails">
+                        <ul class="product-bar">
+                            <li>
+                                <h4>Name</h4>
+                                <h6>{{productDetail?.name}}</h6>
+                            </li>
+                            <li>
+                                <h4>Company name</h4>
+                                <h6>{{productDetail?.company_name }}</h6>
+                            </li>
+                            <li>
+                                <h4>Mobile no</h4>
+                                <h6>{{productDetail?.mobile_no}}</h6>
+                            </li>
+                            <li>
+                                <h4>Telephone no</h4>
+                                <h6>{{productDetail?.telephone_no }}</h6>
+                            </li>
+                            <li>
+                                <h4>Whatsapp no</h4>
+                                <h6>{{productDetail?.whatsapp_no }}</h6>
+                            </li>
+                            <li>
+                                <h4>Userid</h4>
+                                <h6>{{productDetail?.userid }}</h6>
+                            </li>
+                            <li>
+                                <h4>Email</h4>
+                                <h6>{{productDetail?.email}}</h6>
+                            </li>
+                            <li>
+                                <h4>whatsapp no</h4>
+                                <h6>{{productDetail?.whatsapp_no}}</h6>
+                            </li>
+                            <li>
+                                <h4>GST Type</h4>
+                                <h6>{{productDetail?.gst_type}}</h6>
+                            </li>
+                            <li>
+                                <h4>GSTIN</h4>
+                                <h6>{{productDetail?.gstin}}</h6>
+                            </li>
+                            <li>
+                                <h4>Opening balance</h4>
+                                <h6>{{productDetail?.opening_balance_type + ':'+ productDetail?.opening_balance}}</h6>
+                            </li>
+                            <li>
+                                <h4>Pan no</h4>
+                                <h6>{{productDetail?.pan_no }}</h6>
+                            </li>
+                            <li>
+                                <h4>Remark</h4>
+                                <h6>{{productDetail?.remark }}</h6>
+                            </li>
+                            <li>
+                                <h4>Invite code</h4>
+                                <h6>{{productDetail?.invite_code }}</h6>
+                            </li>
+                            <li>
+                                <h4>Userid</h4>
+                                <h6>{{productDetail?.userid }}</h6>
+                            </li>
+                            <li>
+                                <h4>Credit limit</h4>
+                                <h6>{{productDetail?.credit_limit }}</h6>
+                            </li>
+                            <li>
+                                <h4>Payment terms</h4>
+                                <h6>{{productDetail?.payment_terms}}</h6>
+                            </li>
+                           
+                            <li>
+                                <h4>Membership</h4>
+                                <h6>{{productDetail?.membership }}</h6>
+                            </li>
+                            <li>
+                                <h4>Date of birth</h4>
+                                <h6>{{productDetail?.date_of_birth | date:'fullDate'}}</h6>
+                            </li>
+                            <li>
+                                <h4>Anniversary date</h4>
+                                <h6>{{productDetail?.anniversary_date | date:'fullDate'}}</h6>
+                            </li>
+
+                        </ul>
                     </div>
                 </div>
+                <div class="d-flex align-items-center mx-4">
+                    <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                    <span [ngClass]="{'bg-lightgreen': productDetail.is_active === true, 'bg-lightred' : productDetail.is_active === false,'bg-lightyellow' : productDetail.is_active === 'Partial' }"
+                                        class="badges">{{productDetail.is_active}}</span>
+                </div>
             </div>
-          </div>
+        </div>
     </mat-tab>
     <mat-tab label="Address">
         <div class="row">
             <div class="col-lg-12 col-sm-12" >
-                <div class="card">
+                <div class="card" *ngFor="let address of productDetail.address">
                     <div class="card-body">
                         <div class="productdetails">                  
                             <ul class="product-bar">
                                 <li>
                                     <h4>Address Line 1</h4>
-                                    <h6>New Delhi</h6>
+                                    <h6>{{address.address_line_1}}</h6>
                                 </li>
                                 <li>
                                     <h4>Address Line 2</h4>
-                                    <h6>Old Delhi</h6>
+                                    <h6>{{address.address_line_2}}</h6>
                                 </li>
                                 <li>
                                     <h4>Select Country</h4>
-                                    <h6>Indian</h6>
+                                    <h6>{{address?.country?.country_name}}</h6>
                                 </li>
                                 <li>
                                     <h4>Select State</h4>
-                                    <h6>Delhi</h6>
+                                    <h6>{{address?.state?.state}}</h6>
                                 </li>
                                 <li>
                                     <h4>Select City</h4>
-                                    <h6>Faridabd</h6>
+                                    <h6>{{address?.city?.city}}</h6>
                                 </li>
                                 <li>
                                     <h4>Pincode</h4>
-                                    <h6>120235</h6>
+                                    <h6>{{address.pincode}}</h6>
                                 </li>
                                 <li>
                                     <h4>Address Type</h4>
-                                    <h6>Billing</h6>
+                                    <h6>{{address.address_type}}</h6>
                                 </li>
                                
                             </ul>
