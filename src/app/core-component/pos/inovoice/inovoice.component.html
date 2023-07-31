@@ -1,0 +1,177 @@
+<div class="container py-10" style="margin-top: 30px">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>Invoice</h3>
+        <button class="btn btn-primary" (click)="printInvoice()">Download Invoice</button>
+    </div>
+    </div>
+
+ <div>
+    <div #invoice class="pad-10">
+        <div class="container-fluid sts pt-5 first-part">
+            <div class="row">
+                <div class="col-md-7">
+                    <h4>VasyERP</h4>
+                    <p>Synthesis The First, Corporate House, THE FIRST, AS, Nyay Marg near ITC Narmada.</p>
+                    <p>IIM, Vastrapur</p>
+                    <p>Ahmedabad - 380054</p>
+                    <p>Phone number: 1234567899</p>
+                    <p>Email: emai.vasyerp@gmail.com</p>
+                    <p>State: 24-Gujarat</p>
+                    <p>GSTIN No: 071AAGFF2194N1Z1</p>
+                    <p>FSSAI No: 12345678901234</p>
+                    <p>Website: www.vasyerp.com</p>
+                </div>
+                <div class="col-md-5">
+                    <img src="../../../../assets/logo/favicon_icon.png" class="logo">
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <h2 style="color: #ff6600;
+            font-weight: 700;">Tax Invoice</h2>
+        </div>
+        <br>
+        <div class="container-fluid hps">
+            <div class="row">
+                <div class="col-md-8">
+                    <h5>Bill To:</h5>
+                    <h5>c_first name c_last name</h5>
+                    <p>Address Other - 123456 Other India</p>
+                    <p>Contact no: 12345678900</p>
+                    <p>State: 37-Other</p>
+                </div>
+                <div class="col-md-4">
+                    <p>Place of supply : 37-Other</p>
+                    <h5>Invoice No: POS3644</h5>
+                    <h5>Date: 28-06-2023</h5>
+                </div>
+            </div>
+        </div>
+        <table id="first-table" style="margin-top:30px">
+            <tr class="todo">
+                <th>#</th>
+                <th>Item Name</th>
+                <th>HSN/SAC</th>
+                <th>Quantity</th>
+                <th>Price/Unit</th>
+                <th>Discount</th>
+                <th>Discount2</th>
+                <th>GST</th>
+                <th>Amount</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Item 1</td>
+                <td>123456</td>
+                <td>10</td>
+                <td>$10</td>
+                <td>5%</td>
+                <td>2%</td>
+                <td>41.37(18%)</td>
+                <td>285.00</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Item 2</td>
+                <td>789012</td>
+                <td>5</td>
+                <td>$20</td>
+                <td>10%</td>
+                <td>0%</td>
+                <td>41.37</td>
+                <td>285.00</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>Total</td>
+                <td>789012</td>
+                <td>5</td>
+                <td>$20</td>
+                <td>10%</td>
+                <td>0%</td>
+                <td>41.37</td>
+                <td>285.00</td>
+            </tr>
+        </table>
+        <br>
+        <div class="container-fluid just">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>INVOICE AMOUNT IN WORDS</h5>
+                    <p>Ruppes Three Hundred and Eighty Five Only</p>
+                    <h5>TERMS AND CONDITIONS</h5>
+                    <p>NO RETURN / NO EXCHANGE</p>
+                    <p>Please Check items before leave store</p>
+                    <p>dasdasdasd</p>
+                    <p>12345678</p>
+                    <P>T&C5</P>
+                    <p>wertyuiop</p>
+                    <p>zcxvbnm</p>
+                </div>
+                <div class="col-md-6">
+                    <table id="second-table">
+                        <tr>
+                            <td>Sub Total</td>
+                            <td>341.94</td>
+                        </tr>
+                        <tr>
+                            <td>Discount</td>
+                            <td>0.01</td>
+                        </tr>
+                        <tr style="background-color: #ff6600;">
+                            <td style="color: white; font-weight: 700;">Total</td>
+                            <td style="color: white;">385.00</td>
+                        </tr>
+                        <tr>
+                            <td>Received</td>
+                            <td>385.00</td>
+                        </tr>
+                        <tr>
+                            <td>Balance</td>
+                            <td>0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Payment Mode</td>
+                            <td>Cash</td>
+                        </tr>
+                        <tr>
+                            <td>Previous Balance</td>
+                            <td>0.00</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <h5 style="font-weight: 700;">Tax Summary</h5>
+        </div>
+        <div class="container-fluid" style="margin-top: 20px;margin-bottom: 30px;">
+            <table id="last-table" class="og">
+                <tr>
+                    <th>Tax rate</th>
+                    <th>Taxable Amount</th>
+                    <th>CGST</th>
+                    <th>SGST</th>
+                    <th>IGST</th>
+                    <th class="cess-column">CESS</th>
+                </tr>
+                <tr>
+                    <td>0%</td>
+                    <td>100.00</td>
+                    <td>0.00</td>
+                    <td>0.00</td>
+                    <td>0.00</td>
+                    <td class="cess-column">0.00</td>
+                </tr>
+                <tr>
+                    <td>18%</td>
+                    <td>241.94</td>
+                    <td>0.00</td>
+                    <td>0.00</td>
+                    <td>41.37</td>
+                    <td class="cess-column">13.79</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+ </div>   
