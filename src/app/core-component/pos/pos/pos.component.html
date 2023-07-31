@@ -294,7 +294,7 @@
                                                         <button type="button" class="btn btn-dark w-100"> 
                                                             <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                                                 UPI&Print(F10)</button>
-                                                                <button type="button" class="btn btn-dark w-100"> 
+                                                                <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#posPaymentsModal">  
                                                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
                                                                         Card&Print(F9)</button>
                                                                         <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#bankMethodModal"> 
@@ -1659,7 +1659,7 @@
   </div>
 
   <div class="modal fade posmodal" id="batchModal" tabindex="-1" aria-labelledby="batchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="batchModalLabel">Select Product Batch</h5>
@@ -1668,13 +1668,49 @@
           </button>
         </div> 
         <div class="modal-body">
-            <div class="radio" *ngFor="let batch of currentProduct?.batch">
+            <!-- <div class="radio" *ngFor="let batch of currentProduct?.batch">
                 <label>
                     <input type="radio" name="batchProduct" value="{{batch?.id}}" [(ngModel)]="currentBatch" > Price: {{batch?.selling_price_offline}}
                 </label>
-            </div>
+            </div> -->
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <!-- <th>Sr.No.</th> -->
+                        <th></th>
+                        <th>MRP</th>
+                        <th>Selling Price Offline</th>
+                        <th>Stock</th>
+                        <th>Minimum Stock Threshold</th>
+                        <th>Max Order Quantity</th>
+                        <th>Sale Tax</th>
+                        <th>Discount</th>
+                        <th>Additional Discount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let batch of currentProduct?.batch">
+                    
+                        <td>
+                            <label>
+                                <input type="radio" name="batchProduct" value="{{batch?.id}}" [(ngModel)]="currentBatch" >
+                            </label>
+                        </td>
+                        <td>{{batch?.mrp}}</td>
+                        <td>{{batch?.selling_price_offline}}</td>
+                        <td>{{batch?.stock}}</td>
+                        <td>{{batch?.minimum_stock_threshold}}</td>
+                        <td>{{batch?.max_order_quantity}}</td>
+                        <td>{{batch?.sale_tax}}</td>
+                        <td>{{batch?.discount}}</td>                        
+                        <td>{{batch?.additional_discount}}</td>                                                
+                    </tr>
+                    
+                </tbody>
+    
+            </table>
         </div>
-        <div class="modal-footer mt-5">
+        <div class="modal-footer">
           <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
           <button type="button" class="btn btn-dark modal1BtnPos" (click)="confirmBatch()">Confirm</button>
         </div>
@@ -1775,15 +1811,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let order of posOrders | paginate: { itemsPerPage: 10, currentPage: page }">
+                    <tr *ngFor="let order of posOrders">
+                    <!-- <tr *ngFor="let order of posOrders | paginate: { itemsPerPage: 10, currentPage: page }"> -->
                         <!-- <td>{{order.index}}</td> -->
-                        <td>{{order.id}}</td>
-                        <td>{{order.date}}</td>
-                        <td>{{order.customer.name}}</td>
-                        <td>{{order.customer.mobile_no}}</td>
-                        <td>{{order.total_amount}}</td>
-                        <td>{{order.dueAmount}}</td>
-                        <td>{{order.payment_mode}}</td>                        
+                        <td>{{order?.id}}</td>
+                        <td>{{getDateForOrders(order?.date)}}</td>
+                        <td>{{order?.customer?.name}}</td>
+                        <td>{{order?.customer?.mobile_no}}</td>
+                        <td>{{order?.total_amount}}</td>
+                        <td>{{order?.dueAmount}}</td>
+                        <td>{{order?.payment_mode}}</td>                        
                     </tr>
                     
                 </tbody>
@@ -1792,11 +1829,11 @@
             </table>
             
         </div>
-        <div class="modal-footer mt-5">
-            <div class="col-sm-12">
+        <div class="modal-footer">
+            <!-- <div class="col-sm-12">
                 <pagination-controls (pageChange)="page = $event"></pagination-controls>
 
-            </div>
+            </div> -->
           <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
           <button type="button" class="btn btn-dark modal1BtnPos" data-bs-dismiss="modal">Close</button>
         </div>
@@ -2581,7 +2618,7 @@ Payment Account is required.
                         <label class="d-block">Select Payment Type</label>
                                 <div class="radio-payments-modal-wrapper d-flex justify-content-around">
                                     <div class="form-check" *ngFor="let option of paymentType">
-                                        <input class="form-check-input" type="radio" formControlName="payment_type" [disabled]="option.value === 'Against Bill' ? true : false" [value]="option.value">
+                                        <input class="form-check-input" type="radio" formControlName="payment_type" [value]="option.value">
                                         <label class="form-check-label">{{option.label}}</label>
                                     </div>
                                 </div>
@@ -2840,3 +2877,104 @@ Payment Account is required.
       </div>
     </div>
   </div> 
+
+  
+
+  <div class="modal fade posmodal" id="posPaymentsModal" tabindex="-1" aria-labelledby="posPaymentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="posPaymentsModalLabel">POS Payments</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div> 
+        <div class="modal-body">
+            <div class="form-group">
+                <!-- <label class="d-block">Select Payment Type</label> -->
+                        <div class="radio-payments-modal-wrapper d-flex justify-content-around">
+                            <div class="form-check" *ngFor="let option of voucherType2">
+                                <input class="form-check-input" type="radio" [value]="option.value" [(ngModel)]="selectedPaymentsOption">
+                                <label class="form-check-label">{{option.label}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedPaymentsOption === 'sales'">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Receipt No.</th>
+                                    <th>Date</th>
+                                    <th>Mode</th>
+                                    <th>Method</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let order of salesPayments">
+                                    <td>{{order?.id}}</td>
+                                    <td>{{getDateForOrders(order?.receipt_date)}}</td>
+                                    <td>{{order?.receipt_mode}}</td>  
+                                    <td>{{order?.receipt_method}}</td>                      
+                                    <td>{{order?.amount}}</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                      </div>
+                      <div *ngIf="selectedPaymentsOption === 'purchase'">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Receipt No.</th>
+                                    <th>Date</th>
+                                    <th>Mode</th>
+                                    <th>Method</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let order of purchasePayments">
+                                    <td>{{order?.id}}</td>
+                                    <td>{{getDateForOrders(order?.receipt_date)}}</td>
+                                    <td>{{order?.receipt_mode}}</td>  
+                                    <td>{{order?.receipt_method}}</td>                      
+                                    <td>{{order?.amount}}</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div *ngIf="selectedPaymentsOption === 'expense'">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Receipt No.</th>
+                                    <th>Non-GST</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let order of expensePayments">
+                                    <td>{{order?.id}}</td>
+                                    <td>{{order?.non_gst}}</td>                                                        
+                                    <td>{{order?.amount}}</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>  
+            
+            
+        </div>
+        <div class="modal-footer">
+            <!-- <div class="col-sm-12">
+                <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+            </div> -->
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-dark modal1BtnPos" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
