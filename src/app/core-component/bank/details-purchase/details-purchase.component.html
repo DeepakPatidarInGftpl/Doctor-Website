@@ -1,0 +1,146 @@
+<div class="card bg">
+    <div class="card-body">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Purchase Details</h4>
+                <h6>Full details of a Purchase</h6>
+            </div>
+            <!-- <div class="page-btn">
+                <a routerLink="//contacts/updateVendor/{{vendorDetail?.id}}" class="btn btn-added">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Vendor
+                </a>
+            </div> -->
+        </div>
+
+        <mat-tab-group animationDuration="0ms" *ngIf="vendorDetail">
+            <mat-tab label="General Details">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Receipt Mode</h4>
+                                            <h6>{{vendorDetail?.receipt_mode}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Receipt Method</h4>
+                                            <h6>{{vendorDetail?.receipt_method}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Amount</h4>
+                                            <h6>{{vendorDetail?.amount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Bill No.</h4>
+                                            <h6>{{vendorDetail?.bill_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Date</h4>
+                                            <h6>{{vendorDetail?.receipt_date | date:'dd/MM/yyyy'}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Remark</h4>
+                                            <h6>{{vendorDetail?.description}}</h6>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                         
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="UPI" *ngIf="vendorDetail?.receipt_mode=='UPI'">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card-body">
+                            <div class="productdetails">
+                                <ul class="product-bar" *ngIf="vendorDetail?.receipt_upi_id">
+                                    <li>
+                                        <h4>UPI No.</h4>
+                                        <h6>{{vendorDetail?.receipt_upi_id?.upi_no}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Payment account</h4>
+                                        <h6>{{vendorDetail?.receipt_upi_id?.payment_account}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Transaction
+                                        </h4>
+                                        <h6>{{vendorDetail?.receipt_upi_id?.transaction}}</h6>
+                                    </li>
+                                </ul>
+                                <ul class="product-bar" *ngIf="vendorDetail?.receipt_upi_id==null">
+                                     <p class="center-textt" style="color:red">Data not available</p>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Bank" *ngIf="vendorDetail?.receipt_mode=='Bank'">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card-body">
+                            <div class="productdetails">
+                                <ul class="product-bar" *ngIf="vendorDetail?.receipt_bank_id!==null">
+                                    <li>
+                                        <h4>Account No.</h4>
+                                        <h6>{{vendorDetail?.receipt_bank_id?.account_no}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Payment Account</h4>
+                                        <h6>{{vendorDetail?.receipt_bank_id?.payment_account}}</h6>
+                                    </li>
+                                </ul>
+                                <ul class="product-bar" *ngIf="vendorDetail?.receipt_bank_id==null">
+                                    <p class="center-textt" style="color:red">Data not available</p>
+                               </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Card" *ngIf="vendorDetail?.receipt_mode=='Card'">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card-body">
+                            <div class="productdetails">
+                                <ul class="product-bar" *ngIf="vendorDetail?.receipt_card_id!==null">
+                                    <li>
+                                        <h4>Amount</h4>
+                                        <h6>{{vendorDetail?.receipt_card_id?.card_payment_amount}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Card holder name</h4>
+                                        <h6>{{vendorDetail?.receipt_card_id?.card_holder_name}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Bank</h4>
+                                        <h6>{{vendorDetail?.receipt_card_id?.customer_bank_name}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Transaction No.</h4>
+                                        <h6>{{vendorDetail?.receipt_card_id?.cart_transactions_no}}</h6>
+                                    </li>
+                                 
+                                    <li>
+                                        <h4>Payment Account</h4>
+                                        <h6>{{vendorDetail?.receipt_card_id?.payment_account}}</h6>
+                                    </li>
+                                   
+                                </ul>
+                                <ul class="product-bar" *ngIf="vendorDetail?.receipt_card_id==null">
+                                    <p class="center-textt" style="color:red">Data not available</p>
+                               </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
