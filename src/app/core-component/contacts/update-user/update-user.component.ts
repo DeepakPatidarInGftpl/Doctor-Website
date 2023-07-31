@@ -75,7 +75,8 @@ id:any;
         }
       }, err => {
         this.loader=false;
-        this.toastr.error('password',err?.error?.password[0]) 
+        this.toastr.error(err.error.phone_number[0])
+        this.toastr.error(err?.error?.password[0],'password') 
       })
     } else {
       this.userForm.markAllAsTouched()

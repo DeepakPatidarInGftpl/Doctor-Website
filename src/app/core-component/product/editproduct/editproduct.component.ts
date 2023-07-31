@@ -857,6 +857,8 @@ export class EditproductComponent implements OnInit {
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
         } else {
+          this.loader=false;
+          this.toastr.error(res.error)
           console.log('res api error');
         }
       })
