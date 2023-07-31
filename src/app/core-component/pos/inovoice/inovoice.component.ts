@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-
+import { ActivatedRoute } from '@angular/router';
+import { PosCartService } from 'src/app/Services/PosCart/pos-cart.service';
 @Component({
   selector: 'app-inovoice',
   templateUrl: './inovoice.component.html',
@@ -10,9 +11,46 @@ import { jsPDF } from 'jspdf';
 export class InovoiceComponent implements OnInit {
   @ViewChild('invoice')
   invoiceElement!: ElementRef;
-  constructor() { }
+  order: any;
+  loading: boolean = false;
+  constructor( private renderer: Renderer2, private route: ActivatedRoute, private api: PosCartService) { }
 
   ngOnInit(): void {
+    this.loading = true;
+    this.route.params.subscribe(params => {
+      const orderId = params['id'];
+      console.log(orderId);
+      // this.api.company_details().subscribe({
+      //   next: (res: any) => {
+      //     this.company = res;
+      //     console.log(res, 'company');
+      //   },
+      //   error: (error) => {
+      //     console.log('error in company');
+      //   }
+      // })
+      this.api.getPOSOrderDetails(orderId).subscribe({
+        next: (res: any) => {
+          this.order = res;
+          console.log(res, this.order);
+        },
+        error: (error) => {
+          console.log('error');
+        },
+        complete: () => {
+          this.loading = false;
+        }
+      })
+    });
+  }
+
+  getSubTotal(cart:any){
+    let total = 0
+    for (let index = 0; index < cart.length; index++) {
+      const element = cart[index];
+      total += element.net_cost
+    }
+    return total;
   }
 
   printInvoice() {

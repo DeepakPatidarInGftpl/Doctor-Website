@@ -37,7 +37,7 @@
                     <h5>Bill To:</h5>
                     <h5>c_first name c_last name</h5>
                     <p>Address Other - 123456 Other India</p>
-                    <p>Contact no: 12345678900</p>
+                    <p>Contact no: {{order?.customer?.mobile_no}}</p>
                     <p>State: 37-Other</p>
                 </div>
                 <div class="col-md-4">
@@ -53,34 +53,24 @@
                 <th>Item Name</th>
                 <th>HSN/SAC</th>
                 <th>Quantity</th>
+                <th>MRP</th>
                 <th>Price/Unit</th>
                 <th>Discount</th>
-                <th>Discount2</th>
-                <th>GST</th>
-                <th>Amount</th>
+                <th>Tax Amount</th>
+                <th>Net Cost</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td>Item 1</td>
+            <tr *ngFor="let item of order.cart;let ci = index">
+                <td>{{ci}}</td>
+                <td>Item {{ci}}</td>
                 <td>123456</td>
-                <td>10</td>
-                <td>$10</td>
-                <td>5%</td>
-                <td>2%</td>
-                <td>41.37(18%)</td>
-                <td>285.00</td>
+                <td>{{item?.qty}}</td>
+                <td>Rs.{{item?.mrp}}</td>
+                <td>Rs.{{item?.unit_cost}}</td>
+                <td>{{item?.discount}}%</td>
+                <td>{{item?.tax_amount}}({{item?.tax_percentage}}%)</td>
+                <td>Rs.{{item?.net_cost}}</td>
             </tr>
-            <tr>
-                <td>2</td>
-                <td>Item 2</td>
-                <td>789012</td>
-                <td>5</td>
-                <td>$20</td>
-                <td>10%</td>
-                <td>0%</td>
-                <td>41.37</td>
-                <td>285.00</td>
-            </tr>
+            
             <tr>
                 <td>&nbsp;</td>
                 <td>Total</td>
@@ -112,11 +102,11 @@
                     <table id="second-table">
                         <tr>
                             <td>Sub Total</td>
-                            <td>341.94</td>
+                            <td>{{getSubTotal(order?.cart)}}</td>
                         </tr>
                         <tr>
-                            <td>Discount</td>
-                            <td>0.01</td>
+                            <td>Additional Charge</td>
+                            <td>{{order?.additional_charge}}</td>
                         </tr>
                         <tr style="background-color: #ff6600;">
                             <td style="color: white; font-weight: 700;">Total</td>
@@ -132,7 +122,7 @@
                         </tr>
                         <tr>
                             <td>Payment Mode</td>
-                            <td>Cash</td>
+                            <td>{{order?.payment_mode}}</td>
                         </tr>
                         <tr>
                             <td>Previous Balance</td>
