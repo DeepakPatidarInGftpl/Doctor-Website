@@ -27,10 +27,10 @@ id:any;
       username: new FormControl('',),
       name: new FormControl(''),
       email: new FormControl('',),
-      password: new FormControl('',),
+      // password: new FormControl('',),
       active: new FormControl(''),
       user_type: new FormControl(''),
-      // role:new FormControl(''),
+      role:new FormControl(''),
       // user_permissions:new FormControl(''),
       // groups:new FormControl('')
       branch:new FormControl('')
@@ -38,9 +38,11 @@ id:any;
     this.contactService.getUserById(this.id).subscribe(res=>{
       console.log(res);
       this.userForm.patchValue(res)
-      this.userForm.get('branch')?.patchValue(res?.branch)
+      this.userForm.get('branch')?.patchValue(res?.branch);
+      this.userForm.get('role')?.patchValue(res?.role)
     })
     this.getBranch()
+    this.getGroup();
   }
 
   branchList:any;
@@ -48,6 +50,13 @@ id:any;
     this.contactService.getBranch().subscribe(res=>{
       console.log(res);
       this.branchList=res;
+    })
+  }
+  groupList:any
+  getGroup(){
+    this.contactService.getPermissionGroup().subscribe((res:any)=>{
+      console.log(res);
+      this.groupList=res
     })
   }
   dateError = null
@@ -107,6 +116,9 @@ id:any;
   }
   get branch(){
     return this.userForm.get('branch')
+  }
+  get role(){
+    return this.userForm.get('role')
   }
 }
 

@@ -27,19 +27,27 @@ export class AddUserComponent implements OnInit {
       password: new FormControl('',[Validators.required]),
       active: new FormControl(''),
       user_type: new FormControl(''),
-      // role:new FormControl(''),
+      role:new FormControl(''),
       // user_permissions:new FormControl(''),
       // groups:new FormControl('')
       branch:new FormControl(''),
 
     })
     this.getBranch();
+    this.getGroup();
   }
 branchList:any;
   getBranch(){
     this.contactService.getBranch().subscribe(res=>{
       console.log(res);
       this.branchList=res;
+    })
+  }
+  groupList:any
+  getGroup(){
+    this.contactService.getPermissionGroup().subscribe((res:any)=>{
+      console.log(res);
+      this.groupList=res
     })
   }
   dateError = null
@@ -100,6 +108,9 @@ branchList:any;
   }
   get branch(){
     return this.userForm.get('branch')
+  }
+  get role(){
+    return this.userForm.get('role')
   }
 }
 

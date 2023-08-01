@@ -32,10 +32,13 @@ export class HeaderComponent implements OnInit {
     this.settings.changeTheme.subscribe((res: any) => {
       if (res == 'Dark') {
         this.darkTheme = true;
-        this.logoPath = 'assets/img/logo-white.png'
+        // this.logoPath = 'assets/img/logo-white.png'
+        //new icon
+        this.logoPath = 'assets/dummy/pos.png'
       } else {
         this.darkTheme = false;
-        this.logoPath = 'assets/logo/favicon_icon.png'
+        // this.logoPath = 'assets/logo/favicon_icon.png'
+        this.logoPath = 'assets/dummy/pos.png'
 
       }
     });
