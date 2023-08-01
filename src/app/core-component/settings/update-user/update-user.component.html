@@ -45,7 +45,7 @@
                         <span class="text-danger" *ngIf="email && email.invalid && email.touched">Enter Remark</span>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-3 col-12">
+                <!-- <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Password</label>
                         <input type="password" formControlName="password" id="password" [ngClass]="{
@@ -54,7 +54,7 @@
                             Password
                         </span>
                     </div>
-                </div>
+                </div> -->
                 <!-- <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>User Permission</label>
@@ -79,6 +79,18 @@
                         </select>
                         <span class="text-danger" *ngIf="user_type && user_type.invalid && user_type.touched">Select
                             User Type</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>User Role</label>
+                        <select formControlName="role" id="role" [ngClass]="{
+                        'is-invalid': f['role'].touched && f['role'].invalid}">
+                            <option value="" selected disabled>Select User Role</option>
+                            <option value="{{userRole.id}}" *ngFor="let userRole of groupList">{{userRole.name}}</option>
+                        </select>
+                        <span class="text-danger" *ngIf="role && role.invalid && role.touched">Select
+                            User role</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">

@@ -52,8 +52,8 @@
                 </ul>
             </li> -->
 
-            <li class="submenu" *ngIf="isCompany || isWarehouse || isBranch || isCompanyBank">
-                <a [ngClass]="{'active': activePath === 'masters'}"><img src="assets/img/icons/product.svg" alt="img"><span> Master</span> <span class="menu-arrow"></span></a>
+            <li class="submenu" *ngIf="isCompany || isBranch">
+                <a [ngClass]="{'active': activePath === 'masters'}"><i class="fa fa-signal" data-bs-toggle="tooltip" title="fa fa-signal"></i><span> Master</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isCompany"><a routerLink="/masters/companylist" routerLinkActive="active">Company</a></li>
                     <!-- <li *ngIf="isAccount"><a routerLink="/masters/accountlist" routerLinkActive="active">Account</a></li> -->
@@ -67,7 +67,7 @@
             </li> 
 
             <li class="submenu" *ngIf="isAccount || isAccountSubType ">
-                <a [ngClass]="{'active': activePath === 'account'}"><img src="assets/img/icons/product.svg" alt="img"><span> Accounts</span> <span class="menu-arrow"></span></a>
+                <a [ngClass]="{'active': activePath === 'account'}"><i class="fa fa-users" data-bs-toggle="tooltip" title="fa fa-users"></i><span> Accounts</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isAccount"><a routerLink="/account/accountlist" routerLinkActive="active">Account</a></li>
                     <li *ngIf="isAccountSubType"><a routerLink="/account/account_subtype" routerLinkActive="active">Account Sub Type</a></li>         
@@ -125,14 +125,14 @@
                 </ul>
             </li> 
             <li class="submenu" >
-                <a [ngClass]="{'active': activePath === 'poss'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> POS</span> <span class="menu-arrow"></span></a>
+                <a [ngClass]="{'active': activePath === 'poss'}"><i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax"></i><span> POS</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isPosOrder"><a routerLink="/poss/posOrder" routerLinkActive="active">POS Order</a></li>
                 <li><a routerLink="/poss/pos" target="_blank" routerLinkActive="active">POS New</a></li>
                 </ul>
             </li> 
             <li class="submenu" *ngIf="isCompanyBank || isReciept || isExpence || isPurchasepos">
-                <a [ngClass]="{'active': activePath === 'bank'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Bank</span> <span class="menu-arrow"></span></a>
+                <a [ngClass]="{'active': activePath === 'bank'}"> <i class="fa fa-credit-card" data-bs-toggle="tooltip" title="fa fa-credit-card"></i><span> Bank</span> <span class="menu-arrow"></span></a>
                 <ul>
                 <li *ngIf="isCompanyBank"><a routerLink="/bank/companyBank" routerLinkActive="active">Company Bank</a></li>
                 <!-- <li><a routerLink="/bank/payment" routerLinkActive="active">Payment</a></li> -->
@@ -152,7 +152,7 @@
                 </ul>
             </li>
             <li class="submenu" *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview">
-                <a  [ngClass]="{'active': activePath === 'website'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Website</span> <span class="menu-arrow"></span></a>
+                <a  [ngClass]="{'active': activePath === 'website'}"><i class="fa fa-sitemap" data-bs-toggle="tooltip" title="fa fa-sitemap"></i><span> Website</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isBanner"><a routerLink="/website/banner" routerLinkActive="active">Banner</a></li>  
                     <li *ngIf="isStaticPage"><a routerLink="/website/staticPage" routerLinkActive="active">Static pages</a></li>
