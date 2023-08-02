@@ -2244,6 +2244,7 @@ export class PosComponent implements OnInit {
 
 
 
+
     console.log(cartData, 'cash');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
@@ -2294,7 +2295,7 @@ export class PosComponent implements OnInit {
 
   }
 
-  bankPaymentGenerateOrder(){
+  bankPaymentGenerateOrder(type:any){
     if (this.bankPaymentMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.bankPaymentMethodForm.controls).forEach(key => {
@@ -2355,8 +2356,14 @@ export class PosComponent implements OnInit {
             this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
             this.toastr.success(response.msg)
+            if(type == 'print'){
+              window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+              var clicking = <HTMLElement>document.querySelector('.bankPrintModalClose');
+              clicking.click();
+            } else {
             var clicking = <HTMLElement>document.querySelector('.bankModalClose');
             clicking.click();
+            }
             this.bankPaymentMethodForm.reset();
             this.cartService.getPOSOrders().subscribe({
               next: (response) => {
