@@ -288,13 +288,13 @@
                                         <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#payLaterMethodModal"> 
                                             <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
                                                 Pay Later(F11)</button>
-                                                <button type="button" class="btn btn-dark w-100"> 
+                                                <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#cardPrintMethodModal"> 
                                                     <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
-                                                        Hold&Print(F7)</button>
-                                                        <button type="button" class="btn btn-dark w-100"> 
+                                                        Card&Print(F7)</button>
+                                                        <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#upiPrintMethodModal"> 
                                                             <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                                                 UPI&Print(F10)</button>
-                                                                <button type="button" class="btn btn-dark w-100">  
+                                                                <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#printCashModal">  
                                                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
                                                                         Cash&Print(F8)</button>
                                                                         <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#bankMethodModal"> 
@@ -1456,7 +1456,7 @@
                 <div class="col-sm-7">
                     <div>
                         <!-- <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.generateOrder()">Submit</button> -->
-                        <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.cashPaymentGenerateOrder()">Submit</button>
+                        <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.cashPaymentGenerateOrder('normal')">Submit</button>
                     </div>
                     <div>
                         <button  id="exampleModal5Close" type="button" class="btn btn-dark w-100 cashModalClose" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
@@ -1853,7 +1853,7 @@
           </button>
         </div>
         <div class="modal-body">
-            <form [formGroup]="upiPaymentMethodForm" (ngSubmit)="upiPaymentGenerateOrder()">
+            <form [formGroup]="upiPaymentMethodForm" (ngSubmit)="upiPaymentGenerateOrder('normal')">
 
                 <div class="row">
                     <div class="col-sm-12">
@@ -1921,6 +1921,7 @@
   </div> 
   
   
+  
   <!-- Modal Bank-->
   <div class="modal fade posmodal" id="bankMethodModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -1932,7 +1933,7 @@
           </button>
         </div>
         <div class="modal-body">
-            <form [formGroup]="bankPaymentMethodForm" (ngSubmit)="bankPaymentGenerateOrder()">
+            <form [formGroup]="bankPaymentMethodForm" (ngSubmit)="bankPaymentGenerateOrder('normal')">
 
                 <div class="row">
                     <div class="col-sm-12">
@@ -2084,7 +2085,7 @@
           </button>
         </div>
         <div class="modal-body">
-            <form [formGroup]="cardPaymentMethodForm" (ngSubmit)="cardPaymentGenerateOrder()">
+            <form [formGroup]="cardPaymentMethodForm" (ngSubmit)="cardPaymentGenerateOrder('normal')">
 
                 <div class="row">
                     <div class="col-sm-12">
@@ -2985,3 +2986,353 @@ Payment Account is required.
       </div>
     </div>
   </div>
+
+  <!-- Print Cash Modal -->
+  <div class="modal fade posmodal" id="printCashModal" tabindex="-1" aria-labelledby="printCashModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <h5 class="modal-title" id="exampleModal5Label">Calculator</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div> -->
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Due Amount</label>
+                        <input type="number" value="{{this.totalAmount()}}" class="form-control" placeholder="Cash In Hand">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Tendered</label>
+                        <input type="number" [(ngModel)]="tenderedAmount" class="form-control" placeholder="Tendered">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Change</label>
+                        <input type="number" value="{{this.changeAmt()}}" disabled class="form-control" placeholder="Change">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="cal-wrapper">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="cal-div-wrapper">
+                                    <div class="cal-div" (click)="changeTenderedAmt(1)">1</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(2)">2</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(3)">3</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(100)">+100</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="cal-div-wrapper">
+                                    <div class="cal-div"(click)="changeTenderedAmt(4)">4</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(5)">5</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(6)">6</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(200)">+200</div>
+                                    <div class="cal-div"(click)="changeTenderedAmt(2000)">+2000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="cal-div-wrapper">
+                                    <div class="cal-div" (click)="changeTenderedAmt(7)">7</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(8)">8</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(9)">9</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(500)">+500</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(5000)">+5000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="cal-div-wrapper">
+                                    <div class="cal-div" (click)="changeTenderedAmt(10)">10</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(20)">20</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(50)">50</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(1000)">+1000</div>
+                                    <div class="cal-div" (click)="changeTenderedAmt(10000)">+10000</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-7">
+                    <div>
+                        <!-- <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.generateOrder()">Submit</button> -->
+                        <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.cashPaymentGenerateOrder('print')">Submit</button>
+                    </div>
+                    <div>
+                        <button  id="exampleModal5Close" type="button" class="btn btn-dark w-100 cashPrintModalClose" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="modal-footer mt-5">
+          <button type="button" class="btn btn-dark modal1BtnPos">Start Selling</button>
+        </div> -->
+      </div>
+    </div>
+  </div> 
+  
+    <!-- Modal UPI Print-->
+<div class="modal fade posmodal" id="upiPrintMethodModal" tabindex="-1" aria-labelledby="upiPrintModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="upiPrintModalLabel">UPI Details</h5>
+          <button type="button" class="btn-close upiPrintModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="upiPaymentMethodForm" (ngSubmit)="upiPaymentGenerateOrder('print')">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Account</label>
+                            <select class="form-select" formControlName="payment_account">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="payment_account_upi.invalid && (payment_account_upi.dirty || payment_account_upi.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_account_upi.errors?.['required']">
+    Payment Account is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>UPI Id</label>
+                            <input type="text" class="form-control"
+                            placeholder="UPI ID"
+                            formControlName="upi_id">
+                        </div>
+                        <div *ngIf="upi_id.invalid && (upi_id.dirty || upi_id.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="upi_id.errors?.['required']">
+        UPI ID is required.
+      </div>
+    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Transaction ID</label>
+                            <input type="text" class="form-control" 
+                            placeholder="Transaction ID"
+                            formControlName="transaction_id">
+                        </div>
+                        <div *ngIf="transaction_id.invalid && (transaction_id.dirty || transaction_id.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="transaction_id.errors?.['required']">
+        Transaction ID is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal Card Payment And Print-->
+  <div class="modal fade posmodal" id="cardPrintMethodModal" tabindex="-1" aria-labelledby="cardPrintModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cardPrintModalLabel">Card Details</h5>
+          <button type="button" class="btn-close cardPrintModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="cardPaymentMethodForm" (ngSubmit)="cardPaymentGenerateOrder('print')">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Account</label>
+                            <select class="form-select" formControlName="payment_account">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="payment_account_card.invalid && (payment_account_card.dirty || payment_account_card.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_account_card.errors?.['required']">
+    Payment Account is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Customer Bank Name</label>
+                            <input type="text" class="form-control"
+                            placeholder="Customer Bank Name"
+                            formControlName="customer_bank_name">
+                        </div>
+                        <div *ngIf="customer_bank_name.invalid && (customer_bank_name.dirty || customer_bank_name.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="customer_bank_name.errors?.['required']">
+        Customer Bank Name is required.
+      </div>
+    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Card Payment Amount</label>
+                            <input type="number" class="form-control" 
+                            placeholder="Card Payment Amount"
+                            formControlName="card_payment_amount">
+                        </div>
+                        <div *ngIf="card_payment_amount.invalid && (card_payment_amount.dirty || card_payment_amount.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="card_payment_amount.errors?.['required']">
+        Card Payment Amount is required.
+      </div>
+    </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Card Holder Name</label>
+                            <input type="text" class="form-control" 
+                            placeholder="Card Holder Name"
+                            formControlName="card_holder_name">
+                        </div>
+                        <div *ngIf="card_holder_name.invalid && (card_holder_name.dirty || card_holder_name.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="card_holder_name.errors?.['required']">
+        Card Holder Name is required.
+      </div>
+    </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Card Transaction No</label>
+                            <input type="number" class="form-control" 
+                            placeholder="Card Transaction No"
+                            formControlName="cart_transactions_no">
+                        </div>
+                        <div *ngIf="cart_transactions_no.invalid && (cart_transactions_no.dirty || cart_transactions_no.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="cart_transactions_no.errors?.['required']">
+        Card Transaction No. is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>  
+
+  <!-- Modal Bank Print-->
+  <div class="modal fade posmodal" id="bankPrintMethodModal" tabindex="-1" aria-labelledby="bankPrintModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bankPrintModalLabel">Bank Details</h5>
+          <button type="button" class="btn-close bankPrintModalClose" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="bankPaymentMethodForm" (ngSubmit)="bankPaymentGenerateOrder('print')">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Payment Account</label>
+                            <select class="form-select" formControlName="payment_account">
+                                <option value="" disabled selected>Select Payment Account</option>
+      <option *ngFor="let bank of companyBankList" [value]="bank.id">{{bank?.name}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="payment_account_bank.invalid && (payment_account_bank.dirty || payment_account_bank.touched)"
+    class="alert alert-danger">
+
+  <div *ngIf="payment_account_bank.errors?.['required']">
+    Payment Account is required.
+  </div>
+</div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Account No</label>
+                            <input type="text" class="form-control"
+                            placeholder="Account No"
+                            formControlName="account_no">
+                        </div>
+                        <div *ngIf="account_no.invalid && (account_no.dirty || account_no.touched)"
+        class="alert alert-danger">
+    
+      <div *ngIf="account_no.errors?.['required']">
+        Account No is required.
+      </div>
+    </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark">Save</button>
+                    </div>
+                </div>
+    
+            </form>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div> 

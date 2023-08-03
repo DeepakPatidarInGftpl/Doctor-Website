@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { __values } from 'tslib';
 import { Modal } from 'bootstrap';
 import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
-
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -153,7 +153,7 @@ export class PosComponent implements OnInit {
   posOrders:any = [];
 
 
-  constructor(private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
+  constructor(private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
     // this.cartItems = this.cartService.getCartItems();
     this.currentItems = this.cartService.getCurrentItems();
     this.customerForm = this.fb.group({
@@ -1054,7 +1054,6 @@ export class PosComponent implements OnInit {
     return total;
    }
    
-
 
 
   confirmBatch(){
@@ -2203,7 +2202,7 @@ export class PosComponent implements OnInit {
 
   }
 
-  cardPaymentGenerateOrder(){
+  cardPaymentGenerateOrder(type:any){
     if (this.cardPaymentMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.cardPaymentMethodForm.controls).forEach(key => {
@@ -2244,6 +2243,7 @@ export class PosComponent implements OnInit {
 
 
 
+
     console.log(cartData, 'cash');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
@@ -2267,8 +2267,14 @@ export class PosComponent implements OnInit {
             this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
             this.toastr.success(response.msg)
+            if(type == 'print'){
+              window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+              var clicking = <HTMLElement>document.querySelector('.cardPrintModalClose');
+              clicking.click();
+            } else {
             var clicking = <HTMLElement>document.querySelector('.cardModalClose');
             clicking.click();
+            }
             this.cardPaymentMethodForm.reset();
           } else {
             this.toastr.error(response.msg);
@@ -2288,7 +2294,7 @@ export class PosComponent implements OnInit {
 
   }
 
-  bankPaymentGenerateOrder(){
+  bankPaymentGenerateOrder(type:any){
     if (this.bankPaymentMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.bankPaymentMethodForm.controls).forEach(key => {
@@ -2349,8 +2355,14 @@ export class PosComponent implements OnInit {
             this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
             this.toastr.success(response.msg)
+            if(type == 'print'){
+              window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+              var clicking = <HTMLElement>document.querySelector('.bankPrintModalClose');
+              clicking.click();
+            } else {
             var clicking = <HTMLElement>document.querySelector('.bankModalClose');
             clicking.click();
+            }
             this.bankPaymentMethodForm.reset();
             this.cartService.getPOSOrders().subscribe({
               next: (response) => {
@@ -2379,7 +2391,7 @@ export class PosComponent implements OnInit {
 
   } 
 
-  upiPaymentGenerateOrder(){
+  upiPaymentGenerateOrder(type:any){
     if (this.upiPaymentMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.upiPaymentMethodForm.controls).forEach(key => {
@@ -2443,8 +2455,14 @@ export class PosComponent implements OnInit {
             this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
             this.toastr.success(response.msg)
+            if(type == 'print'){
+              window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+              var clicking = <HTMLElement>document.querySelector('.upiPrintModalClose');
+              clicking.click();
+            } else {
             var clicking = <HTMLElement>document.querySelector('.upiModalClose');
             clicking.click();
+            }
             this.upiPaymentMethodForm.reset();
             this.cartService.getPOSOrders().subscribe({
               next: (response) => {
@@ -2464,6 +2482,7 @@ export class PosComponent implements OnInit {
           this.toastr.error(error.message);
         },
       });
+      
       }
     
   } else {
@@ -2473,7 +2492,9 @@ export class PosComponent implements OnInit {
 
   }
 
-  cashPaymentGenerateOrder(){
+
+
+  cashPaymentGenerateOrder(type:any){
     if(this.currentItems.length > 0){
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
@@ -2520,8 +2541,15 @@ export class PosComponent implements OnInit {
             this.discardCurrentBill();
             this.tenderedAmount = 0;
             this.toastr.success(response.msg)
-            var clicking = <HTMLElement>document.querySelector('.cashModalClose');
-            clicking.click();
+            if(type == 'print'){
+              window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+              var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
+              clicking.click();
+            } else {
+              var clicking = <HTMLElement>document.querySelector('.cashModalClose');
+              clicking.click();
+            }
+           
             this.cartService.getPOSOrders().subscribe({
               next: (response) => {
                 console.log(response, 'pos orders')

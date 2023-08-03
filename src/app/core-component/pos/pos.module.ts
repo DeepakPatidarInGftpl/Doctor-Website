@@ -8,10 +8,12 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { InovoiceComponent } from './inovoice/inovoice.component';
 
 @NgModule({
   declarations: [
-    PosComponent
+    PosComponent,
+    InovoiceComponent
   ],
   imports: [
     CommonModule,
