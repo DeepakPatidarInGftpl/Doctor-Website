@@ -1,8 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PosComponent } from './pos/pos.component';
-
-const routes: Routes = [{ path: '', component: PosComponent, }];
+import { InovoiceComponent } from './inovoice/inovoice.component';
+const routes: Routes = [
+  { path: '', children:[
+    { path: '', component: PosComponent },
+    { path: 'invoice/:id', component: InovoiceComponent }
+  ] }
+];
 
 
 @NgModule({

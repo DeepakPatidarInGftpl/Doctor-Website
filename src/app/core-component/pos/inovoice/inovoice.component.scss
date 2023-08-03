@@ -1,0 +1,141 @@
+
+        .one {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .one label {
+            font-size: 20px;
+        }
+
+        .sts {}
+
+        .sts .col-md-7 {
+            flex: 7;
+        }
+
+        .sts .col-md-5 {
+            flex: 5;
+        }
+
+        .sts p {
+            font-size: 14px;
+        }
+
+        .one label {
+            font-size: 20px;
+            margin-left: 75px;
+        }
+
+        #first-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #first-table th,
+        #first-table td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        #first-table th:first-child,
+        #first-table td:first-child {
+            border-left: none;
+        }
+
+        #first-table th:last-child,
+        #first-table td:last-child {
+            border-right: none;
+        }
+
+        #first-table th {
+            background-color: #ff6600;
+            color: #fff;
+        }
+
+        #first-table td {
+            border-left: none;
+            border-right: none;
+        }
+
+        #second-table {
+            border-collapse: collapse;
+            width: 100%;
+            border: none;
+        }
+
+        #second-table th,
+        #second-table td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        #last-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #last-table th,
+        #last-table td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: right;
+        }
+
+        #last-table th {
+            text-align: center;
+
+        }
+
+        .todo {
+            background-color: #ff6600;
+        }
+
+        .first-part p {
+            margin-bottom: 0;
+        }
+
+        .first-part h4 {
+            font-weight: 800;
+        }
+
+        .logo {
+            height: 100px;
+            object-fit: contain;
+            width: auto;
+        }
+
+        .first-part .col-md-5 {
+            display: flex;
+            align-items: center;
+            justify-content: end;
+        }
+
+        .hps h5 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .hps .col-md-4 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: end;
+        }
+
+        .todo th:nth-child(2){
+            width: 20%;
+        }
+
+        #first-table tr td{
+            font-weight: 700;
+        }
+
+        #first-table tr:last-child{
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+        }
+
+        .pad-10 {
+            padding: 0 100px;
+        }
