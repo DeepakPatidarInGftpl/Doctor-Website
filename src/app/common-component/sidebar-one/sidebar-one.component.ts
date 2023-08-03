@@ -40,7 +40,7 @@ export class SidebarOneComponent implements OnInit {
     });
   }
   //master
-  isCompanyBank:any;
+  
   isAdditional:any
   isAccount;
   isCompany;
@@ -101,7 +101,14 @@ export class SidebarOneComponent implements OnInit {
   isPermissionGroup:any;
 //pos
 isPosOrder:any;
+
+
+// bank
 isReciept:any;
+isPurchasepos:any;
+isExpence:any;
+isCompanyBank:any;
+
   ngOnInit(): void {
     this.LoadScript("assets/js/sidebar.js")
 
@@ -122,9 +129,7 @@ isReciept:any;
           this.isBranch = res.codename
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'accountsubtypes' && res.codename == 'view_accountsubtypes') {
           this.isAccountSubType = res.codename
-        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'companybank' && res.codename == 'view_companybank') {
-          this.isCompanyBank = res.codename;
-        } else if (res.content_type.app_label === 'account' && res.content_type.model === 'additionalcharge' && res.codename == 'view_additionalcharge') {
+        }  else if (res.content_type.app_label === 'account' && res.content_type.model === 'additionalcharge' && res.codename == 'view_additionalcharge') {
           this.isAdditional = res.codename;
         }
         //contacts
@@ -243,8 +248,17 @@ isReciept:any;
        else if (res.content_type.app_label === 'pos' && res.content_type.model === 'posorder' && res.codename == 'view_posorder') {
           this.isPosOrder = res.codename;
         }
+        //bank
         else if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'view_receipt') {
           this.isReciept = res.codename;
+        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'payments' && res.codename == 'view_payments') {
+          this.isPurchasepos = res.codename;
+          console.log(this.isPurchasepos);
+        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'view_expance') {
+          this.isExpence = res.codename;
+          console.log(this.isExpence);
+        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'companybank' && res.codename == 'view_companybank') {
+          this.isCompanyBank = res.codename;
         }
       });
     }

@@ -6,6 +6,7 @@ import { ListPurchaseComponent } from './list-purchase.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 
+
 @NgModule({
   declarations: [ListPurchaseComponent],
   imports: [

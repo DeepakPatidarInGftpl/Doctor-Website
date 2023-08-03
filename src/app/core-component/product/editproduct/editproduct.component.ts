@@ -224,7 +224,8 @@ export class EditproductComponent implements OnInit {
     add.forEach((j: any) => {
       console.log(j); 
       formarr.push(this.fb.group({
-        feature_group: j.feature_group,
+        id:j.id,
+        feature_group: j?.feature_group?.id,
         feature: j.feature.id,
       }))
     })
@@ -267,6 +268,7 @@ export class EditproductComponent implements OnInit {
 
   features(): FormGroup {
     return this.fb.group({
+      id:(''),
       feature_group: (''),
       feature: (''),
     });
@@ -857,6 +859,8 @@ export class EditproductComponent implements OnInit {
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
         } else {
+          this.loader=false;
+          this.toastr.error(res.error)
           console.log('res api error');
         }
       })

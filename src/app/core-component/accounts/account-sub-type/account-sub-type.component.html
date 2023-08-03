@@ -220,16 +220,6 @@
                             </div>
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label>Alias*</label>
-                                    <input type="text" formControlName="alias" id="alias" readonly
-                                        [ngClass]="{'is-invalid': f['alias'].touched && f['alias'].invalid}">
-                                    <span class="text-danger" *ngIf="alias && alias.invalid && alias.touched">Enter
-                                        Valid Alias
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
                                     <label>Accounts Type*</label>
                                     <select formControlName="accounts_type"
                                         [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}"
@@ -241,6 +231,16 @@
                                     <span class="text-danger"
                                         *ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select
                                         Aaccounts Type</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Alias*</label>
+                                    <input type="text" formControlName="alias" id="alias" readonly
+                                        [ngClass]="{'is-invalid': f['alias'].touched && f['alias'].invalid}">
+                                    <span class="text-danger" *ngIf="alias && alias.invalid && alias.touched">Enter
+                                        Valid Alias
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-lg-12">

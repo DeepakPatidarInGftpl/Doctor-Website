@@ -288,10 +288,9 @@
                                 <div class="col-sm-2">
                                     <div class="img-div" *ngIf="productDetail?.product_images[0]?.image!==null">
                                         <img [src]="imgUrl+productDetail?.product_images[0]?.image" alt="">
-                                        <img src="assets/logo/logo.png" alt=""  />
                                         <!-- <div class="owl-carousel owl-theme product-slide my-5">
                                             <div class="slider-product" *ngFor="let image of productDetail?.product_images">
-                                                <img [src]="imgUrl+image.image" [alt]="image.product_colour">
+                                                <img [src]="imgUrl+image.image" [alt]="">
                                                 <h4>{{image?.product_colour}}</h4>
                                             </div>
                                         </div> -->
@@ -307,8 +306,7 @@
                                         </div>
                                         <div class="second-part" *ngIf="sho">
                                             <p [innerHTML]="productDetail?.description | readMore"></p>
-                                            <span *ngIf="sho && productDetail?.description?.length>100 " (click)="hide()" class="spandes " style="color:red">Read more...</span>
-                                            
+                                            <span *ngIf="sho && productDetail?.description?.length>100 " (click)="hide()" class="spandes " style="color:red">Read more...</span>    
                                         </div>
                                         <div class="second-part" *ngIf="sho1">
                                             <p [innerHTML]="productDetail?.description | readLess"></p>
@@ -578,8 +576,8 @@
                     </mat-tab-group>
                 </div>
                 <div class="d-flex align-items-center my-3 mx-3">
-                    <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                    <span [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }" class="badges">{{productDetail?.is_active}}</span>
+                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                <span [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }" class="badges">{{productDetail?.is_active}}</span>
                 </div>
             </div>
         </div>

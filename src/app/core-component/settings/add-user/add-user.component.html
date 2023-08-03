@@ -48,7 +48,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Password*</label>
-                        <input type="password" formControlName="password" id="password" [ngClass]="{
+                        <input type="text" formControlName="password" id="password" [ngClass]="{
                       'is-invalid': f['password'].touched && f['password'].invalid}">
                         <span class="text-danger" *ngIf="password && password.invalid && password.touched">Enter your
                             Password
@@ -81,7 +81,18 @@
                             User Type</span>
                     </div>
                 </div>
-
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>User Role</label>
+                        <select formControlName="role" id="role" [ngClass]="{
+                        'is-invalid': f['role'].touched && f['role'].invalid}">
+                            <option value="" selected disabled>Select User Role</option>
+                            <option value="{{userRole.id}}" *ngFor="let userRole of groupList">{{userRole.name}}</option>
+                        </select>
+                        <span class="text-danger" *ngIf="role && role.invalid && role.touched">Select
+                            User role</span>
+                    </div>
+                </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Branch</label>

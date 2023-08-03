@@ -39,7 +39,7 @@ export class UpdateEmployeeComponent implements OnInit {
       anniversary: new FormControl('',),
       apply_tds: new FormControl(''),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
-      credit_limit: new FormControl(''),
+      credit_limit: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
 
