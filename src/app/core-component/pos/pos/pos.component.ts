@@ -1056,7 +1056,6 @@ export class PosComponent implements OnInit {
    
 
 
-
   confirmBatch(){
     let product1;
     let product = this.currentProduct.batch;
@@ -2483,6 +2482,7 @@ export class PosComponent implements OnInit {
           this.toastr.error(error.message);
         },
       });
+      
       }
     
   } else {
