@@ -1220,7 +1220,7 @@ export class PosComponent implements OnInit {
     //let cartItems = this.selectedOptions;
     let totalPrice = 0 + this.currentTotalAdditionalCharges();
     for(let cart of cartItems){
-      totalPrice += cart?.batch[0]?.selling_price_offline * cart?.quantity;
+      totalPrice += this.getPriceAfterTaxes(cart?.batch[0]) * cart?.quantity;
     }
     return totalPrice;
   }
