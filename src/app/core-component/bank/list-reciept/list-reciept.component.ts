@@ -437,7 +437,35 @@ export class ListRecieptComponent implements OnInit {
     return tempTable;
   }
   
+  //print table
+
+  printTable() {
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    const tableData = this.getTableHTML();
   
+    printWindow.document.open();
+    printWindow.document.write(`
+      <!doctype html>
+      <html>
+        <head>
+          <title>Print Table</title>
+          <style>
+            /* Add any custom CSS styles here for printing, if needed */
+          </style>
+        </head>
+        <body>
+          ${tableData}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  }
+  getTableHTML(): string {
+    const tableElement = document.querySelector('.table.datanew') as HTMLTableElement;
+    return tableElement.outerHTML;
+  }
+    
   
 }
 
