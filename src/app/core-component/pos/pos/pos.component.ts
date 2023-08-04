@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Observer, fromEvent, merge, Subscription, OperatorFunction } from 'rxjs';
@@ -11,7 +11,6 @@ import { __values } from 'tslib';
 import { Modal } from 'bootstrap';
 import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-pos',
@@ -186,6 +185,7 @@ export class PosComponent implements OnInit {
     }
     if(event.code == KEY_CODE.F5){
       console.log(event);
+      this.playBeepSound();
       var clicking = <HTMLElement>document.querySelector('.upiF5');
       clicking.click();
     }
@@ -2601,6 +2601,12 @@ getNumberInDecimalPlaces(stringValue:any){
 const floatValue = parseFloat(stringValue);
 const roundedNumber = Math.round(floatValue * 100) / 100;
 return roundedNumber;
+}
+
+// Function to play the beep sound
+playBeepSound(): void {
+  const beepSound = new Audio('assets/dummy/beep.mp3');
+  beepSound.play();
 }
 
 
