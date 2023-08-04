@@ -1,5 +1,5 @@
 <div class="container-fluid d-flex flex-column pos-container">
-    <div class="row align-items-center pb-1">
+    <!-- <div class="row align-items-center pb-1">
         <div class="col-lg-9 col-sm-12 tabs_wrapper" style="width: 81%">
             <div class="top-header-left">
                 <div class="customer-type-div">
@@ -57,7 +57,7 @@
             </div>
            
         </div>
-    </div>
+    </div> -->
     <!-- <div class="row flex-fill" style="min-height:0">
         <div class="col-2 border mh-100" style="overflow-y: scroll;">Sidebar rirachic, Intelligentsia salvia mustache 90's coch. Butcher polaroid VH Brooklyn deep v PBR narwhal sustainable mixtape swag wolf squid tote bag. Tote bag cronut semiotics, raw denim deep v taxidermy messenger bag. Tofu YOLO Etsy, direct trade ethical Odd Future jean shorts paleo. Forage Shoreditch tousled aesthetic irony, street art organic Bushwick artisan cliche semiotics ugh synth chillwave meditation. Shabby chic lomo plaid vinyl chambray Vice. Vice sustainable cardigan, Williamsburg master cleanse hella DIY 90's blog. </div>
         <div class="col-4 border mh-100 div2" style="overflow-y: hidden;">
@@ -124,7 +124,7 @@
                                 </mat-option>
                                 <mat-option *ngIf="customerAutoCompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
                                 <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
-                                <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option>
+                                <!-- <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option> -->
                               <mat-option *ngFor="let customer of filteredCustomer" [value]="customer">
                                 {{ displayCus(customer) }}
                               </mat-option>
@@ -153,7 +153,7 @@
                                         <th>Discount</th>
                                         <th>Add Disc</th>
                                         <th>Unit Cost</th>
-                                        <th>Unit Cost With Taxes</th>
+                                        <th>UC With Tax</th>
                                         <th>Net Amount</th>
                                         <th></th>
                                     </tr>
@@ -161,8 +161,8 @@
                                 <tbody>
                                     <tr class="table-light" *ngFor="let cart of currentItems; let i = index">
                                         <td>{{i}}</td>
-                                        <td>{{cart.sku}}</td>
-                                        <td>{{cart.product_title}}</td>
+                                        <td>{{cart?.sku}}</td>
+                                        <td>{{cart?.product_title}} | {{cart?.variant_name}}</td>
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp qty-input">
                                                 <span (click)="decreaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
@@ -177,12 +177,12 @@
                                             <div class="input-group pos-i-grp table-black-grp">
                                                 <span class="input-group-text" id="basic-addon1">₹
                                                 </span>
-                                                <input type="text" value="25.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                                                <input type="text" value="25.00" class="form-control disc-input-table" aria-label="Username" aria-describedby="basic-addon1">
                                             </div>
                                         </td>
                                         <td><div class="input-group pos-i-grp table-black-grp">
                                             <span class="input-group-text" id="basic-addon1">%</span>
-                                            <input type="text" value="0.00" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                                            <input type="text" value="0.00" class="form-control disc-input-table" aria-label="Username" aria-describedby="basic-addon1">
                                         </div></td>
                                         <td>{{cart?.batch[0]?.selling_price_offline}}</td>
                                         <td>{{getPriceAfterTaxes(cart?.batch[0])}}</td>
@@ -263,7 +263,7 @@
                                     <button type="button" class="btn btn-dark" (click)="holdBill()"> 
                                         <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
                                             Hold(F6)</button>
-                                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#upiMethodModal"> 
+                                            <button type="button" class="btn btn-dark upiF5" data-bs-toggle="modal" data-bs-target="#upiMethodModal"> 
                                                 <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                                     UPI(F5)</button>
                                                     <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#cardMethodModal"> 
@@ -372,6 +372,28 @@
             
         </div>
         <div class="col-lg-3 mh-100 col-sm-12" style="overflow-y: scroll; width: 19%">
+            <div class="row py-2">
+                <div class="right-header-pos">
+                    <button type="button" class="btn btn-dark btn-sm">
+                        <i class="fa fa-cog" data-bs-toggle="tooltip" title="fa fa-cog"></i>
+                    </button>
+                    <button type="button" class="btn btn-dark btn-sm">
+                        <i class="fa fa-bars" data-bs-toggle="tooltip" title="fa fa-bars"></i>
+                    </button>
+                    <button type="button" class="btn btn-dark btn-sm">
+                        <i class="fa fa-trash" data-bs-toggle="tooltip" title="fa fa-trash"></i>
+                    </button>
+                    <button type="button" class="btn btn-dark btn-sm">
+                        <i class="fa fa-expand" data-bs-toggle="tooltip" title="fa fa-expand"></i>
+                    </button>
+                    <button type="button" class="btn btn-dark btn-sm">
+                        <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+                    </button>
+                    <button type="button" class="btn btn-dark btn-sm">
+                        <i class="fa fa-share-square" data-bs-toggle="tooltip" title="fa fa-share-square"></i>
+                    </button>
+                </div>
+            </div>
             <div class="row mb-3">
                 <div class="col-sm-12">
                     <div class="cus-details-wrapper right-btns-wrapper">
@@ -1599,6 +1621,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label>Bank Account</label>

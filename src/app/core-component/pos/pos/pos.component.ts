@@ -170,7 +170,7 @@ export class PosComponent implements OnInit {
     });
   }
 
-  @HostListener('window:keyup', ['$event'])
+  @HostListener('document:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if(event.code == KEY_CODE.F9){
       // Your row selection code
@@ -184,7 +184,13 @@ export class PosComponent implements OnInit {
       // Your row selection code
       console.log(event);
     }
+    if(event.code == KEY_CODE.F5){
+      console.log(event);
+      var clicking = <HTMLElement>document.querySelector('.upiF5');
+      clicking.click();
+    }
   }
+
 
   ngOnInit(): void {
     
@@ -1200,6 +1206,10 @@ export class PosComponent implements OnInit {
 
   displayCus(item: any): string {
     return item ? item?.mobile_no : '';
+  }
+
+  displayCus1(item: any): string {
+    return item ? `Name: ${item?.mobile_no}<br> ${item}` : '';
   }
 
   displayParty(item: any): string {
@@ -2605,6 +2615,7 @@ export enum KEY_CODE {
   // RIGHT_ARROW = 39,
   // LEFT_ARROW = 37,
   F9 = 'F9',
-  F8 = 'F8',
+  F8 = 'F8',  
+  F5 = 'F5',
   UP_ARROW = 'ArrowUp'
 }
