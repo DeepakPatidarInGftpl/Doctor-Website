@@ -54,8 +54,13 @@ export class UpdateSupplierComponent implements OnInit {
     this.contactService.getSupplierById(this.id).subscribe(res => {
       this.getRes = res;
       this.supplierForm.patchValue(res);
-      this.supplierForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id)
-
+      // this.supplierForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id)
+      this.supplierForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
+      this.supplierForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
+      this.supplierForm.get('anniversary_date')?.patchValue(this.getRes?.anniversary_date == null ? '' : this.getRes?.anniversary_date)
+      this.supplierForm.get('credit_limit')?.patchValue(this.getRes?.credit_limit == null ? '' : this.getRes?.credit_limit)
+      this.supplierForm.get('opening_balance')?.patchValue(this.getRes?.opening_balance == null ? '' : this.getRes?.opening_balance)
+     
       this.supplierForm.setControl('address', this.updateAddress(this.getRes?.address));
       this.supplierForm.setControl('bank_id', this.udateBank(this.getRes?.bank_id));
     });
@@ -80,13 +85,13 @@ export class UpdateSupplierComponent implements OnInit {
       console.log(j);
 
       const addressGroup = this.fb.group({
-        address_line_1: j.address_line_1,
-        address_line_2: j.address_line_2,
-        country: j.country.id,
+        address_line_1: j?.address_line_1==null?'':j?.address_line_1,
+        address_line_2: j?.address_line_2==null?'':j?.address_line_2,
+        country: j?.country.id,
         state: null,
         city: null,
-        pincode: j.pincode,
-        address_type: j.address_type
+        pincode: j?.pincode==null?'':j?.pincode,
+        address_type: j?.address_type==null?'':j?.address_type
       });
 
       formArr.push(addressGroup);
@@ -307,12 +312,14 @@ export class UpdateSupplierComponent implements OnInit {
           this.router.navigate(['//contacts/supplier'])
         } else {
           this.loader=false
+          this.toastr.error(this.addRes?.error)
           this.toastr.error(this.addRes?.opening_balance[0]);
           if (this.addRes?.email) {
             this.toastr.error(this.addRes?.error?.email[0])
           }
         }
       }, err => {
+        this.loader=false
         console.log(err.error.gst);
         if (err.error.email) {
           this.toastr.error(err.error.email[0])

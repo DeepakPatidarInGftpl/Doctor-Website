@@ -47,8 +47,6 @@ export class SigninComponent implements OnInit {
     if(localStorage.getItem('token')) {
       this.router.navigate(['/dashboard']);
     }
-
-
   }
 
 
@@ -68,7 +66,7 @@ export class SigninComponent implements OnInit {
           window.location.reload();
         })
         localStorage.setItem('token', this.loginRes.token)
-        localStorage.setItem('auth', JSON.stringify(this.loginRes));
+        localStorage.setItem('auth', JSON.stringify(this.loginRes?.permission));
         console.log(this.loginRes.token);
       }
     }, err => {

@@ -16,7 +16,7 @@ if (localStorageData && localStorageData.permission) {
 }
 const routes: Routes = [{
   path: '', component: EditproductComponent, canActivate: [RolesGuardGuard],
-  data: { allowedRoles: [allowedRoles] }
+  data: { allowedRoles: ['change_product'] }
 }];
 
 @NgModule({

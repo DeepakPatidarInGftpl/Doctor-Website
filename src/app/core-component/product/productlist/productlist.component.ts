@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
@@ -17,7 +18,7 @@ export class ProductlistComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  constructor(private QueryService: QueryService, private coreService: CoreService) {
+  constructor(private QueryService: QueryService, private coreService: CoreService,private cs:CompanyService) {
     this.QueryService.filterToggle()
   }
   delRes: any
@@ -125,6 +126,7 @@ export class ProductlistComponent implements OnInit {
   isEdit: any;
   isDelete: any;
   res:any;
+  userDetails:any
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -157,9 +159,28 @@ export class ProductlistComponent implements OnInit {
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     console.log(this.tableData);
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
+
+    // from localstorage permission
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename == 'add_product') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename == 'change_product') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename == 'delete_product') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
       permission.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename == 'add_product') {
           this.isAdd = res.codename;
@@ -172,7 +193,7 @@ export class ProductlistComponent implements OnInit {
           console.log(this.isDelete);
         }
       });
-    }
+    });
   }
 
   allSelected: boolean = false;

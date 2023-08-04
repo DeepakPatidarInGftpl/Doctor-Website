@@ -53,21 +53,15 @@
             </li> -->
 
             <li class="submenu" *ngIf="isCompany || isBranch">
-                <a [ngClass]="{'active': activePath === 'masters'}"><i class="fa fa-signal" data-bs-toggle="tooltip" title="fa fa-signal"></i><span> Master</span> <span class="menu-arrow"></span></a>
+                <a [ngClass]="{'active': activePath === 'masters'}"><i class="fa fa-signal" data-bs-toggle="tooltip" title="fa fa-signal" style="color: #637381;"></i><span> Master</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isCompany"><a routerLink="/masters/companylist" routerLinkActive="active">Company</a></li>
-                    <!-- <li *ngIf="isAccount"><a routerLink="/masters/accountlist" routerLinkActive="active">Account</a></li> -->
-                    <!-- <li *ngIf="isEmployee"><a routerLink="/masters/employeelist" routerLinkActive="active">Employee</a></li> -->
-                    <!-- <li *ngIf="isWarehouse"><a routerLink="/masters/warehouse" routerLinkActive="active">Warehouse</a></li> -->
-                    <li *ngIf="isBranch"><a routerLink="/masters/branch" routerLinkActive="active">Branch</a></li>
-                    <!-- <li *ngIf="isAccountSubType"><a routerLink="/masters/account_subtype" routerLinkActive="active">Account Sub Type</a></li> -->
-                    <!-- <li *ngIf="isCompanyBank"><a routerLink="/masters/companyBank" routerLinkActive="active">Company Bank</a></li> -->
-                    <!-- <li *ngIf="isAdditional"><a routerLink="/masters/additionalCharge" routerLinkActive="active">Additional Charges</a></li>             -->
-                </ul>
+                <li *ngIf="isBranch"><a routerLink="/masters/branch" routerLinkActive="active">Branch</a></li>
+            </ul>
             </li> 
 
-            <li class="submenu" *ngIf="isAccount || isAccountSubType ">
-                <a [ngClass]="{'active': activePath === 'account'}"><i class="fa fa-users" data-bs-toggle="tooltip" title="fa fa-users"></i><span> Accounts</span> <span class="menu-arrow"></span></a>
+            <li class="submenu" *ngIf="isAccount || isAccountSubType">
+                <a [ngClass]="{'active': activePath === 'account'}"><i class="fa fa-users" data-bs-toggle="tooltip" title="fa fa-users" style="color: #637381;"></i><span> Accounts</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isAccount"><a routerLink="/account/accountlist" routerLinkActive="active">Account</a></li>
                     <li *ngIf="isAccountSubType"><a routerLink="/account/account_subtype" routerLinkActive="active">Account Sub Type</a></li>         
@@ -88,7 +82,10 @@
                 </ul>
             </li> 
             <li class="submenu" *ngIf="isPurchase || isMaterialInward || isPurchaseBill || isDebitNotes">
-                <a  [ngClass]="{'active': activePath === 'purchase'}"><img src="assets/img/icons/purchase1.svg" alt="img"><span> Purchase</span> <span
+                <a  [ngClass]="{'active': activePath === 'purchase'}">
+                        <!-- <img src="assets/img/icons/purchase1.svg" alt="img"> -->
+                        <i class="fa fa-book" data-bs-toggle="tooltip" title="fa fa-book"></i>
+                        <span> Purchase</span> <span
                         class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isPurchase"><a routerLink="/purchase/purchaselist" routerLinkActive="active">Purchase List</a></li>
@@ -125,14 +122,14 @@
                 </ul>
             </li> 
             <li class="submenu" >
-                <a [ngClass]="{'active': activePath === 'poss'}"><i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax"></i><span> POS</span> <span class="menu-arrow"></span></a>
+                <a [ngClass]="{'active': activePath === 'newpos'}"><i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax" style="color: #637381;"></i><span> POS</span> <span class="menu-arrow"></span></a>
                 <ul>
-                    <li *ngIf="isPosOrder"><a routerLink="/poss/posOrder" routerLinkActive="active">POS Order</a></li>
-                <li><a routerLink="/poss/pos" target="_blank" routerLinkActive="active">POS New</a></li>
+                    <li *ngIf="isPosOrder"><a routerLink="/newpos/posOrder" routerLinkActive="active">POS Order</a></li>
+                <li><a routerLink="/newpos/pos" target="_blank" routerLinkActive="active">POS New</a></li>
                 </ul>
             </li> 
             <li class="submenu" *ngIf="isCompanyBank || isReciept || isExpence || isPurchasepos">
-                <a [ngClass]="{'active': activePath === 'bank'}"> <i class="fa fa-credit-card" data-bs-toggle="tooltip" title="fa fa-credit-card"></i><span> Bank</span> <span class="menu-arrow"></span></a>
+                <a [ngClass]="{'active': activePath === 'bank'}"> <i class="fa fa-credit-card" data-bs-toggle="tooltip" title="fa fa-credit-card" style="color: #637381;"></i><span> Bank</span> <span class="menu-arrow"></span></a>
                 <ul>
                 <li *ngIf="isCompanyBank"><a routerLink="/bank/companyBank" routerLinkActive="active">Company Bank</a></li>
                 <!-- <li><a routerLink="/bank/payment" routerLinkActive="active">Payment</a></li> -->
@@ -151,8 +148,9 @@
                     <li *ngIf="isCity"><a routerLink="/places/citylist" routerLinkActive="active">City list</a></li>
                 </ul>
             </li>
+            
             <li class="submenu" *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview">
-                <a  [ngClass]="{'active': activePath === 'website'}"><i class="fa fa-sitemap" data-bs-toggle="tooltip" title="fa fa-sitemap"></i><span> Website</span> <span class="menu-arrow"></span></a>
+                <a  [ngClass]="{'active': activePath === 'website'}"><i class="fa fa-sitemap" data-bs-toggle="tooltip" title="fa fa-sitemap" style="color: #637381;"></i><span> Website</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isBanner"><a routerLink="/website/banner" routerLinkActive="active">Banner</a></li>  
                     <li *ngIf="isStaticPage"><a routerLink="/website/staticPage" routerLinkActive="active">Static pages</a></li>
@@ -170,14 +168,14 @@
                 </ul>
             </li>  
             
-              <li class="submenu">
+              <li class="submenu" *ngIf="isUser || isFinancialYear || isPaymentTerms || isGroup || isAdditional">
                   <a [ngClass]="{'active': activePath === 'settings'}"><img src="assets/img/icons/settings.svg" alt="img"><span> Settings</span> <span
                           class="menu-arrow"></span></a>
                   <ul [ngClass]="{'block': sideBarControls[18].value === true}">
                         <li *ngIf="isUser"><a routerLink="/settings/user" routerLinkActive="active">User</a></li>
                         <li *ngIf="isFinancialYear"><a routerLink="/settings/finncialYear" routerLinkActive="active">Financial Year</a></li>
                         <li *ngIf="isPaymentTerms"><a routerLink="/settings/paymentTerms" routerLinkActive="active">Payment Terms</a></li>
-                        <li><a routerLink="/settings/permissionGroup" routerLinkActive="active">Permission Group</a></li>
+                        <li *ngIf="isGroup"><a routerLink="/settings/permissionGroup" routerLinkActive="active">Permission Group</a></li>
                         <li *ngIf="isAdditional"><a routerLink="/settings/additionalCharge" routerLinkActive="active">Additional Charges</a></li>            
 
                         <!-- <li><a routerLink="/settings/generalsettings" routerLinkActive="active">General Settings</a></li>

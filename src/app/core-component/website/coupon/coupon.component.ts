@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { WebsiteService } from 'src/app/Services/website/website.service';
 import Swal from 'sweetalert2';
 
@@ -39,7 +40,7 @@ export class CouponComponent implements OnInit {
   pageSize: number = 5;
   itemsPerPage = 5;
 
-  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,) {
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,private cs:CompanyService) {
   }
 
   delRes: any
@@ -143,6 +144,7 @@ export class CouponComponent implements OnInit {
   isAdd:any;
   isEdit:any;
   isDelete:any;
+  userDetails:any
   ngOnInit(): void {
     this.couponForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
@@ -155,23 +157,44 @@ export class CouponComponent implements OnInit {
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
-        if (res.content_type.app_label === 'product'  && res.content_type.model === 'coupon' && res.codename=='add_coupon') {
-          this.isAdd = res.codename;
-          console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'coupon' && res.codename=='change_coupon') {
-          this.isEdit = res.codename;
-          console.log(this.isEdit);
-        }
-        else if (res.content_type.app_label === 'product' && res.content_type.model === 'coupon' && res.codename=='delete_coupon') {
-          this.isDelete = res.codename;
-          console.log(this.isDelete);
-        }
+
+    //permission from ocalstorage
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'product'  && res.content_type.model === 'coupon' && res.codename=='add_coupon') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'coupon' && res.codename=='change_coupon') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     }
+    //     else if (res.content_type.app_label === 'product' && res.content_type.model === 'coupon' && res.codename=='delete_coupon') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+
+       // permission from profile api
+       this.cs.userDetails$.subscribe((userDetails) => {
+        this.userDetails = userDetails;
+        const permission = this.userDetails?.permission;
+        permission.map((res: any) => {
+          if (res.content_type.app_label === 'product'  && res.content_type.model === 'coupon' && res.codename=='add_coupon') {
+            this.isAdd = res.codename;
+            console.log(this.isAdd);
+          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'coupon' && res.codename=='change_coupon') {
+            this.isEdit = res.codename;
+            console.log(this.isEdit);
+          }
+          else if (res.content_type.app_label === 'product' && res.content_type.model === 'coupon' && res.codename=='delete_coupon') {
+            this.isDelete = res.codename;
+            console.log(this.isDelete);
+          }
+        });
       });
-    }
   }
   allSelected: boolean = false;
   selectedRows: boolean[]

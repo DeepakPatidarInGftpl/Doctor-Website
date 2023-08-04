@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:AboutFooterBannerComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:allowedRoles}}
+  {path:'',component:AboutFooterBannerComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_aboutfooterbanner', 'change_aboutfooterbanner', 'delete_aboutfooterbanner', 'view_aboutfooterbanner']}}
 ];
 
 @NgModule({

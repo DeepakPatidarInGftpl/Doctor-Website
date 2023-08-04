@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [{ path: '', component: CountrieslistComponent,canActivate: [RolesGuardGuard], 
-data: { allowedRoles: allowedRoles } }];
+data: { allowedRoles: ['add_country', 'change_country', 'delete_country', 'view_country'] } }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

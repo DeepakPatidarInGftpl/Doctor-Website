@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { WebsiteService } from 'src/app/Services/website/website.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2';
@@ -25,7 +26,7 @@ export class FooterListComponent implements OnInit {
 
   imgUrl = 'https://pv.greatfuturetechno.com';
   
-  constructor(private websiteService: WebsiteService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
+  constructor(private websiteService: WebsiteService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private cs:CompanyService) {
     this.QueryService.filterToggle();
   }
 
@@ -134,28 +135,48 @@ export class FooterListComponent implements OnInit {
  isAdd:any;
  isEdit:any;
  isDelete:any;
+ userDetails:any
   ngOnInit(): void {
   this.websiteService.getFooter().subscribe(res=>{
     this.tableData=res;
     this.loader=false;
     this.selectedRows = new Array(this.tableData.length).fill(false);
   })
-  const localStorageData = JSON.parse(localStorage.getItem('auth'));
-  if (localStorageData && localStorageData.permission) {
-    const permission = localStorageData.permission;
-    permission.map((res: any) => {
-      if (res.content_type.app_label === 'website'  && res.content_type.model === 'footer' && res.codename=='add_footer') {
-        this.isAdd = res.codename;
-        console.log(this.isAdd);    
-      } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename=='change_footer') {
-        this.isEdit = res.codename;
-        console.log(this.isEdit); 
-      }else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename=='delete_footer') {
-        this.isDelete = res.codename;
-        console.log(this.isDelete); 
-      }
+  //permission from localstorage
+  // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+  // if (localStorageData && localStorageData.permission) {
+  //   const permission = localStorageData.permission;
+  //   permission.map((res: any) => {
+  //     if (res.content_type.app_label === 'website'  && res.content_type.model === 'footer' && res.codename=='add_footer') {
+  //       this.isAdd = res.codename;
+  //       console.log(this.isAdd);    
+  //     } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename=='change_footer') {
+  //       this.isEdit = res.codename;
+  //       console.log(this.isEdit); 
+  //     }else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename=='delete_footer') {
+  //       this.isDelete = res.codename;
+  //       console.log(this.isDelete); 
+  //     }
+  //   });
+  // } 
+
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'website'  && res.content_type.model === 'footer' && res.codename=='add_footer') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);    
+        } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename=='change_footer') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit); 
+        }else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename=='delete_footer') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete); 
+        }
+      });
     });
-  } 
   }
 //select table row
 allSelected: boolean = false;

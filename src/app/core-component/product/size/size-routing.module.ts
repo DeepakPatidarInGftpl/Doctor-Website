@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [{path:'',component:SizeComponent,canActivate:[RolesGuardGuard], 
-data: { allowedRoles: allowedRoles }}];
+data: { allowedRoles: ['add_size', 'change_size', 'delete_size', 'view_size'] }}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

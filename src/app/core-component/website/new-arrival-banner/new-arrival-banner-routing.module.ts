@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:NewArrivalBannerComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:allowedRoles}}
+  {path:'',component:NewArrivalBannerComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_newarrivalsbanner', 'change_newarrivalsbanner', 'delete_newarrivalsbanner', 'view_newarrivalsbanner']}}
 ];
 
 @NgModule({

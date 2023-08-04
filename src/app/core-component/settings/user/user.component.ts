@@ -5,6 +5,7 @@ import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { employee } from 'src/app/interfaces/employee';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -22,7 +23,7 @@ export class UserComponent implements OnInit {
   itemsPerPage:number=10;
 
   isAscending: boolean = true;
-  constructor(private contactService: ContactService, private QueryService: QueryService,) {
+  constructor(private contactService: ContactService, private QueryService: QueryService, private profileService:CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -128,6 +129,7 @@ export class UserComponent implements OnInit {
   isAdd:any;
   isEdit:any;
   isDelete:any;
+  userDetails:any;
   ngOnInit(): void {
     this.contactService.getUser().subscribe(res => {
       console.log(res);
@@ -135,22 +137,39 @@ export class UserComponent implements OnInit {
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
-        if (res.content_type.app_label === 'master'  && res.content_type.model === 'user' && res.codename=='add_user') {
-          this.isAdd = res.codename;
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'master'  && res.content_type.model === 'user' && res.codename=='add_user') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'master' && res.content_type.model === 'user' && res.codename=='change_user') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     }else if (res.content_type.app_label === 'master' && res.content_type.model === 'user' && res.codename=='delete_user') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+
+    this.profileService.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res?.content_type.app_label === 'master'  && res?.content_type.model === 'user' && res?.codename=='add_user') {
+          this.isAdd = res?.codename;
           console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'user' && res.codename=='change_user') {
-          this.isEdit = res.codename;
+        } else if (res?.content_type.app_label === 'master' && res?.content_type.model === 'user' && res?.codename=='change_user') {
+          this.isEdit = res?.codename;
           console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'user' && res.codename=='delete_user') {
-          this.isDelete = res.codename;
+        }else if (res?.content_type.app_label === 'master' && res?.content_type.model === 'user' && res?.codename=='delete_user') {
+          this.isDelete = res?.codename;
           console.log(this.isDelete);
         }
       });
-    }
+    });
   }
 
   allSelected: boolean = false;
@@ -210,8 +229,8 @@ select=false
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.name.toLocaleLowerCase();
-        const companyNameLower = res.username.toLocaleLowerCase();
+        const nameLower = res?.name.toLocaleLowerCase();
+        const companyNameLower = res?.username.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
           return true;
         } else if (companyNameLower.match(searchTerm)) {

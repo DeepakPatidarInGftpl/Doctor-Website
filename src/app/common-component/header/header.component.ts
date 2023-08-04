@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { AuthServiceService } from 'src/app/Services/auth-service.service';
 import { SettingsService } from 'src/app/shared/settings/settings.service';
@@ -18,7 +19,7 @@ export class HeaderComponent implements OnInit {
   public logoPath: string = '';
 
   constructor(private Router: Router, private settings: SettingsService, private authServ: AuthServiceService, private toastr: ToastrService,
-    private coreService: CoreService
+    private coreService: CoreService, private profileService:CompanyService
   ) {
     this.activePath = this.Router.url.split('/')[2];
     this.Router.events.subscribe((data: any) => {
@@ -78,8 +79,16 @@ export class HeaderComponent implements OnInit {
   }
   userDetails: any
   profile() {
-    this.coreService.getProfile().subscribe(res => {
+    this.coreService.getProfile().subscribe((res:any) => {
       this.userDetails = res;
+      this.profileService.setUserDetails(this.userDetails); 
+
+      const userDetails = res?.permission;
+        const storedUserDetails = this.profileService.getUserDetails();
+        if (!storedUserDetails || storedUserDetails.length !== userDetails.length) {
+          this.profileService.setUserPermission(userDetails);
+          window.location.reload();
+        }
     },err=>{
       console.log(err.error.detail=='Invalid token.');
       if(err.error.detail=='Invalid token.'){

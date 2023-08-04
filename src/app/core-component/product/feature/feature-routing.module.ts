@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [{path:'',component:FeatureComponent,canActivate: [RolesGuardGuard],
-data: { allowedRoles: allowedRoles }}];
+data: { allowedRoles: ['add_productfeatures', 'change_productfeatures', 'delete_productfeatures', 'view_productfeatures'] }}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

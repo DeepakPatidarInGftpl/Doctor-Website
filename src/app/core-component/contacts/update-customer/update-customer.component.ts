@@ -26,23 +26,23 @@ export class UpdateCustomerComponent implements OnInit {
     this.id = this.Arout.snapshot.paramMap.get('id')
     this.customerForm = this.fb.group({
       login_access: new FormControl(''),
-      name: new FormControl('',[Validators.required]),
+      name: new FormControl('',),
       company_name: new FormControl(''),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       telephone_no: new FormControl('',),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl('',[Validators.email]),
       remark: new FormControl(''),
-      date_of_birth: new FormControl('',[Validators.required]),
-      anniversary_date: new FormControl('',[Validators.required]),
+      date_of_birth: new FormControl('',),
+      anniversary_date: new FormControl('',),
       gst_type: new FormControl('',),
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
       apply_tds: new FormControl(''),
-      credit_limit: new FormControl('',[Validators.required]),
+      credit_limit: new FormControl('',),
       address: this.fb.array([]),
-      payment_terms: new FormControl('',[Validators.required]),
-      opening_balance: new FormControl('',[Validators.required]),
+      payment_terms: new FormControl('',),
+      opening_balance: new FormControl('',),
       invite_code: new FormControl(''),
       membership: new FormControl(''),
       opening_balance_type:new FormControl('',[Validators.required])
@@ -53,7 +53,13 @@ export class UpdateCustomerComponent implements OnInit {
      
       if(this.id==res.id){
         this.customerForm.patchValue(res);
-        this.customerForm.get('payment_terms')?.patchValue(res.payment_terms.id)
+        this.customerForm.get('name')?.patchValue(res.name==null?'':res.name)
+        this.customerForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
+        this.customerForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
+        this.customerForm.get('anniversary_date')?.patchValue(this.getRes?.anniversary_date == null ? '' : this.getRes?.anniversary_date)
+        this.customerForm.get('credit_limit')?.patchValue(this.getRes?.credit_limit == null ? '' : this.getRes?.credit_limit)
+        this.customerForm.get('opening_balance')?.patchValue(this.getRes?.opening_balance == null ? '' : this.getRes?.opening_balance)
+       
         this.customerForm.setControl('address', this.updateAddress(this.getRes.address));
    }
     })
@@ -76,13 +82,13 @@ export class UpdateCustomerComponent implements OnInit {
     add.forEach((j: any) => {
       console.log(j);
       const addressGroup = this.fb.group({
-        address_line_1: j.address_line_1,
-        address_line_2: j.address_line_2,
-        country: j.country.id,
+        address_line_1: j?.address_line_1==null?'':j?.address_line_1,
+        address_line_2: j?.address_line_2==null?'':j?.address_line_2,
+        country: j?.country.id,
         state: null,
         city: null,
-        pincode: j.pincode,
-        address_type: j.address_type
+        pincode: j?.pincode==null?'':j?.pincode,
+        address_type: j?.address_type==null?'':j?.address_type
       });
       formArr.push(addressGroup);
     });
@@ -341,6 +347,13 @@ export class UpdateCustomerComponent implements OnInit {
   }
   get apply_tds() {
     return this.customerForm.get('apply_tds')
+  }
+  
+  get membership() {
+    return this.customerForm.get('membership')
+  }
+  get invite_code() {
+    return this.customerForm.get('invite_code')
   }
   get credit_limit() {
     return this.customerForm.get('credit_limit')

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import Swal from 'sweetalert2';
 
@@ -26,7 +27,7 @@ export class FinancialYearComponent implements OnInit {
   p:number=1
   pageSize: number = 10;
   itemsPerPage:number=10;
-  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
+  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private profileService:CompanyService) {
    
   }
 
@@ -133,6 +134,7 @@ export class FinancialYearComponent implements OnInit {
  isAdd:any;
  isEdit:any;
  isDelete:any;
+ userDetails:any;
   ngOnInit(): void {
     this.FinancialYearForm = this.fb.group({
       start_year: new FormControl('', [Validators.required]),
@@ -145,22 +147,39 @@ export class FinancialYearComponent implements OnInit {
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
-        if (res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='add_financialyear') {
-          this.isAdd = res.codename;
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='add_financialyear') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='change_financialyear') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     } else if(res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='delete_financialyear'){
+    //       this.isDelete=res.codename;
+    //       console.log(this.isDelete); 
+    //     }
+    //   });
+    // }
+
+    this.profileService.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename=='add_financialyear') {
+          this.isAdd = res?.codename;
           console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='change_financialyear') {
-          this.isEdit = res.codename;
+        } else if (res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename=='change_financialyear') {
+          this.isEdit = res?.codename;
           console.log(this.isEdit);
-        } else if(res.content_type.app_label === 'website' && res.content_type.model === 'financialyear' && res.codename=='delete_financialyear'){
-          this.isDelete=res.codename;
+        } else if(res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename=='delete_financialyear'){
+          this.isDelete=res?.codename;
           console.log(this.isDelete); 
         }
       });
-    }
+    });
   }
 
   allSelected: boolean = false;
