@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [{path:'',component:EditaccountComponent,canActivate: [RolesGuardGuard], 
-data: { allowedRoles: [allowedRoles] }}];
+data: { allowedRoles: ['change_account'] }}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

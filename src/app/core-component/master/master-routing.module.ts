@@ -9,28 +9,28 @@ const routes: Routes = [
   {
     path: 'companylist',
     loadChildren: () =>
-      import('../company/companylist/companylist.module').then(
+      import('./company/companylist/companylist.module').then(
         (m) => m.CompanylistModule
       ),
   },
   {
     path: 'addcompany',
     loadChildren: () =>
-      import('../company/addcompany/addcompany.module').then(
+      import('./company/addcompany/addcompany.module').then(
         (m) => m.AddcompanyModule
       ),
   },
   {
     path: 'editcompany/:id',
     loadChildren: () =>
-      import('../company/editcompany/editcompany.module').then(
+      import('./company/editcompany/editcompany.module').then(
         (m) => m.EditcompanyModule
       ),
   },
   {
     path: 'company-details/:id',
     loadChildren: () =>
-      import('../company/company-details/company-details.module').then(
+      import('./company/company-details/company-details.module').then(
         (m) => m.CompanyDetailsModule
       ),
   },

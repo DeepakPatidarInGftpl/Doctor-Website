@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
 }
 const routes: Routes = [
   {path:'',component:UnitConversionComponent,canActivate: [RolesGuardGuard],
-  data: { allowedRoles: allowedRoles }}
+  data: { allowedRoles: ['add_unitconversion', 'change_unitconversion', 'delete_unitconversion', 'view_unitconversion'] }}
 ];
 
 @NgModule({

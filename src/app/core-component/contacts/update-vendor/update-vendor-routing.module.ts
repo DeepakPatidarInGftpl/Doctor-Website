@@ -17,7 +17,7 @@ if (localStorageData && localStorageData.permission) {
 
 const routes: Routes = [
   {path:'',component:UpdateVendorComponent,canActivate: [RolesGuardGuard], 
-  data: { allowedRoles: [allowedRoles] }}
+  data: { allowedRoles: ['change_vendor'] }}
 ];
 
 @NgModule({

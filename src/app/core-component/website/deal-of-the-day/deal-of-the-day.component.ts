@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { WebsiteService } from 'src/app/Services/website/website.service';
 import Swal from 'sweetalert2';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
 // vaidation for future date
 function futureDateValidator(): ValidatorFn {
@@ -44,7 +45,7 @@ export class DealOfTheDayComponent implements OnInit {
   pageSize: number = 5;
 
   itemsPerPage = 5;
-  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,) {
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,private cs:CompanyService) {
   }
 
   delRes: any
@@ -149,6 +150,7 @@ export class DealOfTheDayComponent implements OnInit {
  isAdd:any;
  isEdit:any;
  isDelete:any;
+ userDetails:any;
   ngOnInit(): void {
     this.dealOfTheDayForm = this.fb.group({
       variant: new FormArray([], [Validators.required]),
@@ -173,9 +175,29 @@ export class DealOfTheDayComponent implements OnInit {
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getVariant();
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
+
+    //permission from localstorage
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename=='add_dealsoftheday') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);   
+    //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename=='change_dealsoftheday') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);  
+    //     }else if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename=='delete_dealsoftheday') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);  
+    //     }
+    //   });
+    // }  
+
+     // permission from profile api
+     this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
       permission.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename=='add_dealsoftheday') {
           this.isAdd = res.codename;
@@ -188,7 +210,7 @@ export class DealOfTheDayComponent implements OnInit {
           console.log(this.isDelete);  
         }
       });
-    }  
+    });
   }
 
   //

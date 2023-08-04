@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
@@ -18,7 +19,7 @@ export class PurchaseBillComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage: number = 10;
 
-  constructor(private purchaseService: PurchaseServiceService,) { }
+  constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -123,6 +124,7 @@ export class PurchaseBillComponent implements OnInit {
   isAdd:any;
   isEdit:any
   isDelete:any;
+  userDetails:any
   ngOnInit(): void {
     this.purchaseService.getPurchaseBill().subscribe(res => {
       console.log(res);
@@ -130,22 +132,41 @@ export class PurchaseBillComponent implements OnInit {
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
-        if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename=='add_purchasebill') {
-          this.isAdd = res.codename;
-          console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename=='change_purchasebill') {
-          this.isEdit = res.codename;
-          console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename=='delete_purchasebill') {
-          this.isDelete = res.codename;
-          console.log(this.isDelete);
-        }
+    //from localstorage permision
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename=='add_purchasebill') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename=='change_purchasebill') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     }else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename=='delete_purchasebill') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+    
+      // permissin from api profile
+      this.cs.userDetails$.subscribe((userDetails) => {
+        this.userDetails = userDetails;
+        const permission = this.userDetails?.permission;
+        permission.map((res: any) => {
+          if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename=='add_purchasebill') {
+            this.isAdd = res.codename;
+            console.log(this.isAdd);
+          } else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename=='change_purchasebill') {
+            this.isEdit = res.codename;
+            console.log(this.isEdit);
+          }else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename=='delete_purchasebill') {
+            this.isDelete = res.codename;
+            console.log(this.isDelete);
+          }
+        });
       });
-    }
   }
 
   allSelected: boolean = false;

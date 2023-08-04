@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
     }
   });
 }
-const routes: Routes = [{ path: '', component: EditpurchaseComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:[allowedRoles]} }];
+const routes: Routes = [{ path: '', component: EditpurchaseComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['change_purchaseorder']} }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

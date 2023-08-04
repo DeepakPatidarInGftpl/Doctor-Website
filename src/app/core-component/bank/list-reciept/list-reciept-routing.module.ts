@@ -16,7 +16,7 @@ if (localStorageData && localStorageData.permission) {
 }
 
 const routes: Routes = [
-  {path:'',component:ListRecieptComponent,canActivate: [RolesGuardGuard], data: { allowedRoles: [allowedRoles] }}
+  {path:'',component:ListRecieptComponent,canActivate: [RolesGuardGuard], data: { allowedRoles: ['view_receipt'] }}
 ];
 
 @NgModule({

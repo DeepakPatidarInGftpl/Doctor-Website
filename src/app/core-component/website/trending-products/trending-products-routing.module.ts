@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:TrendingProductsComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:allowedRoles}}
+  {path:'',component:TrendingProductsComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_trandingproduct', 'change_trandingproduct', 'delete_trandingproduct', 'view_trandingproduct']}}
 ];
 
 @NgModule({

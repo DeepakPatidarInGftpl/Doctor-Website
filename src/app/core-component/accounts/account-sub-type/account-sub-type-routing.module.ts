@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
 }
 const routes: Routes = [
   {path:'',component:AccountSubTypeComponent,canActivate:[RolesGuardGuard], 
-  data: { allowedRoles: allowedRoles } }
+  data: { allowedRoles: ['add_accountsubtypes', 'change_accountsubtypes', 'delete_accountsubtypes', 'view_accountsubtypes'] } }
 ];
 
 @NgModule({

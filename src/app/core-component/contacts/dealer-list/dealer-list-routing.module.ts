@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:DealerListComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:[allowedRoles]}}
+  {path:'',component:DealerListComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['view_dealer']}}
 ];
 
 @NgModule({

@@ -16,7 +16,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:PurchaseBillComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:[allowedRoles]}}
+  {path:'',component:PurchaseBillComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['view_purchasebill']}}
 ];
 
 @NgModule({

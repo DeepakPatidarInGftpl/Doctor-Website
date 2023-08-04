@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:StaticPagesComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:[allowedRoles]}},
+  {path:'',component:StaticPagesComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['view_staticpages']}},
   { path: 'details/:slug',
   loadChildren: () =>
     import('./staticpage-detals/staticpage-detals.module').then(

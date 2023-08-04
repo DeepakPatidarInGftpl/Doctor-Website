@@ -35,8 +35,9 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
-                                src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <!-- <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="printInvoice()"> -->
+                            <img src="assets/img/icons/pdf.svg" alt="img">
+                            <!-- </a> -->
                     </li>
                     <li>
                         <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
@@ -49,8 +50,82 @@
                 </ul>
             </div>
         </div>
+  <!-- /Filter -->
+                 <div class="card mb-0" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Start Date </label>
+                                            <input type="date" [(ngModel)]="startDate" (change)="filterData()">
+                                           
+                                        </div>
+                                    </div>
+                                    <div class="col-lg col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>End Date </label>
+                                            <input type="date" [(ngModel)]="endDate" (change)="filterData()">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Receipt Mode </label>
+                                            <select [(ngModel)]="selectedReceiptMode" (change)="filterData()" class="form-select">
+                                                <option value="" selected disabled>Select Receipt Mode</option>
+                                                <option value="">All</option>
+                                                <option value="Card">Card</option>
+                                                <option value="Bank">Bank</option>
+                                                <option value="UPI">UPI</option>
+                                                <option value="Cash">Cash</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Receipt Method</label>
+                                            <select [(ngModel)]="selectedReceiptMethod" (change)="filterData()" class="form-select">
+                                                <option value="" selected disabled>Select Receipt Method</option>
+                                                <option value="">All</option>
+                                                <option value="Advance">Advance</option>
+                                                <option value="Against Bill">Against Bill</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <div class="form-group" (click)="clearDateRange()">
+                                            <a class="btn btn-filters ms-auto" style="width: 10%;">Clear Filter</a>
+                                        </div>     
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <!-- /Filter -->
+        <!-- <div>
+            <label>Start Date: </label>
+            <input type="date" [(ngModel)]="startDate" (change)="filterData()">
+            <label>End Date: </label>
+            <input type="date" [(ngModel)]="endDate" (change)="filterData()">
+            <label>Receipt Mode:</label>
+            <select [(ngModel)]="selectedReceiptMode" (change)="filterData()">
+                <option value="">All</option>
+                <option value="Card">Card</option>
+                <option value="Bank">Bank</option>
+                <option value="UPI">UPI</option>
+                <option value="Cash">Cash</option>
+            </select>
 
-        <div class="table-responsive">
+            <label>Receipt Method:</label>
+            <select [(ngModel)]="selectedReceiptMethod" (change)="filterData()">
+                <option value="">All</option>
+                <option value="Advance">Advance</option>
+                <option value="Against Bill">Against Bill</option>
+            </select>
+            <button (click)="clearDateRange()">Clear Dates</button>
+        </div> -->
+
+        <div class="table-responsive" #invoice>
             <table class="table datanew">
                 <thead>
                     <tr>
@@ -62,10 +137,12 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Name<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Receipt Mode<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Receipt Method<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Amount<i class="fa fa-sort"></i></th>
-                        <!-- <th (click)="sort('id')" class="thone">Bill No<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Bill No<i class="fa fa-sort"></i></th>
+                        <!-- 
                         <th (click)="sort('id')" class="thone">Upi<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Bank<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Card<i class="fa fa-sort"></i></th> -->
@@ -74,9 +151,10 @@
                         <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
-                <tbody *ngIf="tableData?.length>=0">
+                <tbody *ngIf="filteredData?.length>=0">
+                    <!-- <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index"> -->
                     <tr
-                        *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                        *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -86,11 +164,13 @@
                         <td>{{i+1}}</td>
                         <td class="productimgname">
                             <a style="line-height: 3;"
-                                routerLink="//bank/detailsReciept/{{products.id}}">{{products?.receipt_mode}}</a>
+                                routerLink="//bank/detailsReciept/{{products.id}}">{{products?.customer?.name}}</a>
                         </td>
+                        <td>{{products?.receipt_mode}}</td>
                         <td>{{products?.receipt_method}}</td>
                         <td>{{products?.amount}}</td>
-                        <!-- <td>{{products?.bill_no}}</td>
+                        <td>{{products?.bill_no}}</td>
+                        <!-- 
                         <td>{{products?.receipt_upi_id?.upi_no}}</td>
                         <td>{{products?.receipt_bank_id?.account_no}}</td>
                         <td>{{products?.receipt_card_id?.cart_transactions_no}}</td> -->
@@ -110,14 +190,13 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="tableData?.length==0">
+                <tbody *ngIf="filteredData?.length==0 && !loader">
                     <tr>
                         <td colspan="10">
                             <p class="center-textt">Data not available</p>
                         </td>
                     </tr>
                 </tbody>
-
             </table>
             <div class="progressbar">
                 <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>

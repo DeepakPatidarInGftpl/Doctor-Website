@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [{path:'',component:UnitComponent,canActivate: [RolesGuardGuard],
-data: { allowedRoles: allowedRoles }}];
+data: { allowedRoles: ['add_unit', 'change_unit', 'delete_unit', 'view_unit'] }}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

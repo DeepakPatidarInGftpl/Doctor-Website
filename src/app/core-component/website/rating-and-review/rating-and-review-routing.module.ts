@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:RatingAndReviewComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:allowedRoles}}
+  {path:'',component:RatingAndReviewComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_ratingandreviewsonproduct', 'change_ratingandreviewsonproduct', 'delete_ratingandreviewsonproduct', 'view_ratingandreviewsonproduct']}}
 ];
 
 @NgModule({

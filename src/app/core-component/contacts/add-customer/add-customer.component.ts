@@ -22,25 +22,25 @@ export class AddCustomerComponent implements OnInit {
 
   ngOnInit(): void {
     this.customerForm = this.fb.group({
-      login_access: new FormControl('', [Validators.required]),
-      name: new FormControl('',[Validators.required]),
+      login_access: new FormControl('', ),
+      name: new FormControl('',),
       company_name: new FormControl('',),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       telephone_no: new FormControl('',),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl('', [Validators.email]),
       remark: new FormControl(''),
-      date_of_birth: new FormControl('', [Validators.required]),
-      anniversary_date: new FormControl('', [Validators.required]),
+      date_of_birth: new FormControl('', ),
+      anniversary_date: new FormControl('', ),
       gst_type: new FormControl('',),
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
-      apply_tds: new FormControl('', [Validators.required]),
-      credit_limit: new FormControl('', [Validators.required]),
+      apply_tds: new FormControl('',),
+      credit_limit: new FormControl('',),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      opening_balance: new FormControl('', [ Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type:new FormControl('',[Validators.required]),
       invite_code: new FormControl(''),
       membership: new FormControl('')
@@ -257,6 +257,12 @@ export class AddCustomerComponent implements OnInit {
   }
   get apply_tds() {
     return this.customerForm.get('apply_tds')
+  }
+  get membership() {
+    return this.customerForm.get('membership')
+  }
+  get invite_code() {
+    return this.customerForm.get('invite_code')
   }
   get credit_limit() {
     return this.customerForm.get('credit_limit')

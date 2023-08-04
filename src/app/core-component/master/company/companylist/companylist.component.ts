@@ -59,11 +59,30 @@ export class CompanylistComponent implements OnInit {
   isAdd: any;
   isEdit: any;
   isDelete:any;
+  userDetails:any
   ngOnInit(): void {
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
+    //from localstorage
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'add_company') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'change_company') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     }else if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'delete_company') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+//from profile api
+    this.companyService.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'add_company') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
@@ -75,7 +94,7 @@ export class CompanylistComponent implements OnInit {
           console.log(this.isDelete);
         }
       });
-    }
+    });
     // this.companyService.getCompany()
     // this.companyService.companyBehaviour.subscribe( () => {
     //   this.tableData = JSON.parse(localStorage.getItem('companyList')!);

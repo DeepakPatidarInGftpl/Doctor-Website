@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 } 
 const routes: Routes = [{path:'',component:FinancialYearComponent,canActivate: [RolesGuardGuard], 
-data: { allowedRoles: allowedRoles }
+data: { allowedRoles: ['add_financialyear', 'change_financialyear', 'delete_financialyear', 'view_financialyear'] }
 }];
 
 @NgModule({
