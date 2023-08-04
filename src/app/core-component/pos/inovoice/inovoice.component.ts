@@ -46,11 +46,66 @@ export class InovoiceComponent implements OnInit {
 
   getSubTotal(cart:any){
     let total = 0
-    for (let index = 0; index < cart.length; index++) {
+    for (let index = 0; index < cart?.length; index++) {
       const element = cart[index];
-      total += element.net_cost
+      total += element?.unit_cost
     }
     return total;
+  }
+
+  getTaxTotal(cart:any){
+    let total = 0
+    for (let index = 0; index < cart?.length; index++) {
+      const element = cart[index];
+      total += element?.tax_amount
+    }
+    return total;
+  }
+
+  getTotalQty(cart:any){
+    let total = 0
+    for (let index = 0; index < cart?.length; index++) {
+      const element = cart[index];
+      total += element?.qty
+    }
+    return total;
+  }
+
+  getTotalMrp(cart:any){
+    let total = 0
+    for (let index = 0; index < cart?.length; index++) {
+      const element = cart[index];
+      total += element?.mrp
+    }
+    return total;
+  }
+
+  getTotalNet(cart:any){
+    let total = 0
+    for (let index = 0; index < cart?.length; index++) {
+      const element = cart[index];
+      total += element?.net_cost
+    }
+    return total;
+  }
+
+  getTotal(order:any){
+    let additional_charge = order?.additional_charge;
+    let subTotal = this.getSubTotal(order?.cart);
+    let taxTotal = order?.total_tax;
+    let total = additional_charge + subTotal + taxTotal;
+    return Number(total).toFixed(2);
+  }
+
+  getDateForOrders(timestamp:any){
+    const dateObject = new Date(timestamp);
+  
+  const year = dateObject.getFullYear();
+  const month = dateObject.getMonth() + 1; // Note: Months are zero-based, so we add 1 to get the correct month number.
+  const day = dateObject.getDate();
+  
+  const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+  return formattedDate;
   }
 
   printInvoice() {
