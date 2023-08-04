@@ -35,12 +35,12 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <!-- <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="printInvoice()"> -->
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="printInvoice()">
                             <img src="assets/img/icons/pdf.svg" alt="img">
-                            <!-- </a> -->
+                            </a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="printInvoiceExcel()"><img
                                 src="assets/img/icons/excel.svg" alt="img"></a>
                     </li>
                     <li>
@@ -147,14 +147,13 @@
                         <th (click)="sort('id')" class="thone">Bank<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Card<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
-                        <!-- <th (click)="sort('id')" class="thone">Remarks<i class="fa fa-sort"></i></th> -->
+                        <th (click)="sort('id')" class="thone">Remarks<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="filteredData?.length>=0">
                     <!-- <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index"> -->
-                    <tr
-                        *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                    <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -163,8 +162,7 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a style="line-height: 3;"
-                                routerLink="//bank/detailsReciept/{{products.id}}">{{products?.customer?.name}}</a>
+                            <a style="line-height: 3;" routerLink="//bank/detailsReciept/{{products.id}}">{{products?.customer?.name}}</a>
                         </td>
                         <td>{{products?.receipt_mode}}</td>
                         <td>{{products?.receipt_method}}</td>
@@ -175,7 +173,7 @@
                         <td>{{products?.receipt_bank_id?.account_no}}</td>
                         <td>{{products?.receipt_card_id?.cart_transactions_no}}</td> -->
                         <td>{{products?.receipt_date |date:'dd/MM/yyyy'}}</td>
-                        <!-- <td>{{products?.description}}</td> -->
+                        <td>{{products?.description}}</td>
                         <td>
                             <a class="me-1" routerLink="//bank/detailsReciept/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
