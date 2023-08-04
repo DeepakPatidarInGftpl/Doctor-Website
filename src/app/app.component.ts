@@ -20,7 +20,6 @@ export class AppComponent {
 
     login() {
     return !!localStorage.getItem('token');
-
-
   }
+
 }

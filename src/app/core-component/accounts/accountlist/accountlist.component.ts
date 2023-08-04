@@ -6,6 +6,7 @@ import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { employee } from 'src/app/interfaces/employee';
 import { Account } from 'src/app/interfaces/account';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 @Component({
   selector: 'app-accountlist',
   templateUrl: './accountlist.component.html',
@@ -22,7 +23,8 @@ export class AccountlistComponent implements OnInit {
   p:number=1
   pageSize: number = 10;
   itemsPerPage:number=10;
-  constructor(private coreService: CoreService, private QueryService: QueryService,) {
+  constructor(private coreService: CoreService, private QueryService: QueryService,
+    private companyService:CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -127,6 +129,7 @@ export class AccountlistComponent implements OnInit {
   isAdd:any;
   isEdit:any;
   isDelete:any;
+  userDetails:any
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -151,10 +154,29 @@ export class AccountlistComponent implements OnInit {
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
+
+    //from localstorage check permisison
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'add_account') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'change_account') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     }else if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'delete_account') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+// from profile api 
+    this.companyService.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'add_account') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
@@ -166,7 +188,8 @@ export class AccountlistComponent implements OnInit {
           console.log(this.isDelete);
         }
       });
-    }
+    });
+    
   }
 
   allSelected: boolean = false;

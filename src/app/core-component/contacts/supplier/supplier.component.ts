@@ -4,6 +4,7 @@ import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { employee } from 'src/app/interfaces/employee';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
 @Component({
   selector: 'app-supplier',
@@ -22,7 +23,7 @@ export class SupplierComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage: number = 10;
 
-  constructor(private contactService: ContactService, private QueryService: QueryService,) {
+  constructor(private contactService: ContactService, private QueryService: QueryService, private cs:CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -127,6 +128,7 @@ export class SupplierComponent implements OnInit {
   isAdd: any;
   isEdit: any;
   isDelete: any
+  userDetails:any
   ngOnInit(): void {
     this.contactService.getSupplier().subscribe(res => {
       console.log(res);
@@ -134,10 +136,29 @@ export class SupplierComponent implements OnInit {
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
+    //permission from localstorage
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'add_supplier') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'change_supplier') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'delete_supplier') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+
+    // permissin from api profile
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'add_supplier') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
@@ -149,7 +170,7 @@ export class SupplierComponent implements OnInit {
           console.log(this.isDelete);
         }
       });
-    }
+    });
   }
 
   allSelected: boolean = false;

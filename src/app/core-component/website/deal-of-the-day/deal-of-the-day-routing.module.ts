@@ -13,7 +13,7 @@ if (localStorageData && localStorageData.permission) {
     }
   });
 }
-const routes: Routes = [{path:'',component:DealOfTheDayComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:allowedRoles}}];
+const routes: Routes = [{path:'',component:DealOfTheDayComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_dealsoftheday', 'change_dealsoftheday', 'delete_dealsoftheday', 'view_dealsoftheday']}}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

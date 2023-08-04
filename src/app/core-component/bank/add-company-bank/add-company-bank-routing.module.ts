@@ -17,7 +17,7 @@ if (localStorageData && localStorageData.permission) {
 const routes: Routes = [
   {
     path: '', component: AddCompanyBankComponent, canActivate: [RolesGuardGuard],
-    data: { allowedRoles: [allowedRoles] }
+    data: { allowedRoles: ['add_companybank'] }
   }
 ];
 

@@ -73,7 +73,7 @@
 
       <!-- Flag -->
       <li class="nav-item dropdown has-arrow flag-nav">
-        <a class="nav-link dropdown-toggle"  routerLink="/poss/pos" target="_blank">
+        <a class="nav-link dropdown-toggle"  routerLink="/newpos/pos" target="_blank">
           <!-- <img src="assets/dummy/pos.png" alt="" height="20" /> -->
           <!-- <i class="fa-solid fa-cash-register"></i> -->
           <i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax"></i>
@@ -226,8 +226,8 @@
                 <img src="assets/dummy/profile.png" alt="" />
                 <span class="status online"></span></span>
               <div class="profilesets">
-                <h6>{{userDetails?.username}}</h6>
-                <!-- <h5>{{userDetails.email}}</h5> -->
+                <h6>{{userDetails?.username | titlecase}}</h6>
+                <h5 *ngIf="userDetails?.role!=='None'"><b>Role</b>:{{userDetails?.role}}</h5>
               </div>
             </div>
             <hr class="m-0" />

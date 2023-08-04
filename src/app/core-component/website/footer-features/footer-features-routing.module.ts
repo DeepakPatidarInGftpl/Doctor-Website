@@ -13,7 +13,7 @@ if (localStorageData && localStorageData.permission) {
     }
   });
 }
-const routes: Routes = [{path:'',component:FooterFeaturesComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:allowedRoles}}];
+const routes: Routes = [{path:'',component:FooterFeaturesComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_footerfeatures', 'change_footerfeatures', 'delete_footerfeatures', 'view_footerfeatures']}}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

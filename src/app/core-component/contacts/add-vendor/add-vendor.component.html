@@ -140,7 +140,7 @@
                       'is-invalid': f['credit_limit'].touched && f['credit_limit'].invalid}">
                         <span class="text-danger"
                             *ngIf="credit_limit && credit_limit.invalid && credit_limit.touched">Enter your
-                            credit_limit</span>
+                            credit limit</span>
                     </div>
                 </div>
 
@@ -161,7 +161,7 @@
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                  <label>Country</label>
+                                  <label>Country*</label>
                                   <select formControlName="country" class="w-100 h-100 border" #countryValue
                                     (change)="selectState(countryValue.value,i)" id="country">
                                     <option value="" selected disabled>Country</option>
@@ -175,7 +175,7 @@
                               </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label>State</label>
+                                    <label>State*</label>
                                     <select formControlName="state" class="w-100 h-100 border" #stateValue
                                         (change)="selectCity(stateValue.value,i)">
                                         <option value="" selected disabled>State</option>
@@ -192,7 +192,7 @@
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label> City</label>
+                                    <label> City*</label>
                                     <select formControlName="city" class="w-100 h-100 border" id="city">
                                         <option value="" selected disabled>City</option>
                                         <option value="{{city.id}}" *ngFor="let city of city[i]">{{city.city}}</option>
@@ -305,7 +305,7 @@
                         <label>Payment Terms</label>
                         <select formControlName="payment_terms" class="w-100 h-100 border" id="payment_terms" [ngClass]="{
                             'is-invalid': f['payment_terms'].touched && f['payment_terms'].invalid}">
-                                <option value="" selected disabled>payment_terms</option>
+                                <option value="" selected disabled>Select Payment terms</option>
                                 <option value="{{payment.id}}" *ngFor="let payment of paymentTerms">{{payment.title}}</option>
                             </select>
                         <span class="text-danger"
@@ -355,6 +355,9 @@
                         <label>Invite Code</label>
                         <input type="text" formControlName="invite_code" id="invite_code"
                             [ngClass]="{'is-invalid': f['invite_code'].touched && f['invite_code'].invalid}">
+                            <span class="text-danger ml-5 pl-5"
+                            *ngIf="invite_code && invite_code.invalid && invite_code.touched">
+                            Enter Invite code</span>
                    
                     </div>
                 </div>
@@ -363,6 +366,9 @@
                         <label>Membership</label>
                         <input type="text" formControlName="membership" id="membership"
                             [ngClass]="{'is-invalid': f['membership'].touched && f['membership'].invalid}">
+                            <span class="text-danger ml-5 pl-5"
+                            *ngIf="membership && membership.invalid && membership.touched">
+                            Enter membership</span>
                    
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
@@ -25,7 +26,8 @@ export class SubcategorylistComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,
+    private cs :CompanyService) {
     this.QueryService.filterToggle();
   }
 
@@ -132,6 +134,7 @@ export class SubcategorylistComponent implements OnInit {
   isAdd:any;
   isEdit:any;
   isDelete:any;
+  userDetails:any
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -170,23 +173,40 @@ export class SubcategorylistComponent implements OnInit {
 
     this.productCategory();
     this.getbrand()
-
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='add_productsubcategory') {
-          this.isAdd = res.codename;
-          console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='change_productsubcategory') {
-          this.isEdit = res.codename;
-          console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='delete_productsubcategory') {
-          this.isDelete = res.codename;
-          console.log(this.isDelete);
-        }
+// localstorege used permission
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='add_productsubcategory') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='change_productsubcategory') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='delete_productsubcategory') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+      // permission from profile api
+      this.cs.userDetails$.subscribe((userDetails) => {
+        this.userDetails = userDetails;
+        const permission = this.userDetails?.permission;
+        permission.map((res: any) => {
+          if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='add_productsubcategory') {
+            this.isAdd = res.codename;
+            console.log(this.isAdd);
+          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='change_productsubcategory') {
+            this.isEdit = res.codename;
+            console.log(this.isEdit);
+          }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='delete_productsubcategory') {
+            this.isDelete = res.codename;
+            console.log(this.isDelete);
+          }
+        });
       });
-    }
   }
   // selected table roww
   allSelected: boolean = false;

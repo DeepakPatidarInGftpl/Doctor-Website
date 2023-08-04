@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [{path:'',component:ColorsComponent,canActivate:[RolesGuardGuard], 
-data: { allowedRoles: allowedRoles } }];
+data: { allowedRoles: ['add_color', 'change_color', 'delete_color', 'view_color'] } }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

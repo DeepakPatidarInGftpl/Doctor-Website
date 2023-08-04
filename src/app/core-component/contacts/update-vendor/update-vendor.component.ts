@@ -34,20 +34,20 @@ export class UpdateVendorComponent implements OnInit {
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl(''),
       remark: new FormControl(''),
-      date_of_birth: new FormControl('', [Validators.required]),
-      anniversary_date: new FormControl('', [Validators.required]),
+      date_of_birth: new FormControl('',),
+      anniversary_date: new FormControl('',),
       gst_type: new FormControl('',),
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
       apply_tds: new FormControl(''),
-      credit_limit: new FormControl('', [Validators.required]),
+      credit_limit: new FormControl('',),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl('', [Validators.required]),
-      invite_code: new FormControl('', [Validators.required]),
-      membership: new FormControl('', [Validators.required]),
+      opening_balance: new FormControl('',),
+      invite_code: new FormControl('',),
+      membership: new FormControl('',),
       opening_balance_type:new FormControl('',[Validators.required])
     })
 
@@ -58,7 +58,13 @@ export class UpdateVendorComponent implements OnInit {
     this.contactService.getVendorById(this.id).subscribe(res => {
       this.getRes = res;
       this.vendorForm.patchValue(this.getRes);
-      this.vendorForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id);
+      // this.vendorForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id);
+      this.vendorForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
+      this.vendorForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
+      this.vendorForm.get('anniversary_date')?.patchValue(this.getRes?.anniversary_date == null ? '' : this.getRes?.anniversary_date)
+      this.vendorForm.get('credit_limit')?.patchValue(this.getRes?.credit_limit == null ? '' : this.getRes?.credit_limit)
+      this.vendorForm.get('opening_balance')?.patchValue(this.getRes?.opening_balance == null ? '' : this.getRes?.opening_balance)
+     
       this.vendorForm.setControl('address', this.updateAddress(this.getRes?.address));
       this.vendorForm.setControl('bank_id', this.udateBank(this.getRes?.bank_id));
     });
@@ -77,13 +83,13 @@ export class UpdateVendorComponent implements OnInit {
     add.forEach((j: any) => {
       console.log(j);
       const addressGroup = this.fb.group({
-        address_line_1: j.address_line_1,
-        address_line_2: j.address_line_2,
-        country: j.country.id,
+        address_line_1: j?.address_line_1==null?'':j?.address_line_1,
+        address_line_2: j?.address_line_2==null?'':j?.address_line_2,
+        country: j?.country.id,
         state: null,
         city: null,
-        pincode: j.pincode,
-        address_type: j.address_type
+        pincode: j?.pincode==null?'':j?.pincode,
+        address_type: j?.address_type==null?'':j?.address_type
       });
 
       formArr.push(addressGroup);
@@ -309,6 +315,7 @@ export class UpdateVendorComponent implements OnInit {
           }
         }
       }, err => {
+        this.loader=false
         console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
@@ -367,6 +374,12 @@ export class UpdateVendorComponent implements OnInit {
   }
   get gst_type() {
     return this.vendorForm.get('gst_type')
+  }
+  get invite_code() {
+    return this.vendorForm.get('invite_code')
+  }
+  get membership() {
+    return this.vendorForm.get('membership')
   }
   get gstin() {
     return this.vendorForm.get('gstin')

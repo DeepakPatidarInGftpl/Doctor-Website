@@ -12,16 +12,16 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class UpdateDealerComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private contactService: ContactService, private toastr: ToastrService, private router: Router, private coreService: CoreService,private Arout:ActivatedRoute) { }
+  constructor(private fb: FormBuilder, private contactService: ContactService, private toastr: ToastrService, private router: Router, private coreService: CoreService, private Arout: ActivatedRoute) { }
   dealerForm!: FormGroup;
 
   get f() {
     return this.dealerForm.controls;
   }
-  getRes:any;
-  id:any;
+  getRes: any;
+  id: any;
   ngOnInit(): void {
-    this.id=this.Arout.snapshot.paramMap.get('id');
+    this.id = this.Arout.snapshot.paramMap.get('id');
 
     this.dealerForm = this.fb.group({
       login_access: new FormControl('',),
@@ -44,15 +44,18 @@ export class UpdateDealerComponent implements OnInit {
       payment_terms: new FormControl(''),
       opening_balance: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       // supplier_type: new FormControl('', [Validators.required]),
-      opening_balance_type: new FormControl('',[Validators.required]),
+      opening_balance_type: new FormControl('', [Validators.required]),
       membership: new FormControl('')
     });
 
     this.contactService.getDealerById(this.id).subscribe(res => {
       this.getRes = res;
       this.dealerForm.patchValue(res);
-      this.dealerForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms?.id)
-
+      this.dealerForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
+      this.dealerForm.get('date_of_birth')?.patchValue(this.getRes?.date_of_birth == null ? '' : this.getRes?.date_of_birth)
+      this.dealerForm.get('anniversary_date')?.patchValue(this.getRes?.anniversary_date == null ? '' : this.getRes?.anniversary_date)
+      this.dealerForm.get('credit_limit')?.patchValue(this.getRes?.credit_limit == null ? '' : this.getRes?.credit_limit)
+      this.dealerForm.get('opening_balance')?.patchValue(this.getRes?.opening_balance == null ? '' : this.getRes?.opening_balance)
       this.dealerForm.setControl('address', this.updateAddress(this.getRes?.address));
       this.dealerForm.setControl('bank_id', this.udateBank(this.getRes?.bank_id));
     });
@@ -109,21 +112,20 @@ export class UpdateDealerComponent implements OnInit {
     this.getBanks().removeAt(i)
   }
 
-  
+
   updateAddress(add: any[]): FormArray {
     const formArr = new FormArray([]);
 
     add.forEach((j: any) => {
       console.log(j);
-
       const addressGroup = this.fb.group({
-        address_line_1: j.address_line_1,
-        address_line_2: j.address_line_2,
-        country: j.country.id,
+        address_line_1: j?.address_line_1==null?'':j?.address_line_1,
+        address_line_2: j?.address_line_2==null?'':j?.address_line_2,
+        country: j?.country.id,
         state: null,
         city: null,
-        pincode: j.pincode,
-        address_type: j.address_type
+        pincode: j?.pincode==null?'':j?.pincode,
+        address_type: j?.address_type==null?'':j?.address_type
       });
 
       formArr.push(addressGroup);
@@ -302,7 +304,7 @@ export class UpdateDealerComponent implements OnInit {
     if (this.dealerForm.valid) {
       console.log('log');
       this.loader = true;
-      this.contactService.updateDealer(formdata,this.id).subscribe(res => {
+      this.contactService.updateDealer(formdata, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Dealer updated successfully") {
@@ -313,12 +315,13 @@ export class UpdateDealerComponent implements OnInit {
         } else {
           this.loader = false
           this.toastr.error(this.addRes?.opening_balance[0]);
+          this.toastr.error(this.addRes?.error)
           if (this.addRes?.email) {
             this.toastr.error(this.addRes?.error?.email[0])
           }
         }
       }, err => {
-        this.loader=false
+        this.loader = false
         console.log(err.error);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)

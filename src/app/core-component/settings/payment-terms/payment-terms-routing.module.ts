@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 } 
 const routes: Routes = [
-  {path:'',component:PaymentTermsComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:allowedRoles}}
+  {path:'',component:PaymentTermsComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_paymentterms', 'change_paymentterms', 'delete_paymentterms', 'view_paymentterms']}}
 ];
 
 @NgModule({

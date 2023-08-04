@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2';
@@ -26,7 +27,7 @@ export class AdditionalChargeComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router) {
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private profileService:CompanyService) {
     this.QueryService.filterToggle();
   }
 
@@ -133,7 +134,7 @@ export class AdditionalChargeComponent implements OnInit {
   isAdd: any;
   isEdit: any;
   isDelete: any;
-
+  userDetails:any;
   ngOnInit(): void {
     this.additionForm = this.fb.group({
       additional_charge: new FormControl('', [Validators.required]),
@@ -148,6 +149,7 @@ export class AdditionalChargeComponent implements OnInit {
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getTax()
+
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData && localStorageData.permission) {
       const permission = localStorageData.permission;
@@ -165,6 +167,23 @@ export class AdditionalChargeComponent implements OnInit {
       });
     }
 
+    // this.profileService.userDetails$.subscribe((userDetails) => {
+    //   this.userDetails = userDetails;
+    //   const permission = this.userDetails?.permission;
+    //   permission?.map((res: any) => {
+    //     if (res?.content_type.app_label === 'account' && res?.content_type.model === 'additionalcharge' && res?.codename == 'add_additionalcharge') {
+    //       this.isAdd = res?.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res?.content_type.app_label === 'account' && res?.content_type.model === 'additionalcharge' && res?.codename == 'change_additionalcharge') {
+    //       this.isEdit = res?.codename;
+    //       console.log(this.isEdit);
+    //     } else if (res?.content_type.app_label === 'account' && res?.content_type.model === 'additionalcharge' && res?.codename == 'delete_additionalcharge') {
+    //       this.isDelete = res?.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // });
+  
   }
   taxList: any;
   getTax() {

@@ -5,6 +5,7 @@ import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { employee } from 'src/app/interfaces/employee';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
 @Component({
   selector: 'app-transport',
@@ -22,7 +23,7 @@ export class TransportComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage:number=10;
 
-  constructor(private contactService: ContactService, private QueryService: QueryService,) {
+  constructor(private contactService: ContactService, private QueryService: QueryService,private cs:CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -128,6 +129,7 @@ export class TransportComponent implements OnInit {
   isAdd:any;
   isEdit:any;
   isDelete:any;
+  userDetails:any
   ngOnInit(): void {
     this.contactService.getTransport().subscribe(res => {
       console.log(res);
@@ -135,10 +137,32 @@ export class TransportComponent implements OnInit {
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
+    //from localstorage use 
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'transport' && res.codename=='add_transport') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+          
+    //     } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename=='change_transport') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+          
+    //     }else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename=='delete_transport') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+          
+    //     }
+    //   });
+    // }
+    //permission from profile api
+  
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'transport' && res.codename=='add_transport') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
@@ -152,8 +176,8 @@ export class TransportComponent implements OnInit {
           console.log(this.isDelete);
           
         }
-      });
-    }
+    });
+  })
   }
 
   allSelected: boolean = false;

@@ -76,6 +76,7 @@ id:any;
           this.router.navigate(['//settings/user'])
         }else{
           this.loader=false;
+          this.toastr.error(this.addRes.error)
           if(this.addRes.phone_number){
             this.toastr.error(this.addRes.phone_number)
           }else if(this.addRes.username){

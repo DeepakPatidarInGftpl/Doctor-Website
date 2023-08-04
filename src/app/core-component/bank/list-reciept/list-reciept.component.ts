@@ -1,17 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { Account } from 'src/app/interfaces/account';
 import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-list-reciept',
   templateUrl: './list-reciept.component.html',
   styleUrls: ['./list-reciept.component.scss']
 })
 export class ListRecieptComponent implements OnInit {
+  @ViewChild('invoice') invoiceElement!: ElementRef;
 
-  
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any | Account
@@ -19,9 +23,9 @@ export class ListRecieptComponent implements OnInit {
   titlee: any;
   name: any
   p: number = 1
-  pageSize: number = 10;
-  itemsPerPage: number = 10;
-  constructor(private posService: PosDashboardService, private QueryService: QueryService,) {
+  pageSize: number = 20;
+  itemsPerPage: number = 20;
+  constructor(private posService: PosDashboardService, private QueryService: QueryService, private cs: CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -126,29 +130,42 @@ export class ListRecieptComponent implements OnInit {
   isAdd: any;
   isEdit: any;
   isDelete: any;
+  userDetails: any;
+
+  //filter
+  startDate: string;
+  endDate: string;
+  filteredData: any[]; // The filtered data
+  selectedReceiptMode: string = '';
+  selectedReceiptMethod: string = '';
+
   ngOnInit(): void {
-    console.log('');
     this.posService.getRecipt().subscribe(res => {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
-    })
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
-        if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'add_receipt') {
-          this.isAdd = res.codename;
-          console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'change_receipt') {
-          this.isEdit = res.codename;
-          console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'delete_receipt') {
-          this.isDelete = res.codename;
-          console.log(this.isDelete);
-        }
-      });
-    }
+      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+      this.filterData();
+    });
+
+   // permission from localstorage
+   const localStorageData = JSON.parse(localStorage.getItem('auth'));
+   if (localStorageData ) {
+     const permission = localStorageData;
+     permission.map((res: any) => {
+       if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'add_receipt') {
+         this.isAdd = res.codename;
+         console.log(this.isAdd);
+       } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'change_receipt') {
+         this.isEdit = res.codename;
+         console.log(this.isEdit);
+       } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'delete_receipt') {
+         this.isDelete = res.codename;
+         console.log(this.isDelete);
+       }
+     });
+   }
+
   }
 
   allSelected: boolean = false;
@@ -168,23 +185,38 @@ export class ListRecieptComponent implements OnInit {
     }
   }
 
+  // search() {
+  //   if (this.titlee == "") {
+  //     this.ngOnInit();
+  //   } else {
+  //     const searchTerm = this.titlee.toLocaleLowerCase();
+  //     this.tableData = this.tableData.filter(res => {
+  //       console.log(res);
+
+  //       const nameLower = res?.customer?.name.toLocaleLowerCase();
+  //       const companyNameLower = res.receipt_method.toLocaleLowerCase();
+  //       if (nameLower.match(searchTerm)) {
+  //         return true;
+  //       } else if (companyNameLower.match(searchTerm)) {
+  //         return true;
+  //       }
+  //       return false;
+  //     });
+  //   }
+  // }
+
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === undefined || this.titlee === null) {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.tableData = this.tableData.filter(res => {
-        const nameLower = res.receipt_mode.toLocaleLowerCase();
-        const companyNameLower = res.receipt_method.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)) {
-          return true;
-        } else if (companyNameLower.match(searchTerm)) {
-          return true;
-        }
-        return false;
+      this.filteredData = this.tableData.filter(res => {
+        const nameLower = res?.customer?.name?.toString()?.toLocaleLowerCase();
+        return nameLower?.includes(searchTerm) || !this.titlee;
       });
     }
   }
+
 
   key = 'id'
   reverse: boolean = false;
@@ -192,4 +224,251 @@ export class ListRecieptComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
+
+  //filter based on the start date and end date & also filter with the 
+  filterData() {
+    let filteredData = this.tableData.slice(); // copy of the original data
+    if (this.startDate && this.endDate) {
+      const startDate = new Date(this.startDate).getTime();
+      const endDate = new Date(this.endDate).getTime();
+      filteredData = filteredData.filter((item) => {
+        const receiptDate = new Date(item.receipt_date).getTime();
+        return receiptDate >= startDate && receiptDate <= endDate;
+      });
+    }
+    if (this.selectedReceiptMode) {
+      filteredData = filteredData.filter((item) => item.receipt_mode === this.selectedReceiptMode);
+    }
+    if (this.selectedReceiptMethod) {
+      filteredData = filteredData.filter((item) => item.receipt_method === this.selectedReceiptMethod);
+    }
+    this.filteredData = filteredData;
+  }
+
+
+
+  clearDateRange() {
+    this.startDate = null;
+    this.endDate = null;
+    this.filterData();
+    this.clearReceiptFilters();
+  }
+
+  clearReceiptFilters() {
+    this.selectedReceiptMode = null;
+    this.selectedReceiptMethod = null;
+    this.filterData();
+  }
+
+
+  printInvoice() {
+    // Make the element temporarily visible
+    //this.renderer.setStyle(this.invoiceElement.nativeElement, 'display', 'block');
+
+    // Access the element and retrieve its width
+    const elementWidth = this.invoiceElement.nativeElement.offsetWidth;
+    const elementHeight = this.invoiceElement.nativeElement.offsetHeight;
+    console.log('Element width:', elementWidth);
+
+    const invoice = this.invoiceElement.nativeElement;
+
+    const htmlWidth = elementWidth;
+    const htmlHeight = elementHeight;
+    const topLeftMargin = 15;
+    let pdfWidth = htmlWidth + (topLeftMargin * 2);
+    let pdfHeight = (pdfWidth * 1.5) + (topLeftMargin * 2);
+    const canvasImageWidth = htmlWidth;
+    const canvasImageHeight = htmlHeight;
+    const totalPDFPages = Math.ceil(htmlHeight / pdfHeight) - 1;
+    html2canvas(invoice).then(canvas => {
+      const contentDataURL = canvas.toDataURL('image/png')
+      let pdf = new jsPDF('p', 'mm', 'a4'); // A4 size page of PDF
+      var width = pdf.internal.pageSize.getWidth();
+      var height = canvas.height * width / canvas.width;
+      pdf.addImage(contentDataURL, 'PNG', 0, 0, width, height)
+      pdf.save(invoice); // Generated PDF
+      //this.renderer.setStyle(this.invoiceElement.nativeElement, 'display', 'none');
+    });
+  }
+
+
+
+  printInvoiceExcel() {
+    const generateExcel = (pageNum) => {
+      if (pageNum !== 0) {
+        return; // Only generate Excel for the first page (pageNum = 0)
+      }
+  
+      const startRow = 0; // Start from the first row
+      const endRow = Math.min(this.pageSize, this.filteredData.length); // Show up to 'pageSize' items
+  
+      const sheetName = `Page_1`; // Fixed sheet name for the first page
+      const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.createTable(startRow, endRow));
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  
+      XLSX.writeFile(wb, `invoice_page_1.xlsx`, { type: 'binary' });
+    };
+  
+    generateExcel(0);
+  }
+  
+  // createTable(startRow: number, endRow: number): HTMLTableElement {
+  //   // Create a new table for each page
+  //   const tempTable = document.createElement('table');
+  //   tempTable.className = 'table datanew';
+  //   const tempTBody = document.createElement('tbody');
+  
+  //   for (let i = startRow; i < endRow; i++) {
+  //     const rowData = this.filteredData[i];
+  //     const tr = document.createElement('tr');
+  
+  //     // Adding table cells for each column in the row
+  //     const checkboxCell = document.createElement('td');
+  //     const srNoCell = document.createElement('td');
+  //     const nameCell = document.createElement('td');
+  //     const receiptModeCell = document.createElement('td');
+  //     const receiptMethodCell = document.createElement('td');
+  //     const amountCell = document.createElement('td');
+  //     const billNoCell = document.createElement('td');
+  //     const dateCell = document.createElement('td');
+  //     const actionCell = document.createElement('td');
+  
+  //     // Adding data to each cell
+  //     checkboxCell.innerHTML = `<label class="checkboxs"><input type="checkbox" ${(this.selectedRows[i] ? 'checked' : '')}><span class="checkmarks"></span></label>`;
+  //     srNoCell.textContent = `${i + 1}`;
+  //     nameCell.innerHTML = `<a style="line-height: 3;" routerLink="//bank/detailsReciept/${rowData.id}">${rowData?.customer?.name}</a>`;
+  //     receiptModeCell.textContent = rowData?.receipt_mode;
+  //     receiptMethodCell.textContent = rowData?.receipt_method;
+  //     amountCell.textContent = rowData?.amount;
+  //     billNoCell.textContent = rowData?.bill_no;
+  //     dateCell.textContent = rowData?.receipt_date ? (new Date(rowData.receipt_date)).toLocaleDateString('en-US') : '';
+  //     billNoCell.textContent = rowData?.description;
+  
+  //     // Appending cells to the row
+  //     tr.appendChild(checkboxCell);
+  //     tr.appendChild(srNoCell);
+  //     tr.appendChild(nameCell);
+  //     tr.appendChild(receiptModeCell);
+  //     tr.appendChild(receiptMethodCell);
+  //     tr.appendChild(amountCell);
+  //     tr.appendChild(billNoCell);
+  //     tr.appendChild(dateCell);
+  //     tr.appendChild(actionCell);
+  
+  //     // Appending the row to the table body
+  //     tempTBody.appendChild(tr);
+  //   }
+  
+  //   // Appending the table body to the table
+  //   tempTable.appendChild(tempTBody);
+  
+  //   return tempTable;
+  // }
+  
+  createTable(startRow: number, endRow: number): HTMLTableElement {
+    // Create a new table for each page
+    const tempTable = document.createElement('table');
+    tempTable.className = 'table datanew';
+    const tempTBody = document.createElement('tbody');
+  
+    // Adding table headers for each column in the header row
+    const headerLabels = ['Checkbox', 'Sr. No', 'Name', 'Receipt Mode', 'Receipt Method', 'Amount', 'Bill No', 'Date', 'Description'];
+    const headerRow = document.createElement('tr');
+    headerLabels.forEach(label => {
+      const th = document.createElement('th');
+      th.textContent = label;
+      headerRow.appendChild(th);
+    });
+  
+    // Appending the header row to the table body
+    tempTBody.appendChild(headerRow);
+  
+    for (let i = startRow; i < endRow; i++) {
+      const rowData = this.filteredData[i];
+      const tr = document.createElement('tr');
+  
+      // Adding table cells for each column in the row
+      const checkboxCell = document.createElement('td');
+      checkboxCell.innerHTML = `<label class="checkboxs"><input type="checkbox" ${(this.selectedRows[i] ? 'checked' : '')}><span class="checkmarks"></span></label>`;
+  
+      const srNoCell = document.createElement('td');
+      srNoCell.textContent = `${i + 1}`;
+  
+      const nameCell = document.createElement('td');
+      nameCell.innerHTML = `<a style="line-height: 3;" routerLink="//bank/detailsReciept/${rowData.id}">${rowData?.customer?.name}</a>`;
+  
+      const receiptModeCell = document.createElement('td');
+      receiptModeCell.textContent = rowData?.receipt_mode;
+  
+      const receiptMethodCell = document.createElement('td');
+      receiptMethodCell.textContent = rowData?.receipt_method;
+  
+      const amountCell = document.createElement('td');
+      amountCell.textContent = rowData?.amount;
+  
+      const billNoCell = document.createElement('td');
+      billNoCell.textContent = rowData?.bill_no;
+  
+      const dateCell = document.createElement('td');
+      dateCell.textContent = rowData?.receipt_date ? (new Date(rowData.receipt_date)).toLocaleDateString('en-US') : '';
+  
+      const descriptionCell = document.createElement('td');
+      descriptionCell.textContent = rowData?.description;
+  
+      // Appending cells to the row
+      tr.appendChild(checkboxCell);
+      tr.appendChild(srNoCell);
+      tr.appendChild(nameCell);
+      tr.appendChild(receiptModeCell);
+      tr.appendChild(receiptMethodCell);
+      tr.appendChild(amountCell);
+      tr.appendChild(billNoCell);
+      tr.appendChild(dateCell);
+      tr.appendChild(descriptionCell);
+  
+      // Appending the row to the table body
+      tempTBody.appendChild(tr);
+    }
+  
+    // Appending the table body to the table
+    tempTable.appendChild(tempTBody);
+  
+    return tempTable;
+  }
+  
+  //print table
+
+  printTable() {
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    const tableData = this.getTableHTML();
+  
+    printWindow.document.open();
+    printWindow.document.write(`
+      <!doctype html>
+      <html>
+        <head>
+          <title>Print Table</title>
+          <style>
+            /* Add any custom CSS styles here for printing, if needed */
+          </style>
+        </head>
+        <body>
+          ${tableData}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  }
+  getTableHTML(): string {
+    const tableElement = document.querySelector('.table.datanew') as HTMLTableElement;
+    return tableElement.outerHTML;
+  }
+    
+  
 }
+
+
+
+

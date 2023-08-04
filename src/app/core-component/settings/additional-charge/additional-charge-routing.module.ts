@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
 }
 
 const routes: Routes = [
-  {path:'',component:AdditionalChargeComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:allowedRoles}}
+  {path:'',component:AdditionalChargeComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_additionalcharge', 'change_additionalcharge', 'delete_additionalcharge', 'view_additionalcharge']}}
 ];
 
 @NgModule({

@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
 }
 const routes: Routes = [
   {path:'',component:AboutBannerComponent,canActivate: [RolesGuardGuard],
-  data: { allowedRoles: allowedRoles }}
+  data: { allowedRoles: ['add_aboutbanner', 'change_aboutbanner', 'delete_aboutbanner', 'view_aboutbanner'] }}
 ];
 
 @NgModule({

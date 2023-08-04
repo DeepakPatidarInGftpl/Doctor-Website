@@ -171,7 +171,7 @@
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label>Country</label>
+                                    <label>Country*</label>
                                     <select formControlName="country" class="w-100 h-100 border" #countryValue
                                         (change)="selectState(countryValue.value,i)" id="country">
                                         <option value="" selected disabled>Country</option>
@@ -186,7 +186,7 @@
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label> State</label>
+                                    <label> State*</label>
                                     <select formControlName="state" class="w-100 h-100 border" #stateValue
                                         (change)="selectCity(stateValue.value,i)">
                                         <option value="" selected disabled>State</option>
@@ -203,7 +203,7 @@
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label> City</label>
+                                    <label> City*</label>
                                     <select formControlName="city" class="w-100 h-100 border" id="city">
                                         <option value="" selected disabled>City</option>
                                         <option value="{{city.id}}" *ngFor="let city of city[i]">{{city.city}}</option>
@@ -392,7 +392,7 @@
                     <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
-                    <a routerLink="//contacts/transform" class="btn btn-cancel">Cancel</a>
+                    <a routerLink="/contacts/transport" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>
         </form>

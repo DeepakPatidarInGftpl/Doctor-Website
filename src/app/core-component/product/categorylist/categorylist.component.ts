@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import { environment } from 'src/environments/environment';
@@ -21,7 +22,8 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  constructor(private QueryService: QueryService, private coreServ: CoreService, private router: Router, private toastr: ToastrService) {
+  constructor(private QueryService: QueryService, private coreServ: CoreService, private router: Router, private toastr: ToastrService,
+    private cs:CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -132,6 +134,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   isAdd:any;
   isEdit:any;
   isDelete:any;
+  userDetails:any
   ngOnInit() {
     this.coreServ.getProductCategor().subscribe(res => {
       this.tableData = res;
@@ -160,9 +163,28 @@ export class CategorylistComponent implements OnInit, OnDestroy {
 
     // };
  
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
+    //permission from localstorage
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='add_productcategory') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='change_productcategory') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='delete_productcategory') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+
+     // permission from profile api
+     this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
       permission.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='add_productcategory') {
           this.isAdd = res.codename;
@@ -175,7 +197,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
           console.log(this.isDelete);
         }
       });
-    }
+    });
   }
 
 
