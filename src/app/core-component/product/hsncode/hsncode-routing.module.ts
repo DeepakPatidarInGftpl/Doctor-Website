@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [{path:'',component:HsncodeComponent,canActivate: [RolesGuardGuard],
-data: { allowedRoles: allowedRoles }}];
+data: { allowedRoles: ['add_hsncode', 'change_hsncode', 'delete_hsncode', 'view_hsncode'] }}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

@@ -78,15 +78,15 @@ const routes: Routes = [
   },
   {
     path: 'addPermissionGroup',
-    loadChildren: () => import('../contacts/add-permission-group/add-permission-group.module').then((m) => m.AddPermissionGroupModule)
+    loadChildren: () => import('./add-permission-group/add-permission-group.module').then((m) => m.AddPermissionGroupModule)
   },
   {
     path: 'updatePermissionGroup/:id',
-    loadChildren: () => import('../contacts/update-permission-group/update-permission-group.module').then((m) => m.UpdatePermissionGroupModule)
+    loadChildren: () => import('./update-permission-group/update-permission-group.module').then((m) => m.UpdatePermissionGroupModule)
   },
   {
     path: 'detailsPermissionGroup/:id',
-    loadChildren: () => import('../contacts/details-permission-group/details-permission-group.module').then((m) => m.DetailsPermissionGroupModule)
+    loadChildren: () => import('./details-permission-group/details-permission-group.module').then((m) => m.DetailsPermissionGroupModule)
   },
   { path: 'additionalCharge', loadChildren: () => import('./additional-charge/additional-charge.module').then((m) => m.AdditionalChargeModule) },
   {

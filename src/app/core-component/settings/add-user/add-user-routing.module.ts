@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:AddUserComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:[allowedRoles]}}
+  {path:'',component:AddUserComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_user']}}
 ];
 
 @NgModule({

@@ -22,7 +22,7 @@ if (localStorageData && localStorageData.permission) {
 }
 
 const routes: Routes = [{ path: '', component: ProductlistComponent,canActivate: [RolesGuardGuard], 
-data: { allowedRoles:allowedRoles } }];
+data: { allowedRoles:['view_product'] } }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

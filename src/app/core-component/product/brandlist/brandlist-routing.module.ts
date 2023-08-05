@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [{ path: '', component: BrandlistComponent,canActivate:[RolesGuardGuard], 
-data: { allowedRoles: allowedRoles }  }];
+data: { allowedRoles: ['add_brands', 'change_brands', 'delete_brands', 'view_brands'] }  }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

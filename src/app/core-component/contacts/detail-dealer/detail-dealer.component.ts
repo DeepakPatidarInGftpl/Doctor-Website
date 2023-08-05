@@ -36,8 +36,8 @@ export class DetailDealerComponent implements OnInit {
   }
   dealerDetail: any
   getdata() {
-    this.contactService.getDealerById(this.id).subscribe(res => {
-        if(this.id==res.id){
+    this.contactService.getDealerById(this?.id).subscribe(res => {
+        if(this?.id==res?.id){
           this.dealerDetail = res
           console.log(res); 
         }

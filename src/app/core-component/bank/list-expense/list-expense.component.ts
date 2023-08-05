@@ -4,6 +4,7 @@ import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { Account } from 'src/app/interfaces/account';
 import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
 @Component({
   selector: 'app-list-expense',
@@ -21,7 +22,7 @@ export class ListExpenseComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  constructor(private posService: PosDashboardService, private QueryService: QueryService,) {
+  constructor(private posService: PosDashboardService, private QueryService: QueryService,private cs:CompanyService) {
     this.QueryService.filterToggle()
   }
 
@@ -126,6 +127,7 @@ export class ListExpenseComponent implements OnInit {
   isAdd: any;
   isEdit: any;
   isDelete: any;
+  userDetails:any;
   ngOnInit(): void {
     console.log('');
     this.posService.getExpense().subscribe(res => {
@@ -133,22 +135,42 @@ export class ListExpenseComponent implements OnInit {
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
-        if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'add_expance') {
-          this.isAdd = res.codename;
-          console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'change_expance') {
-          this.isEdit = res.codename;
-          console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'delete_expance') {
-          this.isDelete = res.codename;
-          console.log(this.isDelete);
-        }
-      });
-    }
+
+    //permission from localstorage data
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'add_expance') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'change_expance') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'delete_expance') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+
+        // permission from profile api
+        this.cs.userDetails$.subscribe((userDetails) => {
+          this.userDetails = userDetails;
+          const permission = this.userDetails?.permission;
+          permission.map((res: any) => {
+            if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'add_expance') {
+              this.isAdd = res.codename;
+              console.log(this.isAdd);
+            } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'change_expance') {
+              this.isEdit = res.codename;
+              console.log(this.isEdit);
+            } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'delete_expance') {
+              this.isDelete = res.codename;
+              console.log(this.isDelete);
+            }
+          });
+        });
   }
 
   allSelected: boolean = false;

@@ -135,6 +135,7 @@ export class StatelistComponent implements OnInit {
   isEdit:any;
   isAdd:any;
   isDelete:any;
+  userDetails:any;
   ngOnInit(): void {
     this.stateForm = this.fb.group({
       state: new FormControl('', [Validators.required]),
@@ -167,23 +168,41 @@ export class StatelistComponent implements OnInit {
     })
     console.log(this.tableData);
     this.getCountryList();
+//permission from localstorage
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='add_state') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='change_state') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     }else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='delete_state') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
 
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
-        if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='add_state') {
-          this.isAdd = res.codename;
-          console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='change_state') {
-          this.isEdit = res.codename;
-          console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='delete_state') {
-          this.isDelete = res.codename;
-          console.log(this.isDelete);
-        }
+      // permission from profile api
+      this.Service.userDetails$.subscribe((userDetails) => {
+        this.userDetails = userDetails;
+        const permission = this.userDetails?.permission;
+        permission.map((res: any) => {
+          if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='add_state') {
+            this.isAdd = res.codename;
+            console.log(this.isAdd);
+          } else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='change_state') {
+            this.isEdit = res.codename;
+            console.log(this.isEdit);
+          }else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='delete_state') {
+            this.isDelete = res.codename;
+            console.log(this.isDelete);
+          }
+        });
       });
-    }
   }
 
   //select table row

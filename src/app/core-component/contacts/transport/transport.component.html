@@ -48,7 +48,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table datatable  class="table datanew">
+            <table class="table datanew">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">
@@ -76,7 +76,7 @@
                             </label>
                         </td>
                         <td class="productimgname">
-                            <a routerLink="//contacts/transportUpdate/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
+                            <a routerLink="//contacts/transportDetails/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
                         </td>
                         <td>{{products.company_name}}</td>
                         <td>{{products.mobile_no}}</td>

@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [{path:'',component:TaxComponent,canActivate:[RolesGuardGuard], 
-data: { allowedRoles: allowedRoles }}];
+data: { allowedRoles: ['add_tax', 'change_tax', 'delete_tax', 'view_tax'] }}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup,Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { WebsiteService } from 'src/app/Services/website/website.service';
 import Swal from 'sweetalert2';
 @Component({
@@ -23,7 +24,7 @@ export class ReasonComponent implements OnInit {
   pageSize: number = 5;
 
   itemsPerPage = 5;
-  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,) {
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,private cs:CompanyService) {
   }
 
   delRes: any
@@ -128,6 +129,7 @@ export class ReasonComponent implements OnInit {
   isAdd:any;
   isEdit:any;
   isDelete:any;
+  userDetails:any
   ngOnInit(): void {
     this.reasonForm = this.fb.group({
       type: new FormControl('', [Validators.required]),
@@ -140,22 +142,41 @@ export class ReasonComponent implements OnInit {
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
-    const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    if (localStorageData && localStorageData.permission) {
-      const permission = localStorageData.permission;
-      permission.map((res: any) => {
-        if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='add_reason') {
-          this.isAdd = res.codename;
-          console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='change_reason') {
-          this.isEdit = res.codename;
-          console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='delete_reason') {
-          this.isDelete = res.codename;
-          console.log(this.isDelete);
-        }
+    //permission from localstorage
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='add_reason') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='change_reason') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='delete_reason') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+
+       // permission from profile api
+       this.cs.userDetails$.subscribe((userDetails) => {
+        this.userDetails = userDetails;
+        const permission = this.userDetails?.permission;
+        permission.map((res: any) => {
+          if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='add_reason') {
+            this.isAdd = res.codename;
+            console.log(this.isAdd);
+          } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='change_reason') {
+            this.isEdit = res.codename;
+            console.log(this.isEdit);
+          } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='delete_reason') {
+            this.isDelete = res.codename;
+            console.log(this.isDelete);
+          }
+        });
       });
-    }
   }
 
   allSelected: boolean = false;

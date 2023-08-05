@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:CouponComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:allowedRoles}}
+  {path:'',component:CouponComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_coupon', 'change_coupon', 'delete_coupon', 'view_coupon']}}
 ];
 
 @NgModule({

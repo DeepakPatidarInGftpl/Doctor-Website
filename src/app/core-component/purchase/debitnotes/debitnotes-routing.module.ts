@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:DebitnotesComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:[allowedRoles]}}
+  {path:'',component:DebitnotesComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['view_debitnote']}}
 ];
 
 @NgModule({

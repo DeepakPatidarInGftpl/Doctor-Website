@@ -31,7 +31,7 @@
                             <h6>{{subcategoryDetails.is_active}}</h6>
                         </li> -->
                         <li>
-                            <h4>Category</h4>
+                            <h4 style="font-weight: bolder;">Category</h4>
                             <div class="second-list">
                                 <ul *ngIf="subcategoryDetails.category">
                                     <li>
@@ -43,7 +43,7 @@
                                         <h6>{{subcategoryDetails.category.is_active}}</h6>
                                     </li> -->
                                     <li>
-                                        <h4>Image</h4>
+                                        <h4 >Image</h4>
                                         <div class="img-div">
                                             <img [src]="imgUrl+subcategoryDetails.category.image" alt="" class="img2">
                                         </div>
@@ -52,7 +52,7 @@
                             </div>
                         </li>
                         <li>
-                            <h4>Feature Group</h4>
+                            <h4 style="font-weight: bolder;">Feature Group</h4>
                             <div class="second-list">
                                 <ul *ngFor="let feature_group of subcategoryDetails.feature_group;let i =index">
                                     <li>
@@ -65,7 +65,7 @@
                             </div>
                         </li>
                         <li>
-                            <h4>Sub Categories</h4>
+                            <h4 style="font-weight: bolder;">Sub Categories</h4>
                             <div class="second-list">
                                 <ul *ngFor="let subcategories of subcategoryDetails.subcategories">
                                     <li>
@@ -121,7 +121,7 @@
                    
                     </ul>
                 </div>
-            </div>
+            </div>s
             <div class="d-flex align-items-center mx-3">
                 <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
                 <span [ngClass]="{'bg-lightgreen': subcategoryDetails.is_active === true, 'bg-lightred' : subcategoryDetails.is_active === false,'bg-lightyellow' : subcategoryDetails.is_active === 'Partial' }"

@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:AddAddressStoreComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:[allowedRoles]}}
+  {path:'',component:AddAddressStoreComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_storeaddress']}}
 ];
 
 @NgModule({

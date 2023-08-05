@@ -25,7 +25,7 @@ export class AddEmployeeComponent implements OnInit {
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl('',[Validators.email]),
-      remark: new FormControl(),
+      remark: new FormControl(''),
       dob: new FormControl('',),
       anniversary: new FormControl('',),
       apply_tds: new FormControl(''),
@@ -37,17 +37,25 @@ export class AddEmployeeComponent implements OnInit {
       wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       target: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
-      username: new FormControl(''),
-      password: new FormControl(''),
-      // permission_group: new FormControl(''),
+      username: new FormControl('',[Validators.required]),
+      password: new FormControl('',[Validators.required]),
+      role: new FormControl(''),
       // permissions:new FormArray([],),
     })
     this.addAddress();
     this.addBank();
     this.getCountry();
     this.getPermission();
+    this.getGroup();
   }
  
+  groupList:any
+  getGroup(){
+    this.contactService.getPermissionGroup().subscribe((res:any)=>{
+      console.log(res);
+      this.groupList=res
+    })
+  }
   addressAdd(): FormGroup {
     return this.fb.group({
       address_line_1: (''),
@@ -186,7 +194,7 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('target', this.employeeForm.get('target')?.value);
     formdata.append('username', this.employeeForm.get('username')?.value);
     formdata.append('password', this.employeeForm.get('password')?.value);
-    // formdata.append('permission_group', this.employeeForm.get('permission_group')?.value);
+    formdata.append('role', this.employeeForm.get('role')?.value);
     // formdata.append('permissions', JSON.stringify(this.employeeForm.get('permissions')?.value));
     
     // nested addrs data 
@@ -308,7 +316,9 @@ export class AddEmployeeComponent implements OnInit {
   get credit_limit() {
     return this.employeeForm.get('credit_limit')
   }
-
+get role(){
+  return this.employeeForm.get('role')
+}
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');
   }

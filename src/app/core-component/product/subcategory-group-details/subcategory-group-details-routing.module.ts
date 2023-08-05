@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [{path:'',component:SubcategoryGroupDetailsComponent, canActivate: [RolesGuardGuard], 
-data: { allowedRoles: [allowedRoles] }}];
+data: { allowedRoles: ['view_subcategorygroup'] }}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

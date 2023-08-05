@@ -15,7 +15,7 @@ if (localStorageData && localStorageData.permission) {
 }
 const routes: Routes = [
   {path:'',component:CitylistComponent,canActivate: [RolesGuardGuard], 
-  data: { allowedRoles: allowedRoles } }
+  data: { allowedRoles: ['add_city', 'change_city', 'delete_city', 'view_city'] } }
 ];
 
 @NgModule({

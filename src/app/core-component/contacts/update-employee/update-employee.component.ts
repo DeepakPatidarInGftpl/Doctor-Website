@@ -55,6 +55,14 @@ export class UpdateEmployeeComponent implements OnInit {
     this.contactService.getEmployeeById(this.id).subscribe(res => {
       this.getRes = res;
       this.employeeForm.patchValue(this.getRes);
+      this.employeeForm.get('commision')?.patchValue(this.getRes?.commision == undefined ? '' : this.getRes?.commision)
+      this.employeeForm.get('dob')?.patchValue(this.getRes?.dob == null ? '' : this.getRes?.dob)
+      this.employeeForm.get('anniversary')?.patchValue(this.getRes?.anniversary == null ? '' : this.getRes?.anniversary)
+      this.employeeForm.get('credit_limit')?.patchValue(this.getRes?.credit_limit == null ? '' : this.getRes?.credit_limit)
+      this.employeeForm.get('extra_wages')?.patchValue(this.getRes?.extra_wages == null ? '' : this.getRes?.extra_wages)
+      this.employeeForm.get('target')?.patchValue(this.getRes?.target == null ? '' : this.getRes?.target)
+      this.employeeForm.get('wages')?.patchValue(this.getRes?.wages == null ? '' : this.getRes?.wages)
+     
       this.employeeForm.setControl('address', this.updateAddress(this.getRes.address));
       this.employeeForm.setControl('bank_id', this.udateBank(this.getRes.bank_id));
     })
@@ -72,13 +80,13 @@ export class UpdateEmployeeComponent implements OnInit {
       console.log(j);
 
       const addressGroup = this.fb.group({
-        address_line_1: j.address_line_1,
-        address_line_2: j.address_line_2,
-        country: j.country.id,
+        address_line_1: j?.address_line_1==null?'':j?.address_line_1,
+        address_line_2: j?.address_line_2==null?'':j?.address_line_2,
+        country: j?.country.id,
         state: null,
         city: null,
-        pincode: j.pincode,
-        address_type: j.address_type
+        pincode: j?.pincode==null?'':j?.pincode,
+        address_type: j?.address_type==null?'':j?.address_type
       });
 
       formArr.push(addressGroup);
@@ -250,7 +258,7 @@ loader=false;
     formdata.append('target', this.employeeForm.get('target')?.value);
     // formdata.append('username', this.employeeForm.get('username')?.value);
     // formdata.append('password', this.employeeForm.get('password')?.value);
-    // formdata.append('permission_group', this.employeeForm.get('permission_group')?.value);
+    // formdata.append('role', this.employeeForm.get('role')?.value);
 
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
@@ -368,7 +376,9 @@ loader=false;
   get credit_limit() {
     return this.employeeForm.get('credit_limit')
   }
-
+  get role(){
+    return this.employeeForm.get('role')
+  }
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');
   }
