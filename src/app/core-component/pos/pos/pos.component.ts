@@ -1246,6 +1246,17 @@ export class PosComponent implements OnInit {
     return totalPrice;
   }
 
+  getRoundOff(){
+    const number = this.totalAmount();
+    const decimalPart = number % 1;
+    if(decimalPart !== 0){
+      const remainingPart = 1 - decimalPart;
+    return remainingPart.toFixed(2);
+    } else {
+      return (0).toFixed(2)    
+    }
+  }
+
   getTaxAmt(batch:any){
     let originalAmount = batch.selling_price_offline;
     let taxPercentage = batch.sale_tax;
