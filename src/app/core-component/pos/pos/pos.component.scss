@@ -51,7 +51,7 @@ font-size: 16px;
 
 .right-header-pos {
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
 }
 
 .amt-info-div ul {
@@ -206,9 +206,11 @@ color: #9C9C9C;
 }
 
 .mrp-input-table{
-    max-width: 220px;
+    max-width: 90px;
 }
-
+.disc-input-table, .add-disc-input-table{
+    max-width: 100px;
+}
 .table-black-grp span {
     background-color: black;
     color: white;

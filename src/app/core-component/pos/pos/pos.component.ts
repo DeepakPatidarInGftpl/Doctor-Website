@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Observer, fromEvent, merge, Subscription, OperatorFunction } from 'rxjs';
@@ -11,7 +11,6 @@ import { __values } from 'tslib';
 import { Modal } from 'bootstrap';
 import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-pos',
@@ -170,7 +169,7 @@ export class PosComponent implements OnInit {
     });
   }
 
-  @HostListener('window:keyup', ['$event'])
+  @HostListener('document:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if(event.code == KEY_CODE.F9){
       // Your row selection code
@@ -184,7 +183,14 @@ export class PosComponent implements OnInit {
       // Your row selection code
       console.log(event);
     }
+    if(event.code == KEY_CODE.F5){
+      console.log(event);
+      this.playBeepSound();
+      var clicking = <HTMLElement>document.querySelector('.upiF5');
+      clicking.click();
+    }
   }
+
 
   ngOnInit(): void {
     
@@ -1200,6 +1206,10 @@ export class PosComponent implements OnInit {
 
   displayCus(item: any): string {
     return item ? item?.mobile_no : '';
+  }
+
+  displayCus1(item: any): string {
+    return item ? `Name: ${item?.mobile_no}<br> ${item}` : '';
   }
 
   displayParty(item: any): string {
@@ -2244,7 +2254,7 @@ export class PosComponent implements OnInit {
 
 
 
-    console.log(cartData, 'cash');
+    console.log(cartData, 'card');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -2409,6 +2419,7 @@ export class PosComponent implements OnInit {
       const element = this.currentItems[index];
       console.log((this.getTaxAmt(element.batch[0]) * element.quantity), 'tax amt');
       console.log(this.getNetAmount(element?.batch[0], element?.quantity), 'net');
+
 
       let item = {
         "variant": element.id,
@@ -2593,6 +2604,12 @@ const roundedNumber = Math.round(floatValue * 100) / 100;
 return roundedNumber;
 }
 
+// Function to play the beep sound
+playBeepSound(): void {
+  const beepSound = new Audio('assets/dummy/beep.mp3');
+  beepSound.play();
+}
+
 
 }
 
@@ -2605,6 +2622,7 @@ export enum KEY_CODE {
   // RIGHT_ARROW = 39,
   // LEFT_ARROW = 37,
   F9 = 'F9',
-  F8 = 'F8',
+  F8 = 'F8',  
+  F5 = 'F5',
   UP_ARROW = 'ArrowUp'
 }
