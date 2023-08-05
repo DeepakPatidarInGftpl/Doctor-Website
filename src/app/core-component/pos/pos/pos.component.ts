@@ -2420,6 +2420,7 @@ export class PosComponent implements OnInit {
       console.log((this.getTaxAmt(element.batch[0]) * element.quantity), 'tax amt');
       console.log(this.getNetAmount(element?.batch[0], element?.quantity), 'net');
 
+      
       let item = {
         "variant": element.id,
         "qty": element.quantity,
