@@ -1269,6 +1269,12 @@ export class PosComponent implements OnInit {
     return totalPrice;
   }
 
+  finalAmount(){
+    const numbere = this.totalAmount();
+    const integerPart = Math.ceil(numbere);
+    return integerPart
+  }
+
   totalMrp(){
     //let cartItems = this.cartService.getCartItems();
     let cartItems = this.cartService.getCurrentItems();

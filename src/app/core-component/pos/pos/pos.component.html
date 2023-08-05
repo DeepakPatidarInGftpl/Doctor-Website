@@ -179,16 +179,16 @@
                                             <div class="input-group pos-i-grp table-black-grp">
                                                 <span class="input-group-text" id="basic-addon1">₹
                                                 </span>
-                                                <input type="text" value="25.00" class="form-control disc-input-table" aria-label="Username" aria-describedby="basic-addon1">
+                                                <input type="text" value="0.00" class="form-control disc-input-table" aria-label="Username" aria-describedby="basic-addon1">
                                             </div>
                                         </td>
                                         <td><div class="input-group pos-i-grp table-black-grp">
                                             <span class="input-group-text" id="basic-addon1">%</span>
                                             <input type="text" value="0.00" class="form-control disc-input-table" aria-label="Username" aria-describedby="basic-addon1">
                                         </div></td>
-                                        <td>{{cart?.batch[0]?.selling_price_offline}}</td>
-                                        <td>{{getPriceAfterTaxes(cart?.batch[0])}}</td>
-                                        <td>{{getNetAmount(cart?.batch[0], cart?.quantity)}}</td>
+                                        <td>Rs.{{cart?.batch[0]?.selling_price_offline}}</td>
+                                        <td>Rs.{{getPriceAfterTaxes(cart?.batch[0])}}</td>
+                                        <td>Rs.{{getNetAmount(cart?.batch[0], cart?.quantity)}}</td>
                                         <td><button (click)="removeOptionCurrent(cart)" class="table-cross-btn">
                                             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                                         </button></td>
@@ -213,21 +213,21 @@
                                         <h5>Quantity</h5>
                                     </li>
                                     <li>
-                                        <p>{{this.totalMrp()}}</p>
+                                        <p>Rs.{{this.totalMrp()}}</p>
                                         <h5>MRP</h5>
                                     </li>
                                     <li>
-                                        <p>{{this.totalTaxAmount()}}</p>
+                                        <p>Rs.{{this.totalTaxAmount()}}</p>
                                         <h5>Tax Amount</h5>
                                     </li>
                                     <li>
-                                        <p>{{currentTotalAdditionalCharges()}}</p>
+                                        <p>Rs.{{currentTotalAdditionalCharges()}}</p>
                                         <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addChargesModal" (click)="playBeepSound()"> 
                                             Add Charges <i class="fas fa-plus" data-bs-toggle="tooltip" title="fa fa-plus"></i>
                                         </button>
                                     </li>
                                     <li>
-                                        <p>0.000</p>
+                                        <p>Rs.0.00</p>
                                         <h5>Discount</h5>
                                     </li>
                                     <li>
@@ -249,7 +249,7 @@
                                         <h5>Round Off</h5>
                                     </li>
                                     <li>
-                                        <p>{{this.totalAmount()}}</p>
+                                        <p>Rs.{{this.finalAmount()}}</p>
                                         <h5>Amount</h5>
                                     </li>
                                 </ul>
@@ -582,7 +582,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Add Customer Details</h5>
-          <button type="button" class="btn-close addCusModal" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close addCusModal" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -1242,7 +1242,7 @@
     <div class="modal-dialog modal-fullscreen">
       <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close">Back To Sale</button>
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">Back To Sale</button>
         </div>
         <div class="modal-body">
            <div class="row flex-fill full-modal-row" style="min-height: 0">
@@ -1483,7 +1483,7 @@
                         <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.cashPaymentGenerateOrder('normal')">Submit</button>
                     </div>
                     <div>
-                        <button  id="exampleModal5Close" type="button" class="btn btn-dark w-100 cashModalClose" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button  id="exampleModal5Close" type="button" class="btn btn-dark w-100 cashModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -1689,7 +1689,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="batchModalLabel">Select Product Batch</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div> 
@@ -1750,7 +1750,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="addChargesModalLabel">Add Additional Charges</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div> 
@@ -1817,7 +1817,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="addChargesModalLabel">POS Orders</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div> 
@@ -1861,7 +1861,7 @@
 
             </div> -->
           <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-          <button type="button" class="btn btn-dark modal1BtnPos" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-dark modal1BtnPos" data-bs-dismiss="modal" (click)="playBeepSound()">Close</button>
         </div>
       </div>
     </div>
@@ -1873,7 +1873,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="upiModalLabel">UPI Details</h5>
-          <button type="button" class="btn-close upiModalClose" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close upiModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -1953,7 +1953,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="bankModalLabel">Bank Details</h5>
-          <button type="button" class="btn-close bankModalClose" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close bankModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -2016,7 +2016,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="payLaterModalLabel">Invoice</h5>
-          <button type="button" class="btn-close payLaterModalClose" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close payLaterModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -2105,7 +2105,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="cardModalLabel">Card Details</h5>
-          <button type="button" class="btn-close cardModalClose" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close cardModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -2213,7 +2213,7 @@
   <div class="offcanvas offcanvas-end pos-offcanvas" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasExampleLabel">On Hold</h5>
-      <button type="button" class="btn-close text-reset holdClose" data-bs-dismiss="offcanvas" aria-label="Close">
+      <button type="button" class="btn-close text-reset holdClose" data-bs-dismiss="offcanvas" aria-label="Close" (click)="playBeepSound()"> 
         <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
       </button>
     </div>
@@ -2263,7 +2263,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="expenseModalLabel">Expense</h5>
-          <button type="button" class="btn-close expenseModalClose" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close expenseModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -2379,7 +2379,7 @@ Payment Account is required.
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="salesModalLabel">Sales</h5>
-          <button type="button" class="btn-close salesModalClose" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close salesModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -2632,7 +2632,7 @@ Payment Account is required.
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="purchaseModalLabel">Purchase</h5>
-          <button type="button" class="btn-close purchaseModalClose" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close purchaseModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -2912,7 +2912,7 @@ Payment Account is required.
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="posPaymentsModalLabel">POS Payments</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div> 
@@ -3098,7 +3098,7 @@ Payment Account is required.
                         <button type="button" class="btn btn-dark mb-2 w-100" (click)="this.cashPaymentGenerateOrder('print')">Submit</button>
                     </div>
                     <div>
-                        <button  id="exampleModal5Close" type="button" class="btn btn-dark w-100 cashPrintModalClose" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button  id="exampleModal5Close" type="button" class="btn btn-dark w-100 cashPrintModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -3116,7 +3116,7 @@ Payment Account is required.
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="upiPrintModalLabel">UPI Details</h5>
-          <button type="button" class="btn-close upiPrintModalClose" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close upiPrintModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -3195,7 +3195,7 @@ Payment Account is required.
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="cardPrintModalLabel">Card Details</h5>
-          <button type="button" class="btn-close cardPrintModalClose" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close cardPrintModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
@@ -3305,7 +3305,7 @@ Payment Account is required.
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="bankPrintModalLabel">Bank Details</h5>
-          <button type="button" class="btn-close bankPrintModalClose" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close bankPrintModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
         </div>
