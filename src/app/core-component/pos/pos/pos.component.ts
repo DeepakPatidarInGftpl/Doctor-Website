@@ -2254,7 +2254,7 @@ export class PosComponent implements OnInit {
 
 
 
-    console.log(cartData, 'cash');
+    console.log(cartData, 'card');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -2420,7 +2420,7 @@ export class PosComponent implements OnInit {
       console.log((this.getTaxAmt(element.batch[0]) * element.quantity), 'tax amt');
       console.log(this.getNetAmount(element?.batch[0], element?.quantity), 'net');
 
-      
+
       let item = {
         "variant": element.id,
         "qty": element.quantity,
