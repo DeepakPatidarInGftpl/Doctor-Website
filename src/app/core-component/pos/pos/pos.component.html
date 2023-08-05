@@ -152,10 +152,10 @@
                                         <th>Product</th>
                                         <th>Qty</th>
                                         <th>MRP</th>
+                                        <th>Unit Cost</th>
                                         <th>Discount</th>
                                         <th>Add Disc</th>
-                                        <th>Unit Cost</th>
-                                        <th>UC With Tax</th>
+                                        <th>Tax</th>
                                         <th>Net Amount</th>
                                         <th></th>
                                     </tr>
@@ -173,22 +173,23 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="text" disabled value="{{cart?.batch[0]?.mrp}}" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1">
+                                            {{cart?.batch[0]?.mrp}}
+                                            <!-- <input type="text" disabled value="{{cart?.batch[0]?.mrp}}" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1"> -->
                                         </td>
-                                        <td>
-                                            <div class="input-group pos-i-grp table-black-grp">
+                                        <td>{{cart?.batch[0]?.selling_price_offline}}</td>
+                                        <td>{{getProductDisc(cart?.batch[0])}}</td>
+                                            <!-- <div class="input-group pos-i-grp table-black-grp">
                                                 <span class="input-group-text" id="basic-addon1">₹
                                                 </span>
                                                 <input type="text" value="0.00" class="form-control disc-input-table" aria-label="Username" aria-describedby="basic-addon1">
-                                            </div>
-                                        </td>
-                                        <td><div class="input-group pos-i-grp table-black-grp">
+                                            </div> -->
+                                        <!-- <td><div class="input-group pos-i-grp table-black-grp">
                                             <span class="input-group-text" id="basic-addon1">%</span>
                                             <input type="text" value="0.00" class="form-control disc-input-table" aria-label="Username" aria-describedby="basic-addon1">
-                                        </div></td>
-                                        <td>Rs.{{cart?.batch[0]?.selling_price_offline}}</td>
-                                        <td>Rs.{{getPriceAfterTaxes(cart?.batch[0])}}</td>
-                                        <td>Rs.{{getNetAmount(cart?.batch[0], cart?.quantity)}}</td>
+                                        </div></td> -->
+                                        <td>{{getProductAddDisc(cart?.batch[0])}}</td>
+                                        <td>{{getProductTax(cart?.batch[0])}}</td>
+                                        <td>{{getNetAmount2(cart?.batch[0], cart?.quantity)}}</td>
                                         <td><button (click)="removeOptionCurrent(cart)" class="table-cross-btn">
                                             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
                                         </button></td>
@@ -227,7 +228,7 @@
                                         </button>
                                     </li>
                                     <li>
-                                        <p>Rs.0.00</p>
+                                        <p>Rs.{{this.totalDiscAmount()}}</p>
                                         <h5>Discount</h5>
                                     </li>
                                     <li>

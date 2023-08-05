@@ -991,6 +991,42 @@ export class PosComponent implements OnInit {
 
   }
 
+  getProductDisc(batch:any){
+    let originalAmount = batch.selling_price_offline;
+    let discPercentage = batch.discount;
+    if(discPercentage < 0 || originalAmount < 0){
+      return Number(0);
+    } else {
+      let discAmount = (discPercentage / 100) * originalAmount;
+      return (discAmount)
+    }
+  }
+
+  getProductAddDisc(batch:any){
+    let originalAmount = batch.selling_price_offline;
+    let addDiscPercentage = batch.additional_discount;
+    if(addDiscPercentage < 0 || originalAmount < 0){
+      return Number(0);
+    } else {
+      let addDiscAmount = (addDiscPercentage / 100) * originalAmount;
+      return (addDiscAmount)
+    }
+  }
+
+  getProductTax(batch:any){
+    let originalAmount = batch.selling_price_offline;
+    let taxPercentage = batch.sale_tax;
+    let discAmt = this.getProductDisc(batch);
+    let addDiscAmt = this.getProductAddDisc(batch);
+    originalAmount = originalAmount - (discAmt + addDiscAmt);
+    if(taxPercentage < 0 || originalAmount < 0){
+      return 0;
+    } else {
+      let taxAmount = (taxPercentage / 100) * originalAmount;
+      return (taxAmount)
+    }
+  }
+
   getPriceAfterTaxes(batch:any){
     let originalAmount = batch.selling_price_offline;
     let taxPercentage = batch.sale_tax;
@@ -1002,9 +1038,65 @@ export class PosComponent implements OnInit {
     }
   }
 
+  getPriceAfterTaxes2(batch:any){
+    let originalAmount = batch.selling_price_offline;
+    let taxPercentage = batch.sale_tax;
+    let discAmt = this.getProductDisc(batch);
+    let addDiscAmt = this.getProductAddDisc(batch);
+    originalAmount = originalAmount - (discAmt + addDiscAmt);
+
+    if(taxPercentage < 0 || originalAmount < 0){
+      return originalAmount;
+    } else {
+      let taxAmount = (taxPercentage / 100) * originalAmount;
+      return (taxAmount + originalAmount)
+    }
+  }
+
   getNetAmount(batch:any, qty:number){
     let priceAfterTaxes = this.getPriceAfterTaxes(batch);
     return (priceAfterTaxes * qty);
+  }
+
+  totalTaxAmount(){
+    let cartItems = this.cartService.getCurrentItems();
+    let totalPrice = 0;
+    for(let cart of cartItems){
+      totalPrice += this.getProductTax(cart?.batch[0]) * cart?.quantity;
+    }
+    return Number(totalPrice).toFixed(2);
+  }
+
+  totalDiscAmount(){
+    let cartItems = this.cartService.getCurrentItems();
+    let totalPrice = 0;
+    for(let cart of cartItems){
+      totalPrice += (this.getProductDisc(cart?.batch[0]) + this.getProductAddDisc(cart?.batch[0])) * cart?.quantity;
+    }
+    return Number(totalPrice).toFixed(2);
+  }
+
+  getNetAmount2(batch:any, qty:number){
+    let priceAfterTaxes = this.getPriceAfterTaxes2(batch);
+    return (priceAfterTaxes * qty);
+  }
+
+  finalAmount(){
+    const numbere = this.totalAmount();
+    const integerPart = Math.ceil(numbere);
+    return integerPart
+  }
+
+  totalAmount(){
+    //let cartItems = this.cartService.getCartItems();
+    let cartItems = this.cartService.getCurrentItems();
+    //let cartItems = this.selectedOptions;
+    let totalPrice = 0 + this.currentTotalAdditionalCharges();
+    for(let cart of cartItems){
+      // totalPrice += this.getPriceAfterTaxes(cart?.batch[0]) * cart?.quantity;
+      totalPrice += this.getNetAmount2(cart?.batch[0], cart?.quantity);
+    }
+    return totalPrice;
   }
 
    // update tax of an element in current order additional charges
@@ -1198,6 +1290,7 @@ export class PosComponent implements OnInit {
     this.cartService.removeFromCurrent(item)
   }
 
+
   addToCurrent(product: any): void {
     this.cartService.addToCurrent(product);
   }
@@ -1258,22 +1351,8 @@ export class PosComponent implements OnInit {
     return this.addMoreDetails = !this.addMoreDetails;
   }
 
-  totalAmount(){
-    //let cartItems = this.cartService.getCartItems();
-    let cartItems = this.cartService.getCurrentItems();
-    //let cartItems = this.selectedOptions;
-    let totalPrice = 0 + this.currentTotalAdditionalCharges();
-    for(let cart of cartItems){
-      totalPrice += this.getPriceAfterTaxes(cart?.batch[0]) * cart?.quantity;
-    }
-    return totalPrice;
-  }
+  
 
-  finalAmount(){
-    const numbere = this.totalAmount();
-    const integerPart = Math.ceil(numbere);
-    return integerPart
-  }
 
   totalMrp(){
     //let cartItems = this.cartService.getCartItems();
@@ -1307,15 +1386,6 @@ export class PosComponent implements OnInit {
       let taxAmount = (taxPercentage / 100) * originalAmount;
       return taxAmount;
     }
-  }
-
-  totalTaxAmount(){
-    let cartItems = this.cartService.getCurrentItems();
-    let totalPrice = 0;
-    for(let cart of cartItems){
-      totalPrice += this.getTaxAmt(cart?.batch[0]) * cart?.quantity;
-    }
-    return Number(totalPrice).toFixed(2);
   }
 
 
