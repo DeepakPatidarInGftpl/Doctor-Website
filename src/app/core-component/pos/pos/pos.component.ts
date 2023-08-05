@@ -504,6 +504,7 @@ export class PosComponent implements OnInit {
 
     const requestOptions = { headers: headers };
 
+
     this.productsAutocompleteControl.valueChanges
       .pipe(
         filter(res => {
@@ -933,6 +934,7 @@ export class PosComponent implements OnInit {
 
   // add row to current additional charges
   addRowToCAC(){
+    this.playBeepSound();
       let newObject = { additional_charge: "", value: 0, value_type: "percentage", tax: "", total: 0 };
       this.currentOrderAdditionalCharges.push(newObject);
   }
@@ -948,7 +950,7 @@ export class PosComponent implements OnInit {
   // delete row in current additional charges
   deleteRowInCAC(index:number, event: Event){
     event.stopPropagation();
-
+    this.playBeepSound();
     if (!this.currentOrderAdditionalCharges || this.currentOrderAdditionalCharges.length === 0) {
     return;
     }
@@ -1491,6 +1493,7 @@ export class PosComponent implements OnInit {
 
 
   onSubmit() {
+    this.playBeepSound();
     if (this.registrationForm.invalid) {
       console.log('invalid');
       Object.keys(this.registrationForm.controls).forEach(key => {
@@ -1693,6 +1696,7 @@ export class PosComponent implements OnInit {
   }
 
   resumeBill(billId: number) {
+    this.playBeepSound();
     // Implement logic to retrieve and resume the selected bill
     const selectedBill = this.heldBills.find((bill) => bill.id === billId);
     if (selectedBill) {
@@ -1787,6 +1791,7 @@ export class PosComponent implements OnInit {
   }
 
   formSubmitExpense(){ 
+    this.playBeepSound();
     if (this.expensePaymentForm.invalid) {
       console.log('invalid');
       Object.keys(this.expensePaymentForm.controls).forEach(key => {
@@ -1842,6 +1847,7 @@ export class PosComponent implements OnInit {
   }
 
   formSubmitPurchase(){ 
+    this.playBeepSound();
     if (this.purchasePaymentForm.invalid) {
       console.log('invalid');
       Object.keys(this.purchasePaymentForm.controls).forEach(key => {
@@ -2004,6 +2010,7 @@ export class PosComponent implements OnInit {
   }
 
   formSubmitReceipt(){ 
+    this.playBeepSound();
     if (this.salesPaymentForm.invalid) {
       console.log('invalid');
       Object.keys(this.salesPaymentForm.controls).forEach(key => {
@@ -2166,6 +2173,7 @@ export class PosComponent implements OnInit {
   }
 
   payLaterGenerateOrder(){
+    this.playBeepSound();
     if (this.payLaterMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.payLaterMethodForm.controls).forEach(key => {
@@ -2259,6 +2267,7 @@ export class PosComponent implements OnInit {
   }
 
   cardPaymentGenerateOrder(type:any){
+    this.playBeepSound();
     if (this.cardPaymentMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.cardPaymentMethodForm.controls).forEach(key => {
@@ -2351,6 +2360,7 @@ export class PosComponent implements OnInit {
   }
 
   bankPaymentGenerateOrder(type:any){
+    this.playBeepSound();
     if (this.bankPaymentMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.bankPaymentMethodForm.controls).forEach(key => {
@@ -2448,6 +2458,7 @@ export class PosComponent implements OnInit {
   } 
 
   upiPaymentGenerateOrder(type:any){
+    this.playBeepSound()
     if (this.upiPaymentMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.upiPaymentMethodForm.controls).forEach(key => {
@@ -2549,9 +2560,8 @@ export class PosComponent implements OnInit {
 
   }
 
-
-
   cashPaymentGenerateOrder(type:any){
+    this.playBeepSound();
     if(this.currentItems.length > 0){
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
