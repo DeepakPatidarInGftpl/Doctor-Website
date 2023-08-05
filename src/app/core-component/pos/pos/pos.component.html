@@ -126,7 +126,8 @@
                                 <mat-option *ngIf="cusIsLoading" class="is-loading">Loading...</mat-option>
                                 <!-- <mat-option *ngIf="cusErrorMsg" class="is-loading">{{cusErrorMsg}}</mat-option> -->
                               <mat-option *ngFor="let customer of filteredCustomer" [value]="customer">
-                                {{ displayCus(customer) }}
+                                <!-- <p></p> -->
+                                {{displayCus(customer)}}
                               </mat-option>
                             </mat-autocomplete>
                           </form>
@@ -164,7 +165,7 @@
                                     <tr class="table-light" *ngFor="let cart of currentItems; let i = index">
                                         <td>{{i}}</td>
                                         <td>{{cart?.sku}}</td>
-                                        <td>{{cart?.product_title}} | {{cart?.variant_name}}</td>
+                                        <td>{{cart?.product?.title}} | {{cart?.variant_name}}</td>
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp qty-input">
                                                 <span (click)="decreaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>

@@ -1328,15 +1328,15 @@ export class PosComponent implements OnInit {
   }
 
   displayFn(item: any): string {
-    return item ? `${item?.product_title} ${item?.variant_name} | ${item?.batch[0]?.selling_price_offline}` : '';
+    return item ? `${item?.product?.title} ${item?.variant_name} | ${item?.batch[0]?.selling_price_offline}` : '';
   }
 
   displayCus(item: any): string {
-    return item ? item?.mobile_no : '';
+    return item ? `Ph: ${item?.mobile_no} Address: ${item?.address[item?.address?.length - 1]?.city?.city}, ${item?.address[item?.address?.length - 1]?.state?.state}` : '';
   }
 
   displayCus1(item: any): string {
-    return item ? `Name: ${item?.mobile_no}<br> ${item}` : '';
+    return item ? item?.mobile_no : '';
   }
 
   displayParty(item: any): string {
@@ -2247,6 +2247,7 @@ export class PosComponent implements OnInit {
       });
 
   }
+
 
   payLaterGenerateOrder(){
     this.playBeepSound();
