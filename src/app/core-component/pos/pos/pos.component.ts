@@ -1327,6 +1327,7 @@ export class PosComponent implements OnInit {
     this.cartItems = [];
   }
 
+  
   displayFn(item: any): string {
     return item ? `${item?.product?.title} ${item?.variant_name} | ${item?.batch[0]?.selling_price_offline}` : '';
   }
