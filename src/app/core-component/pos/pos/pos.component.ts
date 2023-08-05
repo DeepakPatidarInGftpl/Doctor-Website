@@ -172,21 +172,47 @@ export class PosComponent implements OnInit {
   @HostListener('document:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if(event.code == KEY_CODE.F9){
-      // Your row selection code
-      console.log(event);
-    }
-    if(event.code == KEY_CODE.F8){
-      // Your row selection code
-      console.log(event);
+      var clicking = <HTMLElement>document.querySelector('.bankF9');
+      clicking.click();
     }
     if(event.code == KEY_CODE.UP_ARROW){
       // Your row selection code
       console.log(event);
     }
     if(event.code == KEY_CODE.F5){
-      console.log(event);
-      this.playBeepSound();
       var clicking = <HTMLElement>document.querySelector('.upiF5');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F6){
+      var clicking = <HTMLElement>document.querySelector('.holdF6');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F11){
+      var clicking = <HTMLElement>document.querySelector('.plF11');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F3){
+      var clicking = <HTMLElement>document.querySelector('.cardF3');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F4){
+      var clicking = <HTMLElement>document.querySelector('.cashF4');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F12){
+      var clicking = <HTMLElement>document.querySelector('.mpF12');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F7){
+      var clicking = <HTMLElement>document.querySelector('.cpF7');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F10){
+      var clicking = <HTMLElement>document.querySelector('.upF10');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F8){
+      var clicking = <HTMLElement>document.querySelector('.cashprintF8');
       clicking.click();
     }
   }
@@ -1063,6 +1089,7 @@ export class PosComponent implements OnInit {
 
 
   confirmBatch(){
+    this.playBeepSound();
     let product1;
     let product = this.currentProduct.batch;
     let batch = this.currentBatch;
@@ -1091,6 +1118,7 @@ export class PosComponent implements OnInit {
   }
 
   optionSelected(event){
+    this.playBeepSound();
     let product1;
     const selectedOption = event.option.value;
     console.log('prod', selectedOption?.batch);
@@ -1121,6 +1149,7 @@ export class PosComponent implements OnInit {
   }
 
   optionSelected1(event){
+    this.playBeepSound();
     this.currentCustomer = event.option.value;
     console.log(event.option.value, 'cus');
   }
@@ -1153,6 +1182,7 @@ export class PosComponent implements OnInit {
   }
 
   removeOptionCurrent(item) {
+    this.playBeepSound();
     const index = this.selectedOptions.findIndex(currentItem => currentItem.id === item.id);
     if (index !== -1) {
       this.selectedOptions.splice(index, 1);
@@ -1171,10 +1201,12 @@ export class PosComponent implements OnInit {
   }
 
   increaseQtyCurrent(item){
+    this.playBeepSound()
     this.cartService.increaseCurrent(item);
   }
 
   decreaseQtyCurrent(item){
+    this.playBeepSound();
     this.cartService.decreaseCurrent(item);
   }
 
@@ -1245,6 +1277,7 @@ export class PosComponent implements OnInit {
     }
     return totalPrice;
   }
+
 
   getRoundOff(){
     const number = this.totalAmount();
@@ -1688,6 +1721,7 @@ export class PosComponent implements OnInit {
   }
 
   removeFromHold(billId: number) {
+    this.playBeepSound();
     this.billHoldService.removeFromHold(billId);
     this.heldBills = this.billHoldService.getHeldBills();
     var clicking = <HTMLElement>document.querySelector('.holdClose');
@@ -1695,6 +1729,7 @@ export class PosComponent implements OnInit {
   }
 
   holdBill() {
+    this.playBeepSound();
     if(this.currentItems.length > 0){
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
@@ -2632,8 +2667,16 @@ export enum KEY_CODE {
   // DOWN_ARROW = 40,
   // RIGHT_ARROW = 39,
   // LEFT_ARROW = 37,
-  F9 = 'F9',
-  F8 = 'F8',  
+   
+  F3 = 'F3',
+  F4 = 'F4',
   F5 = 'F5',
+  F6 = 'F6',
+  F7 = 'F7',
+  F8 = 'F8',
+  F9 = 'F9',
+  F10 = 'F10',
+  F11 = 'F11',
+  F12 = 'F12',
   UP_ARROW = 'ArrowUp'
 }
