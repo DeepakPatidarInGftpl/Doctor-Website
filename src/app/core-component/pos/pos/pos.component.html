@@ -214,21 +214,21 @@
                                         <h5>Quantity</h5>
                                     </li>
                                     <li>
-                                        <p>Rs.{{this.totalMrp()}}</p>
+                                        <p>₹{{this.totalMrp()}}</p>
                                         <h5>MRP</h5>
                                     </li>
                                     <li>
-                                        <p>Rs.{{this.totalTaxAmount()}}</p>
+                                        <p>₹{{this.totalTaxAmount()}}</p>
                                         <h5>Tax Amount</h5>
                                     </li>
                                     <li>
-                                        <p>Rs.{{currentTotalAdditionalCharges()}}</p>
+                                        <p>₹{{currentTotalAdditionalCharges()}}</p>
                                         <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addChargesModal" (click)="playBeepSound()"> 
                                             Add Charges <i class="fas fa-plus" data-bs-toggle="tooltip" title="fa fa-plus"></i>
                                         </button>
                                     </li>
                                     <li>
-                                        <p>Rs.{{this.totalDiscAmount()}}</p>
+                                        <p>₹{{this.totalDiscAmount()}}</p>
                                         <h5>Discount</h5>
                                     </li>
                                     <li>
@@ -250,7 +250,7 @@
                                         <h5>Round Off</h5>
                                     </li>
                                     <li>
-                                        <p>Rs.{{this.finalAmount()}}</p>
+                                        <p>₹{{this.finalAmount()}}</p>
                                         <h5>Amount</h5>
                                     </li>
                                 </ul>

@@ -2262,23 +2262,7 @@ export class PosComponent implements OnInit {
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-        let cartData = [];
-    for (let index = 0; index < this.currentItems.length; index++) {
-      const element = this.currentItems[index];
-      let item = {
-        "variant": element.id,
-        "qty": element.quantity,
-        "mrp": element.batch[0].mrp,
-        "discount": 0,
-        "add_discount": 0,
-        "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
-        "remarks": "",
-        "tax_percentage": element?.batch[0]?.sale_tax
-      };
-      cartData.push(item);
-    }
+        let cartData = this.setItemsArr();
 
     let pay_later_data = {      
       "day": Number(this.pay_later_day.value),
@@ -2292,7 +2276,7 @@ export class PosComponent implements OnInit {
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
     formData.append('payment_mode', 'Paylater');
     formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2356,23 +2340,7 @@ export class PosComponent implements OnInit {
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-        let cartData = [];
-    for (let index = 0; index < this.currentItems.length; index++) {
-      const element = this.currentItems[index];
-      let item = {
-        "variant": element.id,
-        "qty": element.quantity,
-        "mrp": element.batch[0].mrp,
-        "discount": 0,
-        "add_discount": 0,
-        "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
-        "remarks": "",
-        "tax_percentage": element?.batch[0]?.sale_tax
-      };
-      cartData.push(item);
-    }
+        let cartData = this.setItemsArr();
 
     let card_data = {
       "payment_account": this.payment_account_card.value,
@@ -2389,7 +2357,7 @@ export class PosComponent implements OnInit {
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
     formData.append('payment_mode', 'Card');
     formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2449,23 +2417,7 @@ export class PosComponent implements OnInit {
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-        let cartData = [];
-    for (let index = 0; index < this.currentItems.length; index++) {
-      const element = this.currentItems[index];
-      let item = {
-        "variant": element.id,
-        "qty": element.quantity,
-        "mrp": element.batch[0].mrp,
-        "discount": 0,
-        "add_discount": 0,
-        "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
-        "remarks": "",
-        "tax_percentage": element?.batch[0]?.sale_tax
-      };
-      cartData.push(item);
-    }
+        let cartData = this.setItemsArr();
 
     let bank_data = {
       "account_no": Number(this.account_no.value),
@@ -2478,7 +2430,7 @@ export class PosComponent implements OnInit {
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
     formData.append('payment_mode', 'Bank');
     formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2547,28 +2499,7 @@ export class PosComponent implements OnInit {
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-        let cartData = [];
-    for (let index = 0; index < this.currentItems.length; index++) {
-      const element = this.currentItems[index];
-      console.log((this.getTaxAmt(element.batch[0]) * element.quantity), 'tax amt');
-      console.log(this.getNetAmount(element?.batch[0], element?.quantity), 'net');
-
-
-      let item = {
-        "variant": element.id,
-        "qty": element.quantity,
-        "mrp": element.batch[0].mrp,
-        "discount": 0,
-        "add_discount": 0,
-        "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
-        "remarks": "",
-        "tax_percentage": Number(element?.batch[0]?.sale_tax)
-      };
-      cartData.push(item);
-    }
-
+        let cartData = this.setItemsArr();
     let upi_data = {
       "upi_no": Number(this.upi_id.value),
       "payment_account": Number(this.payment_account_upi.value)
@@ -2580,7 +2511,7 @@ export class PosComponent implements OnInit {
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
     formData.append('payment_mode', 'UPI');
     formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2642,29 +2573,12 @@ export class PosComponent implements OnInit {
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-        let cartData = [];
-    for (let index = 0; index < this.currentItems.length; index++) {
-      const element = this.currentItems[index];
-      let item = {
-        "variant": element.id,
-        "qty": element.quantity,
-        "mrp": element.batch[0].mrp,
-        "discount": 0,
-        "add_discount": 0,
-        "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
-        "remarks": "",
-        "tax_percentage": element?.batch[0]?.sale_tax
-      };
-      cartData.push(item);
-    }
-
+        let cartData = this.setItemsArr();
     console.log(cartData, 'cash');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
     formData.append('payment_mode', 'Cash');
     formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2717,6 +2631,27 @@ export class PosComponent implements OnInit {
     this.toastr.error('Please Add Items To Cart');
   }
 
+}
+
+setItemsArr(){
+  let cart = [];
+  for (let index = 0; index < this.currentItems.length; index++) {
+    const element = this.currentItems[index];
+    let item = {
+      "variant": element.id,
+      "qty": element.quantity,
+      "mrp": element.batch[0].mrp,
+      "discount": element.batch[0].discount,
+      "add_discount": element.batch[0].additional_discount,
+      "unit_cost": element.batch[0]?.selling_price_offline,
+      "net_cost": Number(this.getNetAmount2(element?.batch[0], element?.quantity)).toFixed(2),
+      "tax_amount": Number((this.getProductTax(element.batch[0])) * element.quantity).toFixed(2),
+      "remarks": "",
+      "tax_percentage": element?.batch[0]?.sale_tax
+    };
+    cart.push(item);
+  }
+  return cart;
 }
 
 getDateForOrders(timestamp:any){
