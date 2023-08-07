@@ -726,6 +726,17 @@ padding: 10px 16px;
 .product-title-cart {
     display: flex;
     align-items: center;
+    margin-bottom: 0;
+}
+
+.product-notes {
+    width: 55%;
+}
+
+.product-title-div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 

@@ -917,6 +917,8 @@ export class PosComponent implements OnInit {
     });
   }
 
+
+
   // optionSelected(event) {
   //   console.log(event.option)
   //   const selectedOption = event.option.value;
@@ -1207,6 +1209,7 @@ export class PosComponent implements OnInit {
     product1 = {
       ...selectedOption,
       quantity: 1,
+      notes: '',
     }
 
     this.addToCurrent(product1);
@@ -1233,6 +1236,7 @@ export class PosComponent implements OnInit {
       product1 = {
         ...selectedOption,
         quantity: 1,
+        notes: '',
       }
     this.addToCurrent(product1);
     this.selectedOptions.push(product1);
@@ -2515,7 +2519,7 @@ export class PosComponent implements OnInit {
 
 
 
-    console.log(cartData, 'cash', upi_data);
+    console.log(cartData, 'upi', upi_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -2654,7 +2658,7 @@ setItemsArr(){
       "unit_cost": element.batch[0]?.selling_price_offline,
       "net_cost": Number(this.getNetAmount2(element?.batch[0], element?.quantity)).toFixed(2),
       "tax_amount": Number((this.getProductTax(element.batch[0])) * element.quantity).toFixed(2),
-      "remarks": "",
+      "remarks": element.notes,
       "tax_percentage": element?.batch[0]?.sale_tax
     };
     cart.push(item);
