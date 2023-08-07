@@ -161,11 +161,27 @@
                                         <th></th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
                                     <tr class="table-light" *ngFor="let cart of currentItems; let i = index">
                                         <td>{{i}}</td>
                                         <td>{{cart?.sku}}</td>
-                                        <td>{{cart?.product?.title}} | {{cart?.variant_name}}</td>
+                                        <td>
+                                            <div class="product-title-div">
+                                                <p class="product-title-cart">
+                                                    {{cart?.product?.title}} | {{cart?.variant_name}}
+                                                    <button class="cart-btn2 cart-btn1" data-bs-toggle="modal" data-bs-target="#productDetailsModal" (click)="setIndexForProductDetails(i)">
+                                                        <i class="fas fa-info-circle"></i>
+                                                    </button>
+                                                </p>
+                                                <button class="cart-btn2" (click)="setIndexForNotes(i)">
+                                                    <i class="fas fa-list"></i>
+                                                </button>    
+                                            </div>
+                                            <div class="product-notes" *ngIf="currentCartIndex1 == i">
+                                                <textarea rows="3" cols="3" class="form-control" [(ngModel)]="cart.notes"></textarea>
+                                            </div>
+                                        </td>
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp qty-input">
                                                 <span (click)="decreaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
@@ -276,6 +292,9 @@
                                                             <button type="button" class="btn btn-dark cashF4" data-bs-toggle="modal" data-bs-target="#exampleModal5" (click)="playBeepSound()"> 
                                                                 <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                                                     Cash(F4)</button>
+                                                                    <button type="button" class="btn btn-dark bankF9" data-bs-toggle="modal" data-bs-target="#bankMethodModal" (click)="playBeepSound()"> 
+                                                                        <i class="fas fa-university" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
+                                                                            Bank(F9)</button>
                                                                     <button type="button" class="btn btn-dark mpF12" data-bs-toggle="modal" data-bs-target="#exampleModal4" (click)="playBeepSound()"> 
                                                                         <i class="fas fa-dice-two" data-bs-toggle="tooltip" title="fas fa-dice-two"></i>
                                                                             Multiple Pay(F12)</button>
@@ -289,21 +308,24 @@
                                 <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#exampleModal6" (click)="playBeepSound()"> 
                                     <i class="fas fa-gift" data-bs-toggle="tooltip" title="fas fa-gift"></i>
                                         Apply Coupon</button>
-                                        <button type="button" class="btn btn-dark w-100 plF11" data-bs-toggle="modal" data-bs-target="#payLaterMethodModal" (click)="playBeepSound()"> 
-                                            <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
-                                                Pay Later(F11)</button>
-                                                <button type="button" class="btn btn-dark w-100 cpF7" data-bs-toggle="modal" data-bs-target="#cardPrintMethodModal" (click)="playBeepSound()"> 
+                                                <button type="button" class="btn btn-dark w-100"> 
                                                     <i class="fas fa-pause" data-bs-toggle="tooltip" title="fas fa-pause"></i>
-                                                        Card&Print(F7)</button>
+                                                        Hold&Print</button>
                                                         <button type="button" class="btn btn-dark w-100 upF10" data-bs-toggle="modal" data-bs-target="#upiPrintMethodModal" (click)="playBeepSound()"> 
                                                             <i class="fas fa-forward" data-bs-toggle="tooltip" title="fas fa-forward"></i>
                                                                 UPI&Print(F10)</button>
+                                                <button type="button" class="btn btn-dark w-100 cpF7" data-bs-toggle="modal" data-bs-target="#cardPrintMethodModal" (click)="playBeepSound()"> 
+                                                    <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-pause"></i>
+                                                        Card&Print(F7)</button>
                                                                 <button type="button" class="btn btn-dark w-100 cashprintF8" data-bs-toggle="modal" data-bs-target="#printCashModal" (click)="playBeepSound()">  
-                                                                    <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
+                                                                    <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
                                                                         Cash&Print(F8)</button>
-                                                                        <button type="button" class="btn btn-dark w-100 bankF9" data-bs-toggle="modal" data-bs-target="#bankMethodModal" (click)="playBeepSound()"> 
-                                                                            <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
-                                                                                Bank(F9)</button>
+                                                                        <button type="button" class="btn btn-dark w-100 bankF9" data-bs-toggle="modal" data-bs-target="#bankPrintMethodModal" (click)="playBeepSound()"> 
+                                                                            <i class="fas fa-university" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
+                                                                                Bank&Print</button>
+                                                                                <button type="button" class="btn btn-dark w-100 plF11" data-bs-toggle="modal" data-bs-target="#payLaterMethodModal" (click)="playBeepSound()"> 
+                                                                                    <i class="fas fa-calendar" data-bs-toggle="tooltip" title="fas fa-calendar"></i>
+                                                                                        Pay Later(F11)</button>
                             </div>
                         </div>
                     </div>
@@ -3363,3 +3385,52 @@ Payment Account is required.
       </div>
     </div>
   </div> 
+
+
+  <!-- Modal Product Details-->
+  <div class="modal fade posmodal" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productDetailsModalLabel">Product Details</h5>
+          <button type="button" class="btn-close productDetailsModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr *ngFor="let order of posOrders"> -->
+                    <tr>
+                        <td>Available Stock</td>
+                        <td>{{currentItems[currentCartIndex]?.batch[0]?.stock}}</td>                     
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td>{{currentItems[currentCartIndex]?.batch[0]?.stock}}</td>                     
+                    </tr>
+                    <tr>
+                        <td>Brand</td>
+                        <td>{{currentItems[currentCartIndex]?.batch[0]?.stock}}</td>                     
+                    </tr>
+                    <tr>
+                        <td>HSN Code</td>
+                        <td>{{currentItems[currentCartIndex]?.product?.hsncode}}</td>                     
+                    </tr>
+                </tbody>
+                <!-- <tfoot>
+                </tfoot> -->
+            </table>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>  
