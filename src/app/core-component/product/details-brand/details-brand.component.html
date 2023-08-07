@@ -1,0 +1,115 @@
+
+<div class="card bg">
+    <div class="card-body">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Brand Details</h4>
+                <h6>Full details of a Brand</h6>
+            </div>
+            <div class="page-btn">
+                <a routerLink="//product/editbrand/{{brandDetail?.id}}" class="btn btn-added">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img" >Edit Brand
+                </a>
+            </div>
+        </div>
+
+<mat-tab-group animationDuration="0ms">
+    <mat-tab label="General Details">
+        <div class="row">
+            <div class="col-lg-12 col-sm-12" >
+                <div class="card">
+                    <div class="card-body">
+                        <div class="productdetails">                  
+                            <ul class="product-bar">
+                                <li>
+                                    <h4 class="h4">Title</h4>
+                                    <h6>{{brandDetail?.title}}</h6>
+                                </li>
+                                <li>
+                                    <h4 class="h4">Code</h4>
+                                    <h6>{{brandDetail?.code}}</h6>
+                                </li>
+                                <li>
+                                    <h4 class="h4">Discount</h4>
+                                    <h6>{{brandDetail?.discount + '%'}}</h6>
+                                </li>
+                                <li>
+                                    <h4 class="h4">Image</h4>
+                                    <img [src]="imgUrl+brandDetail?.image" alt="product" style="width: 20%;">
+                                </li>
+                               
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mx-4">
+                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                        <span [ngClass]="{'bg-lightgreen': brandDetail?.is_active === true, 'bg-lightred' : brandDetail?.is_active === false,'bg-lightyellow' : brandDetail?.is_active === 'Partial' }"
+                                            class="badges">{{brandDetail?.is_active}}</span>
+                    </div>
+                </div>
+            </div>
+          </div>
+    </mat-tab>
+    <mat-tab label="Category">
+        <div class="row">
+            <div class="col-lg-12 col-sm-12" >
+                <div class="card" >
+                    <div class="card-body">
+                        <div class="productdetails">
+                            <ul class="product-bar" *ngFor="let cat of brandDetail?.category">                  
+                            <li>
+                                <h4 class="h4">Title</h4>
+                                <h6>{{cat?.title}}</h6>
+                            </li>
+                            <li>
+                                <h4 class="h4">Image</h4>
+                                <img [src]="imgUrl+cat?.image" alt="product" style="width: 20%;">
+                            </li>
+                            </ul>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+          </div>
+    </mat-tab>
+    <mat-tab label="Subcategory Group">
+        <div class="row">
+            <div class="col-lg-12 col-sm-12" >
+                <div class="card" >
+                    <div class="card-body" >
+                        <div class="productdetails">                  
+                            <ul class="product-bar" *ngFor="let bank of brandDetail?.subcategory_group">
+                                <li>
+                                    <h4 class="h4">Title</h4>
+                                    <h6>{{bank?.title}}</h6>
+                                </li>
+                               
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+    </mat-tab>
+    <mat-tab label="Subcategory ">
+        <div class="row">
+            <div class="col-lg-12 col-sm-12" >
+                <div class="card">
+                    <div class="card-body" >
+                        <div class="productdetails">                  
+                            <ul class="product-bar" *ngFor="let bank of brandDetail?.subcategory">
+                                <li>
+                                    <h4 class="h4">Title</h4>
+                                    <h6>{{bank?.title}}</h6>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+</div>

@@ -125,11 +125,7 @@ export class CoreService {
   }
   getCategory() {
     let url = this.apiUrl + '/pv-api/product-category/';
-    return this.http.get(url, {
-      headers: new HttpHeaders({
-        'Authorization': 'token ' + `${localStorage.getItem('token')}`
-      })
-    })
+    return this.http.get(url)
   }
   categoryIsActive(id: any, data) {
     let url = this.apiUrl + '/pv-api/product-category/?id=';
@@ -1670,5 +1666,16 @@ export class CoreService {
   deletePosOrder(id: number) {
     let url = this.apiUrl + '/pv-api/pos/pos_orders/?id=';
     return this.http.delete(`${url}${id}`)
+  }
+
+
+  //brand multiple brand ids
+  getSubcategoryBySubcatGroupid(id: any) {
+    let url = this.apiUrl + '/pv-api/subcategorygroup_wise_subcategory_dashboard/?sub_category_group_id=';
+    return this.http.get<any>(`${url}${id}`);
+  }
+  getSubcategoryGroupByCategoryid(id: any) {
+    let url = this.apiUrl + '/pv-api/category_wise_sub_category_group_dashboard/?category_id=';
+    return this.http.get<any>(`${url}${id}`);
   }
 }

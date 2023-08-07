@@ -16,6 +16,7 @@ export class SubcategoryGroupDetailsComponent implements OnInit {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.coreService.getSubcategoryGroupById(this.id).subscribe(res=>{
       this.subcategoryDetails=res
+      console.log(this.subcategoryDetails?.category);
     })
   }
 
