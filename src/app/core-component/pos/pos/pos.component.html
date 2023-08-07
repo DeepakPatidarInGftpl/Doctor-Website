@@ -111,6 +111,7 @@
                             </mat-autocomplete>
                           </mat-form-field> -->
                     </div>
+
                     <div class="col-sm-4">
                         <form class="exam-form">
                             <input type="text"
@@ -3413,11 +3414,11 @@ Payment Account is required.
                     </tr>
                     <tr>
                         <td>Category</td>
-                        <td>{{currentItems[currentCartIndex]?.batch[0]?.stock}}</td>                     
+                        <td>{{currentItems[currentCartIndex]?.product?.category?.title}}</td>                     
                     </tr>
                     <tr>
                         <td>Brand</td>
-                        <td>{{currentItems[currentCartIndex]?.batch[0]?.stock}}</td>                     
+                        <td>{{currentItems[currentCartIndex]?.product?.brand?.title}}</td>                     
                     </tr>
                     <tr>
                         <td>HSN Code</td>
