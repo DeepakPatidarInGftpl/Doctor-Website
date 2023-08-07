@@ -42,10 +42,10 @@ export class CoreComponentComponent implements OnInit {
     } else {
       this.sideBaractivePath = false;
     }
-    if (data.url.split('/')[2] === 'pos') {
-      this.sideBaractivePath = true;
-    }
-    if(data.url.split('/')[1] === 'pos'){
+    // if (data.url.split('/')[2] === 'pos') {
+    //   this.sideBaractivePath = true;
+    // }
+    if(data.url.split('/')[2] === 'pos'){
       window.addEventListener('load', function () {
         let wrapper:any = document.getElementById('core-comp1');
         wrapper.classList.remove('content');      

@@ -700,7 +700,7 @@ padding: 10px 16px;
     width: 99%;
 }
 
-final-test > div:first-child {
+.final-test > div:first-child {
     flex-shrink: 0;
 }
 
@@ -712,4 +712,30 @@ final-test > div:first-child {
 .final-test >div:last-child {
     flex-shrink: 0;
 }
+
+.cart-btn1 {
+    margin-left: 5px;
+}
+
+.cart-btn2 {
+    border: none;
+    background: transparent;
+}
+
+.product-title-cart {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.product-notes {
+    width: 55%;
+}
+
+.product-title-div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 

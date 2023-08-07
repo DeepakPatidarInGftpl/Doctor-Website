@@ -150,6 +150,9 @@ export class PosComponent implements OnInit {
   activeBill: any;
 
   posOrders:any = [];
+  currentCartIndex:number = 0;
+  currentCartIndex1:number = -1;
+  currentRoundOff:any;
 
 
   constructor(private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
@@ -916,6 +919,8 @@ export class PosComponent implements OnInit {
     });
   }
 
+
+
   // optionSelected(event) {
   //   console.log(event.option)
   //   const selectedOption = event.option.value;
@@ -931,6 +936,18 @@ export class PosComponent implements OnInit {
   //   }
   // }
 
+  setIndexForNotes(index:number){
+    if(this.currentCartIndex1 == index){
+      this.currentCartIndex1 = -1;
+    } else {
+    this.currentCartIndex1 = index;
+    }
+  }
+
+  setIndexForProductDetails(index:number){
+    this.playBeepSound();
+    this.currentCartIndex = index;
+  }
 
   // add row to current additional charges
   addRowToCAC(){
@@ -990,6 +1007,7 @@ export class PosComponent implements OnInit {
     this.currentTotalAdditionalCharges()
 
   }
+
 
   getProductDisc(batch:any){
     let originalAmount = batch.selling_price_offline;
@@ -1201,6 +1219,7 @@ export class PosComponent implements OnInit {
     product1 = {
       ...selectedOption,
       quantity: 1,
+      notes: '',
     }
 
     this.addToCurrent(product1);
@@ -1227,6 +1246,7 @@ export class PosComponent implements OnInit {
       product1 = {
         ...selectedOption,
         quantity: 1,
+        notes: '',
       }
     this.addToCurrent(product1);
     this.selectedOptions.push(product1);
@@ -1327,7 +1347,7 @@ export class PosComponent implements OnInit {
     this.cartItems = [];
   }
 
-  
+
   displayFn(item: any): string {
     return item ? `${item?.product?.title} ${item?.variant_name} | ${item?.batch[0]?.selling_price_offline}` : '';
   }
@@ -2509,7 +2529,7 @@ export class PosComponent implements OnInit {
 
 
 
-    console.log(cartData, 'cash', upi_data);
+    console.log(cartData, 'upi', upi_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -2648,7 +2668,7 @@ setItemsArr(){
       "unit_cost": element.batch[0]?.selling_price_offline,
       "net_cost": Number(this.getNetAmount2(element?.batch[0], element?.quantity)).toFixed(2),
       "tax_amount": Number((this.getProductTax(element.batch[0])) * element.quantity).toFixed(2),
-      "remarks": "",
+      "remarks": element.notes,
       "tax_percentage": element?.batch[0]?.sale_tax
     };
     cart.push(item);
