@@ -152,6 +152,7 @@ export class PosComponent implements OnInit {
   posOrders:any = [];
   currentCartIndex:number = 0;
   currentCartIndex1:number = -1;
+  currentRoundOff:any;
 
 
   constructor(private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
