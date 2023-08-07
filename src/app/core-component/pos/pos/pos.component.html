@@ -292,6 +292,9 @@
                                                             <button type="button" class="btn btn-dark cashF4" data-bs-toggle="modal" data-bs-target="#exampleModal5" (click)="playBeepSound()"> 
                                                                 <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
                                                                     Cash(F4)</button>
+                                                                    <button type="button" class="btn btn-dark bankF9" data-bs-toggle="modal" data-bs-target="#bankMethodModal" (click)="playBeepSound()"> 
+                                                                        <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
+                                                                            Bank(F9)</button>
                                                                     <button type="button" class="btn btn-dark mpF12" data-bs-toggle="modal" data-bs-target="#exampleModal4" (click)="playBeepSound()"> 
                                                                         <i class="fas fa-dice-two" data-bs-toggle="tooltip" title="fas fa-dice-two"></i>
                                                                             Multiple Pay(F12)</button>
@@ -317,9 +320,9 @@
                                                                 <button type="button" class="btn btn-dark w-100 cashprintF8" data-bs-toggle="modal" data-bs-target="#printCashModal" (click)="playBeepSound()">  
                                                                     <i class="fas fa-credit-card" data-bs-toggle="tooltip" title="fas fa-credit-card"></i>
                                                                         Cash&Print(F8)</button>
-                                                                        <button type="button" class="btn btn-dark w-100 bankF9" data-bs-toggle="modal" data-bs-target="#bankMethodModal" (click)="playBeepSound()"> 
+                                                                        <button type="button" class="btn btn-dark w-100 bankF9" data-bs-toggle="modal" data-bs-target="#bankPrintMethodModal" (click)="playBeepSound()"> 
                                                                             <i class="fas fa-rupee-sign" data-bs-toggle="tooltip" title="fas fa-rupee-sign"></i>
-                                                                                Bank(F9)</button>
+                                                                                Bank&Print</button>
                             </div>
                         </div>
                     </div>
@@ -3402,10 +3405,21 @@ Payment Account is required.
                 <tbody>
                     <!-- <tr *ngFor="let order of posOrders"> -->
                     <tr>
-                        <td>Available Stock	</td>
-                        <td>{{currentItems[currentCartIndex]?.batch[0]?.mrp}}</td>                     
+                        <td>Available Stock</td>
+                        <td>{{currentItems[currentCartIndex]?.batch[0]?.stock}}</td>                     
                     </tr>
-                    
+                    <tr>
+                        <td>Category</td>
+                        <td>{{currentItems[currentCartIndex]?.batch[0]?.stock}}</td>                     
+                    </tr>
+                    <tr>
+                        <td>Brand</td>
+                        <td>{{currentItems[currentCartIndex]?.batch[0]?.stock}}</td>                     
+                    </tr>
+                    <tr>
+                        <td>HSN Code</td>
+                        <td>{{currentItems[currentCartIndex]?.product?.hsncode}}</td>                     
+                    </tr>
                 </tbody>
                 <!-- <tfoot>
                 </tfoot> -->
