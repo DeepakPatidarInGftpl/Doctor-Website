@@ -151,6 +151,7 @@ export class PosComponent implements OnInit {
 
   posOrders:any = [];
   currentCartIndex:number = 0;
+  currentCartIndex1:number = -1;
 
 
   constructor(private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
@@ -933,6 +934,14 @@ export class PosComponent implements OnInit {
   //     this.autocompleteControl.setValue('');
   //   }
   // }
+
+  setIndexForNotes(index:number){
+    if(this.currentCartIndex1 == index){
+      this.currentCartIndex1 = -1;
+    } else {
+    this.currentCartIndex1 = index;
+    }
+  }
 
   setIndexForProductDetails(index:number){
     this.playBeepSound();

@@ -170,15 +170,15 @@
                                             <div class="product-title-div">
                                                 <p class="product-title-cart">
                                                     {{cart?.product?.title}} | {{cart?.variant_name}}
-                                                    <button class="cart-btn1" data-bs-toggle="modal" data-bs-target="#productDetailsModal" (click)="setIndexForProductDetails(i)">
-                                                        <i class="fas fa-pause"></i>
+                                                    <button class="cart-btn2 cart-btn1" data-bs-toggle="modal" data-bs-target="#productDetailsModal" (click)="setIndexForProductDetails(i)">
+                                                        <i class="fas fa-info-circle"></i>
                                                     </button>
                                                 </p>
-                                                <button class="cart-btn1" data-bs-toggle="modal" data-bs-target="#productDetailsModal" (click)="setIndexForProductDetails(i)">
-                                                    <i class="fas fa-pause"></i>
+                                                <button class="cart-btn2" (click)="setIndexForNotes(i)">
+                                                    <i class="fas fa-list"></i>
                                                 </button>    
                                             </div>
-                                            <div class="product-notes">
+                                            <div class="product-notes" *ngIf="currentCartIndex1 == i">
                                                 <textarea rows="3" cols="3" class="form-control" [(ngModel)]="cart.notes"></textarea>
                                             </div>
                                         </td>
