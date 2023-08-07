@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Observer, fromEvent, merge, Subscription, OperatorFunction } from 'rxjs';
@@ -11,7 +11,6 @@ import { __values } from 'tslib';
 import { Modal } from 'bootstrap';
 import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-pos',
@@ -151,6 +150,9 @@ export class PosComponent implements OnInit {
   activeBill: any;
 
   posOrders:any = [];
+  currentCartIndex:number = 0;
+  currentCartIndex1:number = -1;
+  currentRoundOff:any;
 
 
   constructor(private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
@@ -170,21 +172,54 @@ export class PosComponent implements OnInit {
     });
   }
 
-  @HostListener('window:keyup', ['$event'])
+  @HostListener('document:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if(event.code == KEY_CODE.F9){
-      // Your row selection code
-      console.log(event);
-    }
-    if(event.code == KEY_CODE.F8){
-      // Your row selection code
-      console.log(event);
+      var clicking = <HTMLElement>document.querySelector('.bankF9');
+      clicking.click();
     }
     if(event.code == KEY_CODE.UP_ARROW){
       // Your row selection code
       console.log(event);
     }
+    if(event.code == KEY_CODE.F5){
+      var clicking = <HTMLElement>document.querySelector('.upiF5');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F6){
+      var clicking = <HTMLElement>document.querySelector('.holdF6');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F11){
+      var clicking = <HTMLElement>document.querySelector('.plF11');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F3){
+      var clicking = <HTMLElement>document.querySelector('.cardF3');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F4){
+      var clicking = <HTMLElement>document.querySelector('.cashF4');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F12){
+      var clicking = <HTMLElement>document.querySelector('.mpF12');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F7){
+      var clicking = <HTMLElement>document.querySelector('.cpF7');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F10){
+      var clicking = <HTMLElement>document.querySelector('.upF10');
+      clicking.click();
+    }
+    if(event.code == KEY_CODE.F8){
+      var clicking = <HTMLElement>document.querySelector('.cashprintF8');
+      clicking.click();
+    }
   }
+
 
   ngOnInit(): void {
     
@@ -471,6 +506,7 @@ export class PosComponent implements OnInit {
       });
 
     const requestOptions = { headers: headers };
+
 
     this.productsAutocompleteControl.valueChanges
       .pipe(
@@ -883,6 +919,8 @@ export class PosComponent implements OnInit {
     });
   }
 
+
+
   // optionSelected(event) {
   //   console.log(event.option)
   //   const selectedOption = event.option.value;
@@ -898,9 +936,22 @@ export class PosComponent implements OnInit {
   //   }
   // }
 
+  setIndexForNotes(index:number){
+    if(this.currentCartIndex1 == index){
+      this.currentCartIndex1 = -1;
+    } else {
+    this.currentCartIndex1 = index;
+    }
+  }
+
+  setIndexForProductDetails(index:number){
+    this.playBeepSound();
+    this.currentCartIndex = index;
+  }
 
   // add row to current additional charges
   addRowToCAC(){
+    this.playBeepSound();
       let newObject = { additional_charge: "", value: 0, value_type: "percentage", tax: "", total: 0 };
       this.currentOrderAdditionalCharges.push(newObject);
   }
@@ -916,7 +967,7 @@ export class PosComponent implements OnInit {
   // delete row in current additional charges
   deleteRowInCAC(index:number, event: Event){
     event.stopPropagation();
-
+    this.playBeepSound();
     if (!this.currentOrderAdditionalCharges || this.currentOrderAdditionalCharges.length === 0) {
     return;
     }
@@ -957,6 +1008,43 @@ export class PosComponent implements OnInit {
 
   }
 
+
+  getProductDisc(batch:any){
+    let originalAmount = batch.selling_price_offline;
+    let discPercentage = batch.discount;
+    if(discPercentage < 0 || originalAmount < 0){
+      return Number(0);
+    } else {
+      let discAmount = (discPercentage / 100) * originalAmount;
+      return (discAmount)
+    }
+  }
+
+  getProductAddDisc(batch:any){
+    let originalAmount = batch.selling_price_offline;
+    let addDiscPercentage = batch.additional_discount;
+    if(addDiscPercentage < 0 || originalAmount < 0){
+      return Number(0);
+    } else {
+      let addDiscAmount = (addDiscPercentage / 100) * originalAmount;
+      return (addDiscAmount)
+    }
+  }
+
+  getProductTax(batch:any){
+    let originalAmount = batch.selling_price_offline;
+    let taxPercentage = batch.sale_tax;
+    let discAmt = this.getProductDisc(batch);
+    let addDiscAmt = this.getProductAddDisc(batch);
+    originalAmount = originalAmount - (discAmt + addDiscAmt);
+    if(taxPercentage < 0 || originalAmount < 0){
+      return 0;
+    } else {
+      let taxAmount = (taxPercentage / 100) * originalAmount;
+      return (taxAmount)
+    }
+  }
+
   getPriceAfterTaxes(batch:any){
     let originalAmount = batch.selling_price_offline;
     let taxPercentage = batch.sale_tax;
@@ -968,9 +1056,65 @@ export class PosComponent implements OnInit {
     }
   }
 
+  getPriceAfterTaxes2(batch:any){
+    let originalAmount = batch.selling_price_offline;
+    let taxPercentage = batch.sale_tax;
+    let discAmt = this.getProductDisc(batch);
+    let addDiscAmt = this.getProductAddDisc(batch);
+    originalAmount = originalAmount - (discAmt + addDiscAmt);
+
+    if(taxPercentage < 0 || originalAmount < 0){
+      return originalAmount;
+    } else {
+      let taxAmount = (taxPercentage / 100) * originalAmount;
+      return (taxAmount + originalAmount)
+    }
+  }
+
   getNetAmount(batch:any, qty:number){
     let priceAfterTaxes = this.getPriceAfterTaxes(batch);
     return (priceAfterTaxes * qty);
+  }
+
+  totalTaxAmount(){
+    let cartItems = this.cartService.getCurrentItems();
+    let totalPrice = 0;
+    for(let cart of cartItems){
+      totalPrice += this.getProductTax(cart?.batch[0]) * cart?.quantity;
+    }
+    return Number(totalPrice).toFixed(2);
+  }
+
+  totalDiscAmount(){
+    let cartItems = this.cartService.getCurrentItems();
+    let totalPrice = 0;
+    for(let cart of cartItems){
+      totalPrice += (this.getProductDisc(cart?.batch[0]) + this.getProductAddDisc(cart?.batch[0])) * cart?.quantity;
+    }
+    return Number(totalPrice).toFixed(2);
+  }
+
+  getNetAmount2(batch:any, qty:number){
+    let priceAfterTaxes = this.getPriceAfterTaxes2(batch);
+    return (priceAfterTaxes * qty);
+  }
+
+  finalAmount(){
+    const numbere = this.totalAmount();
+    const integerPart = Math.ceil(numbere);
+    return integerPart
+  }
+
+  totalAmount(){
+    //let cartItems = this.cartService.getCartItems();
+    let cartItems = this.cartService.getCurrentItems();
+    //let cartItems = this.selectedOptions;
+    let totalPrice = 0 + this.currentTotalAdditionalCharges();
+    for(let cart of cartItems){
+      // totalPrice += this.getPriceAfterTaxes(cart?.batch[0]) * cart?.quantity;
+      totalPrice += this.getNetAmount2(cart?.batch[0], cart?.quantity);
+    }
+    return totalPrice;
   }
 
    // update tax of an element in current order additional charges
@@ -1057,6 +1201,7 @@ export class PosComponent implements OnInit {
 
 
   confirmBatch(){
+    this.playBeepSound();
     let product1;
     let product = this.currentProduct.batch;
     let batch = this.currentBatch;
@@ -1074,6 +1219,7 @@ export class PosComponent implements OnInit {
     product1 = {
       ...selectedOption,
       quantity: 1,
+      notes: '',
     }
 
     this.addToCurrent(product1);
@@ -1085,6 +1231,7 @@ export class PosComponent implements OnInit {
   }
 
   optionSelected(event){
+    this.playBeepSound();
     let product1;
     const selectedOption = event.option.value;
     console.log('prod', selectedOption?.batch);
@@ -1099,6 +1246,7 @@ export class PosComponent implements OnInit {
       product1 = {
         ...selectedOption,
         quantity: 1,
+        notes: '',
       }
     this.addToCurrent(product1);
     this.selectedOptions.push(product1);
@@ -1115,6 +1263,7 @@ export class PosComponent implements OnInit {
   }
 
   optionSelected1(event){
+    this.playBeepSound();
     this.currentCustomer = event.option.value;
     console.log(event.option.value, 'cus');
   }
@@ -1147,6 +1296,7 @@ export class PosComponent implements OnInit {
   }
 
   removeOptionCurrent(item) {
+    this.playBeepSound();
     const index = this.selectedOptions.findIndex(currentItem => currentItem.id === item.id);
     if (index !== -1) {
       this.selectedOptions.splice(index, 1);
@@ -1160,15 +1310,18 @@ export class PosComponent implements OnInit {
     this.cartService.removeFromCurrent(item)
   }
 
+
   addToCurrent(product: any): void {
     this.cartService.addToCurrent(product);
   }
 
   increaseQtyCurrent(item){
+    this.playBeepSound()
     this.cartService.increaseCurrent(item);
   }
 
   decreaseQtyCurrent(item){
+    this.playBeepSound();
     this.cartService.decreaseCurrent(item);
   }
 
@@ -1194,11 +1347,16 @@ export class PosComponent implements OnInit {
     this.cartItems = [];
   }
 
+
   displayFn(item: any): string {
-    return item ? `${item?.product_title} ${item?.variant_name} | ${item?.batch[0]?.selling_price_offline}` : '';
+    return item ? `${item?.product?.title} ${item?.variant_name} | ${item?.batch[0]?.selling_price_offline}` : '';
   }
 
   displayCus(item: any): string {
+    return item ? `Ph: ${item?.mobile_no} Address: ${item?.address[item?.address?.length - 1]?.city?.city}, ${item?.address[item?.address?.length - 1]?.state?.state}` : '';
+  }
+
+  displayCus1(item: any): string {
     return item ? item?.mobile_no : '';
   }
 
@@ -1214,16 +1372,8 @@ export class PosComponent implements OnInit {
     return this.addMoreDetails = !this.addMoreDetails;
   }
 
-  totalAmount(){
-    //let cartItems = this.cartService.getCartItems();
-    let cartItems = this.cartService.getCurrentItems();
-    //let cartItems = this.selectedOptions;
-    let totalPrice = 0 + this.currentTotalAdditionalCharges();
-    for(let cart of cartItems){
-      totalPrice += this.getPriceAfterTaxes(cart?.batch[0]) * cart?.quantity;
-    }
-    return totalPrice;
-  }
+  
+
 
   totalMrp(){
     //let cartItems = this.cartService.getCartItems();
@@ -1236,6 +1386,18 @@ export class PosComponent implements OnInit {
     return totalPrice;
   }
 
+
+  getRoundOff(){
+    const number = this.totalAmount();
+    const decimalPart = number % 1;
+    if(decimalPart !== 0){
+      const remainingPart = 1 - decimalPart;
+    return remainingPart.toFixed(2);
+    } else {
+      return (0).toFixed(2)    
+    }
+  }
+
   getTaxAmt(batch:any){
     let originalAmount = batch.selling_price_offline;
     let taxPercentage = batch.sale_tax;
@@ -1245,15 +1407,6 @@ export class PosComponent implements OnInit {
       let taxAmount = (taxPercentage / 100) * originalAmount;
       return taxAmount;
     }
-  }
-
-  totalTaxAmount(){
-    let cartItems = this.cartService.getCurrentItems();
-    let totalPrice = 0;
-    for(let cart of cartItems){
-      totalPrice += this.getTaxAmt(cart?.batch[0]) * cart?.quantity;
-    }
-    return Number(totalPrice).toFixed(2);
   }
 
 
@@ -1437,6 +1590,7 @@ export class PosComponent implements OnInit {
 
 
   onSubmit() {
+    this.playBeepSound();
     if (this.registrationForm.invalid) {
       console.log('invalid');
       Object.keys(this.registrationForm.controls).forEach(key => {
@@ -1639,6 +1793,7 @@ export class PosComponent implements OnInit {
   }
 
   resumeBill(billId: number) {
+    this.playBeepSound();
     // Implement logic to retrieve and resume the selected bill
     const selectedBill = this.heldBills.find((bill) => bill.id === billId);
     if (selectedBill) {
@@ -1667,6 +1822,7 @@ export class PosComponent implements OnInit {
   }
 
   removeFromHold(billId: number) {
+    this.playBeepSound();
     this.billHoldService.removeFromHold(billId);
     this.heldBills = this.billHoldService.getHeldBills();
     var clicking = <HTMLElement>document.querySelector('.holdClose');
@@ -1674,6 +1830,7 @@ export class PosComponent implements OnInit {
   }
 
   holdBill() {
+    this.playBeepSound();
     if(this.currentItems.length > 0){
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
@@ -1731,6 +1888,7 @@ export class PosComponent implements OnInit {
   }
 
   formSubmitExpense(){ 
+    this.playBeepSound();
     if (this.expensePaymentForm.invalid) {
       console.log('invalid');
       Object.keys(this.expensePaymentForm.controls).forEach(key => {
@@ -1786,6 +1944,7 @@ export class PosComponent implements OnInit {
   }
 
   formSubmitPurchase(){ 
+    this.playBeepSound();
     if (this.purchasePaymentForm.invalid) {
       console.log('invalid');
       Object.keys(this.purchasePaymentForm.controls).forEach(key => {
@@ -1948,6 +2107,7 @@ export class PosComponent implements OnInit {
   }
 
   formSubmitReceipt(){ 
+    this.playBeepSound();
     if (this.salesPaymentForm.invalid) {
       console.log('invalid');
       Object.keys(this.salesPaymentForm.controls).forEach(key => {
@@ -2109,7 +2269,9 @@ export class PosComponent implements OnInit {
 
   }
 
+
   payLaterGenerateOrder(){
+    this.playBeepSound();
     if (this.payLaterMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.payLaterMethodForm.controls).forEach(key => {
@@ -2122,23 +2284,7 @@ export class PosComponent implements OnInit {
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-        let cartData = [];
-    for (let index = 0; index < this.currentItems.length; index++) {
-      const element = this.currentItems[index];
-      let item = {
-        "variant": element.id,
-        "qty": element.quantity,
-        "mrp": element.batch[0].mrp,
-        "discount": 0,
-        "add_discount": 0,
-        "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
-        "remarks": "",
-        "tax_percentage": element?.batch[0]?.sale_tax
-      };
-      cartData.push(item);
-    }
+        let cartData = this.setItemsArr();
 
     let pay_later_data = {      
       "day": Number(this.pay_later_day.value),
@@ -2152,7 +2298,7 @@ export class PosComponent implements OnInit {
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
     formData.append('payment_mode', 'Paylater');
     formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2203,6 +2349,7 @@ export class PosComponent implements OnInit {
   }
 
   cardPaymentGenerateOrder(type:any){
+    this.playBeepSound();
     if (this.cardPaymentMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.cardPaymentMethodForm.controls).forEach(key => {
@@ -2215,23 +2362,7 @@ export class PosComponent implements OnInit {
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-        let cartData = [];
-    for (let index = 0; index < this.currentItems.length; index++) {
-      const element = this.currentItems[index];
-      let item = {
-        "variant": element.id,
-        "qty": element.quantity,
-        "mrp": element.batch[0].mrp,
-        "discount": 0,
-        "add_discount": 0,
-        "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
-        "remarks": "",
-        "tax_percentage": element?.batch[0]?.sale_tax
-      };
-      cartData.push(item);
-    }
+        let cartData = this.setItemsArr();
 
     let card_data = {
       "payment_account": this.payment_account_card.value,
@@ -2244,11 +2375,11 @@ export class PosComponent implements OnInit {
 
 
 
-    console.log(cartData, 'cash');
+    console.log(cartData, 'card');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
     formData.append('payment_mode', 'Card');
     formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2295,6 +2426,7 @@ export class PosComponent implements OnInit {
   }
 
   bankPaymentGenerateOrder(type:any){
+    this.playBeepSound();
     if (this.bankPaymentMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.bankPaymentMethodForm.controls).forEach(key => {
@@ -2307,23 +2439,7 @@ export class PosComponent implements OnInit {
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-        let cartData = [];
-    for (let index = 0; index < this.currentItems.length; index++) {
-      const element = this.currentItems[index];
-      let item = {
-        "variant": element.id,
-        "qty": element.quantity,
-        "mrp": element.batch[0].mrp,
-        "discount": 0,
-        "add_discount": 0,
-        "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
-        "remarks": "",
-        "tax_percentage": element?.batch[0]?.sale_tax
-      };
-      cartData.push(item);
-    }
+        let cartData = this.setItemsArr();
 
     let bank_data = {
       "account_no": Number(this.account_no.value),
@@ -2336,7 +2452,7 @@ export class PosComponent implements OnInit {
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
     formData.append('payment_mode', 'Bank');
     formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2392,6 +2508,7 @@ export class PosComponent implements OnInit {
   } 
 
   upiPaymentGenerateOrder(type:any){
+    this.playBeepSound()
     if (this.upiPaymentMethodForm.invalid) {
       console.log('invalid');
       Object.keys(this.upiPaymentMethodForm.controls).forEach(key => {
@@ -2404,27 +2521,7 @@ export class PosComponent implements OnInit {
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-        let cartData = [];
-    for (let index = 0; index < this.currentItems.length; index++) {
-      const element = this.currentItems[index];
-      console.log((this.getTaxAmt(element.batch[0]) * element.quantity), 'tax amt');
-      console.log(this.getNetAmount(element?.batch[0], element?.quantity), 'net');
-
-      let item = {
-        "variant": element.id,
-        "qty": element.quantity,
-        "mrp": element.batch[0].mrp,
-        "discount": 0,
-        "add_discount": 0,
-        "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
-        "remarks": "",
-        "tax_percentage": Number(element?.batch[0]?.sale_tax)
-      };
-      cartData.push(item);
-    }
-
+        let cartData = this.setItemsArr();
     let upi_data = {
       "upi_no": Number(this.upi_id.value),
       "payment_account": Number(this.payment_account_upi.value)
@@ -2432,11 +2529,11 @@ export class PosComponent implements OnInit {
 
 
 
-    console.log(cartData, 'cash', upi_data);
+    console.log(cartData, 'upi', upi_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
     formData.append('payment_mode', 'UPI');
     formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2492,36 +2589,18 @@ export class PosComponent implements OnInit {
 
   }
 
-
-
   cashPaymentGenerateOrder(type:any){
+    this.playBeepSound();
     if(this.currentItems.length > 0){
       if(this.currentCustomer === null || this.currentCustomer === undefined){
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-        let cartData = [];
-    for (let index = 0; index < this.currentItems.length; index++) {
-      const element = this.currentItems[index];
-      let item = {
-        "variant": element.id,
-        "qty": element.quantity,
-        "mrp": element.batch[0].mrp,
-        "discount": 0,
-        "add_discount": 0,
-        "unit_cost": element.batch[0]?.selling_price_offline,
-        "net_cost": Number(this.getNetAmount(element?.batch[0], element?.quantity)).toFixed(2),
-        "tax_amount": Number((this.getTaxAmt(element.batch[0])) * element.quantity).toFixed(2),
-        "remarks": "",
-        "tax_percentage": element?.batch[0]?.sale_tax
-      };
-      cartData.push(item);
-    }
-
+        let cartData = this.setItemsArr();
     console.log(cartData, 'cash');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.totalAmount().toString())));
+    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
     formData.append('payment_mode', 'Cash');
     formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
     formData.append('cart_data', JSON.stringify(cartData));
@@ -2576,6 +2655,27 @@ export class PosComponent implements OnInit {
 
 }
 
+setItemsArr(){
+  let cart = [];
+  for (let index = 0; index < this.currentItems.length; index++) {
+    const element = this.currentItems[index];
+    let item = {
+      "variant": element.id,
+      "qty": element.quantity,
+      "mrp": element.batch[0].mrp,
+      "discount": element.batch[0].discount,
+      "add_discount": element.batch[0].additional_discount,
+      "unit_cost": element.batch[0]?.selling_price_offline,
+      "net_cost": Number(this.getNetAmount2(element?.batch[0], element?.quantity)).toFixed(2),
+      "tax_amount": Number((this.getProductTax(element.batch[0])) * element.quantity).toFixed(2),
+      "remarks": element.notes,
+      "tax_percentage": element?.batch[0]?.sale_tax
+    };
+    cart.push(item);
+  }
+  return cart;
+}
+
 getDateForOrders(timestamp:any){
   const dateObject = new Date(timestamp);
 
@@ -2593,6 +2693,12 @@ const roundedNumber = Math.round(floatValue * 100) / 100;
 return roundedNumber;
 }
 
+// Function to play the beep sound
+playBeepSound(): void {
+  const beepSound = new Audio('assets/dummy/beep.mp3');
+  beepSound.play();
+}
+
 
 }
 
@@ -2604,7 +2710,16 @@ export enum KEY_CODE {
   // DOWN_ARROW = 40,
   // RIGHT_ARROW = 39,
   // LEFT_ARROW = 37,
-  F9 = 'F9',
+   
+  F3 = 'F3',
+  F4 = 'F4',
+  F5 = 'F5',
+  F6 = 'F6',
+  F7 = 'F7',
   F8 = 'F8',
+  F9 = 'F9',
+  F10 = 'F10',
+  F11 = 'F11',
+  F12 = 'F12',
   UP_ARROW = 'ArrowUp'
 }
