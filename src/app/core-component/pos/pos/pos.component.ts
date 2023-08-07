@@ -150,6 +150,7 @@ export class PosComponent implements OnInit {
   activeBill: any;
 
   posOrders:any = [];
+  currentCartIndex:number = 0;
 
 
   constructor(private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
@@ -931,6 +932,10 @@ export class PosComponent implements OnInit {
   //   }
   // }
 
+  setIndexForProductDetails(index:number){
+    this.playBeepSound();
+    this.currentCartIndex = index;
+  }
 
   // add row to current additional charges
   addRowToCAC(){
@@ -990,6 +995,7 @@ export class PosComponent implements OnInit {
     this.currentTotalAdditionalCharges()
 
   }
+
 
   getProductDisc(batch:any){
     let originalAmount = batch.selling_price_offline;
@@ -1327,7 +1333,7 @@ export class PosComponent implements OnInit {
     this.cartItems = [];
   }
 
-  
+
   displayFn(item: any): string {
     return item ? `${item?.product?.title} ${item?.variant_name} | ${item?.batch[0]?.selling_price_offline}` : '';
   }

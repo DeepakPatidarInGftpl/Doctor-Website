@@ -165,7 +165,16 @@
                                     <tr class="table-light" *ngFor="let cart of currentItems; let i = index">
                                         <td>{{i}}</td>
                                         <td>{{cart?.sku}}</td>
-                                        <td>{{cart?.product?.title}} | {{cart?.variant_name}}</td>
+                                        <td>
+                                            <div>
+                                                <p class="product-title-cart">
+                                                    {{cart?.product?.title}} | {{cart?.variant_name}}
+                                                    <button class="cart-btn1" data-bs-toggle="modal" data-bs-target="#productDetailsModal" (click)="setIndexForProductDetails(i)">
+                                                        <i class="fas fa-pause"></i>
+                                                    </button>
+                                                </p>
+                                            </div>
+                                        </td>
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp qty-input">
                                                 <span (click)="decreaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
@@ -3363,3 +3372,41 @@ Payment Account is required.
       </div>
     </div>
   </div> 
+
+
+  <!-- Modal Product Details-->
+  <div class="modal fade posmodal" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productDetailsModalLabel">Product Details</h5>
+          <button type="button" class="btn-close productDetailsModalClose" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
+            <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr *ngFor="let order of posOrders"> -->
+                    <tr>
+                        <td>Available Stock	</td>
+                        <td>{{currentItems[currentCartIndex]?.batch[0]?.mrp}}</td>                     
+                    </tr>
+                    
+                </tbody>
+                <!-- <tfoot>
+                </tfoot> -->
+            </table>
+        </div>
+        <!-- <div class="modal-footer mt-2">
+            <button type="button" class="btn btn-dark">Finalize Payment</button>
+        </div> -->
+      </div>
+    </div>
+  </div>  
