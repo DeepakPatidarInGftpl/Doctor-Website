@@ -77,7 +77,7 @@
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Purchase* </label>
+                        <label>Purchase order* </label>
                        <select formControlName="purchase" [ngClass]="{'is-invalid': f['purchase'].touched && f['purchase'].invalid}" readonly>
                             <option value="" selected disabled>Select Purchase</option>
                             <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase.order_no}}</option>
