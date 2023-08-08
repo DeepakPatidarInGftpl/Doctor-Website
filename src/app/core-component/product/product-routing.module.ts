@@ -100,9 +100,14 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'editbrand',
+        path: 'editbrand/:id',
         loadChildren: () =>
           import('./editbrand/editbrand.module').then((m) => m.EditbrandModule),
+      },
+      {
+        path: 'branddetails/:id',
+        loadChildren: () =>
+          import('./details-brand/details-brand.module').then((m) => m.DetailsBrandModule),
       },
       {
         path: 'product-details/:id',

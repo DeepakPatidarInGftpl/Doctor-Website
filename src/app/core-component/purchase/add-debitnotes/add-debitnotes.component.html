@@ -90,13 +90,13 @@
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Purchase* </label>
+                        <label>Purchase Order* </label>
                        <select formControlName="purchase" [ngClass]="{'is-invalid': f['purchase'].touched && f['purchase'].invalid}">
-                            <option value="" selected disabled>Select Purchase Bill</option>
+                            <option value="" selected disabled>Select Purchase</option>
                             <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase.order_no}}</option>
                         </select>
                         <span class="text-danger" *ngIf="purchase && purchase.invalid && purchase.touched">Select 
-                            Purchase
+                            Purchase order
                         </span>
                     </div>
                 </div>

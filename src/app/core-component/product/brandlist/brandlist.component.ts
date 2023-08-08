@@ -235,9 +235,9 @@ export class BrandlistComponent implements OnInit {
       if (this.delRes.msg == "Brands Deleted successfully") {
         // this.getcompanyList()
       }
-
     })
   }
+  
   url: any;
   onSelect(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
@@ -255,9 +255,7 @@ export class BrandlistComponent implements OnInit {
 
     this.brandForm.get('image')?.updateValueAndValidity()
   }
-
   subcatGroupList: any
-
   getSubcatGroup() {
     this.coreService.getSubcategoryGroup().subscribe(res => {
       this.subcatGroupList = res;
@@ -276,9 +274,7 @@ export class BrandlistComponent implements OnInit {
       }
     })
   }
-
   subcategories: any = [];
-
   subcatbySubcatGroup: any;
   getSubcategoryBySubcatGroup(val: any) {
     this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
@@ -297,8 +293,6 @@ export class BrandlistComponent implements OnInit {
       }, 2000);
     })
   }
-
-
   check: any
   selectedSubcat = 0;
   onCheckChange(event: any) {

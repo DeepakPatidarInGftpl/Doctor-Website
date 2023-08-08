@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SubcategoryGroupDetailsRoutingModule } from './subcategory-group-details-routing.module';
-import { SubcategoryGroupDetailsComponent } from './subcategory-group-details.component';
+import { DetailsBrandRoutingModule } from './details-brand-routing.module';
+import { DetailsBrandComponent } from './details-brand.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxEditorModule } from 'ngx-editor';
@@ -10,12 +10,13 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-
 @NgModule({
-  declarations: [SubcategoryGroupDetailsComponent],
+  declarations: [
+    DetailsBrandComponent,
+  ],
   imports: [
     CommonModule,
-    SubcategoryGroupDetailsRoutingModule,
+    DetailsBrandRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     NgxEditorModule,
@@ -25,4 +26,4 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatCheckboxModule
   ]
 })
-export class SubcategoryGroupDetailsModule { }
+export class DetailsBrandModule { }
