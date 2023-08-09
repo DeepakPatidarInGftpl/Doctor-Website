@@ -24,22 +24,24 @@ export class AddEmployeeComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
-      email: new FormControl('',[Validators.email]),
+      email: new FormControl('', [Validators.email]),
       remark: new FormControl(''),
       dob: new FormControl('',),
       anniversary: new FormControl('',),
       apply_tds: new FormControl(''),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
-      credit_limit: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      credit_limit: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
-      commision: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
-      wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
-      extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
-      target: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
-      username: new FormControl('',[Validators.required]),
-      password: new FormControl('',[Validators.required]),
+      commision: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      wages: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      extra_wages: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      target: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      username: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
       role: new FormControl(''),
+      opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
+      opening_balance_type: new FormControl('', [Validators.required]),
       // permissions:new FormArray([],),
     })
     this.addAddress();
@@ -48,12 +50,12 @@ export class AddEmployeeComponent implements OnInit {
     this.getPermission();
     this.getGroup();
   }
- 
-  groupList:any
-  getGroup(){
-    this.contactService.getPermissionGroup().subscribe((res:any)=>{
+
+  groupList: any
+  getGroup() {
+    this.contactService.getPermissionGroup().subscribe((res: any) => {
       console.log(res);
-      this.groupList=res
+      this.groupList = res
     })
   }
   addressAdd(): FormGroup {
@@ -63,7 +65,7 @@ export class AddEmployeeComponent implements OnInit {
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
-      pincode:new FormControl('',[Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
+      pincode: new FormControl('', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -82,7 +84,7 @@ export class AddEmployeeComponent implements OnInit {
       bank_ifsc_code: new FormControl('', [Validators.required]),
       bank_name: new FormControl('', [Validators.required]),
       branch_name: new FormControl(''),
-      account_no: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      account_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       account_holder_name: new FormControl('', [Validators.required])
     })
   }
@@ -101,20 +103,20 @@ export class AddEmployeeComponent implements OnInit {
   country: any[] = [];
   state: any[][] = []; // Array of arrays to store states for each formArray item
   city: any[][] = []; // Array of arrays to store cities for each formArray item
-  
+
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
       console.log(this.country);
     });
   }
-  
+
   selectState(val: any, i) {
     console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
-  
+
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
       console.log(this.state[i]);
@@ -122,24 +124,24 @@ export class AddEmployeeComponent implements OnInit {
       this.city[i] = [];
     });
   }
-  
+
   selectCity(val: any, i) {
     console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
-  
+
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
       console.log(this.city[i]);
     });
   }
-  permissionDetails:any;
-  getPermission(){
-    this.contactService.getPermission()?.subscribe((res:any)=>{
+  permissionDetails: any;
+  getPermission() {
+    this.contactService.getPermission()?.subscribe((res: any) => {
       console.log(res);
-      this.permissionDetails=res;
-// console.log(this.permissionDetails[0].name);
+      this.permissionDetails = res;
+      // console.log(this.permissionDetails[0].name);
     })
   }
 
@@ -170,7 +172,7 @@ export class AddEmployeeComponent implements OnInit {
   //   }
   // }
 
-  loader=false;
+  loader = false;
   submit() {
     console.log(this.employeeForm.value);
 
@@ -186,17 +188,20 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('apply_tds', this.employeeForm.get('apply_tds')?.value);
     formdata.append('pan_no', this.employeeForm.get('pan_no')?.value);
     formdata.append('credit_limit', this.employeeForm.get('credit_limit')?.value);
-   
+
     formdata.append('commision', this.employeeForm.get('commision')?.value);
     formdata.append('wages', this.employeeForm.get('wages')?.value);
     formdata.append('extra_wages', this.employeeForm.get('extra_wages')?.value);
-   
+
     formdata.append('target', this.employeeForm.get('target')?.value);
     formdata.append('username', this.employeeForm.get('username')?.value);
     formdata.append('password', this.employeeForm.get('password')?.value);
     formdata.append('role', this.employeeForm.get('role')?.value);
+
+    formdata.append('opening_balance', this.employeeForm.get('opening_balance')?.value);
+    formdata.append('opening_balance_type', this.employeeForm.get('opening_balance_type')?.value);
     // formdata.append('permissions', JSON.stringify(this.employeeForm.get('permissions')?.value));
-    
+
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];
@@ -226,27 +231,27 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('bank_id', JSON.stringify(bankData));
 
     if (this.employeeForm.valid) {
-      this.loader=true;
+      this.loader = true;
       this.contactService.addEmployee(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Successfuly Added") {
-          this.loader=false
+          this.loader = false
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()
           this.router.navigate(['//contacts/employee'])
-        }else{
-          this.loader=false;
-            this.toastr.error(this.addRes.msg)
+        } else {
+          this.loader = false;
+          this.toastr.error(this.addRes.msg)
         }
       }, err => {
-        this.loader=false;
+        this.loader = false;
         // console.log(err.error.gst);
-        if(err.error.msg){
+        if (err.error.msg) {
           this.toastr.error(err.error.msg)
         }
-        else if(err.error.detail){
-          this.toastr.error(err.error.detail,'details')
+        else if (err.error.detail) {
+          this.toastr.error(err.error.detail, 'details')
         } else if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
@@ -259,9 +264,9 @@ export class AddEmployeeComponent implements OnInit {
           }, 2000);
         }
       })
-    } 
+    }
     else {
-      this.loader=false;
+      this.loader = false;
       this.employeeForm.markAllAsTouched()
       console.log('hhhhhh');
     }
@@ -316,9 +321,15 @@ export class AddEmployeeComponent implements OnInit {
   get credit_limit() {
     return this.employeeForm.get('credit_limit')
   }
-get role(){
-  return this.employeeForm.get('role')
-}
+  get role() {
+    return this.employeeForm.get('role')
+  }
+  get opening_balance_type() {
+    return this.employeeForm.get('opening_balance_type')
+  }
+  get opening_balance() {
+    return this.employeeForm.get('opening_balance')
+  }
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');
   }
@@ -331,8 +342,8 @@ get role(){
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
   }
- 
-  
+
+
   // nested bank error
 
   getBankHolderName(index: number) {

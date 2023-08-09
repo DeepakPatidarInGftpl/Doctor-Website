@@ -42,7 +42,7 @@ export class UpdateCustomerComponent implements OnInit {
       credit_limit: new FormControl('',),
       address: this.fb.array([]),
       payment_terms: new FormControl('',),
-      opening_balance: new FormControl('',),
+      opening_balance: new FormControl(0,[Validators.pattern(/^[0-9]*$/)]),
       invite_code: new FormControl(''),
       membership: new FormControl(''),
       opening_balance_type:new FormControl('',[Validators.required])

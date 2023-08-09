@@ -47,6 +47,8 @@ export class UpdateEmployeeComponent implements OnInit {
       wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       target: new FormControl('',Validators.pattern(/^[0-9]*$/)),
+      opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
+      opening_balance_type: new FormControl('', [Validators.required]),
       // username: new FormControl(''),
       // password: new FormControl(''),
       // permission_group: new FormControl('')
@@ -256,6 +258,8 @@ loader=false;
     formdata.append('extra_wages', this.employeeForm.get('extra_wages')?.value);
 
     formdata.append('target', this.employeeForm.get('target')?.value);
+    formdata.append('opening_balance', this.employeeForm.get('opening_balance')?.value);
+    formdata.append('opening_balance_type', this.employeeForm.get('opening_balance_type')?.value);
     // formdata.append('username', this.employeeForm.get('username')?.value);
     // formdata.append('password', this.employeeForm.get('password')?.value);
     // formdata.append('role', this.employeeForm.get('role')?.value);
@@ -378,6 +382,12 @@ loader=false;
   }
   get role(){
     return this.employeeForm.get('role')
+  }
+  get opening_balance_type() {
+    return this.employeeForm.get('opening_balance_type')
+  }
+  get opening_balance() {
+    return this.employeeForm.get('opening_balance')
   }
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');

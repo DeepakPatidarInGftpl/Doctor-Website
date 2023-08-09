@@ -38,7 +38,7 @@ export class AddSupplierComponent implements OnInit {
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      opening_balance: new FormControl(0,[Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type:new FormControl('',[Validators.required]),
       supplier_type: new FormControl('', [Validators.required])
     });

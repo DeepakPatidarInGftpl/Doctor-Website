@@ -149,7 +149,7 @@
                 </ul>
             </li>
             
-            <li class="submenu" *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview">
+            <li class="submenu" *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview || isOrder">
                 <a  [ngClass]="{'active': activePath === 'website'}"><i class="fa fa-sitemap" data-bs-toggle="tooltip" title="fa fa-sitemap" style="color: #637381;"></i><span> Website</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isBanner"><a routerLink="/website/banner" routerLinkActive="active">Banner</a></li>  
@@ -165,6 +165,8 @@
                     <li *ngIf="isAboutFooterBanner"><a routerLink="/website/aboutFooterBanner" routerLinkActive="active">About Footer Banner</a></li>  
                     <li *ngIf="isNewarrivalBanner"><a routerLink="/website/newArrivalBanner" routerLinkActive="active">New Arrival Banner</a></li>  
                     <li *ngIf="isRatingReview"><a routerLink="/website/ratingAndReview" routerLinkActive="active">Rating And Review</a></li>  
+                    
+                    <li *ngIf="isOrder"><a routerLink="/website/productOrder" routerLinkActive="active">Product Order</a></li>  
                 </ul>
             </li>  
             

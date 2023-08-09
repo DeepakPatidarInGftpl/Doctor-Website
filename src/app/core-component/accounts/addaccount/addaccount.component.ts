@@ -43,7 +43,7 @@ export class AddaccountComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       accounts_type: new FormControl('',[Validators.required]),
       account_subtype: new FormControl('',[Validators.required]),
-      opening_balance: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      opening_balance: new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type: new FormControl('', [Validators.required]),
       account_id: new FormControl('')
 
@@ -131,6 +131,7 @@ export class AddaccountComponent implements OnInit {
         }
       }, err => {
         this.loaders = false;
+        this.toastr.error(err.error?.account_id[0],'Account Id')
         if (err.error.anniversary) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {

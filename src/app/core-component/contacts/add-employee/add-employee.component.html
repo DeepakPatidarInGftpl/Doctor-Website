@@ -233,6 +233,35 @@
                             style="background: #FF9F43; color: white; border-radius: 2px;">+ Add More Banks</span>
                     </div>
                 </div>
+
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group row">
+                      <div class="col-lg-12">
+                        <label>Opening Balance*</label>
+                        <div class="input-group">
+                          <div>
+                            <select formControlName="opening_balance_type" class=" border hov" required id="opening_balance_type"
+                              [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">
+                              <option class="unhov" value="" selected disabled>Balance type</option>
+                              <option class="unhov" value="Cr">Cr</option>
+                              <option class="unhov" value="Dr">Dr</option>
+                            </select>
+                            <span class="text-danger d-block"
+                              *ngIf="opening_balance_type && opening_balance_type.invalid && opening_balance_type.touched">Select
+                              Balance Type</span>
+                          </div>
+                          <div>
+                            <input type="text" formControlName="opening_balance" id="opening_balance"
+                              [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
+                            <span class="text-danger ml-5 pl-5"
+                              *ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">
+                              Enter your Balance</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Commision</label>
@@ -272,7 +301,7 @@
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>UserName</label>
+                        <label>UserName*</label>
                         <input type="text" formControlName="username" id="username"
                             [ngClass]="{'is-invalid': f['username'].touched && f['username'].invalid}">
                         <span class="text-danger" *ngIf="username && username.invalid && username.touched">Enter your
@@ -281,7 +310,7 @@
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>Password</label>
+                        <label>Password*</label>
                         <input type="text" formControlName="password" id="password"
                             [ngClass]="{'is-invalid': f['password'].touched && f['password'].invalid}">
                         <span class="text-danger" *ngIf="password && password.invalid && password.touched">Enter your

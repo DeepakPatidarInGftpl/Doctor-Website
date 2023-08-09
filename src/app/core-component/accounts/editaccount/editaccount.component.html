@@ -74,7 +74,7 @@
             <div class="col-lg-6 col-sm-6 col-12">
               <div class="form-group">
                 <label>Account Id</label>
-                <input type="text" formControlName="account_id" id="account_id" [ngClass]="{'is-invalid': f['account_id'].touched && f['account_id'].invalid}">
+                <input type="text" formControlName="account_id" id="account_id" [ngClass]="{'is-invalid': f['account_id'].touched && f['account_id'].invalid}" readonly>
                 <span class="text-danger" *ngIf="account_id && account_id.invalid && account_id.touched">Enter Account id</span>
               </div>
             </div>

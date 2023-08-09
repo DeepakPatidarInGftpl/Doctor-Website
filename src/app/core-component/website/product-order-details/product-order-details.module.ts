@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DetailsPosOrderRoutingModule } from './details-pos-order-routing.module';
-import { DetailsPosOrderComponent } from './details-pos-order.component';
+import { ProductOrderDetailsRoutingModule } from './product-order-details-routing.module';
+import { ProductOrderDetailsComponent } from './product-order-details.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -13,10 +13,12 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
-  declarations: [DetailsPosOrderComponent],
+  declarations: [
+    ProductOrderDetailsComponent
+  ],
   imports: [
     CommonModule,
-    DetailsPosOrderRoutingModule,
+    ProductOrderDetailsRoutingModule,
     SharedModuleModule,
     FormsModule,
     ReactiveFormsModule,
@@ -27,4 +29,4 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatCheckboxModule
   ]
 })
-export class DetailsPosOrderModule { }
+export class ProductOrderDetailsModule { }
