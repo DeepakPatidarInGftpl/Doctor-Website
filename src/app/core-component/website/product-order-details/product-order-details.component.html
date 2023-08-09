@@ -1,0 +1,409 @@
+<div class="card bg">
+    <div class="card-body">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Product Order Details</h4>
+                <h6>Full details of a Product Order</h6>
+            </div>
+        </div>
+
+        <mat-tab-group animationDuration="0ms" *ngIf="productOrderDetail">
+            <mat-tab label="General Details">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>User Id</h4>
+                                            <h6>{{productOrderDetail?.id}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Product Title</h4>
+                                            <h6>{{productOrderDetail?.carts[0]?.product?.title}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Payment Status</h4>
+                                            <h6>{{productOrderDetail?.payment_status}}</h6>
+                                        </li>
+                                       
+                                        <li>
+                                            <h4>Payment type</h4>
+                                            <h6>{{productOrderDetail?.payment_type}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Status</h4>
+                                            <h6>{{productOrderDetail?.status}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Sub total Amount</h4>
+                                            <h6>{{productOrderDetail?.sub_total_amount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Total Discount</h4>
+                                            <h6>{{productOrderDetail?.total_discount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Couopn Discount</h4>
+                                            <h6>{{productOrderDetail?.couopn_discount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Total Amount</h4>
+                                            <h6>{{productOrderDetail?.total_amount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Final Amount</h4>
+                                            <h6>{{productOrderDetail?.final_amount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Address Type</h4>
+                                            <h6>{{productOrderDetail?.address_type}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Order At</h4>
+                                            <h6>{{productOrderDetail?.order_date | date}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Accepted At</h4>
+                                            <h6>{{productOrderDetail?.accepted_at | date}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Dispatched At</h4>
+                                            <h6>{{productOrderDetail?.dispatched_at | date}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Delivered At</h4>
+                                            <h6>{{productOrderDetail?.delivered_at | date}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Cancel At</h4>
+                                            <h6>{{productOrderDetail?.cancel_date | date}}</h6>
+                                        </li>
+                                     
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- <div class="d-flex align-items-center mx-4">
+                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                        <span [ngClass]="{'bg-lightgreen': vendorDetail.is_active === true, 'bg-lightred' : vendorDetail.is_active === false,'bg-lightyellow' : vendorDetail.is_active === 'Partial' }"
+                                            class="badges">{{vendorDetail.is_active}}</span>
+                    </div> -->
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Carts">
+              
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body" *ngFor="let cart of productOrderDetail?.carts;let i=index">
+                                <strong>{{i+1+'.'}} </strong>   
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Prooduct Title</h4>
+                                            <h6>{{cart?.product?.title}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Brand</h4>
+                                            <h6>{{cart?.brand?.title}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Color</h4>
+                                            <h6 [style.color]="cart?.color?.title.toLocaleLowerCase()">{{cart?.color?.title}}</h6>
+                                        </li>
+                                       
+                                        <li>
+                                            <h4>Size</h4>
+                                            <h6>{{cart?.size?.title}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Variant</h4>
+                                            <h6>{{cart?.variant?.variant_name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Cart Status</h4>
+                                            <h6>{{cart?.cart_status}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Is COD</h4>
+                                            <h6>{{cart?.cod_available}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Is Return</h4>
+                                            <h6>{{cart?.is_return}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Status</h4>
+                                            <h6>{{cart?.cart_status}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Quantity</h4>
+                                            <h6>{{cart?.qty}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Brand Discount</h4>
+                                            <h6>{{cart?.brand_discount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Category Discount</h4>
+                                            <h6>{{cart?.category_discount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Sub-Category Discount</h4>
+                                            <h6>{{cart?.subcategory_discount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Extra Discount</h4>
+                                            <h6>{{cart?.extra_discount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Total Discount</h4>
+                                            <h6>{{cart?.discount_total}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>MRP</h4>
+                                            <h6>{{cart?.mrp}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Sub Total</h4>
+                                            <h6>{{cart?.sub_total}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Total Amount</h4>
+                                            <h6>{{cart?.total_amount}}</h6>
+                                        </li>
+                                      
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Store Address">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Name</h4>
+                                            <h6>{{productOrderDetail?.store_address?.name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Address</h4>
+                                            <h6>{{productOrderDetail?.store_address?.address}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Mobile No.</h4>
+                                            <h6>{{productOrderDetail?.store_address?.mobile_no}}</h6>
+                                        </li>
+                                       
+                                        <li>
+                                            <h4>Alternative Mobile No.</h4>
+                                            <h6>{{productOrderDetail?.store_address?.alternative_mobile_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Email</h4>
+                                            <h6>{{productOrderDetail?.store_address?.email}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Line-1</h4>
+                                            <h6>{{productOrderDetail?.store_address?.line1}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Line-2</h4>
+                                            <h6>{{productOrderDetail?.store_address?.line2}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Pincode</h4>
+                                            <h6>{{productOrderDetail?.store_address?.pincode}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Country</h4>
+                                            <h6>{{productOrderDetail?.store_address?.country}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>State</h4>
+                                            <h6>{{productOrderDetail?.store_address?.state}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>City</h4>
+                                            <h6>{{productOrderDetail?.store_address?.city}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Date</h4>
+                                            <h6>{{productOrderDetail?.store_address?.datetime | date}}</h6>
+                                        </li>
+                                       
+                                     
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+          
+            <mat-tab label="Shipping Address">
+             
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Name</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Address</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.address}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Address Type</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.address_type}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Mobile No.</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.mobile_no}}</h6>
+                                        </li>
+                                       
+                                        <li>
+                                            <h4>Alternative Mobile No.</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.alternative_mobile_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Email</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.email}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Line-1</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.line1}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Line-2</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.line2}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Pincode</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.pincode}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Country</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.country}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>State</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.state}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>City</h4>
+                                            <h6>{{productOrderDetail?.shipping_address?.city}}</h6>
+                                        </li>
+                                      
+                                     
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Billing Address">
+             
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Name</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Address</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.address}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Address Type</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.address_type}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Mobile No.</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.mobile_no}}</h6>
+                                        </li>
+                                       
+                                        <li>
+                                            <h4>Alternative Mobile No.</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.alternative_mobile_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Email</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.email}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Line-1</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.line1}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Line-2</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.line2}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Pincode</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.pincode}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Country</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.country}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>State</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.state}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>City</h4>
+                                            <h6>{{productOrderDetail?.billing_address?.city}}</h6>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Cancel Reason">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card-body">
+                            <div class="productdetails">
+                                <ul class="product-bar">
+                                    <li>
+                                        <h4>Title</h4>
+                                        <h6>{{productOrderDetail?.cancel_reason?.title}}</h6>
+                                    </li>
+                                    <li>
+                                        <h4>Mobile no</h4>
+                                        <h6>{{productOrderDetail?.cancel_reason?.type}}</h6>
+                                    </li>
+                                   
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+        <div class="container" *ngIf="productOrderDetail?.length==[]">
+            <p class="center-textt">Data not available</p>
+        </div>
+    </div>
+</div>

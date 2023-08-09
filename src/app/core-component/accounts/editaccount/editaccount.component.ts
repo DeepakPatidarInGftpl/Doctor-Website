@@ -21,6 +21,7 @@ export class EditaccountComponent implements OnInit {
   }
   id: any
   data: any
+  accountId:any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.accountForm = this.fb.group({
@@ -46,7 +47,7 @@ export class EditaccountComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       accounts_type: new FormControl('',[Validators.required]),
       account_subtype: new FormControl('',[Validators.required]),
-      opening_balance: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      opening_balance: new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type: new FormControl('', [Validators.required]),
       account_id:new FormControl('')
     })
@@ -138,12 +139,13 @@ export class EditaccountComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.accountForm.reset()
           this.router.navigate(['//account/accountlist'])
-          // .then(() => {
-          //   window.location.reload()
-          // })
+        }else{
+          this.loaders=false
+          this.toastr.error(this.addRes?.account_id[0])
         }
       }, err => {
         this.loaders=false;
+        this.toastr.error(err.error?.account_id[0])
         console.log(err.error.gst);
         if (err.error.anniversary) {
           this.dateError = 'Date (format:dd/mm/yyyy)';

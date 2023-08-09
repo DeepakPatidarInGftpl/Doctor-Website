@@ -92,7 +92,7 @@ export class SidebarOneComponent implements OnInit {
   isAboutFooterBanner: any;
   isNewarrivalBanner: any;
   isRatingReview: any;
-
+  isOrder:any;
   //places
   isCity: any;
   isCountry: any;
@@ -253,6 +253,9 @@ userDetails:any
       } else if (res.content_type.app_label === 'product' && res.content_type.model === 'ratingandreviewsonproduct' && res.codename == 'view_ratingandreviewsonproduct') {
         this.isRatingReview = res.codename;
         console.log(this.isRatingReview);
+      }else if (res.content_type.app_label === 'order' && res.content_type.model === 'order' && res.codename == 'view_order') {
+        this.isOrder = res.codename;
+        console.log(this.isOrder);
       }
        //settings
        else if (res.content_type.app_label === 'master' && res.content_type.model === 'paymentterms' && res.codename == 'view_paymentterms') {

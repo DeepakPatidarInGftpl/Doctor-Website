@@ -1,4 +1,3 @@
-
 <div class="card bg">
     <div class="card-body">
         <div class="page-header">
@@ -13,141 +12,148 @@
             </div>
         </div>
 
-<mat-tab-group animationDuration="0ms" *ngIf="vendorDetail">
-    <mat-tab label="General Details">
-        <div class="row">
-            <div class="col-lg-12 col-sm-12" >
-                <div class="card">
-                    <div class="card-body">
-                        <div class="productdetails">                  
-                            <ul class="product-bar">
-                                <li>
-                                    <h4>Name</h4>
-                                    <h6>{{vendorDetail?.name}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Company name</h4>
-                                    <h6>{{vendorDetail?.company_name}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Date of Birth</h4>
-                                    <h6>{{vendorDetail?.date_of_birth}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Anniversary</h4>
-                                    <h6>{{vendorDetail?.anniversary_date}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Mobile Number</h4>
-                                    <h6>{{vendorDetail?.mobile_no}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Telephone Number</h4>
-                                    <h6>{{vendorDetail?.telephone_no}}</h6>
-                                </li>
-                                <li>
-                                    <h4>WhatsApp Number</h4>
-                                    <h6>{{vendorDetail?.whatsapp_no}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Email</h4>
-                                    <h6>{{vendorDetail?.email}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Remark</h4>
-                                    <h6>{{vendorDetail?.remark}}</h6>
-                                </li>
-                                <li>
-                                    <h4>GST Type</h4>
-                                    <h6>{{vendorDetail?.gst_type}}</h6>
-                                </li>
-                                <li>
-                                    <h4>GSTIN</h4>
-                                    <h6>{{vendorDetail?.gstin}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Apply TDS</h4>
-                                    <h6>{{vendorDetail?.apply_tds}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Pan card</h4>
-                                    <h6>{{vendorDetail?.pan_no}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Credit Limit</h4>
-                                    <h6>{{vendorDetail?.credit_limit}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Payment Terms</h4>
-                                    <h6>{{vendorDetail?.payment_terms?.title}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Opening Balance</h4>
-                                    <h6>{{vendorDetail?.opening_balance_type + ' : ' + vendorDetail?.opening_balance==null?'':vendorDetail?.opening_balance}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Invite Code</h4>
-                                    <h6>{{vendorDetail?.invite_code}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Membership</h4>
-                                    <h6>{{vendorDetail?.membership}}</h6>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center mx-4">
-                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                        <span [ngClass]="{'bg-lightgreen': vendorDetail?.is_active === true, 'bg-lightred' : vendorDetail?.is_active === false,'bg-lightyellow' : vendorDetail?.is_active === 'Partial' }"
-                                            class="badges">{{vendorDetail?.is_active}}</span>
-                    </div>
-                </div>
-            </div>
-          </div>
-    </mat-tab>
-    <mat-tab label="Address">
-        <div class="row">
-            <div class="col-lg-12 col-sm-12" >
-                <div class="card" *ngFor="let address of vendorDetail?.address">
-                    <div class="card-body">
-                        <div class="productdetails">                  
-                            <ul class="product-bar">
-                                <li>
-                                    <h4>Address Line 1</h4>
-                                    <h6>{{address?.address_line_1}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Address Line 2</h4>
-                                    <h6>{{address?.address_line_2}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Select Country</h4>
-                                    <h6>{{address?.country?.country_name}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Select State</h4>
-                                    <h6>{{address?.state?.state}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Select City</h4>
-                                    <h6>{{address?.city?.city}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Pincode</h4>
-                                    <h6>{{address?.pincode}}</h6>
-                                </li>
-                                <li>
-                                    <h4>Address Type</h4>
-                                    <h6>{{address?.address_type}}</h6>
-                                </li>
-                               
-                            </ul>
+        <mat-tab-group animationDuration="0ms" *ngIf="vendorDetail">
+            <mat-tab label="General Details">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Name</h4>
+                                            <h6>{{vendorDetail?.name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Company name</h4>
+                                            <h6>{{vendorDetail?.company_name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Date of Birth</h4>
+                                            <h6>{{vendorDetail?.date_of_birth}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Anniversary</h4>
+                                            <h6>{{vendorDetail?.anniversary_date}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Mobile Number</h4>
+                                            <h6>{{vendorDetail?.mobile_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Telephone Number</h4>
+                                            <h6>{{vendorDetail?.telephone_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>WhatsApp Number</h4>
+                                            <h6>{{vendorDetail?.whatsapp_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Email</h4>
+                                            <h6>{{vendorDetail?.email}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Remark</h4>
+                                            <h6>{{vendorDetail?.remark}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>GST Type</h4>
+                                            <h6>{{vendorDetail?.gst_type}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>GSTIN</h4>
+                                            <h6>{{vendorDetail?.gstin}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Apply TDS</h4>
+                                            <h6>{{vendorDetail?.apply_tds}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Pan card</h4>
+                                            <h6>{{vendorDetail?.pan_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Credit Limit</h4>
+                                            <h6>{{vendorDetail?.credit_limit}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Payment Terms</h4>
+                                            <h6>{{vendorDetail?.payment_terms?.title}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Opening Balance</h4>
+                                            <h6>{{vendorDetail?.opening_balance_type + ' : ' +
+                                                vendorDetail?.opening_balance}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Invite Code</h4>
+                                            <h6>{{vendorDetail?.invite_code}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Membership</h4>
+                                            <h6>{{vendorDetail?.membership}}</h6>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mx-4">
+                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                <span
+                                    [ngClass]="{'bg-lightgreen': vendorDetail?.is_active === true, 'bg-lightred' : vendorDetail?.is_active === false,'bg-lightyellow' : vendorDetail?.is_active === 'Partial' }"
+                                    class="badges">{{vendorDetail?.is_active}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-          </div>
-    </mat-tab>
-  </mat-tab-group>
-</div>
+            </mat-tab>
+            <mat-tab label="Address">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body" *ngFor="let address of vendorDetail?.address;let i=index">
+                                <strong>{{i+1+'.'}} </strong>
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Address Line 1</h4>
+                                            <h6>{{address?.address_line_1}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Address Line 2</h4>
+                                            <h6>{{address?.address_line_2}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Select Country</h4>
+                                            <h6>{{address?.country?.country_name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Select State</h4>
+                                            <h6>{{address?.state?.state}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Select City</h4>
+                                            <h6>{{address?.city?.city}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Pincode</h4>
+                                            <h6>{{address?.pincode}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Address Type</h4>
+                                            <h6>{{address?.address_type}}</h6>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+        <div class="container" *ngIf="vendorDetail?.length==[]">
+            <p class="center-textt">Data not available</p>
+        </div>
+    </div>
 </div>

@@ -39,7 +39,7 @@ export class AddVendorComponent implements OnInit {
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl(''),
+      opening_balance: new FormControl(0,[Validators.pattern(/^[0-9]*$/)]),
       invite_code: new FormControl(''),
       membership: new FormControl('', ),
       opening_balance_type:new FormControl('',[Validators.required])

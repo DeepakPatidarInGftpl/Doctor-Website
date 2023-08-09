@@ -11,6 +11,8 @@ import { UpdateStaticPageComponent } from './update-static-page/update-static-pa
   declarations: [
     WebsiteComponent,
     UpdateStaticPageComponent,
+    
+
    
   ],
   imports: [

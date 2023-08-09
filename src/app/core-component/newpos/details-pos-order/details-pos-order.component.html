@@ -5,11 +5,6 @@
                 <h4>POS Order Details</h4>
                 <h6>Full details of a POS Order</h6>
             </div>
-            <!-- <div class="page-btn">
-                <a routerLink="//contacts/updateVendor/{{vendorDetail?.id}}" class="btn btn-added">
-                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Vendor
-                </a>
-            </div> -->
         </div>
 
         <mat-tab-group animationDuration="0ms" *ngIf="vendorDetail">
@@ -94,104 +89,160 @@
                 </div>
             </mat-tab>
             <mat-tab label="Receipts">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <td class="th">Receipt Mode</td>
-                                <td class="th">Receipt method</td>
-                                <td class="th">Receipt upi id</td>
-                                <td class="th">Amount</td>
-                                <td class="th">Bill no</td>
-                                <td class="th">Receipt bank</td>
-                                <td class="th">Receipt card</td>
-                                <td class="th">Receipt date</td>
-                                <td class="th">Description</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let cart of vendorDetail?.receipts">
-                                <td class="td">{{cart?.receipt_mode}}</td>
-                                <td class="td">{{cart?.receipt_method}}</td>
-                                <td class="td">{{cart?.receipt_upi_id}}</td>
-                                <td class="td">{{cart?.amount}}</td>
-                                <td class="td">{{cart?.bill_no}}</td>
-                                <td class="td">{{cart?.receipt_bank_id}}</td>
-                                <td class="td">{{cart?.receipt_card_id}}</td>
-                                <td class="td">{{cart?.receipt_date | date}}</td>
-                                <td class="td">{{cart?.description}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body" *ngFor="let cart of vendorDetail?.receipts;let i=index">
+                                <strong>{{i+1 + '.'}}</strong>
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Receipt Mode</h4>
+                                            <h6>{{cart?.receipt_mode}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Receipt Method</h4>
+                                            <h6>{{cart?.receipt_method}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Receipt Upi Id</h4>
+                                            <h6>{{cart?.receipt_upi_id}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Amount</h4>
+                                            <h6>{{cart?.amount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Bill No.</h4>
+                                            <h6>{{cart?.bill_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Receipt Bank Id</h4>
+                                            <h6>{{cart?.receipt_bank_id}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Receipt Card Id</h4>
+                                            <h6>{{cart?.receipt_card_id}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Receipt Date</h4>
+                                            <h6>{{cart?.receipt_date | date}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Description</h4>
+                                            <h6>{{cart?.description}}</h6>
+                                        </li>
+                                      
+                                    </ul>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
                 </div>
             </mat-tab>
             <mat-tab label="Order Paylatter">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <td class="th">Day</td>
-                                <td class="th">Date</td>
-                                <td class="th">Create date</td>
-                                <td class="th">Send Reminder</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let cart of vendorDetail?.order_paylatter">
-                                <td class="td">{{cart?.day}}</td>
-                                <td class="td">{{cart?.date}}</td>
-                                <td class="td">{{cart?.create_date | date:'fullDate'}}</td>
-                                <td class="td">
-                                    <span [ngClass]="{'bg-lightgreen': cart.is_send_reminder === true, 'bg-lightred' : cart.is_send_reminder === false,'bg-lightyellow' : cart.is_send_reminder === 'Partial' }"
-                                    class="badges">{{cart.is_send_reminder}}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body" *ngFor="let cart of vendorDetail?.order_paylatter;let i=index">
+                                <strong>{{i+1 + '.'}}</strong>
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Day</h4>
+                                            <h6>{{cart?.day}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Date</h4>
+                                            <h6>{{cart?.date}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Create Date</h4>
+                                            <h6>{{cart?.create_date | date:'fullDate'}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Send Reminder</h4>
+                                            <h6><span [ngClass]="{'bg-lightgreen': cart.is_send_reminder === true, 'bg-lightred' : cart.is_send_reminder === false,'bg-lightyellow' : cart.is_send_reminder === 'Partial' }"
+                                                class="badges">{{cart.is_send_reminder}}</span></h6>
+                                        </li>
+                                      
+                                    </ul>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
                 </div>
             </mat-tab>
             <mat-tab label="Cart">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <td class="th">Product</td>
-                                <td class="th">Variant</td>
-                                <td class="th">Brand</td>
-                                <td class="th">Color</td>
-                                <td class="th">Size</td>
-                                <td class="th">QTY</td>
-                                <td class="th">MRP</td>
-                                <td class="th">Discount</td>
-                                <td class="th">Unit cost</td>
-                                <td class="th">Net Cost</td>
-                                <td class="th">Tax (%)</td>
-                                <td class="th">Tax Amount</td>
-                                <td class="th">Remarks</td>
-                                <td class="th">Status Choice</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let cart of vendorDetail?.cart">
-                                <td class="td">{{cart?.product}}</td>
-                                <td class="td">{{cart?.variant}}</td>
-                                <td class="td">{{cart?.brand}}</td>
-                                <td class="td">{{cart?.color}}</td>
-                                <td class="td">{{cart?.size}}</td>
-                                <td class="td">{{cart?.qty}}</td>
-                                <td class="td">{{cart?.mrp}}</td>
-                                <td class="td">{{cart?.discount + '%'}}</td>
-                                <td class="td">{{cart?.unit_cost}}</td>
-                                <td class="td">{{cart?.net_cost}}</td>
-                                <td class="td">{{cart?.tax_percentage}}</td>
-                                <td class="td">{{cart?.tax_amount}}</td>
-                                <td class="td">{{cart?.remarks}}</td>
-                                <td class="td">{{cart?.STATUS_CHOICES}}</td>
-
-                               
-                            </tr>
-                        </tbody>
-                    </table>
+              
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body" *ngFor="let cart of vendorDetail?.cart;let i=index">
+                                <strong>{{i+1 + '.'}}</strong>
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Product</h4>
+                                            <h6>{{cart?.product}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Variant</h4>
+                                            <h6>{{cart?.variant}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Brand</h4>
+                                            <h6>{{cart?.brand}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Color</h4>
+                                            <h6>{{cart?.color}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Size</h4>
+                                            <h6>{{cart?.size}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Quantity</h4>
+                                            <h6>{{cart?.qty}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Discount</h4>
+                                            <h6>{{cart?.discount + '%'}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Unit Cost</h4>
+                                            <h6>{{cart?.unit_cost}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Net Cost</h4>
+                                            <h6>{{cart?.net_cost}}</h6>
+                                        </li>
+                                      
+                                        <li>
+                                            <h4>Tax Percentage</h4>
+                                            <h6>{{cart?.tax_percentage + '%'}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Tax Amount</h4>
+                                            <h6>{{cart?.tax_amount}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Remarks</h4>
+                                            <h6>{{cart?.remarks}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Status Choice</h4>
+                                            <h6>{{cart?.STATUS_CHOICES}}</h6>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
                 </div>
             </mat-tab>
           
@@ -241,5 +292,9 @@
                 </div>
             </mat-tab>
         </mat-tab-group>
+
+        <div class="container" *ngIf="vendorDetail?.length==[]">
+            <p class="center-textt">Data not available</p>
+        </div>
     </div>
 </div>
