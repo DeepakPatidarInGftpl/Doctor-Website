@@ -1,6 +1,6 @@
 <div class="page-header">
     <div class="page-title">
-        <h4>Dealer list</h4>
+        <h4 class="titl">Dealer list</h4>
         <h6>View/Search Dealer</h6>
     </div>
     <div class="page-btn" *ngIf="isAdd">
@@ -34,22 +34,44 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img
                                 src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
                                 src="assets/img/icons/excel.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
                                 src="assets/img/icons/printer.svg" alt="img"></a>
                     </li>
                 </ul>
             </div>
         </div>
+        <!-- /Filter -->
+        <div class="card mb-0" id="filter_inputs">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="row">
+                            <div class="col-lg col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Company Name</label>
+                                    <input type="search" [(ngModel)]="selectedCompany" (ngModelChange)="filterData()"
+                                        class="search" placeholder="Search Company">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" (click)="clearFilter()">
+                            <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Filter -->
         <div class="table-responsive">
-            <table class="table datanew">
+            <table class="table datanew" id="mytable">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">
@@ -59,35 +81,43 @@
                             </label>
                             <i class="fa fa-sort"></i>
                         </th>
+                        <th (click)="sort('id')" class="thone">Sr. No. <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Company Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Mobile Number <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">GSTIN <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">PanCard <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Opening Balance<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Membership<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
-                <tbody *ngIf="tableData?.length>=0">
+                <tbody *ngIf="filteredData?.length>=0">
                     <tr
-                        *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                        *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
                                 <span class="checkmarks"></span>
                             </label>
                         </td>
+                        <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//contacts/detailDealer/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
+                            <a routerLink="//contacts/detailDealer/{{products.id}}"
+                                style="line-height: 3;">{{products.name}}</a>
                         </td>
                         <td>{{products.company_name}}</td>
                         <td>{{products.mobile_no}}</td>
                         <td>{{products.gstin}}</td>
                         <td>{{products.pan_no}}</td>
-                        <td>{{products.opening_balance_type + ' : ' + products.opening_balance==null?'':products.opening_balance}}</td>
+                        <td>{{products?.opening_balance_type + (products?.opening_balance != null ? ' : ' + products?.opening_balance : '') }}</td>
+                        
+                        <td>{{products?.membership}}</td>
                         <td>
-                            <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                            <mat-slide-toggle
+                                (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
+                                [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
                         <td>
                             <a class="me-1" routerLink="//contacts/detailDealer/{{products.id}}">
@@ -103,7 +133,7 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="tableData?.length==0">
+                <tbody *ngIf="filteredData?.length==0">
                     <tr>
                         <td colspan="10">
                             <p class="center-textt">Data not available</p>

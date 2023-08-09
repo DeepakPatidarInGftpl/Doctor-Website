@@ -1,6 +1,6 @@
 <div class="page-header">
     <div class="page-title">
-        <h4>Static Page list</h4>
+        <h4 class="titl">Static Page list</h4>
         <h6>Manage your Static Page</h6>
     </div>
     <div class="page-btn" *ngIf="isAdd">
@@ -35,22 +35,22 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img
                                 src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
                                 src="assets/img/icons/excel.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
                                 src="assets/img/icons/printer.svg" alt="img"></a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table  datanew">
+            <table class="table datanew" id="mytable">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">
@@ -60,6 +60,7 @@
                             </label>
                             <i class="fa fa-sort"></i>
                         </th>
+                        <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Slug <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
@@ -75,6 +76,7 @@
                                 <span class="checkmarks"></span>
                             </label>
                         </td>
+                        <td>{{i+1}}</td>
                         <td class="productimgname">
                             <a routerLink="//website/staticPage/details/{{products.slug}}"
                                 style="line-height: 3;">{{products.title}}</a>

@@ -145,28 +145,6 @@ export class BrandlistComponent implements OnInit {
       subcategory_group: new FormArray<any>([], [Validators.required]),
       subcategory: new FormArray([], [Validators.required]),
     })
-    // this.dtOptions = {
-    //   dom: 'Btlpif',
-    //   pagingType: 'numbers',
-    //   language: {
-    //     search: ' ',
-    //     searchPlaceholder: "Search...",
-    //     info: "_START_ - _END_ of _TOTAL_ items",
-    //   },
-    //   initComplete: (settings, json) => {
-    //     $('.dt-buttons').appendTo('.wordset');
-    //     $('.dataTables_filter').appendTo('.search-input');
-    //   },
-
-    // };
-    // this.coreService.getbrand();
-
-
-    // this.coreService.brandBehavior.subscribe(() => {
-    //   if (localStorage.getItem('brandsList')) {
-    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("brandsList")!))
-    //   }
-    // })
     this.coreService.getBrand().subscribe(res => {
       this.tableData = res;
       this.loader = false

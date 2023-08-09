@@ -217,7 +217,6 @@ export class ListRecieptComponent implements OnInit {
     }
   }
 
-
   key = 'id'
   reverse: boolean = false;
   sort(key) {
@@ -225,9 +224,9 @@ export class ListRecieptComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-  //filter based on the start date and end date & also filter with the 
+  //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
   filterData() {
-    let filteredData = this.tableData.slice(); // copy of the original data
+    let filteredData = this.tableData.slice(); 
     if (this.startDate && this.endDate) {
       const startDate = new Date(this.startDate).getTime();
       const endDate = new Date(this.endDate).getTime();
@@ -244,8 +243,6 @@ export class ListRecieptComponent implements OnInit {
     }
     this.filteredData = filteredData;
   }
-
-
 
   clearDateRange() {
     this.startDate = null;
@@ -290,8 +287,6 @@ export class ListRecieptComponent implements OnInit {
       //this.renderer.setStyle(this.invoiceElement.nativeElement, 'display', 'none');
     });
   }
-
-
 
   printInvoiceExcel() {
     const generateExcel = (pageNum) => {

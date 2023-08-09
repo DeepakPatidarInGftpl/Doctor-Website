@@ -313,4 +313,13 @@ export class WebsiteService {
     return this.http.put(`${url}${id}`, data)
   }
 
+  //product order
+  getProductOrder(){
+    let url =this.apiUrl+'/pv-api/website_orders_dashboard/';
+    return this.http.get(url)
+  }
+  getProductOrderById(id:any){
+    let url =this.apiUrl+'/pv-api/website_orders_dashboard/?id=';
+    return this.http.get(`${url}${id}`)
+  }
 }
