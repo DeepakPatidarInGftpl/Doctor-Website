@@ -1,9 +1,8 @@
 <div class="page-header">
     <div class="page-title">
-        <h4>Product Order list</h4>
+        <h4 class="titl">Product Order list</h4>
         <h6>View/Search Product Order</h6>
-    </div>
-    
+    </div> 
 </div>
 
 <!-- /product list -->
@@ -29,22 +28,22 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img
                                 src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
                                 src="assets/img/icons/excel.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
                                 src="assets/img/icons/printer.svg" alt="img"></a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table datanew">
+            <table class="table datanew" id="mytable">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">
@@ -54,21 +53,22 @@
                             </label>
                             <i class="fa fa-sort"></i>
                         </th>
-                        <th (click)="sort('id')" class="thone">Title<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Payment Type<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Payment Status <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Sub Total Amount <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Total Discount<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Total Amount<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Final Amount <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Couopn Discount<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Address Type<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Status<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Order Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Accepted At<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Cancel At <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Dispatched At<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Delivered At<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Sr. No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Title<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Payment Type<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Payment Status<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Sub Total Amount<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Total Discount<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Total Amount<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Final Amount <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Couopn Discount<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Address Type<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Status<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Order Date<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone tdd">Accepted At<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Cancel At <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Dispatched At<i class="fa fa-sort"></i></th> -->
+                        <th (click)="sort('id')" class="thone tdd">Delivered At<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
@@ -81,6 +81,7 @@
                                 <span class="checkmarks"></span>
                             </label>
                         </td>
+                        <td>{{i+1}}</td>
                         <td class="productimgname">
                             <a routerLink="//website/productOrder/{{products.id}}" style="line-height: 3;">{{products?.carts[0]?.product?.title}}</a>
                         </td>
@@ -94,9 +95,9 @@
                         <td>{{products.address_type}}</td>
                         <td>{{products?.status}}</td>
                        <td>{{products?.order_date |date}}</td>
-                       <td>{{products?.accepted_at |date}}</td>
+                       <!-- <td>{{products?.accepted_at |date}}</td>
                        <td>{{products?.cancel_date |date}}</td>
-                       <td>{{products?.dispatched_at |date}}</td>
+                       <td>{{products?.dispatched_at |date}}</td> -->
                        <td>{{products?.delivered_at |date}}</td>
                         <!-- <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>

@@ -74,7 +74,7 @@ const routes: Routes = [
   },
   {
     path: 'permissionGroup',
-    loadChildren: () => import('../contacts/permission-group/permission-group.module').then((m) => m.PermissionGroupModule)
+    loadChildren: () => import('./permission-group/permission-group.module').then((m) => m.PermissionGroupModule)
   },
   {
     path: 'addPermissionGroup',

@@ -2,7 +2,7 @@
     <div class="col-lg-7 col-sm-7 col-12">
         <div class="page-header">
             <div class="page-title">
-                <h4>Coupon list</h4>
+                <h4 class="titl">Coupon list</h4>
                 <h6>Manage your Coupon</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm" >
@@ -28,22 +28,22 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img
                                         src="assets/img/icons/pdf.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
                                         src="assets/img/icons/excel.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
                                         src="assets/img/icons/printer.svg" alt="img"></a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table  datanew">
+                    <table class="table datanew" id="mytable">
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">
@@ -53,6 +53,7 @@
                                     </label>
                                     <i class="fa fa-sort"></i>
                                 </th>
+                                <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Title<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Code<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Expiry Date<i class="fa fa-sort"></i></th>
@@ -69,6 +70,7 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
+                                <td>{{i+1}}</td>
                                 <td >
                                     {{products.title}}
                                 </td>

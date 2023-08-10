@@ -1,7 +1,7 @@
 
 <div class="page-header">
     <div class="page-title">
-        <h4>Address Store list</h4>
+        <h4 class="titl">Address Store list</h4>
         <h6>Manage your Address Store</h6>
     </div>
     <div class="page-btn" *ngIf="isAdd">
@@ -33,15 +33,15 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img
                                 src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
                                 src="assets/img/icons/excel.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
                                 src="assets/img/icons/printer.svg" alt="img"></a>
                     </li>
                 </ul>
@@ -49,7 +49,7 @@
         </div>
 
         <div class="table-responsive">
-            <table datatable class="table  datanew">
+            <table class="table datanew" id="mytable">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">
@@ -59,18 +59,19 @@
                             </label>
                             <i class="fa fa-sort"></i>
                         </th>
-                        <th (click)="sort('id')" class="thone">Name <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Email <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Phone <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Alternative Mobile No <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Line 1 <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Line 2 <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Country <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">State <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">City <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Pincode <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Address <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Name<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Email<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Phone<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Alternative No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Line 1<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Line 2<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Country<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">State<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">City<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Pincode<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Address<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Is Active<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
@@ -82,19 +83,20 @@
                                 <span class="checkmarks"></span>
                             </label>
                         </td>
+                        <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a style="line-height: 3;">{{products.name}}</a>
+                            <a >{{products.name}}</a>
                         </td>
                         <td>{{products.email}}</td>
-                        <td>{{products.mobile_no}}</td>
+                        <td >{{products.mobile_no}}</td>
                         <td>{{products.alternative_mobile_no}}</td>
-                        <td>{{products.line1}}</td>
-                        <td>{{products.line2}}</td>
+                        <td class="tdd">{{products.line1}}</td>
+                        <td class="tdd">{{products.line2}}</td>
                         <td>{{products.country}}</td>
                         <td>{{products.state}}</td>
                         <td>{{products.city}}</td>
                         <td>{{products.pincode}}</td>
-                        <td>{{products.address}}</td>
+                        <td class="tdd">{{products.address}}</td>
                         <td>
                             <mat-slide-toggle
                                 (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"

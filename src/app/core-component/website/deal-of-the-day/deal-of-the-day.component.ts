@@ -7,6 +7,10 @@ import Swal from 'sweetalert2';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 // vaidation for future date
 function futureDateValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -42,10 +46,10 @@ export class DealOfTheDayComponent implements OnInit {
 
   titlee: any;
   p: number = 1
-  pageSize: number = 5;
+  pageSize: number = 10;
 
-  itemsPerPage = 5;
-  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,private cs:CompanyService) {
+  itemsPerPage = 10;
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService) {
   }
 
   delRes: any
@@ -147,10 +151,10 @@ export class DealOfTheDayComponent implements OnInit {
   }
 
   loader = true;
- isAdd:any;
- isEdit:any;
- isDelete:any;
- userDetails:any;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any;
   ngOnInit(): void {
     this.dealOfTheDayForm = this.fb.group({
       variant: new FormArray([], [Validators.required]),
@@ -194,20 +198,20 @@ export class DealOfTheDayComponent implements OnInit {
     //   });
     // }  
 
-     // permission from profile api
-     this.cs.userDetails$.subscribe((userDetails) => {
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename=='add_dealsoftheday') {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename == 'add_dealsoftheday') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);   
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename=='change_dealsoftheday') {
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename == 'change_dealsoftheday') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);  
-        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename=='delete_dealsoftheday') {
+          console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename == 'delete_dealsoftheday') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);  
+          console.log(this.isDelete);
         }
       });
     });
@@ -293,12 +297,12 @@ export class DealOfTheDayComponent implements OnInit {
           this.selectedItems = [];
           this.dealOfTheDayForm.reset();
           this.ngOnInit()
-        }else{
-          this.loaders=false;
+        } else {
+          this.loaders = false;
           this.toastr.error(this.addRes.msg)
         }
       }, err => {
-        this.loaders=false;
+        this.loaders = false;
         console.log(err.error);
       })
     } else {
@@ -321,7 +325,7 @@ export class DealOfTheDayComponent implements OnInit {
 
       this.websiteService.updateDealOfTheDay(formdata, this.id).subscribe(res => {
         console.log(res);
-     
+
         this.addRes = res
         if (this.addRes.Is_Sucess == "True") {
           this.loaders = false;
@@ -330,12 +334,12 @@ export class DealOfTheDayComponent implements OnInit {
           this.addForm = true
           this.selectedItems = [];
           this.ngOnInit()
-        }else{
-          this.loaders=false;
+        } else {
+          this.loaders = false;
           this.toastr.error(this.addRes.msg)
         }
       }, err => {
-        this.loaders=false;
+        this.loaders = false;
         console.log(err.error);
       })
     } else {
@@ -415,5 +419,124 @@ export class DealOfTheDayComponent implements OnInit {
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
+  }
+
+  // convert to pdf
+  generatePDF() {
+    // table data with pagination
+    const doc = new jsPDF();
+    const title = 'Deal Of The Day';
+    doc.setFontSize(15);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 10, 10);
+    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
+    autoTable(doc,
+      {
+        html: '#mytable',
+        theme: 'grid',
+        headStyles: {
+          fillColor: [255, 159, 67]
+        },
+        columns: [
+          //remove action filed
+          { header: 'Sr No.' },
+          { header: 'Discount' },
+          { header: 'Variant' },
+          { header: 'Created Date' },
+          { header: 'Is Active' }
+        ],
+      })
+    doc.save('dealoftheday.pdf');
+  }
+  // excel export only filtered data
+  getVisibleDataFromTable(): any[] {
+    const visibleData = [];
+    const table = document.getElementById('mytable');
+    const headerRow = table.querySelector('thead tr');
+    const dataRows = table.querySelectorAll('tbody tr');
+    //table heading
+    const headerData = [];
+    headerRow.querySelectorAll('th').forEach(cell => {
+      const columnHeader = cell.textContent.trim();
+      if (columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+        headerData.push(columnHeader);
+      }
+    });
+    visibleData.push(headerData);
+
+    // Include visible data rows
+    dataRows.forEach(row => {
+      const rowData = [];
+      row.querySelectorAll('td').forEach(cell => {
+        rowData.push(cell.textContent.trim());
+      });
+      visibleData.push(rowData);
+    });
+    return visibleData;
+  }
+  // Modify your exportToExcel() function
+  exportToExcel(): void {
+    const visibleDataToExport = this.getVisibleDataFromTable();
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Create a Blob from the workbook and initiate a download
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = 'dealoftheday.xlsx';
+    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+  }
+  printTable(): void {
+    // Get the table element and its HTML content
+    const tableElement = document.getElementById('mytable');
+    const tableHTML = tableElement.outerHTML;
+
+    // Get the title element and its HTML content
+    const titleElement = document.querySelector('.titl');
+    const titleHTML = titleElement.outerHTML;
+
+    // Clone the table element to manipulate
+    const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+
+    // Remove the "Is Active" column header from the cloned table
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(6)');
+    if (isActiveTh) {
+      isActiveTh.remove();
+    }
+
+    // Remove the "Action" column header from the cloned table
+    const actionTh = clonedTable.querySelector('th.thone:last-child');
+    if (actionTh) {
+      actionTh.remove();
+    }
+
+    // Loop through each row and remove the "Is Active" column and "Action" column data cells
+    const rows = clonedTable.querySelectorAll('tr');
+    rows.forEach((row) => {
+      // Remove the "Is Active" column data cell
+      const isActiveTd = row.querySelector('td:nth-child(6)');
+      if (isActiveTd) {
+        isActiveTd.remove();
+      }
+      // Remove the "Action" column data cell
+      const actionTd = row.querySelector('td:last-child');
+      if (actionTd) {
+        actionTd.remove();
+      }
+    });
+
+    // Get the modified table's HTML content
+    const modifiedTableHTML = clonedTable.outerHTML;
+    // Apply styles to add some space from the top after the title
+    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+    // Combine the title and table content
+    const combinedContent = styledTitleHTML + modifiedTableHTML;
+    // Store the original contents
+    const originalContents = document.body.innerHTML;
+    // Replace the content of the body with the combined content
+    document.body.innerHTML = combinedContent;
+    window.print();
+    // Restore the original content of the body
+    document.body.innerHTML = originalContents;
   }
 }
