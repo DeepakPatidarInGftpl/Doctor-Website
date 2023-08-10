@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -17,7 +18,7 @@ export class ExpenseComponent implements OnInit {
     return this.expenceForm.controls;
   }
 
-  constructor(private fb: FormBuilder, private purchaseService: PurchaseServiceService, private coreService: CoreService, private posService: PosDashboardService, private toastr: ToastrService) { }
+  constructor(private fb: FormBuilder, private purchaseService: PurchaseServiceService, private coreService: CoreService, private posService: PosDashboardService, private toastr: ToastrService,private router:Router) { }
   supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
@@ -100,6 +101,7 @@ export class ExpenseComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.loaders = false;
           this.expenceForm.reset();
+          this.router.navigate(['//bank/expense'])
         }else{
           this.loaders = false;
         }

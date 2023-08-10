@@ -1,7 +1,7 @@
 
 <div class="page-header">
     <div class="page-title">
-        <h4>Footer list</h4>
+        <h4 class="titl">Footer list</h4>
         <h6>Manage your Footer</h6>
     </div>
     <div class="page-btn" *ngIf="isAdd">
@@ -33,23 +33,23 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
-                                src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()">
+                            <img src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
-                                src="assets/img/icons/excel.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()">
+                            <img src="assets/img/icons/excel.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
-                                src="assets/img/icons/printer.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()">
+                            <img src="assets/img/icons/printer.svg" alt="img"></a>
                     </li>
                 </ul>
             </div>
         </div>
 
         <div class="table-responsive">
-            <table class="table  datanew">
+            <table class="table datanew" id="mytable">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">
@@ -59,6 +59,7 @@
                             </label>
                             <i class="fa fa-sort"></i>
                         </th>
+                        <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Logo <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Phone <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Email <i class="fa fa-sort"></i></th>
@@ -80,6 +81,7 @@
                                 <span class="checkmarks"></span>
                             </label>
                         </td>
+                        <td>{{i+1}}</td>
                         <td class="productimgname">
                             <a style="line-height: 3;"><img [src]="imgUrl+products.logo" alt="product"></a>
                         </td>
