@@ -1,7 +1,7 @@
 
 <div class="page-header">
     <div class="page-title">
-        <h4>DEBIT NOTES LIST</h4>
+        <h4 class="titl">DEBIT NOTES LIST</h4>
         <h6>Manage your DEBIT NOTES</h6>
     </div>
     <div class="page-btn" *ngIf="isAdd">
@@ -26,8 +26,7 @@
                     <a class="btn btn-searchset">
                       <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                      <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
-                      placeholder="search">
+                      <input type="search" class="form-control form-control-sm" placeholder="Search Supplier" [(ngModel)]="titlee" (ngModelChange)="search()">
                     </label>
                   </div>
          </div>
@@ -35,19 +34,50 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
                     </li>
                 </ul>
             </div>
         </div>
+           <!-- /Filter -->
+           <div class="card mb-0" id="filter_inputs">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="row">
+                            <div class="col-lg col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Debit Note Date</label>
+                                    <input type="date" [(ngModel)]="date" (change)="filterData()">
+                                </div>
+                            </div>
+                            <div class="col-lg col-sm-6 col-12">
+                                <div class="form-group">
+                                   <label>Payment Terms</label>
+                                    <select [(ngModel)]="selectedpaymentTerms" (change)="filterData()" class="form-select">
+                                        <option value="" selected disabled>Select Account Sub Type</option>
+                                        <option value="{{acc.title}}" *ngFor="let acc of paymentList">{{acc.title}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                           
+                        </div>
+                         <div class="form-group" (click)="clearFilters()">
+                                    <a class="btn btn-filters ms-auto" style="width: 10%;">Clear Filter</a>
+                                </div>     
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <!-- /Filter -->
         <div class="table-responsive">
-            <table class="table datanew">
+            <table class="table datanew" id="mytable">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">
@@ -57,6 +87,7 @@
                             </label>
                             <i class="fa fa-sort"></i>
                         </th>
+                        <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Debit Note Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Debit Note No<i class="fa fa-sort"></i></th>
@@ -70,14 +101,15 @@
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
-                <tbody *ngIf="tableData?.length>=0 ">
-                    <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                <tbody *ngIf="filteredData?.length>=0 ">
+                    <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
                                 <span class="checkmarks"></span>
                             </label>
                         </td>
+                        <td>{{i+1}}</td>
                         <td class="productimgname">
                             <a routerLink="//purchase/debit-notesDetails/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
@@ -107,7 +139,7 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="tableData?.length===0 && !loader">
+                <tbody *ngIf="filteredData?.length===0 && !loader">
                     <tr>
                       <td colspan="10">
                         <p class="center-textt">Data not available</p>

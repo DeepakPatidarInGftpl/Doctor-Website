@@ -1,6 +1,6 @@
 <div class="page-header">
     <div class="page-title">
-        <h4>Reciept list</h4>
+        <h4 class="titl">Reciept list</h4>
         <h6>View/Search Reciept</h6>
 
     </div>
@@ -33,21 +33,22 @@
                 </div>
             </div>
             <div class="wordset">
-                <ul>
-                    <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="printInvoice()">
-                            <img src="assets/img/icons/pdf.svg" alt="img">
-                            </a>
-                    </li>
-                    <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="printInvoiceExcel()"><img
-                                src="assets/img/icons/excel.svg" alt="img"></a>
-                    </li>
-                    <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
-                                src="assets/img/icons/printer.svg" alt="img"></a>
-                    </li>
-                </ul>
+                <div class="wordset">
+                    <ul>
+                        <li>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img
+                                    src="assets/img/icons/pdf.svg" alt="img"></a>
+                        </li>
+                        <li>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
+                                    src="assets/img/icons/excel.svg" alt="img"></a>
+                        </li>
+                        <li>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
+                                    src="assets/img/icons/printer.svg" alt="img"></a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
   <!-- /Filter -->
@@ -126,7 +127,7 @@
         </div> -->
 
         <div class="table-responsive" #invoice>
-            <table class="table datanew">
+            <table class="table datanew" id="mytable">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">

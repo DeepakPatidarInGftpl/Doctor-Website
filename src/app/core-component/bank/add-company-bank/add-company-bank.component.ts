@@ -38,10 +38,8 @@ export class AddCompanyBankComponent implements OnInit {
     })
 
     this.getCountry();
-    this.getState();
     this.getYear();
     this.getCurrency();
-    this.getCity();
   }
   
 yearDetails:any
@@ -60,23 +58,11 @@ yearDetails:any
   }
   country: any
   getCountry() {
-    this.copmpanyService.countryList().subscribe(res => {
+    this.coreService.countryList().subscribe(res => {
       this.country = res;
     })
   }
-  getState() {
-    this.copmpanyService.stateList().subscribe(res => {
-      // this.state = res;
-      console.log(this.state);
-    })
-  }
-  city:any
-  getCity(){
-    this.coreService.getCity().subscribe(res=>{
-      // this.city=res;
-    })
-  }
-  state: any
+  state: any;
   selectState(val: any) {
     console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
@@ -84,6 +70,7 @@ yearDetails:any
       console.log(this.state);
     })
   }
+  city: any;
   selectCity(val:any){
     this.coreService.getCityByStateId(val).subscribe(res=>{
       this.city=res

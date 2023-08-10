@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
@@ -12,7 +13,7 @@ import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
 })
 export class PurchaseComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private posService: PosDashboardService, private toastr: ToastrService,private purchaseService:PurchaseServiceService) { }
+  constructor(private fb: FormBuilder, private posService: PosDashboardService, private toastr: ToastrService,private purchaseService:PurchaseServiceService,private router:Router) { }
   recieptAdvanceForm!: FormGroup
   get f() {
     return this.recieptAdvanceForm.controls;
@@ -167,6 +168,7 @@ export class PurchaseComponent implements OnInit {
           if (res.isSuccess) {
             this.toastr.success(res.msg);
             // this.recieptAdvanceForm.reset();
+            this.router.navigate(['//bank/purchase'])
             this.ngOnInit();
           } else {
             this.loaders = false
@@ -217,6 +219,7 @@ export class PurchaseComponent implements OnInit {
           if (res.isSuccess) {
             this.toastr.success(res.msg);
             // this.recieptAdvanceForm.reset();
+            this.router.navigate(['//bank/purchase'])
             this.ngOnInit();
           } else {
             this.loaders = false

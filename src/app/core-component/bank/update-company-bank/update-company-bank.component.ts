@@ -44,9 +44,16 @@ export class UpdateCompanyBankComponent implements OnInit {
 
     this.coreService.getCompanyBankById(this.id).subscribe(res=>{
       console.log(res); 
+      console.log(res.counntry);
+      
       this.companyBankForm.patchValue(res)
+      this.companyBankForm.get('counntry')?.patchValue(res.counntry)
+      this.selectState(res?.counntry)
+      this.companyBankForm.get('state')?.patchValue(res.state)
+      this.selectCity(res?.state)
+      this.companyBankForm.get('city')?.patchValue(res.city)
     })
-    // this.getCountry();
+    this.getCountry();
   }
   
   country: any

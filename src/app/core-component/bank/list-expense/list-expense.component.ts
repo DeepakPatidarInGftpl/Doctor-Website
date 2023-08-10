@@ -5,7 +5,10 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { Account } from 'src/app/interfaces/account';
 import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-list-expense',
   templateUrl: './list-expense.component.html',
@@ -214,4 +217,107 @@ export class ListExpenseComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
+
+    // convert to pdf
+    generatePDF() {
+      // table data with pagination
+      const doc = new jsPDF();
+      const title = 'Expence';
+      doc.setFontSize(15);
+      doc.setTextColor(33, 43, 54);
+      doc.text(title, 10, 10);
+      // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
+      autoTable(doc,
+  
+        {
+          html: '#mytable',
+          theme: 'grid',
+          headStyles: {
+            fillColor: [255, 159, 67]
+          },
+          columns: [
+            //remove action filed
+            { header: 'Sr No.' },
+            { header: 'Party' },
+            { header: 'Branch Name' },
+            { header: 'Amount' },
+            { header: 'Remarks' },
+            { header: 'Non GST' },
+            { header: 'Is Active' }
+          ],
+        })
+      doc.save('expence.pdf');
+   }
+    // excel export only filtered data
+    getVisibleDataFromTable(): any[] {
+      const visibleData = [];
+      const table = document.getElementById('mytable');
+      const headerRow = table.querySelector('thead tr');
+      const dataRows = table.querySelectorAll('tbody tr');
+      //table heading
+      const headerData = [];
+      headerRow.querySelectorAll('th').forEach(cell => {
+        const columnHeader = cell.textContent.trim();
+        if (columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+          headerData.push(columnHeader);
+        }
+      });
+      visibleData.push(headerData);
+  
+      // Include visible data rows
+      dataRows.forEach(row => {
+        const rowData = [];
+        row.querySelectorAll('td').forEach(cell => {
+          rowData.push(cell.textContent.trim());
+        });
+        visibleData.push(rowData);
+      });
+      return visibleData;
+    }
+    // Modify your exportToExcel() function
+    exportToExcel(): void {
+      const visibleDataToExport = this.getVisibleDataFromTable();
+      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+      // Create a Blob from the workbook and initiate a download
+      const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const fileName = 'expence.xlsx';
+      saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+    }
+  
+    printTable(): void {
+      // Get the table element and its HTML content
+      const tableElement = document.getElementById('mytable');
+      const tableHTML = tableElement.outerHTML;
+  
+      // Get the title element and its HTML content
+      const titleElement = document.querySelector('.titl');
+      const titleHTML = titleElement.outerHTML;
+  
+      // Clone the table element to manipulate
+      const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+  
+      
+  
+      // Get the modified table's HTML content
+      const modifiedTableHTML = clonedTable.outerHTML;
+  
+      // Apply styles to add some space from the top after the title
+      const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+  
+      // Combine the title and table content
+      const combinedContent = styledTitleHTML + modifiedTableHTML;
+  
+      // Store the original contents
+      const originalContents = document.body.innerHTML;
+  
+      // Replace the content of the body with the combined content
+      document.body.innerHTML = combinedContent;
+      window.print();
+  
+      // Restore the original content of the body
+      document.body.innerHTML = originalContents;
+    }
 }

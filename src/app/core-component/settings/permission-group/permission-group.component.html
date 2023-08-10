@@ -198,7 +198,7 @@
 
 <div class="page-header">
     <div class="page-title">
-        <h4>User Roles list</h4>
+        <h4 class="titl">User Roles list</h4>
         <h6>View/Search User Roles</h6>
     </div>
     <div class="page-btn" *ngIf="isAdd">
@@ -232,19 +232,19 @@
             <div class="wordset">
                 <ul>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
                     </li>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table datanew">
+            <table class="table datanew" id="mytable">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">
@@ -254,6 +254,7 @@
                             </label>
                             <i class="fa fa-sort"></i>
                         </th>
+                        <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Group Name <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
@@ -267,6 +268,7 @@
                                 <span class="checkmarks"></span>
                             </label>
                         </td>
+                        <td>{{i+1}}</td>
                         <td class="productimgname"><a routerLink="//settings/detailsPermissionGroup/{{products.id}}" style="line-height: 3;">{{products?.name}}</a></td>
                         <!-- <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
@@ -299,9 +301,10 @@
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
                     <select [(ngModel)]="itemsPerPage" class="pagination" >
-                        <option value="5">5</option>
+                        
                         <option value="10">10</option>
                         <option value="20">20</option>
+                        <option value="30">30</option>
                         <option value="50">50</option>
                         <option value="-1">All</option>
                       </select>
