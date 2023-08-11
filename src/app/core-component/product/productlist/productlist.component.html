@@ -1,7 +1,7 @@
 
         <div class="page-header">
             <div class="page-title">
-                <h4>Product List</h4>
+                <h4 class="titl">Product List</h4>
                 <h6>Manage your products</h6>
             </div>
             <div class="page-btn" *ngIf="isAdd">
@@ -26,8 +26,7 @@
                             <a class="btn btn-searchset">
                               <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                              <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
-                              placeholder="search">
+                              <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()">
                             </label>
                           </div>
                           </div>
@@ -35,78 +34,93 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                           </li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
                             <li>
-                                <a data-bs-toggle="tooltip"  target="_blank" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
                             </li>
                         </ul>
                     </div>
                 </div>
+           
                 <!-- /Filter -->
-                <!-- <div class="card mb-0" id="filter_inputs">
+               <div class="card mb-0" id="filter_inputs">
                     <div class="card-body pb-0">
                         <div class="row">
                             <div class="col-lg-12 col-sm-12">
                                 <div class="row">
                                     <div class="col-lg col-sm-6 col-12">
                                         <div class="form-group">
-                                            <select class="form-select">
-                                                <option>Choose Product</option>
-                                                <option>Macbook pro</option>
-                                                <option>Orange</option>
+                                            <label>Select Category</label>
+                                            <select class="form-select" [(ngModel)]="selectedCategoryType" (ngModelChange)="filterData()" >
+                                                <option value="" selected disabled>Select Category</option>
+                                                <option value="">All</option>
+                                                <option value="{{cat?.title}}" *ngFor="let cat of categoryList">{{cat?.title}}</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-lg col-sm-6 col-12">
                                         <div class="form-group">
-                                            <select class="form-select">
-                                                <option>Choose Category</option>
-                                                <option>Computers</option>
-                                                <option>Fruits</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <select class="form-select">
-                                                <option>Choose Sub Category</option>
-                                                <option>Computer</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <select class="form-select">
-                                                <option>Brand</option>
-                                                <option>N/D</option>
-                                            </select>
+                                                <label>Select Sub Category</label>
+                                                <select class="form-select" [(ngModel)]="selectedSubcategoryType" (ngModelChange)="filterData()" >
+                                                    <option value="" selected disabled>Select Sub Category</option>
+                                                    <option value="">All</option>
+                                                    <option value="{{subcat?.title}}" *ngFor="let subcat of subcategoryList">{{subcat?.title}}</option>
+                                                </select>
                                         </div>
                                     </div>
                                     <div class="col-lg col-sm-6 col-12 ">
                                         <div class="form-group">
-                                            <select class="form-select">
-                                                <option>Price</option>
-                                                <option>150.00</option>
+                                            <label>Select Sub Category Group</label>
+                                            <select class="form-select" [(ngModel)]="selectedSubcategoryGroupType" (ngModelChange)="filterData()" >
+                                                <option value="" selected disabled>Select Sub Category Group</option>
+                                                <option value="">All</option>
+                                                <option value="{{subcatGroup?.title}}" *ngFor="let subcatGroup of subcatGroupList">{{subcatGroup?.title}}</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-1 col-sm-6 col-12">
+                                    <div class="col-lg col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Select Brand</label>
+                                            <select class="form-select" [(ngModel)]="selectedBrandType" (ngModelChange)="filterData()" >
+                                                <option value="" selected disabled>Select Brand</option>
+                                                <option value="">All</option>
+                                                <option value="{{brand?.title}}" *ngFor="let brand of brandlist">{{brand?.title}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="col-lg col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Select Product Store</label>
+                                            <select class="form-select" [(ngModel)]="selectedProductStoreType" (ngModelChange)="filterData()" >
+                                                <option value="" selected disabled>Select Product Store</option>
+                                                <option value="">All</option>
+                                                <option value="Online">Online</option>
+												<option value="Store">Store</option>
+												<option value="Both">Both</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-lg-1 col-sm-6 col-12">
                                         <div class="form-group">
                                             <a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
+                                <div class="form-group" (click)="clearFilter()">
+                                    <a class="btn btn-filters ms-auto" style="width: 10%;">Clear Filter</a>
+                                </div>   
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div> 
                 <!-- /Filter -->
                 <div class="table-responsive">
-                    <table class="table" id="printTable">
+                    <table class="table" id="mytable">
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">
@@ -116,6 +130,7 @@
                                     </label>
                                     <i class="fa fa-sort"></i>
                                 </th>
+                                <th (click)="sort('id')" class="thone">Sr.No. <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Category <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Subcategory <i class="fa fa-sort"></i></th>
@@ -134,23 +149,24 @@
                                 
                             </tr>
                         </thead>
-                        <tbody *ngIf="tableData?.length>=0">   
-                            <tr *ngFor="let products of tableData | orderBy:key:isAscending | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                        <tbody *ngIf="filteredData?.length>=0">   
+                            <tr *ngFor="let products of filteredData | orderBy:key:isAscending | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox"  [(ngModel)]="selectedRows[i]">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
+                                <td>{{i+1}}</td>
                                 <td class="productimgname">
                                     <a routerLink="//product/product-details/{{products.id}}" style="line-height: 3;">{{products.title}}</a>
                                 </td>
-                                <td>{{products.category.title}}</td>
-                                <td>{{products.subcategory.title}}</td>
-                                <td>{{products.subcategory_group.title}}</td>
-                                <td>{{products.brand.title}}</td>
-                                <td>{{products.unit.title}}</td>
-                                <td>{{products.product_store}}</td>
+                                <td>{{products?.category?.title}}</td>
+                                <td>{{products?.subcategory?.title}}</td>
+                                <td>{{products?.subcategory_group?.title}}</td>
+                                <td>{{products?.brand?.title}}</td>
+                                <td>{{products?.unit?.title}}</td>
+                                <td>{{products?.product_store}}</td>
                               <!-- <td>
                                     <span [ngClass]="{'bg-lightgreen': products.is_measurable === true, 'bg-lightred' : products.is_measurable === false,'bg-lightyellow' : products.is_measurable === 'Partial' }"
                                     class="badges">{{products.is_measurable}}</span>
@@ -169,19 +185,19 @@
                                     <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
-                                    <a class="me-1" routerLink="//product/product-details/{{products.id}}">
+                                    <a class="me-1" routerLink="//product/product-details/{{products?.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-1" routerLink="//product/editproduct/{{products.id}}" *ngIf="isEdit">
+                                    <a class="me-1" routerLink="//product/editproduct/{{products?.id}}" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
+                                    <a (click)="confirmText(i,products?.id)" class="me-1 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
                                         <img  src="assets/img/icons/delete.svg" alt="img">
                                     </a>
                                 </td>
                             </tr>  
                         </tbody> 
-                        <tbody *ngIf="tableData?.length===0 && !loader">
+                        <tbody *ngIf="filteredData?.length===0 && !loader">
                             <tr>
                                 <td colspan="10">
                                     <p class="center-textt">Data not available</p>
@@ -203,10 +219,11 @@
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                             <select [(ngModel)]="itemsPerPage" class="pagination" >
-                                <option value="5">5</option>
                                 <option value="10">10</option>
                                 <option value="20">20</option>
+                                <option value="30">30</option>
                                 <option value="50">50</option>
+                                <option value="100">100</option>
                                 <option value="-1">All</option>
                               </select>
                             </div>
@@ -214,7 +231,7 @@
                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
                         <div class="f-right">
                             <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                            <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>  
                         </div>
              
                        </div>

@@ -2,7 +2,7 @@
     <div class="col-lg-8 col-sm-8 col-12">
         <div class="page-header">
             <div class="page-title">
-                <h4>HSN Code list</h4>
+                <h4 class="titl">HSN Code list</h4>
                 <h6>View/Search HSN Code</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
@@ -36,24 +36,21 @@
                     </div>
                     <div class="wordset">
                         <ul>
-                            <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
-                                        src="assets/img/icons/pdf.svg" alt="img"></a>
-                            </li>
-                            <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
-                                        src="assets/img/icons/excel.svg" alt="img"></a>
-                            </li>
-                            <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
-                                        src="assets/img/icons/printer.svg" alt="img"></a>
-                            </li>
-                        </ul>
-                    </div>
+                          <li>
+                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                          </li>
+                          <li>
+                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                          </li>
+                          <li>
+                              <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                          </li>
+                      </ul>
+                      </div>
                 </div>
 
                 <div class="table-responsive">
-                    <table datatable class="table datanew">
+                    <table class="table datanew" id="mytable">
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">
@@ -63,7 +60,7 @@
                                     </label>
                                     <i class="fa fa-sort"></i>
                                 </th>
-                                <!-- <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th> -->
+                                <th (click)="sort('id')" class="thone">Sr.No. <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">HSN Code <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Subcategory <i class="fa fa-sort"></i></th>
                                 <!-- <th (click)="sort('id')" class="thone">Tax <i class="fa fa-sort"></i></th> -->
@@ -73,21 +70,20 @@
                         </thead>
                         <tbody *ngIf="tableData?.length>=0">
                             <tr
-                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-                                <!-- <td class="productimgname">                         
-                                    <a routerLink="/product/hsncode-details/{{products.id}}" style="line-height: 3;">{{products.title}}</a>
-                                </td> -->
+                                <td> {{i+1}} </td>
                                 <td>{{products.hsn_code}}</td>
                                 <td>
-                            <tr *ngFor="let subcat of products.subcategory">
+                            <!-- <tr *ngFor="let subcat of products.subcategory">
                                 <td>{{subcat.title}}</td>
-                            </tr>
+                            </tr> -->
+                            {{products?.subcategory[0]?.title}}
                             </td>
                             <!-- <td>{{products.tax}}</td> -->
 
@@ -122,7 +118,7 @@
                             <td colspan="5">
                                 <div class="dataTables_length">
                                     <label class="labelSize">Show :&nbsp;
-                                        <select [(ngModel)]="pageSize">
+                                        <select [(ngModel)]="itemsPerPage">
                                             <option [ngValue]="10">10</option>
                                             <option [ngValue]="25">25</option>
                                             <option [ngValue]="50">50</option>
@@ -137,7 +133,7 @@
                         </tr>
                         <tr>
                             <td colspan="5">
-                                <div class="entries">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
+                                <div class="entries">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>
                             </td>
                         </tr> -->
                     </table>
@@ -148,10 +144,12 @@
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                                 <select [(ngModel)]="itemsPerPage" class="pagination">
-                                    <option value="5">5</option>
+                                    
                                     <option value="10">10</option>
                                     <option value="20">20</option>
+                                    <option value="30">30</option>
                                     <option value="50">50</option>
+                                    <option value="100">100</option>
                                     <option value="-1">All</option>
                                 </select>
                             </div>
@@ -159,7 +157,7 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}}
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
                                     entries</div>
                             </div>
 
