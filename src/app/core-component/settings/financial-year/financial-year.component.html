@@ -94,7 +94,7 @@
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
-                            <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                            <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
 
                                 <td>
                                     <label class="checkboxs">
@@ -147,6 +147,7 @@
                                 <option value="20">20</option>
                                 <option value="30">30</option>
                                 <option value="50">50</option>
+                                <option value="100">100</option>
                                 <option value="-1">All</option>
                               </select>
                             </div>
@@ -154,7 +155,7 @@
                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
                         <div class="f-right">
                             <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                            <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>  
                         </div>
              
                        </div>

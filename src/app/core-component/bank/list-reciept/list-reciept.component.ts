@@ -25,8 +25,8 @@ export class ListRecieptComponent implements OnInit {
   titlee: any;
   name: any
   p: number = 1
-  pageSize: number = 20;
-  itemsPerPage: number = 20;
+  pageSize: number = 10;
+  itemsPerPage: number = 10;
   constructor(private posService: PosDashboardService, private QueryService: QueryService, private cs: CompanyService) {
     this.QueryService.filterToggle()
   }

@@ -375,7 +375,7 @@ export class BranchComponent implements OnInit {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase();
+        const nameLower = res?.title?.toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
     }

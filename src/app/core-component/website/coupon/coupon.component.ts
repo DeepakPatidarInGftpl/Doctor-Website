@@ -41,8 +41,8 @@ export class CouponComponent implements OnInit {
 
   titlee: any;
   p: number = 1
-  pageSize: number = 5;
-  itemsPerPage = 5;
+  pageSize: number = 10;
+  itemsPerPage = 10;
 
   constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,private cs:CompanyService) {
   }

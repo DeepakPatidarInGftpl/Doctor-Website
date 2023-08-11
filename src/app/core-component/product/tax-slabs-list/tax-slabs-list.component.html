@@ -1,6 +1,6 @@
 <div class="page-header">
     <div class="page-title">
-        <h4>Tax Slab list</h4>
+        <h4 class="titl">Tax Slab list</h4>
         <h6>View/Search Tax Slab list</h6>
     </div>
     <div class="page-btn" *ngIf="isAdd">
@@ -35,25 +35,22 @@
             </div>
             <div class="wordset">
                 <ul>
-                    <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img
-                                src="assets/img/icons/pdf.svg" alt="img"></a>
-                    </li>
-                    <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
-                                src="assets/img/icons/excel.svg" alt="img"></a>
-                    </li>
-                    <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
-                                src="assets/img/icons/printer.svg" alt="img"></a>
-                    </li>
-                </ul>
-            </div>
+                  <li>
+                      <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                  </li>
+                  <li>
+                      <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                  </li>
+                  <li>
+                      <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                  </li>
+              </ul>
+              </div>
         </div>
 
         <!-- /Filter -->
         <div class="table-responsive">
-            <table datatable [dtOptions]="dtOptions" class="table  datanew">
+            <table class="table datanew" id="mytable">
                 <thead>
                     <tr>
                         <th (click)="sort('id')" class="thone">
@@ -63,30 +60,31 @@
                             </label>
                             <i class="fa fa-sort"></i>
                         </th>
-
+                        <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Subcategory Group <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">SubCategory <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Amount<i class="fa fa-sort"></i></th> -->
-
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="tableData?.length>=0 ">
                     <tr
-                        *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                        *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
                                 <span class="checkmarks"></span>
                             </label>
                         </td>
+                        <td>{{i+1}}</td>
                         <td>
                         {{products.subcategory_group.title}}
                         </td>
-                        <td><tr *ngFor="let data of products.subcategory">
+                        <!-- <td><tr *ngFor="let data of products.subcategory">
                             <td>{{data.title+','}}</td>
-                        </tr></td>
+                        </tr></td> -->
+                        <td>{{products?.subcategory[0].title}}</td>
                         <!-- <td>
                             <tr *ngFor="let amount of products.amount_tax_slabs">
                             <td>
@@ -130,10 +128,12 @@
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
                         <select [(ngModel)]="itemsPerPage" class="pagination">
-                            <option value="5">5</option>
+                            
                             <option value="10">10</option>
                             <option value="20">20</option>
+                            <option value="30">30</option>
                             <option value="50">50</option>
+                            <option value="100">100</option>
                             <option value="-1">All</option>
                         </select>
                     </div>
@@ -141,7 +141,7 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>
                     </div>
                 </div>
             </div>

@@ -292,7 +292,7 @@ export class AccountlistComponent implements OnInit {
     if (this.selectedAccountId) {
       const searchTerm = this.selectedAccountId.toLowerCase();
       filteredData = filteredData.filter((item) => {
-        const aliasLower = item?.account_id.toLowerCase();
+        const aliasLower = item?.account_id.toString().toLowerCase();
         return aliasLower.includes(searchTerm);
       });
     }

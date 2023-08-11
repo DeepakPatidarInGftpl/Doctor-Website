@@ -1,12 +1,12 @@
 
         <div class="page-header">
             <div class="page-title">
-                <h4 class="titl">PURCHASE LIST</h4>
-                <h6>Manage your purchases</h6>
+                <h4 class="titl">Purchase Order List</h4>
+                <h6>Manage your purchase</h6>
             </div>
             <div class="page-btn" *ngIf="isAdd">
                 <a routerLink="//purchase/addpurchase" class="btn btn-added">
-                    <img src="assets/img/icons/plus.svg" alt="img">Add New Purchases
+                    <img src="assets/img/icons/plus.svg" alt="img">Add New Purchase
                 </a>
             </div>
         </div>
@@ -50,13 +50,13 @@
                         <div class="row">
                             <div class="col-lg-12 col-sm-12">
                                 <div class="row">
-                                    <div class="col-lg col-sm-6 col-12">
+                                    <div class="col-lg-3 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label>Shipping Date</label>
                                             <input type="date" [(ngModel)]="date" (change)="filterData()">
                                         </div>
                                     </div>
-                                    <div class="col-lg col-sm-6 col-12">
+                                    <div class="col-lg-3 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label>Purchase No.</label>
                                             <input type="search" [(ngModel)]="selectedPurchaseNo" (ngModelChange)="filterData()" class="search" placeholder="Search Purchase No.">
@@ -98,7 +98,7 @@
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
-                            <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                            <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -149,10 +149,12 @@
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                             <select [(ngModel)]="itemsPerPage" class="pagination" >
-                                <option value="5">5</option>
+                                
                                 <option value="10">10</option>
                                 <option value="20">20</option>
+                                <option value="30">30</option>
                                 <option value="50">50</option>
+                                <option value="100">100</option>
                                 <option value="-1">All</option>
                               </select>
                             </div>
@@ -160,7 +162,7 @@
                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
                         <div class="f-right">
                             <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>  
+                            <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>  
                         </div>
                        </div>
                      </div>

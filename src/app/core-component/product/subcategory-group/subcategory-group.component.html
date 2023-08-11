@@ -13,7 +13,7 @@
     </div> -->
     <div class="page-header">
       <div class="page-title">
-        <h4>Sub Category Group list</h4>
+        <h4 class="titl">Sub Category Group list</h4>
         <h6>View/Search Sub Category Group</h6>
       </div>
       <div class="page-btn" *ngIf="!addForm">
@@ -53,18 +53,15 @@
           <div class="wordset">
             <ul>
               <li>
-                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg"
-                    alt="img"></a>
+                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
               </li>
               <li>
-                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg"
-                    alt="img"></a>
+                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
               </li>
               <li>
-                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
-                    src="assets/img/icons/printer.svg" alt="img"></a>
+                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
               </li>
-            </ul>
+          </ul>
           </div>
         </div>
         <!-- /Filter -->
@@ -73,41 +70,50 @@
         <div class="card" id="filter_inputs">
           <div class="card-body pb-0">
             <div class="row">
-              <div class="col-lg-2 col-sm-6 col-12">
+              <div class="col-lg col-sm-6 col-12">
                 <div class="form-group">
-                  <select class="form-select">
-                    <option>Choose Category</option>
-                    <option>Computers</option>
+                  <label>Select Category</label>
+                  <select class="form-select" [(ngModel)]="selectedCategoryType" (ngModelChange)="filterData()">
+                    <option value="" selected disabled>Select Category</option>
+                    <option value="">All</option>
+                    <option value="{{cat?.title}}" *ngFor="let cat of categories">{{cat?.title}}</option>
+                 </select>
+                </div>
+              </div>
+              <div class="col-lg col-sm-6 col-12">
+                <div class="form-group">
+                  <label>Select Sub Category</label>
+                  <select class="form-select" [(ngModel)]="selectedSubcategoryType" (ngModelChange)="filterData()">
+                    <option value="" selected disabled>Select Sub Category</option>
+                    <option value="">All</option>
+                    <option value="{{subcat?.title}}" *ngFor="let subcat of subCategory">{{subcat?.title}}</option>
                   </select>
                 </div>
               </div>
-              <div class="col-lg-2 col-sm-6 col-12">
+              <div class="col-lg col-sm-6 col-12">
                 <div class="form-group">
-                  <select class="form-select">
-                    <option>Choose Sub Category</option>
-                    <option>Fruits</option>
+                  <label>Select Feature Group</label>
+                  <select class="form-select" [(ngModel)]="selectedSubcategoryGroupType" (ngModelChange)="filterData()">
+                    <option value="" selected disabled>Select Feature Group</option>
+                    <option value="">All</option>
+                    <option value="{{subcat?.title}}" *ngFor="let subcat of featureGroup">{{subcat?.title}}</option>
                   </select>
                 </div>
               </div>
-              <div class="col-lg-2 col-sm-6 col-12">
-                <div class="form-group">
-                  <select class="form-select">
-                    <option>Choose Sub Brand</option>
-                    <option>Iphone</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-1 col-sm-6 col-12 ms-auto">
+              <!-- <div class="col-lg-1 col-sm-6 col-12 ms-auto">
                 <div class="form-group">
                   <a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
                 </div>
-              </div>
+              </div> -->
             </div>
+            <div class="form-group" (click)="clearFilter()">
+              <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
+          </div>   
           </div>
         </div>
         <!-- /Filter -->
         <div class="table-responsive">
-          <table class="table datanew">
+          <table class="table datanew" id="mytable">
             <thead>
               <tr>
                 <th (click)="sort('id')" class="thone">
@@ -117,6 +123,7 @@
                   </label>
                   <i class="fa fa-sort"></i>
                 </th>
+                <th (click)="sort('id')" class="thone">Sr.No. <i class="fa fa-sort"></i></th>
                 <th (click)="sort('id')" class="thone">Image <i class="fa fa-sort"></i></th>
                 <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
                 <th (click)="sort('id')" class="thone">Category <i class="fa fa-sort"></i></th>
@@ -126,15 +133,16 @@
                 <th (click)="sort('id')" class="thone">Actions <i class="fa fa-sort"></i></th>
               </tr>
             </thead>
-            <tbody *ngIf="tableData?.length>=0">
+            <tbody *ngIf="filteredData?.length>=0">
               <tr
-                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                 <td>
                   <label class="checkboxs">
                     <input type="checkbox" [(ngModel)]="selectedRows[i]">
                     <span class="checkmarks"></span>
                   </label>
                 </td>
+                <td>{{i+1}}</td>
                 <td class="productimgname">
                   <a routerLink="/product/subCategoryDetails/{{products.id}}" style="line-height: 3;"><img
                       [src]="imgUrl+products.image" alt="product"></a>
@@ -147,31 +155,31 @@
                 <td>{{data.title+','}}</td>
               </tr>
               </td> -->
-              <td>{{products?.feature_group[0]?.title}}</td>
-              <!-- <td>
+                <td>{{products?.feature_group[0]?.title}}</td>
+                <!-- <td>
                 <tr *ngFor="let data of products.feature_group">
                   <td>{{data.title+','}}</td>
                 </tr>
               </td> -->
-              <td>
-                <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
-                  [(ngModel)]="products.is_active"></mat-slide-toggle>
-              </td>
-              <td>
-                <a class="me-2" routerLink="/product/subCategoryDetails/{{products.id}}">
-                  <img src="assets/img/icons/eye.svg" alt="img">
-                </a>
-                <a class="me-2" (click)="editThis(products)" *ngIf="isEdit">
-                  <img src="assets/img/icons/edit.svg" alt="img">
-                </a>
-                <a (click)="confirmText(i, products.id)" class="me-2 confirm-text" href="javascript:void(0);"
-                  *ngIf="isDelete">
-                  <img src="assets/img/icons/delete.svg" alt="img">
-                </a>
-              </td>
+                <td>
+                  <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                    [(ngModel)]="products.is_active"></mat-slide-toggle>
+                </td>
+                <td>
+                  <a class="me-2" routerLink="/product/subCategoryDetails/{{products.id}}">
+                    <img src="assets/img/icons/eye.svg" alt="img">
+                  </a>
+                  <a class="me-2" (click)="editThis(products)" *ngIf="isEdit">
+                    <img src="assets/img/icons/edit.svg" alt="img">
+                  </a>
+                  <a (click)="confirmText(i, products.id)" class="me-2 confirm-text" href="javascript:void(0);"
+                    *ngIf="isDelete">
+                    <img src="assets/img/icons/delete.svg" alt="img">
+                  </a>
+                </td>
               </tr>
             </tbody>
-            <tbody *ngIf="tableData?.length===0 && !loader">
+            <tbody *ngIf="filteredData?.length===0 && !loader">
               <tr>
                 <td colspan="10">
                   <p class="center-textt">Data not available</p>
@@ -186,10 +194,11 @@
             <div class="col-lg-4 col-sm-4 col-12 mt-2">
               <div class="entries"> Show per page
                 <select [(ngModel)]="itemsPerPage" class="pagination">
-                  <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="20">20</option>
+                  <option value="30">30</option>
                   <option value="50">50</option>
+                  <option value="100">100</option>
                   <option value="-1">All</option>
                 </select>
               </div>
@@ -197,7 +206,7 @@
             <div class="col-lg-8 col-sm-8 col-12 mt-2">
               <div class="f-right">
                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
+                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>
               </div>
             </div>
           </div>
