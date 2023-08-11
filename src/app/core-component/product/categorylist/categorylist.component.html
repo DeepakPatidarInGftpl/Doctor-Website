@@ -1,11 +1,9 @@
 <div class="page-header">
   <div class="row">
     <div class="col-7">
-    
-
     <div class="page-header">
       <div class="page-title">
-        <h4>Product Category list</h4>
+        <h4 class="titl">Product Category list</h4>
         <h6>View/Search product Category</h6>
       </div>
       <div class="page-btn" *ngIf="editMode">
@@ -43,60 +41,21 @@
             <div class="wordset">
               <ul>
                 <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg"
-                      alt="img"></a>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                 </li>
                 <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img
-                      src="assets/img/icons/excel.svg" alt="img"></a>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
                 </li>
                 <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img
-                      src="assets/img/icons/printer.svg" alt="img"></a>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
                 </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="card" id="filter_inputs">
-            <div class="card-body pb-0">
-              <div class="row">
-                <div class="col-lg-2 col-sm-6 col-12">
-                  <div class="form-group">
-                    <select class="form-select">
-                      <option>Choose Category</option>
-                      <option>Computers</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-lg-2 col-sm-6 col-12">
-                  <div class="form-group">
-                    <select class="form-select">
-                      <option>Choose Sub Category</option>
-                      <option>Fruits</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-lg-2 col-sm-6 col-12">
-                  <div class="form-group">
-                    <select class="form-select">
-                      <option>Choose Sub Brand</option>
-                      <option>Iphone</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-lg-1 col-sm-6 col-12 ms-auto">
-                  <div class="form-group">
-                    <a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
-                  </div>
-                </div>
-              </div>
+            </ul>
             </div>
           </div>
 
 
           <div class="table-responsive">
-            <table class="table datanew">
+            <table class="table datanew" id="mytable">
               <thead>
                 <tr>
                   <th (click)="sort('id')" class="thone">
@@ -106,7 +65,7 @@
                     </label>
                     <i class="fa fa-sort"></i>
                   </th>
-                  <!-- <th (click)="sort('id')">id <i class="fa fa-sort"></i></th> -->
+                  <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
                   <th (click)="sort('id')" class="thone">Image <i class="fa fa-sort"></i></th>
                   <th (click)="sort('id')" class="thone">Category name <i class="fa fa-sort"></i></th>
                   <!-- <th (click)="sort('id')" class="thone">Discount<i class="fa fa-sort"></i></th> -->
@@ -117,14 +76,14 @@
               </thead>
               <tbody *ngIf="tableData?.length>=0">
                 <tr
-                  *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:pageSize,currentPage:p} let i = index">
+                  *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                   <td>
                     <label class="checkboxs">
                       <input type="checkbox" [(ngModel)]="selectedRows[i]">
                       <span class="checkmarks"></span>
                     </label>
                   </td>
-                  <!-- <td>{{products.id}}</td> -->
+                  <td>{{i+1}}</td>
                   <td class="productimgname">
                     <a href="javascript:void(0);" class="product-img">
                       <img [src]="apiUrl+products.image" alt="product">
@@ -196,10 +155,11 @@
               <div class="col-lg-4 col-sm-4 col-12 mt-2">
                 <div class="entries"> Show per page
                   <select [(ngModel)]="itemsPerPage" class="pagination">
-                    <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
+                    <option value="30">30</option>
                     <option value="50">50</option>
+                    <option value="100">100</option>
                     <option value="-1">All</option>
                   </select>
                 </div>
@@ -207,7 +167,7 @@
               <div class="col-lg-8 col-sm-8 col-12 mt-2">
                 <div class="f-right">
                   <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                  <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
+                  <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>
                 </div>
 
               </div>

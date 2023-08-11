@@ -6,7 +6,10 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
-
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-brandlist',
@@ -17,11 +20,6 @@ export class BrandlistComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any = []
-
-  brandForm!: FormGroup;
-  get f() {
-    return this.brandForm.controls;
-  }
 
   imgUrl = 'https://pv.greatfuturetechno.com';
 
@@ -131,26 +129,27 @@ export class BrandlistComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
+  filteredData: any[]; // The filtered data
+  selectedCategoryType: string = '';
+  selectedSubcategoryType: string = '';
+  selectedSubcategoryGroupType:string='';
+  selectedBrandType:string='';
+  selectedProductStoreType:string='';
+
   loader = true;
   isAdd:any;
   isEdit:any;
   isDelete:any;
   userDetails:any
   ngOnInit(): void {
-    this.brandForm = new FormGroup({
-      title: new FormControl('', [Validators.required]),
-      code: new FormControl(''),
-      image: new FormControl(''),
-      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      subcategory_group: new FormArray<any>([], [Validators.required]),
-      subcategory: new FormArray([], [Validators.required]),
-    })
     this.coreService.getBrand().subscribe(res => {
       this.tableData = res;
       this.loader = false
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+      this.filterData();
     })
-    this.getSubcatGroup();
+ 
 
     // permision from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -187,7 +186,31 @@ export class BrandlistComponent implements OnInit {
         }
       });
     });
+
+    this.getCategory()
+    this.getSubCategory()
+    this.getSubcategoryGroup()
   }
+
+
+  categoryList:any
+  getCategory() {
+    this.coreService.getCategory().subscribe(res => {
+      this.categoryList = res;
+    })
+  }
+  subcatGroupList:any;
+  getSubcategoryGroup(){
+    this.coreService.getSubCategoryGroup().subscribe(res=>{
+      this.subcatGroupList=res
+    })
+  }
+  subcategoryList
+getSubCategory(){
+  this.coreService.getSubcategory().subscribe(res=>{
+    this.subcategoryList=res
+  })
+}
 
   //select table row
   allSelected: boolean = false;
@@ -207,363 +230,14 @@ export class BrandlistComponent implements OnInit {
       })
     }
   }
-  deleteId(id: number) {
-    this.coreService.deletebrand(id).subscribe(res => {
-      this.delRes = res
-      if (this.delRes.msg == "Brands Deleted successfully") {
-        // this.getcompanyList()
-      }
-    })
-  }
-  
-  url: any;
-  onSelect(event: Event) {
-    const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.url = reader.result as string;
-      };
-    }
-    this.brandForm.patchValue({
-      image: file
-    });
-
-    this.brandForm.get('image')?.updateValueAndValidity()
-  }
-  subcatGroupList: any
-  getSubcatGroup() {
-    this.coreService.getSubcategoryGroup().subscribe(res => {
-      this.subcatGroupList = res;
-      if (!this.addForm) {
-        setTimeout(() => {
-          this.subcatGroupList.map((map: any) => {
-            console.log(this.subcatGroup.includes(map.id), 'subcategory_group');
-            if (this.subcatGroup.includes(map.id)) {
-              console.log(map.id);
-
-              const formArray = this.brandForm.get('subcategory_group') as FormArray;
-              formArray.push(new FormControl(map.id));
-            }
-          })
-        }, 1000);
-      }
-    })
-  }
-  subcategories: any = [];
-  subcatbySubcatGroup: any;
-  getSubcategoryBySubcatGroup(val: any) {
-    this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
-      console.log(res.subcategories);
-      this.subcatbySubcatGroup = res.subcategories;
-
-      setTimeout(() => {
-        this.subcatbySubcatGroup.map((map: any) => {
-          console.log(this.selectSubcat.includes(map.id), 'subcategory');
-          if (this.selectSubcat.includes(map.id)) {
-
-            const formArray = this.brandForm.get('subcategory') as FormArray;
-            formArray.push(new FormControl(map.id));
-          }
-        })
-      }, 2000);
-    })
-  }
-  check: any
-  selectedSubcat = 0;
-  onCheckChange(event: any) {
-    const formArray: any = this.brandForm.get('subcategory') as FormArray;
-
-    /* Selected */
-    if (event.target.checked) {
-      // Add a new control in the arrayForm
-      formArray.push(new FormControl(parseInt(event.target.value)));
-      // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.check = formArray
-      this.selectedSubcat++;
-    }
-    /* unselected */
-    else {
-      // find the unselected element
-      let i: number = 0;
-      formArray.controls.forEach((ctrl: any) => {
-        if (ctrl.value == event.target.value) {
-          // Remove the unselected element from the arrayForm
-          formArray.removeAt(i);
-          this.selectedSubcat--;
-          return;
-        }
-        i++;
-      });
-    }
-  }
-  selectedSubCatGrp = 0;
-
-  onCheckSize(event: any) {
-    const formArray: any = this.brandForm.get('subcategory_group') as FormArray;
-
-    /* Selected */
-    if (event.target.checked) {
-
-      // Add a new control in the arrayForm
-      formArray.push(new FormControl(parseInt(event.target.value)));
-      // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.check = formArray
-      this.selectedSubCatGrp++;
-    }
-    /* unselected */
-    else {
-      // find the unselected element
-      let i: number = 0;
-
-      formArray.controls.forEach((ctrl: any) => {
-        if (ctrl.value == event.target.value) {
-
-          // Remove the unselected element from the arrayForm
-          formArray.removeAt(i);
-          this.selectedSubCatGrp--;
-          return;
-        }
-        i++;
-      });
-    }
-  }
-  addRes: any
-  // submit() {
-  //   console.log(this.brandForm.value);
-  //   console.log(this.id);
-
-  //   var formData: any = new FormData();
-
-
-  //   formData.append("title",this.brandForm.get('title')?.value);
-  //   formData.append("image",this.brandForm.get('image')?.value);
-  //   formData.append("code",this.brandForm.get('code')?.value);
-
-  //   console.log(formData);
-
-  //   if (this.brandForm.valid) {
-  //     if (this.id) {
-  //       this.coreService.updatebrand(formData, this.id).subscribe(res => {
-  //         console.log(res);
-  //         this.addRes = res
-  //         if (this.addRes.msg == "Brands updated successfully") {
-  //           this.toastr.success(this.addRes.msg)
-  //           this.brandForm.reset()
-  //           window.location.reload()
-  //         }
-  //       }, err => {
-  //         console.log(err.error.gst);
-  //       })
-  //     } else {
-  //       this.coreService.addbrand(formData).subscribe(res => {
-  //         console.log(res);
-  //         this.addRes = res
-  //         if (this.addRes.msg == "Data Created") {
-  //           this.toastr.success(this.addRes.msg)
-  //           this.brandForm.reset()
-  //           window.location.reload()
-  //         }
-  //       }, err => {
-  //         console.log(err.error.gst);
-  //       })
-  //     }
-  //   } else {
-  //     this.brandForm.markAllAsTouched()
-  //     console.log('forms invalid');
-  //   }
-  // }
-  loaders = false;
-  submit() {
-    console.log(this.brandForm.value);
-    console.log(this.id);
-    var formData: any = new FormData();
-
-    formData.append("title", this.brandForm.get('title')?.value);
-    formData.append("image", this.brandForm.get('image')?.value);
-    formData.append("code", this.brandForm.get('code')?.value);
-    formData.append("discount", this.brandForm.get('discount')?.value);
-    formData.append('subcategory_group', JSON.stringify(this.brandForm.get('subcategory_group')?.value));
-    formData.append('subcategory', JSON.stringify(this.brandForm.get('subcategory')?.value));
-
-    if (this.brandForm.valid) {
-      this.loaders = true;
-      this.coreService.addbrand(formData).subscribe(res => {
-        console.log(res);
-        this.addRes = res
-        if (this.addRes.msg == "Data Created") {
-          this.updateData='';
-          this.url='';
-          this.loaders = false
-          this.toastr.success(this.addRes.msg)
-          this.brandForm.reset()
-          // window.location.reload()
-          this.ngOnInit()
-          this.selectedSubcat = 0;
-          this.selectedSubCatGrp = 0;
-        }
-      }, err => {
-        console.log(err.error.gst);
-      })
-
-    } else {
-      this.brandForm.markAllAsTouched()
-      console.log('forms invalid');
-    }
-  }
-
-  show = true;
-  hid = false;
-  hide() {
-    this.show = !this.show;
-
-  }
-  update() {
-    var formData: any = new FormData();
-    formData.append("title", this.brandForm.get('title')?.value);
-    // formData.append("image", this.brandForm.get('image')?.value);
-    formData.append("code", this.brandForm.get('code')?.value);
-    formData.append("discount", this.brandForm.get('discount')?.value);
-    formData.append('subcategory_group', JSON.stringify(this.brandForm.get('subcategory_group')?.value));
-    formData.append('subcategory', JSON.stringify(this.brandForm.get('subcategory')?.value));
-
-    if (this.brandForm.valid) {
-      this.loaders = true;
-
-      const imageFile = this.brandForm.get('image')?.value;
-      if (imageFile && imageFile instanceof File) {
-        formData.append('image', imageFile);
-        this.coreService.updatebrand(formData, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Brands updated successfully") {
-            this.loaders = false;
-            this.updateData='';
-            this.url='';
-            this.toastr.success(this.addRes.msg)
-            this.brandForm.reset()
-            this.addForm = true
-            // window.location.reload()
-            this.ngOnInit()
-            this.selectedSubcat = 0;
-            this.selectedSubCatGrp = 0;
-          }else{
-            this.loader=false;
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      }else{
-        this.coreService.updatebrand(formData, this.id).subscribe(res => {
-          console.log(res);
-          this.addRes = res
-          if (this.addRes.msg == "Brands updated successfully") {
-            this.loaders = false;
-            this.updateData='';
-            this.url='';
-            this.toastr.success(this.addRes.msg)
-            this.brandForm.reset()
-            this.addForm = true
-            // window.location.reload()
-            this.ngOnInit()
-            this.selectedSubcat = 0;
-            this.selectedSubCatGrp = 0;
-          }else{
-            this.loader=false;
-          }
-        }, err => {
-          console.log(err.error.gst);
-        })
-      }
-
-    } else {
-      this.brandForm.markAllAsTouched()
-      console.log('forms invalid');
-    }
-  }
-
-  get title() {
-    return this.brandForm.get('title')
-  }
-  get image() {
-    return this.brandForm.get('image')
-  }
-  get code() {
-    return this.brandForm.get('code')
-  }
-  get subcategory_group() {
-    return this.brandForm.get('subcategory_group')
-  }
-  get subcategory() {
-    return this.brandForm.get('subcategory');
-  }
-  get discount() {
-    return this.brandForm.get('discount')
-  }
-  addForm = true
-  id: any;
-  subcatGroup: any = [];
-  selectSubcat: any = [];
-  subcatId: any;
-  updateData:any;
-  editForm(id: number) {
-    this.id = id;
-    this.url='';
-    this.coreService.getbrandById(id).subscribe(res => {
-      console.log(res);
-      res.map((data: any) => {
-        if (id == data.id) {
-          console.log(data);
-          this.updateData=data;
-          this.subcatId = data.subcategory_group[0].id
-          console.log(this.subcatId);
-
-          this.subcatGroup = data.subcategory_group.map((res: any) => res.id);
-          this.selectSubcat = data.subcategory.map((res: any) => res.id);
-
-          // this.brandForm.patchValue(data);
-          this.addForm = false
-          this.brandForm.patchValue({
-            title: data.title,
-            code: data.code,
-            discount: data.discount
-          })
-          this.getSubcategoryBySubcatGroup(this.subcatId)
-        }
-      })
-
-    })
-    this.getSubcatGroup();
-
-  }
-  openaddForm() {
-    this.updateData='';
-    this.addForm = true;
-    this.brandForm.reset();
-  }
-
-
-  // search() {
-  //   if (this.titlee == "") {
-  //     this.ngOnInit();
-  //   } else {
-  //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
-  //       console.log(res.title.toLocaleLowerCase());
-  //       console.log(res.title.match(this.titlee));
-  //       return res.title.match(this.titlee);
-  //     })
-  //   }
-  // }
+ 
 
   search() {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase(); 
-      this.tableData = this.tableData.filter(res => {
+      this.filteredData = this.filteredData.filter(res => {
         const nameLower = res.title.toLocaleLowerCase(); 
         return nameLower.includes(searchTerm); 
       });
@@ -582,4 +256,161 @@ export class BrandlistComponent implements OnInit {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
   }
+
+   // filter data
+   filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectedCategoryType) {
+      filteredData = filteredData.filter((item) => item?.category[0]?.title === this.selectedCategoryType);
+    }
+    if (this.selectedSubcategoryType) {
+      filteredData = filteredData.filter((item) => item?.subcategory[0]?.title === this.selectedSubcategoryType);
+    }
+    if (this.selectedSubcategoryGroupType) {
+      filteredData = filteredData.filter((item) => item?.subcategory_group[0]?.title === this.selectedSubcategoryGroupType);
+    }
+ 
+ 
+    this.filteredData = filteredData;
+  }
+  clearFilter() {
+    this.selectedCategoryType = null;
+    this.selectedSubcategoryType = null;
+    this.selectedSubcategoryGroupType = null;
+    this.filterData();
+  }
+
+  // convert to pdf
+  generatePDF() {
+    // table data with pagination
+    const doc = new jsPDF();
+    const title = 'Brand List';
+
+    doc.setFontSize(15);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 10, 10);
+    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
+    autoTable(doc,
+
+      {
+        html: '#mytable',
+        theme: 'grid',
+        headStyles: {
+          fillColor: [255, 159, 67]
+        },
+        columns: [
+          //remove action filed
+          { header: 'Sr No.' },
+          { header: 'Image' },
+          { header: 'Title' },
+          { header: 'Code' },
+          { header: 'Discount' },
+          { header: 'Category' },
+          { header: 'Subcategory group' },
+          { header: 'SubCategory' },
+          { header: 'Is Active' }
+        ],
+      })
+    doc.save('brand.pdf');
+
+ }
+  // excel export only filtered data
+  getVisibleDataFromTable(): any[] {
+    const visibleData = [];
+    const table = document.getElementById('mytable');
+    const headerRow = table.querySelector('thead tr');
+    const dataRows = table.querySelectorAll('tbody tr');
+    //table heading
+    const headerData = [];
+    headerRow.querySelectorAll('th').forEach(cell => {
+      const columnHeader = cell.textContent.trim();
+      if (columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+        headerData.push(columnHeader);
+      }
+    });
+    visibleData.push(headerData);
+
+    // Include visible data rows
+    dataRows.forEach(row => {
+      const rowData = [];
+      row.querySelectorAll('td').forEach(cell => {
+        rowData.push(cell.textContent.trim());
+      });
+      visibleData.push(rowData);
+    });
+    return visibleData;
+  }
+// Modify your exportToExcel() function
+  exportToExcel(): void {
+    const visibleDataToExport = this.getVisibleDataFromTable();
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Create a Blob from the workbook and initiate a download
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = 'brand.xlsx';
+    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+  }
+  printTable(): void {
+    // Get the table element and its HTML content
+    const tableElement = document.getElementById('mytable');
+    const tableHTML = tableElement.outerHTML;
+
+    // Get the title element and its HTML content
+    const titleElement = document.querySelector('.titl');
+    const titleHTML = titleElement.outerHTML;
+
+    // Clone the table element to manipulate
+    const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+
+    // Remove the "Is Active" column header from the cloned table
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(10)');
+    if (isActiveTh) {
+      isActiveTh.remove();
+    }
+
+    // Remove the "Action" column header from the cloned table
+    const actionTh = clonedTable.querySelector('th.thone:last-child');
+    if (actionTh) {
+      actionTh.remove();
+    }
+
+    // Loop through each row and remove the "Is Active" column and "Action" column data cells
+    const rows = clonedTable.querySelectorAll('tr');
+    rows.forEach((row) => {
+      // Remove the "Is Active" column data cell
+      const isActiveTd = row.querySelector('td:nth-child(10)');
+      if (isActiveTd) {
+        isActiveTd.remove();
+      }
+
+      // Remove the "Action" column data cell
+      const actionTd = row.querySelector('td:last-child');
+      if (actionTd) {
+        actionTd.remove();
+      }
+    });
+
+    // Get the modified table's HTML content
+    const modifiedTableHTML = clonedTable.outerHTML;
+
+    // Apply styles to add some space from the top after the title
+    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+
+    // Combine the title and table content
+    const combinedContent = styledTitleHTML + modifiedTableHTML;
+
+    // Store the original contents
+    const originalContents = document.body.innerHTML;
+
+    // Replace the content of the body with the combined content
+    document.body.innerHTML = combinedContent;
+    window.print();
+
+    // Restore the original content of the body
+    document.body.innerHTML = originalContents;
+  }
+
 }
+
