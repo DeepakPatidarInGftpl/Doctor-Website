@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 
 @Component({
@@ -23,7 +24,8 @@ export class AddmaterialInwardComponent implements OnInit {
 
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
     private router: Router,
-    private toastrService: ToastrService) {
+    private toastrService: ToastrService,
+    private contactService:ContactService) {
   }
 
   supplierControlName = 'party';
@@ -122,10 +124,22 @@ export class AddmaterialInwardComponent implements OnInit {
 
     })
   }
+
+  supplierAddress:any;
+  selectedAddress: string = ''
   oncheck(event: any) {
     console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     console.log(selectedItemId);
+   //call detail api
+   this.contactService.getSupplierById(selectedItemId).subscribe(res=>{
+    console.log(res);
+    this.supplierAddress=res;
+    this.selectedAddress=this.supplierAddress.address[0];
+    console.log(this.selectedAddress);
+    
+  })
+
     const variants = this.materialForm.get('material_inward_cart') as FormArray;
     variants.clear();
     this.addCart();
@@ -133,6 +147,36 @@ export class AddmaterialInwardComponent implements OnInit {
       party: selectedItemId
     });
   }
+
+
+   // address 
+   openModal() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  selectAddress(address: string) {
+    this.selectedAddress = address;
+    // Close Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  closeModal() {
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+
+
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(selectedItemId);
@@ -313,6 +357,16 @@ export class AddmaterialInwardComponent implements OnInit {
     let totalQty = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const qtyControl = this.getCart().controls[i].get('qty');
+      if (qtyControl) {
+        totalQty += +qtyControl.value;
+      }
+    }
+    return totalQty;
+  }
+  calculateTotalPOQty(): number {
+    let totalQty = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const qtyControl = this.getCart().controls[i].get('po_qty');
       if (qtyControl) {
         totalQty += +qtyControl.value;
       }

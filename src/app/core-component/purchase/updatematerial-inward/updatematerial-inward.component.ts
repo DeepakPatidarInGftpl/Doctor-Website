@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { tap } from 'rxjs/operators';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 @Component({
   selector: 'app-updatematerial-inward',
   templateUrl: './updatematerial-inward.component.html',
@@ -24,7 +25,8 @@ export class UpdatematerialInwardComponent implements OnInit {
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
-    private Arout: ActivatedRoute) {
+    private Arout: ActivatedRoute,
+    private contactService:ContactService) {
   }
 
   supplierControlName = 'party';
@@ -50,6 +52,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   getresbyId:any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
+    this.supplierControl.setValue('Loading...');
     this.purchaseService.getMaterialById(this.id).subscribe(res=>{
       console.log(res);
       this.getresbyId=res;
@@ -58,6 +61,15 @@ export class UpdatematerialInwardComponent implements OnInit {
       this.materialForm.get('purchase_order')?.patchValue(res.purchase_order.id);
       this.materialForm.setControl('material_inward_cart', this.udateCart(res.cart));
       this.displaySupplierName(res.party.id);
+
+           //call detail api
+     this.contactService.getSupplierById(res.party.id).subscribe(res=>{
+      console.log(res);
+      this.supplierAddress=res;
+      this.supplierControl.setValue(res.name); 
+      this.selectedAddress=this.supplierAddress.address[0];
+      console.log(this.selectedAddress); 
+    })
     })
     this.materialForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
@@ -177,13 +189,53 @@ displaySupplierName(supplierId: number): void {
       party: selectedItemId
     });
   }
+
+  supplierAddress:any;
+  selectedAddress: string = ''
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(selectedItemId);
+
+     //call detail api
+   this.contactService.getSupplierById(selectedItemId).subscribe(res=>{
+    console.log(res);
+    this.supplierAddress=res;
+    this.selectedAddress=this.supplierAddress.address[0];
+    console.log(this.selectedAddress);
+    
+  })
+
     const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: selectedItemId
     });
+  }
+
+   // address 
+   openModal() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  selectAddress(address: string) {
+    this.selectedAddress = address;
+    // Close Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  closeModal() {
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
   }
   getRes: any;
   loader = false;

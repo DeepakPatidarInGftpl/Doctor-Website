@@ -9,7 +9,7 @@ import { WebsiteService } from 'src/app/Services/website/website.service';
   styleUrls: ['./product-order-details.component.scss']
 })
 export class ProductOrderDetailsComponent implements OnInit {
-
+  imgUrl = 'https://pv.greatfuturetechno.com';
   public tableDatas: any=[
     {
         "id": 5,

@@ -9,7 +9,7 @@
     <div class="card-body">
         <form [formGroup]="purchaseForm" (ngSubmit)="submit()">
             <div class="row">
-                <div class="col-lg-4 col-md-6 col-12">
+                <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
                         <label>Supplier Name*</label>
                         <mat-form-field class="w-100" style="padding: 0;
@@ -20,61 +20,197 @@
                                 [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.name"
-                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.name }}</mat-option>
-
+                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.name
+                                    }}</mat-option>
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
                                     </mat-option>
-                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please
+                                        Enter 1 or more characters</mat-option>
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select 
+                        <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select
                             supplier
-                        </span>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Purchase Date</label>
-                        <input type="date" formControlName="order_date" [ngClass]="{
-                            'is-invalid': f['order_date'].touched && f['order_date'].invalid
-                          }">
-                          <span class="text-danger" *ngIf="order_date && order_date.invalid && order_date.touched">Select
-                            Order Date
-                        </span>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Purchase No.* </label>
-                        <input type="text" formControlName="order_no" [ngClass]="{
-                            'is-invalid': f['order_no'].touched && f['order_no'].invalid
-                          }">
-                          <span class="text-danger" *ngIf="order_no && order_no.invalid && order_no.touched">Enter
-                            Order no.
-                        </span>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Shipping Date* </label>
-                        <input type="date" formControlName="shipping_date" [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}">
-                        <span class="text-danger" *ngIf="shipping_date && shipping_date.invalid && shipping_date.touched">Select
-                            Shipping date
                         </span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
+                        <label>Purchase Date</label>
+                        <input type="date" formControlName="order_date" [ngClass]="{
+                            'is-invalid': f['order_date'].touched && f['order_date'].invalid}">
+                        <span class="text-danger" *ngIf="order_date && order_date.invalid && order_date.touched">Select
+                            Order Date
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Purchase No.* </label>
+                        <input type="text" formControlName="order_no" [ngClass]="{
+                            'is-invalid': f['order_no'].touched && f['order_no'].invalid}">
+                        <span class="text-danger" *ngIf="order_no && order_no.invalid && order_no.touched">Enter
+                            Order no.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Shipping Date* </label>
+                        <input type="date" formControlName="shipping_date"
+                            [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="shipping_date && shipping_date.invalid && shipping_date.touched">Select
+                            Shipping date
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="modal fade" id="addressModal" tabindex="-1" role="dialog"
+                        aria-labelledby="addressModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Billing Address</h1>
+                                    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group" *ngIf="supplierAddress">
+                                        <h5 class=""><small class="text-muted"></small></h5>
+                                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                            <input type="hidden" class="form-control" name="billingcompanyname"
+                                                id="billingcompanyname" value="{{supplierAddress?.name}}">
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-sm-12 col-12"
+                                                *ngFor="let add of supplierAddress?.address">
+
+                                                <button type="button" (click)="selectAddress(add)"
+                                                    class="btn btn-primary btn-sm" style="float: right;">Select</button>
+
+                                                <p class="d-inline mb-0">
+                                                    <span id="billing-address-line-1">
+                                                        {{add?.address_line_1}}, {{add?.address_line_2}}
+                                                    </span>
+                                                </p>
+                                                <br>
+                                                <p class="d-inline mb-0">
+                                                    <span data-address-pincode="">{{add?.pincode}}</span>
+                                                    <span data-address-city="22691">{{add?.city?.city}}</span>
+                                                    <span class="m--font-boldest">,&nbsp;</span>
+                                                </p>
+                                                <p class="d-inline mb-0">
+                                                    <span data-address-state="1722">{{add?.state?.state}}</span>
+                                                    <span class="m--font-boldest">,&nbsp;</span>
+                                                    <span
+                                                        data-address-country="IR">{{add?.country?.country_name}}</span>
+                                                </p>
+                                                <p class="mb-2">
+                                                    <span class="">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
+                                                            fill="currentColor" class="bi bi-telephone-fill"
+                                                            viewBox="0 0 16 16"
+                                                            style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                            <path fill-rule="evenodd"
+                                                                d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                                        </svg>
+                                                        <a
+                                                            href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                                        <input type="hidden" class="form-control" name="billingphone"
+                                                            id="billingphone" value="{{supplierAddress?.mobile_no}}">
+                                                    </span>
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Billing Address</strong></label>
+                    <div class="form-group" *ngIf="!supplierAddress">
+                        <div class="m-divider"><span></span></div>
+                        <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
+                                Provided</small></h5>
+                        <div class="form-group row mt-3">
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span class="font-weight-normal"
+                                    id="lblContactGSTIN">-</span></label>
+                                    <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">Place of Supply <span class="font-weight-normal"
+                                        id="lblContactGSTIN">-</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="supplierAddress">
+                        <h5 class=""><small class="text-muted"></small></h5>
+                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                            <input type="hidden" class="form-control" name="billingcompanyname" id="billingcompanyname"
+                                value="{{supplierAddress?.name}}">
+                        </h5>
+                        <div *ngIf="selectedAddress">
+                            <p class="d-inline mb-0">
+                                <span id="billing-address-line-1">
+                                    {{selectedAddress?.address_line_1}}, {{selectedAddress?.address_line_2}},
+                                </span>
+                            </p>
+                            <br>
+                            <p class="d-inline mb-0">
+                                <span data-address-pincode="">{{selectedAddress?.pincode}}, </span>
+                                <span data-address-city="22691">{{selectedAddress?.city?.city}}</span>
+                                <span class="m--font-boldest">,&nbsp;</span>
+                            </p>
+                            <p class="d-inline mb-0">
+                                <span data-address-state="1722">{{selectedAddress?.state?.state}}</span>
+                                <span class="m--font-boldest">,&nbsp;</span>
+                                <span
+                                    data-address-country="IR">{{selectedAddress?.country?.country_name}}</span>
+                            </p>
+                            <p class="mb-2">
+                                <span class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
+                                        fill="currentColor" class="bi bi-telephone-fill"
+                                        viewBox="0 0 16 16"
+                                        style="    height: 11px; width: 11px; color: #FF9F43;">
+                                        <path fill-rule="evenodd"
+                                            d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                    </svg>
+                                    <a
+                                        href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                    <input type="hidden" class="form-control" name="billingphone"
+                                        id="billingphone" value="{{supplierAddress?.mobile_no}}">
+                                </span>
+                            </p>
+                            <div class="d-grid">
+                                <a type="button" class=" btn-link" (click)="openModal()">Change Address</a>
+                                <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                                    Billing Address
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-group row mt-3">
+                            <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place of Supply : </span> <span class="font-weight-normal"
+                                id="lblContactGSTIN">{{selectedAddress?.state?.state}}</span></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN : </span><span class="font-weight-normal"
+                                    id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9 col-sm-6 col-12">
+                    <div class="form-group">
                         <label>Shipping Note* </label>
-                        <input type="text" formControlName="shipping_note" [ngClass]="{'is-invalid': f['shipping_note'].touched && f['shipping_note'].invalid}">
-                        <span class="text-danger" *ngIf="shipping_note && shipping_note.invalid && shipping_note.touched">Enter
+                        <input type="text" formControlName="shipping_note"
+                            [ngClass]="{'is-invalid': f['shipping_note'].touched && f['shipping_note'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="shipping_note && shipping_note.invalid && shipping_note.touched">Enter
                             Shipping note
                         </span>
                     </div>
@@ -82,19 +218,19 @@
             </div>
             <div class="row">
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table datanew">
                         <thead>
                             <tr>
                                 <th></th>
                                 <th>Barcode/SKU</th>
-                                <th>Product Name</th>
+                                <th style="width: 20%;">Product Name</th>
                                 <th>QTY</th>
                                 <th>Purchase Price</th>
                                 <th>Mrp</th>
                                 <th>Discount</th>
                                 <th>Tax %</th>
                                 <th>Landing Cost</th>
-                                <th class="text-end">Total Cost</th>
+                                <th>Total Cost</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -154,7 +290,7 @@
                                                     </ng-container>
                                                 </mat-autocomplete>
                                             </mat-form-field> -->
-                                            <mat-form-field class="w-100"  class="input">
+                                            <mat-form-field class="w-100" class="input">
                                                 <input type="text" placeholder="Search Product" aria-label="Produt"
                                                     matInput [formControl]="variantControl" [matAutocomplete]="auto"
                                                     style="height: 18px;">
@@ -178,8 +314,10 @@
                                         <td><input type="text" formControlName="purchase_rate" class="input"></td>
                                         <td><input type="text" formControlName="mrp" class="input"></td>
                                         <td><input type="text" formControlName="discount" class="input">
-                                            <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched"> Enter Discount ex: 1-100
-                                            </span> 
+                                            <span class="text-danger" style="display: block;"
+                                                *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">
+                                                Enter Discount ex: 1-100
+                                            </span>
                                         </td>
                                         <td><input type="text" formControlName="tax" class="input"></td>
                                         <td class="text-end"><input type="text" formControlName="landing_cost"
@@ -188,22 +326,61 @@
                                                 [value]="calculateTotalEveryIndex(i).toString()"
                                                 [ngModel]="calculateTotalEveryIndex(i).toString()"></td>
                                     </tr>
+
+                                   
                                 </ng-container>
                             </ng-container>
+                            <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                <td></td>
+                                <td></td>
+                                <td class="text-start"><strong>Total</strong></td>
+                                <td class="text-start">{{ calculateTotalQty()}}</td>
+                               <td class="text-start">{{calculateTotalPurchase()}}</td>
+                               <td></td>
+                               <td></td>
+                              <td class="text-start">{{calculateTotalTax()}}</td>
+                              <td class="text-start">{{calculateTotalLandingCost()}}</td>
+                              <td> {{ calculateTotal() }}</td>
+                            </tr>
                         </tbody>
+                      
                     </table>
                 </div>
             </div>
-            <div class="col-lg-12 my-3">
-                <div class="form-group">
-                    <label>Note*</label>
-                    <textarea class="form-control" formControlName="note" [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
-                    <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter
-                        note
-                    </span>
+            <div class="row">
+                <div class="col-lg-6 my-3">
+                    <div class="form-group">
+                        <label>Note*</label>
+                        <textarea class="form-control" formControlName="note"
+                            [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
+                        <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter
+                            note
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 my-3">
+                    <div class="form-group">
+                        <div class="total-order">
+                            <ul>
+                                <li>
+                                    <h4>Total Mrp</h4>
+                                    <h5>{{calculateTotalMrp() | currency:'INR'}}</h5>
+                                </li>
+                                <li>
+                                    <h4>Sub Total</h4>
+                                    <h5>{{calculateSubtotal() | currency:'INR'}}</h5>
+                                </li>
+                                <li class="total">
+                                    <h4>Total</h4>
+                                    <h5>{{ calculateTotal() }}</h5>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-lg-12 float-md-right">
                     <div class="total-order">
                         <ul>
@@ -244,7 +421,7 @@
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="col-lg-12">
                 <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit()">Submit</button>

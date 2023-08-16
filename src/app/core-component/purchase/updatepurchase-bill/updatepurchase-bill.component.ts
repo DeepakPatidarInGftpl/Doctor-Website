@@ -52,8 +52,11 @@ export class UpdatepurchaseBillComponent implements OnInit {
   subcategoryList;
   id: any;
   getresbyId: any;
+  supplierAddress:any;
+  selectedAddress: string = ''
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
+    this.supplierControl.setValue('Loading...'); 
     this.puchaseBillForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       supplier_bill_date: new FormControl('', [Validators.required]),
@@ -91,6 +94,15 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.puchaseBillForm.get('material_inward_no')?.patchValue(res.material_inward_no.id);
       this.puchaseBillForm.setControl('purchase_bill', this.udateCart(res.cart));
       this.displaySupplierName(res.party.id);
+
+               //call detail api
+     this.contactService.getSupplierById(res.party.id).subscribe(res=>{
+      console.log(res);
+      this.supplierAddress=res;
+      this.supplierControl.setValue(res.name); 
+      this.selectedAddress=this.supplierAddress.address[0];
+      console.log(this.selectedAddress); 
+    })
     })
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
@@ -109,16 +121,16 @@ export class UpdatepurchaseBillComponent implements OnInit {
   }
 
   displaySupplierName(supplierId: number): void {
-    this.filteredSuppliers
-      .pipe(
-        tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
-        map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
-      )
-      .subscribe(matchedSuppliers => {
-        if (matchedSuppliers.length > 0) {
-          this.supplierControl.setValue(matchedSuppliers[0].name);
-        }
-      });
+    // this.filteredSuppliers
+    //   .pipe(
+    //     tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
+    //     map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
+    //   )
+    //   .subscribe(matchedSuppliers => {
+    //     if (matchedSuppliers.length > 0) {
+    //       this.supplierControl.setValue(matchedSuppliers[0].name);
+    //     }
+    //   });
   }
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
@@ -214,6 +226,33 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.puchaseBillForm.patchValue({
       party: selectedItemId
     });
+  }
+
+  // address 
+  openModal() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  selectAddress(address: string) {
+    this.selectedAddress = address;
+    // Close Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  closeModal() {
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
   }
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;

@@ -8,6 +8,7 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { FormControl, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 @Component({
   selector: 'app-editpurchase',
   templateUrl: './editpurchase.component.html',
@@ -28,10 +29,10 @@ export class EditpurchaseComponent implements OnInit {
   //
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
     private router: Router,
-    private toastrService: ToastrService, private Arout: ActivatedRoute) {
+    private toastrService: ToastrService, private Arout: ActivatedRoute, private contactService: ContactService) {
   }
 
-  supplierControlName = 'party';
+  supplierControlName = 'supplier';
   supplierControl = new FormControl();
   suppliers: any[] = [];
 
@@ -49,11 +50,11 @@ export class EditpurchaseComponent implements OnInit {
   variantControl = new FormControl();
   variants: any[] = [];
   filteredVariants: Observable<any[]>;
-  getresbyId:any;
+  getresbyId: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...'); // or any other default value
-  
+
     this.purchaseForm = this.fb.group({
       supplier: new FormControl('', [Validators.required]),
       order_date: new FormControl(''),
@@ -71,13 +72,22 @@ export class EditpurchaseComponent implements OnInit {
 
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
       console.log(res);
-      this.getresbyId=res;
+      this.getresbyId = res;
       this.purchaseForm.patchValue(res);
-      this.purchaseForm.get('party')?.patchValue(res.party.id)
+      this.purchaseForm.get('supplier')?.patchValue(res.party.id)
       this.purchaseForm.setControl('purchase_cart', this.udateCart(res.cart));
       this.displaySupplierName(res.party.id);
+
+      //call detail api
+      this.contactService.getSupplierById(res.party.id).subscribe(res => {
+        console.log(res);
+        this.supplierAddress = res;
+        this.supplierControl.setValue(res.name); 
+        this.selectedAddress = this.supplierAddress.address[0];
+        console.log(this.selectedAddress);
+      })
     })
-    
+
     this.searchForm = this.fb.group({
       search: new FormControl()
     })
@@ -89,26 +99,35 @@ export class EditpurchaseComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getSuuplier();
+
     this.getVariants();
   }
- 
-displaySupplierName(supplierId: number): void {
-  this.filteredSuppliers
-    .pipe(
-      tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
-      map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
-    )
-    .subscribe(matchedSuppliers => {
-      if (matchedSuppliers.length > 0) {
-        this.supplierControl.setValue(matchedSuppliers[0].name);
-      }
-    });
-}
-  
+
+  displaySupplierName(supplierId: number): void {
+    console.log(supplierId);
+console.log(this.supplierList);
+
+
+    // this.filteredSuppliers
+    //   .pipe(
+    //     tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
+    //     map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
+    //   )
+    //   .subscribe(matchedSuppliers => {
+    //     if (matchedSuppliers.length > 0) {
+    //       console.log(matchedSuppliers[0].name,'matchsupplier');
+
+    //       this.supplierControl.setValue(matchedSuppliers[0].name);
+    //     }
+    //   });
+
+    console.log(this.supplierControl);
+
+  }
+
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
-    add.forEach((j: any,i) => {
+    add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
         qty: j.qty,
@@ -120,7 +139,7 @@ displaySupplierName(supplierId: number): void {
         total: j.total
       }))
       this.barcode[i] = j.barcode.sku;
-      this.productName[i]=j.barcode.product_title;
+      this.productName[i] = j.barcode.product_title;
     })
     return formarr
   }
@@ -156,7 +175,7 @@ displaySupplierName(supplierId: number): void {
       qty: (''),
       purchase_rate: (''),
       mrp: (''),
-      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
       total: ('')
@@ -186,21 +205,60 @@ displaySupplierName(supplierId: number): void {
       this.variants = res;
     })
   }
+
+  supplierAddress: any;
+  selectedAddress: string = ''
+
   oncheck(event: any) {
     console.log(event);
     const selectedItemId = event.id;
     console.log(selectedItemId);
-    
-    if(this.getresbyId.cart.length>=0){
+
+    //call detail api
+    this.contactService.getSupplierById(selectedItemId).subscribe(res => {
+      console.log(res);
+      this.supplierAddress = res;
+      this.selectedAddress = this.supplierAddress.address[0];
+      console.log(this.selectedAddress);
+    })
+    if (this.getresbyId.cart.length >= 0) {
       const variants = this.purchaseForm.get('purchase_cart') as FormArray;
-    variants.clear();
-    this.addCart();
-     }
-    
+      variants.clear();
+      this.addCart();
+    }
+
     this.purchaseForm.patchValue({
       party: selectedItemId
     });
     // this.displaySupplierName(event);
+  }
+
+
+  // address 
+  openModal() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  selectAddress(address: string) {
+    this.selectedAddress = address;
+    // Close Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  closeModal() {
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
   }
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
@@ -210,14 +268,14 @@ displaySupplierName(supplierId: number): void {
       barcode: selectedItemId
     });
   }
-loader=false;
+  loader = false;
   getRes: any;
   submit() {
     console.log(this.purchaseForm.value);
     if (this.purchaseForm.valid) {
-      this.loader=true;
+      this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('party', this.purchaseForm.get('party')?.value);
+      formdata.append('supplier', this.purchaseForm.get('supplier')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
       formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
       formdata.append('shipping_date', this.purchaseForm.get('shipping_date')?.value);
@@ -243,21 +301,21 @@ loader=false;
       });
       formdata.append('purchase_cart', JSON.stringify(cartData));
 
-      this.purchaseService.updatePurchase(formdata,this.id).subscribe(res => {
+      this.purchaseService.updatePurchase(formdata, this.id).subscribe(res => {
         console.log(res);
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
           this.toastrService.success(this.getRes.msg);
           this.router.navigate(['//purchase/purchaselist'])
-        }else {
+        } else {
           this.loader = false
         }
-      },err=>{
+      }, err => {
         this.loader = false
       })
     } else {
       this.purchaseForm.markAllAsTouched()
-      console.log(this.purchaseForm.value);
+      console.log('invLID FORM');
     }
   }
 
@@ -276,7 +334,7 @@ loader=false;
   get note() {
     return this.purchaseForm.get('note')
   }
- discountt(index: number) {
+  discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
   private _filter(value: string | number, include: boolean): any[] {
@@ -340,22 +398,22 @@ loader=false;
     this.barcode[index] = value.sku;
     console.log(this.barcode[index]);
     console.log(this.barcode);
-    
+
     this.v_id = value.id;
     const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery','');
+    this.searchProduct('someQuery', '');
   };
 
   searchs: any[] = [];
   Qty: any[] = []
-productName: any[] = [];
+  productName: any[] = [];
   isProduct = true;
   staticValue: string = 'Static Value';
- 
-  searchProduct(event: any,index:any) {
+
+  searchProduct(event: any, index: any) {
     console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
@@ -364,7 +422,7 @@ productName: any[] = [];
         this.searchs = res;
         // this.productOption = res;
         console.log(this.searchs);
-        this.productName[index]= this.searchs[0].product_title;
+        this.productName[index] = this.searchs[0].product_title;
         console.log(this.productName);
         this.check = true;
         const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
