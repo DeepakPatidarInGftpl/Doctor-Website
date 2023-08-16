@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 
 @Component({
@@ -23,7 +24,8 @@ export class AddpurchaseComponent implements OnInit {
 
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
     private router: Router,
-    private toastrService: ToastrService) {
+    private toastrService: ToastrService,
+    private contactService:ContactService) {
   }
 
   supplierControlName = 'party';
@@ -49,16 +51,16 @@ export class AddpurchaseComponent implements OnInit {
     this.purchaseForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       order_date: new FormControl(''),
-      order_no: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
-      shipping_date: new FormControl('',[Validators.required]),
-      shipping_note: new FormControl('',[Validators.required]),
+      order_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      shipping_date: new FormControl('', [Validators.required]),
+      shipping_note: new FormControl('', [Validators.required]),
       sub_total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       purchase_cart: this.fb.array([]),
       total_tax: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       total_discount: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       round_off: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      note: new FormControl('',[Validators.required]),
+      note: new FormControl('', [Validators.required]),
     });
     this.searchForm = this.fb.group({
       search: new FormControl()
@@ -83,7 +85,7 @@ export class AddpurchaseComponent implements OnInit {
       qty: (''),
       purchase_rate: (''),
       mrp: (''),
-      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
       total: ('')
@@ -106,7 +108,7 @@ export class AddpurchaseComponent implements OnInit {
       this.suppliers = res;
       // this.variants=res;
     })
-  } 
+  }
 
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
@@ -114,10 +116,23 @@ export class AddpurchaseComponent implements OnInit {
       this.variants = res;
     })
   }
+  addresses: string[] = ['Address 1', 'Address 2', 'Address 3'];
+  
+  supplierAddress:any;
+  selectedAddress: string = ''
   oncheck(event: any) {
     console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     console.log(selectedItemId);
+    //call detail api
+    this.contactService.getSupplierById(selectedItemId).subscribe(res=>{
+      console.log(res);
+      this.supplierAddress=res;
+      this.selectedAddress=this.supplierAddress.address[0];
+      console.log(this.selectedAddress);
+      
+    })
+
     const variants = this.purchaseForm.get('purchase_cart') as FormArray;
     variants.clear();
     this.addCart();
@@ -125,6 +140,34 @@ export class AddpurchaseComponent implements OnInit {
       party: selectedItemId
     });
   }
+
+ // address 
+  openModal() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  selectAddress(address: string) {
+    this.selectedAddress = address;
+    // Close Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  closeModal() {
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(selectedItemId);
@@ -176,11 +219,11 @@ export class AddpurchaseComponent implements OnInit {
         } else {
           this.loader = false
         }
-      },err=>{
-        this.loader=false
+      }, err => {
+        this.loader = false
       })
     } else {
-      this.loader=false;
+      this.loader = false;
       this.purchaseForm.markAllAsTouched()
       console.log(this.purchaseForm.value);
     }
@@ -202,7 +245,7 @@ export class AddpurchaseComponent implements OnInit {
   get note() {
     return this.purchaseForm.get('note')
   }
- discountt(index: number) {
+  discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
   private _filter(value: string | number, include: boolean): any[] {
