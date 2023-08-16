@@ -84,7 +84,7 @@
                             </label>
                             <i class="fa fa-sort"></i>
                         </th>
-                        <th (click)="sort('id')" class="thone">Sr. No. <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Company Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Mobile Number <i class="fa fa-sort"></i></th>
@@ -106,14 +106,14 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//contacts/customerDetails/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
+                            <a routerLink="//contacts/customerDetails/{{products.id}}" style="line-height: 3;">{{products?.name}}</a>
                         </td>
-                        <td>{{products.company_name}}</td>
-                        <td>{{products.mobile_no}}</td>
+                        <td>{{products?.company_name}}</td>
+                        <td>{{products?.mobile_no}}</td>
                         <td>{{products?.opening_balance_type + (products?.opening_balance != null ? ' : ' + products?.opening_balance : '') }}</td>
-                        <td>{{products.gstin}}</td>
-                        <td>{{products.pan_no}}</td>
-                        <td>{{products.membership}}</td>
+                        <td>{{products?.gstin}}</td>
+                        <td>{{products?.pan_no}}</td>
+                        <td>{{products?.membership}}</td>
                         <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
@@ -121,7 +121,7 @@
                             <a class="me-1" routerLink="//contacts/customerDetails/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//contacts/updateCustomer/{{products.id}}" *ngIf="isEdit">
+                            <a class="me-1" routerLink="//contacts/updateCustomer/{{products?.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);" *ngIf="isDelete">

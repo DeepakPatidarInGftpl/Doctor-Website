@@ -14,7 +14,7 @@ if (localStorageData && localStorageData.permission) {
   });
 }
 const routes: Routes = [
-  {path:'',component:BranchComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['add_branch', 'change_branch', 'delete_branch', 'view_branch']}}
+  {path:'',component:BranchComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['view_branch']}}
 ];
 
 @NgModule({

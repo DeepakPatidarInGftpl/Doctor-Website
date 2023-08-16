@@ -146,30 +146,10 @@ export class VendorComponent implements OnInit {
       this.filterData();
     })
 //permission from localstorage
-    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    // if (localStorageData && localStorageData.permission) {
-    //   const permission = localStorageData.permission;
-    //   permission.map((res: any) => {
-    //     if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'vendor' && res.codename=='add_vendor') {
-    //       this.isAdd = res.codename;
-    //       console.log(this.isAdd);
-          
-    //     } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename=='change_vendor') {
-    //       this.isEdit = res.codename;
-    //       console.log(this.isEdit);
-          
-    //     }else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename=='delete_vendor') {
-    //       this.isDelete = res.codename;
-    //       console.log(this.isDelete);
-          
-    //     }
-    //   });
-    // }
-     // permissin from api profile
-     this.cs.userDetails$.subscribe((userDetails) => {
-      this.userDetails = userDetails;
-      const permission = this.userDetails?.permission;
-      permission?.map((res: any) => {
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData) {
+      const permission = localStorageData;
+      permission.map((res: any) => {
         if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'vendor' && res.codename=='add_vendor') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
@@ -184,7 +164,8 @@ export class VendorComponent implements OnInit {
           
         }
       });
-    });
+    }
+ 
   }
 
   allSelected: boolean = false;
