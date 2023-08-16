@@ -95,7 +95,7 @@
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
-                <tbody *ngIf="filteredData.length>=0">
+                <tbody *ngIf="filteredData?.length>=0">
                     <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
@@ -129,7 +129,7 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="filteredData.length==0 && !loader">
+                <tbody *ngIf="filteredData?.length==0 && !loader">
                     <tr>
                         <td colspan="10">
                             <p class="center-textt">Data not available</p>

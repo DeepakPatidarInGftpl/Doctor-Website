@@ -40,6 +40,9 @@ const routes: Routes = [
   { path: 'employee-details/:id', loadChildren: () => import('../employee/employeedetails/employeedetails.module').then((m) => m.EmployeedetailsModule) },
   { path: 'warehouse', loadChildren: () => import('../warehouse/warehouse.module').then((m) => m.WarehouseModule) },
   { path: 'branch', loadChildren: () => import('./branch/branch.module').then((m) => m.BranchModule) },
+  { path: 'addBranch', loadChildren: () => import('./add-branch/add-branch.module').then((m) => m.AddBranchModule) },
+  { path: 'updateBranch/:id', loadChildren: () => import('./update-branch/update-branch.module').then((m) => m.UpdateBranchModule) },
+  
   // { path: 'account_subtype', loadChildren: () => import('./account-sub-type/account-sub-type.module').then((m) => m.AccountSubTypeModule) },
   // { path: 'addCompanyBank', loadChildren: () => import('./add-company-bank/add-company-bank.module').then((m) => m.AddCompanyBankModule) },
   // { path: 'companyBank', loadChildren: () => import('./company-bank/company-bank.module').then((m) => m.CompanyBankModule) },

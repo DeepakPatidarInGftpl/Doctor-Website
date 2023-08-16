@@ -54,13 +54,14 @@ export class EmployeeComponent implements OnInit {
         this.contactService.deleteEmployee(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "Employee Deleted successfully") {
-            this.ngOnInit();
+           
             Swal.fire({
               icon: 'success',
               title: 'Deleted !',
               text:this.delRes.msg,
             });
             this.tableData.splice(index, 1);
+            this.ngOnInit();
           }else{
             Swal.fire({
               icon: 'error',
