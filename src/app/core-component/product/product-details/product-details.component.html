@@ -287,13 +287,29 @@
                             <div class="row ro-1">
                                 <div class="col-sm-2">
                                     <div class="img-div" *ngIf="productDetail?.product_images[0]?.image!==null">
-                                        <img [src]="imgUrl+productDetail?.product_images[0]?.image" alt="">
+                                        <!-- <img [src]="imgUrl+productDetail?.product_images[0]?.image" alt=""> -->
                                         <!-- <div class="owl-carousel owl-theme product-slide my-5">
                                             <div class="slider-product" *ngFor="let image of productDetail?.product_images">
                                                 <img [src]="imgUrl+image.image" [alt]="">
                                                 <h4>{{image?.product_colour}}</h4>
                                             </div>
                                         </div> -->
+
+                                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                                            <div class="carousel-inner">
+                                              <div class="carousel-item {{i==0?'active':''}}" *ngFor="let image of productDetail?.product_images; index as i ">
+                                                <img [src]="imgUrl+image.image" class="d-block w-100" alt="...">
+                                              </div>
+                                            </div>
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                              <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                              <span class="visually-hidden">Next</span>
+                                            </button>
+                                          </div>
                                     </div>
                                     <div class="img-div" *ngIf="productDetail?.product_images[0]?.image==null">
                                         <img src="assets/dummy/Wavy_Tech-31_Single-04.jpg" alt=""  />

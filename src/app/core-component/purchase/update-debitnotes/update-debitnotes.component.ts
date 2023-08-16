@@ -40,6 +40,7 @@ export class UpdateDebitnotesComponent implements OnInit {
 
   variantControlName = 'barcode';
   variantControl = new FormControl();
+  
 
   variants: any[] = [];
   filteredVariants: Observable<any[]>;
@@ -52,8 +53,11 @@ export class UpdateDebitnotesComponent implements OnInit {
   subcategoryList;
   id: any;
   getresbyId:any;
+  supplierAddress:any;
+  selectedAddress: string = ''
   ngOnInit(): void {
     this.id=this.Arout.snapshot.paramMap.get('id');
+    this.supplierControl.setValue('Loading...'); 
     this.debitNotesForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       debit_note_date: new FormControl('', [Validators.required]),
@@ -70,16 +74,25 @@ export class UpdateDebitnotesComponent implements OnInit {
       cart: this.fb.array([]),
     });
 
-    this.purchaseService.getDebitNotesById(this.id).subscribe(res => {
+    this.purchaseService.getDebitNotesById(this.id).subscribe((res:any) => {
       console.log(res);
       this.getresbyId = res;
       this.debitNotesForm.patchValue(res);
-      this.debitNotesForm.get('party')?.patchValue(res.party.id);
+      this.debitNotesForm.get('party')?.patchValue(res?.party.id);
       // this.debitNotesForm.get('purchase')?.patchValue(res.purchase_order.id);
-      this.debitNotesForm.get('payment_term')?.patchValue(res.payment_term.id);
-      this.debitNotesForm.get('purchase')?.patchValue(res.purchase?.id);
-      this.debitNotesForm.setControl('cart', this.udateCart(res.cart));
-      this.displaySupplierName(res.party.id);
+      this.debitNotesForm.get('payment_term')?.patchValue(res?.payment_term.id);
+      this.debitNotesForm.get('purchase')?.patchValue(res?.purchase);
+      this.debitNotesForm.setControl('cart', this.udateCart(res?.cart));
+      this.displaySupplierName(res?.party.id);
+         //call detail api
+   this.contactService.getSupplierById(res?.party.id).subscribe(res=>{
+    console.log(res);
+    this.supplierAddress=res;
+    this.supplierControl.setValue(res.name); 
+    this.selectedAddress=this.supplierAddress.address[0];
+    console.log(this.selectedAddress);
+    
+  })
     })
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
@@ -92,20 +105,21 @@ export class UpdateDebitnotesComponent implements OnInit {
     )
     this.getSuuplier();
     this.getVariants();
+    this.getBatchComplete()
     this.getPurchase();
     this.getPaymentTerms()
   }
   displaySupplierName(supplierId: number): void {
-    this.filteredSuppliers
-      .pipe(
-        tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
-        map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
-      )
-      .subscribe(matchedSuppliers => {
-        if (matchedSuppliers.length > 0) {
-          this.supplierControl.setValue(matchedSuppliers[0].name);
-        }
-      });
+    // this.filteredSuppliers
+    //   .pipe(
+    //     tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
+    //     map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
+    //   )
+    //   .subscribe(matchedSuppliers => {
+    //     if (matchedSuppliers.length > 0) {
+    //       this.supplierControl.setValue(matchedSuppliers[0].name);
+    //     }
+    //   });
   }
   get supplier() {
     return this.debitNotesForm.get('party') as FormControl;
@@ -119,6 +133,8 @@ export class UpdateDebitnotesComponent implements OnInit {
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
     add.forEach((j: any,i) => {
+      console.log(j);
+      
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
         qty: j.qty,
@@ -131,7 +147,11 @@ export class UpdateDebitnotesComponent implements OnInit {
       }))
       this.barcode[i] = j.barcode.sku;
       this.productName[i]=j.barcode.product_title;
+      // this.variantControl.setValue(this.productName[i]);
+      
     })
+    console.log(this.variantControl);
+    
     return formarr
   }
   cart(): FormGroup {
@@ -168,6 +188,12 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.variants = res;
     })
   }
+  getBatchComplete(){
+    this.coreService.getBatch().subscribe(res=>{
+      console.log(res);
+      this.batchList=res;
+    })
+  }
   purchaseList: any;
   getPurchase() {
     this.purchaseService.getPurchase().subscribe(res => {
@@ -195,6 +221,33 @@ export class UpdateDebitnotesComponent implements OnInit {
     this.debitNotesForm.patchValue({
       party: selectedItemId
     });
+  }
+
+   // address 
+   openModal() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  selectAddress(address: string) {
+    this.selectedAddress = address;
+    // Close Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  closeModal() {
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
   }
   variantId:any;
   oncheckVariant(event: any, index) {

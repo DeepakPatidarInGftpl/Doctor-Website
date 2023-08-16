@@ -137,12 +137,21 @@ export class AddDebitnotesComponent implements OnInit {
       this.paymentList = res;
     })
   }
- 
+  supplierAddress:any;
+  selectedAddress: string = ''
 variantId:any;
   oncheck(event: any) {
     console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     console.log(selectedItemId);
+     //call detail api
+   this.contactService.getSupplierById(selectedItemId).subscribe(res=>{
+    console.log(res);
+    this.supplierAddress=res;
+    this.selectedAddress=this.supplierAddress.address[0];
+    console.log(this.selectedAddress);
+    
+  })
     const variants = this.debitNotesForm.get('cart') as FormArray;
     variants.clear();
     this.addCart();
@@ -150,6 +159,33 @@ variantId:any;
       party: selectedItemId
     });
   
+  }
+
+   // address 
+   openModal() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+
+  selectAddress(address: string) {
+    this.selectedAddress = address;
+    // Close Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  closeModal() {
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
   }
 
   oncheckVariant(event: any, index) {
