@@ -7,7 +7,6 @@ import { MasterComponent } from './master.component';
 @NgModule({
   declarations: [
     MasterComponent,
-    
   ],
   imports: [
     CommonModule,

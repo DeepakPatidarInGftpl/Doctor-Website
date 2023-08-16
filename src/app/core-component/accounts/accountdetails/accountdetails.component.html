@@ -4,7 +4,7 @@
         <h6>Full details of a Account</h6>
     </div>
     <div class="page-btn">
-        <a routerLink="//account/editaccount/{{employeeDetails.id}}" class="btn btn-added">
+        <a routerLink="//account/editaccount/{{employeeDetails?.id}}" class="btn btn-added">
             <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Account
         </a>
     </div>
@@ -54,8 +54,8 @@
             </div>
             <div class="d-flex align-items-center mx-4">
                 <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                <span [ngClass]="{'bg-lightgreen': employeeDetails.is_active === true, 'bg-lightred' : employeeDetails.is_active === false,'bg-lightyellow' : employeeDetails.is_active === 'Partial' }"
-                                    class="badges">{{employeeDetails.is_active}}</span>
+                <span [ngClass]="{'bg-lightgreen': employeeDetails?.is_active === true, 'bg-lightred' : employeeDetails?.is_active === false,'bg-lightyellow' : employeeDetails?.is_active === 'Partial' }"
+                                    class="badges">{{employeeDetails?.is_active}}</span>
             </div>
         </div>
     </div>

@@ -1,12 +1,12 @@
 <div class="row">
-    <div class="col-lg-7 col-sm-7 col-12">
+    <div class="col-lg-12 col-sm-12 col-12">
         <div class="page-header">
             <div class="page-title">
                 <h4 class="titl">Branch list</h4>
                 <h6>Manage your Branch</h6>
             </div>
-            <div class="page-btn" *ngIf="!addForm">
-                <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
+            <div class="page-btn" *ngIf="isAdd">
+                <a class="btn btn-added" routerLink="//masters/addBranch">
                     <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Branch
                 </a>
             </div>
@@ -55,7 +55,7 @@
                         <div class="row">
                             <div class="col-lg-12 col-sm-12">
                                 <div class="row">
-                                    <div class="col-lg col-sm-6 col-12">
+                                    <div class="col-lg=3 col-sm-3 col-12">
                                         <div class="form-group">
                                             <label>GSTIN No.</label>
                                             <div class="dataTables_filter">
@@ -85,6 +85,10 @@
                                 <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">GSTIN<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Address<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Pincode<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">City<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">State<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Country<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i
                                         class="fa fa-sort"></i></th>
@@ -105,13 +109,17 @@
                                 </td>
                                 <td>{{products.gstin}}</td>
                                 <td>{{products?.address}}</td>
+                                <td>{{products?.pincode}}</td>
+                                <td>{{products?.city?.city}}</td>
+                                <td>{{products?.state?.state}}</td>
+                                <td>{{products?.country?.country_name}}</td>
                                 <td>
                                     <mat-slide-toggle
                                         (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
-                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
+                                    <a class="me-3" routerLink="//masters/updateBranch/{{products.id}}" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
@@ -156,234 +164,5 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
-        <div class="page-header">
-            <div class="page-title" *ngIf="addForm">
-                <div *ngIf="isAdd">
-                    <h4> Add Branch </h4>
-                    <h6>Create new Branch </h6>
-                </div>
-            </div>
-            <div class="page-title" *ngIf="!addForm">
-                <div *ngIf="isEdit">
-                    <h4> Update Branch </h4>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div *ngIf="isAdd">
-                <div class="card-body" *ngIf="addForm">
-                    <form [formGroup]="branchForm" (ngSubmit)="submit()">
-                        <div class="row">
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title"
-                                        [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
-                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
-                                        Title
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label>GSTIN*</label>
-                                    <input type="text" formControlName="gstin" id="gstin"
-                                        [ngClass]="{'is-invalid': f['gstin'].touched && f['gstin'].invalid}">
-                                    <span class="text-danger" *ngIf="gstin && gstin.invalid && gstin.touched">Enter
-                                        Valid GSTIN
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label>Country</label>
-                                    <select formControlName="country" class="w-100 h-100 border" #countryValue
-                                        (change)="selectState(countryValue.value)" id="country" [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid
-                                    }">
-                                        <option value="" selected disabled>Country</option>
-                                        <option value="{{country.id}}" *ngFor="let country of country">
-                                            {{country.country_name}}
-                                        </option>
-                                    </select>
-                                    <span class="text-danger"
-                                        *ngIf="countryy && countryy.invalid && countryy.touched">Select country</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label> State</label>
-                                    <select formControlName="state" class="w-100 h-100 border" id="state"
-                                        [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}" #stateValue
-                                        (change)="selectCity(stateValue.value)">
-                                        <option value="" selected disabled>State</option>
-                                        <option value="{{state.id}}" *ngFor="let state of state">{{state.state}}
-                                        </option>
-                                    </select>
-                                    <span class="text-danger"
-                                        *ngIf="statee && statee.invalid && statee.touched && state?.length>0">Select
-                                        state</span>
-                                    <span class="text-danger"
-                                        *ngIf="statee && statee.invalid && statee.touched && state?.length<=0">Data not
-                                        available</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label> City</label>
-                                    <select formControlName="city" class="w-100 h-100 border" id="city" [ngClass]="{
-                                        'is-invalid': f['city'].touched && f['city'].invalid
-                                      }">
-                                        <option value="" selected disabled>City</option>
-                                        <option value="{{city.id}}" *ngFor="let city of city">{{city.city}}</option>
-                                    </select>
-                                    <span class="text-danger"
-                                        *ngIf="cityy && cityy.invalid && cityy.touched && city?.length>0">Select
-                                        city</span>
-                                    <span class="text-danger"
-                                        *ngIf="cityy && cityy.invalid && cityy.touched && city?.length<=0">data not
-                                        available</span>
-
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label>Pincode</label>
-                                    <input type="text" formControlName="pincode" maxlength="6" minlength="6"
-                                        id="pincode"
-                                        [ngClass]="{'is-invalid': f['pincode'].touched && f['pincode'].invalid}">
-                                    <span class="text-danger"
-                                        *ngIf="pincode && pincode.invalid && pincode.touched">Enter your 6 digits
-                                        pincode number</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label>Address</label>
-                                    <textarea class="form-control" formControlName="address" id="address" [ngClass]="{
-                                      'is-invalid': f['address'].touched && f['address'].invalid
-                                    }"></textarea>
-                                    <span class="text-danger"
-                                        *ngIf="address && address.invalid && address.touched">Enter your address</span>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-12">
-                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>Submit</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div *ngIf="isEdit">
-                <div class="card-body" *ngIf="!addForm">
-                    <form [formGroup]="branchForm" (ngSubmit)="update()">
-                        <div class="row">
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title"
-                                        [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
-                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
-                                        Title
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label>GSTIN*</label>
-                                    <input type="text" formControlName="gstin" id="gstin"
-                                        [ngClass]="{'is-invalid': f['gstin'].touched && f['gstin'].invalid}">
-                                    <span class="text-danger" *ngIf="gstin && gstin.invalid && gstin.touched">Enter
-                                        Valid GSTIN
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label>Country</label>
-                                    <select formControlName="country" class="w-100 h-100 border" #countryValue
-                                        (change)="selectState(countryValue.value)" id="country" [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid
-                                    }">
-                                        <option value="" selected disabled>Country</option>
-                                        <option value="{{country.id}}" *ngFor="let country of country">
-                                            {{country.country_name}}
-                                        </option>
-                                    </select>
-                                    <span class="text-danger"
-                                        *ngIf="countryy && countryy.invalid && countryy.touched">Select country</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label> State</label>
-                                    <select formControlName="state" class="w-100 h-100 border" id="state"
-                                        [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}" #stateValue
-                                        (change)="selectCity(stateValue.value)">
-                                        <option value="" selected disabled>State</option>
-                                        <option value="{{state.id}}" *ngFor="let state of state">{{state.state}}
-                                        </option>
-                                    </select>
-                                    <span class="text-danger"
-                                        *ngIf="statee && statee.invalid && statee.touched && state?.length>0">Select
-                                        state</span>
-                                    <span class="text-danger"
-                                        *ngIf="statee && statee.invalid && statee.touched && state?.length<=0">Data not
-                                        available</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label> City</label>
-                                    <select formControlName="city" class="w-100 h-100 border" id="city" [ngClass]="{
-                                        'is-invalid': f['city'].touched && f['city'].invalid
-                                      }">
-                                        <option value="" selected disabled>City</option>
-                                        <option value="{{city.id}}" *ngFor="let city of city">{{city.city}}</option>
-                                    </select>
-                                    <span class="text-danger"
-                                        *ngIf="cityy && cityy.invalid && cityy.touched && city?.length>0">Select
-                                        city</span>
-                                    <span class="text-danger"
-                                        *ngIf="cityy && cityy.invalid && cityy.touched && city?.length<=0">data not
-                                        available</span>
-
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label>Pincode</label>
-                                    <input type="text" formControlName="pincode" maxlength="6" minlength="6"
-                                        id="pincode"
-                                        [ngClass]="{'is-invalid': f['pincode'].touched && f['pincode'].invalid}">
-                                    <span class="text-danger"
-                                        *ngIf="pincode && pincode.invalid && pincode.touched">Enter your 6 digits
-                                        pincode number</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <label>Address</label>
-                                    <textarea class="form-control" formControlName="address" id="address" [ngClass]="{
-                                      'is-invalid': f['address'].touched && f['address'].invalid
-                                    }"></textarea>
-                                    <span class="text-danger"
-                                        *ngIf="address && address.invalid && address.touched">Enter your address</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>Submit</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+ 
 </div>
