@@ -101,7 +101,7 @@
                             <div class="dropdown">
                                 <button type="button" class="dropdown-toggle button" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
-                                <ul class="dropdown-menu" style="width: 100%;">
+                                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
                                     <li><a class="dropdown-item" *ngFor="let category of categoryList let i=index;">
                                             <input type="checkbox" [value]="category.id" [checked]="selectCat.includes(category.id)"
                                                 (change)="onCheckCategory($event)" formArrayName="category"
@@ -127,7 +127,7 @@
                                 <button type="button" class="dropdown-toggle button" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory
                                     group</button>
-                                <ul class="dropdown-menu" style="width: 100%;">
+                                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
                                     <li><a class="dropdown-item"
                                             *ngFor="let subcatgroup of subcatGroupList let i=index;">
                                             <input type="checkbox" [value]="subcatgroup.id"
@@ -155,7 +155,7 @@
                             <div class="dropdown">
                                 <button type="button" class="dropdown-toggle button" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
-                                <ul class="dropdown-menu" style="width: 100%;">
+                                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
                                     <li><a class="dropdown-item"
                                             *ngFor="let subcategory of subcatbySubcatGroup; let i=index">
                                             <input type="checkbox" [value]="subcategory.id" [checked]="selectSubcat.includes(subcategory.id)"
@@ -203,7 +203,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <img [src]="url" *ngIf="url" alt="" class="p_img">
-                                    <img [src]="imgUrl+updateData.image" *ngIf="!url" alt="" class="p_img">
+                                    <img [src]="imgUrl+updateData?.image" *ngIf="!url" alt="" class="p_img">
                                 </div>
                             </div>
                         </div>

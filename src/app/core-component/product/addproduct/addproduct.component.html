@@ -378,7 +378,7 @@
 												<button type="button" class="dropdown-toggle button" type="button"
 													data-bs-toggle="dropdown" aria-expanded="false">Select
 													Color</button>
-												<ul class="dropdown-menu" style="width: 100%;">
+												<ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
 													<li *ngFor="let color of colorList; let i=index">
 														<a class="dropdown-item">
 															<input type="checkbox" [value]="color.id"
@@ -409,7 +409,7 @@
 											<div class="dropdown">
 												<button type="button" class="dropdown-toggle button" type="button"
 													data-bs-toggle="dropdown" aria-expanded="false">Select Size</button>
-												<ul class="dropdown-menu" style="width: 100%;">
+												<ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
 													<li><a class="dropdown-item"
 															*ngFor="let size of sizeList let i = index;">
 															<input type="checkbox" [value]="size.id"

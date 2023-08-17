@@ -195,7 +195,7 @@ export class FeatureGroupComponent implements OnInit {
       this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='add_featuregroup') {
             this.isAdd = res.codename;
             console.log(this.isAdd);
@@ -250,10 +250,10 @@ export class FeatureGroupComponent implements OnInit {
       if(!this.addForm){
  
         this.featureList.map((map:any)=>{
-          console.log(map);
+          console.log(this.features);
           
           console.log(this.features.includes(map.id));
-          
+          this.selectedFeature=this.features.length
           if(this.features.includes(map.id)){
             let formArray:any=this.featureForm.get('feature') as FormArray;
             formArray.push(new FormControl(map.id))
@@ -265,7 +265,7 @@ export class FeatureGroupComponent implements OnInit {
 
   
   check: any
-  selectedSubcat = 0;
+  selectedFeature = 0;
   onCheckChange(event: any) {
     const formArray: any = this.featureForm.get('feature') as FormArray;
     /* Selected */
@@ -273,7 +273,7 @@ export class FeatureGroupComponent implements OnInit {
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
-      this.selectedSubcat++;
+      this.selectedFeature++;
     }
     else {
       // find the unselected element
@@ -282,7 +282,7 @@ export class FeatureGroupComponent implements OnInit {
         if (ctrl.value == event.target.value) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
-          this.selectedSubcat--;
+          this.selectedFeature--;
           return;
         }
         i++;
@@ -342,6 +342,7 @@ export class FeatureGroupComponent implements OnInit {
       console.log(res);
       this.addRes = res
       if (this.addRes.msg == "FeatureGroup Successfuly Added") {
+        this.selectedFeature=0
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.featureForm.reset()
@@ -369,6 +370,7 @@ update(){
       this.addRes = res
       if (this.addRes.msg == "FeatureGroup updated successfully") {
         this.loaders=false;
+        this.selectedFeature=0
         this.toastr.success(this.addRes.msg)
         this.featureForm.reset()
         this.addForm=true
@@ -402,10 +404,12 @@ update(){
         this.addForm=false
         this.featureForm.patchValue(res);
         this.editFormdata = res
+        this.features = res?.feature.map((res: any) => res.id);
       }
     })
   }
   openaddForm() {
+    this.selectedFeature=0
     this.addForm = true;
     this.featureForm.reset();
   }

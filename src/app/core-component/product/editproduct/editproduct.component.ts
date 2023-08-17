@@ -371,6 +371,7 @@ export class EditproductComponent implements OnInit {
       this.colorList = res;
       setTimeout(() => {
         this.colorList.map((map: any) => {
+          this.selectedColor=this.colors.length
           if (this.colors.includes(map.id)) {
             console.log(map.id, 'mapid');
             const formArray: any = this.productForm.get('color') as FormArray;
@@ -387,6 +388,7 @@ export class EditproductComponent implements OnInit {
       this.sizeList = res
       setTimeout(() => {
         this.sizeList.map((map: any) => {
+          this.selectedSize=this.sizes.length
           console.log(this.sizes.includes(map.id), 'size');
           if (this.sizes.includes(map.id)) {
             const formArray = this.productForm.get('size') as FormArray;

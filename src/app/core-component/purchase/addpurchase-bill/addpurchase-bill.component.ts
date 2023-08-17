@@ -111,7 +111,9 @@ export class AddpurchaseBillComponent implements OnInit {
   get shipping_date() {
     return this.purchaseBillForm.get('shipping_date');
   }
- 
+  additional_discount(index:number){
+    return this.getCart().controls[index].get('additional_discount')
+  }
   purchase_bill(): FormGroup {
     return this.fb.group({
       barcode: (''),
@@ -121,6 +123,8 @@ export class AddpurchaseBillComponent implements OnInit {
       discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
+      discount_type:(''),
+      additional_discount:new FormControl(0,[Validators.pattern(/^[0-9]*$/)])
       // total: ('')
     })
   }

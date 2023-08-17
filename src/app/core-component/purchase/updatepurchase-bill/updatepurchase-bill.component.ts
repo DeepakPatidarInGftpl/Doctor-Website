@@ -143,6 +143,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
         discount: j.discount,
         tax: j.tax,
         landing_cost: j.landing_cost,
+        discount_type:j.discount_type,
+        additional_discount:j.additional_discount
         // total: j.total
       }))
       this.barcode[i] = j.barcode.sku;
@@ -157,6 +159,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
+  additional_discount(index:number){
+    return this.getCart().controls[index].get('additional_discount')
+  }
   purchase_bill(): FormGroup {
     return this.fb.group({
       barcode: (''),
@@ -166,6 +171,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
       discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
+      discount_type:(''),
+        additional_discount:new FormControl(0,[Validators.pattern(/^[0-9]*$/)])
       // total: ('')
     })
   }
