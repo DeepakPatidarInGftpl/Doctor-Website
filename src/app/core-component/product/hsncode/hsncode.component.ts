@@ -32,7 +32,7 @@ export class HsncodeComponent implements OnInit {
   pageSize: number = 10;
 
   itemsPerPage = 10;
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private cs:CompanyService) {
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService) {
     this.QueryService.filterToggle()
 
   }
@@ -63,7 +63,7 @@ export class HsncodeComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -71,7 +71,7 @@ export class HsncodeComponent implements OnInit {
             });
           }
         })
-       
+
       }
     });
   }
@@ -135,11 +135,11 @@ export class HsncodeComponent implements OnInit {
       }
     });
   }
-  loader=true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     this.hsncodeForm = this.fb.group({
       // title: new FormControl('', [Validators.required]),
@@ -171,7 +171,7 @@ export class HsncodeComponent implements OnInit {
     //   }
     // })
     this.coreService.getHSNCode().subscribe(res => {
-      this.loader=false;
+      this.loader = false;
       this.tableData = res
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -196,23 +196,23 @@ export class HsncodeComponent implements OnInit {
     //   });
     // }
 
-       // permission from profile api
-       this.cs.userDetails$.subscribe((userDetails) => {
-        this.userDetails = userDetails;
-        const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
-          if (res.content_type.app_label === 'product' && res.content_type.model === 'hsncode' && res.codename=='add_hsncode') {
-            this.isAdd = res.codename;
-            console.log(this.isAdd);
-          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'hsncode' && res.codename=='change_hsncode') {
-            this.isEdit = res.codename;
-            console.log(this.isEdit);
-          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'hsncode' && res.codename=='delete_hsncode') {
-            this.isDelete = res.codename;
-            console.log(this.isDelete);
-          }
-        });
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'hsncode' && res.codename == 'add_hsncode') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'hsncode' && res.codename == 'change_hsncode') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'hsncode' && res.codename == 'delete_hsncode') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
       });
+    });
   }
   //select table row
   allSelected: boolean = false;
@@ -281,7 +281,7 @@ export class HsncodeComponent implements OnInit {
         this.subcategoryList.map((map: any) => {
           console.log(this.subcategories.includes(map.id));
           console.log(map);
-
+          this.selectedSubcat = this.subcategories.length
           if (this.subcategories.includes(map.id)) {
             let formArray: any = this.hsncodeForm.get('subcategory') as FormArray;
             formArray.push(new FormControl(map.id))
@@ -335,22 +335,30 @@ export class HsncodeComponent implements OnInit {
   //   }
   // }
 
-loaders=false;
+  loaders = false;
   submit() {
     console.log(this.hsncodeForm.value);
     var formdata: any = new FormData()
 
     formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
-    formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
+    // formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
+    const subcategoryValue = this.hsncodeForm.get('subcategory')?.value;
 
+    const nonNullSubcategories = subcategoryValue.filter(value => value !== null);
+    
+    if (nonNullSubcategories.length > 0) {
+      formdata.append('subcategory', JSON.stringify(nonNullSubcategories));
+    }
+    
 
     if (this.hsncodeForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.addHSNcode(formdata).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "HSNCode Successfuly Added") {
-          this.loaders=false;
+          this.loaders = false;
+          this.selectedSubcat = 0
           this.toastr.success(this.addRes.msg)
           this.hsncodeForm.reset()
           this.addForm = true
@@ -371,15 +379,21 @@ loaders=false;
     var formdata: any = new FormData()
 
     formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
-    formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
+    // formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
+    const subcategoryValue = this.hsncodeForm.get('subcategory')?.value;
+    const nonNullSubcategories = subcategoryValue.filter(value => value !== null); 
+    if (nonNullSubcategories.length > 0) {
+      formdata.append('subcategory', JSON.stringify(nonNullSubcategories));
+    }
 
     if (this.hsncodeForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.updateHSNcode(formdata, this.id).subscribe(res => {
         console.log(res);
         this.addRes = res
         if (this.addRes.msg == "HSNCode updated successfully") {
-          this.loaders=false
+          this.loaders = false
+          this.selectedSubcat = 0
           this.toastr.success(this.addRes.msg)
           this.hsncodeForm.reset()
           this.addForm = true;
@@ -435,8 +449,10 @@ loaders=false;
   }
 
   openaddForm() {
-    this.addForm = true;
+    this.selectedSubcat = 0
     this.hsncodeForm.reset();
+    this.addForm = true;
+    
   }
 
 
@@ -457,14 +473,14 @@ loaders=false;
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.hsn_code.toString().toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.hsn_code.toString().toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
-  
+
   key = 'id'
   reverse: boolean = false;
   sort(key) {
@@ -477,8 +493,8 @@ loaders=false;
     event.stopPropagation();
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'HSN Code List';
@@ -503,7 +519,7 @@ loaders=false;
       })
     doc.save('hsncode.pdf');
 
- }
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];

@@ -88,7 +88,9 @@ export class AddpurchaseComponent implements OnInit {
       discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
-      total: ('')
+      total: (''),
+      discount_type:(''),
+      additional_discount:new FormControl(0,[Validators.pattern(/^[0-9]*$/)])
     })
   }
 
@@ -248,6 +250,10 @@ export class AddpurchaseComponent implements OnInit {
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
+  additional_discount(index:number){
+    return this.getCart().controls[index].get('additional_discount')
+  }
+  
   private _filter(value: string | number, include: boolean): any[] {
     console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();

@@ -97,7 +97,9 @@ export class AddDebitnotesComponent implements OnInit {
       discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
-      batch: new FormControl('',Validators.required)
+      batch: new FormControl('',Validators.required),
+      discount_type:(''),
+      additional_discount:new FormControl(0,[Validators.pattern(/^[0-9]*$/)])
     })
   }
   getCart(): FormArray {
@@ -280,6 +282,9 @@ variantId:any;
   }
   batch(index: number) {
     return this.getCart().controls[index].get('batch');
+  }
+  additional_discount(index:number){
+    return this.getCart().controls[index].get('additional_discount')
   }
   private _filter(value: string | number, include: boolean): any[] {
     console.log(value);

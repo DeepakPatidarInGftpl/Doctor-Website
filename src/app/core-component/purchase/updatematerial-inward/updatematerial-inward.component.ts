@@ -124,7 +124,9 @@ displaySupplierName(supplierId: number): void {
       discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
-      total: ('')
+      total: (''),
+      discount_type:(''),
+      additional_discount:new FormControl(0,[Validators.pattern(/^[0-9]*$/)])
     })
   }
   udateCart(add: any): FormArray {
@@ -139,7 +141,9 @@ displaySupplierName(supplierId: number): void {
         discount: j.discount,
         tax: j.tax,
         landing_cost: j.landing_cost,
-        total: j.total
+        total: j.total,
+        discount_type:j.discount_type,
+        additional_discount:j.additional_discount
       }))
       this.barcode[i] = j.barcode.sku;
       this.productName[i]=j.barcode.product_title;
@@ -287,7 +291,9 @@ displaySupplierName(supplierId: number): void {
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
-  
+  additional_discount(index:number){
+    return this.getCart().controls[index].get('additional_discount')
+  }
   get material_inward_date() {
     return this.materialForm.get('material_inward_date') ;
   }

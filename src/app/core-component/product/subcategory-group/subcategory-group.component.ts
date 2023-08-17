@@ -217,8 +217,10 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
         // this.selectedSubCats = this.subcatEdit.map(res => res.id,
         //   console.log(res));
         this.selectedSubCats = res.subcategories.map(res => res.id,
-          console.log(res));
+          console.log(res) , );
+          
         this.selectedFeature = this.featureCategoryEdit.map(res => res.id)
+        // this.selectedFeatureGrp=this.selectedFeature.length
       }
 
       this.form = new FormGroup({
@@ -253,7 +255,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
      this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename=='add_subcategorygroup') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
@@ -297,6 +299,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
       this.selectedFeature.push(fGroup.id);
       this.selectedFeatureGrp++;
     } else {
+      this.selectedFeatureGrp=this.selectedFeature.length
       this.selectedFeature = this.selectedFeature.filter(id => id !== fGroup.id,
         this.selectedFeatureGrp--);
     }
@@ -356,6 +359,8 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
           formdata.append('image', imageFile);
           this.coreServ.editSubCategoryGroup(formdata, this.editMode.id).subscribe((res: any) => {
             if (res.msg == 'SubCategory Group updated successfully') {
+              this.selectedSubCat=0
+              this.selectedFeatureGrp=0
               this.loaders = false;
               this.editMode = false;
               this.url='';
@@ -374,6 +379,8 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
         }else{
           this.coreServ.editSubCategoryGroup(formdata, this.editMode.id).subscribe((res: any) => {
             if (res.msg == 'SubCategory Group updated successfully') {
+              this.selectedSubCat=0
+              this.selectedFeatureGrp=0
               this.loaders = false;
               this.url='';
               this.updateData='';
@@ -398,6 +405,8 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
         formdata.append("feature_group", `[${this.selectedFeature}]`);
         this.coreServ.postCategoriesGroup(formdata).subscribe((res: any) => {
           if (res.msg == 'Data Created') {
+            this.selectedSubCat=0
+            this.selectedFeatureGrp=0
             this.url='';
             this.updateData='';
             this.loaders = false;
@@ -441,6 +450,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
 
   }
 
+
   ngOnDestroy() {
     this.coreServ.editThisData(null)
   }
@@ -474,7 +484,6 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   }
 
   openaddForm() {
-    this.updateData='';
     this.url=''
     this.addForm = true;
     this.form.reset();
@@ -482,8 +491,9 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   addForm = true
   editForm() {
     this.url='';
-    this.updateData='';
     this.addForm = false
+    this.selectedSubCat=0
+    this.selectedFeatureGrp=0
   }
   // search() {
   //   if (this.titlee == "") {

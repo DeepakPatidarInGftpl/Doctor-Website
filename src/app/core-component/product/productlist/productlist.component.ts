@@ -195,7 +195,7 @@ export class ProductlistComponent implements OnInit {
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename == 'add_product') {
           this.isAdd = res.codename;
           console.log(this.isAdd);

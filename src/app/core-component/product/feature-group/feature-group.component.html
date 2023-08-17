@@ -206,22 +206,23 @@
                                 <div class="form-group">
                                     <label>Feature*</label>
                                     <div class="dropdown">
-                                        <button type="button" class="dropdown-toggle button" type="button"
-                                            data-bs-toggle="dropdown" aria-expanded="false">Select Feature</button>
-                                        <ul class="dropdown-menu" style="width: 100%;">
-                                            <li><a class="dropdown-item"
-                                                    *ngFor="let feature of featureList; let i=index">
-                                                    <input type="checkbox" [value]="feature.id"
-                                                        (change)="onCheckChange($event)" formArrayName="feature"
-                                                        style="margin-right: 5px;" [ngClass]="{
-                                                        'is-invalid': f['feature'].touched && f['feature'].invalid
-                                                      }" [id]="'checkbox-' + i">
-                                                    <label [for]="'checkbox-' + i" style="margin-bottom: 0;"
-                                                        (click)="onLabelClick($event)">{{feature.title}}</label>
-
-                                                </a></li>
+                                        <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                          Select Feature
+                                        </button>
+                                        <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                          <li *ngFor="let feature of featureList; let i = index">
+                                            <a class="dropdown-item">
+                                              <input type="checkbox" [value]="feature.id" [checked]="features.includes(feature.id)" (change)="onCheckChange($event)"
+                                                formArrayName="feature" style="margin-right: 5px;" [ngClass]="{
+                                                'is-invalid': f['feature'].touched && f['feature'].invalid
+                                              }" [id]="'checkbox-' + i">
+                                              <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{ feature.title }}</label>
+                                            </a>
+                                          </li>
                                         </ul>
-                                    </div>
+                                      </div>
+                                      
+                                    <p *ngIf="selectedFeature>0">{{selectedFeature + ' Feature Selected'}}</p>
                                     <span class="text-danger"
                                         *ngIf="feature && feature.invalid && feature.touched">Select
                                         feature
@@ -260,23 +261,23 @@
                                 <div class="form-group">
                                     <label>Feature*</label>
                                     <div class="dropdown">
-                                        <button type="button" class="dropdown-toggle button" type="button"
-                                            data-bs-toggle="dropdown" aria-expanded="false">Select Feature</button>
-                                        <ul class="dropdown-menu" style="width: 100%;">
-                                            <li><a class="dropdown-item"
-                                                    *ngFor="let feature of featureList; let i=index">
-                                                    <input type="checkbox" [value]="feature.id"
-                                                        [checked]="features.includes(feature.id)"
-                                                        (change)="onCheckChange($event)" formArrayName="feature"
-                                                        style="margin-right: 5px;" [ngClass]="{
-                                                        'is-invalid': f['feature'].touched && f['feature'].invalid
-                                                      }" [id]="'checkbox-' + i">
-                                                    <label [for]="'checkbox-' + i" style="margin-bottom: 0;"
-                                                        (click)="onLabelClick($event)">{{feature.title}}</label>
-
-                                                </a></li>
+                                        <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                          Select Feature
+                                        </button>
+                                        <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                          <li *ngFor="let feature of featureList; let i = index">
+                                            <a class="dropdown-item">
+                                              <input type="checkbox" [value]="feature.id" [checked]="features.includes(feature.id)" (change)="onCheckChange($event)"
+                                                formArrayName="feature" style="margin-right: 5px;" [ngClass]="{
+                                                'is-invalid': f['feature'].touched && f['feature'].invalid
+                                              }" [id]="'checkbox-' + i">
+                                              <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{ feature.title }}</label>
+                                            </a>
+                                          </li>
                                         </ul>
-                                    </div>
+                                      </div>
+                                      
+                                    <p *ngIf="selectedFeature>0">{{selectedFeature + ' Feature Selected'}}</p>
                                     <span class="text-danger"
                                         *ngIf="feature && feature.invalid && feature.touched">Select
                                         feature

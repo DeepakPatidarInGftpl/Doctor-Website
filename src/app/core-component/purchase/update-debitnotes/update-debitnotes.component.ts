@@ -127,6 +127,9 @@ export class UpdateDebitnotesComponent implements OnInit {
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
+  additional_discount(index:number){
+    return this.getCart().controls[index].get('additional_discount')
+  }
   batch(index: number) {
     return this.getCart().controls[index].get('batch');
   }
@@ -143,7 +146,9 @@ export class UpdateDebitnotesComponent implements OnInit {
         discount: j.discount,
         tax: j.tax,
         landing_cost: j.landing_cost,
-        batch:j.batch.id
+        batch:j.batch.id,
+        discount_type:j.discount_type,
+        additional_discount:j.additional_discount
       }))
       this.barcode[i] = j.barcode.sku;
       this.productName[i]=j.barcode.product_title;
@@ -163,7 +168,9 @@ export class UpdateDebitnotesComponent implements OnInit {
       discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       tax: (''),
       landing_cost: (''),
-      batch: new FormControl('',[Validators.required])
+      batch: new FormControl('',[Validators.required]),
+      discount_type:(''),
+      additional_discount:new FormControl(0,[Validators.pattern(/^[0-9]*$/)])
     })
   }
   getCart(): FormArray {
