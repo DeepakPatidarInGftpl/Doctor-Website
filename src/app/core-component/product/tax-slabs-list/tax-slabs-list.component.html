@@ -79,12 +79,12 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td>
-                        {{products.subcategory_group.title}}
+                        {{products?.subcategory_group?.title}}
                         </td>
                         <!-- <td><tr *ngFor="let data of products.subcategory">
                             <td>{{data.title+','}}</td>
                         </tr></td> -->
-                        <td>{{products?.subcategory[0].title}}</td>
+                        <td>{{products?.subcategory[0]?.title}}</td>
                         <!-- <td>
                             <tr *ngFor="let amount of products.amount_tax_slabs">
                             <td>

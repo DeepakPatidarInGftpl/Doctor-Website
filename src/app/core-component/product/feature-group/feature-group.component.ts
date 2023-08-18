@@ -24,11 +24,11 @@ export class FeatureGroupComponent implements OnInit {
     return this.featureForm.controls;
   }
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
- 
+
   itemsPerPage = 10;
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService,private cs:CompanyService) {
+  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService) {
     this.QueryService.filterToggle();
   }
 
@@ -54,13 +54,13 @@ export class FeatureGroupComponent implements OnInit {
             this.tableData
             this.ngOnInit();
             this.tableData.splice(index, 1);
-      
+
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
               text: this.delRes.msg,
             });
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -73,75 +73,75 @@ export class FeatureGroupComponent implements OnInit {
     });
   }
 
-  select=false
+  select = false
   // active deactive
   deActivate(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Deactivate this feature group!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Deactivate it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.featureGroupIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.msg == "FeatureGroup Is active Updated Successfully") {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Deactivate!',
-         text: 'Feature Group Is Deactivate Successfully.',
-       });
-     }
-   });
- }
- Active(index: any, id: any) {
-   Swal.fire({
-     title: 'Are you sure?',
-     text: "Do you want to Active this feature group!",
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Yes, Active it!',
-     buttonsStyling: true,
-     customClass: {
-       confirmButton: 'btn btn-primary',
-       cancelButton: 'btn btn-danger ml-1',
-     },
-   }).then((t) => {
-     if (t.isConfirmed) {
-       this.coreService.featureGroupIsActive(id,'').subscribe(res => {
-         this.delRes = res
-         if (this.delRes.msg == "FeatureGroup Is active Updated Successfully") {
-           this.ngOnInit()
-         }
-       })
-       Swal.fire({
-         icon: 'success',
-         title: 'Active!',
-         text: 'Feature Group Is Active Successfully.',
-       });
-     }
-   });
- }
- loader=true;
- isAdd:any;
- isEdit:any;
- isDelete:any;
- userDetails:any;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Deactivate this feature group!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Deactivate it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.featureGroupIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "FeatureGroup Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Deactivate!',
+          text: 'Feature Group Is Deactivate Successfully.',
+        });
+      }
+    });
+  }
+  Active(index: any, id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to Active this feature group!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Active it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.featureGroupIsActive(id, '').subscribe(res => {
+          this.delRes = res
+          if (this.delRes.msg == "FeatureGroup Is active Updated Successfully") {
+            this.ngOnInit()
+          }
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Active!',
+          text: 'Feature Group Is Active Successfully.',
+        });
+      }
+    });
+  }
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any;
   ngOnInit(): void {
     this.featureForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      feature:new FormArray([], [Validators.required]),
+      feature: new FormArray([], [Validators.required]),
     })
 
     // this.dtOptions = {
@@ -166,9 +166,9 @@ export class FeatureGroupComponent implements OnInit {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("fuature_groupList")!))
     //   }
     // })
-    this.coreService.getFuature_groupD().subscribe(res=>{
-      this.tableData=res;
-      this.loader=false;
+    this.coreService.getFuature_groupD().subscribe(res => {
+      this.tableData = res;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
     this.getFeature();
@@ -191,32 +191,32 @@ export class FeatureGroupComponent implements OnInit {
     //   });
     // }
 
-      // permission from profile api
-      this.cs.userDetails$.subscribe((userDetails) => {
-        this.userDetails = userDetails;
-        const permission = this.userDetails?.permission;
-        permission?.map((res: any) => {
-          if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='add_featuregroup') {
-            this.isAdd = res.codename;
-            console.log(this.isAdd);
-          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='change_featuregroup') {
-            this.isEdit = res.codename;
-            console.log(this.isEdit);
-          }else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='delete_featuregroup') {
-            this.isDelete = res.codename;
-            console.log(this.isDelete);
-          }
-        });
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'add_featuregroup') {
+          this.isAdd = res.codename;
+          console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'change_featuregroup') {
+          this.isEdit = res.codename;
+          console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'delete_featuregroup') {
+          this.isDelete = res.codename;
+          console.log(this.isDelete);
+        }
       });
+    });
   }
 
-   //select table row
- allSelected: boolean = false;
- selectedRows:boolean[]
- selectAlll() {
-   this.selectedRows.fill(this.allSelected);
- }
- 
+  //select table row
+  allSelected: boolean = false;
+  selectedRows: boolean[]
+  selectAlll() {
+    this.selectedRows.fill(this.allSelected);
+  }
+
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -238,33 +238,42 @@ export class FeatureGroupComponent implements OnInit {
     })
   }
 
-  featureList:any;
-
+  featureList: any[] = []; 
+  filteredFeatureList: any[] = [];
+  searchTerm: string = '';
   features: any = [];
 
-  getFeature(){
-    this.coreService.getfeature().subscribe(res=>{
-      this.featureList=res;
+  getFeature() {
+    this.coreService.getfeature().subscribe((res: any) => {
+      this.featureList = res;
       console.log(this.featureList);
-      
-      if(!this.addForm){
- 
-        this.featureList.map((map:any)=>{
+      this.filteredFeatureList = [...this.featureList];
+      if (!this.addForm) {
+        this.featureList.map((map: any) => {
           console.log(this.features);
-          
           console.log(this.features.includes(map.id));
-          this.selectedFeature=this.features.length
-          if(this.features.includes(map.id)){
-            let formArray:any=this.featureForm.get('feature') as FormArray;
+          this.selectedFeature = this.features.length
+          if (this.features.includes(map.id)) {
+            let formArray: any = this.featureForm.get('feature') as FormArray;
             formArray.push(new FormControl(map.id))
           }
         })
       }
     })
   }
-
   
+  filterFeatures() {
+    if (this.searchTerm.trim() === '') {
+      this.filteredFeatureList = [...this.featureList];
+    } else {
+      this.filteredFeatureList = this.featureList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+  }
+
   check: any
+  selectedFeatureIds: any[] = []
   selectedFeature = 0;
   onCheckChange(event: any) {
     const formArray: any = this.featureForm.get('feature') as FormArray;
@@ -274,6 +283,7 @@ export class FeatureGroupComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedFeature++;
+      this.selectedFeatureIds=formArray.value
     }
     else {
       // find the unselected element
@@ -289,7 +299,7 @@ export class FeatureGroupComponent implements OnInit {
       });
     }
   }
-  
+
   addRes: any
   // submit() {
   //   console.log(this.featureForm.value);
@@ -327,71 +337,73 @@ export class FeatureGroupComponent implements OnInit {
   //   }
   // }
 
-  loaders=false;
- submit() {
-  console.log(this.featureForm.value);
-  console.log(this.id);
+  loaders = false;
+  submit() {
+    console.log(this.featureForm.value);
+    console.log(this.id);
 
-  var formData: any = new FormData();
-  formData.append("title",this.featureForm.get('title')?.value);
-  formData.append('feature', JSON.stringify(this.featureForm.get('feature')?.value));
+    var formData: any = new FormData();
+    formData.append("title", this.featureForm.get('title')?.value);
+    formData.append('feature', JSON.stringify(this.featureForm.get('feature')?.value));
 
-  if (this.featureForm.valid) {
-  this.loaders=true;
-    this.coreService.addFuature_group(formData).subscribe(res => {
-      console.log(res);
-      this.addRes = res
-      if (this.addRes.msg == "FeatureGroup Successfuly Added") {
-        this.selectedFeature=0
-        this.loaders=false;
-        this.toastr.success(this.addRes.msg)
-        this.featureForm.reset()
-        // window.location.reload();
-        this.ngOnInit()
-      }
-    }, err => {
-      console.log(err.error.gst);
-    })
-  } else {
-    this.featureForm.markAllAsTouched()
-    console.log('forms invalid');
+    if (this.featureForm.valid) {
+      this.loaders = true;
+      this.coreService.addFuature_group(formData).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "FeatureGroup Successfuly Added") {
+          this.selectedFeature = 0
+          this.loaders = false;
+          this.toastr.success(this.addRes.msg)
+          this.featureForm.reset()
+          // window.location.reload();
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
+    } else {
+      this.featureForm.markAllAsTouched()
+      console.log('forms invalid');
+    }
   }
-}
 
-update(){
-  var formData: any = new FormData();
-  formData.append("title",this.featureForm.get('title')?.value);
-  formData.append('feature', JSON.stringify(this.featureForm.get('feature')?.value));
+  update() {
+    console.log(this.featureForm.value);
+    
+    var formData: any = new FormData();
+    formData.append("title", this.featureForm.get('title')?.value);
+    formData.append('feature', JSON.stringify(this.featureForm.get('feature')?.value));
 
-  if (this.featureForm.valid) {
-    this.loaders=true;
-    this.coreService.updateFuature_group(formData, this.id).subscribe(res => {
-      console.log(res);
-      this.addRes = res
-      if (this.addRes.msg == "FeatureGroup updated successfully") {
-        this.loaders=false;
-        this.selectedFeature=0
-        this.toastr.success(this.addRes.msg)
-        this.featureForm.reset()
-        this.addForm=true
-        // window.location.reload()
-        this.ngOnInit()
-      }
-    }, err => {
-      console.log(err.error.gst);
-    }) 
-  } else {
-    this.featureForm.markAllAsTouched()
-    console.log('forms invalid');
+    if (this.featureForm.valid) {
+      this.loaders = true;
+      this.coreService.updateFuature_group(formData, this.id).subscribe(res => {
+        console.log(res);
+        this.addRes = res
+        if (this.addRes.msg == "FeatureGroup updated successfully") {
+          this.loaders = false;
+          this.selectedFeature = 0
+          this.toastr.success(this.addRes.msg)
+          this.featureForm.reset()
+          this.addForm = true
+          // window.location.reload()
+          this.ngOnInit()
+        }
+      }, err => {
+        console.log(err.error.gst);
+      })
+    } else {
+      this.featureForm.markAllAsTouched()
+      console.log('forms invalid');
+    }
   }
-}
   get title() {
     return this.featureForm.get('title')
   }
- get feature(){
-  return this.featureForm.get('feature');
- }
- 
+  get feature() {
+    return this.featureForm.get('feature');
+  }
+
   addForm = true
   id: any
   editFormdata: any
@@ -401,7 +413,7 @@ update(){
       console.log(res);
       if (id == res.id) {
         this.getFeature()
-        this.addForm=false
+        this.addForm = false
         this.featureForm.patchValue(res);
         this.editFormdata = res
         this.features = res?.feature.map((res: any) => res.id);
@@ -409,12 +421,12 @@ update(){
     })
   }
   openaddForm() {
-    this.selectedFeature=0
+    this.selectedFeature = 0
     this.addForm = true;
     this.featureForm.reset();
   }
 
-  
+
   // search() {
   //   if (this.titlee == "") {
   //     this.ngOnInit();
@@ -432,10 +444,10 @@ update(){
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -446,14 +458,14 @@ update(){
     this.key = key;
     this.reverse = !this.reverse
   }
-     //dropdown auto close stop
-     onLabelClick(event: Event) {
-      // Prevent the event from propagating to the dropdown menu
-      event.stopPropagation();
-    }
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
+  }
 
-     // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Feature Group List';
@@ -478,7 +490,7 @@ update(){
       })
     doc.save('featuregroup.pdf');
 
- }
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];

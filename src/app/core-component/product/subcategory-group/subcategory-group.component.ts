@@ -142,7 +142,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
 
   categories;
 
-  featureGroup;
+  featureGroup:any[]=[]
 
   subCategory
 
@@ -191,10 +191,8 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
       this.categories = res
     })
 
-    this.coreServ.getFeatureGroup().subscribe(res => {
-      this.featureGroup = res
-    })
-
+   
+this.getFeatureGroup()
     this.coreServ.subCategory().subscribe((res: any) => {
       this.subCategory = res
 
@@ -311,11 +309,49 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
     console.log(this.form.controls['category'].value);
   }
 
-  subcatbyCategory: any;
+  
+  filteredFeatureGroupData: any[];
+  searchFeatureGroup: string = '';
+  getFeatureGroup(){
+    this.coreServ.getFeatureGroup().subscribe((res:any) => {
+      this.featureGroup = res
+      this.filteredFeatureGroupData = this.featureGroup.slice();
+      console.log(this.filteredFeatureGroupData);
+      
+      this.filterFeatureGroupData();
+    })
+  }
+  filterFeatureGroupData() {
+    let filteredData = this.featureGroup.slice();
+    if (this.searchFeatureGroup) {
+      const searchTerm = this.searchFeatureGroup.toLowerCase();
+      filteredData = filteredData.filter((item) => {
+        const aliasLower = item?.title.toLowerCase();
+        return aliasLower.includes(searchTerm);
+      });
+    }
+    this.filteredFeatureGroupData = filteredData;
+  }
+  subcatbyCategory: any[] = []
+  filteredSubcategoryData: any[];
+  searchSubcategory: string = '';
   getSubcategoryByCategory(val: any) {
     this.coreServ.getSubcategoryByCategory(val).subscribe(res => {
       this.subcatbyCategory = res;
+      this.filteredSubcategoryData = this.subcatbyCategory.slice();
+      this.filterSubcategoryData();
     })
+  }
+  filterSubcategoryData() {
+    let filteredData = this.subcatbyCategory.slice();
+    if (this.searchSubcategory) {
+      const searchTerm = this.searchSubcategory.toLowerCase();
+      filteredData = filteredData.filter((item) => {
+        const aliasLower = item?.title.toLowerCase();
+        return aliasLower.includes(searchTerm);
+      });
+    }
+    this.filteredSubcategoryData = filteredData;
   }
 
   url: any;

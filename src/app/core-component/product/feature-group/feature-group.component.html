@@ -210,9 +210,11 @@
                                           Select Feature
                                         </button>
                                         <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                          <li *ngFor="let feature of featureList; let i = index">
+                                            <li>    <input type="text" placeholder="search feature" class="form-control" [(ngModel)]="searchTerm" [(ngModel)]="selectedTitle" (ngModelChange)="filterFeatures()" [ngModelOptions]="{standalone: true}">
+                                            </li>
+                                          <li *ngFor="let feature of filteredFeatureList; let i = index">
                                             <a class="dropdown-item">
-                                              <input type="checkbox" [value]="feature.id" [checked]="features.includes(feature.id)" (change)="onCheckChange($event)"
+                                              <input type="checkbox" [value]="feature.id" [checked]="selectedFeatureIds.includes(feature.id)" (change)="onCheckChange($event)"
                                                 formArrayName="feature" style="margin-right: 5px;" [ngClass]="{
                                                 'is-invalid': f['feature'].touched && f['feature'].invalid
                                               }" [id]="'checkbox-' + i">
@@ -265,9 +267,11 @@
                                           Select Feature
                                         </button>
                                         <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                          <li *ngFor="let feature of featureList; let i = index">
+                                            <li>    <input type="text" placeholder="search feature" class="form-control" [(ngModel)]="searchTerm" [(ngModel)]="selectedTitle" (ngModelChange)="filterFeatures()" [ngModelOptions]="{standalone: true}">
+                                            </li>
+                                          <li *ngFor="let feature of filteredFeatureList; let i = index">
                                             <a class="dropdown-item">
-                                              <input type="checkbox" [value]="feature.id" [checked]="features.includes(feature.id)" (change)="onCheckChange($event)"
+                                              <input type="checkbox" [value]="feature.id" [checked]="features.includes(feature.id) || selectedFeatureIds.includes(feature.id)" (change)="onCheckChange($event)"
                                                 formArrayName="feature" style="margin-right: 5px;" [ngClass]="{
                                                 'is-invalid': f['feature'].touched && f['feature'].invalid
                                               }" [id]="'checkbox-' + i">
