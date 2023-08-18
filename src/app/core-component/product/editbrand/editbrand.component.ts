@@ -87,7 +87,7 @@ export class EditbrandComponent implements OnInit {
         this.getCategory();
       }
     })
-    
+
   }
 
   ///
@@ -123,25 +123,38 @@ export class EditbrandComponent implements OnInit {
   //
 
 
-  categoryList: any
+
+  categoryList: any[] = [];
+  filteredCategoryList: any[] = [];
+  searchCategory: string = '';
   getCategory() {
-    this.coreService.getCategory().subscribe(res => {
+    this.coreService.getCategory().subscribe((res: any) => {
       this.categoryList = res;
+      this.filteredCategoryList = [...this.categoryList];
       this.categoryList.map((map: any) => {
         console.log(this.selectCat.length);
-        this.selectedCat=this.selectCat.length // count how many category is already selected
+        this.selectedCat = this.selectCat.length // count how many category is already selected
         console.log(this.selectCat.includes(map?.id), 'category');
         if (this.selectCat.includes(map.id)) {
           const formArray = this.brandForm.get('category') as FormArray;
-          
+
           formArray.push(new FormControl(map.id));
         }
       })
     })
   }
-
+  filterCategory() {
+    if (this.searchCategory.trim() === '') {
+      this.filteredCategoryList = [...this.categoryList];
+    } else {
+      this.filteredCategoryList = this.categoryList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  }
   //check Category
   selectedCat = 0
+  selectedCategoryIds: any[] = []
   onCheckCategory(event: any) {
     const formArray: any = this.brandForm.get('category') as FormArray;
     /* Selected */
@@ -151,6 +164,7 @@ export class EditbrandComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedCat++;
+      this.selectedCategoryIds = formArray.value
       this.getSubcatGroupByCategory(formArray.value);
     }
     /* unselected */
@@ -169,16 +183,19 @@ export class EditbrandComponent implements OnInit {
       });
     }
   }
-
+  subcatGroupList: any[] = [];
+  filteredSubCategoryGroupList: any[] = [];
+  searchSubCategoryGroup: string = ''
   getSubcatGroupByCategory(val: number[]) {
     console.log(val);
     const idString = JSON.stringify(val);
     this.coreService.getSubcategoryGroupByCategoryid(idString).subscribe(res => {
       console.log(res);
       this.subcatGroupList = res;
+      this.filteredSubCategoryGroupList = [...this.subcatGroupList];
       // update then display
       this.subcatGroupList.map((map: any) => {
-        this.selectedSubCatGrp=this.subcatGroup.length
+        this.selectedSubCatGrp = this.subcatGroup.length
         console.log(this.selectedSubCatGrp);
         if (this.subcatGroup.includes(map.id)) {
           console.log(map.id);
@@ -190,7 +207,15 @@ export class EditbrandComponent implements OnInit {
 
     })
   }
-
+  filterSubCategoryGroup() {
+    if (this.searchSubCategoryGroup.trim() === '') {
+      this.filteredSubCategoryGroupList = [...this.subcatGroupList];
+    } else {
+      this.filteredSubCategoryGroupList = this.subcatGroupList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchSubCategoryGroup.toLowerCase())
+      );
+    }
+  }
   url: any;
   onSelect(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
@@ -208,15 +233,15 @@ export class EditbrandComponent implements OnInit {
     this.brandForm.get('image')?.updateValueAndValidity()
   }
 
-  subcatGroupList: any
+  // subcatGroupList: any
   getSubcatGroup() {
-    this.coreService.getSubcategoryGroup().subscribe(res => {
+    this.coreService.getSubcategoryGroup().subscribe((res: any) => {
       this.subcatGroupList = res;
       // update then display
       this.subcatGroupList.map((map: any) => {
         // this.selectedSubCatGrp=this.subcatGroup.length;
         console.log(this.subcatGroup);
-        
+
         console.log(this.subcatGroup.includes(map.id), 'subcategory_group');
         if (this.subcatGroup.includes(map.id)) {
           console.log(map.id);
@@ -227,7 +252,7 @@ export class EditbrandComponent implements OnInit {
       // // end  
     })
   }
-
+  selectedSubCategoryGroupIds: any[] = [];
   onCheckSize(event: any) {
     const formArray: any = this.brandForm.get('subcategory_group') as FormArray;
     /* Selected */
@@ -238,6 +263,8 @@ export class EditbrandComponent implements OnInit {
       this.check = formArray
       this.selectedSubCatGrp++;
       this.getSubcategoryBySubcatGroup(formArray.value);
+      this.selectedSubCategoryGroupIds = formArray.value
+      console.log(this.selectedSubCategoryGroupIds);
     }
     /* unselected */
     else {
@@ -256,16 +283,18 @@ export class EditbrandComponent implements OnInit {
     }
   }
 
-  subcategories: any = [];
-  subcatbySubcatGroup: any;
+  subcatbySubcatGroup: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchSubCategory: string = '';
   getSubcategoryBySubcatGroup(val: any) {
     const idString = JSON.stringify(val);
     this.coreService.getSubcategoryBySubcatGroupid(idString).subscribe(res => {
       console.log(res);
-      this.subcatbySubcatGroup = res;
+      this.subcatbySubcatGroup =  this.filterDuplicates(res);
+      this.filteredSubCategoryList = [...this.subcatbySubcatGroup];
       this.subcatbySubcatGroup.map((map: any) => {
         console.log(this.selectSubcat);
-        this.selectedSubcat=this.selectSubcat.length
+        this.selectedSubcat = this.selectSubcat.length
         console.log(this.selectSubcat.includes(map.id), 'subcategory');
         if (this.selectSubcat.includes(map.id)) {
           const formArray = this.brandForm.get('subcategory') as FormArray;
@@ -274,9 +303,32 @@ export class EditbrandComponent implements OnInit {
       })
     })
   }
+  //filter duplicate data
+  filterDuplicates(data: any[]): any[] {
+    const uniqueIds = {};
+    const filteredData = [];
 
+    for (const item of data) {
+      if (!uniqueIds[item.id]) {
+        uniqueIds[item.id] = true;
+        filteredData.push(item);
+      }
+    }
+
+    return filteredData;
+  }
+  filterSubCategory() {
+    if (this.searchSubCategory.trim() === '') {
+      this.filteredSubCategoryList = [...this.subcatbySubcatGroup];
+    } else {
+      this.filteredSubCategoryList = this.subcatbySubcatGroup.filter(subcat =>
+        subcat.title.toLowerCase().includes(this.searchSubCategory.toLowerCase())
+      );
+    }
+  }
   check: any
   selectedSubcat = 0;
+  selectedSubCategoryIds: any[] = []
   onCheckChange(event: any) {
     const formArray: any = this.brandForm.get('subcategory') as FormArray;
     /* Selected */
@@ -286,6 +338,7 @@ export class EditbrandComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedSubcat++;
+      this.selectedSubCategoryIds = formArray.value
     }
     /* unselected */
     else {
@@ -311,14 +364,20 @@ export class EditbrandComponent implements OnInit {
     console.log(this.brandForm.value);
 
     var formData: any = new FormData();
+    const uniqueCategoryArray = Array.from(new Set(this.brandForm.get('category')?.value));
+    const uniqueSubcategoryGroupArray = Array.from(new Set(this.brandForm.get('subcategory_group')?.value));
+    const uniqueSubcategoryArray = Array.from(new Set(this.brandForm.get('subcategory')?.value));
     formData.append("title", this.brandForm.get('title')?.value);
     // formData.append("image", this.brandForm.get('image')?.value);
     formData.append("code", this.brandForm.get('code')?.value);
     formData.append("discount", this.brandForm.get('discount')?.value);
-    formData.append("category", JSON.stringify(this.brandForm.get('category')?.value));
-    formData.append('subcategory_group', JSON.stringify(this.brandForm.get('subcategory_group')?.value));
-    formData.append('subcategory', JSON.stringify(this.brandForm.get('subcategory')?.value));
+    // formData.append("category", JSON.stringify(this.brandForm.get('category')?.value));
+    // formData.append('subcategory_group', JSON.stringify(this.brandForm.get('subcategory_group')?.value));
+    // formData.append('subcategory', JSON.stringify(this.brandForm.get('subcategory')?.value));
 
+    formData.append("category", JSON.stringify(uniqueCategoryArray));
+    formData.append('subcategory_group', JSON.stringify(uniqueSubcategoryGroupArray));
+    formData.append('subcategory', JSON.stringify(uniqueSubcategoryArray));
     if (this.brandForm.valid) {
       this.loaders = true;
 

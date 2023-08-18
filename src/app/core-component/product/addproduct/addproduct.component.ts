@@ -194,19 +194,51 @@ export class AddproductComponent implements OnInit {
       this.subcatGroupList = res
     })
   }
-  colorList: any
+  colorList: any[] = []
+  filteredColorData: any[];
+  searchColor: string = '';
   getColor() {
     this.coreService.getColor().subscribe(res => {
       this.colorList = res
+      this.filteredColorData = this.colorList.slice(); // Initialize filteredData with the original data
+      this.filterColorData();
     })
   }
-  sizeList: any
+  filterColorData() {
+    let filteredData = this.colorList.slice();
+    if (this.searchColor) {
+      const searchTerm = this.searchColor.toLowerCase();
+      filteredData = filteredData.filter((item) => {
+        const aliasLower = item?.title.toLowerCase();
+        return aliasLower.includes(searchTerm);
+      });
+    }
+    this.filteredColorData = filteredData;
+  }
+
+  sizeList: any[] = []
+  filteredSizeData: any[];
+  searchSize: string = '';
   getSize() {
     this.coreService.getSize().subscribe(res => {
       console.log(res);
-      this.sizeList = res
+      this.sizeList = res;
+      this.filteredSizeData = this.sizeList.slice();
+      this.filterSizeData();
     })
   }
+  filterSizeData() {
+    let filteredData = this.sizeList.slice();
+    if (this.searchSize) {
+      const searchTerm = this.searchSize.toLowerCase();
+      filteredData = filteredData.filter((item) => {
+        const aliasLower = item?.title.toLowerCase();
+        return aliasLower.includes(searchTerm);
+      });
+    }
+    this.filteredSizeData = filteredData;
+  }
+
   varantList: any
   getVariant() {
     this.coreService.getVariantd().subscribe(res => {
@@ -315,6 +347,7 @@ export class AddproductComponent implements OnInit {
   }
   check: any
   selectedColor = 0;
+  selectedColorId: any[] = [];
   onCheckColor(event: any) {
     const formArray: any = this.productForm.get('color') as FormArray;
     /* Selected */
@@ -326,6 +359,7 @@ export class AddproductComponent implements OnInit {
       console.log(this.check);
 
       this.selectedColor++;
+      this.selectedColorId = formArray.value
     }
     /* unselected */
     else {
@@ -346,6 +380,7 @@ export class AddproductComponent implements OnInit {
 
   selectedSize = 0;
   selectedTaxes = {};
+  selectedSizeId: any[] = []
   onCheckSize(event: any) {
     const formArray: any = this.productForm.get('size') as FormArray;
     /* Selected */
@@ -356,7 +391,7 @@ export class AddproductComponent implements OnInit {
       this.check = formArray
       this.selectedSize++;
       console.log(this.selectedSize);
-
+      this.selectedSizeId = formArray.value
     }
     /* unselected */
     else {

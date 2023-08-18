@@ -245,6 +245,7 @@ export class HsncodeComponent implements OnInit {
   // form submit
   check: any
   selectedSubcat = 0;
+  selectedSubcategoryIds: any[] = []
   onCheckChange(event: any) {
     const formArray: any = this.hsncodeForm.get('subcategory') as FormArray;
 
@@ -255,6 +256,8 @@ export class HsncodeComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedSubcat++;
+      this.selectedSubcategoryIds = formArray.value
+
     }
     /* unselected */
     else {
@@ -272,11 +275,14 @@ export class HsncodeComponent implements OnInit {
     }
   }
 
-  subcategoryList: any
+  subcategoryList: any[] = []
+  filteredFeatureList: any[] = [];
+  searchTerm: string = '';
   getSubcategory() {
     this.coreService.getSubcategory().subscribe(res => {
       console.log(res);
       this.subcategoryList = res
+      this.filteredFeatureList = [...this.subcategoryList];
       if (!this.addForm) {
         this.subcategoryList.map((map: any) => {
           console.log(this.subcategories.includes(map.id));
@@ -291,6 +297,15 @@ export class HsncodeComponent implements OnInit {
     })
   }
 
+  filterSubcategory() {
+    if (this.searchTerm.trim() === '') {
+      this.filteredFeatureList = [...this.subcategoryList];
+    } else {
+      this.filteredFeatureList = this.subcategoryList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+  }
 
   addRes: any
   data: any
@@ -345,11 +360,11 @@ export class HsncodeComponent implements OnInit {
     const subcategoryValue = this.hsncodeForm.get('subcategory')?.value;
 
     const nonNullSubcategories = subcategoryValue.filter(value => value !== null);
-    
+
     if (nonNullSubcategories.length > 0) {
       formdata.append('subcategory', JSON.stringify(nonNullSubcategories));
     }
-    
+
 
     if (this.hsncodeForm.valid) {
       this.loaders = true;
@@ -380,10 +395,21 @@ export class HsncodeComponent implements OnInit {
 
     formdata.append('hsn_code', this.hsncodeForm.get('hsn_code')?.value);
     // formdata.append('subcategory', JSON.stringify(this.hsncodeForm.get('subcategory')?.value));
+    //remove null 
+    // const subcategoryValue = this.hsncodeForm.get('subcategory')?.value;
+    // const nonNullSubcategories = subcategoryValue.filter(value => value !== null); 
+    // if (nonNullSubcategories.length > 0) {
+    //   formdata.append('subcategory', JSON.stringify(nonNullSubcategories));
+    // }
+    //remove null or duplicate data
     const subcategoryValue = this.hsncodeForm.get('subcategory')?.value;
-    const nonNullSubcategories = subcategoryValue.filter(value => value !== null); 
-    if (nonNullSubcategories.length > 0) {
-      formdata.append('subcategory', JSON.stringify(nonNullSubcategories));
+    const nonNullSubcategories = subcategoryValue.filter(value => value !== null);
+
+    // Using Set to remove duplicates (excluding null values)
+    const uniqueSubcategories = Array.from(new Set(nonNullSubcategories));
+
+    if (uniqueSubcategories.length > 0) {
+      formdata.append('subcategory', JSON.stringify(uniqueSubcategories));
     }
 
     if (this.hsncodeForm.valid) {
@@ -452,7 +478,7 @@ export class HsncodeComponent implements OnInit {
     this.selectedSubcat = 0
     this.hsncodeForm.reset();
     this.addForm = true;
-    
+
   }
 
 

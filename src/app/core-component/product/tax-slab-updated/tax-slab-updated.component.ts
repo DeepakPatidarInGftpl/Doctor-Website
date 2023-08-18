@@ -118,14 +118,16 @@ export class TaxSlabUpdatedComponent implements OnInit {
     })
   }
   checks = true;
-  subcatbySubcatGroup: any;
+  subcatbySubcatGroup: any[] = []; 
+  filteredSubcategory: any[] = [];
+  searchTerm: string = '';
   getd: any;
   selectSubcat: any = [];
   getSubcategoryBySubcatGroup(val: any) {
     this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
       console.log(res.subcategories);
       this.subcatbySubcatGroup = res.subcategories;
-
+      this.filteredSubcategory = [...this.subcatbySubcatGroup];
       this.subcatbySubcatGroup.map((map: any) => {
         console.log(map);
         this.selectedSubcat = this.selectSubcat.length
@@ -143,8 +145,18 @@ export class TaxSlabUpdatedComponent implements OnInit {
     })
   }
 
+  filterSubcategory() {
+    if (this.searchTerm.trim() === '') {
+      this.filteredSubcategory = [...this.subcatbySubcatGroup];
+    } else {
+      this.filteredSubcategory = this.subcatbySubcatGroup.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+  }
   check: any
   selectedSubcat = 0;
+  selectedSubCategoryIds: any[] = []
   onCheckChange(event: any) {
     const formArray: any = this.taxSlabForm.get('subcategory') as FormArray;
 
@@ -155,6 +167,7 @@ export class TaxSlabUpdatedComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedSubcat++;
+      this.selectedSubCategoryIds=formArray.value
     }
     /* unselected */
     else {
