@@ -81,7 +81,7 @@ export class EditbrandComponent implements OnInit {
           console.log('categry');
           this.getSubcatGroupByCategory(this.selectCat)
         } else {
-          this.getSubcatGroup()
+          // this.getSubcatGroup()
         }
         this.getSubcategoryBySubcatGroup(this.subcatGroup)
         this.getCategory();
@@ -128,11 +128,12 @@ export class EditbrandComponent implements OnInit {
     this.coreService.getCategory().subscribe(res => {
       this.categoryList = res;
       this.categoryList.map((map: any) => {
-        console.log(this.selectCat);
-       
+        console.log(this.selectCat.length);
+        this.selectedCat=this.selectCat.length // count how many category is already selected
         console.log(this.selectCat.includes(map?.id), 'category');
         if (this.selectCat.includes(map.id)) {
           const formArray = this.brandForm.get('category') as FormArray;
+          
           formArray.push(new FormControl(map.id));
         }
       })
@@ -177,7 +178,8 @@ export class EditbrandComponent implements OnInit {
       this.subcatGroupList = res;
       // update then display
       this.subcatGroupList.map((map: any) => {
-        console.log(this.subcatGroup.includes(map.id), 'subcategory_group');
+        this.selectedSubCatGrp=this.subcatGroup.length
+        console.log(this.selectedSubCatGrp);
         if (this.subcatGroup.includes(map.id)) {
           console.log(map.id);
           const formArray = this.brandForm.get('subcategory_group') as FormArray;
@@ -212,6 +214,9 @@ export class EditbrandComponent implements OnInit {
       this.subcatGroupList = res;
       // update then display
       this.subcatGroupList.map((map: any) => {
+        // this.selectedSubCatGrp=this.subcatGroup.length;
+        console.log(this.subcatGroup);
+        
         console.log(this.subcatGroup.includes(map.id), 'subcategory_group');
         if (this.subcatGroup.includes(map.id)) {
           console.log(map.id);
@@ -260,7 +265,7 @@ export class EditbrandComponent implements OnInit {
       this.subcatbySubcatGroup = res;
       this.subcatbySubcatGroup.map((map: any) => {
         console.log(this.selectSubcat);
-        
+        this.selectedSubcat=this.selectSubcat.length
         console.log(this.selectSubcat.includes(map.id), 'subcategory');
         if (this.selectSubcat.includes(map.id)) {
           const formArray = this.brandForm.get('subcategory') as FormArray;

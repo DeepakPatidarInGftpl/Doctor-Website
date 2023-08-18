@@ -128,6 +128,7 @@ export class TaxSlabUpdatedComponent implements OnInit {
 
       this.subcatbySubcatGroup.map((map: any) => {
         console.log(map);
+        this.selectedSubcat = this.selectSubcat.length
         this.getd = this.selectSubcat.includes(map.id)
         console.log(this.getd);
 

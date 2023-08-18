@@ -292,12 +292,14 @@
                             <tr>
                                 <th></th>
                                 <th>Barcode/SKU</th>
-                                <th style="width: 20%;">Product Name</th>
-                                <th>QTY</th>
+                                <th style="width: 20%;">Product Name <span style="visibility: hidden;">knjmh</span></th>
+                                <th>QTY <span style="visibility: hidden;">knjmh</span></th>
                                 <th>Unit Cost</th>
-                                <th>Mrp</th>
+                                <th>Mrp <span style="visibility: hidden;">knjmh</span></th>
                                 <th>Discount</th>
-                                <th>Tax %</th>
+                                <th>Discount Type</th>
+                                <th>Additional Discount</th>
+                                <th>Tax % <span style="visibility: hidden;">h</span></th>
                                 <th>Landing Cost</th>
                                 <th>Batch</th>
                                 <th class="text-end">Total Cost</th>
@@ -369,6 +371,19 @@
                                                 Enter Discount ex: 1-100
                                             </span>
                                         </td>
+                                        <td>
+                                            <select formControlName="discount_type">
+                                                <option value="" selected disabled>Select Discount Type</option>
+                                                <option value="%">%</option>
+                                                <option value="Rupee">Rupee</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="text" formControlName="additional_discount" class="input">
+                                            <span class="text-danger" style="display: block;"
+                                            *ngIf="additional_discount(i) && additional_discount(i).invalid && additional_discount(i).touched">
+                                            Enter Additional Discount 
+                                        </span>
+                                        </td>
                                         <td><input type="text" formControlName="tax" class="input"></td>
                                         <td class="text-end"><input type="text" formControlName="landing_cost"
                                                 class="input"></td>
@@ -394,6 +409,8 @@
                                 <td class="text-start"><strong>Total</strong></td>
                                 <td class="text-start">{{ calculateTotalQty()}}</td>
                                 <td class="text-start"></td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td class="text-start">{{calculateTotalTax()}}</td>

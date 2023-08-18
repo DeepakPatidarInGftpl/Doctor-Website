@@ -36,9 +36,9 @@ id:any;
       if (this.id == res.id) {
         this.branchForm.patchValue(res);
         this.branchForm.get('country')?.patchValue(res?.country?.id)
-        this.selectState(res?.country)
+        this.selectState(res?.country?.id)
         this.branchForm.get('state')?.patchValue(res?.state?.id)
-        this.selectCity(res?.state)
+        this.selectCity(res?.state?.id)
         this.branchForm.get('city')?.patchValue(res?.city?.id)
       }
     })

@@ -223,12 +223,14 @@
                             <tr>
                                 <th></th>
                                 <th>Barcode/SKU</th>
-                                <th style="width: 20%;">Product Name</th>
-                                <th>QTY</th>
+                                <th class="product-name">Product Name <span style="visibility: hidden;">knjmh</span></th>
+                                <th class="qty">QTY <span style="visibility: hidden;">knjh</span></th>
                                 <th>Purchase Price</th>
-                                <th>Mrp</th>
+                                <th class="mrp">Mrp <span style="visibility: hidden;">kjjhjjnjh</span></th>
                                 <th>Discount</th>
-                                <th>Tax %</th>
+                                <th>Discount Type</th>
+                                <th>Additional Discount</th>
+                                <th>Tax % <span style="visibility: hidden;">h</span></th>
                                 <th>Landing Cost</th>
                                 <th>Total Cost</th>
                                 <th></th>
@@ -266,7 +268,7 @@
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
                                                 (keyup)="searchProduct(id.value,i)" (blur)="hideSearch()">
                                         </td>
-                                        <td>
+                                        <td> 
                                             <!-- <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
                                                 (click)="open()" placeholder="Search Product" *ngIf="isProduct"
                                                 class="input">
@@ -319,6 +321,19 @@
                                                 Enter Discount ex: 1-100
                                             </span>
                                         </td>
+                                        <td>
+                                            <select formControlName="discount_type">
+                                                <option value="" selected disabled>Select Discount Type</option>
+                                                <option value="%">%</option>
+                                                <option value="Rupee">Rupee</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="text" formControlName="additional_discount" class="input">
+                                            <span class="text-danger" style="display: block;"
+                                            *ngIf="additional_discount(i) && additional_discount(i).invalid && additional_discount(i).touched">
+                                            Enter Additional Discount 
+                                        </span>
+                                        </td>
                                         <td><input type="text" formControlName="tax" class="input"></td>
                                         <td class="text-end"><input type="text" formControlName="landing_cost"
                                                 class="input"></td>
@@ -336,6 +351,8 @@
                                 <td class="text-start"><strong>Total</strong></td>
                                 <td class="text-start">{{ calculateTotalQty()}}</td>
                                <td class="text-start">{{calculateTotalPurchase()}}</td>
+                               <td></td>
+                               <td></td>
                                <td></td>
                                <td></td>
                               <td class="text-start">{{calculateTotalTax()}}</td>
