@@ -391,10 +391,14 @@
 													data-bs-toggle="dropdown" aria-expanded="false">Select
 													Color</button>
 												<ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+													<li><input type="text" placeholder="search color"
+														class="form-control" [(ngModel)]="searchColor"
+														(ngModelChange)="filterColorData()"
+														[ngModelOptions]="{standalone: true}"></li>
 													<li><a class="dropdown-item"
-															*ngFor="let color of colorList; let i=index">
+															*ngFor="let color of filteredColorData; let i=index">
 															<input type="checkbox" [value]="color.id"
-																[checked]="colors.includes(color.id)"
+																[checked]="colors.includes(color.id) || selectedColorId.includes(color.id)"
 																(change)="onCheckColor($event,color.id,color.title)"
 																formArrayName="color" style="margin-right: 5px;"
 																[ngClass]="{
@@ -424,10 +428,14 @@
 												<button type="button" class="dropdown-toggle button" type="button"
 													data-bs-toggle="dropdown" aria-expanded="false">Select Size</button>
 												<ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+													<li><input type="text" placeholder="search size"
+														class="form-control" [(ngModel)]="searchSize"
+														(ngModelChange)="filterSizeData()"
+														[ngModelOptions]="{standalone: true}"></li>
 													<li><a class="dropdown-item"
-															*ngFor="let size of sizeList let i=index;">
+															*ngFor="let size of filteredSizeData let i=index;">
 															<input type="checkbox" [value]="size.id"
-																[checked]="sizes.includes(size.id)"
+																[checked]="sizes.includes(size.id) || selectedSizeId.includes(size.id)"
 																(change)="onCheckSize($event,size.id,size.title)"
 																formArrayName="size" style="margin-right: 5px;"
 																[ngClass]="{

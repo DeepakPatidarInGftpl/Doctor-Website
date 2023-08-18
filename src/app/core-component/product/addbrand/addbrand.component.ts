@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
-import { IDropdownSettings } from 'ng-multiselect-dropdown';
 @Component({
   selector: 'app-addbrand',
   templateUrl: './addbrand.component.html',
@@ -17,11 +16,6 @@ export class AddbrandComponent implements OnInit {
     return this.brandForm.controls;
   }
 
-  //
-  dropdownList = [];
-  selectedItems: any[] = [];
-  dropdownSettings: IDropdownSettings = {};
-  //
 
   imgUrl = 'https://pv.greatfuturetechno.com';
 
@@ -36,58 +30,18 @@ export class AddbrandComponent implements OnInit {
     this.brandForm = new FormGroup({
       title: new FormControl('', [Validators.required]),
       code: new FormControl(''),
-      image: new FormControl(''),
+      image: new FormControl('', [Validators.required]),
       discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       category: new FormArray([]),
-      subcategory_group: new FormArray<any>([], [Validators.required]),
-      subcategory: new FormArray([], [Validators.required]),
+      subcategory_group: new FormArray<any>([],),
+      subcategory: new FormArray([]),
 
     })
     this.getSubcatGroup();
     this.getCategory();
-    //dropdown list
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'id',
-      textField: 'product_title',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
+
   }
 
-  ///
-  onItemSelect(item: any) {
-    console.log(item);
-    let formArray: any = this.brandForm.get('variant') as FormArray;
-    formArray.push(new FormControl(item.id))
-  }
-  onItemDeselect(item: any): void {
-    // Handle the deselection of the item
-    console.log('Item deselected:', item);
-    let formArray: FormArray = this.brandForm.get('variant') as FormArray;
-    console.log(formArray);
-    const index = formArray.controls.findIndex(control => control.value === item.id);
-    console.log(index);
-    if (index !== -1) {
-      formArray.removeAt(index);
-    }
-  }
-
-  onSelectAll(items: any) {
-    console.log(items);
-    let formArray: any = this.brandForm.get('variant') as FormArray;
-    items.forEach((item: any) => {
-      formArray.push(new FormControl(item.id));
-    });
-  }
-  onDeselectAll(items: any) {
-    console.log('All items deselected:', items);
-    let formArray: any = this.brandForm.get('variant') as FormArray;
-    formArray.clear();
-  }
-  //
   url: any;
   onSelect(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
@@ -106,57 +60,89 @@ export class AddbrandComponent implements OnInit {
     this.brandForm.get('image')?.updateValueAndValidity()
   }
 
-  subcatGroupList: any
+ 
   getSubcatGroup() {
     this.coreService.getSubcategoryGroup().subscribe(res => {
       // this.subcatGroupList = res;
     })
   }
-categoryList:any
+
+  categoryList: any[] = [];
+  filteredCategoryList: any[] = [];
+  searchCategory: string = '';
   getCategory() {
-    this.coreService.getCategory().subscribe(res => {
+    this.coreService.getCategory().subscribe((res: any) => {
       this.categoryList = res;
+      this.filteredCategoryList = [...this.categoryList];
+    })
+  }
+  filterCategory() {
+    if (this.searchCategory.trim() === '') {
+      this.filteredCategoryList = [...this.categoryList];
+    } else {
+      this.filteredCategoryList = this.categoryList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  }
+
+  //check Category
+  selectedCat = 0
+  selectedCategoryIds:any[]=[]
+  onCheckCategory(event: any) {
+    const formArray: any = this.brandForm.get('category') as FormArray;
+    /* Selected */
+    if (event.target.checked) {
+      // Add a new control in the arrayForm
+      formArray.push(new FormControl(parseInt(event.target.value)));
+      // parseInt(formArray.push(new FormControl(event.target.value)))
+      this.check = formArray
+      this.selectedCat++;
+      this.getSubcatGroupByCategory(formArray.value);
+      this.selectedCategoryIds=formArray.value
+      console.log( this.selectedCategoryIds);
+    }
+    /* unselected */
+    else {
+      // find the unselected element
+      let i: number = 0;
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          this.selectedCat--;
+          this.getSubcatGroupByCategory(formArray.value);
+          return;
+        }
+        i++;
+      });
+    }
+  }
+
+  subcatGroupList: any[] = [];
+  filteredSubCategoryGroupList: any[] = [];
+  searchSubCategoryGroup:string=''
+  getSubcatGroupByCategory(val: number[]) {
+    console.log(val);
+    const idString = JSON.stringify(val);
+    this.coreService.getSubcategoryGroupByCategoryid(idString).subscribe(res => {
+      console.log(res);
+      this.subcatGroupList = res;
+      this.filteredSubCategoryGroupList = [...this.subcatGroupList];
     })
   }
 
-//check Category
-selectedCat=0
-onCheckCategory(event: any) {
-  const formArray: any = this.brandForm.get('category') as FormArray;
-  /* Selected */
-  if (event.target.checked) {
-    // Add a new control in the arrayForm
-    formArray.push(new FormControl(parseInt(event.target.value)));
-    // parseInt(formArray.push(new FormControl(event.target.value)))
-    this.check = formArray
-    this.selectedCat++;
-    this.getSubcatGroupByCategory(formArray.value);
+  filterSubCategoryGroup() {
+    if (this.searchSubCategoryGroup.trim() === '') {
+      this.filteredSubCategoryGroupList = [...this.subcatGroupList];
+    } else {
+      this.filteredSubCategoryGroupList = this.subcatGroupList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchSubCategoryGroup.toLowerCase())
+      );
+    }
   }
-  /* unselected */
-  else {
-    // find the unselected element
-    let i: number = 0;
-    formArray.controls.forEach((ctrl: any) => {
-      if (ctrl.value == event.target.value) {
-        // Remove the unselected element from the arrayForm
-        formArray.removeAt(i);
-        this.selectedCat--;
-        this.getSubcatGroupByCategory(formArray.value);
-        return;
-      }
-      i++;
-    });
-  }
-}
 
-getSubcatGroupByCategory(val: number[]) {
-  console.log(val);
-  const idString = JSON.stringify(val);
-  this.coreService.getSubcategoryGroupByCategoryid(idString).subscribe(res => {
-    console.log(res);
-    this.subcatGroupList = res;
-  })
-}
+  selectedSubCategoryGroupIds: any[] = [];
 
   selectedSubCatGrp = 0;
 
@@ -170,6 +156,9 @@ getSubcatGroupByCategory(val: number[]) {
       this.check = formArray
       this.selectedSubCatGrp++;
       this.getSubcategoryBySubcatGroup(formArray.value);
+      this.selectedSubCategoryGroupIds=formArray.value
+      console.log( this.selectedSubCategoryIds);
+      
     }
     /* unselected */
     else {
@@ -190,7 +179,9 @@ getSubcatGroupByCategory(val: number[]) {
     }
   }
 
-  subcategories: any = [];
+  subcategories: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchSubCategory: string = '';
   id: any = []
   subcatbySubcatGroup: any;
   getSubcategoryBySubcatGroup(val: number[]) {
@@ -200,24 +191,36 @@ getSubcatGroupByCategory(val: number[]) {
       console.log(res);
       // this.subcatbySubcatGroup = res;
       this.subcatbySubcatGroup = this.filterDuplicates(res);
+      this.filteredSubCategoryList = [...this.subcatbySubcatGroup];
     })
   }
-//filter duplicate data
+  //filter duplicate data
   filterDuplicates(data: any[]): any[] {
     const uniqueIds = {};
     const filteredData = [];
-  
+
     for (const item of data) {
       if (!uniqueIds[item.id]) {
         uniqueIds[item.id] = true;
         filteredData.push(item);
       }
     }
-  
+
     return filteredData;
+  }
+
+  filterSubCategory() {
+    if (this.searchSubCategory.trim() === '') {
+      this.filteredSubCategoryList = [...this.subcatbySubcatGroup];
+    } else {
+      this.filteredSubCategoryList = this.subcatbySubcatGroup.filter(subcat =>
+        subcat.title.toLowerCase().includes(this.searchSubCategory.toLowerCase())
+      );
+    }
   }
   check: any
   selectedSubcat = 0;
+  selectedSubCategoryIds:any[]=[]
   onCheckChange(event: any) {
     const formArray: any = this.brandForm.get('subcategory') as FormArray;
     /* Selected */
@@ -227,6 +230,7 @@ getSubcatGroupByCategory(val: number[]) {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedSubcat++;
+      this.selectedSubCategoryIds=formArray.value
     }
     /* unselected */
     else {
@@ -299,7 +303,7 @@ getSubcatGroupByCategory(val: number[]) {
   get discount() {
     return this.brandForm.get('discount')
   }
-  get category(){
+  get category() {
     return this.brandForm.get('category')
   }
 

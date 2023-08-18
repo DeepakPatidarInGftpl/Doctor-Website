@@ -240,9 +240,11 @@
                                         <button type="button" class="dropdown-toggle button" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
                                         <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                            <li> <input type="text" placeholder="search subcategory" class="form-control" [(ngModel)]="searchTerm" [(ngModel)]="selectedTitle" (ngModelChange)="filterSubcategory()" [ngModelOptions]="{standalone: true}">
+                                            </li>
                                             <li><a class="dropdown-item"
-                                                    *ngFor="let subcategory of subcategoryList; let i=index">
-                                                    <input type="checkbox" [value]="subcategory.id"
+                                                    *ngFor="let subcategory of filteredFeatureList; let i=index">
+                                                    <input type="checkbox" [value]="subcategory.id" [checked]="selectedSubcategoryIds.includes(subcategory.id)"
                                                         (change)="onCheckChange($event)" formArrayName="subcategory"
                                                         style="margin-right: 5px;" [ngClass]="{
                                                         'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
@@ -317,10 +319,12 @@
                                         <button type="button" class="dropdown-toggle button" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
                                         <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                            <li>    <input type="text" placeholder="search subcategory" class="form-control" [(ngModel)]="searchTerm" [(ngModel)]="selectedTitle" (ngModelChange)="filterSubcategory()" [ngModelOptions]="{standalone: true}">
+                                            </li>
                                             <li><a class="dropdown-item"
-                                                    *ngFor="let subcategory of subcategoryList; let i=index">
+                                                    *ngFor="let subcategory of filteredFeatureList; let i=index">
                                                     <input type="checkbox" [value]="subcategory.id"
-                                                        [checked]="subcategories.includes(subcategory.id)"
+                                                        [checked]="subcategories.includes(subcategory.id) || selectedSubcategoryIds.includes(subcategory.id)"
                                                         (change)="onCheckChange($event)" formArrayName="subcategory"
                                                         style="margin-right: 5px;" [ngClass]="{
                                                         'is-invalid': f['subcategory'].touched && f['subcategory'].invalid

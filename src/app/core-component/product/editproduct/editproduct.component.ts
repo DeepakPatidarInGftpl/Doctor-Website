@@ -365,10 +365,14 @@ export class EditproductComponent implements OnInit {
       this.taxSlabList = res
     })
   }
-  colorList: any
+  colorList: any[] = []
+  filteredColorData: any[];
+  searchColor: string = '';
   getColor() {
     this.coreService.getColor().subscribe(res => {
       this.colorList = res;
+      this.filteredColorData = this.colorList.slice(); // Initialize filteredData with the original data
+      this.filterColorData();
       setTimeout(() => {
         this.colorList.map((map: any) => {
           this.selectedColor=this.colors.length
@@ -381,11 +385,26 @@ export class EditproductComponent implements OnInit {
       }, 2000);
     })
   }
-  sizeList: any
+  filterColorData() {
+    let filteredData = this.colorList.slice();
+    if (this.searchColor) {
+      const searchTerm = this.searchColor.toLowerCase();
+      filteredData = filteredData.filter((item) => {
+        const aliasLower = item?.title.toLowerCase();
+        return aliasLower.includes(searchTerm);
+      });
+    }
+    this.filteredColorData = filteredData;
+  }
+  sizeList: any[] = []
+  filteredSizeData: any[];
+  searchSize: string = '';
   getSize() {
     this.coreService.getSize().subscribe(res => {
       console.log(res);
       this.sizeList = res
+      this.filteredSizeData = this.sizeList.slice();
+      this.filterSizeData();
       setTimeout(() => {
         this.sizeList.map((map: any) => {
           this.selectedSize=this.sizes.length
@@ -395,8 +414,20 @@ export class EditproductComponent implements OnInit {
             formArray.push(new FormControl(map.id));
           }
         })
-      }, 2000);
+      }, 1000);
     })
+  }
+
+  filterSizeData() {
+    let filteredData = this.sizeList.slice();
+    if (this.searchSize) {
+      const searchTerm = this.searchSize.toLowerCase();
+      filteredData = filteredData.filter((item) => {
+        const aliasLower = item?.title.toLowerCase();
+        return aliasLower.includes(searchTerm);
+      });
+    }
+    this.filteredSizeData = filteredData;
   }
   // varantList: any
   // getVariant() {
@@ -522,6 +553,7 @@ export class EditproductComponent implements OnInit {
   checkcolor: any;
   selectedColor = 0;
   selectColor: any = [];
+  selectedColorId: any[] = [];
   onCheckColor(event: any, id: any, title: any) {
     console.log(title);
     const formArray: any = this.productForm.get('color') as FormArray;
@@ -532,6 +564,7 @@ export class EditproductComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.checkcolor = formArray;
       this.selectedColor++;
+      this.selectedColorId=formArray.value
     }
     /* unselected */
     else {
@@ -566,6 +599,7 @@ export class EditproductComponent implements OnInit {
   }
   selectedSize = 0;
   selectSize: any = [];
+  selectedSizeId: any[] = []
   onCheckSize(event: any, id: any, title: any) {
     let formArray: any = this.productForm.get('size') as FormArray;
     /* Selected */
@@ -575,6 +609,7 @@ export class EditproductComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray;
       this.selectedSize++;
+      this.selectedSizeId=formArray.value
     }
     /* unselected */
     else {

@@ -267,7 +267,11 @@
                 <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
                   aria-expanded="false">Select Subcategory</button>
                 <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                  <li><a class="dropdown-item" *ngFor="let subCat of subcatbyCategory; let i=index">
+                  <li><input type="text" placeholder="search subcategory"
+                    class="form-control" [(ngModel)]="searchSubcategory"
+                    (ngModelChange)="filterSubcategoryData()"
+                    [ngModelOptions]="{standalone: true}"></li>
+                  <li><a class="dropdown-item" *ngFor="let subCat of filteredSubcategoryData; let i=index">
                       <input type="checkbox" [value]="subCat.id" [checked]="selectedSubCats.includes(subCat.id)"
                         (change)="onSelectionChange(subCat, $event.target)" style="margin-right: 5px;"
                         [id]="'checkbox-' + i">
@@ -295,7 +299,13 @@
                 <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
                   aria-expanded="false">Select Feature Group</button>
                 <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                  <li><a class="dropdown-item" *ngFor="let fGroup of featureGroup; let i=index">
+
+                  <li><input type="text" placeholder="search feature group"
+                    class="form-control" [(ngModel)]="searchFeatureGroup"
+                    (ngModelChange)="filterFeatureGroupData()"
+                    [ngModelOptions]="{standalone: true}"></li>
+
+                  <li><a class="dropdown-item" *ngFor="let fGroup of filteredFeatureGroupData; let i=index">
                       <input type="checkbox" [value]="fGroup.id" [checked]="selectedFeature.includes(fGroup.id)"
                         (change)="selectFeatureGroup(fGroup, $event.target)" style="margin-right: 5px;"
                         [id]="'checkboxFeat-' + i">

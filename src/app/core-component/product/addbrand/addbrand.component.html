@@ -37,10 +37,7 @@
     
                                 </div>
                             </div>
-                            <!-- <ng-multiselect-dropdown [placeholder]="'Select Variants'"
-                            [settings]="dropdownSettings" [data]="variantList" [(ngModel)]="selectedItems"
-                            (onSelect)="onItemSelect($event)" (onDeSelect)="onItemDeselect($event)"  (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeselectAll($event)">
-                        </ng-multiselect-dropdown> -->
+                           
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label>Category</label>
@@ -48,9 +45,11 @@
                                     <button type="button" class="dropdown-toggle button" type="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
                                     <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                        <li>    <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory"  (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}">
+                                        </li>
                                         <li><a class="dropdown-item"
-                                                *ngFor="let category of categoryList let i=index;">
-                                                <input type="checkbox" [value]="category.id" (change)="onCheckCategory($event)" formArrayName="category"
+                                                *ngFor="let category of filteredCategoryList let i=index;">
+                                                <input type="checkbox" [value]="category.id" [checked]="selectedCategoryIds.includes(category.id)" (change)="onCheckCategory($event)" formArrayName="category"
                                                     style="margin-right: 5px;" [ngClass]="{'is-invalid': f['category'].touched && f['category'].invalid}" #categoryValue
                                                     [id]="'checkboxCat-' + i">
                                                 <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category.title}}</label>
@@ -71,9 +70,10 @@
                                             data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory
                                             group</button>
                                         <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                            <li><input type="text" placeholder="search subcategory group" class="form-control" [(ngModel)]="searchSubCategoryGroup" (ngModelChange)="filterSubCategoryGroup()" [ngModelOptions]="{standalone: true}"></li>
                                             <li><a class="dropdown-item"
-                                                    *ngFor="let subcatgroup of subcatGroupList let i=index;">
-                                                    <input type="checkbox" [value]="subcatgroup.id"
+                                                    *ngFor="let subcatgroup of filteredSubCategoryGroupList let i=index;">
+                                                    <input type="checkbox" [value]="subcatgroup.id" [checked]="selectedSubCategoryGroupIds.includes(subcatgroup.id)"
                                                         (change)="onCheckSize($event)" formArrayName="subcategory_group"
                                                         style="margin-right: 5px;" [ngClass]="{
                                                             'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
@@ -92,14 +92,16 @@
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>SubCategory*</label>
+                                    <label>SubCategory</label>
                                     <div class="dropdown">
                                         <button type="button" class="dropdown-toggle button" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
                                         <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                            <li><input type="text" placeholder="search subcategory" class="form-control" [(ngModel)]="searchSubCategory" (ngModelChange)="filterSubCategory()" [ngModelOptions]="{standalone: true}"></li>
+                                           
                                             <li><a class="dropdown-item"
-                                                    *ngFor="let subcategory of subcatbySubcatGroup; let i=index">
-                                                    <input type="checkbox" [value]="subcategory.id"
+                                                    *ngFor="let subcategory of filteredSubCategoryList; let i=index">
+                                                    <input type="checkbox" [value]="subcategory.id" [checked]="selectedSubCategoryIds.includes(subcategory?.id)"
                                                         (change)="onCheckChange($event)" formArrayName="subcategory"
                                                         style="margin-right: 5px;" [ngClass]="{
                                                             'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
