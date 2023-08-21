@@ -10,6 +10,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-subcategory-group',
@@ -58,12 +59,15 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
         this.coreServ.deleteSubCategGroup(id).subscribe(res => {
           console.log(res)
           this.delRes = res;
-          if (this.delRes == 'Subcategory Group Deleted successfully') {
+          if (this.delRes.msg == 'Subcategory Group Deleted successfully') {
+            console.log('abssssss');
+            
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
               text: this.delRes.msg,
             });
+            this.ngOnInit()
           } else {
             Swal.fire({
               icon: 'error',
@@ -149,7 +153,6 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
   get f() {
     return this.form.controls
   }
-
   subcatEdit
   featureCategoryEdit
 
@@ -506,15 +509,12 @@ this.getFeatureGroup()
   get title() {
     return this.form.get('title')
   }
-
   get category() {
     return this.form.get('category')
   }
-
   get subcategories() {
     return this.form.get('subcategories')
   }
-
   get feature_group() {
     return this.form.get('feature_group')
   }
@@ -580,9 +580,6 @@ this.getFeatureGroup()
       if (this.selectedSubcategoryGroupType) {
         filteredData = filteredData.filter((item) => item?.feature_group[0]?.title === this.selectedSubcategoryGroupType);
       }
-   
-   
-   
       this.filteredData = filteredData;
     }
     clearFilter() {
@@ -594,36 +591,55 @@ this.getFeatureGroup()
       this.filterData();
     }
     // convert to pdf
-    generatePDF() {
-      // table data with pagination
-      const doc = new jsPDF();
-      const title = 'Sub Category Group list';
+  //   generatePDF() {
+  //     // table data with pagination
+  //     const doc = new jsPDF();
+  //     const title = 'Sub Category Group list';
   
-      doc.setFontSize(15);
-      doc.setTextColor(33, 43, 54);
-      doc.text(title, 10, 10);
-      // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
-      autoTable(doc,
+  //     doc.setFontSize(15);
+  //     doc.setTextColor(33, 43, 54);
+  //     doc.text(title, 10, 10);
+  //     // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
+  //     autoTable(doc,
   
-        {
-          html: '#mytable',
-          theme: 'grid',
-          headStyles: {
-            fillColor: [255, 159, 67]
-          },
-          columns: [
-            //remove action filed
-            { header: 'Sr No.' },
-            { header: 'Image' },
-            { header: 'Title' },
-            { header: 'Category' },
-            { header: 'Subcategory' },
-            { header: 'Feature group' },
-            { header: 'Is Active' }
-          ],
-        })
+  //       {
+  //         html: '#mytable',
+  //         theme: 'grid',
+  //         headStyles: {
+  //           fillColor: [255, 159, 67]
+  //         },
+  //         columns: [
+  //           //remove action filed
+  //           { header: 'Sr No.' },
+  //           { header: 'Image' },
+  //           { header: 'Title' },
+  //           { header: 'Category' },
+  //           { header: 'Subcategory' },
+  //           { header: 'Feature group' },
+  //           { header: 'Is Active' }
+  //         ],
+  //       })
+  //     doc.save('subcategorygroup.pdf');
+  // }
+
+  generatePDF() {
+    const doc = new jsPDF();
+    const title = 'Sub Category Group list';
+  
+    doc.setFontSize(15);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 10, 10);
+  
+    const table = document.getElementById('mytable'); // Get the table element
+  
+    html2canvas(table).then((canvas) => {
+      const tableImgData = canvas.toDataURL('image/png'); // Convert table to image data URL
+      doc.addImage(tableImgData, 'PNG', 10, 20, 190, 0); // Add the table image to PDF
+  
       doc.save('subcategorygroup.pdf');
+    });
   }
+  
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {
       const visibleData = [];
