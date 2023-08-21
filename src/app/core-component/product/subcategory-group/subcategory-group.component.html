@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-lg-8 col-sm-8 col-12">
+  <div class="col-lg-12 col-sm-12 col-12">
     
     <!-- <div class="page-header">
       <div class="page-title">
@@ -17,8 +17,8 @@
         <h4 class="titl">Sub Category Group list</h4>
         <h6>View/Search Sub Category Group</h6>
       </div>
-      <div class="page-btn" *ngIf="!addForm">
-        <a class="btn btn-added" (click)="openaddForm()" *ngIf="isAdd">
+      <div class="page-btn" *ngIf="isAdd">
+        <a class="btn btn-added" routerLink="/product/addSubCategoryGroup">
           <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Sub Category Group
         </a>
       </div>
@@ -144,8 +144,8 @@
                   </label>
                 </td>
                 <td>{{i+1}}</td>
-                <td class="productimgname">
-                  <a routerLink="/product/subCategoryDetails/{{products.id}}" style="line-height: 3;"><img
+                <td >
+                  <a routerLink="/product/subCategoryDetails/{{products.id}}" class="product-img"><img
                       [src]="imgUrl+products.image" alt="product"></a>
                 </td>
                 <td>{{products.title}}</td>
@@ -170,7 +170,7 @@
                   <a class="me-2" routerLink="/product/subCategoryDetails/{{products.id}}">
                     <img src="assets/img/icons/eye.svg" alt="img">
                   </a>
-                  <a class="me-2" (click)="editThis(products)" *ngIf="isEdit">
+                  <a class="me-2" *ngIf="isEdit" routerLink="/product/editSubCategoryGroup/{{products.id}}">
                     <img src="assets/img/icons/edit.svg" alt="img">
                   </a>
                   <a (click)="confirmText(i, products.id)" class="me-2 confirm-text" href="javascript:void(0);"
@@ -216,7 +216,7 @@
     </div>
   </div>
 
-  <div class="col-lg-4 col-sm-4 col-12">
+  <!-- <div class="col-lg-4 col-sm-4 col-12">
     <div class="page-header">
       <div *ngIf="isAdd">
         <div class="page-title" *ngIf="addForm">
@@ -232,7 +232,6 @@
       </div>
     </div>
 
-    <!-- /add -->
     <div class="card" *ngIf="isAdd || isEdit">
       <div class="card-body">
         <form [formGroup]="form" class="row">
@@ -249,9 +248,9 @@
             <div class="form-group">
               <label>Category</label>
               <div class="image-upload mb-2">
-                <select class="w-100" formControlName="category" (change)="selectCate($event)" #categoryValue
+                <select class="w-100" formControlName="category" 
                   (change)="getSubcategoryByCategory(categoryValue.value)">
-                  <option value="" [selected]="!editMode" disabled>Select Category</option>
+                  <option value="" disabled>Select Category</option>
                   <option *ngFor="let cate of categories" id="{{cate.id}}" [value]="cate.id">{{ cate.title }}</option>
                 </select>
               </div>
@@ -369,9 +368,8 @@
         </form>
       </div>
     </div>
-    <!-- /add -->
 
-  </div>
+  </div> -->
 
 </div>
 

@@ -43,6 +43,21 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'addSubCategoryGroup',
+        loadChildren: () =>
+          import('./add-subcategory-group/add-subcategory-group.module').then(
+            (m) => m.AddSubcategoryGroupModule
+          ),
+      },
+      {
+        path: 'editSubCategoryGroup/:id',
+        loadChildren: () =>
+          import('./edit-subcategory-group/edit-subcategory-group.module').then(
+            (m) => m.EditSubcategoryGroupModule
+          ),
+      },
+
+      {
         path: 'subCategoryDetails/:id',
         loadChildren: () =>
           import('./subcategory-group-details/subcategory-group-details.module').then(
