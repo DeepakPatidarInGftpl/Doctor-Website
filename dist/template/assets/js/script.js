@@ -196,7 +196,7 @@ $(document).ready(function () {
       $input = $this.next("input"),
       $parent = $input.closest("div"),
       newValue = parseInt($input.val()) - 1;
-    console.log($parent);
+    // console.log($parent);
     $parent.find(".inc").addClass("a" + newValue);
     $input.val(newValue);
     newValue += newValue;
