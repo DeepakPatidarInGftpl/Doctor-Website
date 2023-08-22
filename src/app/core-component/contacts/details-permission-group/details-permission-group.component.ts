@@ -162,12 +162,12 @@ id:any;
     this.getPermissionGroup(); 
     // this.modelName = toTitleCase(this.modeln);
     // console.log(this.modelName);
-    console.log(this.data);
+    // console.log(this.data);
 
     this.contactService.getPermissionGroupById(this.id).subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.modelName = toTitleCase(res.Group);
-      console.log(this.modelName);
+      // console.log(this.modelName);
        //1st steps - store permissions id into permssions
        this.permissions = [];
        res.data.forEach((group: any) => {
@@ -177,7 +177,7 @@ id:any;
            });
          });
        });
-       console.log(this.permissions);
+      //  console.log(this.permissions);
     })
   }
 
@@ -187,7 +187,7 @@ id:any;
   notCheck=true;
   getPermissionGroup() {
     this.contactService.getPermission().subscribe((response:any) => {
-      console.log(response);
+      // console.log(response);
       this.groupList = response?.data;
       this.groupList.forEach((res: any) => {
         let group = []
@@ -196,12 +196,12 @@ id:any;
           //2steps- steps pemissions checkbox auto selected data 
           group.permissions.map((map: any) => {
             //3steps- check data is available or not
-            console.log(this.permissions.includes(map.id));
+            // console.log(this.permissions.includes(map.id));
             // console.log(map);
             //4steps- if data available then display true & patching into permissions formarray id
             //5steps in input tag - [checked]="permissions.includes(perm.id)"
             if (this.permissions.includes(map.id)) {
-              console.log(map);
+              // console.log(map);
               this.isCheck=true;
               this.notCheck=false;
               // let formArray: any = this.permissionForm.get('permissions') as FormArray;

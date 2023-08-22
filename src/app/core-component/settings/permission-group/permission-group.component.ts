@@ -132,15 +132,15 @@ export class PermissionGroupComponent implements OnInit {
   ngOnInit(): void {
     this.contactService.getPermissionGroup().subscribe(res => {
       this.tableData = res;
-      console.log(res);
+      // console.log(res);
       this.tableData.forEach((res: any) => {
-       console.log(res);
+      //  console.log(res);
       });
-      console.log(this.groupList);
+      // console.log(this.groupList);
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     });
-    console.log(this.tableData);
+    // console.log(this.tableData);
 
     this.profileService.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
@@ -148,13 +148,13 @@ export class PermissionGroupComponent implements OnInit {
       permission?.map((res: any) => {
         if (res?.content_type.app_label === 'auth'  && res?.content_type.model === 'group' && res?.codename=='add_group') {
           this.isAdd = res?.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res?.content_type.app_label === 'auth' && res?.content_type.model === 'group' && res?.codename=='change_group') {
           this.isEdit = res?.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res?.content_type.app_label === 'auth' && res?.content_type.model === 'group' && res?.codename=='delete_group') {
           this.isDelete = res?.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });

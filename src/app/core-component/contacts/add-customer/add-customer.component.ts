@@ -54,7 +54,7 @@ export class AddCustomerComponent implements OnInit {
   gstType: any;
   getgstType() {
     this.contactService.getTypeOfGst().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.gstType = res;
     })
   }
@@ -95,38 +95,38 @@ export class AddCustomerComponent implements OnInit {
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
-      console.log(this.country);
+      // console.log(this.country);
     });
   }
 
   selectState(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
 
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
-      console.log(this.state[i]);
+      // console.log(this.state[i]);
       // Reset city for the current formArray item
       this.city[i] = [];
     });
   }
 
   selectCity(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      console.log(this.city[i]);
+      // console.log(this.city[i]);
     });
   }
   loaders = false;
   submit() {
-    console.log(this.customerForm.value);
+    // console.log(this.customerForm.value);
 
     let formdata: any = new FormData();
     formdata.append('login_access', this.customerForm.get('login_access')?.value);
@@ -165,7 +165,7 @@ export class AddCustomerComponent implements OnInit {
     this.loaders = true
     // if (this.customerForm.valid) {
     this.contactService.addCustomer(formdata).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
         this.toastr.success(this.addRes.msg)
@@ -185,7 +185,7 @@ export class AddCustomerComponent implements OnInit {
       }
     }, err => {
       this.loaders = false
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
       if (err.error) {
         this.toastr.error(err.error?.opening_balance[0]);
         this.toastr.error(err.error?.email[0])
@@ -199,7 +199,7 @@ export class AddCustomerComponent implements OnInit {
     })
     // } else {
     this.customerForm.markAllAsTouched()
-    console.log('hhhhhh');
+    // console.log('hhhhhh');
 
     // }
   }

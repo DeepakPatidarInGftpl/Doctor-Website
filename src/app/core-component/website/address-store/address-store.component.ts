@@ -164,16 +164,16 @@ export class AddressStoreComponent implements OnInit {
      this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'order'  && res.content_type.model === 'storeaddress' && res.codename=='add_storeaddress') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if(res.content_type.app_label === 'order' && res.content_type.model === 'storeaddress' && res.codename == 'change_storeaddress') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if(res.content_type.app_label === 'order' && res.content_type.model === 'storeaddress' && res.codename == 'delete_storeaddress') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });

@@ -137,7 +137,7 @@ export class PosOrderComponent implements OnInit {
   isDelete: any;
   ngOnInit(): void {
     this.coreService.getPosOrder().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);

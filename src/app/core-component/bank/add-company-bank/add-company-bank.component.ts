@@ -45,14 +45,14 @@ export class AddCompanyBankComponent implements OnInit {
 yearDetails:any
   getYear(){
     this.coreService.getFinancialYear().subscribe(res=>{
-      console.log(res); 
+      // console.log(res); 
       this.yearDetails=res;
     })
   }
   currencyDetails:any
   getCurrency(){
     this.coreService.getCurrency().subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.currencyDetails=res;
     })
   }
@@ -64,10 +64,10 @@ yearDetails:any
   }
   state: any;
   selectState(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   city: any;
@@ -80,11 +80,11 @@ yearDetails:any
   loaders=false;
   addRes:any;
   submit() {
-    console.log(this.companyBankForm.value);
+    // console.log(this.companyBankForm.value);
     if (this.companyBankForm.valid) {
       this.loaders=true;
       this.coreService.addCompanyBank(this.companyBankForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes=res;
         if (this.addRes.Is_Success == "True") {
           this.loaders=false;
@@ -96,12 +96,12 @@ yearDetails:any
           this.toastr.error(this.addRes.account_number[0],'Account number')
         }
       }, err => {
-        console.log(err.error);
+        // console.log(err.error);
         this.loaders=false;
       })
     } else {
       this.companyBankForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
 
     }
   }

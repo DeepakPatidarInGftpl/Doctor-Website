@@ -161,7 +161,7 @@ export class UnitComponent implements OnInit {
 
     // this.coreService.getUnits();
     // // this.tableData = this.QueryService.unitList;
-    // // console.log(this.tableData);
+    // console.log(this.tableData);
 
     // this.coreService.unitBehavior.subscribe(() => {
     //   if (localStorage.getItem('unitList')) {
@@ -200,13 +200,13 @@ export class UnitComponent implements OnInit {
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename=='add_unit') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename=='change_unit') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'product' && res.content_type.model === 'unit' && res.codename=='delete_unit') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });
@@ -283,13 +283,13 @@ selectAlll() {
 
 loaders=false;
  submit() {
-    console.log(this.unitsForm.value);
-    console.log(this.id);
+    // console.log(this.unitsForm.value);
+    // console.log(this.id);
 
     if (this.unitsForm.valid) {
       this.loaders=true;
       this.coreService.addUnits(this.unitsForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loaders=false;
@@ -299,11 +299,11 @@ loaders=false;
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.unitsForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -311,7 +311,7 @@ loaders=false;
     if (this.unitsForm.valid) {
       this.loaders=true;
       this.coreService.updateUnits(this.unitsForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Unit updated successfully") {
           this.loaders=false;
@@ -321,11 +321,11 @@ loaders=false;
         this.ngOnInit()
 }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.unitsForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   get title() {
@@ -336,9 +336,9 @@ id:any
   editForm(id: number) {
     this.id=id
     this.coreService.getUnitsById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
           this.addForm=false
           this.unitsForm.patchValue(data);
@@ -354,7 +354,7 @@ id:any
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
+        // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);

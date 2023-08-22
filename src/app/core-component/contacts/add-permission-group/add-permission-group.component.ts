@@ -268,7 +268,7 @@ export class AddPermissionGroupComponent implements OnInit {
     this.getPermissionGroup();
     // this.getPermission();
     // this.getPermissions();
-    console.log(this.data1);
+    // console.log(this.data1);
   }
   // Component code
   // selectAllPermissions(permissions: any[], i: number, model_name: string, event: any) {
@@ -314,7 +314,7 @@ export class AddPermissionGroupComponent implements OnInit {
   groupList: any;
   getPermissionGroup() {
     this.contactService.getPermission().subscribe((response: any) => {
-      console.log(response);
+      // console.log(response);
       this.groupList = response?.data;
     })
   }
@@ -337,7 +337,7 @@ export class AddPermissionGroupComponent implements OnInit {
         }]
       }));
       this.permmisionList = transformedData;
-      console.log(this.permmisionList);
+      // console.log(this.permmisionList);
     });
   }
 
@@ -374,7 +374,7 @@ export class AddPermissionGroupComponent implements OnInit {
       });
 
       this.permmisionList = groupedPermissions;
-      console.log(this.permmisionList);
+      // console.log(this.permmisionList);
     });
   }
 
@@ -408,12 +408,12 @@ export class AddPermissionGroupComponent implements OnInit {
   loaders = false;
   modelName:any;
   submit() {
-    console.log(this.modelName);
-    console.log(this.permissionForm.value.group_name);
-    console.log(this.permissionForm.value);
+    // console.log(this.modelName);
+    // console.log(this.permissionForm.value.group_name);
+    // console.log(this.permissionForm.value);
     if (this.permissionForm.valid) {
       this.loaders = true
-      console.log('valid');
+      // console.log('valid');
       var formdata: any = new FormData();
       formdata.append('group_name', this.permissionForm.get('group_name')?.value);
       // Filter out null values from the variant array
@@ -421,7 +421,7 @@ export class AddPermissionGroupComponent implements OnInit {
       formdata.append('permissions', JSON.stringify(permissionsArray));
       // formdata.append('datetime',this.permissionForm.get('datetime')?.value);
       this.contactService.addPermissionGroup(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.loaders = false;
         this.addRes = res;
         if (this.addRes.IsSuccess == 'True') {
@@ -440,7 +440,7 @@ export class AddPermissionGroupComponent implements OnInit {
       });
     } else {
       this.permissionForm.markAllAsTouched();
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -452,7 +452,7 @@ export class AddPermissionGroupComponent implements OnInit {
   }
 
   detailsPage(val) {
-    console.log(val);
+    // console.log(val);
     this.router.navigate([`//contacts/detailsPermissionGroup/${val}`])
   }
 }

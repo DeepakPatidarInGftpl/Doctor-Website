@@ -61,7 +61,7 @@ export class StatelistComponent implements OnInit {
               text: 'Your file has been deleted.',
             });
           } else {
-            console.log(this.delRes);
+            // console.log(this.delRes);
             // this.toastr.error(this.delRes.error)
             Swal.fire({
               icon: 'error',
@@ -171,7 +171,7 @@ export class StatelistComponent implements OnInit {
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    console.log(this.tableData);
+    // console.log(this.tableData);
     this.getCountryList();
 //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -195,16 +195,16 @@ export class StatelistComponent implements OnInit {
       this.Service.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='add_state') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='change_state') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }else if (res.content_type.app_label === 'places' && res.content_type.model === 'state' && res.codename=='delete_state') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });
@@ -247,13 +247,13 @@ export class StatelistComponent implements OnInit {
   addRes: any;
   loaders = false;
   submit() {
-    console.log(this.stateForm.value);
-    console.log(this.id);
+    // console.log(this.stateForm.value);
+    // console.log(this.id);
 
     if (this.stateForm.valid) {
       this.loaders = true;
       this.coreService.addstate(this.stateForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loaders = false;
@@ -262,12 +262,12 @@ export class StatelistComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
 
     } else {
       this.stateForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   countryError = null;
@@ -275,7 +275,7 @@ export class StatelistComponent implements OnInit {
     if (this.stateForm.valid) {
       this.loaders = true;
       this.coreService.updatestate(this.stateForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "State updated successfully") {
           this.loaders = false;
@@ -285,7 +285,7 @@ export class StatelistComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error);
+        // console.log(err.error);
         if (err.error.country) {
           this.countryError = 'Select Country';
           setTimeout(() => {
@@ -296,7 +296,7 @@ export class StatelistComponent implements OnInit {
 
     } else {
       this.stateForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   countryy: any
@@ -321,7 +321,7 @@ export class StatelistComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getstateById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
         if (id == data.id) {
           this.addForm = false
@@ -342,7 +342,7 @@ export class StatelistComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
+        // console.log(res);
   //       console.log(res.state.toLocaleLowerCase());
   //       console.log(res.state.match(this.titlee));
   //       return res.state.match(this.titlee);

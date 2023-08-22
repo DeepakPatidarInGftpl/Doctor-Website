@@ -91,7 +91,7 @@ export class RatingAndReviewComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.updateratingAndReview({ status: status }, id).subscribe(res => {
           this.delRes = res
-          console.log(this.delRes);
+          // console.log(this.delRes);
           if (this.delRes.error == "Rating And Reviews is not in New status") {
             Swal.fire({
               icon: 'error',
@@ -142,7 +142,7 @@ export class RatingAndReviewComponent implements OnInit {
       if (result.isConfirmed) {
         this.websiteService.updateratingAndReview({ status: 'Accept' }, id).subscribe((res) => {
             this.delRes = res;
-            console.log(this.delRes);
+            // console.log(this.delRes);
             if (this.delRes.msg == 'Rating And Reviews Updated Sucessfully') {
               Swal.fire({
                 icon: 'success',
@@ -155,7 +155,7 @@ export class RatingAndReviewComponent implements OnInit {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         this.websiteService.updateratingAndReview({ status: 'Reject' }, id).subscribe((res) => {
             this.delRes = res;
-            console.log(this.delRes);
+            // console.log(this.delRes);
             if (this.delRes.msg == 'Rating And Reviews Updated Sucessfully') {
               Swal.fire({
                 icon: 'success',
@@ -200,13 +200,13 @@ export class RatingAndReviewComponent implements OnInit {
       this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'product'  && res.content_type.model === 'ratingandreviewsonproduct' && res.codename=='add_ratingandreviewsonproduct') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'product' && res.content_type.model === 'ratingandreviewsonproduct' && res.codename=='change_ratingandreviewsonproduct') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }
         });
       });
@@ -244,9 +244,9 @@ export class RatingAndReviewComponent implements OnInit {
       this.ngOnInit();
     } else {
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.product?.title.toLocaleLowerCase());
-        console.log(res.product?.title.match(this.titlee));
+        // console.log(res);
+        // console.log(res.product?.title.toLocaleLowerCase());
+        // console.log(res.product?.title.match(this.titlee));
         return res.product?.title.match(this.titlee);
       })
     }

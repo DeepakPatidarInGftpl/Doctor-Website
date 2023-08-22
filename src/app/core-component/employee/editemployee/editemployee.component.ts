@@ -73,7 +73,7 @@ export class EditemployeeComponent implements OnInit {
     })
   }
   selectState(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
     })
@@ -85,7 +85,7 @@ export class EditemployeeComponent implements OnInit {
     })
   }
   selectCity(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city = res;
     })
@@ -93,10 +93,10 @@ export class EditemployeeComponent implements OnInit {
   addRes:any
   dateError=null;
   submit() {
-    console.log(this.employeeForm.value);
+    // console.log(this.employeeForm.value);
     if (this.employeeForm.valid) {
       this.coreService.updateEmployee(this.employeeForm.value,this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes=res
         if (this.addRes.msg == "Employee updated successfully") {
           this.toastr.success(this.addRes.msg)
@@ -107,7 +107,7 @@ export class EditemployeeComponent implements OnInit {
           // })
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
         if (err.error.dob) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {

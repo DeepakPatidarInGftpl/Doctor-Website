@@ -158,7 +158,7 @@ export class BrandlistComponent implements OnInit {
     //   permission.map((res: any) => {
     //     if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='add_brands') {
     //       this.isAdd = res.codename;
-    //       console.log(this.isAdd);
+          // console.log(this.isAdd);
     //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='change_brands') {
     //       this.isEdit = res.codename;
     //       console.log(this.isEdit);
@@ -176,13 +176,13 @@ export class BrandlistComponent implements OnInit {
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='add_brands') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='change_brands') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'product' && res.content_type.model === 'brands' && res.codename=='delete_brands') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });

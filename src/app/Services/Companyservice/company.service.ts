@@ -39,7 +39,7 @@ export class CompanyService {
 
   editData(data: company) {
     this.edit.next(data);
-    console.log(data);
+    // console.log(data);
 
     localStorage.setItem('editCompany', JSON.stringify(data))
     // localStorage.setItem('editCompany', JSON.stringify([data]))

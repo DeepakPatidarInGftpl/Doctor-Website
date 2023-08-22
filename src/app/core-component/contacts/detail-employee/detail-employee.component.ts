@@ -39,7 +39,7 @@ export class DetailEmployeeComponent implements OnInit {
     this.contactService.getEmployeeById(this.id).subscribe(res => {
         if(this.id==res.id){
           this.employeeDetail = res
-          console.log(res); 
+          // console.log(res); 
         }
     })
   }

@@ -171,14 +171,14 @@ export class AddproductComponent implements OnInit {
   subcatList: any
   getSubCategory() {
     this.coreService.getSubcategory().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.subcatList = res;
     })
   }
   brandList: any
   getBrand() {
     this.coreService.getBrand().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.brandList = res
     })
   }
@@ -221,7 +221,7 @@ export class AddproductComponent implements OnInit {
   searchSize: string = '';
   getSize() {
     this.coreService.getSize().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.sizeList = res;
       this.filteredSizeData = this.sizeList.slice();
       this.filterSizeData();
@@ -294,7 +294,7 @@ export class AddproductComponent implements OnInit {
   hsncodeBysubcatList: any;
   getHsncodeBySubcategory(val: any) {
     this.coreService.getHsncodeBySubcategory(val).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.hsncodeBysubcatList = res;
     })
   }
@@ -303,7 +303,7 @@ export class AddproductComponent implements OnInit {
   taxSlabBysubcatList: any;
   getTaxslabBySubcategory(val: any) {
     this.coreService.getTaxslabBySubcategory(val).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.taxSlabBysubcatList = res;
     })
   }
@@ -313,7 +313,7 @@ export class AddproductComponent implements OnInit {
   featureData: any;
   getFeaturegroupBySubcategory(val: any) {
     this.coreService.getFeaturegroupBySubcategoryGroup(val).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.featureGrpBysubcatGroupList = res;
       // open feature form 
       const feature = this.productForm.get('product_features') as FormArray;
@@ -322,7 +322,7 @@ export class AddproductComponent implements OnInit {
         this.addFeature();
       }
       this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
-        console.log(res);
+        // console.log(res);
 
         const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
         imageGroup.patchValue({
@@ -356,7 +356,7 @@ export class AddproductComponent implements OnInit {
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray;
-      console.log(this.check);
+      // console.log(this.check);
 
       this.selectedColor++;
       this.selectedColorId = formArray.value
@@ -390,7 +390,7 @@ export class AddproductComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedSize++;
-      console.log(this.selectedSize);
+      // console.log(this.selectedSize);
       this.selectedSizeId = formArray.value
     }
     /* unselected */
@@ -438,7 +438,7 @@ export class AddproductComponent implements OnInit {
 
   loader = false
   submit() {
-    console.log(this.productForm.value);
+    // console.log(this.productForm.value);
     let formdata: any = new FormData();
     formdata.append('title', this.productForm.get('title')?.value);
     formdata.append('category', this.productForm.get('category')?.value);
@@ -470,8 +470,8 @@ export class AddproductComponent implements OnInit {
     // variants.controls.forEach((control, index) => {
     //   const variant = control.value;
     //   Object.keys(variant).forEach((key: string) => {
-    //     console.log(key);
-    //     console.log(index);
+        // console.log(key);
+        // console.log(index);
 
     //     const value = variant[key];
     //     formdata.append(`variants[${index}][${key}]`, value);
@@ -575,12 +575,12 @@ export class AddproductComponent implements OnInit {
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
         } else {
-          console.log('res api error');
+          // console.log('res api error');
         }
       })
     } else {
       this.productForm.markAllAsTouched();
-      console.log('forms invalid');
+      // console.log('forms invalid');
       this.toastr.error('Please select all the required fields')
     }
   }
@@ -666,7 +666,7 @@ export class AddproductComponent implements OnInit {
         this.selectSize = this.selectSize.filter(item => item !== existingItem);
       }
     }
-    console.log(this.selectSize);
+    // console.log(this.selectSize);
     this.variantCheck();
   }
 
@@ -685,8 +685,8 @@ export class AddproductComponent implements OnInit {
         this.selectColor = this.selectColor.filter(item => item !== existingItem);
       }
     }
-    console.log(this.currentColors, 'currentColors');
-    console.log(this.selectColor, 'selectColor');
+    // console.log(this.currentColors, 'currentColors');
+    // console.log(this.selectColor, 'selectColor');
     this.variantCheck();
   }
   varntColor: any = [];
@@ -698,7 +698,7 @@ export class AddproductComponent implements OnInit {
       for (let i = 0; i < this.currentColors.length; i++) {
         this.currentVariants.push({ color: this.currentColors[i] });
         this.productColor = this.currentColors[i];
-        console.log(this.productColor, 'productcolor');
+        // console.log(this.productColor, 'productcolor');
       }
     } else if (this.currentSizes.length > 0 && this.currentColors.length == 0) {
       for (let i = 0; i < this.currentSizes.length; i++) {
@@ -712,12 +712,12 @@ export class AddproductComponent implements OnInit {
       }
     }
     this.variantForm();
-    console.log(this.currentSizes, 'currSizes');
-    console.log(this.currentColors, 'currColors');
-    console.log(this.currentVariants, 'currVar');
+    // console.log(this.currentSizes, 'currSizes');
+    // console.log(this.currentColors, 'currColors');
+    // console.log(this.currentVariants, 'currVar');
 
     // this.currentColors.map((res:any)=>{
-    //   console.log(res);
+      // console.log(res);
     //   // const variants = this.productForm.get('variants') as FormArray;
     //   const variants = this.productForm.get('variants') as FormArray;
     //   // variants.at(0).patchValue({
@@ -740,10 +740,10 @@ export class AddproductComponent implements OnInit {
 
     const userArray = this.productForm.get('variant_product') as FormArray;
     this.currentVariants.map((user, index) => {
-      console.log(user);
-      console.log(index);
+      // console.log(user);
+      // console.log(index);
       const userGroup = userArray.at(index) as FormGroup;
-      console.log(userGroup);
+      // console.log(userGroup);
       userGroup.patchValue({
         variant_name: user.color?.title == undefined ? user.size?.title : user.size?.title == undefined ? user.color?.title : `${user.color?.title} - ${user.size?.title}`,
         variant_color: user.color?.id == undefined ? user.color?.id : `${user.color?.id}`,
@@ -751,14 +751,14 @@ export class AddproductComponent implements OnInit {
       });
     });
     this.currentVariants.forEach((j: any, i: any) => {
-      console.log(j?.color);
+      // console.log(j?.color);
       this.varntColor[i] = j?.color.title == undefined ? j?.color.title : `${j?.color.title}`;
-      console.log(this.varntColor[i]);
+      // console.log(this.varntColor[i]);
     })
     this.currentVariants.forEach((j: any, i: any) => {
-      console.log(j?.size);
+      // console.log(j?.size);
       this.varntSize[i] = j?.size?.title == undefined ? j?.size?.title : `${j?.size?.title}`;
-      console.log(this.varntSize[i]);
+      // console.log(this.varntSize[i]);
     })
   }
   variantForm() {
@@ -773,7 +773,7 @@ export class AddproductComponent implements OnInit {
 
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     const productImage = this.productForm.get('product_images') as FormArray;
     const imagesarray = productImage.at(0) as FormGroup;
     imagesarray.patchValue({
@@ -838,7 +838,7 @@ export class AddproductComponent implements OnInit {
     if (this.isFormValid()) {
       this.tabGroup.selectedIndex = 1;
     } else {
-      console.log('Please fill in all required fields before proceeding.');
+      // console.log('Please fill in all required fields before proceeding.');
       this.toastr.error('Please fill in all required fields before proceeding.')
     }
   }

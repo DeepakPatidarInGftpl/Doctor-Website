@@ -187,16 +187,16 @@ export class AboutFooterBannerComponent implements OnInit {
       this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'website'  && res.content_type.model === 'aboutfooterbanner' && res.codename=='add_aboutfooterbanner') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'website' && res.content_type.model === 'aboutfooterbanner' && res.codename=='change_aboutfooterbanner') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }else if (res.content_type.app_label === 'website' && res.content_type.model === 'aboutfooterbanner' && res.codename=='delete_aboutfooterbanner') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });
@@ -221,7 +221,7 @@ export class AboutFooterBannerComponent implements OnInit {
   url:any
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -239,16 +239,16 @@ export class AboutFooterBannerComponent implements OnInit {
   loaders = false;
   imgError:any;
   submit() {
-    console.log(this.bannerForm.value);
+    // console.log(this.bannerForm.value);
     if (this.bannerForm.valid) {
-      console.log('valid');
+      // console.log('valid');
       this.loaders = true;
       var formdata: any = new FormData()
       formdata.append('title', this.bannerForm.get('title')?.value);
       formdata.append('description', this.bannerForm.get('description')?.value);
       formdata.append('image', this.bannerForm.get('image')?.value);
       this.websiteService.addaboutFooterBanner(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "ABOUT FOOTER BANNER CREATED SUCESSFULLY") {
           this.loaders=false;
@@ -260,7 +260,7 @@ export class AboutFooterBannerComponent implements OnInit {
           this.loaders=false;
         }
       }, err => {
-        console.log(err.error);
+        // console.log(err.error);
         this.loaders=false;
         this.imgError=err.error.image;
         setTimeout(() => {
@@ -269,12 +269,12 @@ export class AboutFooterBannerComponent implements OnInit {
       })
     } else {
       this.bannerForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
   update() {
-    console.log(this.id);
+    // console.log(this.id);
     if (this.bannerForm.valid) {
       this.loaders=true;
       var formdata: any = new FormData()
@@ -286,7 +286,7 @@ export class AboutFooterBannerComponent implements OnInit {
       if (imageFile && imageFile instanceof File) {
         formdata.append('image', imageFile);
         this.websiteService.updateaboutFooterBanner(formdata, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "About Footer Banner Updated Sucessfully") {
             this.loaders=false;
@@ -300,7 +300,7 @@ export class AboutFooterBannerComponent implements OnInit {
             this.loaders=false;
           }
         }, err => {
-          console.log(err.error);
+          // console.log(err.error);
           this.loaders=false;
           this.imgError=err.error.image;
           setTimeout(() => {
@@ -309,7 +309,7 @@ export class AboutFooterBannerComponent implements OnInit {
         })
       }else{
         this.websiteService.updateaboutFooterBanner(formdata, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "About Footer Banner Updated Sucessfully") {
             this.loaders=false;
@@ -323,7 +323,7 @@ export class AboutFooterBannerComponent implements OnInit {
             this.loaders=false;
           }
         }, err => {
-          console.log(err.error);
+          // console.log(err.error);
           this.loaders=false;
           this.imgError=err.error.image;
           setTimeout(() => {
@@ -335,7 +335,7 @@ export class AboutFooterBannerComponent implements OnInit {
 
     } else {
       this.bannerForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -358,12 +358,12 @@ export class AboutFooterBannerComponent implements OnInit {
     this.id = id;
     this.url=''
     this.websiteService.getaboutFooterBannerById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.resEdit = res;
       this.resEdit.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
-          console.log(data);
+          // console.log(data);
           this.updateData=data;
           this.addForm = false
           this.bannerForm.patchValue({

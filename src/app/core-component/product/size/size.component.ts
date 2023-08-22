@@ -159,7 +159,7 @@ export class SizeComponent implements OnInit {
 
     // this.coreService.getsize();
     // // this.tableData = this.QueryService.sizeList;
-    // // console.log(this.tableData);
+    // console.log(this.tableData);
     // this.coreService.sizeBehavior.subscribe(() => {
     //   if (localStorage.getItem('sizesList')) {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("sizesList")!))
@@ -178,13 +178,13 @@ export class SizeComponent implements OnInit {
     //   permission.map((res: any) => {
     //     if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename=='add_size') {
     //       this.isAdd = res.codename;
-    //       console.log(this.isAdd);
+          // console.log(this.isAdd);
     //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename=='change_size') {
     //       this.isEdit = res.codename;
-    //       console.log(this.isEdit);
+          // console.log(this.isEdit);
     //     }else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename=='delete_size') {
     //       this.isDelete = res.codename;
-    //       console.log(this.isDelete);
+          // console.log(this.isDelete);
     //     }
     //   });
     // }
@@ -196,13 +196,13 @@ export class SizeComponent implements OnInit {
         permission.map((res: any) => {
           if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename=='add_size') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename=='change_size') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }else if (res.content_type.app_label === 'product' && res.content_type.model === 'size' && res.codename=='delete_size') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });
@@ -238,13 +238,13 @@ export class SizeComponent implements OnInit {
   addRes: any
   loaders=false;
  submit() {
-  console.log(this.sizeForm.value);
-  console.log(this.id);
+  // console.log(this.sizeForm.value);
+  // console.log(this.id);
 
   if (this.sizeForm.valid) {
     this.loaders=true;
     this.coreService.addsize(this.sizeForm.value).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
         this.loaders=false;
@@ -254,11 +254,11 @@ export class SizeComponent implements OnInit {
         this.ngOnInit()
       }
     }, err => {
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
     })
   } else {
     this.sizeForm.markAllAsTouched()
-    console.log('forms invalid');
+    // console.log('forms invalid');
   }
 }
 
@@ -266,7 +266,7 @@ update(){
   if (this.sizeForm.valid) {
     this.loaders=true;
     this.coreService.updatesize(this.sizeForm.value, this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Size updated successfully") {
         this.loaders=false;
@@ -277,11 +277,11 @@ update(){
         this.ngOnInit()
       }
     }, err => {
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
     })
   } else {
     this.sizeForm.markAllAsTouched()
-    console.log('forms invalid');
+    // console.log('forms invalid');
   }
 }
 
@@ -298,9 +298,9 @@ update(){
   editForm(id: number) {
     this.id = id
     this.coreService.getsizeById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
           this.addForm=false
           this.sizeForm.patchValue(data);
@@ -320,9 +320,9 @@ update(){
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
-  //       console.log(res.title.toLocaleLowerCase());
-  //       console.log(res.title.match(this.titlee));
+        // console.log(res);
+        // console.log(res.title.toLocaleLowerCase());
+        // console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);
   //     })
   //   }

@@ -161,18 +161,18 @@ export class ProductlistComponent implements OnInit {
     //   }
     // })
     // this.QueryService.productList;
-    console.log(this.res);
+    // console.log(this.res);
 
     this.coreService.getProducts().subscribe(res => {
       this.res = res;
       this.tableData = res;
       this.loader = false;
-      console.log(this.tableData);
+      // console.log(this.tableData);
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
     })
-    console.log(this.tableData);
+    // console.log(this.tableData);
 
     // from localstorage permission
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -198,13 +198,13 @@ export class ProductlistComponent implements OnInit {
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename == 'add_product') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename == 'change_product') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'product' && res.codename == 'delete_product') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });

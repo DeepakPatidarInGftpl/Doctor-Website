@@ -71,7 +71,7 @@ export class EditpurchaseComponent implements OnInit {
     });
 
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.getresbyId = res;
       this.purchaseForm.patchValue(res);
       this.purchaseForm.get('supplier')?.patchValue(res.party.id)
@@ -80,11 +80,11 @@ export class EditpurchaseComponent implements OnInit {
 
       //call detail api
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.supplierAddress = res;
         this.supplierControl.setValue(res.name); 
         this.selectedAddress = this.supplierAddress.address[0];
-        console.log(this.selectedAddress);
+        // console.log(this.selectedAddress);
       })
     })
 
@@ -104,8 +104,8 @@ export class EditpurchaseComponent implements OnInit {
   }
 
   displaySupplierName(supplierId: number): void {
-    console.log(supplierId);
-console.log(this.supplierList);
+    // console.log(supplierId);
+// console.log(this.supplierList);
 
 
     // this.filteredSuppliers
@@ -121,7 +121,7 @@ console.log(this.supplierList);
     //     }
     //   });
 
-    console.log(this.supplierControl);
+    // console.log(this.supplierControl);
 
   }
 
@@ -147,23 +147,23 @@ console.log(this.supplierList);
   }
 
   onItemSelect(item: any) {
-    console.log(item);
+    // console.log(item);
     this.oncheck(item)
-    console.log(this.dropdownSettings.noFilteredDataAvailablePlaceholderText);
+    // console.log(this.dropdownSettings.noFilteredDataAvailablePlaceholderText);
   }
   onItemSelectProduct(item: any) {
-    console.log(item);
+    // console.log(item);
   }
   onSelectAll(items: any) {
-    console.log(items);
+    // console.log(items);
   }
   searchInputValue: string = '';
 
   noData = false
   onSearchKeyUp(event: KeyboardEvent) {
-    console.log(event.key);
+    // console.log(event.key);
     if (this.dropdownSettings.noFilteredDataAvailablePlaceholderText) {
-      console.log('caleddd');
+      // console.log('caleddd');
       this.noData = true
     }
     this.searchInputValue = (event.target as HTMLInputElement).value;
@@ -198,14 +198,14 @@ console.log(this.supplierList);
   supplierList: any;
   getSuuplier() {
     this.purchaseService.getSupplier().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.suppliers = res;
-      console.log(this.suppliers);
+      // console.log(this.suppliers);
     })
   }
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.variants = res;
     })
   }
@@ -214,16 +214,16 @@ console.log(this.supplierList);
   selectedAddress: string = ''
 
   oncheck(event: any) {
-    console.log(event);
+    // console.log(event);
     const selectedItemId = event.id;
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
 
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.supplierAddress = res;
       this.selectedAddress = this.supplierAddress.address[0];
-      console.log(this.selectedAddress);
+      // console.log(this.selectedAddress);
     })
     if (this.getresbyId.cart.length >= 0) {
       const variants = this.purchaseForm.get('purchase_cart') as FormArray;
@@ -266,7 +266,7 @@ console.log(this.supplierList);
   }
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
     const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: selectedItemId
@@ -275,7 +275,7 @@ console.log(this.supplierList);
   loader = false;
   getRes: any;
   submit() {
-    console.log(this.purchaseForm.value);
+    // console.log(this.purchaseForm.value);
     if (this.purchaseForm.valid) {
       this.loader = true;
       let formdata: any = new FormData();
@@ -306,7 +306,7 @@ console.log(this.supplierList);
       formdata.append('purchase_cart', JSON.stringify(cartData));
 
       this.purchaseService.updatePurchase(formdata, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
           this.toastrService.success(this.getRes.msg);
@@ -319,7 +319,7 @@ console.log(this.supplierList);
       })
     } else {
       this.purchaseForm.markAllAsTouched()
-      console.log('invLID FORM');
+      // console.log('invLID FORM');
     }
   }
 
@@ -345,21 +345,21 @@ console.log(this.supplierList);
     return this.getCart().controls[index].get('additional_discount')
   }
   private _filter(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
       ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
       : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
 
     if (!include && filteredSuppliers.length === 0) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
     }
     return filteredSuppliers;
   }
 
   private _filtr(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
     const filteredVariant = include
       ? this.variants?.filter(variant => variant && (variant.product_title?.toLowerCase().includes(filterValue) ||
@@ -375,7 +375,7 @@ console.log(this.supplierList);
           variant.id?.toString().includes(filterValue))
       );
     if (!include && (!filteredVariant || filteredVariant.length === 0)) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredVariant.push({ product_title: "No data found" });
     }
     return filteredVariant || [];
@@ -400,11 +400,11 @@ console.log(this.supplierList);
   v_id: any;
 
   variantChanged(value: any, index) {
-    console.log(index);
-    console.log(value?.sku);
+    // console.log(index);
+    // console.log(value?.sku);
     this.barcode[index] = value.sku;
-    console.log(this.barcode[index]);
-    console.log(this.barcode);
+    // console.log(this.barcode[index]);
+    // console.log(this.barcode);
 
     this.v_id = value.id;
     const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
@@ -421,16 +421,16 @@ console.log(this.supplierList);
   staticValue: string = 'Static Value';
 
   searchProduct(event: any, index: any) {
-    console.log(event);
+    // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
         // this.productOption = res;
-        console.log(this.searchs);
+        // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
-        console.log(this.productName);
+        // console.log(this.productName);
         this.check = true;
         const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
         barcode.patchValue({
@@ -563,9 +563,9 @@ console.log(this.supplierList);
       this.ngOnInit();
     } else {
       this.suppliers = this.suppliers.filter(res => {
-        console.log(res);
-        console.log(res.title.toLocaleLowerCase());
-        console.log(res.title.match(this.titlee));
+        // console.log(res);
+        // console.log(res.title.toLocaleLowerCase());
+        // console.log(res.title.match(this.titlee));
         return res.title.match(this.titlee);
       })
     }

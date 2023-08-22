@@ -141,7 +141,7 @@ export class UserComponent implements OnInit {
   userDetails:any;
   ngOnInit(): void {
     this.contactService.getUser().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
@@ -171,13 +171,13 @@ export class UserComponent implements OnInit {
       permission?.map((res: any) => {
         if (res?.content_type.app_label === 'master'  && res?.content_type.model === 'user' && res?.codename=='add_user') {
           this.isAdd = res?.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res?.content_type.app_label === 'master' && res?.content_type.model === 'user' && res?.codename=='change_user') {
           this.isEdit = res?.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res?.content_type.app_label === 'master' && res?.content_type.model === 'user' && res?.codename=='delete_user') {
           this.isDelete = res?.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });
@@ -188,7 +188,7 @@ export class UserComponent implements OnInit {
   branchList:any;
   getBranch(){
     this.contactService.getBranch().subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.branchList=res;
     })
   }

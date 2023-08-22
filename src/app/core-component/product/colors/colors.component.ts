@@ -200,24 +200,24 @@ export class ColorsComponent implements OnInit {
      this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
        if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename=='add_color') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename=='change_color') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'product' && res.content_type.model === 'color' && res.codename=='delete_color') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });
   }
   add() {
-    console.log('jj');
+    // console.log('jj');
 
-    console.log(this.form.value);
+    // console.log(this.form.value);
 
   }
   //select table row
@@ -287,13 +287,13 @@ export class ColorsComponent implements OnInit {
 
 loaders=false;
   submit() {
-    console.log(this.colorForm.value);
-    console.log(this.id);
+    // console.log(this.colorForm.value);
+    // console.log(this.id);
 
     if (this.colorForm.valid) {
       this.loaders=true;
       this.coreService.addcolor(this.colorForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loaders=false;
@@ -303,11 +303,11 @@ loaders=false;
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.colorForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -315,7 +315,7 @@ loaders=false;
     if (this.colorForm.valid) {
       this.loaders=true;
       this.coreService.updatecolor(this.colorForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Colour updated successfully") {
           this.loaders=false;
@@ -326,11 +326,11 @@ loaders=false;
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.colorForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -347,9 +347,9 @@ loaders=false;
   editForm(id: number) {
     this.id = id
     this.coreService.getcolorById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
           this.addForm = false;
           this.colorForm.patchValue(data);

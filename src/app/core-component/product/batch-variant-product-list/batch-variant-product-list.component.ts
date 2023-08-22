@@ -129,7 +129,7 @@ export class BatchVariantProductListComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.coreService.getBatchById(this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -168,9 +168,9 @@ export class BatchVariantProductListComponent implements OnInit {
       this.ngOnInit();
     } else {
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.name.toLocaleLowerCase());
-        console.log(res.name.match(this.titlee));
+        // console.log(res);
+        // console.log(res.name.toLocaleLowerCase());
+        // console.log(res.name.match(this.titlee));
         return res.name.match(this.titlee);
       })
     }

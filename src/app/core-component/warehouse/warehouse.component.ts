@@ -51,7 +51,7 @@ export class WarehouseComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteWarehouse(id).subscribe(res => {
           this.delRes = res
-          console.log(res);
+          // console.log(res);
           // if (this.delRes.msg == "Warehouse Deleted successfully") {
           //   this.tableData
           // }
@@ -211,14 +211,14 @@ export class WarehouseComponent implements OnInit {
       permission.map((res: any) => {
         if (res.content_type.app_label === 'master' && res.content_type.model === 'warehouse' && res.codename == 'add_warehouse') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'warehouse' && res.codename == 'change_warehouse') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
 
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'warehouse' && res.codename == 'delete_warehouse') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
 
         }
       });
@@ -254,7 +254,7 @@ export class WarehouseComponent implements OnInit {
   accountType: any
   getAccountType() {
     this.coreService.accountType().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.accountType = res
     })
   }
@@ -293,10 +293,10 @@ export class WarehouseComponent implements OnInit {
 
 
   submit() {
-    console.log(this.warehouseForm.value);
+    // console.log(this.warehouseForm.value);
     if (this.warehouseForm.valid) {
       this.coreService.addWarehouse(this.warehouseForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.toastr.success(this.addRes.msg)
@@ -304,18 +304,18 @@ export class WarehouseComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.warehouseForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
   update() {
     if (this.warehouseForm.valid) {
       this.coreService.updateWarehouse(this.warehouseForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Warehouse updated successfully") {
           this.toastr.success(this.addRes.msg)
@@ -325,14 +325,14 @@ export class WarehouseComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
 
 
 
     } else {
       this.warehouseForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -347,9 +347,9 @@ export class WarehouseComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getwarehouseById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
           this.addForm = false;
           this.warehouseForm.patchValue(data);
@@ -384,7 +384,7 @@ export class WarehouseComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
+        // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);

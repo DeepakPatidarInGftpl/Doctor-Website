@@ -174,18 +174,18 @@ export class FooterFeaturesComponent implements OnInit {
        this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'website'  && res.content_type.model === 'footerfeatures' && res.codename=='add_footerfeatures') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
             
           } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footerfeatures' && res.codename=='change_footerfeatures') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
             
           }else if (res.content_type.app_label === 'website' && res.content_type.model === 'footerfeatures' && res.codename=='delete_footerfeatures') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
             
           }
         });
@@ -221,7 +221,7 @@ export class FooterFeaturesComponent implements OnInit {
   url: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -238,8 +238,8 @@ export class FooterFeaturesComponent implements OnInit {
   addRes: any
   loaders = false;
   submit() {
-    console.log(this.FooterFeaturesForm.value);
-    console.log(this.id);
+    // console.log(this.FooterFeaturesForm.value);
+    // console.log(this.id);
     var formdata: any = new FormData()
 
     formdata.append('title', this.FooterFeaturesForm.get('title')?.value);
@@ -248,7 +248,7 @@ export class FooterFeaturesComponent implements OnInit {
     if (this.FooterFeaturesForm.valid) {
       this.loaders = true;
       this.websiteService.addFooterFeature(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.url=''
@@ -264,11 +264,11 @@ export class FooterFeaturesComponent implements OnInit {
         }
       }, err => {
         this.loaders=false;
-        console.log(err.error);
+        // console.log(err.error);
       })
     } else {
       this.FooterFeaturesForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -284,7 +284,7 @@ export class FooterFeaturesComponent implements OnInit {
       if (imageFile && imageFile instanceof File) {
         formdata.append('image', imageFile);
         this.websiteService.updateFooterFeature(formdata, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Footer Features Updated Sucessfully") {
             this.loaders = false;
@@ -299,11 +299,11 @@ export class FooterFeaturesComponent implements OnInit {
           }
         }, err => {
           this.loaders=false;
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
         })
       } else {
         this.websiteService.updateFooterFeature(formdata, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Footer Features Updated Sucessfully") {
             this.updateData = '';
@@ -315,12 +315,12 @@ export class FooterFeaturesComponent implements OnInit {
             this.ngOnInit()
           }else{this.loaders=false;}
         }, err => {
-          console.log(err.error);
+          // console.log(err.error);
         })
       }
     } else {
       this.FooterFeaturesForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -342,7 +342,7 @@ export class FooterFeaturesComponent implements OnInit {
     this.websiteService.getFooterFeatureById(id).subscribe(res => {
       this.resData = res
       this.resData.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
           this.addForm = false;
           this.updateData = data;
@@ -366,8 +366,8 @@ export class FooterFeaturesComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
-  //       console.log(res.title.toLocaleLowerCase());
+        // console.log(res);
+        // console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);
   //     })

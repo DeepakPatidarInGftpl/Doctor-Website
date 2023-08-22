@@ -39,7 +39,7 @@ export class DetailSupplierComponent implements OnInit {
     this.contactService.getSupplierById(this.id).subscribe(res => {
         if(this.id==res.id){
           this.supplierDetail = res
-          console.log(res); 
+          // console.log(res); 
         }
     })
   }

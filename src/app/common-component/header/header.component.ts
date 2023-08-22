@@ -52,16 +52,16 @@ export class HeaderComponent implements OnInit {
 
 
   logOut() {
-    console.log(localStorage.getItem('token'));
+    // console.log(localStorage.getItem('token'));
     if (localStorage.getItem('token')) {
       this.authServ.logout().subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.toastr.success('LogOut Successfull');
         localStorage.clear()
         this.Router.navigate(['/auth/signin'])
         this.authServ.doLogout()
       }, (err: any) => {
-        console.log(err.error.detail);
+        // console.log(err.error.detail);
         if (err.error.detail) {
           localStorage.removeItem('token');
           localStorage.clear()
@@ -90,7 +90,7 @@ export class HeaderComponent implements OnInit {
           window.location.reload();
         }
     },err=>{
-      console.log(err.error.detail=='Invalid token.');
+      // console.log(err.error.detail=='Invalid token.');
       if(err.error.detail=='Invalid token.'){
         localStorage.clear();
         window.location.reload();

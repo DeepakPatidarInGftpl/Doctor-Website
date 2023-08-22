@@ -182,23 +182,23 @@ export class RecieptComponent implements OnInit {
         .pipe(
           catchError(err => {
             // handleError(err);
-            console.log('err catch', err);
+            // console.log('err catch', err);
             this.cusErrorMsg = 'No Customer Found';
             this.cusIsLoading = false;
             return [];
           }),
           finalize(() => {
             this.cusIsLoading = false
-            console.log('search', value)
+            // console.log('search', value)
           }),
         )
       )
     )
     .subscribe((data: any) => {
-      console.log('data', data)
+      // console.log('data', data)
 
       if(data.length > 0){
-        console.log('data', data)
+        // console.log('data', data)
         this.filteredCustomer2 = data;
       } else {
         this.filteredCustomer2 = [];
@@ -224,23 +224,23 @@ export class RecieptComponent implements OnInit {
         .pipe(
           catchError(err => {
             // handleError(err);
-            console.log('err catch', err);
+            // console.log('err catch', err);
             this.partyErrorMsg = 'No Party Found';
             this.partyIsLoading = false;
             return [];
           }),
           finalize(() => {
             this.partyIsLoading = false
-            console.log('search', value)
+            // console.log('search', value)
           }),
         )
       )
     )
     .subscribe((data: any) => {
-      console.log('data', data)
+      // console.log('data', data)
 
       if(data.length > 0){
-        console.log('data', data)
+        // console.log('data', data)
         this.filteredParty = data;
       } else {
         this.filteredParty = [];
@@ -251,11 +251,11 @@ export class RecieptComponent implements OnInit {
 
     this.cartService.getCompanyBank().subscribe({
       next: (response) => {
-        console.log(response, 'company bank')
+        // console.log(response, 'company bank')
         this.companyBankList = response;
       },
       error: (error) => {
-        console.log('company bank', error);
+        // console.log('company bank', error);
       }
     })
 }
@@ -266,11 +266,11 @@ optionSelectedReceipt(event){
   let customer = event.option.value;
   this.cartService.getReceiptDueOrder(customer.id).subscribe({
     next: (response) => {
-      console.log(response, 'receipt sales')
+      // console.log(response, 'receipt sales')
       this.receiptSales = response;
     },
     error: (error) => {
-      console.log('receipt sales', error);
+      // console.log('receipt sales', error);
     }
   })
 
@@ -309,7 +309,7 @@ get payment_account_receipt() { return this.receiptPaymentForm.get('payment_acco
 
 receiptFormSubmit(){
   if (this.receiptPaymentForm.invalid) {
-    console.log('invalid');
+    // console.log('invalid');
     Object.keys(this.receiptPaymentForm.controls).forEach(key => {
       this.receiptPaymentForm.controls[key].markAsTouched();
     });
@@ -338,7 +338,7 @@ formSubmitExpense(){
    .expensePayment(formData)
    .subscribe({
       next: (response:any) => {
-        console.log('response receipt', response);
+        // console.log('response receipt', response);
         if(response.isSuccess){
           // this.discardCurrentBill();
           this.toastr.success(response.msg)
@@ -352,7 +352,7 @@ formSubmitExpense(){
         }
       },
       error: (error) => {
-        console.log(error)
+        // console.log(error)
         this.toastr.error(error.message);
       },
     });
@@ -481,7 +481,7 @@ formSubmitPurchase(){
    .purchasePayment(formData)
    .subscribe({
       next: (response:any) => {
-        console.log('response receipt', response);
+        // console.log('response receipt', response);
         if(response.isSuccess){
           // this.discardCurrentBill();
           this.toastr.success(response.msg)
@@ -493,7 +493,7 @@ formSubmitPurchase(){
         }
       },
       error: (error) => {
-        console.log(error)
+        // console.log(error)
         this.toastr.error(error.message);
       },
     });
@@ -622,7 +622,7 @@ formSubmitReceipt(){
    .receiptPayment(formData)
    .subscribe({
       next: (response:any) => {
-        console.log('response receipt', response);
+        // console.log('response receipt', response);
         if(response.isSuccess){
           // this.discardCurrentBill();
           this.toastr.success(response.msg)
@@ -634,7 +634,7 @@ formSubmitReceipt(){
         }
       },
       error: (error) => {
-        console.log(error)
+        // console.log(error)
         this.toastr.error(error.message);
       },
     });

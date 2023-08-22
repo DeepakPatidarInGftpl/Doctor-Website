@@ -36,7 +36,7 @@ export class BatchVariantProductDetailsComponent implements OnInit {
   getdata() {
     this.coreService.getBatchById(this.id).subscribe(res => {
           this.batchDetail = res
-          console.log(res);
+          // console.log(res);
     })
   }
 }

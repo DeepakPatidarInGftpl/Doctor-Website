@@ -21,7 +21,7 @@ export class DetailsPurchaseComponent implements OnInit {
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.purchaseDetail = res
-        console.log(res);
+        // console.log(res);
       }
     })
   }

@@ -166,7 +166,7 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.tableDatas.map((res)=>{
       if(this.id==res.id){
         this.tableData=res;
-        console.log(this.tableData);
+        // console.log(this.tableData);
       }
     })
   }

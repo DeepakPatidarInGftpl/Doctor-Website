@@ -19,7 +19,7 @@ export class EditcompanyComponent implements OnInit {
   constructor(private fb: FormBuilder, private Arout: ActivatedRoute, private copmpanyService: CompanyService, private router: Router, private toastr: ToastrService
     , private coreService: CoreService) {
     //getting data through url
-    console.log(this.router.getCurrentNavigation()?.extras?.state?.['example']);
+    // console.log(this.router.getCurrentNavigation()?.extras?.state?.['example']);
 
     // this.data = this.router.getCurrentNavigation()?.extras?.state?.['example']
   }
@@ -36,7 +36,7 @@ export class EditcompanyComponent implements OnInit {
     this.getYear();
     this.copmpanyService.getCompanyById(this.companyId).subscribe(res => {
       this.data = res
-      console.log(this.data);
+      // console.log(this.data);
 
       // this.companyForm.patchValue(this.data)
 
@@ -51,7 +51,7 @@ export class EditcompanyComponent implements OnInit {
       //   state:this.data.state
       // })
       this.selectS = this.data.state
-      console.log(this.state);
+      // console.log(this.state);
 
     })
 
@@ -83,15 +83,15 @@ export class EditcompanyComponent implements OnInit {
   getState() {
     this.copmpanyService.stateList().subscribe(res => {
       // this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
 
   selectState(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   city: any
@@ -102,7 +102,7 @@ export class EditcompanyComponent implements OnInit {
   }
 
   selectCity(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city = res;
 
@@ -112,7 +112,7 @@ export class EditcompanyComponent implements OnInit {
   yearDetails: any
   getYear() {
     this.coreService.getFinancialYear().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.yearDetails = res;
     })
   }
@@ -122,7 +122,7 @@ export class EditcompanyComponent implements OnInit {
     if (this.companyForm.valid) {
       this.loaders=true;
       this.copmpanyService.updateCompany(this.companyForm.value, this.companyId).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         if (res.msg == "Company updated successfully") {
           this.loaders=false;
           this.toastr.success(res.msg);
@@ -142,7 +142,7 @@ export class EditcompanyComponent implements OnInit {
       })
     } else {
       this.companyForm.markAllAsTouched()
-      console.log('error');
+      // console.log('error');
     }
 
   }

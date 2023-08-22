@@ -28,7 +28,7 @@ export class RolesGuardGuard implements CanActivate {
 // from localstorage
     if (auth) {
       const allowedRoles = route.data['allowedRoles'] as string[];
-      console.log(allowedRoles, 'allowedRoles');
+      // console.log(allowedRoles, 'allowedRoles');
       const hasPermission = auth.some((permission: Permission) =>
         allowedRoles.includes(permission.codename)
       );
@@ -48,12 +48,12 @@ export class RolesGuardGuard implements CanActivate {
       })
 
       //end
-      console.log(hasPermission);
+      // console.log(hasPermission);
       if (hasPermission) {
         return true;
       }
     }
-    console.log(this.permissions ,'permisiion guard');
+    // console.log(this.permissions ,'permisiion guard');
 
     // dynamic data from profile api
     // if(this.permissions ){

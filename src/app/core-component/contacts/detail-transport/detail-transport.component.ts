@@ -40,7 +40,7 @@ export class DetailTransportComponent implements OnInit {
     this.contactService.getTransportById(this.id).subscribe(res => {
         if(this.id==res.id){
           this.transportDetail = res
-          console.log(res); 
+          // console.log(res); 
         }
     })
   }

@@ -81,7 +81,7 @@ export class CityComponent implements OnInit {
     };
     this.coreService.getcity();
     this.tableData = this.QueryService.cityList;
-    console.log(this.tableData);
+    // console.log(this.tableData);
     this.getstate();
   }
 
@@ -113,13 +113,13 @@ export class CityComponent implements OnInit {
   }
   addRes: any
   submit() {
-    console.log(this.cityForm.value);
-    console.log(this.id);
+    // console.log(this.cityForm.value);
+    // console.log(this.id);
 
     if (this.cityForm.valid) {
     
         this.coreService.addcity(this.cityForm.value).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Data Created") {
             this.toastr.success(this.addRes.msg)
@@ -127,19 +127,19 @@ export class CityComponent implements OnInit {
             window.location.reload();
           }
         }, err => {
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
         })
       
     } else {
       this.cityForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
   update(){
     if (this.cityForm.valid) {
         this.coreService.updatecity(this.cityForm.value, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "City updated successfully") {
             this.toastr.success(this.addRes.msg)
@@ -148,12 +148,12 @@ export class CityComponent implements OnInit {
             window.location.reload()
           }
         }, err => {
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
         })
      
     } else {
       this.cityForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -173,7 +173,7 @@ export class CityComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getcityById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
         if (id == data.id) {
           this.addForm = false

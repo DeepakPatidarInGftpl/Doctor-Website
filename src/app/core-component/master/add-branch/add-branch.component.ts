@@ -40,15 +40,15 @@ export class AddBranchComponent implements OnInit {
   }
   state: any;
   selectState(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   city: any;
   selectCity(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city = res;
     })
@@ -57,12 +57,12 @@ export class AddBranchComponent implements OnInit {
 
   loaders = false;
   submit() {
-    console.log(this.branchForm.value);
+    // console.log(this.branchForm.value);
  
     if (this.branchForm.valid) {
       this.loaders = true;
       this.coreService.addBranch(this.branchForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "BRANCH CREATED SUCESSFULLY") {
           this.loaders = false;
@@ -74,11 +74,11 @@ export class AddBranchComponent implements OnInit {
         }
       }, err => {
         this.loaders = false
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.branchForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   

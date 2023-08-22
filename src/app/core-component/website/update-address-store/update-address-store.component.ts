@@ -45,7 +45,7 @@ export class UpdateAddressStoreComponent implements OnInit {
     this.id = this.Arout.snapshot.paramMap.get('id');
 
     this.websiteService.getAddressStoreById(this.id).subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.addressStoreForm.patchValue(res)
     })
     // this.getCountry();
@@ -62,7 +62,7 @@ export class UpdateAddressStoreComponent implements OnInit {
   getState() {
     this.copmpanyService.stateList().subscribe(res => {
       // this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   city: any
@@ -73,10 +73,10 @@ export class UpdateAddressStoreComponent implements OnInit {
   }
   state: any
   selectState(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   selectCity(val: any) {
@@ -88,7 +88,7 @@ export class UpdateAddressStoreComponent implements OnInit {
   addRes: any;
   loaders=false
   submit() {
-    console.log(this.addressStoreForm.value);
+    // console.log(this.addressStoreForm.value);
     var formdata: any = new FormData()
     formdata.append('name', this.addressStoreForm.get('name')?.value);
     formdata.append('email', this.addressStoreForm.get('email')?.value);
@@ -105,7 +105,7 @@ export class UpdateAddressStoreComponent implements OnInit {
     if (this.addressStoreForm.valid) {
       this.loaders=true;
       this.websiteService.updateAddressStore(formdata,this.id).subscribe((res: any) => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res;
         if (this.addRes.Is_Success == "True") {
           this.loaders=false;
@@ -117,12 +117,12 @@ export class UpdateAddressStoreComponent implements OnInit {
         }
       }, err => {
         this.loaders=false;
-        console.log(err.error);
+        // console.log(err.error);
       })
     } else {
       this.loaders=false;
       this.addressStoreForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
     }
   }
 

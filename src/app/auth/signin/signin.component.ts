@@ -55,11 +55,11 @@ export class SigninComponent implements OnInit {
 
   submit() {
     // this.storage.Login(this.form.value);
-    console.log(this.form.value);
+    // console.log(this.form.value);
     this.authService.login(this.form.value).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.loginRes = res;
-      console.log(this.loginRes.token);
+      // console.log(this.loginRes.token);
       if (this.loginRes.token) {
         this.toastr.success('Login Successfull');
         this.router.navigate(['//dashboard']).then(()=>{
@@ -67,12 +67,12 @@ export class SigninComponent implements OnInit {
         })
         localStorage.setItem('token', this.loginRes.token)
         localStorage.setItem('auth', JSON.stringify(this.loginRes?.permission));
-        console.log(this.loginRes.token);
+        // console.log(this.loginRes.token);
       }
     }, err => {
-      console.log(err);
+      // console.log(err);
       if(err.error.User==false){
-        console.log(err.error.msg);  
+        // console.log(err.error.msg);  
         this.toastr.error(err.error.msg)
       } else if(err.error.status){
         this.toastr.error(err.error.status);

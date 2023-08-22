@@ -22,7 +22,7 @@ export class DetailsTrendingProductsComponent implements OnInit {
     this.websiteService.getTrendingProductsById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.trendingDetail = res
-        console.log(res);
+        // console.log(res);
       }
     })
   }

@@ -37,12 +37,12 @@ isDelete:any;
 
   ngOnInit(): void {
     this.websiteService.getProductOrder().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    console.log(this.tableData);
+    // console.log(this.tableData);
     
   }
 

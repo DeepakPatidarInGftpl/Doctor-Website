@@ -163,13 +163,13 @@ export class TaxSlabsListComponent implements OnInit {
         permission?.map((res: any) => {
           if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'add_taxslabs') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'change_taxslabs') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'delete_taxslabs') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });

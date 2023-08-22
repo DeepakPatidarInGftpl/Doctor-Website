@@ -22,7 +22,7 @@ export class DetailsDebitnotesComponent implements OnInit {
     this.purchaseService.getDebitNotesById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.purchaseBillDetail = res
-        console.log(res);
+        // console.log(res);
       }
     })
   }

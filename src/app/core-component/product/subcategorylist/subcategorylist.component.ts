@@ -199,16 +199,16 @@ export class SubcategorylistComponent implements OnInit {
       this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='add_productsubcategory') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='change_productsubcategory') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='delete_productsubcategory') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });
@@ -243,23 +243,23 @@ export class SubcategorylistComponent implements OnInit {
   categoryList: any
   productCategory() {
     this.coreService.getProductcategory().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.categoryList = res
     })
   }
   brandList: any
   getbrand() {
     this.coreService.getBrand().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.brandList = res;
       if (this.addForm) {
 
       } else {
         this.brandList.map((map: any) => {
-          console.log(this.brands.includes(map.id));
+          // console.log(this.brands.includes(map.id));
 
           if (this.brands.includes(map.id)) {
-            console.log(map.id, 'map.id');
+            // console.log(map.id, 'map.id');
 
             let formArray: any = this.subcategoryForm.get('brand_id') as FormArray;
             formArray.push(new FormControl(map.id))
@@ -301,7 +301,7 @@ export class SubcategorylistComponent implements OnInit {
   url:any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -317,7 +317,7 @@ export class SubcategorylistComponent implements OnInit {
 
   // selectimg(event: Event, index: number) {
   //   const file = (event.target as HTMLInputElement).files![0];
-  //   console.log(file);
+    // console.log(file);
   //   const control = this.subcategoryForm.get('subcategories')?.at(index)?.get('image');
   //   control?.patchValue(file);
   //   control?.updateValueAndValidity();
@@ -373,10 +373,10 @@ export class SubcategorylistComponent implements OnInit {
 
   loader = false
   submit() {
-    console.log(this.subcategoryForm.value);
-    console.log(this.id);
-    console.log(this.check);
-    console.log(this.subcategoryForm.get('brand_id')?.value);
+    // console.log(this.subcategoryForm.value);
+    // console.log(this.id);
+    // console.log(this.check);
+    // console.log(this.subcategoryForm.get('brand_id')?.value);
     this.data = this.subcategoryForm.get('brand_id')?.value
     var formdata: any = new FormData()
 
@@ -389,7 +389,7 @@ export class SubcategorylistComponent implements OnInit {
     if (this.subcategoryForm.valid) {
       this.loader = true;
       this.coreService.addProductSubcategory(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.loader = false;
         this.addRes = res
         if (this.addRes.msg == "Successfuly Added") {
@@ -400,17 +400,17 @@ export class SubcategorylistComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
 
     } else {
       this.subcategoryForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   imgError = false;
   update() {
-    console.log(this.subcategoryForm.value);
+    // console.log(this.subcategoryForm.value);
 
     var formdata: any = new FormData()
 
@@ -425,7 +425,7 @@ export class SubcategorylistComponent implements OnInit {
       if (imageFile && imageFile instanceof File) {
         formdata.append('image', imageFile);
         this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           this.loader = false;
           if (this.addRes.msg == "Product Subcategory updated successfully") {
@@ -438,7 +438,7 @@ export class SubcategorylistComponent implements OnInit {
             this.ngOnInit()
           }
         }, err => {
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
           if (err.error.image) {
             this.imgError = true
             // setTimeout(() => {
@@ -448,7 +448,7 @@ export class SubcategorylistComponent implements OnInit {
         })
       }else{
         this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           this.loader = false;
           if (this.addRes.msg == "Product Subcategory updated successfully") {
@@ -461,7 +461,7 @@ export class SubcategorylistComponent implements OnInit {
             this.ngOnInit()
           }
         }, err => {
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
           if (err.error.image) {
             this.imgError = true
             // setTimeout(() => {
@@ -476,7 +476,7 @@ export class SubcategorylistComponent implements OnInit {
 
     } else {
       this.subcategoryForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -503,14 +503,14 @@ export class SubcategorylistComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getProductSubcategoryById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
 
       if (id == res.id) {
         this.addForm = false;
         // this.getbrand()
         // this.brandEdit = res.brand_id;
         this.updateData = res;
-        console.log(res.category_id.title);
+        // console.log(res.category_id.title);
         // console.log(res?.discount);
         // this.brands = res.brand_id.map((res: any) => res.id);
         // console.log(this.brands, 'this.brands');
