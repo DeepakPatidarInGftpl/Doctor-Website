@@ -53,11 +53,30 @@ export class ProductDetailsComponent implements OnInit {
       }
     });
   }
-
+isAdd:any
+isEdit:any
+isDelete:any
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
     // this.getBatch();
+
+      //permission from localstorage data
+    const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    if (localStorageData) {
+      const permission = localStorageData;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'batch' && res.codename=='add_batch') {
+          this.isAdd = res.codename;
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'batch' && res.codename=='change_batch') {
+          this.isEdit = res.codename;
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'batch' && res.codename=='delete_batch') {
+          this.isDelete = res.codename;
+        }
+      });
+    }
+
+   
   }
   batchList: any
   getBatch() {

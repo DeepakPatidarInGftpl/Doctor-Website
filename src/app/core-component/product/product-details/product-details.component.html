@@ -503,36 +503,36 @@
                                 <table datatable class="table datanew">
                                   <thead>
                                     <tr class="bg">
-                                      <!-- <th class="border" [width]="1">Sr no.</th> -->
+                                      <th class="border" [width]="1">Sr no.</th>
                                       <th class="boder">Product</th>
                                       <th class="boder">Variant</th>
                                       <th class="boder">Color</th>
                                       <th class="boder">Size</th>
                                       <th class="boder">Sku</th>
-                                      <th class="boder">Add Batch</th>
+                                      <th class="boder" *ngIf="isAdd">Add Batch</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <ng-container *ngFor="let variant of productDetail?.variant_product; let i = index">
                                         <tr class="bg-color">
-                                        <!-- <td class="boder">{{i+1}}</td> -->
+                                        <th class="boder" style="font-weight: bolder;">{{i+1+'.'}}</th>
                                         <td class="boder">{{ variant?.product_title }}</td>
                                         <td class="boder">{{ variant?.variant_name }}</td>
                                         <td class="boder">{{ variant?.color?.title }}</td>
                                         <td class="boder">{{ variant?.size?.title }}</td>
                                         <td class="boder">{{ variant?.sku }}</td>
-                                        <td class="boder">
+                                        <td class="boder" *ngIf="isAdd">
                                             <a routerLink="//product/batch/{{ variant?.id }}">add batch</a>
                                         </td>
                                       </tr>
                                       <!-- <button *ngIf="!addbatch[i]" (click)="openBatch(i)" class="btn btn-submit mx-3 my-3" style="padding: 1px 2px;">Batch</button>                               -->
                                       <!-- <tr *ngIf="addbatch[i]"> -->
-                                        <tr>
+                                        <tr *ngIf="variant?.batch.length>0">
                                         <td colspan="6">
                                           <table>
                                             <!-- <thead> -->
                                                 <h6 style="color: #FF9F43;">Batch List</h6>
-                                              <tr class="bg "> 
+                                              <tr class="bg"> 
                                                 <th class="boder space-text">MRP</th>
                                                 <th class="boder space-text">Cost Price</th>
                                                 <th class="boder space-text">Selling Price Online</th>
@@ -546,7 +546,7 @@
                                                 <th class="boder space-text">Sale Tax</th>
                                                 <th class="boder space-text">Discount</th>
                                                 <th class="boder space-text">Additional Discount</th>
-                                                <th class="boder space-text">Is Active</th>
+                                                <th class="boder space-text">Enable</th>
                                                 <th class="boder space-text">Action</th>
                                               </tr>
                                             <!-- </thead> -->
@@ -569,12 +569,12 @@
                                                 <td class="boder"><mat-slide-toggle (click)="batch?.is_active ? isActive(i,batch.id):Active(i,batch?.id)" [(ngModel)]="batch.is_active"></mat-slide-toggle>
                                                 </td>
                                                 <td class="boder">
-                                                    <a routerLink="//product/batchUpdate/{{batch?.id}}">
-                                                        <img src="assets/img/icons/edit.svg" alt="img">
+                                                    <a routerLink="//product/batchUpdate/{{batch?.id}}" *ngIf="isEdit">
+                                                        <img src="assets/img/icons/edit.svg" alt="img" style="padding-left: 10px;">
                                                     </a>
-                                                    <a (click)="confirmText(i,batch?.id)" class="me-1 confirm-text" href="javascript:void(0);">
+                                                    <!-- <a (click)="confirmText(i,batch?.id)" class="me-1 confirm-text" *ngIf="isDelete">
                                                         <img src="assets/img/icons/delete.svg" alt="img">
-                                                    </a>
+                                                    </a> -->
                                                 </td>  
                                                 <!-- </ng-container> -->
                                               </tr>
