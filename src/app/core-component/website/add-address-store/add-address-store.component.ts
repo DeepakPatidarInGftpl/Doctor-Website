@@ -52,7 +52,7 @@ export class AddAddressStoreComponent implements OnInit {
   getState() {
     this.copmpanyService.stateList().subscribe(res => {
       // this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   city: any
@@ -63,10 +63,10 @@ export class AddAddressStoreComponent implements OnInit {
   }
   state: any
   selectState(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   selectCity(val: any) {
@@ -78,7 +78,7 @@ export class AddAddressStoreComponent implements OnInit {
   addRes:any;
   loaders=false;
   submit() {
-    console.log(this.addressStoreForm.value);
+    // console.log(this.addressStoreForm.value);
     var formdata: any = new FormData()
     formdata.append('name', this.addressStoreForm.get('name')?.value);
     formdata.append('email', this.addressStoreForm.get('email')?.value);
@@ -95,7 +95,7 @@ export class AddAddressStoreComponent implements OnInit {
     if (this.addressStoreForm.valid) {
       this.loaders=true;
       this.websiteService.addAddressStore(formdata).subscribe((res:any) => {
-        console.log(res);
+        // console.log(res);
         this.addRes=res;
         if (this.addRes.Is_Success == "True") {
           this.loaders=false;
@@ -107,12 +107,12 @@ export class AddAddressStoreComponent implements OnInit {
         }
       }, err => {
         this.loaders=false;
-        console.log(err.error);
+        // console.log(err.error);
       })
     } else {
       this.loaders=false;
       this.addressStoreForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
     }
   }
 

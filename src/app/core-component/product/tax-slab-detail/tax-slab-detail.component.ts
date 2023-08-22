@@ -38,7 +38,7 @@ export class TaxSlabDetailComponent implements OnInit {
     this.coreService.getTaxSlabById(this.id).subscribe(res => {
   
           this.productDetail = res
-          console.log(res);
+          // console.log(res);
 
     })
   }

@@ -138,7 +138,7 @@ export class VendorComponent implements OnInit {
   userDetails:any
   ngOnInit(): void {
     this.contactService.getVendor().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
       this.loader = false
       this.selectedRows = new Array(this.tableData.length).fill(false);
@@ -149,18 +149,18 @@ export class VendorComponent implements OnInit {
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData) {
       const permission = localStorageData;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'vendor' && res.codename=='add_vendor') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
           
         } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename=='change_vendor') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
           
         }else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'vendor' && res.codename=='delete_vendor') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
           
         }
       });

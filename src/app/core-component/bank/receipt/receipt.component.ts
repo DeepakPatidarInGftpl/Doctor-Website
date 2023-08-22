@@ -93,19 +93,19 @@ export class ReceiptComponent implements OnInit {
   customerList: any;
   getCustomer() {
     this.posService.getCustomers().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.customers = res;
       // this.variants=res;
     })
   }
   private _filter(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'number' ? value.toString().toLowerCase() : value.toLowerCase();
     const filteredCustomer = include
       ? this.customers.filter(supplier => supplier.mobile_no.toString().toLowerCase().includes(filterValue))
       : this.customers.filter(supplier => !supplier.mobile_no.toString().toLowerCase().includes(filterValue));
     if (!include && filteredCustomer.length === 0) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredCustomer.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
     }
     return filteredCustomer;
@@ -116,9 +116,9 @@ export class ReceiptComponent implements OnInit {
   }
 
   oncheck(event: any) {
-    console.log(event);
+    // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
     this.getSles(selectedItemId)
     this.recieptAdvanceForm.patchValue({
       customer: selectedItemId
@@ -133,7 +133,7 @@ export class ReceiptComponent implements OnInit {
   loaders = false
   addRes: any;
   onSubmit() {
-    console.log(this.recieptAdvanceForm.value);
+    // console.log(this.recieptAdvanceForm.value);
     if (this.recieptAdvanceForm.valid) {
       const formData = new FormData();
       formData.append('customer', this.recieptAdvanceForm.get('customer')?.value);
@@ -179,13 +179,13 @@ export class ReceiptComponent implements OnInit {
         }
       );
     } else {
-      console.log('error');
+      // console.log('error');
 
       this.recieptAdvanceForm.markAllAsTouched();
     }
   }
   onAgainstSubmit() {
-    console.log(this.recieptAdvanceForm.value);
+    // console.log(this.recieptAdvanceForm.value);
     if (this.recieptAdvanceForm.valid) {
       const formData = new FormData();
       formData.append('customer', this.recieptAdvanceForm.get('customer')?.value);
@@ -231,7 +231,7 @@ export class ReceiptComponent implements OnInit {
         }
       );
     } else {
-      console.log('error');
+      // console.log('error');
 
       this.recieptAdvanceForm.markAllAsTouched();
     }

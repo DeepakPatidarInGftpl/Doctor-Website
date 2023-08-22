@@ -32,10 +32,10 @@ export class TaxSlabUpdatedComponent implements OnInit {
     })
 
     this.coreService.getTaxSlabById(this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.getRes = res;
       this.selectSubcat = this.getRes.subcategory.map((res: any) => res.id);
-      console.log(this.selectSubcat);
+      // console.log(this.selectSubcat);
       this.getSubcategoryBySubcatGroup(this.getRes.subcategory_group.id);
 
       this.taxSlabForm.patchValue({
@@ -68,7 +68,7 @@ export class TaxSlabUpdatedComponent implements OnInit {
   udateSubcat(add: any) {
 
     add.forEach((j: any) => {
-      console.log(j);
+      // console.log(j);
       subcategory: j.id
     })
 
@@ -105,16 +105,16 @@ export class TaxSlabUpdatedComponent implements OnInit {
   subcatGroupList: any
   getSubcateGroup() {
     this.coreService.getSubcategoryGroup().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.subcatGroupList = res
     })
   }
   taxList: any;
   getTax() {
     this.coreService.gettaxd().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.taxList = res
-      console.log(this.taxList);
+      // console.log(this.taxList);
     })
   }
   checks = true;
@@ -125,16 +125,16 @@ export class TaxSlabUpdatedComponent implements OnInit {
   selectSubcat: any = [];
   getSubcategoryBySubcatGroup(val: any) {
     this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
-      console.log(res.subcategories);
+      // console.log(res.subcategories);
       this.subcatbySubcatGroup = res.subcategories;
       this.filteredSubcategory = [...this.subcatbySubcatGroup];
       this.subcatbySubcatGroup.map((map: any) => {
-        console.log(map);
+        // console.log(map);
         this.selectedSubcat = this.selectSubcat.length
         this.getd = this.selectSubcat.includes(map.id)
-        console.log(this.getd);
+        // console.log(this.getd);
 
-        console.log(this.selectSubcat.includes(map.id), 'subcategory');
+        // console.log(this.selectSubcat.includes(map.id), 'subcategory');
 
         if (this.selectSubcat.includes(map.id)) {
           const formArray = this.taxSlabForm.get('subcategory') as FormArray;
@@ -187,14 +187,14 @@ export class TaxSlabUpdatedComponent implements OnInit {
   updateRes: any;
   loaders = false;
   submit() {
-    console.log(this.taxSlabForm.value);
-    console.log(this.id);
+    // console.log(this.taxSlabForm.value);
+    // console.log(this.id);
     
     let form = this.taxSlabForm.value;
     if (this.taxSlabForm.valid) {
       this.loaders = true;
       this.coreService.updateTaxSlab(form,this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.updateRes = res;
         if (this.updateRes.msg == "Tax Slabs Updated") {
           this.loaders = false;
@@ -204,7 +204,7 @@ export class TaxSlabUpdatedComponent implements OnInit {
       })
     } else {
       this.taxSlabForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 

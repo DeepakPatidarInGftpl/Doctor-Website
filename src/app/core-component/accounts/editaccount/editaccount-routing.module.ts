@@ -10,7 +10,7 @@ if (localStorageData && localStorageData.permission) {
   permission.map((res:any)=>{
     if(res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'change_account'){
       allowedRoles=res.codename;
-      console.log(allowedRoles);  
+      // console.log(allowedRoles);  
     }
   });
 }

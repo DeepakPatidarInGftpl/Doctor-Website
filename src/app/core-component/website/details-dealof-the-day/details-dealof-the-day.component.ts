@@ -22,7 +22,7 @@ export class DetailsDealofTheDayComponent implements OnInit {
     this.websiteService.getDealOfTheDayById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.dealodtheDayDetail = res
-        console.log(res);
+        // console.log(res);
       }
     })
   }

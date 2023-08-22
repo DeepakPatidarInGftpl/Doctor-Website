@@ -150,16 +150,16 @@ export class BranchComponent implements OnInit {
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData) {
       const permission = localStorageData;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'master'  && res.content_type.model === 'branch' && res.codename=='add_branch') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);      
+          // console.log(this.isAdd);      
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'branch' && res.codename=='change_branch') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'master' && res.content_type.model === 'branch' && res.codename=='delete_branch') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     }

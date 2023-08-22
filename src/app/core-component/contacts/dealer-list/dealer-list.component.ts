@@ -135,7 +135,7 @@ isDelete:any;
 userDetails:any;
   ngOnInit(): void {
     this.contactService.getDealer().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
@@ -169,13 +169,13 @@ userDetails:any;
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'master'  && res.content_type.model === 'dealer' && res.codename=='add_dealer') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename=='change_dealer') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename=='delete_dealer') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
     });
   })

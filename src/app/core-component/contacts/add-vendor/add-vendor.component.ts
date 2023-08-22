@@ -61,7 +61,7 @@ export class AddVendorComponent implements OnInit {
   gstType: any;
   getgstType() {
     this.contactService.getTypeOfGst().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.gstType = res;
     })
   }
@@ -119,39 +119,39 @@ export class AddVendorComponent implements OnInit {
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
-      console.log(this.country);
+      // console.log(this.country);
     });
   }
   
   selectState(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
   
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
-      console.log(this.state[i]);
+      // console.log(this.state[i]);
       // Reset city for the current formArray item
       this.city[i] = [];
     });
   }
   
   selectCity(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
   
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      console.log(this.city[i]);
+      // console.log(this.city[i]);
     });
   }
   
 loader=false;
   submit() {
-    console.log(this.vendorForm.value);
+    // console.log(this.vendorForm.value);
 
     let formdata: any = new FormData();
     formdata.append('login_access', this.vendorForm.get('login_access')?.value);
@@ -205,7 +205,7 @@ loader=false;
     if (this.vendorForm.valid) {
       this.loader=true;
     this.contactService.addVendor(formdata).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
         this.loader=false;
@@ -221,7 +221,7 @@ loader=false;
       }
     }, err => {
       this.loader=false;
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
       if (err.error.msg) {
         this.toastr.error(err.error.msg)
       }
@@ -243,7 +243,7 @@ loader=false;
     })
     } else {
     this.vendorForm.markAllAsTouched()
-    console.log('hhhhhh');
+    // console.log('hhhhhh');
     }
   }
 

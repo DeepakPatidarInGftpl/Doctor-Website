@@ -68,10 +68,10 @@ export class AddaccountComponent implements OnInit {
     })
   }
   selectState(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   city: any
@@ -81,7 +81,7 @@ export class AddaccountComponent implements OnInit {
     })
   }
   selectCity(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city = res;
     })
@@ -89,7 +89,7 @@ export class AddaccountComponent implements OnInit {
   accountType: any
   getAccountType() {
     this.coreService.accountType().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.accountType = res;
     })
   }
@@ -103,7 +103,7 @@ export class AddaccountComponent implements OnInit {
 //end
     this.coreService.getAccountSubType().subscribe(res => {
       this.accountSubTypeLsit = res;
-      console.log(this.accountSubTypeLsit);  
+      // console.log(this.accountSubTypeLsit);  
     })
 
   }
@@ -112,11 +112,11 @@ export class AddaccountComponent implements OnInit {
   dateError = null;
   loaders = false;
   submit() {
-    console.log(this.accountForm.value);
+    // console.log(this.accountForm.value);
     if (this.accountForm.valid) {
       this.loaders = true;
       this.coreService.addAccount(this.accountForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.loaders = false;
         this.addRes = res
         if (this.addRes.msg == "Successfuly Added") {
@@ -151,7 +151,7 @@ export class AddaccountComponent implements OnInit {
       })
     } else {
       this.accountForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
     }
   }
 

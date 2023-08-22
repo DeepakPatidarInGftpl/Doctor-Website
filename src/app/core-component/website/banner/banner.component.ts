@@ -30,7 +30,6 @@ export class BannerComponent implements OnInit {
 
   itemsPerPage = 10;
   constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService,private cs:CompanyService) {
-
   }
 
   delRes: any
@@ -189,16 +188,16 @@ export class BannerComponent implements OnInit {
        this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'website'  && res.content_type.model === 'banner' && res.codename=='add_banner') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'website' && res.content_type.model === 'banner' && res.codename=='change_banner') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }else if (res.content_type.app_label === 'website' && res.content_type.model === 'banner' && res.codename=='delete_banner') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });
@@ -232,7 +231,7 @@ export class BannerComponent implements OnInit {
   imgurl: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -249,16 +248,16 @@ export class BannerComponent implements OnInit {
   addRes: any
   loaders = false;
   submit() {
-    console.log(this.bannerForm.value);
+    // console.log(this.bannerForm.value);
     if (this.bannerForm.valid) {
-      console.log('valid');
+      // console.log('valid');
       this.loaders = true;
       var formdata: any = new FormData()
       formdata.append('title', this.bannerForm.get('title')?.value);
       formdata.append('url', this.bannerForm.get('url')?.value);
       formdata.append('image', this.bannerForm.get('image')?.value);
       this.websiteService.addBanner(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loaders = false;
@@ -272,17 +271,17 @@ export class BannerComponent implements OnInit {
         }
       }, err => {
         this.loaders=false
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.loaders=false
       this.bannerForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
   update() {
-    console.log(this.id);
+    // console.log(this.id);
   
     if (this.bannerForm.valid) {
       this.loaders = true;
@@ -295,7 +294,7 @@ export class BannerComponent implements OnInit {
       if (imageFile && imageFile instanceof File) {
         formdata.append('image', imageFile);
         this.websiteService.updateBanner(formdata, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res;
           if (this.addRes.msg == "Banner Updated Sucessfully") {   
             this.loaders = false;
@@ -310,13 +309,13 @@ export class BannerComponent implements OnInit {
           }
         }, err => {
           this.loaders=false
-          console.log(err.error);
+          // console.log(err.error);
           this.toastr.error(err.error.url[0])
         });
       } else {
       //  formdata.append('image', ''); // Append an empty string for image if not selected
         this.websiteService.updateBanner(formdata, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res;
           if (this.addRes.msg == "Banner Updated Sucessfully") {
             this.loaders = false;
@@ -330,13 +329,13 @@ export class BannerComponent implements OnInit {
           }
         }, err => {
           this.loaders=false
-          console.log(err.error);
+          // console.log(err.error);
           this.toastr.error(err.error.url[0])
         });
       }
     } else {
       this.bannerForm.markAllAsTouched();
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   
@@ -359,12 +358,12 @@ export class BannerComponent implements OnInit {
     this.imgurl=''
     this.id = id
     this.websiteService.getBannerbById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.resEdit = res;
       this.resEdit.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
-          console.log(data);
+          // console.log(data);
           this.updateData = data;
           this.addForm = false
           this.bannerForm.patchValue({
@@ -388,7 +387,7 @@ export class BannerComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
+        // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);

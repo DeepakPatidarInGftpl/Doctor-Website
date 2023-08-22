@@ -29,7 +29,7 @@ export class AddcategoryComponent implements OnInit {
     this.CoreServ.editThings.subscribe((data: any) => {
 
       this.editRoute = data
-      console.log(data);
+      // console.log(data);
 
       if (this.editRoute) {
         ftitle = data.title,
@@ -41,7 +41,7 @@ export class AddcategoryComponent implements OnInit {
         // discount: new FormControl(fdiscount, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
         image: new FormControl('',)
       })
-      console.log(this.formaddCateg);
+      // console.log(this.formaddCateg);
     })
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData && localStorageData.permission) {
@@ -49,10 +49,10 @@ export class AddcategoryComponent implements OnInit {
       permission.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='add_productcategory') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='change_productcategory') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }
       });
     }
@@ -61,7 +61,7 @@ export class AddcategoryComponent implements OnInit {
   url: any;
   onFileChange(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -101,7 +101,7 @@ export class AddcategoryComponent implements OnInit {
               // this.ngOnInit();
               window.location.reload()
             }
-            console.log(res);
+            // console.log(res);
           })
         } else {
           this.CoreServ.editHttp(formData, this.editRoute.id).subscribe((res: any) => {
@@ -114,7 +114,7 @@ export class AddcategoryComponent implements OnInit {
               // this.ngOnInit();
               window.location.reload()
             }
-            console.log(res);
+            // console.log(res);
 
           })
         }
@@ -129,7 +129,7 @@ export class AddcategoryComponent implements OnInit {
         formData.append("image", this.formaddCateg.get('image')?.value);
 
         this.CoreServ.addCategory(formData).subscribe((res: any) => {
-          console.log(res);
+          // console.log(res);
           this.toastr.success(res.msg)
           if (res.msg == 'Data Created') {
             this.formaddCateg.reset()

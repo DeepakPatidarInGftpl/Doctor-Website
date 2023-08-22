@@ -168,16 +168,16 @@ export class FooterListComponent implements OnInit {
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'website'  && res.content_type.model === 'footer' && res.codename=='add_footer') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);    
+          // console.log(this.isAdd);    
         } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename=='change_footer') {
           this.isEdit = res.codename;
-          console.log(this.isEdit); 
+          // console.log(this.isEdit); 
         }else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename=='delete_footer') {
           this.isDelete = res.codename;
-          console.log(this.isDelete); 
+          // console.log(this.isDelete); 
         }
       });
     });

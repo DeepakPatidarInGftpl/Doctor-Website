@@ -50,7 +50,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
       if (t.isConfirmed) {
         this.coreServ.deleteProductCateg(id).subscribe(res => {
           this.delRes = res;
-          console.log(this.delRes);
+          // console.log(this.delRes);
           if (this.delRes.msg == 'Product Category Deleted successfully') {
             this.ngOnInit();
             Swal.fire({
@@ -59,7 +59,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
               text: this.delRes.msg,
             });
           } else {
-            console.log(this.delRes.error);
+            // console.log(this.delRes.error);
             // this.toastr.error(this.delRes.error)
             Swal.fire({
               icon: 'error',
@@ -190,16 +190,16 @@ export class CategorylistComponent implements OnInit, OnDestroy {
      this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='add_productcategory') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='change_productcategory') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productcategory' && res.codename=='delete_productcategory') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });

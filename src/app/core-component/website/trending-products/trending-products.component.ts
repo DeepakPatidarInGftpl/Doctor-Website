@@ -200,16 +200,16 @@ export class TrendingProductsComponent implements OnInit {
       this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'product' && res.content_type.model === 'trandingproduct' && res.codename=='add_trandingproduct') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);   
+            // console.log(this.isAdd);   
           } else if (res.content_type.app_label === 'product' && res.content_type.model === 'trandingproduct' && res.codename=='change_trandingproduct') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);  
+            // console.log(this.isEdit);  
           }else if (res.content_type.app_label === 'product' && res.content_type.model === 'trandingproduct' && res.codename=='delete_trandingproduct') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);  
+            // console.log(this.isDelete);  
           }
         });
       });
@@ -217,38 +217,38 @@ export class TrendingProductsComponent implements OnInit {
 
   //
   onItemSelect(item: any) {
-    console.log(item);
+    // console.log(item);
     let formArray: any = this.trendingProductsForm.get('variant') as FormArray;
     formArray.push(new FormControl(item.id))
   }
   onItemDeselect(item: any): void {
     // Handle the deselection of the item
-    console.log('Item deselected:', item);
+    // console.log('Item deselected:', item);
     let formArray: FormArray = this.trendingProductsForm.get('variant') as FormArray;
-    console.log(formArray);
+    // console.log(formArray);
     const index = formArray.controls.findIndex(control => control.value === item.id);
-    console.log(index);
+    // console.log(index);
     if (index !== -1) {
       formArray.removeAt(index);
     }
   }
 
   onSelectAll(items: any) {
-    console.log(items);
+    // console.log(items);
     let formArray: any = this.trendingProductsForm.get('variant') as FormArray;
     items.forEach((item: any) => {
       formArray.push(new FormControl(item.id));
     });
   }
   onDeselectAll(items: any) {
-    console.log('All items deselected:', items);
+    // console.log('All items deselected:', items);
     let formArray: any = this.trendingProductsForm.get('variant') as FormArray;
     formArray.clear();
   }
   variantList: any[] = [];
   getVariant() {
     this.websiteService.getVariant().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.variantList = res;
     })
   }
@@ -274,10 +274,10 @@ export class TrendingProductsComponent implements OnInit {
   addRes: any;
   loaders = false;
   submit() {
-    console.log(this.trendingProductsForm.value);
+    // console.log(this.trendingProductsForm.value);
     if (this.trendingProductsForm.valid) {
       this.loaders=true
-      console.log('valid');
+      // console.log('valid');
       var formdata: any = new FormData();
       formdata.append('discount', this.trendingProductsForm.get('discount')?.value);
   
@@ -288,7 +288,7 @@ export class TrendingProductsComponent implements OnInit {
       // formdata.append('datetime',this.trendingProductsForm.get('datetime')?.value);
   
       this.websiteService.addTrendingProducts(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.loaders=false;
         this.addRes = res;
         if (this.addRes.Is_Sucess == "True") {
@@ -302,18 +302,18 @@ export class TrendingProductsComponent implements OnInit {
         }
       }, err => {
         this.loaders=false
-        console.log(err.error);
+        // console.log(err.error);
       });
     } else {
       this.trendingProductsForm.markAllAsTouched();
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   
 
   update() {
-    console.log(this.id);
-    console.log(this.trendingProductsForm.value);
+    // console.log(this.id);
+    // console.log(this.trendingProductsForm.value);
     if (this.trendingProductsForm.valid) {
       this.loaders=true
       var formdata: any = new FormData()
@@ -324,7 +324,7 @@ export class TrendingProductsComponent implements OnInit {
       // formdata.append('datetime',this.trendingProductsForm.get('datetime')?.value);
       
       this.websiteService.updateTrendingProducts(formdata, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.Is_Sucess == "True") {
           this.toastr.success(this.addRes.msg)
@@ -339,11 +339,11 @@ export class TrendingProductsComponent implements OnInit {
         }
       }, err => {
         this.loaders=false
-        console.log(err.error);
+        // console.log(err.error);
       })
     } else {
       this.trendingProductsForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -362,10 +362,10 @@ export class TrendingProductsComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.websiteService.getTrendingProductsById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.resEdit = res;
       if (id == this.resEdit.id) {
-        console.log(this.resEdit.variant);
+        // console.log(this.resEdit.variant);
         this.addForm = false
         this.trendingProductsForm.patchValue({
           discount: this.resEdit.discount,
@@ -373,7 +373,7 @@ export class TrendingProductsComponent implements OnInit {
         });
         // here selected data send value in formArray
         this.resEdit.variant.map((res: any) => {
-          console.log(res);
+          // console.log(res);
           let formArray: any = this.trendingProductsForm.get('variant') as FormArray;
           formArray.push(new FormControl(res.id))
         })
@@ -385,7 +385,7 @@ export class TrendingProductsComponent implements OnInit {
           };
         });
         this.selectedItems = this.variantItem;
-        console.log(this.variantItem);
+        // console.log(this.variantItem);
         this.editFormdata = res;
       }
     })
@@ -401,7 +401,7 @@ export class TrendingProductsComponent implements OnInit {
       this.ngOnInit();
     } else {
       this.tableData = this.tableData.filter((res: any) => {
-        console.log(res);
+        // console.log(res);
 
         const matchingVariants = res.variant.filter((variant: any) =>
           variant.product_title.toLowerCase().includes(this.titlee.toLowerCase())

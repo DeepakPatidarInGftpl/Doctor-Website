@@ -72,7 +72,7 @@ export class TaxSlabsComponent implements OnInit {
   subcatGroupList: any
   getSubcateGroup() {
     this.coreService.getSubcategoryGroup().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.subcatGroupList = res
     })
   }
@@ -80,9 +80,9 @@ export class TaxSlabsComponent implements OnInit {
   taxList: any;
   getTax() {
     this.coreService.gettaxd().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.taxList = res
-      console.log(this.taxList);
+      // console.log(this.taxList);
 
     })
   }
@@ -93,12 +93,12 @@ export class TaxSlabsComponent implements OnInit {
   selectSubcat: any = [];
   getSubcategoryBySubcatGroup(val: any) {
     this.coreService.getSubcategoryBySubcatGroup(val).subscribe(res => {
-      console.log(res.subcategories);
+      // console.log(res.subcategories);
       this.subcatbySubcatGroup = res.subcategories;
       this.filteredSubcategory = [...this.subcatbySubcatGroup];
       setTimeout(() => {
         this.subcatbySubcatGroup.map((map: any) => {
-          console.log(this.selectSubcat.includes(map.id), 'subcategory');
+          // console.log(this.selectSubcat.includes(map.id), 'subcategory');
           if (this.selectSubcat.includes(map.id)) {
             const formArray = this.taxSlabForm.get('subcategory') as FormArray;
             formArray.push(new FormControl(map.id));
@@ -151,11 +151,11 @@ export class TaxSlabsComponent implements OnInit {
   addRes: any;
   loaders=false;
   submit() {
-    console.log(this.taxSlabForm.value);
+    // console.log(this.taxSlabForm.value);
     if (this.taxSlabForm.valid) {
       this.loaders=true;
       this.coreService.addTaxSlab(this.taxSlabForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res;
         if(this.addRes.msg == "Tax Slabs Created") {
           this.loaders=false;
@@ -165,7 +165,7 @@ export class TaxSlabsComponent implements OnInit {
       })
     } else {
       this.taxSlabForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   //dropdown auto close stop

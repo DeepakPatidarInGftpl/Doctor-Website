@@ -201,13 +201,13 @@ export class FeatureComponent implements OnInit {
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename=='add_productfeatures') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename=='change_productfeatures') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productfeatures' && res.codename=='delete_productfeatures') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });
@@ -284,13 +284,13 @@ export class FeatureComponent implements OnInit {
 
   loaders=false
  submit() {
-  console.log(this.featureForm.value);
-  console.log(this.id);
+  // console.log(this.featureForm.value);
+  // console.log(this.id);
 
   if (this.featureForm.valid) {
     this.loaders=true;
     this.coreService.addFeature(this.featureForm.value).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Feature Successfuly Added") {
         this.loaders=false;
@@ -300,11 +300,11 @@ export class FeatureComponent implements OnInit {
         this.ngOnInit()
       }
     }, err => {
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
     })
   } else {
     this.featureForm.markAllAsTouched()
-    console.log('forms invalid');
+    // console.log('forms invalid');
   }
 }
 
@@ -312,7 +312,7 @@ update(){
   if (this.featureForm.valid) {
     this.loaders=true;
     this.coreService.updateFeature(this.featureForm.value, this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Feature updated successfully") {
         this.loaders=false;
@@ -323,11 +323,11 @@ update(){
         this.ngOnInit()
       }
     }, err => {
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
     })
   } else {
     this.featureForm.markAllAsTouched()
-    console.log('forms invalid');
+    // console.log('forms invalid');
   }
 }
 
@@ -344,7 +344,7 @@ update(){
   editForm(id: number) {
     this.id = id
     this.coreService.getFeatureById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       if (id == res.id) {
         this.addForm = false
         this.featureForm.patchValue(res);
@@ -362,8 +362,8 @@ update(){
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
-  //       console.log(res.title.toLocaleLowerCase());
+        // console.log(res);
+        // console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);
   //     })

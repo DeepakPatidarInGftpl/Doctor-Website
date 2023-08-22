@@ -93,13 +93,13 @@ export class PurchaseComponent implements OnInit {
     })
   }
   private _filter(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
       ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
       : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
     }
     return filteredSuppliers;
@@ -111,7 +111,7 @@ export class PurchaseComponent implements OnInit {
   supplierList: any;
   getSuuplier() {
     this.purchaseService.getSupplier().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.suppliers = res;
       // this.variants=res;
     })
@@ -119,9 +119,9 @@ export class PurchaseComponent implements OnInit {
 
 
   oncheck(event: any) {
-    console.log(event);
+    // console.log(event);
     const selectedItemId = event; 
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
     this.getSles(selectedItemId)
     this.recieptAdvanceForm.patchValue({
       party: selectedItemId
@@ -136,7 +136,7 @@ export class PurchaseComponent implements OnInit {
   loaders = false
   addRes: any;
   onSubmit() {
-    console.log(this.recieptAdvanceForm.value);
+    // console.log(this.recieptAdvanceForm.value);
     if (this.recieptAdvanceForm.valid) {
       const formData = new FormData();
       formData.append('party', this.recieptAdvanceForm.get('party')?.value);
@@ -181,13 +181,13 @@ export class PurchaseComponent implements OnInit {
         }
       );
     } else {
-      console.log('error');
+      // console.log('error');
 
       this.recieptAdvanceForm.markAllAsTouched();
     }
   }
   onAgainstSubmit() {
-    console.log(this.recieptAdvanceForm.value);
+    // console.log(this.recieptAdvanceForm.value);
     if (this.recieptAdvanceForm.valid) {
       const formData = new FormData();
       formData.append('party', this.recieptAdvanceForm.get('party')?.value);
@@ -232,7 +232,7 @@ export class PurchaseComponent implements OnInit {
         }
       );
     } else {
-      console.log('error');
+      // console.log('error');
 
       this.recieptAdvanceForm.markAllAsTouched();
     }

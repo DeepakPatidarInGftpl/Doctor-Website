@@ -193,16 +193,16 @@ userDetails:any
      this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'website'  && res.content_type.model === 'staticpages' && res.codename=='add_staticpages') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'website' && res.content_type.model === 'staticpages' && res.codename=='change_staticpages') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);  
+          // console.log(this.isEdit);  
         } else if (res.content_type.app_label === 'website' && res.content_type.model === 'staticpages' && res.codename=='delete_staticpages') {
           this.isDelete = res.codename;
-          console.log(this.isDelete); 
+          // console.log(this.isDelete); 
         }
       });
     });
@@ -239,12 +239,12 @@ selectAlll() {
   
   
  submit() {
-  console.log(this.staticPgForm.value);
-  console.log(this.id);
+  // console.log(this.staticPgForm.value);
+  // console.log(this.id);
 
   if (this.staticPgForm.valid) {
     this.coreService.addcolor(this.staticPgForm.value).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
         this.toastr.success(this.addRes.msg)
@@ -253,20 +253,20 @@ selectAlll() {
         this.ngOnInit()
       }
     }, err => {
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
     })
     
     
   } else {
     this.staticPgForm.markAllAsTouched()
-    console.log('forms invalid');
+    // console.log('forms invalid');
   }
 }
 
 update(){
   if (this.staticPgForm.valid) {
     this.coreService.updatecolor(this.staticPgForm.value, this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Colour updated successfully") {
         this.toastr.success(this.addRes.msg)
@@ -276,12 +276,12 @@ update(){
         this.ngOnInit()
       }
     }, err => {
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
     })
    
   } else {
     this.staticPgForm.markAllAsTouched()
-    console.log('forms invalid');
+    // console.log('forms invalid');
   }
 }
 
@@ -301,9 +301,9 @@ update(){
   editForm(id: number) {
     this.id = id
     this.coreService.getcolorById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
           this.addForm=false;
           this.staticPgForm.patchValue(data);

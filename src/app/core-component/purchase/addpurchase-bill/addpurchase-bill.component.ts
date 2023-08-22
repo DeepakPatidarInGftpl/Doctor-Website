@@ -140,7 +140,7 @@ export class AddpurchaseBillComponent implements OnInit {
   supplierList: any;
   getSuuplier() {
     this.purchaseService.getSupplier().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.suppliers = res;
     })
   }
@@ -149,7 +149,7 @@ export class AddpurchaseBillComponent implements OnInit {
   }
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.variants = res;
     })
   }
@@ -157,36 +157,36 @@ export class AddpurchaseBillComponent implements OnInit {
   getPurchase() {
     this.purchaseService.getPurchase().subscribe(res => {
       this.purchaseList = res;
-      console.log(this.purchaseList);
+      // console.log(this.purchaseList);
 
     })
   }
   materialList: any;
   getMaterialInward() {
     this.purchaseService.getMaterial().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.materialList = res;
     })
   }
   paymentList: any;
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.paymentList = res;
     })
   }
   supplierAddress:any;
   selectedAddress: string = ''
   oncheck(event: any) {
-    console.log(event);
+    // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
   //call detail api
   this.contactService.getSupplierById(selectedItemId).subscribe(res=>{
-    console.log(res);
+    // console.log(res);
     this.supplierAddress=res;
     this.selectedAddress=this.supplierAddress.address[0];
-    console.log(this.selectedAddress);
+    // console.log(this.selectedAddress);
   })
 
     const variants = this.purchaseBillForm.get('purchase_bill') as FormArray;
@@ -225,7 +225,7 @@ export class AddpurchaseBillComponent implements OnInit {
   
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
     const barcode = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: selectedItemId
@@ -234,7 +234,7 @@ export class AddpurchaseBillComponent implements OnInit {
   getRes: any;
   loader = false;
   submit() {
-    console.log(this.purchaseBillForm.value);
+    // console.log(this.purchaseBillForm.value);
     if (this.purchaseBillForm.valid) {
 
       this.loader = true;
@@ -274,7 +274,7 @@ export class AddpurchaseBillComponent implements OnInit {
       });
       formdata.append('purchase_bill', JSON.stringify(cartData));
       this.purchaseService.addPurchaseBill(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
           this.loader = false;
@@ -291,20 +291,20 @@ export class AddpurchaseBillComponent implements OnInit {
     }
   }
   private _filter(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
       ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
       : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
     }
     return filteredSuppliers;
   }
 
   private _filtr(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
     const filteredVariant = include
       ? this.variants?.filter(variant => variant && (variant.product_title?.toLowerCase().includes(filterValue) ||
@@ -320,7 +320,7 @@ export class AddpurchaseBillComponent implements OnInit {
           variant.id?.toString().includes(filterValue))
       );
     if (!include && (!filteredVariant || filteredVariant.length === 0)) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredVariant.push({ product_title: "No data found" });
     }
     return filteredVariant || [];
@@ -338,21 +338,21 @@ export class AddpurchaseBillComponent implements OnInit {
     this.searchs = undefined;
   }
   onOptionSelected(event: any): void {
-    console.log(event);
-    console.log(event.option.value);
+    // console.log(event);
+    // console.log(event.option.value);
   }
   displayFn(result: any): string {
-    console.log(result);
+    // console.log(result);
     return result ? result.product_title : '';
   }
   barcode: any[] = [];
   v_id: any;
   variantChanged(value: any, index) {
-    console.log(index);
-    console.log(value?.sku);
+    // console.log(index);
+    // console.log(value?.sku);
     this.barcode[index] = value.sku;
-    console.log(this.barcode[index]);
-    console.log(this.barcode);
+    // console.log(this.barcode[index]);
+    // console.log(this.barcode);
 
     this.v_id = value.id;
     const barcode = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
@@ -367,17 +367,16 @@ export class AddpurchaseBillComponent implements OnInit {
   isProduct = true;
 
   searchProduct(event: any, index: any) {
-    console.log(event);
+    // console.log(event);
     // const searchValue = event.target.value;
-    // console.log(searchValue);
 
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
         this.productOption = res;
-        console.log(this.searchs);
+        // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
-        console.log(this.productName);
+        // console.log(this.productName);
         this.check = true;
         const barcode = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
         barcode.patchValue({

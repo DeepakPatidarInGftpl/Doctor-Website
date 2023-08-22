@@ -79,7 +79,7 @@ export class UpdateEmployeeComponent implements OnInit {
     const formArr = new FormArray([]);
 
     add.forEach((j: any) => {
-      console.log(j);
+      // console.log(j);
 
       const addressGroup = this.fb.group({
         address_line_1: j?.address_line_1==null?'':j?.address_line_1,
@@ -186,53 +186,53 @@ export class UpdateEmployeeComponent implements OnInit {
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
-      console.log(this.country);
+      // console.log(this.country);
     });
   }
 
   selectState(val: any, i) {
-    console.log(val, i);
+    // console.log(val, i);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
 
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
-      console.log(this.state[i]);
+      // console.log(this.state[i]);
       // Reset city for the current formArray item
       this.city[i] = [];
     });
   }
   selectedState(val, i) {
-    console.log(val, i);
+    // console.log(val, i);
     if (val) {
       this.coreService.getStateByCountryId(val).subscribe(res => {
         this.state[i] = res;
-        console.log(this.state[i]);
+        // console.log(this.state[i]);
         // this.city[i] = [];
       });
     }
 
   }
   selectCity(val: any, i) {
-    console.log(val, i);
+    // console.log(val, i);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      console.log(this.city[i]);
+      // console.log(this.city[i]);
     });
 
   }
 
   selectedCity(val: any, i) {
-    console.log(val, i);
+    // console.log(val, i);
     if (val) {
       this.coreService.getCityByStateId(val).subscribe(res => {
         this.city[i] = res;
-        console.log(this.city[i]);
+        // console.log(this.city[i]);
       });
     }
 
@@ -295,7 +295,7 @@ loader=false;
     if (this.employeeForm.valid) {
       this.loader=true;
       this.contactService.updateEmployee(formdata,this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Employee updated successfully") {
           this.loader=false;
@@ -308,7 +308,7 @@ loader=false;
         }
       }, err => {
         this.loader=false;
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
         if(err.error.msg){
           this.toastr.error(err.error.msg)
         }
@@ -327,7 +327,7 @@ loader=false;
     } else {
       this.loader=false;
       this.employeeForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
     }
   }
 

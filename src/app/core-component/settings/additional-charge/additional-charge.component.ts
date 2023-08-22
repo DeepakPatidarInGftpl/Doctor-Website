@@ -157,16 +157,16 @@ export class AdditionalChargeComponent implements OnInit {
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData && localStorageData.permission) {
       const permission = localStorageData.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'account' && res.content_type.model === 'additionalcharge' && res.codename == 'add_additionalcharge') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'account' && res.content_type.model === 'additionalcharge' && res.codename == 'change_additionalcharge') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         } else if (res.content_type.app_label === 'account' && res.content_type.model === 'additionalcharge' && res.codename == 'delete_additionalcharge') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     }
@@ -192,7 +192,7 @@ export class AdditionalChargeComponent implements OnInit {
   taxList: any;
   getTax() {
     this.coreService.gettaxd().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.taxList = res;
     })
   }
@@ -220,13 +220,13 @@ export class AdditionalChargeComponent implements OnInit {
 
   loaders = false;
   submit() {
-    console.log(this.additionForm.value);
-    console.log(this.id);
+    // console.log(this.additionForm.value);
+    // console.log(this.id);
 
     if (this.additionForm.valid) {
       this.loaders = true;
       this.coreService.addAdditionalCharges(this.additionForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.Is_Success == "True") {
           this.loaders = false;
@@ -239,11 +239,11 @@ export class AdditionalChargeComponent implements OnInit {
         }
       }, err => {
         this.loader = false
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.additionForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -251,7 +251,7 @@ export class AdditionalChargeComponent implements OnInit {
     if (this.additionForm.valid) {
       this.loaders = true;
       this.coreService.updateAdditionalCharges(this.additionForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.Is_Success == "True") {
           this.loaders = false;
@@ -265,11 +265,11 @@ export class AdditionalChargeComponent implements OnInit {
         }
       }, err => {
         this.loaders = false;
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.additionForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -296,7 +296,7 @@ export class AdditionalChargeComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getAdditionalChargesById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       if (id == res.id) {
         this.addForm = false;
         this.additionForm.patchValue(res);

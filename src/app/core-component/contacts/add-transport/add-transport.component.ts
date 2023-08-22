@@ -60,7 +60,7 @@ export class AddTransportComponent implements OnInit {
   gstType: any;
   getgstType() {
     this.contactService.getTypeOfGst().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.gstType = res;
     })
   }
@@ -113,38 +113,38 @@ export class AddTransportComponent implements OnInit {
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
-      console.log(this.country);
+      // console.log(this.country);
     });
   }
   
   selectState(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
   
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
-      console.log(this.state[i]);
+      // console.log(this.state[i]);
       // Reset city for the current formArray item
       this.city[i] = [];
     });
   }
   
   selectCity(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
   
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      console.log(this.city[i]);
+      // console.log(this.city[i]);
     });
   }
   loader=false;
   submit() {
-    console.log(this.transportForm.value);
+    // console.log(this.transportForm.value);
 
     let formdata: any = new FormData();
     formdata.append('login_access', this.transportForm.get('login_access')?.value);
@@ -196,7 +196,7 @@ export class AddTransportComponent implements OnInit {
     if (this.transportForm.valid) {
       this.loader=true;
       this.contactService.addTransport(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loader=false;
@@ -213,7 +213,7 @@ export class AddTransportComponent implements OnInit {
         }
       }, err => {
         this.loader=false;
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
         }
@@ -235,7 +235,7 @@ export class AddTransportComponent implements OnInit {
       })
     } else {
       this.transportForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
 
     }
   }

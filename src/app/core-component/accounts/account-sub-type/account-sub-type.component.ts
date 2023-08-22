@@ -174,13 +174,13 @@ export class AccountSubTypeComponent implements OnInit {
     //   permission.map((res: any) => {
     //     if (res.content_type.app_label === 'master'  && res.content_type.model === 'accountsubtypes' && res.codename=='add_accountsubtypes') {
     //       this.isAdd = res.codename;
-    //       console.log(this.isAdd);
+          // console.log(this.isAdd);
     //     } else if (res.content_type.app_label === 'master' && res.content_type.model === 'accountsubtypes' && res.codename=='change_accountsubtypes') {
     //       this.isEdit = res.codename;
-    //       console.log(this.isEdit);  
+          // console.log(this.isEdit);  
     //     }else if (res.content_type.app_label === 'master' && res.content_type.model === 'accountsubtypes' && res.codename=='delete_accountsubtypes') {
     //       this.isDelete = res.codename;
-    //       console.log(this.isDelete);  
+          // console.log(this.isDelete);  
     //     }
     //   });
     // }
@@ -191,13 +191,13 @@ export class AccountSubTypeComponent implements OnInit {
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'master' && res.content_type.model === 'accountsubtypes' && res.codename == 'add_accountsubtypes') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'accountsubtypes' && res.codename == 'change_accountsubtypes') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'accountsubtypes' && res.codename == 'delete_accountsubtypes') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });
@@ -205,14 +205,14 @@ export class AccountSubTypeComponent implements OnInit {
   accountType: any
   getAccountType() {
     this.coreService.accountType().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.accountType = res;
     })
   }
-  add() {
-    console.log('jj');
-    console.log(this.form.value);
-  }
+  // add() {
+  //   console.log('jj');
+  //   console.log(this.form.value);
+  // }
   //select table row
   allSelected: boolean = false;
   selectedRows: boolean[]
@@ -236,12 +236,12 @@ export class AccountSubTypeComponent implements OnInit {
 
   loaders = false;
   submit() {
-    console.log(this.accountSubTypeForm.value);
-    console.log(this.id);
+    // console.log(this.accountSubTypeForm.value);
+    // console.log(this.id);
     if (this.accountSubTypeForm.valid) {
       this.loaders = true;
       this.coreService.addAccountSubType(this.accountSubTypeForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "ACCOUNT SUBTYPE CREATED SUCESSFULLY") {
           this.loaders = false;
@@ -254,11 +254,11 @@ export class AccountSubTypeComponent implements OnInit {
         }
       }, err => {
         this.loader = false
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.accountSubTypeForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -268,7 +268,7 @@ export class AccountSubTypeComponent implements OnInit {
       formdata.append('title', this.accountSubTypeForm.get('title')?.value)
       this.loaders = true;
       this.coreService.updateAccountSubType(formdata, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Account Subtype Updated Sucessfully") {
           this.loaders = false;
@@ -282,11 +282,11 @@ export class AccountSubTypeComponent implements OnInit {
         }
       }, err => {
         this.loaders = false;
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.accountSubTypeForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -305,7 +305,7 @@ export class AccountSubTypeComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getAccountSubTypeById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       if (id == res.id) {
         this.addForm = false;
         this.accountSubTypeForm.patchValue(res);
@@ -323,9 +323,9 @@ export class AccountSubTypeComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
-  //       console.log(res.title.toLocaleLowerCase());
-  //       console.log(res.title.match(this.titlee));
+        // console.log(res);
+        // console.log(res.title.toLocaleLowerCase());
+        // console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);
   //     })
   //   }
@@ -497,7 +497,7 @@ export class AccountSubTypeComponent implements OnInit {
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.selectedAccountType) {
-      console.log(this.selectedAccountType);
+      // console.log(this.selectedAccountType);
       filteredData = filteredData.filter((item) => item?.accounts_type === this.selectedAccountType);
     } if (this.selectedAlias) {
       const searchTerm = this.selectedAlias.toLowerCase();

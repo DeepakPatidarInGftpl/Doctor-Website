@@ -70,14 +70,14 @@ export class AddcompanyComponent implements OnInit {
 yearDetails:any
   getYear(){
     this.coreService.getFinancialYear().subscribe(res=>{
-      console.log(res); 
+      // console.log(res); 
       this.yearDetails=res;
     })
   }
   currencyDetails:any
   getCurrency(){
     this.coreService.getCurrency().subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.currencyDetails=res;
     })
   }
@@ -91,7 +91,7 @@ yearDetails:any
   getState() {
     this.copmpanyService.stateList().subscribe(res => {
       // this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   city:any
@@ -102,10 +102,10 @@ yearDetails:any
   }
   state: any
   selectState(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   selectCity(val:any){
@@ -116,11 +116,11 @@ yearDetails:any
   dateError = null;
   loaders=false;
   submit() {
-    console.log(this.companyForm.value);
+    // console.log(this.companyForm.value);
     if (this.companyForm.valid) {
       this.loaders=true;
       this.copmpanyService.postCompany(this.companyForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         if (res.msg == "Successfuly Added") {
           this.loaders=false;
           this.toastr.success(res.msg)
@@ -131,7 +131,7 @@ yearDetails:any
           // })
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
  
         if (err.error.financial_year) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
@@ -150,7 +150,7 @@ yearDetails:any
       })
     } else {
       this.companyForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
 
     }
   }

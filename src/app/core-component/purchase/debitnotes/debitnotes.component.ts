@@ -25,10 +25,10 @@ export class DebitnotesComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
-  selectedpaymentTerms: string='';
-  date:any
+  selectedpaymentTerms: string = '';
+  date: any
 
-  constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,private contactService:ContactService) { }
+  constructor(private purchaseService: PurchaseServiceService, private cs: CompanyService, private contactService: ContactService) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -56,7 +56,7 @@ export class DebitnotesComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -64,7 +64,7 @@ export class DebitnotesComponent implements OnInit {
             });
           }
         })
-        
+
       }
     });
   }
@@ -129,16 +129,16 @@ export class DebitnotesComponent implements OnInit {
     });
   }
 
-  loader=true;
-  isAdd:any
-  isEdit:any;
-  isDelete:any;
-  userDetails:any;
+  loader = true;
+  isAdd: any
+  isEdit: any;
+  isDelete: any;
+  userDetails: any;
   ngOnInit(): void {
     this.purchaseService.getDebitNotes().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
-      this.loader=false;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
@@ -161,30 +161,30 @@ export class DebitnotesComponent implements OnInit {
     //   });
     // }
 
-       // permissin from api profile
-       this.cs.userDetails$.subscribe((userDetails) => {
-        this.userDetails = userDetails;
-        const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
-          if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename=='add_debitnote') {
-            this.isAdd = res.codename;
-            console.log(this.isAdd);
-          } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename=='change_debitnote') {
-            this.isEdit = res.codename;
-            console.log(this.isEdit);
-          } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename=='delete_debitnote') {
-            this.isDelete = res.codename;
-            console.log(this.isDelete);
-          }
-        });
+    // permissin from api profile
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission.map((res: any) => {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'add_debitnote') {
+          this.isAdd = res.codename;
+          // console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'change_debitnote') {
+          this.isEdit = res.codename;
+          // console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'delete_debitnote') {
+          this.isDelete = res.codename;
+          // console.log(this.isDelete);
+        }
       });
-      this.getPaymentTerms()
+    });
+    this.getPaymentTerms()
   }
 
   paymentList: any;
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.paymentList = res;
     })
   }
@@ -243,10 +243,10 @@ export class DebitnotesComponent implements OnInit {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.party.name.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res?.party.name.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -257,7 +257,7 @@ export class DebitnotesComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-  
+
   // convert to pdf
   generatePDF() {
     // table data with pagination
@@ -335,26 +335,26 @@ export class DebitnotesComponent implements OnInit {
     // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-  
+
     // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
-  
+
     // Clone the table element to manipulate
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-  
+
     // Remove the "Is Active" column header from the cloned table
     const isActiveTh = clonedTable.querySelector('th.thone:nth-child(12)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
-  
+
     // Remove the "Action" column header from the cloned table
     const actionTh = clonedTable.querySelector('th.thone:last-child');
     if (actionTh) {
       actionTh.remove();
     }
-  
+
     // Loop through each row and remove the "Is Active" column and "Action" column data cells
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
@@ -363,14 +363,14 @@ export class DebitnotesComponent implements OnInit {
       if (isActiveTd) {
         isActiveTd.remove();
       }
-  
+
       // Remove the "Action" column data cell
       const actionTd = row.querySelector('td:last-child');
       if (actionTd) {
         actionTd.remove();
       }
     });
-  
+
     // Get the modified table's HTML content
     const modifiedTableHTML = clonedTable.outerHTML;
     // Apply styles to add some space from the top after the title
@@ -385,24 +385,24 @@ export class DebitnotesComponent implements OnInit {
     // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }
-       //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
-       filterData() {
-        let filteredData = this.tableData.slice(); 
-        if (this.date) {
-          const selectedDate = new Date(this.date).toISOString().split('T')[0];
-          filteredData = filteredData.filter((item) => {
-            const receiptDate = new Date(item?.debit_note_date).toISOString().split('T')[0];
-            return receiptDate === selectedDate;
-          });
-        }
-        if (this.selectedpaymentTerms) {
-          filteredData = filteredData.filter((item) => item?.payment_term?.title=== this.selectedpaymentTerms);
-        }
-        this.filteredData = filteredData;
-      }
-      clearFilters() {
-        this.selectedpaymentTerms = null;
-        this.date=null;
-        this.filterData();
-      }
+  //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.date) {
+      const selectedDate = new Date(this.date).toISOString().split('T')[0];
+      filteredData = filteredData.filter((item) => {
+        const receiptDate = new Date(item?.debit_note_date).toISOString().split('T')[0];
+        return receiptDate === selectedDate;
+      });
+    }
+    if (this.selectedpaymentTerms) {
+      filteredData = filteredData.filter((item) => item?.payment_term?.title === this.selectedpaymentTerms);
+    }
+    this.filteredData = filteredData;
+  }
+  clearFilters() {
+    this.selectedpaymentTerms = null;
+    this.date = null;
+    this.filterData();
+  }
 }

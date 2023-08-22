@@ -193,16 +193,16 @@ export class TaxComponent implements OnInit {
       this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'product' && res.content_type.model === 'tax' && res.codename == 'add_tax') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'product' && res.content_type.model === 'tax' && res.codename == 'change_tax') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }else if (res.content_type.app_label === 'product' && res.content_type.model === 'tax' && res.codename == 'delete_tax') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });
@@ -273,13 +273,13 @@ export class TaxComponent implements OnInit {
 
   loaders = false
   submit() {
-    console.log(this.taxForm.value);
-    console.log(this.id);
+    // console.log(this.taxForm.value);
+    // console.log(this.id);
 
     if (this.taxForm.valid) {
       this.loaders = true;
       this.coreService.addtax(this.taxForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loaders = false;
@@ -291,12 +291,12 @@ export class TaxComponent implements OnInit {
           this.toastr.error(this.addRes.tax_percentage)
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
 
     } else {
       this.taxForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -304,7 +304,7 @@ export class TaxComponent implements OnInit {
     if (this.taxForm.valid) {
       this.loaders = true;
       this.coreService.updatetax(this.taxForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Tax updated successfully") {
           this.loaders = false;
@@ -316,12 +316,12 @@ export class TaxComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
 
     } else {
       this.taxForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -338,9 +338,9 @@ export class TaxComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.gettaxById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
           this.addForm = false
           this.taxForm.patchValue(data);
@@ -359,7 +359,7 @@ export class TaxComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
+        // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);

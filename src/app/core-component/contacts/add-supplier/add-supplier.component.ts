@@ -104,7 +104,7 @@ export class AddSupplierComponent implements OnInit {
   gstType: any;
   getgstType() {
     this.contactService.getTypeOfGst().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.gstType = res;
     })
   }
@@ -117,39 +117,39 @@ export class AddSupplierComponent implements OnInit {
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
-      console.log(this.country);
+      // console.log(this.country);
     });
   }
   
   selectState(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
   
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
-      console.log(this.state[i]);
+      // console.log(this.state[i]);
       // Reset city for the current formArray item
       this.city[i] = [];
     });
   }
   
   selectCity(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
   
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      console.log(this.city[i]);
+      // console.log(this.city[i]);
     });
   }
   
   loader=false;
   submit() {
-    console.log(this.supplierForm.value);
+    // console.log(this.supplierForm.value);
 
     let formdata: any = new FormData();
     formdata.append('login_access', this.supplierForm.get('login_access')?.value);
@@ -209,10 +209,10 @@ export class AddSupplierComponent implements OnInit {
     formdata.append('bank_id', JSON.stringify(bankData));
     
     if (this.supplierForm.valid) {
-      console.log('log');
+      // console.log('log');
       this.loader=true;
       this.contactService.addSupplier(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loader=false;
@@ -228,7 +228,7 @@ export class AddSupplierComponent implements OnInit {
         }
       }, err => {
         this.loader=false
-        console.log(err.error);
+        // console.log(err.error);
         if(err.error.msg){
           this.toastr.error(err.error.msg)
         }
@@ -250,7 +250,7 @@ export class AddSupplierComponent implements OnInit {
       })
     } else {
       this.supplierForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
     }
   }
 

@@ -81,7 +81,7 @@ export class UpdateVendorComponent implements OnInit {
   updateAddress(add: any[]): FormArray {
     const formArr = new FormArray([]);
     add.forEach((j: any) => {
-      console.log(j);
+      // console.log(j);
       const addressGroup = this.fb.group({
         address_line_1: j?.address_line_1==null?'':j?.address_line_1,
         address_line_2: j?.address_line_2==null?'':j?.address_line_2,
@@ -140,7 +140,7 @@ export class UpdateVendorComponent implements OnInit {
   gstType: any;
   getgstType() {
     this.contactService.getTypeOfGst().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.gstType = res;
     })
   }
@@ -194,60 +194,60 @@ export class UpdateVendorComponent implements OnInit {
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
-      console.log(this.country);
+      // console.log(this.country);
     });
   }
 
   selectState(val: any, i) {
-    console.log(val, i);
+    // console.log(val, i);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
 
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
-      console.log(this.state[i]);
+      // console.log(this.state[i]);
       // Reset city for the current formArray item
       this.city[i] = [];
     });
   }
   selectedState(val, i) {
-    console.log(val, i);
+    // console.log(val, i);
     if (val) {
       this.coreService.getStateByCountryId(val).subscribe(res => {
         this.state[i] = res;
-        console.log(this.state[i]);
+        // console.log(this.state[i]);
         // this.city[i] = [];
       });
     }
 
   }
   selectCity(val: any, i) {
-    console.log(val, i);
+    // console.log(val, i);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      console.log(this.city[i]);
+      // console.log(this.city[i]);
     });
 
   }
 
   selectedCity(val: any, i) {
-    console.log(val, i);
+    // console.log(val, i);
     if (val) {
       this.coreService.getCityByStateId(val).subscribe(res => {
         this.city[i] = res;
-        console.log(this.city[i]);
+        // console.log(this.city[i]);
       });
     }
 
   }
   loader = false;
   submit() {
-    console.log(this.vendorForm.value);
+    // console.log(this.vendorForm.value);
     let formdata: any = new FormData();
     formdata.append('login_access', this.vendorForm.get('login_access')?.value);
     formdata.append('name', this.vendorForm.get('name')?.value);
@@ -300,7 +300,7 @@ export class UpdateVendorComponent implements OnInit {
     if (this.vendorForm.valid) {
       this.loader=true;
       this.contactService.updateVendor(formdata, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Vendor updated successfully") {
           this.loader=false;
@@ -316,7 +316,7 @@ export class UpdateVendorComponent implements OnInit {
         }
       }, err => {
         this.loader=false
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
         }
@@ -338,7 +338,7 @@ export class UpdateVendorComponent implements OnInit {
       })
     } else {
       this.vendorForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
     }
   }
 

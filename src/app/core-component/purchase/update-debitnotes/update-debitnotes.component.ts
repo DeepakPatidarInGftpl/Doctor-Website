@@ -75,7 +75,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     });
 
     this.purchaseService.getDebitNotesById(this.id).subscribe((res:any) => {
-      console.log(res);
+      // console.log(res);
       this.getresbyId = res;
       this.debitNotesForm.patchValue(res);
       this.debitNotesForm.get('party')?.patchValue(res?.party.id);
@@ -86,11 +86,11 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.displaySupplierName(res?.party.id);
          //call detail api
    this.contactService.getSupplierById(res?.party.id).subscribe(res=>{
-    console.log(res);
+    // console.log(res);
     this.supplierAddress=res;
     this.supplierControl.setValue(res.name); 
     this.selectedAddress=this.supplierAddress.address[0];
-    console.log(this.selectedAddress);
+    // console.log(this.selectedAddress);
     
   })
     })
@@ -136,7 +136,7 @@ export class UpdateDebitnotesComponent implements OnInit {
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
     add.forEach((j: any,i) => {
-      console.log(j);
+      // console.log(j);
       
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
@@ -155,7 +155,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       // this.variantControl.setValue(this.productName[i]);
       
     })
-    console.log(this.variantControl);
+    // console.log(this.variantControl);
     
     return formarr
   }
@@ -185,19 +185,19 @@ export class UpdateDebitnotesComponent implements OnInit {
   supplierList: any;
   getSuuplier() {
     this.purchaseService.getSupplier().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.suppliers = res;
     })
   }
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.variants = res;
     })
   }
   getBatchComplete(){
     this.coreService.getBatch().subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.batchList=res;
     })
   }
@@ -205,21 +205,21 @@ export class UpdateDebitnotesComponent implements OnInit {
   getPurchase() {
     this.purchaseService.getPurchase().subscribe(res => {
       this.purchaseList = res;
-      console.log(this.purchaseList);
+      // console.log(this.purchaseList);
     })
   }
   paymentList: any;
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.paymentList = res;
     })
   }
 
   oncheck(event: any) {
-    console.log(event);
+    // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
     if(this.getresbyId.cart.length>=0){
       const variants = this.debitNotesForm.get('cart') as FormArray;
       variants.clear();
@@ -261,7 +261,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     const selectedItemId = event.id;
     this.variantId=event.id
     this.getBatch()
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
     const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: selectedItemId
@@ -270,14 +270,14 @@ export class UpdateDebitnotesComponent implements OnInit {
   batchList:any;
   getBatch(){
     this.coreService.getBatchById(this.variantId).subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.batchList=res;
     })
   }
   getRes: any;
   loader = false;
   submit() {
-    console.log(this.debitNotesForm.value);
+    // console.log(this.debitNotesForm.value);
     if (this.debitNotesForm.valid) {
 
       this.loader = true;
@@ -309,7 +309,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       });
       formdata.append('cart', JSON.stringify(cartData));
       this.purchaseService.updateDebitNotes(formdata,this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.getRes = res;
         if (this.getRes.Is_Success == "True") {
           this.loader = false;
@@ -326,20 +326,20 @@ export class UpdateDebitnotesComponent implements OnInit {
     }
   }
   private _filter(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
       ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
       : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
     }
     return filteredSuppliers;
   }
 
   private _filtr(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
     const filteredVariant = include
       ? this.variants?.filter(variant => variant && (variant.product_title?.toLowerCase().includes(filterValue) ||
@@ -355,7 +355,7 @@ export class UpdateDebitnotesComponent implements OnInit {
           variant.id?.toString().includes(filterValue))
       );
     if (!include && (!filteredVariant || filteredVariant.length === 0)) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredVariant.push({ product_title: "No data found" });
     }
     return filteredVariant || [];
@@ -373,18 +373,18 @@ export class UpdateDebitnotesComponent implements OnInit {
     this.searchs = undefined;
   }
   onOptionSelected(event: any): void {
-    console.log(event);
-    console.log(event.option.value);
+    // console.log(event);
+    // console.log(event.option.value);
   }
   displayFn(result: any): string {
-    console.log(result);
+    // console.log(result);
     return result ? result.product_title : '';
   }
   barcode: any[] = [];
   v_id: any;
   variantChanged(value: any, index) {
-    console.log(index);
-    console.log(value?.sku);
+    // console.log(index);
+    // console.log(value?.sku);
     this.barcode[index] = value.sku;
 
     this.v_id = value.id;
@@ -399,7 +399,7 @@ export class UpdateDebitnotesComponent implements OnInit {
   isProduct = true;
 
   searchProduct(event: any, index: any) {
-    console.log(event);
+    // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
 
@@ -407,16 +407,16 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
         this.productOption = res;
-        console.log(this.searchs);
+        // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
-        console.log(this.productName);
+        // console.log(this.productName);
         this.check = true;
         const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
         barcode.patchValue({
           barcode: this.searchs[0].id
         });
         this.coreService.getBatchById(this.searchs[0].id).subscribe(res=>{
-          console.log(res);
+          // console.log(res);
           this.batchList=res;
         })
       });

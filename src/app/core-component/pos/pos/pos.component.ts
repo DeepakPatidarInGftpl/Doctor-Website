@@ -180,7 +180,7 @@ export class PosComponent implements OnInit {
     }
     if(event.code == KEY_CODE.UP_ARROW){
       // Your row selection code
-      console.log(event);
+      // console.log(event);
     }
     if(event.code == KEY_CODE.F5){
       var clicking = <HTMLElement>document.querySelector('.upiF5');
@@ -449,7 +449,7 @@ export class PosComponent implements OnInit {
       }
     })
     // this.httpClient.get("assets/data.json").subscribe(data =>{
-    //   console.log(data);
+      // console.log(data);
     //   this.customers = data;
     // })
     this.syncService.checkOnlineStatus();
@@ -460,7 +460,7 @@ export class PosComponent implements OnInit {
     // this.subscriptions.push(this.onlineEvent.subscribe(e => {
     //   this.connectionStatusMessage = 'Back to online';
     //   this.connectionStatus = 'online';
-    //   console.log('Online...');
+      // console.log('Online...');
     //   // this.loader = true;
     //   // setTimeout(function() { 
     //   //   this.loader = false
@@ -471,7 +471,7 @@ export class PosComponent implements OnInit {
     // this.subscriptions.push(this.offlineEvent.subscribe(e => {
     //   this.connectionStatusMessage = 'Connection lost! You are not connected to internet';
     //   this.connectionStatus = 'offline';
-    //   console.log('Offline...');
+      // console.log('Offline...');
     //   // this.loader = true;
     //   // setTimeout(function() { 
     //   //   this.loader = false
@@ -490,7 +490,7 @@ export class PosComponent implements OnInit {
     //   map(value => this._filter(value || '')),
     // );
     this.cartItems = this.cartService.getCartItems();
-    console.log(this.cartItems);
+    // console.log(this.cartItems);
 
 
     // this.filteredOptions$ = this.options;
@@ -524,20 +524,20 @@ export class PosComponent implements OnInit {
           .pipe(
             catchError(err => {
               // handleError(err);
-              console.log('err catch', err);
+              // console.log('err catch', err);
               this.errorMsg = 'No Products Found';
               this.isLoading = false;
               return [];
             }),
             finalize(() => {
               this.isLoading = false
-              console.log('search', value)
+              // console.log('search', value)
             }),
           )
         )
       )
       .subscribe((data: any) => {
-        console.log('data', data)
+        // console.log('data', data)
         // if(data.variants.length > 0){
         //   this.filteredProducts = data.variants;
         // }
@@ -556,8 +556,8 @@ export class PosComponent implements OnInit {
         //   this.filteredProducts = data['Search'];
         //   console.log('else');
         // }
-        console.log(this.filteredProducts, 'fil');
-        console.log(this.errorMsg, 'errmg');
+        // console.log(this.filteredProducts, 'fil');
+        // console.log(this.errorMsg, 'errmg');
       });
   
       this.customerAutoCompleteControl.valueChanges
@@ -576,23 +576,23 @@ export class PosComponent implements OnInit {
           .pipe(
             catchError(err => {
               // handleError(err);
-              console.log('err catch', err);
+              // console.log('err catch', err);
               this.cusErrorMsg = 'No Customer Found';
               this.cusIsLoading = false;
               return [];
             }),
             finalize(() => {
               this.cusIsLoading = false
-              console.log('search', value)
+              // console.log('search', value)
             }),
           )
         )
       )
       .subscribe((data: any) => {
-        console.log('data', data)
+        // console.log('data', data)
 
         if(data.length > 0){
-          console.log('data', data)
+          // console.log('data', data)
           this.filteredCustomer = data;
         } else {
           this.filteredCustomer = [];
@@ -627,23 +627,23 @@ export class PosComponent implements OnInit {
           .pipe(
             catchError(err => {
               // handleError(err);
-              console.log('err catch', err);
+              // console.log('err catch', err);
               this.cusErrorMsg = 'No Customer Found';
               this.cusIsLoading = false;
               return [];
             }),
             finalize(() => {
               this.cusIsLoading = false
-              console.log('search', value)
+              // console.log('search', value)
             }),
           )
         )
       )
       .subscribe((data: any) => {
-        console.log('data', data)
+        // console.log('data', data)
 
         if(data.length > 0){
-          console.log('data', data)
+          // console.log('data', data)
           this.filteredCustomer2 = data;
         } else {
           this.filteredCustomer2 = [];
@@ -669,23 +669,23 @@ export class PosComponent implements OnInit {
           .pipe(
             catchError(err => {
               // handleError(err);
-              console.log('err catch', err);
+              // console.log('err catch', err);
               this.partyErrorMsg = 'No Party Found';
               this.partyIsLoading = false;
               return [];
             }),
             finalize(() => {
               this.partyIsLoading = false
-              console.log('search', value)
+              // console.log('search', value)
             }),
           )
         )
       )
       .subscribe((data: any) => {
-        console.log('data', data)
+        // console.log('data', data)
 
         if(data.length > 0){
-          console.log('data', data)
+          // console.log('data', data)
           this.filteredParty = data;
         } else {
           this.filteredParty = [];
@@ -711,23 +711,23 @@ export class PosComponent implements OnInit {
           .pipe(
             catchError(err => {
               // handleError(err);
-              console.log('err catch', err);
+              // console.log('err catch', err);
               this.partyErrorMsg = 'No Party Found';
               this.partyIsLoading = false;
               return [];
             }),
             finalize(() => {
               this.partyIsLoading = false
-              console.log('search', value)
+              // console.log('search', value)
             }),
           )
         )
       )
       .subscribe((data: any) => {
-        console.log('data', data)
+        // console.log('data', data)
 
         if(data.length > 0){
-          console.log('data', data)
+          // console.log('data', data)
           this.filteredPartyExpense = data;
         } else {
           this.filteredPartyExpense = [];
@@ -738,117 +738,117 @@ export class PosComponent implements OnInit {
 
     
     this.addMoreDetails = false;
-    console.log(this.addMoreDetails);
+    // console.log(this.addMoreDetails);
     this.coreService.getCountry().subscribe({
       next: (response) => {
-        console.log(response, 'countries')
+        // console.log(response, 'countries')
         this.currentCountry = response[0];
         this.coreService.getStateByCountryId(response[0].id).subscribe({
           next: (response) => {
-            console.log(response, 'state');
+            // console.log(response, 'state');
             this.stateList = response;
             this.state.setValue(response[0].id);
             this.currentState = response[0].id;
             this.coreService.getCityByStateId(response[0].id).subscribe({
               next: (response) => {
-                console.log(response, 'city');
+                // console.log(response, 'city');
                 this.city.setValue(response[0].id)
                 this.currentCities = response[0].id
                 this.cityList = response
               },
               error: (error) => {
-                console.log('state', error)
+                // console.log('state', error)
               }
             })
 
           },
           error: (error) => {
-            console.log('state', error)
+            // console.log('state', error)
           }
         })
       },
       error: (error) => {
-        console.log('country', error);
+        // console.log('country', error);
       }
     });
 
     this.cartService.getAdditionalCharge().subscribe({
       next: (response) => {
-        console.log(response, 'addt charge')
+        // console.log(response, 'addt charge')
         this.additionalChargesList = response;
       },
       error: (error) => {
-        console.log('addt charge', error);
+        // console.log('addt charge', error);
       }
     })
 
     this.cartService.getTaxes().subscribe({
       next: (response) => {
-        console.log(response, 'taxes')
+        // console.log(response, 'taxes')
         this.taxesList = response;
       },
       error: (error) => {
-        console.log('taxes', error);
+        // console.log('taxes', error);
       }
     })
 
     this.cartService.getCompanyBank().subscribe({
       next: (response) => {
-        console.log(response, 'company bank')
+        // console.log(response, 'company bank')
         this.companyBankList = response;
       },
       error: (error) => {
-        console.log('company bank', error);
+        // console.log('company bank', error);
       }
     })
 
     this.cartService.getPaymentTerms().subscribe({
       next: (response) => {
-        console.log(response, 'payment terms')
+        // console.log(response, 'payment terms')
         this.paymentTermsList = response;
       },
       error: (error) => {
-        console.log('payment terms', error);
+        // console.log('payment terms', error);
       }
     })
 
     this.cartService.getPOSOrders().subscribe({
       next: (response) => {
-        console.log(response, 'pos orders')
+        // console.log(response, 'pos orders')
         this.posOrders = response;
       },
       error: (error) => {
-        console.log('pos orders', error);
+        // console.log('pos orders', error);
       }
     })
 
     this.cartService.getExpensePayments().subscribe({
       next: (response) => {
-        console.log(response, 'expense payments')
+        // console.log(response, 'expense payments')
         this.expensePayments = response;
       },
       error: (error) => {
-        console.log('expense payments', error);
+        // console.log('expense payments', error);
       }
     })
 
     this.cartService.getSalesPayments().subscribe({
       next: (response) => {
-        console.log(response, 'sales payments')
+        // console.log(response, 'sales payments')
         this.salesPayments = response;
       },
       error: (error) => {
-        console.log('sales payments', error);
+        // console.log('sales payments', error);
       }
     })
 
     this.cartService.getPurchasePayments().subscribe({
       next: (response) => {
-        console.log(response, 'purchase payments')
+        // console.log(response, 'purchase payments')
         this.purchasePayments = response;
       },
       error: (error) => {
-        console.log('purchase payments', error);
+        // console.log('purchase payments', error);
       }
     })
 
@@ -865,7 +865,7 @@ export class PosComponent implements OnInit {
     // Check if the backspace key is pressed (keyCode 8) and the input is empty
     if (event.key === 'Backspace' && this.productsAutocompleteControl.value === '') {
       // Clear the selection or perform other actions as needed
-      console.log('Backspace key pressed, clear previous selection here.');
+      // console.log('Backspace key pressed, clear previous selection here.');
     }
   }
 
@@ -904,8 +904,8 @@ export class PosComponent implements OnInit {
   }
 
   filterOptions(value: any): any[] {
-    console.log('fil', value.name);
-    console.log('options', this.options[0].name);
+    // console.log('fil', value.name);
+    // console.log('options', this.options[0].name);
     const filterValue = value.toLowerCase();
     return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
   }
@@ -958,7 +958,7 @@ export class PosComponent implements OnInit {
 
   // update row in current additional charges
   updateRowInCAC(index: number){
-    console.log(this.currentOrderAdditionalCharges, 'coac');
+    // console.log(this.currentOrderAdditionalCharges, 'coac');
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
     }
   }
@@ -973,9 +973,9 @@ export class PosComponent implements OnInit {
     }
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
       this.currentOrderAdditionalCharges.splice(index, 1);
-      console.log("Element deleted successfully!");
+      // console.log("Element deleted successfully!");
     } else {
-      console.log("Invalid index. Element not deleted.");
+      // console.log("Invalid index. Element not deleted.");
     }
     this.updateRowInCAC(index)
   }
@@ -1234,15 +1234,15 @@ export class PosComponent implements OnInit {
     this.playBeepSound();
     let product1;
     const selectedOption = event.option.value;
-    console.log('prod', selectedOption?.batch);
+    // console.log('prod', selectedOption?.batch);
     if(selectedOption.batch.length > 1){
-      console.log('length > 1');
+      // console.log('length > 1');
       this.currentProduct = selectedOption;
       const element = document.getElementById('batchModal') as HTMLElement;
       const myModal = new Modal(element);
       myModal.show();
     } else {
-      console.log('length < 1');
+      // console.log('length < 1');
       product1 = {
         ...selectedOption,
         quantity: 1,
@@ -1259,24 +1259,24 @@ export class PosComponent implements OnInit {
   
   optionSelectedCharge(event){
     const selectedOption = event.option.value;
-    console.log('charge', selectedOption);
+    // console.log('charge', selectedOption);
   }
 
   optionSelected1(event){
     this.playBeepSound();
     this.currentCustomer = event.option.value;
-    console.log(event.option.value, 'cus');
+    // console.log(event.option.value, 'cus');
   }
 
   optionSelectedReceipt(event){
     let customer = event.option.value;
     this.cartService.getReceiptDueOrder(customer.id).subscribe({
       next: (response) => {
-        console.log(response, 'receipt sales')
+        // console.log(response, 'receipt sales')
         this.receiptSales = response;
       },
       error: (error) => {
-        console.log('receipt sales', error);
+        // console.log('receipt sales', error);
       }
     })
 
@@ -1291,7 +1291,7 @@ export class PosComponent implements OnInit {
   }
 
   removeOption(index: number) {
-    console.log('removed');
+    // console.log('removed');
     this.selectedOptions.splice(index, 1);
   }
 
@@ -1305,7 +1305,7 @@ export class PosComponent implements OnInit {
   }
 
   removeFromCurrent(item) {
-    console.log('removed');
+    // console.log('removed');
     // this.selectedOptions.splice(index, 1);
     this.cartService.removeFromCurrent(item)
   }
@@ -1545,13 +1545,13 @@ export class PosComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error)
+          // console.log(error)
           this.toastr.error(error.message);
         },
       });
 
     // for(let x of formData){
-    //   console.log('formdata cus', x);
+      // console.log('formdata cus', x);
     // }
     // this.http
     //   .post('https://pv.greatfuturetechno.com/pv-api/customer/', formData)
@@ -1572,12 +1572,12 @@ export class PosComponent implements OnInit {
     // console.log(stateCode.id, '...');
       this.coreService.getCityByStateId(selectedState).subscribe({
         next: (res) => {
-          console.log(res, 'cites');
+          // console.log(res, 'cites');
           this.cityList = res;
           this.currentCities = this.cityList?.id
         },
         error: (err) => {
-          console.log('cities', err);
+          // console.log('cities', err);
         }
       })
 
@@ -1592,7 +1592,7 @@ export class PosComponent implements OnInit {
   onSubmit() {
     this.playBeepSound();
     if (this.registrationForm.invalid) {
-      console.log('invalid');
+      // console.log('invalid');
       Object.keys(this.registrationForm.controls).forEach(key => {
         this.registrationForm.controls[key].markAsTouched();
       });
@@ -1618,7 +1618,7 @@ export class PosComponent implements OnInit {
     
 
     // Form is valid, proceed with submission
-    console.log(this.registrationForm.value);
+    // console.log(this.registrationForm.value);
     this.submitCustomerForm();
     // Perform additional actions like API calls or data processing here
   }
@@ -1725,7 +1725,7 @@ export class PosComponent implements OnInit {
     if(this.mobile_no.valid){
       this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/mobile_no_check_of_customer/?search=${inputValue}`).subscribe({
       next: (response:any) => {
-        console.log(response, 'mobile check');
+        // console.log(response, 'mobile check');
         if(response.Same){
           this.customerRegistrationNumberSame = true;
         } else {
@@ -1733,7 +1733,7 @@ export class PosComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.log(err, 'mobile check');
+        // console.log(err, 'mobile check');
       }
     })
     }
@@ -1867,11 +1867,11 @@ export class PosComponent implements OnInit {
 
   receiptFormSubmit(){
     if (this.receiptPaymentForm.invalid) {
-      console.log('invalid');
+      // console.log('invalid');
       Object.keys(this.receiptPaymentForm.controls).forEach(key => {
         const control = this.receiptPaymentForm.controls[key];
         if (control.invalid) {
-          console.log(key);
+          // console.log(key);
         }
 
         this.receiptPaymentForm.controls[key].markAsTouched();
@@ -1890,11 +1890,11 @@ export class PosComponent implements OnInit {
   formSubmitExpense(){ 
     this.playBeepSound();
     if (this.expensePaymentForm.invalid) {
-      console.log('invalid');
+      // console.log('invalid');
       Object.keys(this.expensePaymentForm.controls).forEach(key => {
         const control = this.expensePaymentForm.controls[key];
         if (control.invalid) {
-          console.log(key);
+          // console.log(key);
         }
 
         this.expensePaymentForm.controls[key].markAsTouched();
@@ -1914,7 +1914,7 @@ export class PosComponent implements OnInit {
      .expensePayment(formData)
      .subscribe({
         next: (response:any) => {
-          console.log('response receipt', response);
+          // console.log('response receipt', response);
           if(response.isSuccess){
             // this.discardCurrentBill();
             this.toastr.success(response.msg)
@@ -1924,11 +1924,11 @@ export class PosComponent implements OnInit {
             this.expense_nongst.setValue(false);
             this.cartService.getExpensePayments().subscribe({
               next: (response) => {
-                console.log(response, 'expense payments')
+                // console.log(response, 'expense payments')
                 this.expensePayments = response;
               },
               error: (error) => {
-                console.log('expense payments', error);
+                // console.log('expense payments', error);
               }
             })
           } else {
@@ -1936,7 +1936,7 @@ export class PosComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error)
+          // console.log(error)
           this.toastr.error(error.message);
         },
       });
@@ -1946,11 +1946,11 @@ export class PosComponent implements OnInit {
   formSubmitPurchase(){ 
     this.playBeepSound();
     if (this.purchasePaymentForm.invalid) {
-      console.log('invalid');
+      // console.log('invalid');
       Object.keys(this.purchasePaymentForm.controls).forEach(key => {
         const control = this.purchasePaymentForm.controls[key];
         if (control.invalid) {
-          console.log(key);
+          // console.log(key);
         }
 
         this.purchasePaymentForm.controls[key].markAsTouched();
@@ -2078,7 +2078,7 @@ export class PosComponent implements OnInit {
      .purchasePayment(formData)
      .subscribe({
         next: (response:any) => {
-          console.log('response receipt', response);
+          // console.log('response receipt', response);
           if(response.isSuccess){
             // this.discardCurrentBill();
             this.toastr.success(response.msg)
@@ -2087,11 +2087,11 @@ export class PosComponent implements OnInit {
             this.purchasePaymentForm.reset();
             this.cartService.getPurchasePayments().subscribe({
               next: (response) => {
-                console.log(response, 'purchase payments')
+                // console.log(response, 'purchase payments')
                 this.purchasePayments = response;
               },
               error: (error) => {
-                console.log('purchase payments', error);
+                // console.log('purchase payments', error);
               }
             })
           } else {
@@ -2099,7 +2099,7 @@ export class PosComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error)
+          // console.log(error)
           this.toastr.error(error.message);
         },
       });
@@ -2109,11 +2109,11 @@ export class PosComponent implements OnInit {
   formSubmitReceipt(){ 
     this.playBeepSound();
     if (this.salesPaymentForm.invalid) {
-      console.log('invalid');
+      // console.log('invalid');
       Object.keys(this.salesPaymentForm.controls).forEach(key => {
         const control = this.salesPaymentForm.controls[key];
         if (control.invalid) {
-          console.log(key);
+          // console.log(key);
         }
 
         this.salesPaymentForm.controls[key].markAsTouched();
@@ -2241,7 +2241,7 @@ export class PosComponent implements OnInit {
      .receiptPayment(formData)
      .subscribe({
         next: (response:any) => {
-          console.log('response receipt', response);
+          // console.log('response receipt', response);
           if(response.isSuccess){
             // this.discardCurrentBill();
             this.toastr.success(response.msg)
@@ -2250,11 +2250,11 @@ export class PosComponent implements OnInit {
             this.salesPaymentForm.reset();
             this.cartService.getSalesPayments().subscribe({
               next: (response) => {
-                console.log(response, 'sales payments')
+                // console.log(response, 'sales payments')
                 this.salesPayments = response;
               },
               error: (error) => {
-                console.log('sales payments', error);
+                // console.log('sales payments', error);
               }
             })
           } else {
@@ -2262,7 +2262,7 @@ export class PosComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error)
+          // console.log(error)
           this.toastr.error(error.message);
         },
       });
@@ -2273,7 +2273,7 @@ export class PosComponent implements OnInit {
   payLaterGenerateOrder(){
     this.playBeepSound();
     if (this.payLaterMethodForm.invalid) {
-      console.log('invalid');
+      // console.log('invalid');
       Object.keys(this.payLaterMethodForm.controls).forEach(key => {
         this.payLaterMethodForm.controls[key].markAsTouched();
       });
@@ -2294,7 +2294,7 @@ export class PosComponent implements OnInit {
 
 
 
-    console.log(cartData, 'cash', pay_later_data);
+    // console.log(cartData, 'cash', pay_later_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -2313,7 +2313,7 @@ export class PosComponent implements OnInit {
      .generateOrderNew(formData)
      .subscribe({
         next: (response:any) => {
-          console.log('response order', response);
+          // console.log('response order', response);
           if(response.isSuccess){
             this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
@@ -2323,11 +2323,11 @@ export class PosComponent implements OnInit {
             this.payLaterMethodForm.reset();
             this.cartService.getPOSOrders().subscribe({
               next: (response) => {
-                console.log(response, 'pos orders')
+                // console.log(response, 'pos orders')
                 this.posOrders = response;
               },
               error: (error) => {
-                console.log('pos orders', error);
+                // console.log('pos orders', error);
               }
             })
           } else {
@@ -2335,7 +2335,7 @@ export class PosComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error)
+          // console.log(error)
           this.toastr.error(error.message);
         },
       });
@@ -2351,7 +2351,7 @@ export class PosComponent implements OnInit {
   cardPaymentGenerateOrder(type:any){
     this.playBeepSound();
     if (this.cardPaymentMethodForm.invalid) {
-      console.log('invalid');
+      // console.log('invalid');
       Object.keys(this.cardPaymentMethodForm.controls).forEach(key => {
         this.cardPaymentMethodForm.controls[key].markAsTouched();
       });
@@ -2375,7 +2375,7 @@ export class PosComponent implements OnInit {
 
 
 
-    console.log(cartData, 'card');
+    // console.log(cartData, 'card');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -2393,7 +2393,7 @@ export class PosComponent implements OnInit {
      .generateOrderNew(formData)
      .subscribe({
         next: (response:any) => {
-          console.log('response order', response);
+          // console.log('response order', response);
           if(response.isSuccess){
             this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
@@ -2412,7 +2412,7 @@ export class PosComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error)
+          // console.log(error)
           this.toastr.error(error.message);
         },
       });
@@ -2428,7 +2428,7 @@ export class PosComponent implements OnInit {
   bankPaymentGenerateOrder(type:any){
     this.playBeepSound();
     if (this.bankPaymentMethodForm.invalid) {
-      console.log('invalid');
+      // console.log('invalid');
       Object.keys(this.bankPaymentMethodForm.controls).forEach(key => {
         this.bankPaymentMethodForm.controls[key].markAsTouched();
       });
@@ -2448,7 +2448,7 @@ export class PosComponent implements OnInit {
 
 
 
-    console.log(cartData, 'cash', bank_data);
+    // console.log(cartData, 'cash', bank_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -2466,7 +2466,7 @@ export class PosComponent implements OnInit {
      .generateOrderNew(formData)
      .subscribe({
         next: (response:any) => {
-          console.log('response order', response);
+          // console.log('response order', response);
           if(response.isSuccess){
             this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
@@ -2482,11 +2482,11 @@ export class PosComponent implements OnInit {
             this.bankPaymentMethodForm.reset();
             this.cartService.getPOSOrders().subscribe({
               next: (response) => {
-                console.log(response, 'pos orders')
+                // console.log(response, 'pos orders')
                 this.posOrders = response;
               },
               error: (error) => {
-                console.log('pos orders', error);
+                // console.log('pos orders', error);
               }
             })
           } else {
@@ -2494,7 +2494,7 @@ export class PosComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error)
+          // console.log(error)
           this.toastr.error(error.message);
         },
       });
@@ -2510,7 +2510,7 @@ export class PosComponent implements OnInit {
   upiPaymentGenerateOrder(type:any){
     this.playBeepSound()
     if (this.upiPaymentMethodForm.invalid) {
-      console.log('invalid');
+      // console.log('invalid');
       Object.keys(this.upiPaymentMethodForm.controls).forEach(key => {
         this.upiPaymentMethodForm.controls[key].markAsTouched();
       });
@@ -2529,7 +2529,7 @@ export class PosComponent implements OnInit {
 
 
 
-    console.log(cartData, 'upi', upi_data);
+    // console.log(cartData, 'upi', upi_data);
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -2547,7 +2547,7 @@ export class PosComponent implements OnInit {
      .generateOrderNew(formData)
      .subscribe({
         next: (response:any) => {
-          console.log('response order', response);
+          // console.log('response order', response);
           if(response.isSuccess){
             this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
@@ -2563,11 +2563,11 @@ export class PosComponent implements OnInit {
             this.upiPaymentMethodForm.reset();
             this.cartService.getPOSOrders().subscribe({
               next: (response) => {
-                console.log(response, 'pos orders')
+                // console.log(response, 'pos orders')
                 this.posOrders = response;
               },
               error: (error) => {
-                console.log('pos orders', error);
+                // console.log('pos orders', error);
               }
             })
           } else {
@@ -2575,7 +2575,7 @@ export class PosComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error)
+          // console.log(error)
           this.toastr.error(error.message);
         },
       });
@@ -2596,7 +2596,7 @@ export class PosComponent implements OnInit {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
-    console.log(cartData, 'cash');
+    // console.log(cartData, 'cash');
     const formData = new FormData();
     formData.append('customer', JSON.stringify(this.currentCustomer.id));
     formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
@@ -2614,7 +2614,7 @@ export class PosComponent implements OnInit {
      .generateOrderNew(formData)
      .subscribe({
         next: (response:any) => {
-          console.log('response order', response);
+          // console.log('response order', response);
           if(response.isSuccess){
             this.customerAutoCompleteControl.setValue('');
             this.discardCurrentBill();
@@ -2631,11 +2631,11 @@ export class PosComponent implements OnInit {
            
             this.cartService.getPOSOrders().subscribe({
               next: (response) => {
-                console.log(response, 'pos orders')
+                // console.log(response, 'pos orders')
                 this.posOrders = response;
               },
               error: (error) => {
-                console.log('pos orders', error);
+                // console.log('pos orders', error);
               }
             })
           } else {
@@ -2643,7 +2643,7 @@ export class PosComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error)
+          // console.log(error)
           this.toastr.error(error.message);
         },
       });

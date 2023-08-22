@@ -38,7 +38,7 @@ export class DetailVendorComponent implements OnInit {
     this.contactService.getVendorById(this.id).subscribe(res => {
         if(this.id==res.id){
           this.vendorDetail = res
-          console.log(res); 
+          // console.log(res); 
         }
     })
   }

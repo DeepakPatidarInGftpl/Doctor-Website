@@ -12,7 +12,7 @@ export class FormSelect2Component implements OnInit {
   subcategoryList
   ngOnInit(): void {
     this.coreService.getSubcategory().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.subcategoryList = res
     })
   }

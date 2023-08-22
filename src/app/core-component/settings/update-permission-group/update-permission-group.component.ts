@@ -26,7 +26,7 @@ export class UpdatePermissionGroupComponent implements OnInit {
     })
 
     this.contactService.getPermissionGroupById(this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.gName = res.Group;
       this.permissionForm.patchValue({
         group_name:res.Group
@@ -40,7 +40,7 @@ export class UpdatePermissionGroupComponent implements OnInit {
           });
         });
       });
-      console.log(this.permissions);
+      // console.log(this.permissions);
     })
     this.getPermissionGroup();
   }
@@ -90,7 +90,7 @@ export class UpdatePermissionGroupComponent implements OnInit {
 
   getPermissionGroup() {
     this.contactService.getPermission().subscribe((response: any) => {
-      console.log(response);
+      // console.log(response);
       this.groupList = response?.data;
       this.groupList.forEach((res: any) => {
         let group = []
@@ -99,12 +99,12 @@ export class UpdatePermissionGroupComponent implements OnInit {
           //2steps- steps pemissions checkbox auto selected data 
           group.permissions.map((map: any) => {
             //3steps- check data is available or not
-            console.log(this.permissions.includes(map.id));
-            console.log(map);
+            // console.log(this.permissions.includes(map.id));
+            // console.log(map);
             //4steps- if data available then display true & patching into permissions formarray id
             //5steps in input tag - [checked]="permissions.includes(perm.id)"
             if (this.permissions.includes(map.id)) {
-              console.log(map);
+              // console.log(map);
               let formArray: any = this.permissionForm.get('permissions') as FormArray;
               formArray.push(new FormControl(map.id))
             }
@@ -146,10 +146,10 @@ export class UpdatePermissionGroupComponent implements OnInit {
   addRes: any;
   loaders = false;
   submit() {
-    console.log(this.permissionForm.value);
+    // console.log(this.permissionForm.value);
     if (this.permissionForm.valid) {
       this.loaders = true
-      console.log('valid');
+      // console.log('valid');
       var formdata: any = new FormData();
       // formdata.append('group_name', this.permissionForm.get('group_name')?.value);
 
@@ -158,7 +158,7 @@ export class UpdatePermissionGroupComponent implements OnInit {
       formdata.append('permissions', JSON.stringify(permissionsArray));
 
       this.contactService.updatePermissionGroup(formdata,this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.loaders = false;
         this.addRes = res;
         if (this.addRes.msg == 'Group updated successfully') {
@@ -169,11 +169,11 @@ export class UpdatePermissionGroupComponent implements OnInit {
           // this.router.navigate(['//contacts/permissionGroup'])
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       });
     } else {
       this.permissionForm.markAllAsTouched();
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 

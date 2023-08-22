@@ -38,7 +38,7 @@ export class DetailCustomerComponent implements OnInit {
     this.coreService.getCustomerById(this.id).subscribe(res => {
         if(this.id==res.id){
           this.productDetail = res
-          console.log(res); 
+          // console.log(res); 
         }
     })
   }

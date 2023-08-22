@@ -55,9 +55,9 @@ export class UpdateTransportComponent implements OnInit {
     this.getPaymentTerms();
 
     this.contactService.getTransportById(this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.getRes = res;
-      console.log(this.getRes);
+      // console.log(this.getRes);
       this.transportForm.patchValue(this.getRes);
       // this.transportForm.get('payment_terms')?.patchValue(this.getRes.payment_terms.id)
       this.transportForm.get('payment_terms')?.patchValue(this.getRes?.payment_terms == undefined ? '' : this.getRes?.payment_terms?.id)
@@ -76,7 +76,7 @@ export class UpdateTransportComponent implements OnInit {
     const formArr = new FormArray([]);
 
     add.forEach((j: any) => {
-      console.log(j);
+      // console.log(j);
 
       const addressGroup = this.fb.group({
         address_line_1: j?.address_line_1==null?'':j?.address_line_1,
@@ -143,7 +143,7 @@ export class UpdateTransportComponent implements OnInit {
   gstType: any;
   getgstType() {
     this.contactService.getTypeOfGst().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.gstType = res;
     })
   }
@@ -197,58 +197,58 @@ export class UpdateTransportComponent implements OnInit {
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
-      console.log(this.country);
+      // console.log(this.country);
     });
   }
   selectState(val: any, i) {
-    console.log(val, i);
+    // console.log(val, i);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
 
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
-      console.log(this.state[i]);
+      // console.log(this.state[i]);
       // Reset city for the current formArray item
       this.city[i] = [];
     });
   }
   selectedState(val, i) {
-    console.log(val, i);
+    // console.log(val, i);
     if (val) {
       this.coreService.getStateByCountryId(val).subscribe(res => {
         this.state[i] = res;
-        console.log(this.state[i]);
+        // console.log(this.state[i]);
         // this.city[i] = [];
       });
     }
 
   }
   selectCity(val: any, i) {
-    console.log(val, i);
+    // console.log(val, i);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      console.log(this.city[i]);
+      // console.log(this.city[i]);
     });
 
   }
   selectedCity(val: any, i) {
-    console.log(val, i);
+    // console.log(val, i);
     if (val) {
       this.coreService.getCityByStateId(val).subscribe(res => {
         this.city[i] = res;
-        console.log(this.city[i]);
+        // console.log(this.city[i]);
       });
     }
 
   }
   loader=false;
   submit() {
-    console.log(this.transportForm.value);
+    // console.log(this.transportForm.value);
 
     let formdata: any = new FormData();
     formdata.append('login_access', this.transportForm.get('login_access')?.value);
@@ -300,7 +300,7 @@ export class UpdateTransportComponent implements OnInit {
     if (this.transportForm.valid) {
       this.loader=true;
       this.contactService.updateTransport(formdata, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Transport updated successfully") {
           this.toastr.success(this.addRes.msg)
@@ -316,7 +316,7 @@ export class UpdateTransportComponent implements OnInit {
         }
       }, err => {
         this.loader=false;
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
         }
@@ -339,7 +339,7 @@ export class UpdateTransportComponent implements OnInit {
     } else {
       this.loader=false;
       this.transportForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
     }
   }
 

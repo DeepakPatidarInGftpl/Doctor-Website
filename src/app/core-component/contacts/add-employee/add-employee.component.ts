@@ -54,7 +54,7 @@ export class AddEmployeeComponent implements OnInit {
   groupList: any
   getGroup() {
     this.contactService.getPermissionGroup().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.groupList = res
     })
   }
@@ -107,39 +107,39 @@ export class AddEmployeeComponent implements OnInit {
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
-      console.log(this.country);
+      // console.log(this.country);
     });
   }
 
   selectState(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
 
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
-      console.log(this.state[i]);
+      // console.log(this.state[i]);
       // Reset city for the current formArray item
       this.city[i] = [];
     });
   }
 
   selectCity(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      console.log(this.city[i]);
+      // console.log(this.city[i]);
     });
   }
   permissionDetails: any;
   getPermission() {
     this.contactService.getPermission()?.subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.permissionDetails = res;
       // console.log(this.permissionDetails[0].name);
     })
@@ -174,7 +174,7 @@ export class AddEmployeeComponent implements OnInit {
 
   loader = false;
   submit() {
-    console.log(this.employeeForm.value);
+    // console.log(this.employeeForm.value);
 
     let formdata: any = new FormData();
     formdata.append('login_access', this.employeeForm.get('login_access')?.value);
@@ -233,7 +233,7 @@ export class AddEmployeeComponent implements OnInit {
     if (this.employeeForm.valid) {
       this.loader = true;
       this.contactService.addEmployee(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Successfuly Added") {
           this.loader = false
@@ -268,7 +268,7 @@ export class AddEmployeeComponent implements OnInit {
     else {
       this.loader = false;
       this.employeeForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
     }
   }
 

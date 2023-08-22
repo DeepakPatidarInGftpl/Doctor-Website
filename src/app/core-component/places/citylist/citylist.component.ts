@@ -159,7 +159,7 @@ export class CitylistComponent implements OnInit {
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    console.log(this.tableData);
+    // console.log(this.tableData);
     this.getstate();
 
     //permission from localstorage
@@ -184,16 +184,16 @@ export class CitylistComponent implements OnInit {
      this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='add_city') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='change_city') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='delete_city') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });
@@ -234,13 +234,13 @@ export class CitylistComponent implements OnInit {
   addRes: any;
   loaders=false;
   submit() {
-    console.log(this.cityForm.value);
-    console.log(this.id);
+    // console.log(this.cityForm.value);
+    // console.log(this.id);
 
     if (this.cityForm.valid) {
       this.loaders=true;
       this.coreService.addcity(this.cityForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loaders=false;
@@ -250,11 +250,11 @@ export class CitylistComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.cityForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -263,7 +263,7 @@ export class CitylistComponent implements OnInit {
     if (this.cityForm.valid) {
       this.loaders=true;
       this.coreService.updatecity(this.cityForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "City updated successfully") {
           this.loaders=false;
@@ -274,7 +274,7 @@ export class CitylistComponent implements OnInit {
           this.ngOnInit();
         }
       }, err => {
-        console.log(err.error.state);
+        // console.log(err.error.state);
         if (err.error.state) {
           this.stateError = 'Select State';
           setTimeout(() => {
@@ -285,7 +285,7 @@ export class CitylistComponent implements OnInit {
 
     } else {
       this.cityForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -305,7 +305,7 @@ export class CitylistComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getcityById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
         if (id == data.id) {
           this.addForm = false
@@ -326,8 +326,8 @@ export class CitylistComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
-  //       console.log(res.city.toLocaleLowerCase());
+        // console.log(res);
+        // console.log(res.city.toLocaleLowerCase());
   //       console.log(res.city.match(this.titlee));
   //       return res.city.match(this.titlee);
   //     })

@@ -174,16 +174,16 @@ export class AccountlistComponent implements OnInit {
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData) {
       const permission = localStorageData;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'add_account') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'change_account') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'account' && res.codename == 'delete_account') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     }
@@ -192,14 +192,14 @@ export class AccountlistComponent implements OnInit {
   accountType: any
   getAccountType() {
     this.coreService.accountType().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.accountType = res;
     })
   }
   subtype: any
   getAccountSubType() {
     this.coreService.getAccountSubType().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.subtype = res;
     })
   }
@@ -281,7 +281,7 @@ export class AccountlistComponent implements OnInit {
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.selectedAccountType) {
-      console.log(this.selectedAccountType);
+      // console.log(this.selectedAccountType);
       filteredData = filteredData.filter((item) => item?.accounts_type === this.selectedAccountType);
     }
     if (this.selectedAccountSubType) {

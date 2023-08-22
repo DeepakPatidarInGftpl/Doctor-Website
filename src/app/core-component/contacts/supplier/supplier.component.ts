@@ -138,7 +138,7 @@ export class SupplierComponent implements OnInit {
   userDetails:any
   ngOnInit(): void {
     this.contactService.getSupplier().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
@@ -170,13 +170,13 @@ export class SupplierComponent implements OnInit {
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'add_supplier') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'change_supplier') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'delete_supplier') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });

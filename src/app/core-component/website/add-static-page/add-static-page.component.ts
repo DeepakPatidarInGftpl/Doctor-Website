@@ -78,11 +78,11 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
   addRes: any;
   loaders=false;
   submit() {
-    console.log(this.staticPgForm.value);
+    // console.log(this.staticPgForm.value);
     if (this.staticPgForm.valid) {
       this.loaders=true;
       this.coreService.addStatic(this.staticPgForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loaders=false;
@@ -97,12 +97,12 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
         }
       }, err => {
         this.loaders=false;
-        console.log(err.error);
+        // console.log(err.error);
       })
     } else {
       this.loaders=false;
       this.staticPgForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 

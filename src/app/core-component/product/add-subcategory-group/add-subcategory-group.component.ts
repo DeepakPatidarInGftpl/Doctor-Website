@@ -42,7 +42,7 @@ export class AddSubcategoryGroupComponent implements OnInit {
     this.coreService.getFeatureGroup().subscribe((res: any) => {
       this.featureGroup = res
       this.filteredFeatureGroupData = this.featureGroup.slice();
-      console.log(this.filteredFeatureGroupData);
+      // console.log(this.filteredFeatureGroupData);
 
       this.filterFeatureGroupData();
     })
@@ -83,7 +83,7 @@ export class AddSubcategoryGroupComponent implements OnInit {
   url: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -158,7 +158,7 @@ export class AddSubcategoryGroupComponent implements OnInit {
   errormessFFG: any
   errormessFSubC: any
   submit() {
-    console.log(this.subCategoryGroupForm.value);
+    // console.log(this.subCategoryGroupForm.value);
     if (this.subCategoryGroupForm.valid) {
       this.loaders = true;
       let formdata: any = new FormData();
@@ -177,7 +177,7 @@ export class AddSubcategoryGroupComponent implements OnInit {
       },
         err => {
           this.loaders=false
-          console.log(err.error.msg);
+          // console.log(err.error.msg);
           if (err.error.msg == 'Your Selected subcategories is Not Avaliable') {
             this.errormessFSubC = 'This Field Is Required'
             setTimeout(() => {
@@ -195,7 +195,7 @@ export class AddSubcategoryGroupComponent implements OnInit {
     } else {
       this.loaders=false
       this.subCategoryGroupForm.markAllAsTouched()
-      console.log('invalid form');
+      // console.log('invalid form');
       
     }
 

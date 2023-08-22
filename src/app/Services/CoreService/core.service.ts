@@ -209,7 +209,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('hsncodeList', JSON.stringify(res));
       this.hsncodeBehavior.next(null)
     })
@@ -283,7 +283,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('unitList', JSON.stringify(res));
       this.unitBehavior.next(null)
     })
@@ -345,7 +345,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('unitconservationList', JSON.stringify(res));
       this.unitConversionBehavior.next(null)
     })
@@ -405,7 +405,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('productsubcategroyList', JSON.stringify(res));
       this.subcategoryBehavior.next(null)
     })
@@ -459,7 +459,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('brandsList', JSON.stringify(res));
       this.brandBehavior.next(null)
     })
@@ -516,7 +516,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('colorsList', JSON.stringify(res));
       this.colorBehavior.next(null)
     })
@@ -575,7 +575,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('sizesList', JSON.stringify(res));
       this.sizeBehavior.next(null)
     })
@@ -633,7 +633,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('taxList', JSON.stringify(res));
       this.taxBehavior.next(null)
     })
@@ -682,7 +682,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('fuature_groupList', JSON.stringify(res));
       this.featureGroupBehavior.next(null)
     })
@@ -735,7 +735,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('featureList', JSON.stringify(res));
       this.featureBehavior.next(null)
     })
@@ -794,7 +794,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('variantList', JSON.stringify(res));
       this.variantBehavior.next(null)
     })
@@ -1069,7 +1069,7 @@ export class CoreService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     }).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       localStorage.setItem('productList', JSON.stringify(res));
       this.productListBehaviur.next(null)
     })

@@ -175,13 +175,13 @@ export class PaymentTermsComponent implements OnInit {
       permission?.map((res: any) => {
         if (res?.content_type.app_label === 'master' && res?.content_type.model === 'paymentterms' && res?.codename=='add_paymentterms') {
           this.isAdd = res?.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res?.content_type.app_label === 'master' && res?.content_type.model === 'paymentterms' && res?.codename=='change_paymentterms') {
           this.isEdit = res?.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         } else if(res?.content_type.app_label === 'master' && res?.content_type.model === 'paymentterms' && res?.codename=='delete_paymentterms'){
           this.isDelete=res?.codename;
-          console.log(this.isDelete); 
+          // console.log(this.isDelete); 
         }
       });
     });
@@ -214,7 +214,7 @@ export class PaymentTermsComponent implements OnInit {
 
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     this.paymentTermsForm.patchValue({
       image: file
     })
@@ -224,13 +224,13 @@ export class PaymentTermsComponent implements OnInit {
   addRes: any
   loaders=false;
  submit() {
-  console.log(this.paymentTermsForm.value);
-  console.log(this.id);
+  // console.log(this.paymentTermsForm.value);
+  // console.log(this.id);
 
   if (this.paymentTermsForm.valid) {
     this.loaders=true;
     this.contactService.addPaymentTerms(this.paymentTermsForm.value).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
         this.loaders=false;
@@ -240,11 +240,11 @@ export class PaymentTermsComponent implements OnInit {
         this.ngOnInit()
       }
     }, err => {
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
     })
   } else {
     this.paymentTermsForm.markAllAsTouched()
-    console.log('forms invalid');
+    // console.log('forms invalid');
   }
 }
 
@@ -252,7 +252,7 @@ update(){
   if (this.paymentTermsForm.valid) {
     this.loaders=true;
     this.contactService.updatePaymentTerms(this.paymentTermsForm.value, this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Payment Terms Updated Sucessfully") {
         this.loaders=false;
@@ -263,11 +263,11 @@ update(){
         this.ngOnInit()
       }
     }, err => {
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
     })
   } else {
     this.paymentTermsForm.markAllAsTouched()
-    console.log('forms invalid');
+    // console.log('forms invalid');
   }
 }
 
@@ -287,7 +287,7 @@ get days() {
     this.contactService.getPaymentTermsById(id).subscribe(res => {
       this.resData=res
       this.resData.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
           this.addForm=false
           this.paymentTermsForm.patchValue({

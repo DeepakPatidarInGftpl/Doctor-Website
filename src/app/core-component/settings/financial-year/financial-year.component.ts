@@ -182,13 +182,13 @@ export class FinancialYearComponent implements OnInit {
       permission?.map((res: any) => {
         if (res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename=='add_financialyear') {
           this.isAdd = res?.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename=='change_financialyear') {
           this.isEdit = res?.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         } else if(res?.content_type.app_label === 'website' && res?.content_type.model === 'financialyear' && res?.codename=='delete_financialyear'){
           this.isDelete=res?.codename;
-          console.log(this.isDelete); 
+          // console.log(this.isDelete); 
         }
       });
     });
@@ -221,7 +221,7 @@ export class FinancialYearComponent implements OnInit {
 
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     this.FinancialYearForm.patchValue({
       image: file
     })
@@ -231,13 +231,13 @@ export class FinancialYearComponent implements OnInit {
   addRes: any
   loaders=false;
  submit() {
-  console.log(this.FinancialYearForm.value);
-  console.log(this.id);
+  // console.log(this.FinancialYearForm.value);
+  // console.log(this.id);
 
   if (this.FinancialYearForm.valid) {
     this.loaders=true;
     this.coreService.addFinancialYear(this.FinancialYearForm.value).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Data Created") {
         this.loaders=false;
@@ -247,11 +247,11 @@ export class FinancialYearComponent implements OnInit {
         this.ngOnInit()
       }
     }, err => {
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
     })
   } else {
     this.FinancialYearForm.markAllAsTouched()
-    console.log('forms invalid');
+    // console.log('forms invalid');
   }
 }
 
@@ -259,7 +259,7 @@ update(){
   if (this.FinancialYearForm.valid) {
     this.loaders=true;
     this.coreService.updateFinancialYear(this.FinancialYearForm.value, this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.addRes = res
       if (this.addRes.msg == "Finincial Year Updated Sucessfully") {
         this.loaders=false;
@@ -270,11 +270,11 @@ update(){
         this.ngOnInit()
       }
     }, err => {
-      console.log(err.error.gst);
+      // console.log(err.error.gst);
     })
   } else {
     this.FinancialYearForm.markAllAsTouched()
-    console.log('forms invalid');
+    // console.log('forms invalid');
   }
 }
 
@@ -294,7 +294,7 @@ update(){
     this.coreService.getFinancialYearById(id).subscribe(res => {
       this.resData=res
       this.resData.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
           this.addForm=false
           this.FinancialYearForm.patchValue({
@@ -316,7 +316,7 @@ update(){
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
+        // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.start_year.match(this.titlee));
   //       return res.start_year.match(this.titlee);
