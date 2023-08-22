@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BatchVariantProductListComponent } from './batch-variant-product-list.component';
+import { RolesGuardGuard } from 'src/app/guards/roles-guard.guard';
 
 const routes: Routes = [
-  {path:'',component:BatchVariantProductListComponent}
+  {path:'',component:BatchVariantProductListComponent,canActivate: [RolesGuardGuard], 
+  data: { allowedRoles: ['view_batch'] } }
 ];
 
 @NgModule({
