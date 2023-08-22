@@ -197,6 +197,8 @@ export class HsncodeComponent implements OnInit {
     // }
 
     // permission from profile api
+  
+  
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
