@@ -61,13 +61,13 @@ export class EditbrandComponent implements OnInit {
 
     // display updated data
     this.coreService.getbrandById(this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.url = ''
       if (this.id == res.id) {
-        console.log(res);
+        // console.log(res);
         this.updateData = res;
         this.subcatId = res.subcategory_group[0].id
-        console.log(this.subcatId);
+        // console.log(this.subcatId);
         this.subcatGroup = res?.subcategory_group.map((res: any) => res.id);
         this.selectSubcat = res?.subcategory.map((res: any) => res.id);
         this.selectCat = res?.category.map((res: any) => res?.id)
@@ -78,7 +78,7 @@ export class EditbrandComponent implements OnInit {
           discount: res.discount
         })
         if (res?.category.length > 0) {
-          console.log('categry');
+          // console.log('categry');
           this.getSubcatGroupByCategory(this.selectCat)
         } else {
           // this.getSubcatGroup()
@@ -92,31 +92,31 @@ export class EditbrandComponent implements OnInit {
 
   ///
   onItemSelect(item: any) {
-    console.log(item);
+    // console.log(item);
     let formArray: any = this.brandForm.get('variant') as FormArray;
     formArray.push(new FormControl(item.id))
   }
   onItemDeselect(item: any): void {
     // Handle the deselection of the item
-    console.log('Item deselected:', item);
+    // console.log('Item deselected:', item);
     let formArray: FormArray = this.brandForm.get('variant') as FormArray;
-    console.log(formArray);
+    // console.log(formArray);
     const index = formArray.controls.findIndex(control => control.value === item.id);
-    console.log(index);
+    // console.log(index);
     if (index !== -1) {
       formArray.removeAt(index);
     }
   }
 
   onSelectAll(items: any) {
-    console.log(items);
+    // console.log(items);
     let formArray: any = this.brandForm.get('variant') as FormArray;
     items.forEach((item: any) => {
       formArray.push(new FormControl(item.id));
     });
   }
   onDeselectAll(items: any) {
-    console.log('All items deselected:', items);
+    // console.log('All items deselected:', items);
     let formArray: any = this.brandForm.get('variant') as FormArray;
     formArray.clear();
   }
@@ -132,9 +132,9 @@ export class EditbrandComponent implements OnInit {
       this.categoryList = res;
       this.filteredCategoryList = [...this.categoryList];
       this.categoryList.map((map: any) => {
-        console.log(this.selectCat.length);
+        // console.log(this.selectCat.length);
         this.selectedCat = this.selectCat.length // count how many category is already selected
-        console.log(this.selectCat.includes(map?.id), 'category');
+        // console.log(this.selectCat.includes(map?.id), 'category');
         if (this.selectCat.includes(map.id)) {
           const formArray = this.brandForm.get('category') as FormArray;
 
@@ -187,18 +187,18 @@ export class EditbrandComponent implements OnInit {
   filteredSubCategoryGroupList: any[] = [];
   searchSubCategoryGroup: string = ''
   getSubcatGroupByCategory(val: number[]) {
-    console.log(val);
+    // console.log(val);
     const idString = JSON.stringify(val);
     this.coreService.getSubcategoryGroupByCategoryid(idString).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.subcatGroupList = res;
       this.filteredSubCategoryGroupList = [...this.subcatGroupList];
       // update then display
       this.subcatGroupList.map((map: any) => {
         this.selectedSubCatGrp = this.subcatGroup.length
-        console.log(this.selectedSubCatGrp);
+        // console.log(this.selectedSubCatGrp);
         if (this.subcatGroup.includes(map.id)) {
-          console.log(map.id);
+          // console.log(map.id);
           const formArray = this.brandForm.get('subcategory_group') as FormArray;
           formArray.push(new FormControl(map.id));
         }
@@ -219,7 +219,7 @@ export class EditbrandComponent implements OnInit {
   url: any;
   onSelect(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -240,11 +240,11 @@ export class EditbrandComponent implements OnInit {
       // update then display
       this.subcatGroupList.map((map: any) => {
         // this.selectedSubCatGrp=this.subcatGroup.length;
-        console.log(this.subcatGroup);
+        // console.log(this.subcatGroup);
 
-        console.log(this.subcatGroup.includes(map.id), 'subcategory_group');
+        // console.log(this.subcatGroup.includes(map.id), 'subcategory_group');
         if (this.subcatGroup.includes(map.id)) {
-          console.log(map.id);
+          // console.log(map.id);
           const formArray = this.brandForm.get('subcategory_group') as FormArray;
           formArray.push(new FormControl(map.id));
         }
@@ -264,7 +264,7 @@ export class EditbrandComponent implements OnInit {
       this.selectedSubCatGrp++;
       this.getSubcategoryBySubcatGroup(formArray.value);
       this.selectedSubCategoryGroupIds = formArray.value
-      console.log(this.selectedSubCategoryGroupIds);
+      // console.log(this.selectedSubCategoryGroupIds);
     }
     /* unselected */
     else {
@@ -289,13 +289,13 @@ export class EditbrandComponent implements OnInit {
   getSubcategoryBySubcatGroup(val: any) {
     const idString = JSON.stringify(val);
     this.coreService.getSubcategoryBySubcatGroupid(idString).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.subcatbySubcatGroup =  this.filterDuplicates(res);
       this.filteredSubCategoryList = [...this.subcatbySubcatGroup];
       this.subcatbySubcatGroup.map((map: any) => {
-        console.log(this.selectSubcat);
+        // console.log(this.selectSubcat);
         this.selectedSubcat = this.selectSubcat.length
-        console.log(this.selectSubcat.includes(map.id), 'subcategory');
+        // console.log(this.selectSubcat.includes(map.id), 'subcategory');
         if (this.selectSubcat.includes(map.id)) {
           const formArray = this.brandForm.get('subcategory') as FormArray;
           formArray.push(new FormControl(map.id));
@@ -361,7 +361,7 @@ export class EditbrandComponent implements OnInit {
   loaders = false
   addRes: any;
   update() {
-    console.log(this.brandForm.value);
+    // console.log(this.brandForm.value);
 
     var formData: any = new FormData();
     const uniqueCategoryArray = Array.from(new Set(this.brandForm.get('category')?.value));
@@ -385,7 +385,7 @@ export class EditbrandComponent implements OnInit {
       if (imageFile && imageFile instanceof File) {
         formData.append('image', imageFile);
         this.coreService.updatebrand(formData, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Brands updated successfully") {
             this.loaders = false;
@@ -401,11 +401,11 @@ export class EditbrandComponent implements OnInit {
             this.loaders = false;
           }
         }, err => {
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
         })
       } else {
         this.coreService.updatebrand(formData, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Brands updated successfully") {
             this.loaders = false;
@@ -419,13 +419,13 @@ export class EditbrandComponent implements OnInit {
           } else {
           }
         }, err => {
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
         })
       }
 
     } else {
       this.brandForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 

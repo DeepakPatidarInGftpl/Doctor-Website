@@ -159,13 +159,13 @@ export class PurchaselistComponent implements OnInit {
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'master' && res.content_type.model === 'purchaseorder' && res.codename=='add_purchaseorder') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchaseorder' && res.codename=='change_purchaseorder') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'master' && res.content_type.model === 'purchaseorder' && res.codename=='delete_purchaseorder') {
          this.isDelete = res.codename;
-         console.log(this.isDelete);
+        //  console.log(this.isDelete);
        }
       });
     });
@@ -173,7 +173,7 @@ export class PurchaselistComponent implements OnInit {
   loader=true;
   getPurchase(){
     this.purchaseService.getPurchase().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);

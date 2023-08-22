@@ -17,7 +17,7 @@ export class StaticpageDetalsComponent implements OnInit {
     this.slug = this.Arout.snapshot.paramMap.get('slug');
 
     this.coreService.getStaticPageBySlug(this.slug).subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.details=res;
     })
   }

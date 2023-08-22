@@ -154,16 +154,16 @@ export class ListRecieptComponent implements OnInit {
    const localStorageData = JSON.parse(localStorage.getItem('auth'));
    if (localStorageData ) {
      const permission = localStorageData;
-     permission.map((res: any) => {
+     permission?.map((res: any) => {
        if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'add_receipt') {
          this.isAdd = res.codename;
-         console.log(this.isAdd);
+        //  console.log(this.isAdd);
        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'change_receipt') {
          this.isEdit = res.codename;
-         console.log(this.isEdit);
+        //  console.log(this.isEdit);
        } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'receipt' && res.codename == 'delete_receipt') {
          this.isDelete = res.codename;
-         console.log(this.isDelete);
+        //  console.log(this.isDelete);
        }
      });
    }
@@ -267,7 +267,7 @@ export class ListRecieptComponent implements OnInit {
     // Access the element and retrieve its width
     const elementWidth = this.invoiceElement.nativeElement.offsetWidth;
     const elementHeight = this.invoiceElement.nativeElement.offsetHeight;
-    console.log('Element width:', elementWidth);
+    // console.log('Element width:', elementWidth);
 
     const invoice = this.invoiceElement.nativeElement;
 

@@ -160,7 +160,7 @@ export class FeatureGroupComponent implements OnInit {
     // };
     // this.coreService.getFuature_group();
     // // this.tableData = this.QueryService.fuature_groupList;
-    // // console.log(this.tableData);
+    // console.log(this.tableData);
     // this.coreService.featureGroupBehavior.subscribe(() => {
     //   if (localStorage.getItem('fuature_groupList')) {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("fuature_groupList")!))
@@ -180,7 +180,7 @@ export class FeatureGroupComponent implements OnInit {
     //   permission.map((res: any) => {
     //     if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='add_featuregroup') {
     //       this.isAdd = res.codename;
-    //       console.log(this.isAdd);
+          // console.log(this.isAdd);
     //     } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename=='change_featuregroup') {
     //       this.isEdit = res.codename;
     //       console.log(this.isEdit);
@@ -198,13 +198,13 @@ export class FeatureGroupComponent implements OnInit {
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'add_featuregroup') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'change_featuregroup') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'featuregroup' && res.codename == 'delete_featuregroup') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });
@@ -246,12 +246,12 @@ export class FeatureGroupComponent implements OnInit {
   getFeature() {
     this.coreService.getfeature().subscribe((res: any) => {
       this.featureList = res;
-      console.log(this.featureList);
+      // console.log(this.featureList);
       this.filteredFeatureList = [...this.featureList];
       if (!this.addForm) {
         this.featureList.map((map: any) => {
-          console.log(this.features);
-          console.log(this.features.includes(map.id));
+          // console.log(this.features);
+          // console.log(this.features.includes(map.id));
           this.selectedFeature = this.features.length
           if (this.features.includes(map.id)) {
             let formArray: any = this.featureForm.get('feature') as FormArray;
@@ -339,8 +339,8 @@ export class FeatureGroupComponent implements OnInit {
 
   loaders = false;
   submit() {
-    console.log(this.featureForm.value);
-    console.log(this.id);
+    // console.log(this.featureForm.value);
+    // console.log(this.id);
 
     var formData: any = new FormData();
     formData.append("title", this.featureForm.get('title')?.value);
@@ -349,7 +349,7 @@ export class FeatureGroupComponent implements OnInit {
     if (this.featureForm.valid) {
       this.loaders = true;
       this.coreService.addFuature_group(formData).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "FeatureGroup Successfuly Added") {
           this.selectedFeature = 0
@@ -360,16 +360,16 @@ export class FeatureGroupComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.featureForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
   update() {
-    console.log(this.featureForm.value);
+    // console.log(this.featureForm.value);
     
     var formData: any = new FormData();
     formData.append("title", this.featureForm.get('title')?.value);
@@ -378,7 +378,7 @@ export class FeatureGroupComponent implements OnInit {
     if (this.featureForm.valid) {
       this.loaders = true;
       this.coreService.updateFuature_group(formData, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "FeatureGroup updated successfully") {
           this.loaders = false;
@@ -390,11 +390,11 @@ export class FeatureGroupComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.featureForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   get title() {
@@ -410,7 +410,7 @@ export class FeatureGroupComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getFuature_groupById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       if (id == res.id) {
         this.getFeature()
         this.addForm = false

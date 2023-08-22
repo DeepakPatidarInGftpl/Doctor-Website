@@ -33,7 +33,7 @@ export class AuthServiceService {
   }
   get isLoggedIn(): boolean {
     let authToken = localStorage.getItem('token');
-    console.log(authToken);
+    // console.log(authToken);
     return authToken !== null ? true : false;
   }
 

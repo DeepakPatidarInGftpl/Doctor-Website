@@ -45,7 +45,7 @@ export class AddbrandComponent implements OnInit {
   url: any;
   onSelect(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -100,7 +100,7 @@ export class AddbrandComponent implements OnInit {
       this.selectedCat++;
       this.getSubcatGroupByCategory(formArray.value);
       this.selectedCategoryIds=formArray.value
-      console.log( this.selectedCategoryIds);
+      // console.log( this.selectedCategoryIds);
     }
     /* unselected */
     else {
@@ -123,10 +123,10 @@ export class AddbrandComponent implements OnInit {
   filteredSubCategoryGroupList: any[] = [];
   searchSubCategoryGroup:string=''
   getSubcatGroupByCategory(val: number[]) {
-    console.log(val);
+    // console.log(val);
     const idString = JSON.stringify(val);
     this.coreService.getSubcategoryGroupByCategoryid(idString).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.subcatGroupList = res;
       this.filteredSubCategoryGroupList = [...this.subcatGroupList];
     })
@@ -157,7 +157,7 @@ export class AddbrandComponent implements OnInit {
       this.selectedSubCatGrp++;
       this.getSubcategoryBySubcatGroup(formArray.value);
       this.selectedSubCategoryGroupIds=formArray.value
-      console.log( this.selectedSubCategoryIds);
+      // console.log( this.selectedSubCategoryIds);
       
     }
     /* unselected */
@@ -185,10 +185,10 @@ export class AddbrandComponent implements OnInit {
   id: any = []
   subcatbySubcatGroup: any;
   getSubcategoryBySubcatGroup(val: number[]) {
-    console.log(val);
+    // console.log(val);
     const idString = JSON.stringify(val);
     this.coreService.getSubcategoryBySubcatGroupid(idString).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       // this.subcatbySubcatGroup = res;
       this.subcatbySubcatGroup = this.filterDuplicates(res);
       this.filteredSubCategoryList = [...this.subcatbySubcatGroup];
@@ -252,7 +252,7 @@ export class AddbrandComponent implements OnInit {
   addRes: any;
 
   submit() {
-    console.log(this.brandForm.value);
+    // console.log(this.brandForm.value);
     var formData: any = new FormData();
     formData.append("title", this.brandForm.get('title')?.value);
     formData.append("image", this.brandForm.get('image')?.value);
@@ -264,7 +264,7 @@ export class AddbrandComponent implements OnInit {
     if (this.brandForm.valid) {
       this.loaders = true;
       this.coreService.addbrand(formData).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.toastr.success(this.addRes.msg)
@@ -276,12 +276,12 @@ export class AddbrandComponent implements OnInit {
           this.selectedSubCatGrp = 0;
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
 
     } else {
       this.brandForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 

@@ -60,7 +60,7 @@ export class CountrieslistComponent implements OnInit {
               text: this.delRes.msg,
             });
           } else {
-            console.log(this.delRes);
+            // console.log(this.delRes);
             // this.toastr.error(this.delRes.error)
             Swal.fire({
               icon: 'error',
@@ -167,7 +167,7 @@ export class CountrieslistComponent implements OnInit {
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    console.log(this.tableData);
+    // console.log(this.tableData);
     this.getFeatureGroup();
 
     //permission from localstorage
@@ -191,16 +191,16 @@ export class CountrieslistComponent implements OnInit {
      this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'places' && res.content_type.model === 'country' && res.codename=='add_country') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'places' && res.content_type.model === 'country' && res.codename=='change_country') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'places' && res.content_type.model === 'country' && res.codename=='delete_country') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });
@@ -228,7 +228,7 @@ export class CountrieslistComponent implements OnInit {
       if (this.delRes.msg == "Country Deleted successfully") {
         this.ngOnInit()
       } else {
-        console.log(this.delRes);
+        // console.log(this.delRes);
 
         this.toastr.error(this.delRes.error)
       }
@@ -244,13 +244,13 @@ export class CountrieslistComponent implements OnInit {
   addRes: any;
   loaders = false;
   submit() {
-    console.log(this.countryForm.value);
-    console.log(this.id);
+    // console.log(this.countryForm.value);
+    // console.log(this.id);
 
     if (this.countryForm.valid) {
       this.loaders = true;
       this.coreService.addCountry(this.countryForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loaders = false;
@@ -259,12 +259,12 @@ export class CountrieslistComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
 
     } else {
       this.countryForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -272,7 +272,7 @@ export class CountrieslistComponent implements OnInit {
     if (this.countryForm.valid) {
       this.loaders = true;
       this.coreService.updateCountry(this.countryForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Country updated successfully") {
           this.loaders = false;
@@ -282,13 +282,13 @@ export class CountrieslistComponent implements OnInit {
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error);
+        // console.log(err.error);
 
       })
 
     } else {
       this.countryForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   get country_name() {
@@ -304,7 +304,7 @@ export class CountrieslistComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getCountryById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
         if (id == data.id) {
           this.addForm = false
@@ -324,7 +324,7 @@ export class CountrieslistComponent implements OnInit {
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
+        // console.log(res);
   //       console.log(res.country_name.toLocaleLowerCase());
   //       console.log(res.country_name.match(this.titlee));
   //       return res.country_name.match(this.titlee);

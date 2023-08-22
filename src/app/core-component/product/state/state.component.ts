@@ -81,7 +81,7 @@ export class StateComponent implements OnInit {
     
     this.coreService.getstate();
     this.tableData = this.QueryService.stateList;
-    console.log(this.tableData);
+    // console.log(this.tableData);
     this.getFeatureGroup();
   }
 
@@ -113,13 +113,13 @@ export class StateComponent implements OnInit {
   }
   addRes: any
   submit() {
-    console.log(this.stateForm.value);
-    console.log(this.id);
+    // console.log(this.stateForm.value);
+    // console.log(this.id);
 
     if (this.stateForm.valid) {
     
         this.coreService.addstate(this.stateForm.value).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Data Created") {
             this.toastr.success(this.addRes.msg)
@@ -127,19 +127,19 @@ export class StateComponent implements OnInit {
             window.location.reload();
           }
         }, err => {
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
         })
       
     } else {
       this.stateForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
   update(){
     if (this.stateForm.valid) {
         this.coreService.updatestate(this.stateForm.value, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "State updated successfully") {
             this.toastr.success(this.addRes.msg)
@@ -148,12 +148,12 @@ export class StateComponent implements OnInit {
             window.location.reload()
           }
         }, err => {
-          console.log(err.error);
+          // console.log(err.error);
         })
      
     } else {
       this.stateForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   countryy: any
@@ -178,7 +178,7 @@ export class StateComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getstateById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
         if (id == data.id) {
           this.addForm = false

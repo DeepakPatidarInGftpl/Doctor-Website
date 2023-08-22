@@ -19,7 +19,7 @@ export class InovoiceComponent implements OnInit {
     this.loading = true;
     this.route.params.subscribe(params => {
       const orderId = params['id'];
-      console.log(orderId);
+      // console.log(orderId);
       // this.api.company_details().subscribe({
       //   next: (res: any) => {
       //     this.company = res;
@@ -32,10 +32,10 @@ export class InovoiceComponent implements OnInit {
       this.api.getPOSOrderDetails(orderId).subscribe({
         next: (res: any) => {
           this.order = res;
-          console.log(res, this.order);
+          // console.log(res, this.order);
         },
         error: (error) => {
-          console.log('error');
+          // console.log('error');
         },
         complete: () => {
           this.loading = false;
@@ -115,7 +115,7 @@ export class InovoiceComponent implements OnInit {
     // Access the element and retrieve its width
     const elementWidth = this.invoiceElement.nativeElement.offsetWidth;
     const elementHeight = this.invoiceElement.nativeElement.offsetHeight;
-    console.log('Element width:', elementWidth);
+    // console.log('Element width:', elementWidth);
 
     // Hide the element again
     //this.renderer.setStyle(this.invoiceElement.nativeElement, 'display', 'none');

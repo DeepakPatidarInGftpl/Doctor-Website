@@ -54,9 +54,9 @@ export class UpdateStaticPageComponent implements OnInit, OnDestroy {
     this.editor = new Editor();
     this.staticPgForm
     this.slugid = this.Arout.snapshot.paramMap.get('slug');
-    console.log(this.slugid);
+    // console.log(this.slugid);
     this.coreService.getStaticPageBySlug(this.slugid).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.staticPgForm.patchValue(res)
     })
 
@@ -70,11 +70,11 @@ export class UpdateStaticPageComponent implements OnInit, OnDestroy {
   addRes: any;
   loaders=false;
   submit() {
-    console.log(this.staticPgForm.value);
+    // console.log(this.staticPgForm.value);
     if (this.staticPgForm.valid) {
       this.loaders=true;
       this.coreService.updateStaticPage(this.staticPgForm.value, this.slugid).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Updated Sucessfully") {
           this.loaders=false;
@@ -91,12 +91,12 @@ export class UpdateStaticPageComponent implements OnInit, OnDestroy {
         }
       }, err => {
         this.loaders=false;
-        console.log(err.error);
+        // console.log(err.error);
       })
     } else {
       this.loaders=false;
       this.staticPgForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 

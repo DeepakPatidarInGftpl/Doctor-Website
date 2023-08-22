@@ -144,7 +144,7 @@ export class EmployeeListComponent implements OnInit, AfterViewChecked {
     // console.log(this.coreService.data);
 
     this.coreService.getEmployee().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
@@ -205,9 +205,9 @@ select=false
       this.ngOnInit();
     } else {
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.name.toLocaleLowerCase());
-        console.log(res.name.match(this.titlee));
+        // console.log(res);
+        // console.log(res.name.toLocaleLowerCase());
+        // console.log(res.name.match(this.titlee));
         return res.name.match(this.titlee);
       })
     }

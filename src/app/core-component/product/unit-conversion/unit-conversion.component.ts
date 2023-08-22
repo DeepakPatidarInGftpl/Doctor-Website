@@ -165,7 +165,7 @@ export class UnitConversionComponent implements OnInit {
       this.tableData=res;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-    console.log(this.tableData);
+    // console.log(this.tableData);
     this.getUnits();
 
     //permission from localstorage api
@@ -193,13 +193,13 @@ export class UnitConversionComponent implements OnInit {
         permission?.map((res: any) => {
           if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename=='add_unitconversion') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename=='change_unitconversion') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }else if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename=='delete_unitconversion') {
             this.isDelete = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }
         });
       });
@@ -283,13 +283,13 @@ selectAlll() {
 
 loaders=false;
   submit() {
-    console.log(this.unitConversionForm.value);
-    console.log(this.id);
+    // console.log(this.unitConversionForm.value);
+    // console.log(this.id);
 
     if (this.unitConversionForm.valid) {
       this.loaders=true;
       this.coreService.addUnitConversion(this.unitConversionForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Data Created") {
           this.loaders=false;
@@ -298,11 +298,11 @@ loaders=false;
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.unitConversionForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -310,7 +310,7 @@ loaders=false;
     if (this.unitConversionForm.valid) {
       this.loaders=true;
       this.coreService.updateUnitConversion(this.unitConversionForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Unit Conversion updated successfully") {
           this.loaders=false;
@@ -320,11 +320,11 @@ loaders=false;
           this.ngOnInit()
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.unitConversionForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -343,12 +343,12 @@ loaders=false;
   editForm(id: number) {
     this.id = id
     this.coreService.getUnitConversionById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       res.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
           this.addForm = false
-          console.log(data.quantity);
+          // console.log(data.quantity);
           
           this.unitConversionForm.patchValue({
             alternate_unit:data?.alternate_unit?.id,
@@ -367,7 +367,7 @@ loaders=false;
   //     this.ngOnInit();
   //   } else {
   //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
+        // console.log(res);
   //       console.log(res.title.toLocaleLowerCase());
   //       console.log(res.title.match(this.titlee));
   //       return res.title.match(this.titlee);

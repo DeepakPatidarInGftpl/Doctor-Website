@@ -143,7 +143,7 @@ export class ReasonComponent implements OnInit {
     this.websiteService.getReason().subscribe(res => {
       this.loader = false;
       this.tableData = res;
-      console.log(this.tableData);
+      // console.log(this.tableData);
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
 
@@ -169,16 +169,16 @@ export class ReasonComponent implements OnInit {
        this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='add_reason') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='change_reason') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename=='delete_reason') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });
@@ -205,11 +205,11 @@ export class ReasonComponent implements OnInit {
   addRes: any;
   loaders = false;
   submit() {
-    console.log(this.reasonForm.value);
+    // console.log(this.reasonForm.value);
     if (this.reasonForm.valid) {
       this.loaders = true
       this.websiteService.addReason(this.reasonForm.value).subscribe(res => {
-        console.log("response", res);
+        // console.log("response", res);
         this.addRes = res
         if (this.addRes.Is_Success == 'True') {
           this.loaders = false
@@ -226,7 +226,7 @@ export class ReasonComponent implements OnInit {
     }
     else {
       this.reasonForm.markAllAsTouched()
-      console.log('invalid form');
+      // console.log('invalid form');
     }
 
 
@@ -236,7 +236,7 @@ export class ReasonComponent implements OnInit {
     if (this.reasonForm.valid) {
       this.loaders = true
       this.websiteService.updateReason(this.reasonForm.value,this.id).subscribe(res => {
-        console.log("response", res);
+        // console.log("response", res);
         this.addRes = res
         if (this.addRes.Is_Success == 'True') {
           this.loaders = false;
@@ -254,7 +254,7 @@ export class ReasonComponent implements OnInit {
     }
     else {
       this.reasonForm.markAllAsTouched()
-      console.log('invalid form');
+      // console.log('invalid form');
     }
     
 
@@ -274,7 +274,7 @@ export class ReasonComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.websiteService.getReasonById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.resEdit = res;
     
       if (id == this.resEdit.id) {

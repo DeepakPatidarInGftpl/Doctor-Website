@@ -185,17 +185,17 @@ export class CouponComponent implements OnInit {
        this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'product'  && res.content_type.model === 'coupon' && res.codename=='add_coupon') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'product' && res.content_type.model === 'coupon' && res.codename=='change_coupon') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }
           else if (res.content_type.app_label === 'product' && res.content_type.model === 'coupon' && res.codename=='delete_coupon') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });
@@ -228,7 +228,7 @@ export class CouponComponent implements OnInit {
 
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     this.couponForm.patchValue({
       image: file
     })
@@ -238,9 +238,9 @@ export class CouponComponent implements OnInit {
   addRes: any
   loaders = false;
   submit() {
-    console.log(this.couponForm.value);
+    // console.log(this.couponForm.value);
     if (this.couponForm.valid) {
-      console.log('valid');
+      // console.log('valid');
       this.loaders = true;
       var formdata: any = new FormData()
       formdata.append('title', this.couponForm.get('title')?.value);
@@ -248,7 +248,7 @@ export class CouponComponent implements OnInit {
       formdata.append('expiry_date', this.couponForm.get('expiry_date')?.value);
       formdata.append('discount', this.couponForm.get('discount')?.value);
       this.websiteService.addCoupon(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "COUPON CREATED SUCESSFULLY") {
           this.loaders = false;
@@ -261,16 +261,16 @@ export class CouponComponent implements OnInit {
         }
       }, err => {
         this.loaders = false;
-        console.log(err.error);
+        // console.log(err.error);
       })
     } else {
       this.couponForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
   update() {
-    console.log(this.id);
+    // console.log(this.id);
     if (this.couponForm.valid) {
       this.loaders = true;
       var formdata: any = new FormData()
@@ -279,7 +279,7 @@ export class CouponComponent implements OnInit {
       formdata.append('expiry_date', this.couponForm.get('expiry_date')?.value);
       formdata.append('discount', this.couponForm.get('discount')?.value);
       this.websiteService.updateCoupon(formdata, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Coupon Updated Sucessfully") {
           this.loaders = false;
@@ -293,11 +293,11 @@ export class CouponComponent implements OnInit {
         }
       }, err => {
         this.loaders = false;
-        console.log(err.error);
+        // console.log(err.error);
       })
     } else {
       this.couponForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -320,12 +320,12 @@ export class CouponComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.websiteService.getCouponById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.resEdit = res;
       this.resEdit.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
-          console.log(data);
+          // console.log(data);
           this.addForm = false
           this.couponForm.patchValue(data);
           this.editFormdata = res

@@ -38,7 +38,7 @@ export class AddUserComponent implements OnInit {
 branchList:any;
   getBranch(){
     this.contactService.getBranch().subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.branchList=res;
     })
   }
@@ -46,11 +46,11 @@ branchList:any;
   addRes: any;
   loader = false;
   submit() {
-    console.log(this.userForm.value);
+    // console.log(this.userForm.value);
     if (this.userForm.valid) {
       this.loader = true;
       this.contactService.addUser(this.userForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.Is_Success == "True") {
           this.loader = false;
@@ -66,13 +66,13 @@ branchList:any;
           }
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
        
         
       })
     } else {
       this.userForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
 
     }
   }

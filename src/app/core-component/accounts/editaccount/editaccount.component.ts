@@ -83,14 +83,14 @@ export class EditaccountComponent implements OnInit {
   getState() {
     this.coreService.stateList().subscribe(res => {
       // this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   selectState(val: any) {
     console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   city:any
@@ -100,7 +100,7 @@ export class EditaccountComponent implements OnInit {
     })
   }
   selectCity(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city = res;
     })
@@ -108,17 +108,17 @@ export class EditaccountComponent implements OnInit {
   accountType: any
   getAccountType() {
     this.coreService.accountType().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.accountType = res
     })
   }
   accountSubTypeLsit: any;
   getAccountSubType(val: any) {
-    console.log();
+    // console.log();
     
     this.coreService.getAccountTypeById(val).subscribe(res => {
       this.accountSubTypeLsit = res;
-      console.log(this.accountSubTypeLsit);  
+      // console.log(this.accountSubTypeLsit);  
     })
   }
 
@@ -128,11 +128,11 @@ export class EditaccountComponent implements OnInit {
   stateError=null;
   loaders=false;
   submit() {
-    console.log(this.accountForm.value);
+    // console.log(this.accountForm.value);
     if (this.accountForm.valid) {
       this.loaders=true;
       this.coreService.updateAccount(this.accountForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.loaders=false;
         this.addRes = res
         if (this.addRes.msg == "Account updated successfully") {
@@ -146,7 +146,7 @@ export class EditaccountComponent implements OnInit {
       }, err => {
         this.loaders=false;
         this.toastr.error(err.error?.account_id[0])
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
         if (err.error.anniversary) {
           this.dateError = 'Date (format:dd/mm/yyyy)';
           setTimeout(() => {
@@ -178,7 +178,7 @@ export class EditaccountComponent implements OnInit {
       })
     } else {
       this.accountForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
 
     }
   }

@@ -44,7 +44,7 @@ export class QueryService {
         localStorage.removeItem('warehouseList')
         localStorage.setItem('warehouseList', JSON.stringify(res));
         // this.warehouse.next(JSON.parse(localStorage.getItem('warehouseList')!))
-        console.log(res);
+        // console.log(res);
         this.warehouse.next(res)
       })
 

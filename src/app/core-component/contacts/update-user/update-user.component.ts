@@ -36,7 +36,7 @@ id:any;
       branch:new FormControl('')
     })
     this.contactService.getUserById(this.id).subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.userForm.patchValue(res)
       this.userForm.get('branch')?.patchValue(res?.branch)
     })
@@ -46,7 +46,7 @@ id:any;
   branchList:any;
   getBranch(){
     this.contactService.getBranch().subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.branchList=res;
     })
   }
@@ -54,11 +54,11 @@ id:any;
   addRes: any;
   loader = false;
   submit() {
-    console.log(this.userForm.value);
+    // console.log(this.userForm.value);
     if (this.userForm.valid) {
       this.loader = true;
       this.contactService.updateUser(this.userForm.value,this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.Is_Success == "True") {
           this.loader = false;
@@ -80,7 +80,7 @@ id:any;
       })
     } else {
       this.userForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
 
     }
   }

@@ -44,12 +44,12 @@ export class SyncServiceService {
   // listen for online/offline status changes
   checkOnlineStatus() {
     window.addEventListener('online', () => {
-      console.log('Application is online sync');
+      // console.log('Application is online sync');
       this.syncData1();
     });
 
     window.addEventListener('offline', () => {
-      console.log('Application is offline sync');
+      // console.log('Application is offline sync');
       this.saveDataLocal();
     });
   }

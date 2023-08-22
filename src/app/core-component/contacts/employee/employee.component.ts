@@ -142,7 +142,7 @@ export class EmployeeComponent implements OnInit {
   ngOnInit(): void {
 
     this.contactService.getEmployee().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
@@ -173,13 +173,13 @@ export class EmployeeComponent implements OnInit {
         permission?.map((res: any) => {
           if (res.content_type.app_label === 'master'  && res.content_type.model === 'employee' && res.codename=='add_employee') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);    
+            // console.log(this.isAdd);    
           } else if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename=='change_employee') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);      
+            // console.log(this.isEdit);      
           }else if (res.content_type.app_label === 'master' && res.content_type.model === 'employee' && res.codename=='delete_employee') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);      
+            // console.log(this.isDelete);      
           }
         });
       });
@@ -190,7 +190,7 @@ export class EmployeeComponent implements OnInit {
   groupList: any
   getGroup() {
     this.contactService.getPermissionGroup().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.groupList = res
     })
   }

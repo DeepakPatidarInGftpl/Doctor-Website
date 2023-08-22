@@ -58,7 +58,7 @@ export class BatchVariantProductComponent implements OnInit {
   addRes: any;
   loader=false;
   submit() {
-    console.log(this.batchForm.value);
+    // console.log(this.batchForm.value);
     if (this.batchForm.valid) {
       this.loader=true;
       this.coreService.addBatch(this.batchForm.value,this.id).subscribe(res => {
@@ -74,12 +74,12 @@ export class BatchVariantProductComponent implements OnInit {
         }
       }, err => {
         this.loader=false;
-        console.log(err.error);
+        // console.log(err.error);
 
       })
     } else {
       this.batchForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 

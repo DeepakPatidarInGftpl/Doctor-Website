@@ -104,7 +104,7 @@ export class AddDealerComponent implements OnInit {
   gstType: any;
   getgstType() {
     this.contactService.getTypeOfGst().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.gstType = res;
     })
   }
@@ -117,39 +117,39 @@ export class AddDealerComponent implements OnInit {
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
-      console.log(this.country);
+      // console.log(this.country);
     });
   }
 
   selectState(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
 
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
-      console.log(this.state[i]);
+      // console.log(this.state[i]);
       // Reset city for the current formArray item
       this.city[i] = [];
     });
   }
 
   selectCity(val: any, i) {
-    console.log(val);
+    // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
 
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
-      console.log(this.city[i]);
+      // console.log(this.city[i]);
     });
   }
 
   loader = false;
   submit() {
-    console.log(this.dealerForm.value);
+    // console.log(this.dealerForm.value);
 
     let formdata: any = new FormData();
     formdata.append('login_access', this.dealerForm.get('login_access')?.value);
@@ -209,10 +209,10 @@ export class AddDealerComponent implements OnInit {
     formdata.append('bank_id', JSON.stringify(bankData));
 
     if (this.dealerForm.valid) {
-      console.log('log');
+      // console.log('log');
       this.loader = true;
       this.contactService.addDealer(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.Is_Success == "True") {
           this.loader = false;
@@ -228,7 +228,7 @@ export class AddDealerComponent implements OnInit {
         }
       }, err => {
         this.loader=false
-        console.log(err.error);
+        // console.log(err.error);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
         }
@@ -251,7 +251,7 @@ export class AddDealerComponent implements OnInit {
     } else {
       this.loader=false;
       this.dealerForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
     }
   }
 

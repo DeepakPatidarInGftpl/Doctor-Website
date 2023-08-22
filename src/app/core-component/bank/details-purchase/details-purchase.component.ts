@@ -40,7 +40,7 @@ export class DetailsPurchaseComponent implements OnInit {
       res.map((res:any)=>{
         if (res.id == this.id){
           this.vendorDetail = res
-          console.log(res);
+          // console.log(res);
           
         }
       })

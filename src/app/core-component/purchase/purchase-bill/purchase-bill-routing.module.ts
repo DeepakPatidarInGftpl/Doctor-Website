@@ -6,12 +6,12 @@ import { RolesGuardGuard } from 'src/app/guards/roles-guard.guard';
 
 const localStorageData = JSON.parse(localStorage.getItem('auth'));
 let allowedRoles;
-if (localStorageData && localStorageData.permission) {
-  const permission = localStorageData.permission;
+if (localStorageData) {
+  const permission = localStorageData;
   permission.map((res:any)=>{
     if(res.content_type.app_label === 'master' && res.content_type.model === 'purchasebill' && res.codename=='view_purchasebill'){
       allowedRoles=res.codename;
-      console.log(allowedRoles);  
+      // console.log(allowedRoles);  
     }
   });
 }

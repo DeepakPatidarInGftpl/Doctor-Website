@@ -5,8 +5,8 @@ import { RolesGuardGuard } from 'src/app/guards/roles-guard.guard';
 
 const localStorageData = JSON.parse(localStorage.getItem('auth'));
 const allowedRoles: string[] = [];
-if (localStorageData && localStorageData.permission) {
-  const permission = localStorageData.permission;
+if (localStorageData) {
+  const permission = localStorageData;
   permission.map((res: any) => {
     if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' ) {
       allowedRoles.push(res.codename);

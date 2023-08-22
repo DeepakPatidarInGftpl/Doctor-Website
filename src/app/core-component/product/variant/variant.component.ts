@@ -143,7 +143,7 @@ export class VariantComponent implements OnInit {
 
     // this.coreService.getVariant();
     // // this.tableData = this.QueryService.variantList;
-    // // console.log(this.tableData);
+    // console.log(this.tableData);
 
     // this.coreService.variantBehavior.subscribe(() => {
     //   if (localStorage.getItem('variantList')) {
@@ -186,13 +186,13 @@ selectAlll() {
 
   addRes: any
   submit() {
-    console.log(this.variantForm.value);
-    console.log(this.id);
+    // console.log(this.variantForm.value);
+    // console.log(this.id);
 
     if (this.variantForm.valid) {
 
       this.coreService.addVariant(this.variantForm.value).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Variant Successfuly Added") {
           this.toastr.success(this.addRes.msg)
@@ -201,12 +201,12 @@ selectAlll() {
           this.ngOnInit();
         }
       }, err => {
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
 
     } else {
       this.variantForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -214,7 +214,7 @@ selectAlll() {
     if (this.variantForm.valid) {
       if (this.id) {
         this.coreService.updateVariant(this.variantForm.value, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Variant updated successfully") {
             this.toastr.success(this.addRes.msg)
@@ -224,12 +224,12 @@ selectAlll() {
             this.ngOnInit();
           }
         }, err => {
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
         })
       }
     } else {
       this.variantForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   get sku() {
@@ -245,7 +245,7 @@ selectAlll() {
   editForm(id: number) {
     this.id = id
     this.coreService.getVariantById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       if (id == res.id) {
         this.addForm = false
         this.variantForm.patchValue(res);
@@ -264,9 +264,9 @@ selectAlll() {
       this.ngOnInit();
     } else {
       this.tableData = this.tableData.filter(res => {
-        console.log(res);
-        console.log(res.sku.toLocaleLowerCase());
-        console.log(res.sku.match(this.titlee));
+        // console.log(res);
+        // console.log(res.sku.toLocaleLowerCase());
+        // console.log(res.sku.match(this.titlee));
         return res.sku.match(this.titlee);
       })
     }

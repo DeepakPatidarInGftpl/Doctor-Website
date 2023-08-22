@@ -63,7 +63,7 @@ export class ProductDetailsComponent implements OnInit {
   getBatch() {
     this.coreService.getBatch().subscribe(res => {
       this.batchList = res;
-      console.log(res);
+      // console.log(res);
     })
   }
   ngAfterViewInit() {
@@ -88,8 +88,8 @@ export class ProductDetailsComponent implements OnInit {
     this.coreService.getProductById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.productDetail = res
-        console.log(res);
-        console.log(res.variant_product);
+        // console.log(res);
+        // console.log(res.variant_product);
       }
     })
   }

@@ -54,7 +54,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
     this.purchaseService.getMaterialById(this.id).subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.getresbyId=res;
       this.materialForm.patchValue(res);
       this.materialForm.get('party')?.patchValue(res.party.id);
@@ -64,11 +64,11 @@ export class UpdatematerialInwardComponent implements OnInit {
 
            //call detail api
      this.contactService.getSupplierById(res.party.id).subscribe(res=>{
-      console.log(res);
+      // console.log(res);
       this.supplierAddress=res;
       this.supplierControl.setValue(res.name); 
       this.selectedAddress=this.supplierAddress.address[0];
-      console.log(this.selectedAddress); 
+      // console.log(this.selectedAddress); 
     })
     })
     this.materialForm = this.fb.group({
@@ -162,13 +162,13 @@ displaySupplierName(supplierId: number): void {
   supplierList: any;
   getSuuplier() {
     this.purchaseService.getSupplier().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.suppliers = res;
     })
   }
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.variants = res;
     })
   }
@@ -176,13 +176,13 @@ displaySupplierName(supplierId: number): void {
   getPurchase() {
     this.purchaseService.getPurchase().subscribe(res => {
       this.purchaseList = res;
-      console.log(this.purchaseList);
+      // console.log(this.purchaseList);
     })
   }
   oncheck(event: any) {
-    console.log(event);
+    // console.log(event);
     const selectedItemId = event;
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
     
     if(this.getresbyId.cart.length>=0){
      const variants = this.materialForm.get('material_inward_cart') as FormArray;
@@ -198,14 +198,14 @@ displaySupplierName(supplierId: number): void {
   selectedAddress: string = ''
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
 
      //call detail api
    this.contactService.getSupplierById(selectedItemId).subscribe(res=>{
-    console.log(res);
+    // console.log(res);
     this.supplierAddress=res;
     this.selectedAddress=this.supplierAddress.address[0];
-    console.log(this.selectedAddress);
+    // console.log(this.selectedAddress);
     
   })
 
@@ -244,7 +244,7 @@ displaySupplierName(supplierId: number): void {
   getRes: any;
   loader = false;
   submit() {
-    console.log(this.materialForm.value);
+    // console.log(this.materialForm.value);
     if (this.materialForm.valid) {
       this.loader = true;
       let formdata: any = new FormData();
@@ -271,7 +271,7 @@ displaySupplierName(supplierId: number): void {
       });
       formdata.append('material_inward_cart', JSON.stringify(cartData));
       this.purchaseService.updateMaterial(formdata,this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
           this.loader = false;
@@ -310,20 +310,20 @@ displaySupplierName(supplierId: number): void {
     return this.materialForm.get('purchase_order');
   }
   private _filter(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
       ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
       : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
     }
     return filteredSuppliers;
   }
 
   private _filtr(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
     const filteredVariant = include
       ? this.variants?.filter(variant => variant && (variant.product_title?.toLowerCase().includes(filterValue) ||
@@ -339,7 +339,7 @@ displaySupplierName(supplierId: number): void {
           variant.id?.toString().includes(filterValue))
       );
     if (!include && (!filteredVariant || filteredVariant.length === 0)) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredVariant.push({ product_title: "No data found" });
     }
     return filteredVariant || [];
@@ -357,21 +357,21 @@ displaySupplierName(supplierId: number): void {
     this.searchs = undefined;
   }
   onOptionSelected(event: any): void {
-    console.log(event);
-    console.log(event.option.value);
+    // console.log(event);
+    // console.log(event.option.value);
   }
   displayFn(result: any): string {
-    console.log(result);
+    // console.log(result);
     return result ? result.product_title : '';
   }
   barcode: any[] = [];
   v_id: any;
   variantChanged(value: any, index) {
-    console.log(index);
-    console.log(value?.sku);
+    // console.log(index);
+    // console.log(value?.sku);
     this.barcode[index] = value.sku;
-    console.log(this.barcode[index]);
-    console.log(this.barcode);
+    // console.log(this.barcode[index]);
+    // console.log(this.barcode);
 
     this.v_id = value.id;
     const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
@@ -386,16 +386,16 @@ displaySupplierName(supplierId: number): void {
   isProduct = true;
   
   searchProduct(event: any,index:any) {
-    console.log(event);
+    // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
         // this.productOption = res;
-        console.log(this.searchs);
+        // console.log(this.searchs);
         this.productName[index]= this.searchs[0].product_title;
-        console.log(this.productName);
+        // console.log(this.productName);
         this.check = true;
         const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
         barcode.patchValue({

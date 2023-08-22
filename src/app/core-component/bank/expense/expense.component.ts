@@ -51,13 +51,13 @@ export class ExpenseComponent implements OnInit {
     })
   }
   private _filter(value: string | number, include: boolean): any[] {
-    console.log(value);
+    // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
       ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
       : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
-      console.log("No results found");
+      // console.log("No results found");
       filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
     }
     return filteredSuppliers;
@@ -69,15 +69,15 @@ export class ExpenseComponent implements OnInit {
   supplierList: any;
   getSuuplier() {
     this.purchaseService.getSupplier().subscribe((res: any) => {
-      console.log(res);
+      // console.log(res);
       this.suppliers = res;
       // this.variants=res;
     })
   }
   oncheck(event: any) {
-    console.log(event);
+    // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
-    console.log(selectedItemId);
+    // console.log(selectedItemId);
 
     this.expenceForm.patchValue({
       party: selectedItemId
@@ -95,7 +95,7 @@ export class ExpenseComponent implements OnInit {
     if (this.expenceForm.valid) {
       this.loaders = true;
       this.posService.expensePayment(formData).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes=res;
         if(this.addRes.isSuccess){
           this.toastr.success(this.addRes.msg)

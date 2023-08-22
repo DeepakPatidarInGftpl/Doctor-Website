@@ -22,7 +22,7 @@ export class DetailsMaterialInwardComponent implements OnInit {
     this.purchaseService.getMaterialById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.materialDetail = res
-        console.log(res);
+        // console.log(res);
       }
     })
   }

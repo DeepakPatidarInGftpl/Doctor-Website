@@ -188,16 +188,16 @@ export class NewArrivalBannerComponent implements OnInit {
       this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'website'  && res.content_type.model === 'newarrivalsbanner' && res.codename=='add_newarrivalsbanner') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'website' && res.content_type.model === 'newarrivalsbanner' && res.codename=='change_newarrivalsbanner') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           }else if (res.content_type.app_label === 'website' && res.content_type.model === 'newarrivalsbanner' && res.codename=='delete_newarrivalsbanner') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });
@@ -222,7 +222,7 @@ export class NewArrivalBannerComponent implements OnInit {
 url:any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -240,9 +240,9 @@ url:any;
   loaders = false;
   imgError:any;
   submit() {
-    console.log(this.bannerForm.value);
+    // console.log(this.bannerForm.value);
     if (this.bannerForm.valid) {
-      console.log('valid');
+      // console.log('valid');
       this.loaders = true;
       var formdata: any = new FormData()
       formdata.append('title1', this.bannerForm.get('title1')?.value);
@@ -251,7 +251,7 @@ url:any;
       formdata.append('short_description', this.bannerForm.get('short_description')?.value);
       formdata.append('image', this.bannerForm.get('image')?.value);
       this.websiteService.addnewArrivalBanner(formdata).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "NEW ARRIVALS BANNER CREATED SUCESSFULLY") {
           this.loaders=false;
@@ -263,7 +263,7 @@ url:any;
           this.loaders=false;
         }
       }, err => {
-        console.log(err.error);
+        // console.log(err.error);
         this.loaders=false;
         this.imgError=err.error.image;
         setTimeout(() => {
@@ -272,12 +272,12 @@ url:any;
       })
     } else {
       this.bannerForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
   update() {
-    console.log(this.id);
+    // console.log(this.id);
     if (this.bannerForm.valid) {
       this.loaders=true;
       var formdata: any = new FormData()
@@ -290,7 +290,7 @@ url:any;
       if (imageFile && imageFile instanceof File) {
         formdata.append('image', imageFile);
         this.websiteService.updatenewArrivalBanner(formdata, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "New Arrivals Banner Updated Sucessfully") {
             this.loaders=false;
@@ -304,7 +304,7 @@ url:any;
             this.loaders=false;
           }
         }, err => {
-          console.log(err.error);
+          // console.log(err.error);
           this.loaders=false;
           this.imgError=err.error.image;
           setTimeout(() => {
@@ -313,7 +313,7 @@ url:any;
         })
       }else{
         this.websiteService.updatenewArrivalBanner(formdata, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "New Arrivals Banner Updated Sucessfully") {
             this.loaders=false;
@@ -327,7 +327,7 @@ url:any;
             this.loaders=false;
           }
         }, err => {
-          console.log(err.error);
+          // console.log(err.error);
           this.loaders=false;
           this.imgError=err.error.image;
           setTimeout(() => {
@@ -339,7 +339,7 @@ url:any;
 
     } else {
       this.bannerForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
@@ -367,12 +367,12 @@ url:any;
     this.id = id;
     this.url=''
     this.websiteService.getnewArrivalBannerById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.resEdit = res;
       this.resEdit.map((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (id == data.id) {
-          console.log(data);
+          // console.log(data);
           this.updateData=data;
           this.addForm = false
           this.bannerForm.patchValue({

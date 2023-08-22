@@ -132,7 +132,7 @@ export class ListExpenseComponent implements OnInit {
   isDelete: any;
   userDetails:any;
   ngOnInit(): void {
-    console.log('');
+    // console.log('');
     this.posService.getExpense().subscribe(res => {
       this.tableData = res;
       this.loader = false;
@@ -161,16 +161,16 @@ export class ListExpenseComponent implements OnInit {
         this.cs.userDetails$.subscribe((userDetails) => {
           this.userDetails = userDetails;
           const permission = this.userDetails?.permission;
-          permission.map((res: any) => {
+          permission?.map((res: any) => {
             if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'add_expance') {
               this.isAdd = res.codename;
-              console.log(this.isAdd);
+              // console.log(this.isAdd);
             } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'change_expance') {
               this.isEdit = res.codename;
-              console.log(this.isEdit);
+              // console.log(this.isEdit);
             } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'delete_expance') {
               this.isDelete = res.codename;
-              console.log(this.isDelete);
+              // console.log(this.isDelete);
             }
           });
         });

@@ -137,7 +137,7 @@ userDetails:any
         //contact
         else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'view_supplier') {
           this.isSupplier = res.codename;
-          console.log(this.isSupplier);
+          // console.log(this.isSupplier);
         } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename == 'view_customer') {
           this.isCustomer = res.codename
         } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename == 'view_transport') {
@@ -198,10 +198,10 @@ userDetails:any
         this.isReciept = res.codename;
       } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'payments' && res.codename == 'view_payments') {
         this.isPurchasepos = res.codename;
-        console.log(this.isPurchasepos);
+        // console.log(this.isPurchasepos);
       } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'view_expance') {
         this.isExpence = res.codename;
-        console.log(this.isExpence);
+        // console.log(this.isExpence);
       } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'companybank' && res.codename == 'view_companybank') {
         this.isCompanyBank = res.codename;
       }
@@ -216,46 +216,46 @@ userDetails:any
        //website
        else if (res.content_type.app_label === 'website' && res.content_type.model === 'banner' && res.codename == 'view_banner') {
         this.isBanner = res.codename;
-        console.log(this.isBanner);
+        // console.log(this.isBanner);
       } else if (res.content_type.app_label === 'website' && res.content_type.model === 'staticpages' && res.codename == 'view_staticpages') {
         this.isStaticPage = res.codename;
-        console.log(this.isStaticPage);
+        // console.log(this.isStaticPage);
       } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footerfeatures' && res.codename == 'view_footerfeatures') {
         this.isFooterpage = res.codename;
-        console.log(this.isFooterpage);
+        // console.log(this.isFooterpage);
       } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename == 'view_footer') {
         this.isFooterList = res.codename;
-        console.log(this.isFooterList);
+        // console.log(this.isFooterList);
       } else if (res.content_type.app_label === 'product' && res.content_type.model === 'trandingproduct' && res.codename == 'view_trandingproduct') {
         this.isTrendingProducts = res.codename;
-        console.log(this.isTrendingProducts);
+        // console.log(this.isTrendingProducts);
       } else if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename == 'view_dealsoftheday') {
         this.isDealoftheDay = res.codename;
-        console.log(this.isDealoftheDay);
+        // console.log(this.isDealoftheDay);
       } else if (res.content_type.app_label === 'order' && res.content_type.model === 'storeaddress' && res.codename == 'view_storeaddress') {
         this.isAddressStore = res.codename;
-        console.log(this.isAddressStore);
+        // console.log(this.isAddressStore);
       } else if (res.content_type.app_label === 'product' && res.content_type.model === 'coupon' && res.codename == 'view_coupon') {
         this.isCouponList = res.codename;
-        console.log(this.isCouponList);
+        // console.log(this.isCouponList);
       } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename == 'view_reason') {
         this.isReason = res.codename;
-        console.log(this.isReason);
+        // console.log(this.isReason);
       } else if (res.content_type.app_label === 'website' && res.content_type.model === 'aboutbanner' && res.codename == 'view_aboutbanner') {
         this.isAboutBanner = res.codename;
-        console.log(this.isAboutBanner);
+        // console.log(this.isAboutBanner);
       } else if (res.content_type.app_label === 'website' && res.content_type.model === 'aboutfooterbanner' && res.codename == 'view_aboutfooterbanner') {
         this.isAboutFooterBanner = res.codename;
-        console.log(this.isAboutFooterBanner);
+        // console.log(this.isAboutFooterBanner);
       } else if (res.content_type.app_label === 'website' && res.content_type.model === 'newarrivalsbanner' && res.codename == 'view_newarrivalsbanner') {
         this.isNewarrivalBanner = res.codename;
-        console.log(this.isNewarrivalBanner);
+        // console.log(this.isNewarrivalBanner);
       } else if (res.content_type.app_label === 'product' && res.content_type.model === 'ratingandreviewsonproduct' && res.codename == 'view_ratingandreviewsonproduct') {
         this.isRatingReview = res.codename;
-        console.log(this.isRatingReview);
+        // console.log(this.isRatingReview);
       }else if (res.content_type.app_label === 'order' && res.content_type.model === 'order' && res.codename == 'view_order') {
         this.isOrder = res.codename;
-        console.log(this.isOrder);
+        // console.log(this.isOrder);
       }
        //settings
        else if (res.content_type.app_label === 'master' && res.content_type.model === 'paymentterms' && res.codename == 'view_paymentterms') {
@@ -292,7 +292,7 @@ userDetails:any
     //     //contact
     //     else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'party' && res.codename == 'view_supplier') {
     //       this.isSupplier = res.codename;
-    //       console.log(this.isSupplier);
+          console.log(this.isSupplier);
     //     } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename == 'view_customer') {
     //       this.isCustomer = res.codename
     //     } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'transport' && res.codename == 'view_transport') {
@@ -353,10 +353,10 @@ userDetails:any
     //     this.isReciept = res.codename;
     //   } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'payments' && res.codename == 'view_payments') {
     //     this.isPurchasepos = res.codename;
-    //     console.log(this.isPurchasepos);
+        // console.log(this.isPurchasepos);
     //   } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'expance' && res.codename == 'view_expance') {
     //     this.isExpence = res.codename;
-    //     console.log(this.isExpence);
+        // console.log(this.isExpence);
     //   } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'companybank' && res.codename == 'view_companybank') {
     //     this.isCompanyBank = res.codename;
     //   }
@@ -371,43 +371,43 @@ userDetails:any
     //    //website
     //    else if (res.content_type.app_label === 'website' && res.content_type.model === 'banner' && res.codename == 'view_banner') {
     //     this.isBanner = res.codename;
-    //     console.log(this.isBanner);
+        // console.log(this.isBanner);
     //   } else if (res.content_type.app_label === 'website' && res.content_type.model === 'staticpages' && res.codename == 'view_staticpages') {
     //     this.isStaticPage = res.codename;
-    //     console.log(this.isStaticPage);
+        // console.log(this.isStaticPage);
     //   } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footerfeatures' && res.codename == 'view_footerfeatures') {
     //     this.isFooterpage = res.codename;
-    //     console.log(this.isFooterpage);
+        // console.log(this.isFooterpage);
     //   } else if (res.content_type.app_label === 'website' && res.content_type.model === 'footer' && res.codename == 'view_footer') {
     //     this.isFooterList = res.codename;
-    //     console.log(this.isFooterList);
+        // console.log(this.isFooterList);
     //   } else if (res.content_type.app_label === 'product' && res.content_type.model === 'trandingproduct' && res.codename == 'view_trandingproduct') {
     //     this.isTrendingProducts = res.codename;
-    //     console.log(this.isTrendingProducts);
+        // console.log(this.isTrendingProducts);
     //   } else if (res.content_type.app_label === 'product' && res.content_type.model === 'dealsoftheday' && res.codename == 'view_dealsoftheday') {
     //     this.isDealoftheDay = res.codename;
-    //     console.log(this.isDealoftheDay);
+        // console.log(this.isDealoftheDay);
     //   } else if (res.content_type.app_label === 'order' && res.content_type.model === 'storeaddress' && res.codename == 'view_storeaddress') {
     //     this.isAddressStore = res.codename;
-    //     console.log(this.isAddressStore);
+        // console.log(this.isAddressStore);
     //   } else if (res.content_type.app_label === 'product' && res.content_type.model === 'coupon' && res.codename == 'view_coupon') {
     //     this.isCouponList = res.codename;
-    //     console.log(this.isCouponList);
+        // console.log(this.isCouponList);
     //   } else if (res.content_type.app_label === 'order' && res.content_type.model === 'reason' && res.codename == 'view_reason') {
     //     this.isReason = res.codename;
-    //     console.log(this.isReason);
+        // console.log(this.isReason);
     //   } else if (res.content_type.app_label === 'website' && res.content_type.model === 'aboutbanner' && res.codename == 'view_aboutbanner') {
     //     this.isAboutBanner = res.codename;
-    //     console.log(this.isAboutBanner);
+        // console.log(this.isAboutBanner);
     //   } else if (res.content_type.app_label === 'website' && res.content_type.model === 'aboutfooterbanner' && res.codename == 'view_aboutfooterbanner') {
     //     this.isAboutFooterBanner = res.codename;
-    //     console.log(this.isAboutFooterBanner);
+        // console.log(this.isAboutFooterBanner);
     //   } else if (res.content_type.app_label === 'website' && res.content_type.model === 'newarrivalsbanner' && res.codename == 'view_newarrivalsbanner') {
     //     this.isNewarrivalBanner = res.codename;
-    //     console.log(this.isNewarrivalBanner);
+        // console.log(this.isNewarrivalBanner);
     //   } else if (res.content_type.app_label === 'product' && res.content_type.model === 'ratingandreviewsonproduct' && res.codename == 'view_ratingandreviewsonproduct') {
     //     this.isRatingReview = res.codename;
-    //     console.log(this.isRatingReview);
+        // console.log(this.isRatingReview);
     //   }
     //    //settings
     //    else if (res.content_type.app_label === 'master' && res.content_type.model === 'paymentterms' && res.codename == 'view_paymentterms') {

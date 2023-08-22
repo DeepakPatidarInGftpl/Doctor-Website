@@ -57,10 +57,10 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
     }).then((t) => {
       if (t.isConfirmed) {
         this.coreServ.deleteSubCategGroup(id).subscribe(res => {
-          console.log(res)
+          // console.log(res)
           this.delRes = res;
           if (this.delRes.msg == 'Subcategory Group Deleted successfully') {
-            console.log('abssssss');
+            // console.log('abssssss');
             
             Swal.fire({
               icon: 'success',
@@ -204,7 +204,7 @@ this.getFeatureGroup()
     this.coreServ.editThings.subscribe((res: any) => {
 
       this.editMode = res
-      console.log(res);
+      // console.log(res);
 
 
       if (this.editMode != null) {
@@ -213,12 +213,12 @@ this.getFeatureGroup()
         this.subcatEdit = res.subcategories
         this.featureCategoryEdit = res.feature_group;
         this.updateData=res;
-        console.log(this.updateData);
+        // console.log(this.updateData);
         
         // this.selectedSubCats = this.subcatEdit.map(res => res.id,
         //   console.log(res));
         this.selectedSubCats = res.subcategories.map(res => res.id,
-          console.log(res) , );
+       );
           
         this.selectedFeature = this.featureCategoryEdit.map(res => res.id)
         // this.selectedFeatureGrp=this.selectedFeature.length
@@ -233,7 +233,7 @@ this.getFeatureGroup()
       })
     })
 
-    console.log(this.subcategories);
+    // console.log(this.subcategories);
 // permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
@@ -259,13 +259,13 @@ this.getFeatureGroup()
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename=='add_subcategorygroup') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename=='change_subcategorygroup') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'product' && res.content_type.model === 'subcategorygroup' && res.codename=='delete_subcategorygroup') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });
@@ -309,7 +309,7 @@ this.getFeatureGroup()
   selectedCat;
   selectCate(id) {
     this.selectedCat = id.target.value
-    console.log(this.form.controls['category'].value);
+    // console.log(this.form.controls['category'].value);
   }
 
   
@@ -319,7 +319,7 @@ this.getFeatureGroup()
     this.coreServ.getFeatureGroup().subscribe((res:any) => {
       this.featureGroup = res
       this.filteredFeatureGroupData = this.featureGroup.slice();
-      console.log(this.filteredFeatureGroupData);
+      // console.log(this.filteredFeatureGroupData);
       
       this.filterFeatureGroupData();
     })
@@ -360,7 +360,7 @@ this.getFeatureGroup()
   url: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -376,13 +376,13 @@ this.getFeatureGroup()
 
   loaders = false;
   submitForm() {
-    console.log(this.form.value);
+    // console.log(this.form.value);
     if (this.form.controls['category'].value == 'Category Type') {
       this.form.controls['category'].invalid
     }
     if (this.form.invalid) {
       this.form.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     } else {
       this.loaders = true;
       var formdata: any = new FormData();
@@ -462,7 +462,7 @@ this.getFeatureGroup()
           }
         },
           err => {
-            console.log(err.error.msg);
+            // console.log(err.error.msg);
             if (err.error.msg == 'Your Selected subcategories is Not Avaliable') {
               this.errormessFSubC = 'This Field Is Required'
             }
@@ -483,7 +483,7 @@ this.getFeatureGroup()
     this.editForm()
     this.id
     this.coreServ.getSubcategoryGroupById(this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.getSubcategoryByCategory(res.category.id)
     })
 

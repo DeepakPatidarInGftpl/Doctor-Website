@@ -48,7 +48,7 @@ export class WarehouseListComponent implements OnInit, OnDestroy {
       if (t.isConfirmed) {
         this.coreService.deleteWarehouse(id).subscribe(res => {
           this.delRes = res
-          console.log(res);
+          // console.log(res);
           // if (this.delRes.msg == "Warehouse Deleted successfully") {
           //   this.tableData
           // }
@@ -165,7 +165,7 @@ export class WarehouseListComponent implements OnInit, OnDestroy {
 
       } else {
         this.coreService.addWarehouse(this.warehouseForm.value).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Data Created") {
             this.toastr.success(this.addRes.msg)
@@ -173,12 +173,12 @@ export class WarehouseListComponent implements OnInit, OnDestroy {
             this.warehouseForm.reset()
           }
         }, err => {
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
         })
       }
     } else {
       this.warehouseForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 

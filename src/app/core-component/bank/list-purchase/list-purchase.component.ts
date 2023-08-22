@@ -138,7 +138,7 @@ export class ListPurchaseComponent implements OnInit {
   isDelete: any;
   userDetails:any
   ngOnInit(): void {
-    console.log('');
+    // console.log('');
     this.posService.getPurchase().subscribe(res => {
       this.tableData = res;
       this.loader = false;
@@ -169,16 +169,16 @@ export class ListPurchaseComponent implements OnInit {
       this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
-        permission.map((res: any) => {
+        permission?.map((res: any) => {
           if (res.content_type.app_label === 'pos' && res.content_type.model === 'payments' && res.codename == 'add_payments') {
             this.isAdd = res.codename;
-            console.log(this.isAdd);
+            // console.log(this.isAdd);
           } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'payments' && res.codename == 'change_payments') {
             this.isEdit = res.codename;
-            console.log(this.isEdit);
+            // console.log(this.isEdit);
           } else if (res.content_type.app_label === 'pos' && res.content_type.model === 'payments' && res.codename == 'delete_payments') {
             this.isDelete = res.codename;
-            console.log(this.isDelete);
+            // console.log(this.isDelete);
           }
         });
       });

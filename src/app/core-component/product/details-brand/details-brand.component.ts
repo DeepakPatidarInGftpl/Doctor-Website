@@ -38,7 +38,7 @@ export class DetailsBrandComponent implements OnInit {
     this.CoreService.getbrandById(this.id).subscribe(res => {
         if(this.id==res.id){
           this.brandDetail = res
-          console.log(res); 
+          // console.log(res); 
         }
     })
   }

@@ -15,7 +15,7 @@ export class AppComponent {
       if (res == 'Dark') this.darkTheme = true;
       else this.darkTheme = false;
     });
-    console.log(!!localStorage.getItem('token'));
+    // console.log(!!localStorage.getItem('token'));
   }
 
     login() {

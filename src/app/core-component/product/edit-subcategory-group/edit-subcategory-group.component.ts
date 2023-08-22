@@ -37,7 +37,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
 
 
     this.coreService.getSubcategoryGroupById(this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.updateData = res
       this.subCategoryGroupForm.patchValue({
         title: res.title,
@@ -46,7 +46,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
       this.getSubcategoryByCategory(res?.category?.id);
       this.selectedSubCats = res?.subcategories?.map(res => res.id);
       this.selectedFeature = res?.feature_group?.map(res => res.id);
-      console.log(this.selectedFeature);
+      // console.log(this.selectedFeature);
       this.getFeatureGroup()
     })
   }
@@ -64,18 +64,18 @@ export class EditSubcategoryGroupComponent implements OnInit {
     this.coreService.getFeatureGroup().subscribe((res: any) => {
       this.featureGroup = res
       this.filteredFeatureGroupData = this.featureGroup.slice();
-      console.log(this.filteredFeatureGroupData);
+      // console.log(this.filteredFeatureGroupData);
       this.filterFeatureGroupData();
 
       // update then display
 
       this.featureGroup.map((map: any) => {
-        console.log(this.selectedFeature);
+        // console.log(this.selectedFeature);
 
         this.selectedFeatureGrp = this.selectedFeature.length
-        console.log(this.selectedFeatureGrp);
+        // console.log(this.selectedFeatureGrp);
         if (this.selectedFeature.includes(map.id)) {
-          console.log(map.id);
+          // console.log(map.id);
           const formArray = this.subCategoryGroupForm.get('feature_group') as FormArray;
           formArray.push(new FormControl(map.id));
         }
@@ -104,9 +104,9 @@ export class EditSubcategoryGroupComponent implements OnInit {
       this.filteredSubcategoryData = this.subcatbyCategory.slice();
       this.filterSubcategoryData();
       // update then display
-      console.log(this.selectedSubCats);
+      // console.log(this.selectedSubCats);
       this.selectedSubcat = this.selectedSubCats.length
-      console.log(this.selectedSubcat);
+      // console.log(this.selectedSubcat);
       this.subcatbyCategory.map((map: any) => {
 
         if (this.selectedSubCats.includes(map.id)) {
@@ -131,7 +131,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
   url: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -206,7 +206,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
   errormessFFG: any
   errormessFSubC: any
   submit() {
-    console.log(this.subCategoryGroupForm.value);
+    // console.log(this.subCategoryGroupForm.value);
     if (this.subCategoryGroupForm.valid) {
       this.loaders = true;
       let formdata: any = new FormData();
@@ -230,7 +230,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
         },
           err => {
             this.loaders = false
-            console.log(err.error.msg);
+            // console.log(err.error.msg);
             if (err.error.msg == 'Your Selected subcategories is Not Avaliable') {
               this.errormessFSubC = 'This Field Is Required'
               setTimeout(() => {
@@ -255,7 +255,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
         },
           err => {
             this.loaders = false
-            console.log(err.error.msg);
+            // console.log(err.error.msg);
             if (err.error.msg == 'Your Selected subcategories is Not Avaliable') {
               this.errormessFSubC = 'This Field Is Required'
               setTimeout(() => {
@@ -274,7 +274,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
     } else {
       this.loaders = false
       this.subCategoryGroupForm.markAllAsTouched()
-      console.log('invalid form');
+      // console.log('invalid form');
 
     }
 

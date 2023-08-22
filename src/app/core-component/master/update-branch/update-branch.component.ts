@@ -32,7 +32,7 @@ id:any;
       address: new FormControl('')
     })
     this.coreService.getBranchById(this.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       if (this.id == res.id) {
         this.branchForm.patchValue(res);
         this.branchForm.get('country')?.patchValue(res?.country?.id)
@@ -52,15 +52,15 @@ id:any;
   }
   state: any;
   selectState(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   city: any;
   selectCity(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city = res;
     })
@@ -72,7 +72,7 @@ id:any;
     if (this.branchForm.valid) {
       this.loaders = true;
       this.coreService.updateBranch(this.branchForm.value, this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res
         if (this.addRes.msg == "Branch Updated Sucessfully") {
           this.loaders = false;
@@ -85,11 +85,11 @@ id:any;
         }
       }, err => {
         this.loaders = false;
-        console.log(err.error.gst);
+        // console.log(err.error.gst);
       })
     } else {
       this.branchForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   

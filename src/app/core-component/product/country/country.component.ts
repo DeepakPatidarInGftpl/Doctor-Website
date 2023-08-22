@@ -77,7 +77,7 @@ export class CountryComponent implements OnInit {
     };
     this.coreService.getCountry();
     this.tableData = this.QueryService.countryList;
-    console.log(this.tableData);
+    // console.log(this.tableData);
     this.getFeatureGroup();
   }
 
@@ -109,13 +109,13 @@ export class CountryComponent implements OnInit {
   }
   addRes: any
   submit() {
-    console.log(this.countryForm.value);
-    console.log(this.id);
+    // console.log(this.countryForm.value);
+    // console.log(this.id);
 
     if (this.countryForm.valid) {
     
         this.coreService.addCountry(this.countryForm.value).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Data Created") {
             this.toastr.success(this.addRes.msg)
@@ -123,19 +123,19 @@ export class CountryComponent implements OnInit {
             window.location.reload();
           }
         }, err => {
-          console.log(err.error.gst);
+          // console.log(err.error.gst);
         })
       
     } else {
       this.countryForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
 
   update(){
     if (this.countryForm.valid) {
         this.coreService.updateCountry(this.countryForm.value, this.id).subscribe(res => {
-          console.log(res);
+          // console.log(res);
           this.addRes = res
           if (this.addRes.msg == "Country updated successfully") {
             this.toastr.success(this.addRes.msg)
@@ -144,12 +144,12 @@ export class CountryComponent implements OnInit {
             window.location.reload()
           }
         }, err => {
-          console.log(err.error);
+          // console.log(err.error);
         })
      
     } else {
       this.countryForm.markAllAsTouched()
-      console.log('forms invalid');
+      // console.log('forms invalid');
     }
   }
   get country_name() {
@@ -165,7 +165,7 @@ export class CountryComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.coreService.getCountryById(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
      res.map((data:any)=>{
       if (id == data.id) {
         this.addForm = false

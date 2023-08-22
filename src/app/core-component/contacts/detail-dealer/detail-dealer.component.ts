@@ -39,7 +39,7 @@ export class DetailDealerComponent implements OnInit {
     this.contactService.getDealerById(this?.id).subscribe(res => {
         if(this?.id==res?.id){
           this.dealerDetail = res
-          console.log(res); 
+          // console.log(res); 
         }
     })
   }

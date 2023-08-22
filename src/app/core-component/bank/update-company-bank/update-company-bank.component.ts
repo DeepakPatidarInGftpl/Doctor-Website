@@ -24,7 +24,7 @@ export class UpdateCompanyBankComponent implements OnInit {
 
   ngOnInit(): void {
     this.id=this.Arout.snapshot.paramMap.get('id')
-    console.log(this.id);
+    // console.log(this.id);
     this.companyBankForm = this.fb.group({
       name: new FormControl('', [Validators.required]),
       branch_name: new FormControl('', [Validators.required]),
@@ -43,8 +43,8 @@ export class UpdateCompanyBankComponent implements OnInit {
     })
 
     this.coreService.getCompanyBankById(this.id).subscribe(res=>{
-      console.log(res); 
-      console.log(res.counntry);
+      // console.log(res); 
+      // console.log(res.counntry);
       
       this.companyBankForm.patchValue(res)
       this.companyBankForm.get('counntry')?.patchValue(res.counntry)
@@ -65,10 +65,10 @@ export class UpdateCompanyBankComponent implements OnInit {
   city:any
   state: any
   selectState(val: any) {
-    console.log(val);
+    // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state = res;
-      console.log(this.state);
+      // console.log(this.state);
     })
   }
   selectCity(val:any){
@@ -80,11 +80,11 @@ export class UpdateCompanyBankComponent implements OnInit {
   loaders=false;
   addRes:any;
   submit() {
-    console.log(this.companyBankForm.value);
+    // console.log(this.companyBankForm.value);
     if (this.companyBankForm.valid) {
       this.loaders=true;
       this.coreService.updateCompanyBank(this.companyBankForm.value,this.id).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         this.addRes=res;
         if (this.addRes.Is_Success == "True") {
           this.loaders=false;
@@ -96,12 +96,12 @@ export class UpdateCompanyBankComponent implements OnInit {
           this.toastr.error(this.addRes.account_number[0],'Account number')
         }
       }, err => {
-        console.log(err.error);
+        // console.log(err.error);
         this.loaders=false;
       })
     } else {
       this.companyBankForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
 
     }
   }

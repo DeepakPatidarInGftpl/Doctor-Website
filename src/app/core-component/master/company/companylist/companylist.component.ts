@@ -85,13 +85,13 @@ export class CompanylistComponent implements OnInit {
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'add_company') {
           this.isAdd = res.codename;
-          console.log(this.isAdd);
+          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'change_company') {
           this.isEdit = res.codename;
-          console.log(this.isEdit);
+          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'delete_company') {
           this.isDelete = res.codename;
-          console.log(this.isDelete);
+          // console.log(this.isDelete);
         }
       });
     });
@@ -140,7 +140,7 @@ export class CompanylistComponent implements OnInit {
     this.tableData.splice(id, 1)
 
     this.companyService.deleteC('/pv-api/company/', i.id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
 
     })
 

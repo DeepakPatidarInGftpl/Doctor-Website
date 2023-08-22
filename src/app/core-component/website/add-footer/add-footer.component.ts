@@ -56,7 +56,7 @@ export class AddFooterComponent implements OnInit {
   url: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    console.log(file);
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -75,7 +75,7 @@ export class AddFooterComponent implements OnInit {
   loaders = false;
   whatsError = ''
   submit() {
-    console.log(this.footerForm.value);
+    // console.log(this.footerForm.value);
     var formdata: any = new FormData()
     formdata.append('email', this.footerForm.get('email')?.value);
     formdata.append('phone', this.footerForm.get('phone')?.value);
@@ -90,7 +90,7 @@ export class AddFooterComponent implements OnInit {
     if (this.footerForm.valid) {
       this.loaders = true;
       this.websiteService.addFooter(formdata).subscribe((res: any) => {
-        console.log(res);
+        // console.log(res);
         this.addRes = res;
         if (this.addRes.msg == "FOOTER CREATED SUCESSFULLY") {
           this.loaders = false;
@@ -109,11 +109,11 @@ export class AddFooterComponent implements OnInit {
         }
       }, err => {
         this.loaders = false;
-        console.log(err.error);
+        // console.log(err.error);
       })
     } else {
       this.footerForm.markAllAsTouched()
-      console.log('hhhhhh');
+      // console.log('hhhhhh');
     }
   }
 
