@@ -98,7 +98,7 @@
                                    class="form-control">
                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelected($event)" (keydown)="onInputKeydown($event)">
                                     <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
-                                    <mat-option *ngIf="productsAutocompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                    <mat-option *ngIf="productsAutocompleteControl.value?.length < 3" class="is-loading">Please Enter 3 or</mat-option>
                                     <mat-option *ngIf="errorMsg" class="is-loading">{{errorMsg}}</mat-option>
                                     <mat-option *ngFor="let option of filteredProducts" [value]="option">{{ displayFn(option) }}</mat-option>
                                   </mat-autocomplete>

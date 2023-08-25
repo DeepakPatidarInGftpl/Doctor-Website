@@ -27,7 +27,7 @@ export class SigninComponent implements OnInit {
   //SIDEBAR SETTINGS.SCSS -> sidebar open karne ke liye uncomment karna hoga
 
   constructor(private storage: WebstorgeService, private authService: AuthServiceService,
-     private toastr: ToastrService, private router:Router) {
+    private toastr: ToastrService, private router: Router) {
     this.subscription = this.storage.Loginvalue.subscribe((data: any) => {
       if (data != 0) {
         this.CustomControler = data;
@@ -44,7 +44,7 @@ export class SigninComponent implements OnInit {
     this.storage.Checkuser();
     this.password = 'password';
 
-    if(localStorage.getItem('token')) {
+    if (localStorage.getItem('token')) {
       this.router.navigate(['/dashboard']);
     }
   }
@@ -56,36 +56,47 @@ export class SigninComponent implements OnInit {
   submit() {
     // this.storage.Login(this.form.value);
     // console.log(this.form.value);
-    this.authService.login(this.form.value).subscribe(res => {
-      // console.log(res);
-      this.loginRes = res;
-      // console.log(this.loginRes.token);
-      if (this.loginRes.token) {
-        this.toastr.success('Login Successfull');
-        this.router.navigate(['//dashboard']).then(()=>{
-          window.location.reload();
-        })
-        localStorage.setItem('token', this.loginRes.token)
-        localStorage.setItem('auth', JSON.stringify(this.loginRes?.permission));
+    if (this.form.valid) {
+      this.authService.login(this.form.value).subscribe(res => {
+        // console.log(res);
+        this.loginRes = res;
         // console.log(this.loginRes.token);
-      }
-    }, err => {
-      // console.log(err);
-      if(err.error.User==false){
-        // console.log(err.error.msg);  
-        this.toastr.error(err.error.msg)
-      } else if(err.error.status){
-        this.toastr.error(err.error.status);
-      }
-  
+        if (this.loginRes.token) {
+          this.toastr.success('Login Successfull');
+          this.router.navigate(['//dashboard']).then(() => {
+            window.location.reload();
+          })
+          localStorage.setItem('token', this.loginRes.token)
+          localStorage.setItem('auth', JSON.stringify(this.loginRes?.permission));
+          // console.log(this.loginRes.token);
+        }
+      }, err => {
+        // console.log(err);
+        if (err.error.User == false) {
+          // console.log(err.error.msg);  
+          this.toastr.error(err.error.msg)
+        } else if (err.error.status) {
+          this.toastr.error(err.error.status);
+        }
+
+
+      })
+    } else {
+      this.form.markAllAsTouched()
+      console.log('invalid form');
       
-    })
+    }
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-
+  get username() {
+    return this.form.get('username')
+  }
+  get passwords() {
+    return this.form.get('password')
+  }
 
   onClick() {
     if (this.password === 'password') {

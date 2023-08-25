@@ -141,6 +141,99 @@
                     </div>
                 </div>
             </mat-tab>
+            <mat-tab label="Customer">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Name</h4>
+                                            <h6>{{vendorDetail?.customer?.name}}</h6>
+                                        </li>
+                                        
+                                        <li>
+                                            <h4>Mobile no.</h4>
+                                            <h6>{{vendorDetail?.customer?.mobile_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Whatsapp no.</h4>
+                                            <h6>{{vendorDetail?.customer?.whatsapp_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Email</h4>
+                                            <h6>{{vendorDetail?.customer?.email}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>GST Type</h4>
+                                            <h6>{{vendorDetail?.customer?.gst_type}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>GSTIN</h4>
+                                            <h6>{{vendorDetail?.customer?.gstin}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Date of Birth</h4>
+                                            <h6>{{vendorDetail?.customer?.date_of_birth}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Anniversary Date</h4>
+                                            <h6>{{vendorDetail?.customer?.anniversary_date}}</h6>
+                                        </li>
+                                       
+                                    </ul>
+                                </div>
+                            </div>
+                         
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Address">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body" *ngFor="let address of vendorDetail?.customer?.address;let i=index">
+                                <strong>{{i+1+'.'}} </strong>
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Address Line 1</h4>
+                                            <h6>{{address?.address_line_1}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Address Line 2</h4>
+                                            <h6>{{address?.address_line_2}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Select Country</h4>
+                                            <h6>{{address?.country?.country_name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Select State</h4>
+                                            <h6>{{address?.state?.state}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Select City</h4>
+                                            <h6>{{address?.city?.city}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Pincode</h4>
+                                            <h6>{{address?.pincode}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Address Type</h4>
+                                            <h6>{{address?.address_type}}</h6>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
         </mat-tab-group>
     </div>
 </div>

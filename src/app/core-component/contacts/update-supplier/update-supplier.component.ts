@@ -22,9 +22,9 @@ export class UpdateSupplierComponent implements OnInit {
   }
   id: any;
   getRes: any;
+  selectedBrands: any = [];
   ngOnInit(): void {
     this.id = this.Aroute.snapshot.paramMap.get('id');
-
     this.supplierForm = this.fb.group({
       login_access: new FormControl(''),
       name: new FormControl('', [Validators.required]),
@@ -48,7 +48,8 @@ export class UpdateSupplierComponent implements OnInit {
       payment_terms: new FormControl(''),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       supplier_type: new FormControl('', [Validators.required]),
-      opening_balance_type:new FormControl('',[Validators.required])
+      opening_balance_type:new FormControl('',[Validators.required]),
+      variant: new FormArray<any>([],),
     });
 
     this.contactService.getSupplierById(this.id).subscribe(res => {
@@ -63,6 +64,11 @@ export class UpdateSupplierComponent implements OnInit {
      
       this.supplierForm.setControl('address', this.updateAddress(this.getRes?.address));
       this.supplierForm.setControl('bank_id', this.udateBank(this.getRes?.bank_id));
+
+      // this.selectedBrands= res?.products.map((res: any) => res?.id)
+      this.selectedBrands=res?.products;
+      console.log(this.selectedBrands);
+      
     });
 
     this.addAddress();
@@ -70,6 +76,66 @@ export class UpdateSupplierComponent implements OnInit {
     this.getCountry();
     this.getgstType();
     this.getPaymentTerms();
+    this.getVraiant()
+  }
+
+  variants: any[] = [];
+  filteredVariantList: any[] = [];
+  searchVariant:string=''
+  getVraiant() {
+    this.contactService.productVariant().subscribe((res:any) => {
+      this.variants = res
+      this.filteredVariantList = [...this.variants];
+
+      this.variants.map((map: any) => {
+        // console.log(this.selectCat.length);
+        this.selectedBrand = this.selectedBrands.length 
+     
+        if (this.selectedBrands.includes(map.id)) {
+          const formArray = this.supplierForm.get('variant') as FormArray;
+          formArray.push(new FormControl(map.id));
+        }
+      })
+    })
+  }
+  filterVariant() {
+    if (this.searchVariant.trim() === '') {
+      this.filteredVariantList = [...this.variants];
+    } else {
+      this.filteredVariantList = this.variants.filter(feature =>
+        feature.product_title.toLowerCase().includes(this.searchVariant.toLowerCase())
+      );
+    }
+  }
+  selectedVariantsId: any[] = [];
+  selectedBrand = 0;
+  onCheckSize(event: any) {
+    const formArray: any = this.supplierForm.get('variant') as FormArray;
+    /* Selected */
+    if (event.target.checked) {
+      // Add a new control in the arrayForm
+      formArray.push(new FormControl(parseInt(event.target.value)));
+      // parseInt(formArray.push(new FormControl(event.target.value)))
+ 
+      this.selectedBrand++;
+      this.selectedVariantsId=formArray.value
+      // console.log( this.selectedSubCategoryIds);
+      
+    }
+    /* unselected */
+    else {
+      // find the unselected element
+      let i: number = 0;
+
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event.target.value) {
+          formArray.removeAt(i);
+          this.selectedBrand--;
+          return;
+        }
+        i++;
+      });
+    }
   }
   paymentTerms: any;
   getPaymentTerms() {
@@ -272,6 +338,7 @@ export class UpdateSupplierComponent implements OnInit {
     formdata.append('opening_balance', this.supplierForm.get('opening_balance')?.value);
     formdata.append('supplier_type', this.supplierForm.get('supplier_type')?.value);
     formdata.append('opening_balance_type', this.supplierForm.get('opening_balance_type')?.value);
+    formdata.append('variant', JSON.stringify(this.supplierForm.get('variant')?.value));
     // nested addrs data 
     const addressArray = this.supplierForm.get('address') as FormArray;
     const addressData = [];

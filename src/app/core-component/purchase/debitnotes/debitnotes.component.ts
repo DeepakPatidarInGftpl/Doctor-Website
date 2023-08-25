@@ -262,7 +262,7 @@ export class DebitnotesComponent implements OnInit {
   generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
-    const title = 'Debit Notes';
+    const title = 'Purchase Return';
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
@@ -290,7 +290,7 @@ export class DebitnotesComponent implements OnInit {
           { header: 'Is Active' }
         ],
       })
-    doc.save('debitNotes.pdf');
+    doc.save('purchasereturn.pdf');
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -327,7 +327,7 @@ export class DebitnotesComponent implements OnInit {
     // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'debitNotes.xlsx';
+    const fileName = 'Purchasereturn.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
 
