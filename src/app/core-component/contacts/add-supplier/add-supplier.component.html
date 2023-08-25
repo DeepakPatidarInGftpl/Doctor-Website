@@ -36,7 +36,7 @@
                         <input type="text" formControlName="mobile_no" maxlength="10" minlength="10" id="mobile_no"
                             [ngClass]="{
                       'is-invalid': f['mobile_no'].touched && f['mobile_no'].invalid}">
-                   
+
                         <span class="text-danger" *ngIf="mobile && mobile.invalid && mobile.touched">Enter your 10
                             digits mobile phone number</span>
                     </div>
@@ -69,7 +69,8 @@
                         <label>Email</label>
                         <input type="text" formControlName="email" id="email" [ngClass]="{
                       'is-invalid': f['email'].touched && f['email'].invalid}">
-                        <span class="text-danger" *ngIf="email && email.invalid && email.touched">Enter Valid Email</span>
+                        <span class="text-danger" *ngIf="email && email.invalid && email.touched">Enter Valid
+                            Email</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
@@ -111,7 +112,8 @@
                                     <select formControlName="gst_type" class=" border hov" id="gst_type"
                                         [ngClass]="{'is-invalid': f['gst_type'].touched && f['gst_type'].invalid}">
                                         <option class="unhov" value="" selected disabled>GST type</option>
-                                        <option class="unhov" value="{{gst.title}}" *ngFor="let gst of gstType">{{gst.title}}</option>
+                                        <option class="unhov" value="{{gst.title}}" *ngFor="let gst of gstType">
+                                            {{gst.title}}</option>
                                     </select>
                                     <span class="text-danger d-block"
                                         *ngIf="gst_type && gst_type.invalid && gst_type.touched">Select Gst Type</span>
@@ -147,7 +149,7 @@
                             apply_tds</span>
                     </div>
                 </div> -->
-         
+
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Credit Limit</label>
@@ -183,8 +185,9 @@
                 </div> -->
 
                 <div formArrayName="address">
-                    <div *ngFor="let d of getAddresss().controls; let i=index">
-                        <div [formGroupName]="i" class="row">
+                    <div *ngFor="let d of getAddresss().controls; let i=index"
+                        style="border: 1px solid rgba(145, 158, 171, 0.32); margin-top: 10px;">
+                        <div [formGroupName]="i" class="row m-2">
                             <div class="col-lg-3 col-sm-3">
                                 <div class="form-group">
                                     <label>Address Line 1</label>
@@ -240,7 +243,8 @@
                                         *ngIf="cityy(i) && cityy(i).invalid && cityy(i).touched && city[i]?.length>0">Select
                                         city</span>
                                     <span class="text-danger"
-                                        *ngIf="cityy(i) && cityy(i).invalid && cityy(i).touched && city[i]?.length<=0">data not
+                                        *ngIf="cityy(i) && cityy(i).invalid && cityy(i).touched && city[i]?.length<=0">data
+                                        not
                                         available</span>
                                 </div>
                             </div>
@@ -250,7 +254,8 @@
                                     <input type="text" formControlName="pincode" maxlength="6" minlength="6"
                                         id="pincode">
                                     <span class="text-danger"
-                                        *ngIf="pincode(i) && pincode(i).invalid && pincode(i).touched">Enter your 6 digits
+                                        *ngIf="pincode(i) && pincode(i).invalid && pincode(i).touched">Enter your 6
+                                        digits
                                         pincode number</span>
                                 </div>
                             </div>
@@ -265,24 +270,27 @@
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
-                                    <span (click)="removeAddress(i)" class="btn" style="color: red;"
-                                        *ngIf="i>0"><svg style="width:20px; height:20px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                          </svg></span>
+                                <span (click)="removeAddress(i)" class="btn" style="color: red;" *ngIf="i>0"><svg
+                                        style="width:20px; height:20px" xmlns="http://www.w3.org/2000/svg" width="16"
+                                        height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path
+                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg></span>
                             </div>
                         </div>
                     </div>
-                    <div class="w-100 text-right mb-3">
-                        <span (click)="addAddress()" class="addMore" 
-                        style="background: #FF9F43; color: white; border-radius: 2px;">+  Add More Address</span>
+                    <div class="w-100 text-right my-3">
+                        <span (click)="addAddress()" class="addMore"
+                            style="background: #FF9F43; color: white; border-radius: 2px;">+ Add More Address</span>
                     </div>
                 </div>
-
-            
+                <hr>
                 <div formArrayName="bank_id">
-                    <div *ngFor="let d of getBanks().controls; let i=index">
-                        <div [formGroupName]="i" class="row">
+                    <div *ngFor="let d of getBanks().controls; let i=index"
+                        style="border: 1px solid rgba(145, 158, 171, 0.32); margin-top: 10px;">
+                        <div [formGroupName]="i" class="row m-2">
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Bank Holder Name*</label>
@@ -321,7 +329,8 @@
                                     <label>IFSC Code*</label>
                                     <input type="text" formControlName="bank_ifsc_code">
                                     <span class="text-danger"
-                                    *ngIf="getIfscCode(i)?.invalid && getIfscCode(i)?.touched">Enter your Ifsc code</span>
+                                        *ngIf="getIfscCode(i)?.invalid && getIfscCode(i)?.touched">Enter your Ifsc
+                                        code</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
@@ -336,20 +345,47 @@
                             </div>
                         </div>
                     </div>
-                    <div class="w-100 text-right mb-3">
+                    <div class="w-100 text-right my-3">
                         <span (click)="addBank()" class="addMore"
                             style="background: #FF9F43; color: white; border-radius: 2px;">+ Add More Banks</span>
                     </div>
                 </div>
-
+                <hr>
+             
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Select Product</label>
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">Select Products</button>
+                            <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                <li><input type="text" placeholder="search product" class="form-control"
+                                        [(ngModel)]="searchVariant" (ngModelChange)="filterVariant()"
+                                        [ngModelOptions]="{standalone: true}"></li>
+                                <li><a class="dropdown-item" *ngFor="let variant of filteredVariantList let i=index;">
+                                        <input type="checkbox" [value]="variant.id"
+                                            [checked]="selectedVariantsId.includes(variant.id)"
+                                            (change)="onCheckSize($event)" (change)="SelectedProduct(variant)" formArrayName="variant"
+                                            style="margin-right: 5px;" [ngClass]="{
+                                                'is-invalid': f['variant'].touched && f['variant'].invalid
+                                              }" #categoryValue [id]="'checkbox-' + i">
+                                        <label [for]="'checkbox-' + i" style="margin-bottom: 0;"
+                                            (click)="onLabelClick($event)">{{variant.product_title}}</label>
+                                    </a></li>
+                            </ul>
+                        </div>
+                        <p *ngIf="selectedBrand>0">{{selectedBrand + ' Product Selected'}}</p>
+                    </div>
+                </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Payment Terms</label>
                         <select formControlName="payment_terms" class="w-100 h-100 border" id="payment_terms" [ngClass]="{
                             'is-invalid': f['payment_terms'].touched && f['payment_terms'].invalid}">
-                                <option value="" selected disabled>Select Payment Terms</option>
-                                <option value="{{payment.id}}" *ngFor="let payment of paymentTerms">{{payment.title}}</option>
-                            </select>
+                            <option value="" selected disabled>Select Payment Terms</option>
+                            <option value="{{payment.id}}" *ngFor="let payment of paymentTerms">{{payment.title}}
+                            </option>
+                        </select>
                         <span class="text-danger"
                             *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select Payment
                             Terms</span>
@@ -367,31 +403,32 @@
                 </div> -->
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group row">
-                      <div class="col-lg-12">
-                        <label>Opening Balance*</label>
-                        <div class="input-group">
-                          <div>
-                            <select formControlName="opening_balance_type" class=" border hov" required id="opening_balance_type"
-                              [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">
-                              <option class="unhov" value="" selected disabled>Balance type</option>
-                              <option class="unhov" value="Cr">Cr</option>
-                              <option class="unhov" value="Dr">Dr</option>
-                            </select>
-                            <span class="text-danger d-block"
-                              *ngIf="opening_balance_type && opening_balance_type.invalid && opening_balance_type.touched">Select
-                              Balance Type</span>
-                          </div>
-                          <div>
-                            <input type="text" formControlName="opening_balance" id="opening_balance"
-                              [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
-                            <span class="text-danger ml-5 pl-5"
-                              *ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">
-                              Enter your Balance</span>
-                          </div>
+                        <div class="col-lg-12">
+                            <label>Opening Balance*</label>
+                            <div class="input-group">
+                                <div>
+                                    <select formControlName="opening_balance_type" class=" border hov" required
+                                        id="opening_balance_type"
+                                        [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">
+                                        <option class="unhov" value="" selected disabled>Balance type</option>
+                                        <option class="unhov" value="Cr">Cr</option>
+                                        <option class="unhov" value="Dr">Dr</option>
+                                    </select>
+                                    <span class="text-danger d-block"
+                                        *ngIf="opening_balance_type && opening_balance_type.invalid && opening_balance_type.touched">Select
+                                        Balance Type</span>
+                                </div>
+                                <div>
+                                    <input type="text" formControlName="opening_balance" id="opening_balance"
+                                        [ngClass]="{'is-invalid': f['opening_balance'].touched && f['opening_balance'].invalid}">
+                                    <span class="text-danger ml-5 pl-5"
+                                        *ngIf="opening_balance && opening_balance.invalid && opening_balance.touched">
+                                        Enter your Balance</span>
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
+                </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Supplier Type*</label>
@@ -410,26 +447,27 @@
 
                 <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
                     <div class="form-group mt-4">
-                            <div class="d-flex ">
-                                <input type="checkbox" formControlName="login_access"
-                                    [id]="'checkboxTax-'" [ngModel]="true">
-                                <label [for]="'checkboxTax-'" class="d_flex"
-                                    style="margin-bottom: 0; margin-left: 5px;">Login Access</label>
-                            </div>
-                            <div class="d-flex ">
-                                <input type="checkbox" formControlName="apply_tds"
-                                    [id]="'checkboxMeasure-'" [ngModel]="true">
-                                <label [for]="'checkboxMeasure-'" class="d_flex"
-                                    style="margin-bottom: 0; margin-left: 5px;">Apply TDS</label>
-                            </div>
-                      
+                        <div class="d-flex ">
+                            <input type="checkbox" formControlName="login_access" [id]="'checkboxTax-'"
+                                [ngModel]="true">
+                            <label [for]="'checkboxTax-'" class="d_flex"
+                                style="margin-bottom: 0; margin-left: 5px;">Login Access</label>
+                        </div>
+                        <div class="d-flex ">
+                            <input type="checkbox" formControlName="apply_tds" [id]="'checkboxMeasure-'"
+                                [ngModel]="true">
+                            <label [for]="'checkboxMeasure-'" class="d_flex"
+                                style="margin-bottom: 0; margin-left: 5px;">Apply TDS</label>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-lg-12">
                     <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
-                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
-                        <a routerLink="//contacts/supplier" class="btn btn-cancel">Cancel</a>
+                    <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status"
+                            aria-hidden="true"></span>Submit</button>
+                    <a routerLink="//contacts/supplier" class="btn btn-cancel">Cancel</a>
                 </div>
 
             </div>

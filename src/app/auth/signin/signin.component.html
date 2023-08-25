@@ -24,6 +24,8 @@
                             }">
                             <img src="assets/img/icons/mail.svg" alt="img">
                         </div>
+                        <span class="text-danger"*ngIf="username && username.invalid && username.touched">Enter your username </span>
+                  
                         <div
                         class="invalid-feedback"
                         *ngIf="CustomControler ?.status === 'username'"
@@ -47,12 +49,14 @@
                     <div class="form-login">
                         <label>Password</label>
                         <div class="pass-group">
-                            <input [type]="password" class="pass-input" placeholder="Enter your password"    formControlName="password"
+                            <input [type]="password" class="pass-input" placeholder="Enter your password" formControlName="password"
                             id="password"
                             [ngClass]="{
                               'is-invalid':
                                 f['password'].touched && f['password'].invalid
                             }">
+                            <span class="text-danger"*ngIf="passwords && passwords.invalid && passwords.touched">Enter your password </span>
+                  
                             <span class="fas toggle-password fa-eye" (click)="onClick()" *ngIf="show"></span>
                             <span class="fas toggle-password fa-eye-slash" (click)="onClick()" *ngIf="!show"></span>
                         </div>

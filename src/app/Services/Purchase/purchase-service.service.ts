@@ -130,4 +130,39 @@ export class PurchaseServiceService {
     let url = this.apiUrl + '/pv-api/debit_note/?id=';
     return this.http.delete(`${url}${id}`)
   }
+
+  // search product
+  getSearchProductById(id:any){
+    let url =this.apiUrl+'/pv-api/variant-search/?search='
+    return this.http.get(`${url}${id}`)
+  }
+  getSearchProduct(){
+    let url =this.apiUrl+'/pv-api/variant-search/'
+    return this.http.get(url)
+  }
+
+  //prefix
+
+  getPurchaseOrderPrefix(){
+    let url =this.apiUrl+'/pv-api/prefix/?id=PurchaseOrder';
+    return this.http.get(url)
+  }
+  getPurchaseBillPrefix(){
+    let url =this.apiUrl+'/pv-api/prefix/?id=PurchaseBill';
+    return this.http.get(url)
+  }
+  getDebitNotePrefix(){
+    let url =this.apiUrl+'/pv-api/prefix/?id=DebitNote';
+    return this.http.get(url)
+  }
+  getMaterialInwardPrefix(){
+    let url =this.apiUrl+'/pv-api/prefix/?id=MaterialInward';
+    return this.http.get(url)
+  }
+
+  //productbySupplier
+  productBySupplier(){
+    let url =this.apiUrl+'/pv-api/purchase_product_filter/';
+    return this.http.get(url)
+  }
 }
