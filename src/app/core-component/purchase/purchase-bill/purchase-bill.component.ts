@@ -240,7 +240,7 @@ export class PurchaseBillComponent implements OnInit {
     generatePDF() {
       // table data with pagination
       const doc = new jsPDF();
-      const title = 'Purchase Bill';
+      const title = 'GRN';
       doc.setFontSize(15);
       doc.setTextColor(33, 43, 54);
       doc.text(title, 10, 10);
@@ -269,7 +269,7 @@ export class PurchaseBillComponent implements OnInit {
             { header: 'Is Active' }
           ],
         })
-      doc.save('purchaseBill.pdf');
+      doc.save('grn.pdf');
     }
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {
@@ -306,7 +306,7 @@ export class PurchaseBillComponent implements OnInit {
       // Create a Blob from the workbook and initiate a download
       const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const fileName = 'purchaseBill.xlsx';
+      const fileName = 'grn.xlsx';
       saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
     }
   

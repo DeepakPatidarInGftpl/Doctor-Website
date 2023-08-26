@@ -261,5 +261,8 @@ export class ContactService {
     let url = this.apiUrl+'/pv-api/branch/';
     return this.http.get(url)
   }
-
+  productVariant(){
+    let url = this.apiUrl+'/pv-api/product_variant/';
+    return this.http.get(url)
+  }
 }
