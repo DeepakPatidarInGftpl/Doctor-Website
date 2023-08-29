@@ -62,6 +62,25 @@ export class AddSupplierComponent implements OnInit {
       this.filteredVariantList = [...this.variants];
     })
   }
+
+  search;
+searchProduct(product: any) {
+  if (product.value) {
+    this.contactService.searchProduct(product.value).subscribe(res => {
+      this.search = res;
+      console.log(this.search);
+      
+    });
+  } else {
+    this.search = [];
+  }
+}
+
+hideSearch() {
+  this.search = undefined;
+}
+
+
   filterVariant() {
     if (this.searchVariant.trim() === '') {
       this.filteredVariantList = [...this.variants];
@@ -438,8 +457,16 @@ export class AddSupplierComponent implements OnInit {
 
   selectData: any[] = []
   SelectedProduct(variant: any) {
+    console.log('dd');
+    
+    console.log(variant);
+    
   this.getVariants().value
     this.selectData.push(variant)
+  }
+  clicl(){
+    console.log('hhhh');
+    
   }
 }
 

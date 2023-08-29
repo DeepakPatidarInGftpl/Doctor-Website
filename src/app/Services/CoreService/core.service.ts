@@ -1667,8 +1667,6 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/pos/pos_orders/?id=';
     return this.http.delete(`${url}${id}`)
   }
-
-
   //brand multiple brand ids
   getSubcategoryBySubcatGroupid(id: any) {
     let url = this.apiUrl + '/pv-api/subcategorygroup_wise_subcategory_dashboard/?sub_category_group_id=';
@@ -1678,4 +1676,9 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/category_wise_sub_category_group_dashboard/?category_id=';
     return this.http.get<any>(`${url}${id}`);
   }
+//feature by featuregroup
+getFeatureByFeaturegroup(id: any) {
+  let url = this.apiUrl + '/pv-api/feature-group-wise-feature-dashboard/?feature_grp=';
+  return this.http.get<any>(`${url}${id}`);
+}
 }

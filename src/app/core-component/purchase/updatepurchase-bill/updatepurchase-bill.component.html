@@ -15,20 +15,23 @@
                         width: 100%;
                         min-width: 100%;border-top: none;">
                             <input type="text" placeholder="Search Supplier" aria-label="Supplier" matInput
-                                [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;" [readonly]="true">
+                                [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
+                                [readonly]="true">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.name"
-                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.name }}</mat-option>
+                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.name
+                                    }}</mat-option>
 
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
                                     </mat-option>
-                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please
+                                        Enter 3 or more characters</mat-option>
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select 
+                        <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select
                             supplier
                         </span>
                     </div>
@@ -37,235 +40,397 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Supplier Bill Date*</label>
-                        <input type="date" formControlName="supplier_bill_date" [ngClass]="{'is-invalid': f['supplier_bill_date'].touched && f['supplier_bill_date'].invalid}" readonly>
+                        <input type="datetime-local" formControlName="supplier_bill_date"
+                            [ngClass]="{'is-invalid': f['supplier_bill_date'].touched && f['supplier_bill_date'].invalid}"
+                            readonly>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Supplier Bill No*</label>
-                        <input type="text" formControlName="supplier_bill_no" [ngClass]="{'is-invalid': f['supplier_bill_no'].touched && f['supplier_bill_no'].invalid}" readonly>
+                        <input type="text" formControlName="supplier_bill_no"
+                            [ngClass]="{'is-invalid': f['supplier_bill_no'].touched && f['supplier_bill_no'].invalid}"
+                            readonly>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Refrence Bill No</label>
-                        <input type="text" formControlName="refrence_bill_no" [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}" readonly>
+                        <input type="text" formControlName="refrence_bill_no"
+                            [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}"
+                            readonly>
                     </div>
                 </div>
-  <!-- address display -->
-  <div class="col-lg-3 col-sm-3 col-12">
-    <div class="modal fade" id="addressModal" tabindex="-1" role="dialog"
-        aria-labelledby="addressModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Billing Address</h1>
-                    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group" *ngIf="supplierAddress">
-                        <h5 class=""><small class="text-muted"></small></h5>
-                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
-                            <input type="hidden" class="form-control" name="billingcompanyname"
-                                id="billingcompanyname" value="{{supplierAddress?.name}}">
-                        </h5>
-                        <div class="row">
-                            <div class="col-lg-12 col-sm-12 col-12"
-                                *ngFor="let add of supplierAddress?.address">
+                <!-- address display -->
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="modal fade" id="addressModal" tabindex="-1" role="dialog"
+                        aria-labelledby="addressModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Billing Address</h1>
+                                    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group" *ngIf="supplierAddress">
+                                        <h5 class=""><small class="text-muted"></small></h5>
+                                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                            <input type="hidden" class="form-control" name="billingcompanyname"
+                                                id="billingcompanyname" value="{{supplierAddress?.name}}">
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-sm-12 col-12"
+                                                *ngFor="let add of supplierAddress?.address">
+                                                <div *ngIf="add.address_type=='Billing'">
+                                                    <button type="button" (click)="selectAddressBilling(add)"
+                                                        class="btn btn-primary btn-sm"
+                                                        style="float: right;">Select</button>
 
-                                <button type="button" (click)="selectAddress(add)"
-                                    class="btn btn-primary btn-sm" style="float: right;">Select</button>
+                                                    <p class="d-inline mb-0">
+                                                        <span id="billing-address-line-1">
+                                                            {{add?.address_line_1}}, {{add?.address_line_2}}
+                                                        </span>
+                                                    </p>
+                                                    <br>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-pincode="">{{add?.pincode}}</span>
+                                                        <span data-address-city="22691">{{add?.city?.city}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                    </p>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-state="1722">{{add?.state?.state}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                        <span
+                                                            data-address-country="IR">{{add?.country?.country_name}}</span>
+                                                    </p>
+                                                    <p class="mb-2">
+                                                        <span class="">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11"
+                                                                height="11" fill="currentColor"
+                                                                class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                                            </svg>
+                                                            <a
+                                                                href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                                            <input type="hidden" class="form-control"
+                                                                name="billingphone" id="billingphone"
+                                                                value="{{supplierAddress?.mobile_no}}">
+                                                        </span>
+                                                    </p>
 
-                                <p class="d-inline mb-0">
-                                    <span id="billing-address-line-1">
-                                        {{add?.address_line_1}}, {{add?.address_line_2}}
-                                    </span>
-                                </p>
-                                <br>
-                                <p class="d-inline mb-0">
-                                    <span data-address-pincode="">{{add?.pincode}}</span>
-                                    <span data-address-city="22691">{{add?.city?.city}}</span>
-                                    <span class="m--font-boldest">,&nbsp;</span>
-                                </p>
-                                <p class="d-inline mb-0">
-                                    <span data-address-state="1722">{{add?.state?.state}}</span>
-                                    <span class="m--font-boldest">,&nbsp;</span>
-                                    <span
-                                        data-address-country="IR">{{add?.country?.country_name}}</span>
-                                </p>
-                                <p class="mb-2">
-                                    <span class="">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-                                            fill="currentColor" class="bi bi-telephone-fill"
-                                            viewBox="0 0 16 16"
-                                            style="    height: 11px; width: 11px; color: #FF9F43;">
-                                            <path fill-rule="evenodd"
-                                                d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                                        </svg>
-                                        <a
-                                            href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
-                                        <input type="hidden" class="form-control" name="billingphone"
-                                            id="billingphone" value="{{supplierAddress?.mobile_no}}">
-                                    </span>
-                                </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Billing Address</strong></label>
+                    <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type!=='Billing'">
+                        <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
+                                Available</small></h5>
+                        <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                            Address
+                        </a>
+                    </div>
+
+                    <div class="form-group" *ngIf="!supplierAddress">
+                        <div class="m-divider"><span></span></div>
+                        <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
+                                Provided</small></h5>
+                        <div class="form-group row mt-3">
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">Place of Supply <span
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'">
+                        <div class="form-group" *ngIf="supplierAddress">
+
+                            <h5 class=""><small class="text-muted"></small></h5>
+                            <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                <input type="hidden" class="form-control" name="billingcompanyname"
+                                    id="billingcompanyname" value="{{supplierAddress?.name}}">
+                            </h5>
+                            <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'">
+                                <div *ngIf="selectedAddressBilling">
+                                    <p class="d-inline mb-0">
+                                        <span id="billing-address-line-1">
+                                            {{selectedAddressBilling?.address_line_1}},
+                                            {{selectedAddressBilling?.address_line_2}},
+                                        </span>
+                                    </p>
+                                    <br>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-pincode="">{{selectedAddressBilling?.pincode}}, </span>
+                                        <span data-address-city="22691">{{selectedAddressBilling?.city?.city}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                    </p>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-state="1722">{{selectedAddressBilling?.state?.state}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                        <span
+                                            data-address-country="IR">{{selectedAddressBilling?.country?.country_name}}</span>
+                                    </p>
+                                    <p class="mb-2">
+                                        <span class="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
+                                                fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                <path fill-rule="evenodd"
+                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                            </svg>
+                                            <a href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                            <input type="hidden" class="form-control" name="billingphone"
+                                                id="billingphone" value="{{supplierAddress?.mobile_no}}">
+                                        </span>
+                                    </p>
+                                    <div class="d-grid">
+                                        <a type="button" class=" btn-link" (click)="openModal()">Change Address</a>
+                                        <a class=" btn-link"
+                                            routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                                            Billing Address
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="form-group row mt-3">
+                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place
+                                            of Supply : </span> <span class="font-weight-normal"
+                                            id="lblContactGSTIN">{{selectedAddressBilling?.state?.state}}</span></label>
+                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
+                                        </span><span class="font-weight-normal"
+                                            id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="modal fade" id="addressModalShipping" tabindex="-1" role="dialog"
+                        aria-labelledby="addressModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Shipping Address</h1>
+                                    <button type="button" class="close" (click)="closeModalShipping()"
+                                        aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group" *ngIf="supplierAddress">
+                                        <h5 class=""><small class="text-muted"></small></h5>
+                                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                            <input type="hidden" class="form-control" name="billingcompanyname"
+                                                id="billingcompanyname" value="{{supplierAddress?.name}}">
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-sm-12 col-12"
+                                                *ngFor="let add of supplierAddress?.address">
+                                                <div *ngIf="add.address_type=='Shipping'">
+                                                    <button type="button" (click)="selectAddressShipping(add)"
+                                                        class="btn btn-primary btn-sm"
+                                                        style="float: right;">Select</button>
 
-    <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Billing Address</strong></label>
-    <div class="form-group" *ngIf="!supplierAddress">
-        <div class="m-divider"><span></span></div>
-        <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
-                Provided</small></h5>
-        <div class="form-group row mt-3">
-            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span class="font-weight-normal"
-                    id="lblContactGSTIN">-</span></label>
-            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">Place of Supply <span class="font-weight-normal"
-                        id="lblContactGSTIN">-</span></label>
-        </div>
-    </div>
-    <div class="form-group" *ngIf="supplierAddress">
-        <h5 class=""><small class="text-muted"></small></h5>
-        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
-            <input type="hidden" class="form-control" name="billingcompanyname" id="billingcompanyname"
-                value="{{supplierAddress?.name}}">
-        </h5>
-        <div *ngIf="selectedAddress">
-            <p class="d-inline mb-0">
-                <span id="billing-address-line-1">
-                    {{selectedAddress?.address_line_1}}, {{selectedAddress?.address_line_2}},
-                </span>
-            </p>
-            <br>
-            <p class="d-inline mb-0">
-                <span data-address-pincode="">{{selectedAddress?.pincode}}, </span>
-                <span data-address-city="22691">{{selectedAddress?.city?.city}}</span>
-                <span class="m--font-boldest">,&nbsp;</span>
-            </p>
-            <p class="d-inline mb-0">
-                <span data-address-state="1722">{{selectedAddress?.state?.state}}</span>
-                <span class="m--font-boldest">,&nbsp;</span>
-                <span data-address-country="IR">{{selectedAddress?.country?.country_name}}</span>
-            </p>
-            <p class="mb-2">
-                <span class="">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor"
-                        class="bi bi-telephone-fill" viewBox="0 0 16 16"
-                        style="    height: 11px; width: 11px; color: #FF9F43;">
-                        <path fill-rule="evenodd"
-                            d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                    </svg>
-                    <a href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
-                    <input type="hidden" class="form-control" name="billingphone" id="billingphone"
-                        value="{{supplierAddress?.mobile_no}}">
-                </span>
-            </p>
-            <div class="d-grid">
-                <a type="button" class=" btn-link" (click)="openModal()">Change Address</a>
-                <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
-                    Billing Address
-                </a>
-            </div>
-        </div>
-        <div class="form-group row mt-3">
-            <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place of Supply : </span> <span class="font-weight-normal"
-                id="lblContactGSTIN">{{selectedAddress?.state?.state}}</span></label>
-            <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN : </span><span class="font-weight-normal"
-                    id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
-        </div>
-    </div>
-</div>
+                                                    <p class="d-inline mb-0">
+                                                        <span id="billing-address-line-1">
+                                                            {{add?.address_line_1}}, {{add?.address_line_2}}
+                                                        </span>
+                                                    </p>
+                                                    <br>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-pincode="">{{add?.pincode}}</span>
+                                                        <span data-address-city="22691">{{add?.city?.city}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                    </p>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-state="1722">{{add?.state?.state}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                        <span
+                                                            data-address-country="IR">{{add?.country?.country_name}}</span>
+                                                    </p>
+                                                    <p class="mb-2">
+                                                        <span class="">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11"
+                                                                height="11" fill="currentColor"
+                                                                class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                                            </svg>
+                                                            <a
+                                                                href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                                            <input type="hidden" class="form-control"
+                                                                name="billingphone" id="billingphone"
+                                                                value="{{supplierAddress?.mobile_no}}">
+                                                        </span>
+                                                    </p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Shipping Address</strong></label>
+                    <div *ngIf="selectedAddressShipping && selectedAddressShipping.address_type!=='Shipping'">
+                        <h5 style="font-size: 13px;"><small class="text-muted">Shipping Address is Not
+                                Available</small></h5>
+                        <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                            Address
+                        </a>
+                    </div>
+                    <div class="form-group" *ngIf="!supplierAddress">
+                        <div class="m-divider"><span></span></div>
+                        <h5 style="font-size: 13px;"><small class="text-muted">Shipping Address is Not
+                                Provided</small></h5>
+                        <div class="form-group row mt-3">
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">Place of Supply <span
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedAddressShipping && selectedAddressShipping.address_type=='Shipping'">
+                        <div class="form-group" *ngIf="supplierAddress">
+
+                            <h5 class=""><small class="text-muted"></small></h5>
+                            <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                <input type="hidden" class="form-control" name="billingcompanyname"
+                                    id="billingcompanyname" value="{{supplierAddress?.name}}">
+                            </h5>
+                            <div *ngIf="selectedAddressShipping && selectedAddressShipping.address_type=='Shipping'">
+                                <div *ngIf="selectedAddressShipping">
+                                    <p class="d-inline mb-0">
+                                        <span id="billing-address-line-1">
+                                            {{selectedAddressShipping?.address_line_1}},
+                                            {{selectedAddressShipping?.address_line_2}},
+                                        </span>
+                                    </p>
+                                    <br>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-pincode="">{{selectedAddressShipping?.pincode}}, </span>
+                                        <span data-address-city="22691">{{selectedAddressShipping?.city?.city}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                    </p>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-state="1722">{{selectedAddressShipping?.state?.state}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                        <span
+                                            data-address-country="IR">{{selectedAddressShipping?.country?.country_name}}</span>
+                                    </p>
+                                    <p class="mb-2">
+                                        <span class="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
+                                                fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                <path fill-rule="evenodd"
+                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                            </svg>
+                                            <a href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                            <input type="hidden" class="form-control" name="billingphone"
+                                                id="billingphone" value="{{supplierAddress?.mobile_no}}">
+                                        </span>
+                                    </p>
+                                    <div class="d-grid">
+                                        <a type="button" class=" btn-link" (click)="openModalShipping()">Change
+                                            Address</a>
+                                        <a class=" btn-link"
+                                            routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                                            Shipping Address
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="form-group row mt-3">
+                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place
+                                            of Supply : </span> <span class="font-weight-normal"
+                                            id="lblContactGSTIN">{{selectedAddressShipping?.state?.state}}</span></label>
+                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
+                                        </span><span class="font-weight-normal"
+                                            id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end -->
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Material Inward No*</label>
-                       <select formControlName="material_inward_no" [ngClass]="{'is-invalid': f['material_inward_no'].touched && f['material_inward_no'].invalid}" readonly>
+                        <select formControlName="material_inward_no"
+                            [ngClass]="{'is-invalid': f['material_inward_no'].touched && f['material_inward_no'].invalid}"
+                            readonly>
                             <option value="" selected disabled>Select Material Inward</option>
-                            <option value="{{material.id}}" *ngFor="let material of materialList">{{material.material_inward_no}}</option>
+                            <option value="{{material.id}}" *ngFor="let material of materialList">
+                                {{material.material_inward_no}}</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Payment Term</label>
-                       <select formControlName="payment_term" [ngClass]="{'is-invalid': f['payment_term'].touched && f['payment_term'].invalid}" readonly>
+                        <select formControlName="payment_term"
+                            [ngClass]="{'is-invalid': f['payment_term'].touched && f['payment_term'].invalid}" readonly>
                             <option value="" selected disabled>Select Payment Term</option>
-                            <option value="{{payment.id}}" *ngFor="let payment of paymentList">{{payment.title}}</option>
+                            <option value="{{payment.id}}" *ngFor="let payment of paymentList">{{payment.title}}
+                            </option>
                         </select>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Due Date*</label>
-                        <input type="date" formControlName="due_date" [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}" readonly>
-                    </div>
-                </div>
-             
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Reverse Charge</label>
-                        <input type="text" formControlName="reverse_charge" [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}" readonly>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Shipping Date* </label>
-                        <input type="date" formControlName="shipping_date" [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}" readonly>
-                    </div>
-                </div>
-              
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Selling Price Online</label>
-                        <input type="text" formControlName="selling_price_online" [ngClass]="{'is-invalid': f['selling_price_online'].touched && f['selling_price_online'].invalid}" readonly>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Selling Price Offline</label>
-                        <input type="text" formControlName="selling_price_offline" [ngClass]="{'is-invalid': f['selling_price_offline'].touched && f['selling_price_offline'].invalid}" readonly>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Dealer Price</label>
-                        <input type="text" formControlName="dealer_price" [ngClass]="{'is-invalid': f['dealer_price'].touched && f['dealer_price'].invalid}" readonly>
+                        <input type="datetime-local" formControlName="due_date"
+                            [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}" readonly>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Employee Price</label>
-                        <input type="text" formControlName="employee_price" [ngClass]="{'is-invalid': f['employee_price'].touched && f['employee_price'].invalid}" readonly>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select formControlName="status" [ngClass]="{'is-invalid': f['status'].touched && f['status'].invalid}" readonly>
-                            <option value="" selected disabled>Select Status</option>
-                            <option value="Complete">Complete</option>
-                            <option value="Pending">Pending</option>
+                        <label>Reverse Charge</label>
+                        <!-- <input type="text" formControlName="reverse_charge" [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}"> -->
+                        <select formControlName="reverse_charge"
+                            [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}">
+                            <option value="" selected disabled>Select Reverse Charge</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
+                        <label>Shipping Date* </label>
+                        <input type="datetime-local" formControlName="shipping_date"
+                            [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}"
+                            readonly>
+                    </div>
+                </div>
+
+
+
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
                         <div class="d-flex">
-                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true" readonly>
-                            <label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Export</label>
+                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true"
+                                readonly>
+                            <label [for]="'checkboxMeasure-'" class="d_flex"
+                                style="margin-bottom: 0; margin-left: 5px;">Export</label>
                         </div>
                     </div>
                 </div>
-              
+
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -381,6 +546,317 @@
                         </tbody>
                     </table>
                 </div>
+            </div> -->
+
+
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Barcode/SKU</th>
+                                <th style="width: 20%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Product Name <span
+                                        style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                </th>
+                                <th>QTY <span
+                                        style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                </th>
+                                <th>Unit Cost</th>
+                                <th>Mrp <span
+                                        style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                </th>
+                                <th>Discount</th>
+                                <th>Selling Price Online</th>
+                                <th>Selling Price Offline</th>
+                                <th>Dealer Price</th>
+                                <th>Employee Price</th>
+                                <th>Tax % <span
+                                        style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                </th>
+                                <th>Additional Discount</th>
+                                <th>Landing Cost</th>
+                                <th class="text-end">Total Cost</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container formArrayName="purchase_bill">
+                                <ng-container *ngFor="let d of getCart().controls; let i=index">
+                                    <tr [formGroupName]="i">
+                                        <td>
+                                            <div>
+                                                <div class="me-2">
+                                                    <svg (click)="removeCart(i)" style="color:red"
+                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                        <path
+                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                    </svg>
+                                                </div>
+                                                <svg *ngIf="isLastCart(i)" (click)="addCart()" style="color:green"
+                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                    <path
+                                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                </svg>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input class="input" type="text" placeholder="Search Barcode"
+                                                [attr.data-index]="i"
+                                                [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
+                                                (keyup)="searchProduct(id.value,i)" (blur)="hideSearch()">
+                                        </td>
+                                        <td> <input type="text"
+                                                [value]="productName[i]!== undefined ? productName[i]:''"
+                                                (click)="open()" placeholder="Search Product" *ngIf="isProduct"
+                                                class="input">
+                                            <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
+                                                <input type="text" placeholder="Search Product" aria-label="Produt"
+                                                    matInput [formControl]="variantControl" [matAutocomplete]="auto"
+                                                    style="height: 18px;">
+                                                <mat-autocomplete #auto="matAutocomplete">
+                                                    <mat-option *ngFor="let variant of filteredVariants | async"
+                                                        [value]="variant?.product_title"
+                                                        (onSelectionChange)="oncheckVariant(variant,i)"
+                                                        (onSelectionChange)="variantChanged(variant, i)">{{
+                                                        variant?.product_title}}</mat-option>
+                                                    <ng-container *ngIf="(filteredVariants | async) as variants">
+                                                        <mat-option *ngIf="variants?.length === 0"
+                                                            [value]="'No data found'">
+                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+
+                                                                add Product</a>
+                                                        </mat-option>
+                                                    </ng-container>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </td>
+                                        <td><input type="text" formControlName="qty" class="input"></td>
+                                        <td><input type="text" formControlName="unit_cost" class="input"></td>
+                                        <td><input type="text" formControlName="mrp" class="input">
+                                            <i class="ion-information circle" data-bs-toggle="tooltip"
+                                                title="ion-information" (click)="openModalBatch()"></i>
+                                            <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
+                                                aria-labelledby="addressModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered"
+                                                    role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Batch
+                                                            </h1>
+                                                            <button type="button" class="close"
+                                                                (click)="closeModalBatch()" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group" *ngIf="selectBatch">
+                                                                <div class="row">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table datanew">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="boder space-text">Sr.No.
+                                                                                    </th>
+                                                                                    <th class="boder space-text">MRP
+                                                                                    </th>
+                                                                                    <th class="boder space-text">
+                                                                                        Purchase Price</th>
+                                                                                    <th class="boder space-text">
+                                                                                        Purchase Tax</th>
+                                                                                    <th class="border space-text">Stock
+                                                                                    </th>
+                                                                                    <th class="border space-text">
+                                                                                        Opening Stock</th>
+                                                                                    <th class="boder space-text">Sale
+                                                                                        Tax</th>
+                                                                                    <th class="boder space-text">
+                                                                                        Discount</th>
+                                                                                    <th class="boder space-text">
+                                                                                        Additional Discount</th>
+                                                                                    <th class="boder space-text">Selling
+                                                                                        Price Dealer</th>
+                                                                                    <th class="boder space-text">
+                                                                                        selling_price_employee</th>
+                                                                                    <th class="boder space-text">Selling
+                                                                                        Price Offline</th>
+                                                                                    <th class="boder space-text">Selling
+                                                                                        Price Online</th>
+                                                                                    <th class="boder space-text">Action
+                                                                                    </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr
+                                                                                    *ngFor="let batch of selectBatch;let ind=index;">
+                                                                                    <td class="boder">{{ ind+1+'.'}}
+                                                                                    </td>
+                                                                                    <td class="boder">{{ batch?.mrp }}
+                                                                                    </td>
+                                                                                    <td class="boder">{{
+                                                                                        batch?.cost_price }}</td>
+                                                                                    <td class="boder">{{
+                                                                                        batch?.purchase_tax + '%'}}</td>
+                                                                                    <td class="border">{{batch?.stock}}
+                                                                                    </td>
+                                                                                    <td class="border">
+                                                                                        {{batch?.opening_stock}}</td>
+                                                                                    <td class="boder">{{ batch?.sale_tax
+                                                                                        + '%'}}</td>
+                                                                                    <td class="boder">{{ batch?.discount
+                                                                                        + '%'}}</td>
+                                                                                    <td class="boder">{{
+                                                                                        batch?.additional_discount +
+                                                                                        '%'}}</td>
+                                                                                    <td class="border">
+                                                                                        {{batch?.selling_price_dealer}}
+                                                                                    </td>
+                                                                                    <td class="border">
+                                                                                        {{batch?.selling_price_employee}}
+                                                                                    </td>
+                                                                                    <td class="border">
+                                                                                        {{batch?.selling_price_offline}}
+                                                                                    </td>
+                                                                                    <td class="border">
+                                                                                        {{batch?.selling_price_online}}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <button type="button"
+                                                                                            (click)="selecBatchtModel(batch,i)"
+                                                                                            class="btn btn-primary btn-sm"
+                                                                                            style="float: right;">Select</button>
+                                                                                    </td>
+
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><input type="text" formControlName="discount" class="input">
+                                            <span class="text-danger" style="display: block;"
+                                                *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">
+                                                Enter Discount ex: 1-100
+                                            </span>
+                                        </td>
+                                        <td> <input type="text" formControlName="selling_price_online" class="input">
+                                        </td>
+                                        <td><input type="text" formControlName="selling_price_offline" class="input">
+                                        </td>
+                                        <td><input type="text" formControlName="dealer_price" class="input"></td>
+                                        <td><input type="text" formControlName="employee_price" class="input"></td>
+                                        <td><input type="text" formControlName="tax" class="input"></td>
+                                        <td><input type="text" formControlName="additional_discount" class="input"></td>
+                                        <td class="text-end"><input type="text" formControlName="landing_cost"
+                                                class="input"></td>
+                                        <td class="text-end"><input type="text" class="input"
+                                                [value]="calculateTotalEveryIndex(i).toString()"
+                                                [ngModel]="calculateTotalEveryIndex(i).toString()"></td>
+                                    </tr>
+                                </ng-container>
+                            </ng-container>
+                            <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                <td></td>
+                                <td></td>
+                                <td class="text-start"><strong>Total</strong></td>
+                                <td class="text-start">{{ calculateTotalQty()}}</td>
+                                <td class="text-start">{{calculateTotalUnitCost()}}</td>
+                                <td class="text-start">{{calculateTotalMrp()}}</td>
+                                <td class="text-start">{{calculateTotalDiscount()}}</td>
+                                <td class="text-start">{{calculateTotalSellingPriceOnline()}}</td>
+                                <td class="text-start">{{calculateTotalSellingPriceOffline()}}</td>
+                                <td class="text-start">{{calculateTotalDealerPrice()}}</td>
+                                <td class="text-start">{{calculateTotalEmployeePrice()}}</td>
+                                <td class="text-start">{{calculateTotalTax()}}</td>
+                                <th class="text-start">{{calculateTotalAdditionalDiscount()}}</th>
+                                <td class="text-start">{{calculateTotalLandingCost()}}</td>
+                                <td class="text-start"> {{ calculateTotal() }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- aditional charge -->
+            <div class="m-demo-icon pt-0 pl-0 my-5" *ngIf="additionalTable">
+                <div class="m-demo-icon__class">
+                    <a class="m-link m--font-boldest" (click)="displayAdditiionalTable()"><i class="ion-ios7-plus"
+                            data-bs-toggle="tooltip" title="ion-ios7-plus"></i>Add
+                        Additional Charges</a>
+                </div>
+            </div>
+            <div class="row my-5" *ngIf="!additionalTable">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr style="background-color:#FF9F43;">
+                                <td colspan="5" style="color:#fff">Additional Charge</td>
+                                <td (click)="hideAdditiionalTable()" style="color:#fff"><i data-bs-toggle="tooltip"
+                                        title="ion-close-circled" class="ion-close-circled"></i></td>
+                            </tr>
+                        </thead>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>#</th>
+                                <th>Additional Charge</th>
+                                <th>Value</th>
+                                <th>Tax</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container formArrayName="additional_charges">
+                                <ng-container *ngFor="let d of getAdditionalCharge().controls; let j=index">
+                                    <tr [formGroupName]="j">
+                                        <td>
+                                            <div>
+                                                <div class="me-2">
+                                                    <svg (click)="removeAdditionalCharge(j)" style="color:red"
+                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                        <path
+                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                    </svg>
+                                                </div>
+                                                <svg *ngIf="isLastAdditionalCharge(j)" (click)="addAdditionalCharge()"
+                                                    style="color:green" xmlns="http://www.w3.org/2000/svg" width="16"
+                                                    height="16" fill="currentColor" class="bi bi-plus-circle"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                    <path
+                                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                </svg>
+                                            </div>
+                                        </td>
+                                        <td>{{j+1}}</td>
+                                        <td>
+                                            <input type="text" formControlName="additional_charge" class="input">
+                                        </td>
+                                        <td>
+                                            <input type="text" formControlName="value" class="input">
+                                        </td>
+                                        <td>
+                                            <input type="text" formControlName="tax" class="input">
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <!-- <div class="col-lg-12 my-3">
                 <div class="form-group">
@@ -470,10 +946,32 @@
                 </div>
             </div>
             <div class="col-lg-12">
-            <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit()">Submit</button>
+                <!-- <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit()">Submit</button>
 			<button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
 			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Submit</button>
-                <a routerLink="//purchase/purchase-bill-list" class="btn btn-cancel text-white">Cancel</a>
+                <a routerLink="//purchase/purchase-bill-list" class="btn btn-cancel text-white">Cancel</a> -->
+                <div class="row">
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <a routerLink="//purchase/purchase-bill-list" class="btn btn-cancel text-white"
+                            style=" background-color: #f4516c;">Cancel</a>
+                        <a class="btn btn-cancel text-white" (click)="clearForm()">Clear</a>
+                    </div>
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <button class="btn btn-submit me-2" (click)="submit('print')">Save & Print</button>
+                        <button class="btn btn-submit me-2" (click)="submit('draft')">Save as Draft</button>
+                    </div>
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>Save</button>
+                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('new')">Save & Create
+                            New</button>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save
+                            & Create New</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
