@@ -49,21 +49,28 @@ export class AddmaterialInwardComponent implements OnInit {
   subcategoryList;
 
   ngOnInit(): void {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-indexed
+    const day = now.getDate().toString().padStart(2, '0');
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+
+    const defaultDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
     this.materialForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       purchase_order: new FormControl('', [Validators.required]),
-      po_date: new FormControl(''),
-      material_inward_date: new FormControl('', [Validators.required]),
-      material_inward_no: new FormControl('',[Validators.required,Validators.pattern(/^[0-9]*$/)]),
-      shipping_note: new FormControl('',[Validators.required,]),
+      po_date: new FormControl(defaultDateTime),
+      material_inward_date: new FormControl(defaultDateTime, [Validators.required]),
+      material_inward_no: new FormControl('',[Validators.required]),
+      shipping_note: new FormControl(''),
       recieved_by: new FormControl('',[Validators.required,]),
       material_inward_cart: this.fb.array([]),
-      // total_tax: new FormControl('', ),
-      // total_discount: new FormControl('', ),
-      // sub_total: new FormControl('', ),
-      // round_off: new FormControl('', ),
-      // total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      total: new FormControl('', ),
+      export:new FormControl(''),
       note: new FormControl(''),
+      status:new FormControl('')
     });
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
@@ -76,8 +83,21 @@ export class AddmaterialInwardComponent implements OnInit {
     this.getSuuplier();
     this.getVariants();
     this.getPurchase();
+    this.getprefix();
   }
-
+  prefixNo: any;
+  getprefix() {
+    this.purchaseService.getMaterialInwardPrefix().subscribe((res: any) => {
+      console.log(res);
+      if (res.isSuccess == true) {
+        this.prefixNo = res.prefix
+      } else {
+        this.toastrService.error(res.msg)
+      }
+    }, err => {
+      this.toastrService.error(err.error.msg)
+    })
+  }
   get supplier() {
     return this.materialForm.get('party') as FormControl;
   }
@@ -86,14 +106,8 @@ export class AddmaterialInwardComponent implements OnInit {
       barcode: (''),
       qty: (''),
       po_qty: (''),
-      unit_cost: (''),
       mrp: (''),
-      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: (''),
-      landing_cost: (''),
-      total: (''),
-      discount_type:(''),
-      additional_discount:new FormControl(0,[Validators.pattern(/^[0-9]*$/)])
+  
     })
   }
   getCart(): FormArray {
@@ -123,23 +137,32 @@ export class AddmaterialInwardComponent implements OnInit {
     this.purchaseService.getPurchase().subscribe(res => {
       this.purchaseList = res;
       // console.log(this.purchaseList);
-
     })
   }
 
-  supplierAddress:any;
-  selectedAddress: string = ''
+  supplierAddress: any;
+  selectedAddressBilling: any;
+  selectedAddressShipping: any;
+  selectBatch: any;
   oncheck(event: any) {
     // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     // console.log(selectedItemId);
    //call detail api
-   this.contactService.getSupplierById(selectedItemId).subscribe(res=>{
+   this.contactService.getSupplierById(selectedItemId).subscribe(res => {
     // console.log(res);
-    this.supplierAddress=res;
-    this.selectedAddress=this.supplierAddress.address[0];
-    // console.log(this.selectedAddress);
-    
+    this.supplierAddress = res;
+    console.log(this.selectedAddressBilling);
+    this.supplierAddress.address.map((res: any) => {
+      if (res.address_type == 'Billing') {
+        this.selectedAddressBilling = res
+        console.log(this.selectedAddressBilling);
+      } else if (res.address_type == 'Shipping') {
+        this.selectedAddressShipping = res
+        console.log(this.selectedAddressShipping);
+      }
+    })
+
   })
 
     const variants = this.materialForm.get('material_inward_cart') as FormArray;
@@ -160,15 +183,58 @@ export class AddmaterialInwardComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-
-  selectAddress(address: string) {
-    this.selectedAddress = address;
+  openModalShipping() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModalShipping');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+  openModalBatch() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+  selectAddressBilling(address: string) {
+    this.selectedAddressBilling = address;
     // Close Bootstrap modal using JavaScript
     const modal = document.getElementById('addressModal');
     if (modal) {
       modal.classList.remove('show');
       modal.style.display = 'none';
     }
+  }
+  selectAddressShipping(address: string) {
+    this.selectedAddressShipping = address;
+    // Close Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModalShipping');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  selecBatchtModel(address: any, index: any) {
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+    const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+    let taxRupee = (address?.purchase_rate * address?.purchase_tax) / 100
+    console.log(taxRupee);
+    let discountRupees = (address?.purchase_rate * address?.discount) / 100
+    console.log(discountRupees);
+    let landingCost = (address?.purchase_rate - discountRupees) + taxRupee;
+    console.log(landingCost); 
+    barcode.patchValue({
+      mrp: address?.mrp,
+      // po_qty: address?.stock,
+      qty: address?.stock,
+    });
   }
   closeModal() {
     const modal = document.getElementById('addressModal');
@@ -177,19 +243,47 @@ export class AddmaterialInwardComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
+  closeModalBatch() {
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  closeModalShipping() {
+    const modal = document.getElementById('addressModalShipping');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
 
-
+  selectedProductName: any;
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
-    // console.log(selectedItemId);
+    console.log(event);
+    this.selectedProductName = event.product_title
+    this.selectBatch = event.batch
+    console.log(event.batch.length);
     const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: selectedItemId
     });
+
+    if (event.batch.length > 0) {
+      const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+      barcode.patchValue({
+        mrp: event.batch[0]?.mrp,
+        qty: event.batch[0]?.stock,
+      });
+
+      console.log(event.batch);
+    }
   }
+
   getRes: any;
   loader = false;
-  submit() {
+  submit(type: any) {
     // console.log(this.materialForm.value);
     if (this.materialForm.valid) {
 
@@ -203,7 +297,10 @@ export class AddmaterialInwardComponent implements OnInit {
       formdata.append('shipping_note', this.materialForm.get('shipping_note')?.value);
       formdata.append('recieved_by', this.materialForm.get('recieved_by')?.value);
       formdata.append('note', this.materialForm.get('note')?.value);
-
+      formdata.append('total', this.materialForm.get('total')?.value);
+      if (type == 'draft') {
+        formdata.append('status', 'draft');
+      }
       // nested addrs data 
       const cartArray = this.materialForm.get('material_inward_cart') as FormArray;
       const cartData = [];
@@ -223,7 +320,22 @@ export class AddmaterialInwardComponent implements OnInit {
         if (this.getRes.IsSuccess == "True") {
           this.loader = false;
           this.toastrService.success(this.getRes.msg);
-          this.router.navigate(['//purchase/material-Inward-list'])
+          // this.router.navigate(['//purchase/material-Inward-list'])
+          if (type == 'new') {
+            this.materialForm.reset()
+            this.ngOnInit()
+            this.supplierControl.reset()
+          } else if (type == 'print') {
+            this.printForm()
+            setTimeout(() => {
+              this.materialForm.reset()
+              this.ngOnInit()
+              this.supplierControl.reset()
+            }, 3000);
+          }
+          else {
+            this.router.navigate(['//purchase/material-Inward-list'])
+          }
         }else{
           this.loader=false;
         }
@@ -237,9 +349,7 @@ export class AddmaterialInwardComponent implements OnInit {
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
-  additional_discount(index:number){
-    return this.getCart().controls[index].get('additional_discount')
-  }
+ 
   get material_inward_date() {
     return this.materialForm.get('material_inward_date') ;
   }
@@ -387,46 +497,46 @@ export class AddmaterialInwardComponent implements OnInit {
     }
     return totalMrp;
   }
-  calculateTotalDiscount(): number {
-    let totalDiscount = 0;
-    for (let i = 0; i < this.getCart().controls.length; i++) {
-      const discountControl = this.getCart().controls[i].get('discount');
-      if (discountControl) {
-        totalDiscount += +discountControl.value;
-      }
-    }
-    return totalDiscount;
-  }
-  calculateTotalPurchase(): number {
-    let totalPurchase = 0;
-    for (let i = 0; i < this.getCart().controls.length; i++) {
-      const purchaseControl = this.getCart().controls[i].get('purchase_rate');
-      if (purchaseControl) {
-        totalPurchase += +purchaseControl.value;
-      }
-    }
-    return totalPurchase;
-  }
-  calculateTotalTax(): number {
-    let totalTax = 0;
-    for (let i = 0; i < this.getCart().controls.length; i++) {
-      const taxControl = this.getCart().controls[i].get('tax');
-      if (taxControl) {
-        totalTax += +taxControl.value;
-      }
-    }
-    return totalTax;
-  }
-  calculateTotalLandingCost(): number {
-    let totalLandingCost = 0;
-    for (let i = 0; i < this.getCart().controls.length; i++) {
-      const landingControl = this.getCart().controls[i].get('landing_cost');
-      if (landingControl) {
-        totalLandingCost += +landingControl.value;
-      }
-    }
-    return totalLandingCost;
-  }
+  // calculateTotalDiscount(): number {
+  //   let totalDiscount = 0;
+  //   for (let i = 0; i < this.getCart().controls.length; i++) {
+  //     const discountControl = this.getCart().controls[i].get('discount');
+  //     if (discountControl) {
+  //       totalDiscount += +discountControl.value;
+  //     }
+  //   }
+  //   return totalDiscount;
+  // }
+  // calculateTotalPurchase(): number {
+  //   let totalPurchase = 0;
+  //   for (let i = 0; i < this.getCart().controls.length; i++) {
+  //     const purchaseControl = this.getCart().controls[i].get('purchase_rate');
+  //     if (purchaseControl) {
+  //       totalPurchase += +purchaseControl.value;
+  //     }
+  //   }
+  //   return totalPurchase;
+  // }
+  // calculateTotalTax(): number {
+  //   let totalTax = 0;
+  //   for (let i = 0; i < this.getCart().controls.length; i++) {
+  //     const taxControl = this.getCart().controls[i].get('tax');
+  //     if (taxControl) {
+  //       totalTax += +taxControl.value;
+  //     }
+  //   }
+  //   return totalTax;
+  // }
+  // calculateTotalLandingCost(): number {
+  //   let totalLandingCost = 0;
+  //   for (let i = 0; i < this.getCart().controls.length; i++) {
+  //     const landingControl = this.getCart().controls[i].get('landing_cost');
+  //     if (landingControl) {
+  //       totalLandingCost += +landingControl.value;
+  //     }
+  //   }
+  //   return totalLandingCost;
+  // }
   // subTotal
   calculateSubtotal(): number {
     let subtotal = 0;
@@ -449,18 +559,14 @@ export class AddmaterialInwardComponent implements OnInit {
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const qtyControl = this.getCart().controls[i].get('qty');
       const mrpControl = this.getCart().controls[i].get('mrp');
-      const taxControl = this.getCart().controls[i].get('tax');
-      const discountControl = this.getCart().controls[i].get('discount');
-      if (qtyControl && mrpControl && taxControl && discountControl) {
+      if (qtyControl && mrpControl) {
         const qty = +qtyControl.value;
         const mrp = +mrpControl.value;
-        const tax = +taxControl.value;
-        const discount = +discountControl.value;
         const subtotal = mrp * qty;
-        const taxAmount = (subtotal * tax) / 100;
-        const discountAmount = (subtotal * discount) / 100;
+        // const taxAmount = (subtotal * tax) / 100;
+        // const discountAmount = (subtotal * discount) / 100;
 
-        total += subtotal + taxAmount - discountAmount;
+        total += subtotal;
       }
     }
     return total;
@@ -470,11 +576,21 @@ export class AddmaterialInwardComponent implements OnInit {
     const qty = +cartItem.get('qty').value;
     const mrp = +cartItem.get('mrp').value;
     const subtotal = mrp * qty;
-    const tax = subtotal * (+cartItem.get('tax').value / 100);
-    const discount = subtotal * (+cartItem.get('discount').value / 100);
-    const discountAmount = tax + discount;
-    const total = subtotal + tax - discount;
-    return total;
+    console.log(subtotal);
+    
+    return subtotal;
+  }
+
+  clearForm() {
+    this.materialForm.reset();
+    this.supplierControl.reset()
+  }
+  printForm(): void {
+    const printContents = document.getElementById('purchaseForm').outerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
   }
 
 }

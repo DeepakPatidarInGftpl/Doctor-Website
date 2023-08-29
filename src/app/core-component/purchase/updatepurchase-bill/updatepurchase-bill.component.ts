@@ -65,25 +65,24 @@ export class UpdatepurchaseBillComponent implements OnInit {
       material_inward_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       payment_term: new FormControl(''),
       due_date: new FormControl('', [Validators.required]),
-      reverse_charge: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-
+      reverse_charge: new FormControl('',),
       shipping_date: new FormControl('', [Validators.required]),
-      export: new FormControl(''),
-
-      selling_price_online: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      selling_price_offline: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      dealer_price: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-
-      employee_price: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      export: new FormControl('', [Validators.required]),
+      // selling_price_online: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      // selling_price_offline: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      // dealer_price: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      // employee_price: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       status: new FormControl(''),
-
       purchase_bill: this.fb.array([]),
+      additional_charges:this.fb.array([]),
       // total_tax: new FormControl('', ),
       // total_discount: new FormControl('', ),
       // sub_total: new FormControl('', ),
       // round_off: new FormControl('', ),
-      // total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       note: new FormControl(''),
+      total: new FormControl(''),
+      additional_charge: new FormControl(''),
+      // additional_discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)])
     });
 
     this.purchaseService.getPurchaseBillById(this.id).subscribe(res => {
@@ -100,8 +99,16 @@ export class UpdatepurchaseBillComponent implements OnInit {
       // console.log(res);
       this.supplierAddress=res;
       this.supplierControl.setValue(res.name); 
-      this.selectedAddress=this.supplierAddress.address[0];
-      // console.log(this.selectedAddress); 
+      this.getprefix()
+      this.supplierAddress.address.map((res: any) => {
+        if (res.address_type == 'Billing') {
+          this.selectedAddressBilling = res
+          console.log(this.selectedAddressBilling);
+        } else if (res.address_type == 'Shipping') {
+          this.selectedAddressShipping = res
+          console.log(this.selectedAddressShipping);
+        }
+      })
     })
     })
 
@@ -131,6 +138,20 @@ export class UpdatepurchaseBillComponent implements OnInit {
     //       this.supplierControl.setValue(matchedSuppliers[0].name);
     //     }
     //   });
+  }
+
+  prefixNo: any;
+  getprefix() {
+    this.purchaseService.getPurchaseBillPrefix().subscribe((res: any) => {
+      console.log(res);
+      if (res.isSuccess == true) {
+        this.prefixNo = res.prefix
+      } else {
+        this.toastrService.error(res.msg)
+      }
+    }, err => {
+      this.toastrService.error(err.error.msg)
+    })
   }
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
@@ -164,16 +185,18 @@ export class UpdatepurchaseBillComponent implements OnInit {
   }
   purchase_bill(): FormGroup {
     return this.fb.group({
-      barcode: (''),
-      qty: (''),
-      unit_cost: (''),
-      mrp: (''),
-      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: (''),
-      landing_cost: (''),
-      discount_type:(''),
-        additional_discount:new FormControl(0,[Validators.pattern(/^[0-9]*$/)])
-      // total: ('')
+      barcode: (0),
+      qty: (0),
+      unit_cost: (0),
+      mrp: (0),
+      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: (0),
+      landing_cost: (0),
+      selling_price_online: (0),
+      selling_price_offline: (0),
+      dealer_price: (0),
+      employee_price: (0),
+      additional_discount:new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
     })
   }
   getCart(): FormArray {
@@ -184,6 +207,23 @@ export class UpdatepurchaseBillComponent implements OnInit {
   }
   removeCart(i: any) {
     this.getCart().removeAt(i)
+  }
+
+  additional_charges():FormGroup{
+    return this.fb.group({
+      additional_charge:(0),
+      value:(0),
+      tax:(0)
+    })
+  }
+  getAdditionalCharge():FormArray{
+    return this.puchaseBillForm.get('additional_charges') as FormArray
+  }
+  addAdditionalCharge(){
+    this.getAdditionalCharge().push(this.additional_charges())
+  }
+  removeAdditionalCharge(j:any){
+    this.getAdditionalCharge().removeAt(j)
   }
   supplierList: any;
   getSuuplier() {
@@ -219,7 +259,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.paymentList = res;
     })
   }
-
+  selectedAddressBilling: any;
+  selectedAddressShipping: any;
+  selectBatch: any;
   oncheck(event: any) {
     // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
@@ -233,9 +275,23 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.puchaseBillForm.patchValue({
       party: selectedItemId
     });
+  //call detail api
+  this.contactService.getSupplierById(selectedItemId).subscribe(res => {
+    this.getPaymentTerms = res?.payment_terms?.id;
+    this.supplierAddress = res;
+    this.supplierAddress.address.map((res: any) => {
+      if (res.address_type == 'Billing') {
+        this.selectedAddressBilling = res
+        console.log(this.selectedAddressBilling);
+      } else if (res.address_type == 'Shipping') {
+        this.selectedAddressShipping = res
+        console.log(this.selectedAddressShipping);
+      }
+    })
+  })
+    
   }
 
-  // address 
   openModal() {
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('addressModal');
@@ -245,14 +301,67 @@ export class UpdatepurchaseBillComponent implements OnInit {
     }
   }
 
-  selectAddress(address: string) {
-    this.selectedAddress = address;
+  openModalShipping() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModalShipping');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+  openModalBatch() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+  selectAddressBilling(address: string) {
+    this.selectedAddressBilling = address;
     // Close Bootstrap modal using JavaScript
     const modal = document.getElementById('addressModal');
     if (modal) {
       modal.classList.remove('show');
       modal.style.display = 'none';
     }
+  }
+  selectAddressShipping(address: string) {
+    this.selectedAddressShipping = address;
+    // Close Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModalShipping');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  selecBatchtModel(address: any, index: any) {
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+    const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
+    let discountRupees = (address?.cost_price * address?.discount) / 100
+      console.log(discountRupees);
+      let afterDiscountPrice=(address?.cost_price-discountRupees)
+      let taxRupee: number = (afterDiscountPrice * address?.purchase_tax) / 100
+      console.log(taxRupee);
+      let landingCost = (address?.cost_price - discountRupees) + taxRupee;
+      console.log(landingCost);
+    barcode.patchValue({
+      mrp: address?.mrp,
+      qty: address?.stock,
+      tax: address?.purchase_tax,
+      discount: address?.discount,
+      unit_cost: address?.cost_price,
+      landing_cost: landingCost,
+      dealer_price:address?.selling_price_dealer,
+      employee_price:address?.selling_price_employee,
+      selling_price_offline:address?.selling_price_offline,
+      selling_price_online:address?.selling_price_online,
+      additional_discount:address?.additional_discount
+    });
   }
   closeModal() {
     const modal = document.getElementById('addressModal');
@@ -261,17 +370,62 @@ export class UpdatepurchaseBillComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
+  closeModalBatch() {
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  closeModalShipping() {
+    const modal = document.getElementById('addressModalShipping');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  selectedProductName: any;
+ 
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
+    console.log(event);
+    this.selectedProductName = event.product_title
+    this.selectBatch = event.batch
+    console.log(event.batch.length);
     // console.log(selectedItemId);
     const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: selectedItemId
     });
+    if (event.batch.length > 0) {
+      let discountRupees = (event.batch[0]?.cost_price * event.batch[0]?.discount) / 100
+      console.log(discountRupees);
+      let afterDiscountPrice=(event.batch[0]?.cost_price-discountRupees)
+      let taxRupee: number = (afterDiscountPrice * event.batch[0]?.purchase_tax) / 100
+      console.log(taxRupee);
+      let landingCost = (event.batch[0]?.cost_price - discountRupees) + taxRupee;
+      console.log(landingCost);
+      barcode.patchValue({
+        barcode: selectedItemId,
+        mrp: event.batch[0]?.mrp,
+        qty: event.batch[0]?.stock,
+        tax: event.batch[0]?.purchase_tax,
+        discount: event.batch[0]?.discount,
+        unit_cost: event.batch[0]?.cost_price,
+        landing_cost: landingCost,
+        dealer_price:event.batch[0]?.selling_price_dealer,
+        employee_price:event.batch[0]?.selling_price_employee,
+        selling_price_offline:event.batch[0]?.selling_price_offline,
+        selling_price_online:event.batch[0]?.selling_price_online,
+        additional_discount:event.batch[0]?.additional_discount
+      });
+
+      console.log(event.batch);
+    }
   }
   getRes: any;
   loader = false;
-  submit() {
+  submit(type: any) {
     // console.log(this.puchaseBillForm.value);
     if (this.puchaseBillForm.valid) {
 
@@ -284,19 +438,21 @@ export class UpdatepurchaseBillComponent implements OnInit {
       formdata.append('material_inward_no', this.puchaseBillForm.get('material_inward_no')?.value);
       formdata.append('payment_term', this.puchaseBillForm.get('payment_term')?.value);
       formdata.append('due_date', this.puchaseBillForm.get('due_date')?.value);
-
       formdata.append('reverse_charge', this.puchaseBillForm.get('reverse_charge')?.value);
       formdata.append('shipping_date', this.puchaseBillForm.get('shipping_date')?.value);
       formdata.append('export', this.puchaseBillForm.get('export')?.value);
-
-      formdata.append('selling_price_online', this.puchaseBillForm.get('selling_price_online')?.value);
-      formdata.append('selling_price_offline', this.puchaseBillForm.get('selling_price_offline')?.value);
-      formdata.append('dealer_price', this.puchaseBillForm.get('dealer_price')?.value);
-
-      formdata.append('employee_price', this.puchaseBillForm.get('employee_price')?.value);
-      formdata.append('status', this.puchaseBillForm.get('status')?.value);
-
+      
+      // formdata.append('selling_price_online', this.puchaseBillForm.get('selling_price_online')?.value);
+      // formdata.append('selling_price_offline', this.puchaseBillForm.get('selling_price_offline')?.value);
+      // formdata.append('dealer_price', this.puchaseBillForm.get('dealer_price')?.value);
+      // formdata.append('employee_price', this.puchaseBillForm.get('employee_price')?.value);
+      // formdata.append('status', this.puchaseBillForm.get('status')?.value);
       formdata.append('note', this.puchaseBillForm.get('note')?.value);
+      formdata.append('total', this.puchaseBillForm.get('total')?.value);
+      formdata.append('additional_charge', this.puchaseBillForm.get('additional_charge')?.value);
+     if (type == 'draft') {
+        formdata.append('status', 'draft');
+      }
 
       // nested addrs data 
       const cartArray = this.puchaseBillForm.get('purchase_bill') as FormArray;
@@ -317,7 +473,22 @@ export class UpdatepurchaseBillComponent implements OnInit {
         if (this.getRes.IsSuccess == "True") {
           this.loader = false;
           this.toastrService.success(this.getRes.msg);
-          this.router.navigate(['//purchase/purchase-bill-list'])
+          // this.router.navigate(['//purchase/purchase-bill-list'])
+          if (type == 'new') {
+            this.puchaseBillForm.reset()
+            this.supplierControl.reset()
+            this.ngOnInit()
+          } else if (type == 'print') {
+            this.printForm()
+            setTimeout(() => {
+              this.puchaseBillForm.reset()
+              this.supplierControl.reset()
+              this.ngOnInit()
+            }, 3000);
+          }
+          else {
+            this.router.navigate(['//purchase/purchase-bill-list'])
+          }
         }
       })
     } else {
@@ -424,11 +595,20 @@ export class UpdatepurchaseBillComponent implements OnInit {
   open() {
     this.isProduct = false
   }
-
   calculateTotalQty(): number {
     let totalQty = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const qtyControl = this.getCart().controls[i].get('qty');
+      if (qtyControl) {
+        totalQty += +qtyControl.value;
+      }
+    }
+    return totalQty;
+  }
+  calculateTotalAdditionalDiscount(): number {
+    let totalQty = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const qtyControl = this.getCart().controls[i].get('additional_discount');
       if (qtyControl) {
         totalQty += +qtyControl.value;
       }
@@ -455,10 +635,50 @@ export class UpdatepurchaseBillComponent implements OnInit {
     }
     return totalDiscount;
   }
-  calculateTotalPurchase(): number {
+  calculateTotalUnitCost(): number {
+    let totalQty = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const qtyControl = this.getCart().controls[i].get('unit_cost');
+      if (qtyControl) {
+        totalQty += +qtyControl.value;
+      }
+    }
+    return totalQty;
+  }
+  calculateTotalDealerPrice(): number {
     let totalPurchase = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const purchaseControl = this.getCart().controls[i].get('purchase_rate');
+      const purchaseControl = this.getCart().controls[i].get('dealer_price');
+      if (purchaseControl) {
+        totalPurchase += +purchaseControl.value;
+      }
+    }
+    return totalPurchase;
+  }
+  calculateTotalEmployeePrice(): number {
+    let totalPurchase = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const purchaseControl = this.getCart().controls[i].get('employee_price');
+      if (purchaseControl) {
+        totalPurchase += +purchaseControl.value;
+      }
+    }
+    return totalPurchase;
+  }
+  calculateTotalSellingPriceOnline(): number {
+    let totalPurchase = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const purchaseControl = this.getCart().controls[i].get('selling_price_online');
+      if (purchaseControl) {
+        totalPurchase += +purchaseControl.value;
+      }
+    }
+    return totalPurchase;
+  }
+  calculateTotalSellingPriceOffline(): number {
+    let totalPurchase = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const purchaseControl = this.getCart().controls[i].get('selling_price_offline');
       if (purchaseControl) {
         totalPurchase += +purchaseControl.value;
       }
@@ -535,5 +755,57 @@ export class UpdatepurchaseBillComponent implements OnInit {
     return total;
   }
 
+  clearForm() {
+    this.puchaseBillForm.reset();
+    this.supplierControl.reset()
+  }
+  printForm(): void {
+    const printContents = document.getElementById('purchaseForm').outerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  }
+  additionalTable = true
+  displayAdditiionalTable() {
+    this.additionalTable = false;
+  }
+  hideAdditiionalTable(){
+    this.additionalTable = true;
+  }
+  calculateTotalTaxIntoRupees() {
+    let total = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const purchaseRateControl = this.getCart().controls[i].get('unit_cost');
+      const taxControl = this.getCart().controls[i].get('tax');
+      const discountControl = this.getCart().controls[i].get('discount');
+      if (purchaseRateControl && discountControl) {
+        const purchaseRate = +purchaseRateControl.value;
+        const tax = +taxControl.value;
+        const discount = +discountControl.value
+
+        const discountAmountPercentage = +discount
+        const discountAmount = (purchaseRate * discountAmountPercentage) / 100;
+        const afterDiscuntAmount = purchaseRate - discountAmount
+        const taxAmountPercentage = +tax;
+        const taxAmount = (afterDiscuntAmount * taxAmountPercentage) / 100;
+
+        total += taxAmount;
+      }
+    }
+    return total;
+  }
+  calculateTaxintoPrice(index: number): number {
+    const cartItem = this.getCart().controls[index];
+    const purchaseRate = +cartItem.get('unit_cost').value;
+    const taxPercentage = +cartItem.get('tax').value;
+    const discountPercentage = +cartItem.get('discount').value;
+    const discount = (purchaseRate * discountPercentage) / 100;
+    const afterDiscountAmount = purchaseRate - discount
+    const taxAmount = (afterDiscountAmount * taxPercentage) / 100;
+    console.log(taxAmount);
+    const totalForTax = taxAmount
+    return totalForTax;
+  }
 }
 

@@ -265,4 +265,11 @@ export class ContactService {
     let url = this.apiUrl+'/pv-api/product_variant/';
     return this.http.get(url)
   }
+
+  // variant search
+  searchProduct(query: any) {
+    let url = this.apiUrl + '/pv-api/variant-search/?search=';
+    return this.http.get(url + query);
+  }
+
 }

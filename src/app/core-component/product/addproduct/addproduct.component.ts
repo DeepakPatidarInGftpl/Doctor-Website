@@ -277,10 +277,10 @@ export class AddproductComponent implements OnInit {
     })
   }
 
-  featureList: any;
+  featureList: any[] = [];
   getFeatureData() {
     this.coreService.getfeature().subscribe(res => {
-      this.featureList = res;
+      // this.featureList = res;
     })
   }
   featureGroupList: any;
@@ -289,7 +289,17 @@ export class AddproductComponent implements OnInit {
       this.featureGroupList = res;
     })
   }
-
+  // getFeatureByFeaturegroup(featureGroupid: any) {
+  //   this.coreService.getFeatureByFeaturegroup(featureGroupid).subscribe(res => {
+  //     this.featureList = res;
+  //   })
+  // }
+  getFeatureByFeaturegroup(featureGroupid: any, index: number) {
+    this.coreService.getFeatureByFeaturegroup(featureGroupid).subscribe(res => {
+      this.featureList[index] = res; 
+      console.log(this.featureList[index]);   
+    });
+  }
   // subcategory wise hsn code
   hsncodeBysubcatList: any;
   getHsncodeBySubcategory(val: any) {
@@ -320,10 +330,12 @@ export class AddproductComponent implements OnInit {
       feature.clear();
       for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
         this.addFeature();
+        this.getFeatureByFeaturegroup(this.featureGrpBysubcatGroupList.feature_group[i].id, i); // Call the function here
       }
+  
       this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
         // console.log(res);
-
+       
         const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
         imageGroup.patchValue({
           feature_group: res.id
@@ -470,8 +482,8 @@ export class AddproductComponent implements OnInit {
     // variants.controls.forEach((control, index) => {
     //   const variant = control.value;
     //   Object.keys(variant).forEach((key: string) => {
-        // console.log(key);
-        // console.log(index);
+    // console.log(key);
+    // console.log(index);
 
     //     const value = variant[key];
     //     formdata.append(`variants[${index}][${key}]`, value);
@@ -717,7 +729,7 @@ export class AddproductComponent implements OnInit {
     // console.log(this.currentVariants, 'currVar');
 
     // this.currentColors.map((res:any)=>{
-      // console.log(res);
+    // console.log(res);
     //   // const variants = this.productForm.get('variants') as FormArray;
     //   const variants = this.productForm.get('variants') as FormArray;
     //   // variants.at(0).patchValue({

@@ -36,18 +36,18 @@ export class BatchVariantProductComponent implements OnInit {
   ngOnInit(): void {
     this.batchForm = this.fb.group({
       // variant: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      mrp: new FormControl('', [Validators.required]),
+      mrp: new FormControl(0, [Validators.required]),
       cost_price: new FormControl(0,Validators.pattern(/^[0-9]*$/)),
       selling_price_online: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       selling_price_offline: new FormControl(0, Validators.pattern(/^[0-9]*$/)),
       selling_price_dealer: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       selling_price_employee: new FormControl(0, Validators.pattern(/^[0-9]*$/)),
-      stock: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      opening_stock:new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      minimum_stock_threshold: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      stock: new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      opening_stock:new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      minimum_stock_threshold: new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       max_order_quantity: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
-      discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      additional_discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)])
+      discount:new FormControl(0,[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      additional_discount:new FormControl(0,[Validators.pattern(/^(100|[0-9]{1,2})$/)])
     })
 
     this.id = +this.Arout.snapshot.paramMap.get('id');

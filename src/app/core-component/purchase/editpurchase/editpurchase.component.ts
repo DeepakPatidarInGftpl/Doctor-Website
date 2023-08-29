@@ -54,22 +54,23 @@ export class EditpurchaseComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...'); // or any other default value
-
     this.purchaseForm = this.fb.group({
-      supplier: new FormControl('', [Validators.required]),
+      party: new FormControl('', [Validators.required]),
       order_date: new FormControl(''),
-      order_no: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      shipping_date: new FormControl(''),
-      shipping_note: new FormControl(''),
-      sub_total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      order_no: new FormControl('', [Validators.required]),
+      shipping_date: new FormControl('', [Validators.required]),
+      shipping_note: new FormControl(''),  
       purchase_cart: this.fb.array([]),
+      note: new FormControl(''),
+      status: new FormControl(''),
+      export: new FormControl(''),
+      total_qty:new FormControl(''),
       total_tax: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       total_discount: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      sub_total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       round_off: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      note: new FormControl(''),
     });
-
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
       // console.log(res);
       this.getresbyId = res;
@@ -83,8 +84,16 @@ export class EditpurchaseComponent implements OnInit {
         // console.log(res);
         this.supplierAddress = res;
         this.supplierControl.setValue(res.name); 
-        this.selectedAddress = this.supplierAddress.address[0];
-        // console.log(this.selectedAddress);
+        this.getprefix()
+        this.supplierAddress.address.map((res: any) => {
+          if (res.address_type == 'Billing') {
+            this.selectedAddressBilling = res
+            console.log(this.selectedAddressBilling);
+          } else if (res.address_type == 'Shipping') {
+            this.selectedAddressShipping = res
+            console.log(this.selectedAddressShipping);
+          }
+        })
       })
     })
 
@@ -124,20 +133,36 @@ export class EditpurchaseComponent implements OnInit {
     // console.log(this.supplierControl);
 
   }
-
+  prefixNo:any;
+  getprefix() {
+    this.purchaseService.getPurchaseOrderPrefix().subscribe((res:any) => {
+      console.log(res);
+      if (res.isSuccess == true) {
+        this.prefixNo=res.prefix
+      }else{
+        this.toastrService.error(res.msg)
+      }
+    },err=>{
+      this.toastrService.error(err.error.msg)
+    })
+  }
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
         qty: j.qty,
-        purchase_rate: j.purchase_rate,
+        unit_cost: j.unit_cost,
         mrp: j.mrp,
         discount: j.discount,
         tax: j.tax,
         landing_cost: j.landing_cost,
-        total: j.total,
-        discount_type:j.discount_type,
+        selling_price_online:j.selling_price_online,
+        selling_price_offline:j.selling_price_offline,
+        dealer_price:j.dealer_price,
+        employee_price:j.employee_price,
+        // total: j.total,
+        // discount_type:j.discount_type,
         additional_discount:j.additional_discount
       }))
       this.barcode[i] = j.barcode.sku;
@@ -173,16 +198,18 @@ export class EditpurchaseComponent implements OnInit {
   }
   purchase_cart(): FormGroup {
     return this.fb.group({
-      barcode: (''),
-      qty: (''),
-      purchase_rate: (''),
-      mrp: (''),
-      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: (''),
-      landing_cost: (''),
-      total: (''),
-      discount_type:(''),
-      additional_discount:new FormControl(0,[Validators.pattern(/^[0-9]*$/)])
+     barcode: (0),
+      qty: (0),
+      unit_cost: (0),
+      mrp: (0),
+      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: (0),
+      landing_cost: (0),
+      selling_price_online: (0),
+      selling_price_offline: (0),
+      dealer_price: (0),
+      employee_price: (0),
+      additional_discount:new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
     })
   }
 
@@ -194,6 +221,22 @@ export class EditpurchaseComponent implements OnInit {
   }
   removeCart(i: any) {
     this.getCart().removeAt(i)
+  }
+  additional_charges():FormGroup{
+    return this.fb.group({
+      additional_charge:(0),
+      value:(0),
+      tax:(0)
+    })
+  }
+  getAdditionalCharge():FormArray{
+    return this.purchaseForm.get('additional_charges') as FormArray
+  }
+  addAdditionalCharge(){
+    this.getAdditionalCharge().push(this.additional_charges())
+  }
+  removeAdditionalCharge(j:any){
+    this.getAdditionalCharge().removeAt(j)
   }
   supplierList: any;
   getSuuplier() {
@@ -211,20 +254,31 @@ export class EditpurchaseComponent implements OnInit {
   }
 
   supplierAddress: any;
-  selectedAddress: string = ''
-
+  
+  selectedAddressBilling: any;
+  selectedAddressShipping: any;
+  selectBatch: any;
   oncheck(event: any) {
     // console.log(event);
     const selectedItemId = event.id;
     // console.log(selectedItemId);
 
-    //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
       this.supplierAddress = res;
-      this.selectedAddress = this.supplierAddress.address[0];
-      // console.log(this.selectedAddress);
+      console.log(this.selectedAddressBilling);
+      this.supplierAddress.address.map((res: any) => {
+        if (res.address_type == 'Billing') {
+          this.selectedAddressBilling = res
+          console.log(this.selectedAddressBilling);
+        } else if (res.address_type == 'Shipping') {
+          this.selectedAddressShipping = res
+          console.log(this.selectedAddressShipping);
+        }
+      })
+
     })
+
     if (this.getresbyId.cart.length >= 0) {
       const variants = this.purchaseForm.get('purchase_cart') as FormArray;
       variants.clear();
@@ -247,15 +301,80 @@ export class EditpurchaseComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
+  openModalShipping() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModalShipping');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+  openModalBatch() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+  closeModalBatch() {
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  closeModalShipping() {
+    const modal = document.getElementById('addressModalShipping');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
 
-  selectAddress(address: string) {
-    this.selectedAddress = address;
+  selectAddressBilling(address: string) {
+    this.selectedAddressBilling = address;
     // Close Bootstrap modal using JavaScript
     const modal = document.getElementById('addressModal');
     if (modal) {
       modal.classList.remove('show');
       modal.style.display = 'none';
     }
+  }
+  selectAddressShipping(address: string) {
+    this.selectedAddressShipping = address;
+    // Close Bootstrap modal using JavaScript
+    const modal = document.getElementById('addressModalShipping');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  selecBatchtModel(address: any, index: any) {
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+    const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+    let discountRupees = (address?.cost_price * address?.discount) / 100
+      console.log(discountRupees);
+      let afterDiscountPrice=(address?.cost_price-discountRupees)
+      let taxRupee: number = (afterDiscountPrice * address?.purchase_tax) / 100
+      console.log(taxRupee);
+      let landingCost = (address?.cost_price - discountRupees) + taxRupee;
+      console.log(landingCost);
+    barcode.patchValue({
+      mrp: address?.mrp,
+      qty: address?.stock,
+      tax: address?.purchase_tax,
+      discount: address?.discount,
+      purchase_rate: address?.cost_price,
+      landing_cost: landingCost
+      // additional_discount: address?.additional_discount,
+      // discount_type: '%',
+      // purchase_rate: 0,
+    });
   }
   closeModal() {
     const modal = document.getElementById('addressModal');
@@ -274,23 +393,28 @@ export class EditpurchaseComponent implements OnInit {
   }
   loader = false;
   getRes: any;
-  submit() {
+  submit(type: any) {
     // console.log(this.purchaseForm.value);
     if (this.purchaseForm.valid) {
       this.loader = true;
       let formdata: any = new FormData();
-      formdata.append('supplier', this.purchaseForm.get('supplier')?.value);
+      formdata.append('party', this.purchaseForm.get('party')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
       formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
       formdata.append('shipping_date', this.purchaseForm.get('shipping_date')?.value);
       formdata.append('shipping_note', this.purchaseForm.get('shipping_note')?.value);
-      formdata.append('sub_total', this.purchaseForm.get('sub_total')?.value);
+      formdata.append('note', this.purchaseForm.get('note')?.value);
+      formdata.append('export', this.purchaseForm.get('export')?.value);
+      formdata.append('total_qty', this.purchaseForm.get('total_qty')?.value);
       formdata.append('total_tax', this.purchaseForm.get('total_tax')?.value);
       formdata.append('total_discount', this.purchaseForm.get('total_discount')?.value);
       formdata.append('round_off', this.purchaseForm.get('round_off')?.value);
+      formdata.append('sub_total', this.purchaseForm.get('sub_total')?.value);
       formdata.append('total', this.purchaseForm.get('total')?.value);
-      formdata.append('note', this.purchaseForm.get('note')?.value);
 
+      if (type == 'draft') {
+        formdata.append('status', 'draft');
+      }
       // nested addrs data 
       const cartArray = this.purchaseForm.get('purchase_cart') as FormArray;
       const cartData = [];
@@ -310,7 +434,22 @@ export class EditpurchaseComponent implements OnInit {
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
           this.toastrService.success(this.getRes.msg);
-          this.router.navigate(['//purchase/purchaselist'])
+          // this.router.navigate(['//purchase/purchaselist'])
+          if (type == 'new') {
+            this.purchaseForm.reset()
+            this.ngOnInit()
+            this.supplierControl.reset()
+          } else if (type == 'print') {
+            this.printForm()
+            setTimeout(() => {
+              this.purchaseForm.reset()
+              this.ngOnInit()
+              this.supplierControl.reset()
+            }, 3000);
+          }
+          else {
+            this.router.navigate(['//purchase/purchaselist'])
+          }
         } else {
           this.loader = false
         }
@@ -444,6 +583,8 @@ export class EditpurchaseComponent implements OnInit {
   open() {
     this.isProduct = false
   }
+
+  
   calculateTotalQty(): number {
     let totalQty = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
@@ -474,6 +615,7 @@ export class EditpurchaseComponent implements OnInit {
     }
     return totalDiscount;
   }
+
   calculateTotalPurchase(): number {
     let totalPurchase = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
@@ -494,15 +636,54 @@ export class EditpurchaseComponent implements OnInit {
     }
     return totalTax;
   }
+
+  // calculateTotalLandingCost(): number {
+  //   let totalLandingCost = 0;
+  //   for (let i = 0; i < this.getCart().controls.length; i++) {
+  //     const landingControl = this.getCart().controls[i].get('landing_cost');
+  //     if (landingControl) {
+  //       totalLandingCost += +landingControl.value;
+  //     }
+  //   }
+  //   return totalLandingCost;
+  // }
   calculateTotalLandingCost(): number {
     let totalLandingCost = 0;
-    for (let i = 0; i < this.getCart().controls.length; i++) {
-      const landingControl = this.getCart().controls[i].get('landing_cost');
-      if (landingControl) {
-        totalLandingCost += +landingControl.value;
+    const cartControls = this.getCart().controls;
+    for (let i = 0; i < cartControls.length; i++) {
+      const purchaseRateControl = cartControls[i].get('purchase_rate');
+      const discountControl = cartControls[i].get('discount');
+      const taxAmountControl = cartControls[i].get('tax');
+      if (purchaseRateControl && discountControl && taxAmountControl) {
+        const purchaseRate = +purchaseRateControl.value;
+        const discountPercentage = +discountControl.value;
+        const taxAmountPercentage = +taxAmountControl.value;
+        const discountAmount = (purchaseRate * discountPercentage) / 100;
+        const afterDiscountAmount = purchaseRate - discountAmount
+        const taxAmount = (afterDiscountAmount * taxAmountPercentage) / 100;
+      const landingCost = (purchaseRate - discountAmount) + taxAmount;
+        totalLandingCost += landingCost;
       }
     }
     return totalLandingCost;
+  }
+
+  calculateTotalLandingCostEveryIndex(index: number): number {
+    const cartItem = this.getCart().controls[index];
+    const purchaseRateControl = cartItem.get('purchase_rate');
+    const taxPercentageControl = cartItem.get('tax');
+    const discountPercentageControl = cartItem.get('discount');
+    if (purchaseRateControl && taxPercentageControl && discountPercentageControl) {
+      const purchaseRate = +purchaseRateControl.value;
+      const taxPercentage = +taxPercentageControl.value;
+      const discountPercentage = +discountPercentageControl.value;
+      const discountAmount = (purchaseRate * discountPercentage) / 100;
+      const afterDiscountAmount = purchaseRate - discountAmount
+      const taxAmount = (afterDiscountAmount * taxPercentage) / 100;
+      const landingCost = purchaseRate - discountAmount + taxAmount;
+      return landingCost;
+    }
+    return 0;
   }
   // subTotal
   calculateSubtotal(): number {
@@ -513,47 +694,116 @@ export class EditpurchaseComponent implements OnInit {
       if (qtyControl && mrpControl) {
         const qty = +qtyControl.value;
         const mrp = +mrpControl.value;
+
         const itemSubtotal = mrp * qty;
         subtotal += itemSubtotal;
       }
     }
     return subtotal;
   }
-
+  totalAmount:any
   calculateTotal(): number {
     let total = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
+      const purchaseRateControl = this.getCart().controls[i].get('purchase_rate');
+      const discountControl = this.getCart().controls[i].get('discount');
+      const taxControl = this.getCart().controls[i].get('tax');
       const qtyControl = this.getCart().controls[i].get('qty');
-      const mrpControl = this.getCart().controls[i].get('mrp');
+      if (purchaseRateControl && discountControl && taxControl && qtyControl) {
+        const purchaseRate = +purchaseRateControl.value;
+        const discount = +discountControl.value;
+        const tax = +taxControl.value;
+        const qty = +qtyControl.value;
+        const discountPercentage = +discount;
+        const taxAmountPercentage = +tax;
+        const taxAmount = (purchaseRate * taxAmountPercentage) / 100;
+        const discountAmount = (purchaseRate * discountPercentage) / 100;
+        const landingCost = (purchaseRate - discountAmount) + taxAmount;
+        const totalForItem = landingCost * qty;    
+        total += totalForItem;
+      }
+    }
+    this.totalAmount=total
+    // Round the total based on decimal value and add 1 if necessary
+    const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
+    const decimalPart = roundedTotal - Math.floor(roundedTotal);
+  
+    if (decimalPart >= 0.5) {
+      return Math.floor(roundedTotal) + 1;
+    } else {
+      return Math.floor(roundedTotal);
+    }
+  }
+ 
+  calculateRoundoffValue(): number {
+    const total = this.totalAmount; // Use your existing calculateTotal function
+    const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
+    const integerPart = Math.floor(roundedTotal);
+    const decimalPart = (roundedTotal - integerPart) * 100; // Convert decimal part to whole number
+  
+    if (decimalPart === 0 && integerPart === 0) {
+      return 0; // Both parts are 0, so subtractedValue is 0
+    }
+  
+    const subtractedValue = (100 - decimalPart) / 100; // Subtract decimal part from 100 and convert to fraction
+    return subtractedValue;
+  }
+  
+  calculateTotalEveryIndex(index: number): number {
+    const cartItem = this.getCart().controls[index];
+    const purchaseRate = +cartItem.get('purchase_rate').value;
+    const discountPercentage = +cartItem.get('discount').value;
+    const taxAmountPercentage = +cartItem.get('tax').value;
+    const qty = +cartItem.get('qty').value;
+    const discountAmount = (purchaseRate * discountPercentage) / 100;
+    const taxAmount = (purchaseRate * taxAmountPercentage) / 100;
+    const landingCost = (purchaseRate - discountAmount) + taxAmount;
+    const totalForItem = landingCost * qty;
+    return totalForItem;
+  }
+  calculateTotalTaxIntoRupees() {
+    let total = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const purchaseRateControl = this.getCart().controls[i].get('purchase_rate');
       const taxControl = this.getCart().controls[i].get('tax');
       const discountControl = this.getCart().controls[i].get('discount');
-
-      if (qtyControl && mrpControl && taxControl && discountControl) {
-        const qty = +qtyControl.value;
-        const mrp = +mrpControl.value;
+      if (purchaseRateControl && discountControl) {
+        const purchaseRate = +purchaseRateControl.value;
         const tax = +taxControl.value;
-        const discount = +discountControl.value;
+        const discount = +discountControl.value
 
-        const subtotal = mrp * qty;
-        const taxAmount = (subtotal * tax) / 100;
-        const discountAmount = (subtotal * discount) / 100;
+        const discountAmountPercentage = +discount
+        const discountAmount = (purchaseRate * discountAmountPercentage) / 100;
+        const afterDiscuntAmount = purchaseRate - discountAmount
+        const taxAmountPercentage = +tax;
+        const taxAmount = (afterDiscuntAmount * taxAmountPercentage) / 100;
 
-        total += subtotal + taxAmount - discountAmount;
+        total += taxAmount;
       }
     }
     return total;
   }
-
-  calculateTotalEveryIndex(index: number): number {
+  calculateTaxintoPrice(index: number): number {
     const cartItem = this.getCart().controls[index];
-    const qty = +cartItem.get('qty').value;
-    const mrp = +cartItem.get('mrp').value;
-    const subtotal = mrp * qty;
-    const tax = subtotal * (+cartItem.get('tax').value / 100);
-    const discount = subtotal * (+cartItem.get('discount').value / 100);
-    const discountAmount = tax + discount;
-    const total = subtotal + tax - discount;
-    return total;
+    const purchaseRate = +cartItem.get('purchase_rate').value;
+    const taxPercentage = +cartItem.get('tax').value;
+    const discountPercentage = +cartItem.get('discount').value;
+    const discount = (purchaseRate * discountPercentage) / 100;
+    const afterDiscountAmount = purchaseRate - discount
+    const taxAmount = (afterDiscountAmount * taxPercentage) / 100;
+    console.log(taxAmount);
+    const totalForTax = taxAmount
+    return totalForTax;
+  }
+  clearForm() {
+    this.purchaseForm.reset()
+  }
+  printForm(): void {
+    const printContents = document.getElementById('purchaseForm').outerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
   }
 
   // search result 
