@@ -171,7 +171,7 @@ export class EditproductComponent implements OnInit {
 
         this.getSubcategoryGroupByCategory(res.category.id);
         this.oncheck(res.subcategory_group.id);
-        this.getFeaturegroupBySubcategory(res.subcategory_group.id,'')
+        this.getFeaturegroupBySubcategory(res?.subcategory_group.id,'')
         this.checkSubact(res.subcategory.id);
         // console.log(this.editRes.variant_product);
         // console.log(this.colorTitle, 'colorarray ');
@@ -203,7 +203,7 @@ export class EditproductComponent implements OnInit {
     this.getUnit()
     this.getUnitConversion()
     this.getTaxSlab()
-    this.getFeatureData()
+    // this.getFeatureData()
     this.getFeatureGroup()
   }
 
@@ -222,7 +222,7 @@ export class EditproductComponent implements OnInit {
     // console.log(add);
     let formarr = new FormArray([]);
     add.forEach((j: any) => {
-      // console.log(j); 
+      console.log(j); 
       formarr.push(this.fb.group({
         id:j.id,
         feature_group: j?.feature_group?.id,
@@ -470,11 +470,17 @@ export class EditproductComponent implements OnInit {
       this.brandBySubcat = res;
     })
   }
-  featureList: any;
+  featureList: any[]=[];
   getFeatureData() {
     this.coreService.getfeature().subscribe(res => {
-      this.featureList = res;
+      // this.featureList = res;
     })
+  }
+  getFeatureByFeaturegroup(featureGroupid: any, index: number) {
+    this.coreService.getFeatureByFeaturegroup(featureGroupid).subscribe(res => {
+      this.featureList[index] = res; 
+      console.log(this.featureList[index]);   
+    });
   }
   featureGroupList: any;
   getFeatureGroup() {
@@ -504,10 +510,10 @@ export class EditproductComponent implements OnInit {
   featureGrpBysubcatGroupList: any;
   featureData: any;
   getFeaturegroupBySubcategory(val: any,event:any) {
-    // console.log(event);
+    console.log(event);
     
     this.coreService.getFeaturegroupBySubcategoryGroup(val).subscribe(res => {
-      // console.log(res);
+      console.log(res);
       this.featureGrpBysubcatGroupList = res;
       if(event){
         // open feature form 
@@ -515,6 +521,7 @@ export class EditproductComponent implements OnInit {
       feature.clear();
       for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
         this.addFeature();
+        this.getFeatureByFeaturegroup(this.featureGrpBysubcatGroupList.feature_group[i].id, i);
       }
       this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
         // console.log(res);
@@ -523,6 +530,10 @@ export class EditproductComponent implements OnInit {
           feature_group: res.id
         });
       })
+      }else{
+        for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
+          this.getFeatureByFeaturegroup(this.featureGrpBysubcatGroupList.feature_group[i].id, i);
+        }
       }
      
     })

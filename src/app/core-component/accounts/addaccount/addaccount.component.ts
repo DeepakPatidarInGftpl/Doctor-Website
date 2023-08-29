@@ -46,7 +46,6 @@ export class AddaccountComponent implements OnInit {
       opening_balance: new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type: new FormControl('', [Validators.required]),
       account_id: new FormControl('')
-
     })
     this.getCity();
     this.getCountry();
@@ -97,14 +96,14 @@ export class AddaccountComponent implements OnInit {
   getAccountSubType(val: any) {
     //display by id
     this.coreService.getAccountTypeById(val).subscribe(res => {
-      // this.accountSubTypeLsit = res;
-      // console.log(this.accountSubTypeLsit);  
+      this.accountSubTypeLsit = res;
+      console.log(this.accountSubTypeLsit);  
     })
 //end
-    this.coreService.getAccountSubType().subscribe(res => {
-      this.accountSubTypeLsit = res;
-      // console.log(this.accountSubTypeLsit);  
-    })
+    // this.coreService.getAccountSubType().subscribe(res => {
+    //   this.accountSubTypeLsit = res;
+    //   // console.log(this.accountSubTypeLsit);  
+    // })
 
   }
 

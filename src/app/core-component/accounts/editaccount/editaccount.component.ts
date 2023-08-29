@@ -49,7 +49,7 @@ export class EditaccountComponent implements OnInit {
       account_subtype: new FormControl('',[Validators.required]),
       opening_balance: new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type: new FormControl('', [Validators.required]),
-      account_id:new FormControl('')
+      // account_id:new FormControl('')
     })
 
     this.coreService.getAccountById(this.id).subscribe(res => {
@@ -61,7 +61,7 @@ export class EditaccountComponent implements OnInit {
         accounts_type:this.data?.accounts_type,
         opening_balance:this.data?.opening_balance,
         opening_balance_type:this.data?.opening_balance_type,
-        account_id:this.data?.account_id,
+        // account_id:this.data?.account_id,
         account_subtype:this.data?.account_subtype?.id
       })
       this.getAccountSubType(this.data?.accounts_type)

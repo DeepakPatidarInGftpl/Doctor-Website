@@ -4,6 +4,7 @@
         <h6>Create new Supplier </h6>
     </div>
 </div>
+
 <!-- /add -->
 <div class="card">
     <div class="card-body">
@@ -351,6 +352,22 @@
                     </div>
                 </div>
                 <hr>
+
+                <!-- <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Credit Limit</label>
+                        <input type="text" placeholder="search product" class="form-control"
+                            (keyup)="searchProduct($event.target)" (blur)="hideSearch()"> 
+                        <div>
+                            <ul style="width: 100%; max-height: 300px; overflow-y: auto; cursor: pointer;">
+                                <li *ngFor="let variant of search let i=index;"><a class="dropdown-item" (click)="SelectedProduct(variant)">
+                                        <span >{{variant?.product_title}}</span>
+                                    </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                </div> -->
              
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">

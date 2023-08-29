@@ -6,6 +6,7 @@
   }
   select,
   input[type="date"],
+  input[type="datetime-local"],
   .input
   {
      border: 1px solid rgba(145, 158, 171, 0.32);
@@ -65,4 +66,27 @@
   }
   
   
+  .form-control {
+    border-bottom: 1px solid #9c9c9c;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    font-size: 15px;
+    color: #606060;
+    border-radius: 0;
+    padding-left: 2px;
+  }
   
+  .space-text{
+    white-space: pre-wrap !important
+  }
+  .circle{
+    display: inline-block;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid #FF9F43;
+      text-align: center;
+      line-height: 16px;
+      color: #FF9F43;
+  }
