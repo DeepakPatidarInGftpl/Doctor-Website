@@ -62,9 +62,9 @@ export class AddpurchaseBillComponent implements OnInit {
     this.purchaseBillForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       supplier_bill_date: new FormControl(defaultDateTime, [Validators.required]),
-      refrence_bill_no: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      supplier_bill_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      material_inward_no: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      refrence_bill_no: new FormControl('',),
+      supplier_bill_no: new FormControl('', [Validators.required, ]),
+      material_inward_no: new FormControl('', [Validators.required, ]),
       payment_term: new FormControl(''),
       due_date: new FormControl(defaultDateTime, [Validators.required]),
       reverse_charge: new FormControl('',),
@@ -76,7 +76,7 @@ export class AddpurchaseBillComponent implements OnInit {
       // employee_price: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       status: new FormControl(''),
       purchase_bill: this.fb.array([]),
-      additional_charges:this.fb.array([]),
+      additional_charges: this.fb.array([]),
       // total_tax: new FormControl('', ),
       // total_discount: new FormControl('', ),
       // sub_total: new FormControl('', ),
@@ -95,12 +95,14 @@ export class AddpurchaseBillComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
     this.getSuuplier();
-    this.getVariants();
+    // this.getVariants();
     this.getPurchase();
     this.getMaterialInward();
     this.getPaymentTerms();
     this.getprefix();
     this.addAdditionalCharge();
+    this.getAdditionalDiscount();
+    this.getTax();
   }
   prefixNo: any;
   getprefix() {
@@ -113,6 +115,32 @@ export class AddpurchaseBillComponent implements OnInit {
       }
     }, err => {
       this.toastrService.error(err.error.msg)
+    })
+  }
+  additionalData: any;
+  getAdditionalDiscount() {
+    this.purchaseService.getAdditionalCharge().subscribe(res => {
+      console.log(res);
+      this.additionalData = res;
+    })
+  }
+  taxData: any;
+  getTax() {
+    this.purchaseService.getTax().subscribe(res => {
+      this.taxData = res;
+    })
+  }
+  value:any[]=[]
+  getAdditional(data:any,j){
+    console.log(data);
+    this.purchaseService.getAdditionalCharge().subscribe((res:any) => {
+      res.map((res:any)=>{
+        if(data==res.additional_charge){
+          this.value[j]=res.value
+          console.log(this.value[j]);
+          
+        }
+      })
     })
   }
   get supplier() {
@@ -139,6 +167,7 @@ export class AddpurchaseBillComponent implements OnInit {
   get additional_charge() {
     return this.purchaseBillForm.get('additional_charge')
   }
+
   purchase_bill(): FormGroup {
     return this.fb.group({
       barcode: (0),
@@ -152,7 +181,7 @@ export class AddpurchaseBillComponent implements OnInit {
       selling_price_offline: (0),
       dealer_price: (0),
       employee_price: (0),
-      additional_discount:new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      additional_discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       // total: ('')
     })
   }
@@ -166,20 +195,20 @@ export class AddpurchaseBillComponent implements OnInit {
   removeCart(i: any) {
     this.getCart().removeAt(i)
   }
-  additional_charges():FormGroup{
+  additional_charges(): FormGroup {
     return this.fb.group({
-      additional_charge:(0),
-      value:(0),
-      tax:(0)
+      additional_charge: (0),
+      value: (0),
+      tax: (0)
     })
   }
-  getAdditionalCharge():FormArray{
+  getAdditionalCharge(): FormArray {
     return this.purchaseBillForm.get('additional_charges') as FormArray
   }
-  addAdditionalCharge(){
+  addAdditionalCharge() {
     this.getAdditionalCharge().push(this.additional_charges())
   }
-  removeAdditionalCharge(j:any){
+  removeAdditionalCharge(j: any) {
     this.getAdditionalCharge().removeAt(j)
   }
 
@@ -192,6 +221,9 @@ export class AddpurchaseBillComponent implements OnInit {
   }
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
+  }
+  additional_discount(index: number) {
+    return this.getCart().controls[index].get('additional_discount')
   }
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
@@ -226,13 +258,17 @@ export class AddpurchaseBillComponent implements OnInit {
   selectedAddressShipping: any;
   selectBatch: any;
   selectPaymentTerm: any
+  supplierId:any
   oncheck(event: any) {
     // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     // console.log(selectedItemId);
+    this.supplierId=event
     //call detail api
+    this.getVariant('','')
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
+
       this.purchaseBillForm.get('payment_term').patchValue(this.getPaymentTerms)
       this.supplierAddress = res;
       this.supplierAddress.address.map((res: any) => {
@@ -263,7 +299,6 @@ export class AddpurchaseBillComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-
   openModalShipping() {
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('addressModalShipping');
@@ -306,12 +341,12 @@ export class AddpurchaseBillComponent implements OnInit {
     }
     const barcode = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
     let discountRupees = (address?.cost_price * address?.discount) / 100
-      console.log(discountRupees);
-      let afterDiscountPrice=(address?.cost_price-discountRupees)
-      let taxRupee: number = (afterDiscountPrice * address?.purchase_tax) / 100
-      console.log(taxRupee);
-      let landingCost = (address?.cost_price - discountRupees) + taxRupee;
-      console.log(landingCost);
+    console.log(discountRupees);
+    let afterDiscountPrice = (address?.cost_price - discountRupees)
+    let taxRupee: number = (afterDiscountPrice * address?.purchase_tax) / 100
+    console.log(taxRupee);
+    let landingCost = (address?.cost_price - discountRupees) + taxRupee;
+    console.log(landingCost);
     barcode.patchValue({
       mrp: address?.mrp,
       qty: address?.stock,
@@ -319,11 +354,11 @@ export class AddpurchaseBillComponent implements OnInit {
       discount: address?.discount,
       unit_cost: address?.cost_price,
       landing_cost: landingCost,
-      dealer_price:address?.selling_price_dealer,
-      employee_price:address?.selling_price_employee,
-      selling_price_offline:address?.selling_price_offline,
-      selling_price_online:address?.selling_price_online,
-      additional_discount:address?.additional_discount
+      dealer_price: address?.selling_price_dealer,
+      employee_price: address?.selling_price_employee,
+      selling_price_offline: address?.selling_price_offline,
+      selling_price_online: address?.selling_price_online,
+      additional_discount: address?.additional_discount
     });
   }
   closeModal() {
@@ -363,7 +398,7 @@ export class AddpurchaseBillComponent implements OnInit {
     if (event.batch.length > 0) {
       let discountRupees = (event.batch[0]?.cost_price * event.batch[0]?.discount) / 100
       console.log(discountRupees);
-      let afterDiscountPrice=(event.batch[0]?.cost_price-discountRupees)
+      let afterDiscountPrice = (event.batch[0]?.cost_price - discountRupees)
       let taxRupee: number = (afterDiscountPrice * event.batch[0]?.purchase_tax) / 100
       console.log(taxRupee);
       let landingCost = (event.batch[0]?.cost_price - discountRupees) + taxRupee;
@@ -376,11 +411,11 @@ export class AddpurchaseBillComponent implements OnInit {
         discount: event.batch[0]?.discount,
         unit_cost: event.batch[0]?.cost_price,
         landing_cost: landingCost,
-        dealer_price:event.batch[0]?.selling_price_dealer,
-        employee_price:event.batch[0]?.selling_price_employee,
-        selling_price_offline:event.batch[0]?.selling_price_offline,
-        selling_price_online:event.batch[0]?.selling_price_online,
-        additional_discount:event.batch[0]?.additional_discount
+        dealer_price: event.batch[0]?.selling_price_dealer,
+        employee_price: event.batch[0]?.selling_price_employee,
+        selling_price_offline: event.batch[0]?.selling_price_offline,
+        selling_price_online: event.batch[0]?.selling_price_online,
+        additional_discount: event.batch[0]?.additional_discount
       });
 
       console.log(event.batch);
@@ -390,7 +425,7 @@ export class AddpurchaseBillComponent implements OnInit {
   getRes: any;
   loader = false;
   submit(type: any) {
-    // console.log(this.purchaseBillForm.value);
+    console.log(this.purchaseBillForm.value);
     if (this.purchaseBillForm.valid) {
 
       this.loader = true;
@@ -405,7 +440,7 @@ export class AddpurchaseBillComponent implements OnInit {
       formdata.append('reverse_charge', this.purchaseBillForm.get('reverse_charge')?.value);
       formdata.append('shipping_date', this.purchaseBillForm.get('shipping_date')?.value);
       formdata.append('export', this.purchaseBillForm.get('export')?.value);
-      
+
       // formdata.append('selling_price_online', this.purchaseBillForm.get('selling_price_online')?.value);
       // formdata.append('selling_price_offline', this.purchaseBillForm.get('selling_price_offline')?.value);
       // formdata.append('dealer_price', this.purchaseBillForm.get('dealer_price')?.value);
@@ -414,10 +449,24 @@ export class AddpurchaseBillComponent implements OnInit {
       formdata.append('note', this.purchaseBillForm.get('note')?.value);
       formdata.append('total', this.purchaseBillForm.get('total')?.value);
       formdata.append('additional_charge', this.purchaseBillForm.get('additional_charge')?.value);
-     if (type == 'draft') {
+      if (type == 'draft') {
         formdata.append('status', 'draft');
       }
       // nested addrs data 
+      // const cartArray = this.purchaseBillForm.get('purchase_bill') as FormArray;
+      // const cartData = [];
+      // cartArray.controls.forEach((address) => {
+      //   const cartGroup = address as FormGroup;
+      //   const cartObject = {};
+      //   Object.keys(cartGroup.controls).forEach((key) => {
+      //     const control = cartGroup.controls[key];
+      //     cartObject[key] = control.value;
+      //   });
+      //   cartData.push(cartObject);
+      // });
+      // formdata.append('purchase_bill', JSON.stringify(cartData));
+
+
       const cartArray = this.purchaseBillForm.get('purchase_bill') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
@@ -425,11 +474,18 @@ export class AddpurchaseBillComponent implements OnInit {
         const cartObject = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
-          cartObject[key] = control.value;
+          // Convert the value to an integer if it's a number
+          if (!isNaN(control.value)) {
+            cartObject[key] = parseInt(control.value, 10);
+          } else {
+            cartObject[key] = control.value;
+          }
         });
+
         cartData.push(cartObject);
       });
       formdata.append('purchase_bill', JSON.stringify(cartData));
+
       this.purchaseService.addPurchaseBill(formdata).subscribe(res => {
         // console.log(res);
         this.getRes = res;
@@ -536,6 +592,7 @@ export class AddpurchaseBillComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
+    this.getVariant('','')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
@@ -741,7 +798,7 @@ export class AddpurchaseBillComponent implements OnInit {
   displayAdditiionalTable() {
     this.additionalTable = false;
   }
-  hideAdditiionalTable(){
+  hideAdditiionalTable() {
     this.additionalTable = true;
   }
   calculateTotalTaxIntoRupees() {
@@ -778,5 +835,30 @@ export class AddpurchaseBillComponent implements OnInit {
     const totalForTax = taxAmount
     return totalForTax;
   }
+
+  category:any;
+  subcategory:any;
+  searc:any;
+  myControl = new FormControl('');
+  variantList: any[] = []; 
+    getVariant(search:any,index:any) {
+      this.purchaseService.filterVariant(this.supplierId,this.category,this.subcategory,search).subscribe((res:any) => {
+        console.log(res);
+        this.variantList=res;
+        console.log(this.variantList);
+        
+        // barcode patch
+        this.searchs = res;
+        this.productOption = res;
+        // console.log(this.searchs);
+        this.productName[index] = this.searchs[0].product_title;
+        // console.log(this.productName);
+        this.check = true;
+        const barcode = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
+        barcode.patchValue({
+          barcode: this.searchs[0].id
+        });
+      });
+    }
 }
 

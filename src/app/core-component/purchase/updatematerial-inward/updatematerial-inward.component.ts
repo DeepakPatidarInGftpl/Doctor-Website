@@ -26,7 +26,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private Arout: ActivatedRoute,
-    private contactService:ContactService) {
+    private contactService: ContactService) {
   }
 
   supplierControlName = 'party';
@@ -49,54 +49,55 @@ export class UpdatematerialInwardComponent implements OnInit {
 
   subcategoryList;
   id: any;
-  getresbyId:any;
+  getresbyId: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
-
+    this.myControls = new FormArray([]);
     this.materialForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       purchase_order: new FormControl('', [Validators.required]),
       po_date: new FormControl(''),
       material_inward_date: new FormControl('', [Validators.required]),
-      material_inward_no: new FormControl('',[Validators.required]),
+      material_inward_no: new FormControl('', [Validators.required]),
       shipping_note: new FormControl(''),
-      recieved_by: new FormControl('',[Validators.required,]),
+      recieved_by: new FormControl('', [Validators.required,]),
       material_inward_cart: this.fb.array([]),
-      total: new FormControl('', ),
-      export:new FormControl(''),
+      total: new FormControl('',),
+      export: new FormControl(''),
       note: new FormControl(''),
-      status:new FormControl('')
+      status: new FormControl('')
     });
 
-    
-    this.purchaseService.getMaterialById(this.id).subscribe(res=>{
+
+    this.purchaseService.getMaterialById(this.id).subscribe(res => {
       // console.log(res);
-      this.getresbyId=res;
+      this.getresbyId = res;
       this.materialForm.patchValue(res);
       this.materialForm.get('party')?.patchValue(res.party.id);
       this.materialForm.get('purchase_order')?.patchValue(res.purchase_order.id);
       this.materialForm.setControl('material_inward_cart', this.udateCart(res.cart));
       this.displaySupplierName(res.party.id);
-
-           //call detail api
-           this.contactService.getSupplierById(res.party.id).subscribe(res => {
-            // console.log(res);
-            this.supplierAddress = res;
-            this.supplierControl.setValue(res.name); 
-            this.getprefix()
-            this.supplierAddress.address.map((res: any) => {
-              if (res.address_type == 'Billing') {
-                this.selectedAddressBilling = res
-                console.log(this.selectedAddressBilling);
-              } else if (res.address_type == 'Shipping') {
-                this.selectedAddressShipping = res
-                console.log(this.selectedAddressShipping);
-              }
-            })
-          })
+      this.supplierId = res.party.id
+      this.getVariant('','')
+      //call detail api
+      this.contactService.getSupplierById(res.party.id).subscribe(res => {
+        // console.log(res);
+        this.supplierAddress = res;
+        this.supplierControl.setValue(res.name);
+        this.getprefix()
+        this.supplierAddress.address.map((res: any) => {
+          if (res.address_type == 'Billing') {
+            this.selectedAddressBilling = res
+            console.log(this.selectedAddressBilling);
+          } else if (res.address_type == 'Shipping') {
+            this.selectedAddressShipping = res
+            console.log(this.selectedAddressShipping);
+          }
+        })
+      })
     })
-  
+
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
@@ -106,35 +107,34 @@ export class UpdatematerialInwardComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
     this.getSuuplier();
-    this.getVariants();
     this.getPurchase();
   }
 
-  prefixNo:any;
+  prefixNo: any;
   getprefix() {
-    this.purchaseService.getPurchaseOrderPrefix().subscribe((res:any) => {
+    this.purchaseService.getPurchaseOrderPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.isSuccess == true) {
-        this.prefixNo=res.prefix
-      }else{
+        this.prefixNo = res.prefix
+      } else {
         this.toastrService.error(res.msg)
       }
-    },err=>{
+    }, err => {
       this.toastrService.error(err.error.msg)
     })
   }
-displaySupplierName(supplierId: number): void {
-  this.filteredSuppliers
-    .pipe(
-      tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
-      map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
-    )
-    .subscribe(matchedSuppliers => {
-      if (matchedSuppliers.length > 0) {
-        this.supplierControl.setValue(matchedSuppliers[0].name);
-      }
-    });
-}
+  displaySupplierName(supplierId: number): void {
+    // this.filteredSuppliers
+    //   .pipe(
+    //     tap(data => console.log('Data emitted:', data)), // Add this line to check emitted data
+    //     map(suppliers => suppliers.filter(supplier => supplier.id === supplierId))
+    //   )
+    //   .subscribe(matchedSuppliers => {
+    //     if (matchedSuppliers.length > 0) {
+    //       this.supplierControl.setValue(matchedSuppliers[0].name);
+    //     }
+    //   });
+  }
   get supplier() {
     return this.materialForm.get('party') as FormControl;
   }
@@ -155,11 +155,11 @@ displaySupplierName(supplierId: number): void {
   }
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
-    add.forEach((j: any,i) => {
+    add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
         qty: j.qty,
-        po_qty:j.po_qty,
+        po_qty: j.po_qty,
         // unit_cost: j.unit_cost,
         mrp: j.mrp,
         // discount: j.discount,
@@ -170,7 +170,8 @@ displaySupplierName(supplierId: number): void {
         // additional_discount:j.additional_discount
       }))
       this.barcode[i] = j.barcode.sku;
-      this.productName[i]=j.barcode.product_title;
+      this.productName[i] = j.barcode.product_title;
+      this.myControls.push(new FormControl(j?.barcode?.product_title));
     })
     return formarr
   }
@@ -190,12 +191,6 @@ displaySupplierName(supplierId: number): void {
       this.suppliers = res;
     })
   }
-  getVariants() {
-    this.purchaseService.productVariant().subscribe((res: any) => {
-      // console.log(res);
-      this.variants = res;
-    })
-  }
   purchaseList: any;
   getPurchase() {
     this.purchaseService.getPurchase().subscribe(res => {
@@ -207,38 +202,41 @@ displaySupplierName(supplierId: number): void {
   selectedAddressBilling: any;
   selectedAddressShipping: any;
   selectBatch: any;
+  supplierId: any;
   oncheck(event: any) {
     // console.log(event);
     const selectedItemId = event;
     // console.log(selectedItemId);
-     //call detail api
-   this.contactService.getSupplierById(selectedItemId).subscribe(res => {
-    // console.log(res);
-    this.supplierAddress = res;
-    console.log(this.selectedAddressBilling);
-    this.supplierAddress.address.map((res: any) => {
-      if (res.address_type == 'Billing') {
-        this.selectedAddressBilling = res
-        console.log(this.selectedAddressBilling);
-      } else if (res.address_type == 'Shipping') {
-        this.selectedAddressShipping = res
-        console.log(this.selectedAddressShipping);
-      }
+    this.supplierId = event;
+    //call detail api
+    this.contactService.getSupplierById(selectedItemId).subscribe(res => {
+      // console.log(res);
+      this.getVariant('','')
+      this.supplierAddress = res;
+      console.log(this.selectedAddressBilling);
+      this.supplierAddress.address.map((res: any) => {
+        if (res.address_type == 'Billing') {
+          this.selectedAddressBilling = res
+          console.log(this.selectedAddressBilling);
+        } else if (res.address_type == 'Shipping') {
+          this.selectedAddressShipping = res
+          console.log(this.selectedAddressShipping);
+        }
+      })
+
     })
 
-  })
-
-    if(this.getresbyId.cart.length>=0){
-     const variants = this.materialForm.get('material_inward_cart') as FormArray;
-    variants.clear();
-    this.addCart();
+    if (this.getresbyId.cart.length >= 0) {
+      const variants = this.materialForm.get('material_inward_cart') as FormArray;
+      variants.clear();
+      this.addCart();
     }
     this.materialForm.patchValue({
       party: selectedItemId
     });
   }
 
- 
+
   selectedAddress: string = ''
   // oncheckVariant(event: any, index) {
   //   const selectedItemId = event.id;
@@ -280,8 +278,8 @@ displaySupplierName(supplierId: number): void {
     }
   }
 
-   // address 
-   openModal() {
+  // address 
+  openModal() {
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('addressModal');
     if (modal) {
@@ -338,7 +336,7 @@ displaySupplierName(supplierId: number): void {
     let discountRupees = (address?.purchase_rate * address?.discount) / 100
     console.log(discountRupees);
     let landingCost = (address?.purchase_rate - discountRupees) + taxRupee;
-    console.log(landingCost); 
+    console.log(landingCost);
     barcode.patchValue({
       mrp: address?.mrp,
       // po_qty: address?.stock,
@@ -386,6 +384,18 @@ displaySupplierName(supplierId: number): void {
         formdata.append('status', 'draft');
       }
       // nested addrs data 
+      // const cartArray = this.materialForm.get('material_inward_cart') as FormArray;
+      // const cartData = [];
+      // cartArray.controls.forEach((address) => {
+      //   const cartGroup = address as FormGroup;
+      //   const cartObject = {};
+      //   Object.keys(cartGroup.controls).forEach((key) => {
+      //     const control = cartGroup.controls[key];
+      //     cartObject[key] = control.value;
+      //   });
+      //   cartData.push(cartObject);
+      // });
+      // formdata.append('material_inward_cart', JSON.stringify(cartData));
       const cartArray = this.materialForm.get('material_inward_cart') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
@@ -393,12 +403,19 @@ displaySupplierName(supplierId: number): void {
         const cartObject = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
-          cartObject[key] = control.value;
+          // Convert the value to an integer if it's a number
+          if (!isNaN(control.value)) {
+            cartObject[key] = parseInt(control.value, 10);
+          } else {
+            cartObject[key] = control.value;
+          }
         });
+
         cartData.push(cartObject);
       });
       formdata.append('material_inward_cart', JSON.stringify(cartData));
-      this.purchaseService.updateMaterial(formdata,this.id).subscribe(res => {
+
+      this.purchaseService.updateMaterial(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
@@ -420,11 +437,11 @@ displaySupplierName(supplierId: number): void {
           else {
             this.router.navigate(['//purchase/material-Inward-list'])
           }
-        }else{
-          this.loader=false;
+        } else {
+          this.loader = false;
         }
-      },err=>{
-        this.loader=false;
+      }, err => {
+        this.loader = false;
       })
     } else {
       this.materialForm.markAllAsTouched()
@@ -434,17 +451,17 @@ displaySupplierName(supplierId: number): void {
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
-  additional_discount(index:number){
+  additional_discount(index: number) {
     return this.getCart().controls[index].get('additional_discount')
   }
   get material_inward_date() {
-    return this.materialForm.get('material_inward_date') ;
+    return this.materialForm.get('material_inward_date');
   }
   get material_inward_no() {
-    return this.materialForm.get('material_inward_no') ;
+    return this.materialForm.get('material_inward_no');
   }
   get recieved_by() {
-    return this.materialForm.get('recieved_by') ;
+    return this.materialForm.get('recieved_by');
   }
   get shipping_note() {
     return this.materialForm.get('shipping_note');
@@ -521,14 +538,15 @@ displaySupplierName(supplierId: number): void {
     barcode.patchValue({
       barcode: value.id
     });
-    this.searchProduct('someQuery','');
+    this.searchProduct('someQuery', '');
+    this.getVariant('','')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
   productName: any[] = [];
   isProduct = true;
-  
-  searchProduct(event: any,index:any) {
+
+  searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
@@ -537,7 +555,7 @@ displaySupplierName(supplierId: number): void {
         this.searchs = res;
         // this.productOption = res;
         // console.log(this.searchs);
-        this.productName[index]= this.searchs[0].product_title;
+        this.productName[index] = this.searchs[0].product_title;
         // console.log(this.productName);
         this.check = true;
         const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
@@ -663,7 +681,7 @@ displaySupplierName(supplierId: number): void {
     const mrp = +cartItem.get('mrp').value;
     const subtotal = mrp * qty;
     console.log(subtotal);
-    
+
     return subtotal;
   }
 
@@ -677,5 +695,31 @@ displaySupplierName(supplierId: number): void {
     document.body.innerHTML = printContents;
     window.print();
     document.body.innerHTML = originalContents;
+  }
+
+  category: any;
+  subcategory: any;
+  searc: any;
+  myControls: FormArray;
+  variantList: any[] = [];
+  getVariant(search:any,index:any) {
+    this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+      console.log(res);
+      this.variantList = res;
+      console.log(this.variantList);
+      if (search) {
+      //barcode patchvalue
+      this.searchs = res;
+      this.productOption = res;
+      // console.log(this.searchs);
+      this.productName[index] = this.searchs[0].product_title;
+      // console.log(this.productName);
+      this.check = true;
+      const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+      barcode.patchValue({
+        barcode: this.searchs[0].id
+      });
+    }
+    });
   }
 }

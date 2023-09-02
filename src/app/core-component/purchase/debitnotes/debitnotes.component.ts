@@ -46,9 +46,9 @@ export class DebitnotesComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.purchaseService.deleteDebitNotes(id).subscribe(res => {
+        this.purchaseService.deletePurchaseReturn(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Debit Note Deleted successfully") {
+          if (this.delRes.msg == "Purchase Return Deleted Successfully") {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -85,17 +85,24 @@ export class DebitnotesComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.purchaseService.DebitNotesIsActive(id, '').subscribe(res => {
+        this.purchaseService.PurchaseReturnIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Debit Note Is active Updated Successfully") {
+          if (this.delRes.msg == "Purchase Return Is active Updated Successfully") {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deactivate!',
+              text: 'Purchase Return Is Deactivate Successfully.',
+            });
             this.ngOnInit()
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not-Deactivate!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deactivate!',
-          text: 'Debit Note Is Deactivate Successfully.',
-        });
+      
       }
     });
   }
@@ -114,17 +121,25 @@ export class DebitnotesComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.purchaseService.DebitNotesIsActive(id, '').subscribe(res => {
+        this.purchaseService.PurchaseReturnIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Debit Note Is active Updated Successfully") {
+          if (this.delRes.msg == "Purchase Return Is active Updated Successfully") {
+            Swal.fire({
+              icon: 'success',
+              title: 'Active!',
+              text: 'Purchase Return Is Active Successfully.',
+            });
             this.ngOnInit()
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not-Active!',
+              text: this.delRes.error,
+            });
           }
+          
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Active!',
-          text: 'Debit Note Is Active Successfully.',
-        });
+      
       }
     });
   }
@@ -135,7 +150,7 @@ export class DebitnotesComponent implements OnInit {
   isDelete: any;
   userDetails: any;
   ngOnInit(): void {
-    this.purchaseService.getDebitNotes().subscribe(res => {
+    this.purchaseService.getPurchaseReturn().subscribe(res => {
       // console.log(res);
       this.tableData = res;
       this.loader = false;
@@ -165,7 +180,7 @@ export class DebitnotesComponent implements OnInit {
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
-      permission.map((res: any) => {
+      permission?.map((res: any) => {
         if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'add_debitnote') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);

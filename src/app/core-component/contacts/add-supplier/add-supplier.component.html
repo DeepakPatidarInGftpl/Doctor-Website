@@ -352,24 +352,8 @@
                     </div>
                 </div>
                 <hr>
-
+ 
                 <!-- <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Credit Limit</label>
-                        <input type="text" placeholder="search product" class="form-control"
-                            (keyup)="searchProduct($event.target)" (blur)="hideSearch()"> 
-                        <div>
-                            <ul style="width: 100%; max-height: 300px; overflow-y: auto; cursor: pointer;">
-                                <li *ngFor="let variant of search let i=index;"><a class="dropdown-item" (click)="SelectedProduct(variant)">
-                                        <span >{{variant?.product_title}}</span>
-                                    </a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                </div> -->
-             
-                <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Select Product</label>
                         <div class="dropdown">
@@ -382,7 +366,7 @@
                                 <li><a class="dropdown-item" *ngFor="let variant of filteredVariantList let i=index;">
                                         <input type="checkbox" [value]="variant.id"
                                             [checked]="selectedVariantsId.includes(variant.id)"
-                                            (change)="onCheckSize($event)" (change)="SelectedProduct(variant)" formArrayName="variant"
+                                            (change)="onCheckSize($event)" formArrayName="variant"
                                             style="margin-right: 5px;" [ngClass]="{
                                                 'is-invalid': f['variant'].touched && f['variant'].invalid
                                               }" #categoryValue [id]="'checkbox-' + i">
@@ -393,7 +377,8 @@
                         </div>
                         <p *ngIf="selectedBrand>0">{{selectedBrand + ' Product Selected'}}</p>
                     </div>
-                </div>
+                </div> -->
+
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Payment Terms</label>
@@ -476,10 +461,50 @@
                             <label [for]="'checkboxMeasure-'" class="d_flex"
                                 style="margin-bottom: 0; margin-left: 5px;">Apply TDS</label>
                         </div>
-
                     </div>
                 </div>
-                <div class="col-lg-12">
+
+                <div class="col-lg-8 col-sm-6 col-12">
+                    <div class="form-group my-1">
+                        <label>Product Details</label>
+                        <input type="text" placeholder="search product" class="form-control"
+                            (keyup)="searchProduct($event.target)" formArrayName="variant" [(ngModel)]="searchVariant" [ngModelOptions]="{standalone: true}"> 
+                        <div *ngIf="isproduct">
+                            <ul class="productDetails">
+                                <li *ngFor="let variant of search let i=index;" (click)="SelectedProduct(variant)">
+                                    <a class="dropdown-item" style="width: 100%;" >
+                                        <span >{{variant?.product_title + ' ' + variant?.variant_name}}</span>
+                                    </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="table-responsive">
+                            <table class="table" style="border: 1px solid #EBEDF3 !important;">
+                                <thead>
+                                    <tr style="background-color: #f4f5f8;">
+                                        <th>Sr.No.</th>
+                                        <th>Product Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                     <tr *ngFor="let data of selectData;let j=index">
+                                                <td>{{j+1}}</td>
+                                                <td>
+                                                   <p>{{data?.product_title + ' ' + data?.variant_name}}</p>
+                                                </td>
+                                                <td>
+                                                 <i data-bs-toggle="tooltip" title="ion-close-circled" class="ion-close-circled" (click)="removeVariant(data.id)" 
+                                                    style="color: red; font-size: 20px;"></i>
+                                                </td>
+                                      </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>    
+                <div class="col-lg-12 my-2">
                     <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
                         <span class="spinner-border spinner-border-sm" role="status"

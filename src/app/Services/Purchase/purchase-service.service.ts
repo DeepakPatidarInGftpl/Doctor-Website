@@ -165,4 +165,67 @@ export class PurchaseServiceService {
     let url =this.apiUrl+'/pv-api/purchase_product_filter/';
     return this.http.get(url)
   }
+  getAdditionalCharge(){
+    let url = this.apiUrl+'/pv-api/pos/additional_charge_pos/';
+    return this.http.get(url)
+  }
+  getTax(){
+    let url = this.apiUrl+'/pv-api/tax/';
+    return this.http.get(url)
+  }
+
+  //purchaseReturn
+
+  getPurchaseReturn(){
+    let url =this.apiUrl+'/pv-api/purchase_return/';
+    return this.http.get(url);
+  }
+  addPurchaseReturn(data:any){
+    let url = this.apiUrl+'/pv-api/purchase_return/';
+    return this.http.post(url,data);
+  }
+  getPurchaseReturnById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/purchase_return/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  PurchaseReturnIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/purchase_return/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  updatePurchaseReturn(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/purchase_return/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  deletePurchaseReturn(id: number) {
+    let url = this.apiUrl + '/pv-api/purchase_return/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
+  // filterVariant(sid: number,category:any,subcategory:any,search:any): Observable<any> {
+  //   let url = this.apiUrl + '/pv-api/purchase_product_filter/'
+  //   return this.http.get<any>(`${url}${sid}`)
+  // }
+  
+  filterVariant(supplierid: number, category: any, subcategory: any, search: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/purchase_product_filter/';
+    const queryParams: any[] = [];
+    if (supplierid) {
+      queryParams.push(`supplier=${supplierid}`);
+    }
+    if (category) {
+      queryParams.push(`category=${category}`);
+    }
+    if (subcategory) {
+      queryParams.push(`subcategory=${subcategory}`);
+    }
+    if (search) {
+      queryParams.push(`search=${search}`);
+    }
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  
+
 }

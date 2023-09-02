@@ -21,7 +21,8 @@ export class AddpurchaseComponent implements OnInit {
   discount: any;
   totalTax: any;
   roundOff: any;
-  mrpPurchase:number=0
+  mrpPurchase:number=0;
+ 
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
@@ -87,9 +88,7 @@ export class AddpurchaseComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-
     this.getSuuplier();
-    this.getVariants();
     this.getprefix();
   }
   prefixNo: any;
@@ -105,20 +104,47 @@ export class AddpurchaseComponent implements OnInit {
       this.toastrService.error(err.error.msg)
     })
   }
+
+ 
+category:any;
+subcategory:any;
+searc:any;
+myControl = new FormControl('');
+variantList: any[] = []; 
+  getVariant(search:any,index:any) {
+    this.purchaseService.filterVariant(this.supplierId,this.category,this.subcategory,search).subscribe((res:any) => {
+      console.log(res);
+      this.variantList=res;
+      console.log(this.variantList);
+      
+      //barcode patch
+      this.searchs = res;
+      this.productOption = res;
+      // console.log(this.searchs);
+      this.productName[index] = this.searchs[0].product_title;
+      // console.log(this.productName);
+      this.check = true;
+      const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+      barcode.patchValue({
+        barcode: this.searchs[0].id
+      });
+    });
+  }
+ 
   get supplier() {
     return this.purchaseForm.get('party') as FormControl;
   }
   purchase_cart(): FormGroup {
     return this.fb.group({
-      barcode: (''),
-      qty: (''),
-      purchase_rate: (''),
-      mrp: (''),
-      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: (''),
-      landing_cost: (''),
-      total: (''),
-      // discount_type: (''),
+      barcode: (0),
+      qty: (0),
+      purchase_rate: (0),
+      mrp: (0),
+      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(0,[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      landing_cost: (0),
+      total: (0),
+      // discount_type: (0),
       // additional_discount: new FormControl(0, [Validators.pattern(/^[0-9]*$/)])
     })
   }
@@ -157,26 +183,23 @@ export class AddpurchaseComponent implements OnInit {
     })
   }
 
-  getVariants() {
-    this.purchaseService.getSearchProduct().subscribe((res: any) => {
-      // console.log(res);
-      this.variants = res;
-    })
-  }
   addresses: string[] = ['Address 1', 'Address 2', 'Address 3'];
 
   supplierAddress: any;
   selectedAddressBilling: any;
   selectedAddressShipping: any;
   selectBatch: any;
+  supplierId:any;
   oncheck(event: any) {
     // console.log(event);
-    const selectedItemId = event; // Assuming the ID field is 'item_id'
+    const selectedItemId = event; 
+    this.supplierId=event;
     // console.log(selectedItemId);
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
       this.supplierAddress = res;
+      this.getVariant('','')
       console.log(this.selectedAddressBilling);
       this.supplierAddress.address.map((res: any) => {
         if (res.address_type == 'Billing') {
@@ -187,9 +210,7 @@ export class AddpurchaseComponent implements OnInit {
           console.log(this.selectedAddressShipping);
         }
       })
-
     })
-
     const variants = this.purchaseForm.get('purchase_cart') as FormArray;
     variants.clear();
     this.addCart();
@@ -349,6 +370,19 @@ export class AddpurchaseComponent implements OnInit {
         formdata.append('status', 'draft');
       }
       // nested addrs data 
+      // const cartArray = this.purchaseForm.get('purchase_cart') as FormArray;
+      // const cartData = [];
+      // cartArray.controls.forEach((address) => {
+      //   const cartGroup = address as FormGroup;
+      //   const cartObject = {};
+      //   Object.keys(cartGroup.controls).forEach((key) => {
+      //     const control = cartGroup.controls[key];
+      //     cartObject[key] = control.value;
+      //   });
+      //   cartData.push(cartObject);
+      // });
+      // formdata.append('purchase_cart', JSON.stringify(cartData));
+
       const cartArray = this.purchaseForm.get('purchase_cart') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
@@ -356,11 +390,18 @@ export class AddpurchaseComponent implements OnInit {
         const cartObject = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
-          cartObject[key] = control.value;
+          // Convert the value to an integer if it's a number
+          if (!isNaN(control.value)) {
+            cartObject[key] = parseInt(control.value, 10);
+          } else {
+            cartObject[key] = control.value;
+          }
         });
+
         cartData.push(cartObject);
       });
       formdata.append('purchase_cart', JSON.stringify(cartData));
+
       this.purchaseService.addPurchase(formdata).subscribe(res => {
         // console.log(res);
         this.getRes = res;
@@ -414,9 +455,12 @@ export class AddpurchaseComponent implements OnInit {
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
-  additional_discount(index: number) {
-    return this.getCart().controls[index].get('additional_discount')
+  taxx(index: number) {
+    return this.getCart().controls[index].get('tax');
   }
+  // additional_discount(index: number) {
+  //   return this.getCart().controls[index].get('additional_discount')
+  // }
 
   private _filter(value: string | number, include: boolean): any[] {
     // console.log(value);
@@ -496,11 +540,14 @@ export class AddpurchaseComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
+    this.getVariant('','')
   };
+
   staticValue: string = 'Static Value';
   searchs: any[] = [];
   productName: any[] = [];
   isProduct = true;
+
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
@@ -538,7 +585,7 @@ export class AddpurchaseComponent implements OnInit {
   calculateTotalMrp(): number {
     let totalMrp = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const mrpControl = this.getCart().controls[i].get('mrp');
+      const mrpControl = this.getCart().controls[i]?.get('mrp') || 0;
       if (mrpControl) {
         totalMrp += +mrpControl.value;
       }
@@ -616,7 +663,6 @@ export class AddpurchaseComponent implements OnInit {
     }
     return totalLandingCost;
   }
-
   calculateTotalLandingCostEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('purchase_rate');
@@ -711,19 +757,21 @@ export class AddpurchaseComponent implements OnInit {
       return Math.floor(roundedTotal);
     }
   }
-  calculateRoundoffValue() {
-    const total = this.totalAmount; // Use your existing calculateTotal function
-    const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
+  calculateRoundoffValue(): number {
+    const total = this.totalAmount; 
+    const roundedTotal = Math.round(total * 100) / 100;
     const integerPart = Math.floor(roundedTotal);
-    const decimalPart = (roundedTotal - integerPart) * 100; // Convert decimal part to whole number
-
+    const decimalPart = (roundedTotal - integerPart) * 100; 
     if (decimalPart === 0 && integerPart === 0) {
-      return 0; // Both parts are 0, so subtractedValue is 0
+      return 0; 
     }
-
-    const subtractedValue = (100 - decimalPart) / 100; // Subtract decimal part from 100 and convert to fraction
+    const subtractedValue = (100 - decimalPart) / 100; 
+    if (subtractedValue === 1) {
+      return 0;
+    }
     return subtractedValue;
   }
+  
   calculateTotalEveryIndex(index: number) {
     const cartItem = this.getCart().controls[index];
     const purchaseRate = +cartItem.get('purchase_rate').value;

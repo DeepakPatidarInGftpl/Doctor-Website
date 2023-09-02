@@ -4,32 +4,34 @@
         <h6>Update Purchase Return</h6>
     </div>
 </div>
-<div class="card">
+<div class="card" id="purchaseForm">
     <div class="card-body">
         <form [formGroup]="debitNotesForm">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
-                        <label>Supplier Name*</label>
+                        <label>Company Name*</label>
                         <mat-form-field class="w-100" style="padding: 0;
                         width: 100%;
                         min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Supplier" aria-label="Supplier" matInput
+                            <input type="text" placeholder="Search Company" aria-label="Company" matInput
                                 [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
-                               [readonly]="true">
+                                [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.name"
-                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.name }}</mat-option>
-
-                                <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
+                                <ng-container *ngFor="let supplier of filteredSuppliers | async">
+                                <mat-option *ngIf="supplier.is_active==true" [value]="supplier.company_name"
+                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.company_name }}</mat-option>
+                             </ng-container>
+                                    <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
                                     </mat-option>
-                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
+                                    <mat-option *ngIf="supplierControl.value?.length < 3" class="is-loading">Please
+                                        Enter 1 or more characters</mat-option>
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select 
+                        <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select
                             supplier
                         </span>
                     </div>
@@ -37,213 +39,425 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Debit Note Date*</label>
-                        <input type="date" formControlName="debit_note_date" [ngClass]="{'is-invalid': f['debit_note_date'].touched && f['debit_note_date'].invalid}" readonly>
+                        <input type="datetime-local" formControlName="debit_note_date" [ngClass]="{'is-invalid': f['debit_note_date'].touched && f['debit_note_date'].invalid}">
+                        <span class="text-danger" *ngIf="debit_note_date && debit_note_date.invalid && debit_note_date.touched">Select
+                            Debit-note date
+                        </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Debit Note No</label>
-                        <input type="text" formControlName="debit_note_no" [ngClass]="{'is-invalid': f['debit_note_no'].touched && f['debit_note_no'].invalid}" readonly>
+                        <input type="text" formControlName="debit_note_no" [ngClass]="{'is-invalid': f['debit_note_no'].touched && f['debit_note_no'].invalid}">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Refrence Bill No*</label>
-                        <input type="text" formControlName="refrence_bill_no" [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}" readonly>
+                        <input type="text" formControlName="refrence_bill_no" [ngModel]="prefixNo "
+                            [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="refrence_bill_no && refrence_bill_no.invalid && refrence_bill_no.touched">Enter
+                            Refrence bill no
+                        </span>
                     </div>
                 </div>
-  <!-- address display -->
-  <div class="col-lg-3 col-sm-3 col-12">
-    <div class="modal fade" id="addressModal" tabindex="-1" role="dialog"
-        aria-labelledby="addressModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Billing Address</h1>
-                    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group" *ngIf="supplierAddress">
-                        <h5 class=""><small class="text-muted"></small></h5>
-                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
-                            <input type="hidden" class="form-control" name="billingcompanyname"
-                                id="billingcompanyname" value="{{supplierAddress?.name}}">
-                        </h5>
-                        <div class="row">
-                            <div class="col-lg-12 col-sm-12 col-12"
-                                *ngFor="let add of supplierAddress?.address">
+                 <!-- address display -->
+                 <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="modal fade" id="addressModal" tabindex="-1" role="dialog"
+                        aria-labelledby="addressModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Billing Address</h1>
+                                    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group" *ngIf="supplierAddress">
+                                        <h5 class=""><small class="text-muted"></small></h5>
+                                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                            <input type="hidden" class="form-control" name="billingcompanyname"
+                                                id="billingcompanyname" value="{{supplierAddress?.name}}">
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-sm-12 col-12"
+                                                *ngFor="let add of supplierAddress?.address">
+                                                <div *ngIf="add.address_type=='Billing'">
+                                                    <button type="button" (click)="selectAddressBilling(add)"
+                                                        class="btn btn-primary btn-sm"
+                                                        style="float: right;">Select</button>
 
-                                <button type="button" (click)="selectAddress(add)"
-                                    class="btn btn-primary btn-sm" style="float: right;">Select</button>
+                                                    <p class="d-inline mb-0">
+                                                        <span id="billing-address-line-1">
+                                                            {{add?.address_line_1}}, {{add?.address_line_2}}
+                                                        </span>
+                                                    </p>
+                                                    <br>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-pincode="">{{add?.pincode}}</span>
+                                                        <span data-address-city="22691">{{add?.city?.city}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                    </p>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-state="1722">{{add?.state?.state}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                        <span
+                                                            data-address-country="IR">{{add?.country?.country_name}}</span>
+                                                    </p>
+                                                    <p class="mb-2">
+                                                        <span class="">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11"
+                                                                height="11" fill="currentColor"
+                                                                class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                                            </svg>
+                                                            <a
+                                                                href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                                            <input type="hidden" class="form-control"
+                                                                name="billingphone" id="billingphone"
+                                                                value="{{supplierAddress?.mobile_no}}">
+                                                        </span>
+                                                    </p>
 
-                                <p class="d-inline mb-0">
-                                    <span id="billing-address-line-1">
-                                        {{add?.address_line_1}}, {{add?.address_line_2}}
-                                    </span>
-                                </p>
-                                <br>
-                                <p class="d-inline mb-0">
-                                    <span data-address-pincode="">{{add?.pincode}}</span>
-                                    <span data-address-city="22691">{{add?.city?.city}}</span>
-                                    <span class="m--font-boldest">,&nbsp;</span>
-                                </p>
-                                <p class="d-inline mb-0">
-                                    <span data-address-state="1722">{{add?.state?.state}}</span>
-                                    <span class="m--font-boldest">,&nbsp;</span>
-                                    <span
-                                        data-address-country="IR">{{add?.country?.country_name}}</span>
-                                </p>
-                                <p class="mb-2">
-                                    <span class="">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-                                            fill="currentColor" class="bi bi-telephone-fill"
-                                            viewBox="0 0 16 16"
-                                            style="    height: 11px; width: 11px; color: #FF9F43;">
-                                            <path fill-rule="evenodd"
-                                                d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                                        </svg>
-                                        <a
-                                            href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
-                                        <input type="hidden" class="form-control" name="billingphone"
-                                            id="billingphone" value="{{supplierAddress?.mobile_no}}">
-                                    </span>
-                                </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Billing Address</strong></label>
+                    <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type!=='Billing'">
+                        <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
+                                Available</small></h5>
+                        <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                            Address
+                        </a>
+                    </div>
+
+                    <div class="form-group" *ngIf="!supplierAddress">
+                        <div class="m-divider"><span></span></div>
+                        <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
+                                Provided</small></h5>
+                        <div class="form-group row mt-3">
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">Place of Supply <span
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'">
+                        <div class="form-group" *ngIf="supplierAddress">
+
+                            <h5 class=""><small class="text-muted"></small></h5>
+                            <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                <input type="hidden" class="form-control" name="billingcompanyname"
+                                    id="billingcompanyname" value="{{supplierAddress?.name}}">
+                            </h5>
+                            <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'">
+                                <div *ngIf="selectedAddressBilling">
+                                    <p class="d-inline mb-0">
+                                        <span id="billing-address-line-1">
+                                            {{selectedAddressBilling?.address_line_1}},
+                                            {{selectedAddressBilling?.address_line_2}},
+                                        </span>
+                                    </p>
+                                    <br>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-pincode="">{{selectedAddressBilling?.pincode}}, </span>
+                                        <span data-address-city="22691">{{selectedAddressBilling?.city?.city}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                    </p>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-state="1722">{{selectedAddressBilling?.state?.state}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                        <span
+                                            data-address-country="IR">{{selectedAddressBilling?.country?.country_name}}</span>
+                                    </p>
+                                    <p class="mb-2">
+                                        <span class="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
+                                                fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                <path fill-rule="evenodd"
+                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                            </svg>
+                                            <a href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                            <input type="hidden" class="form-control" name="billingphone"
+                                                id="billingphone" value="{{supplierAddress?.mobile_no}}">
+                                        </span>
+                                    </p>
+                                    <div class="d-grid">
+                                        <a type="button" class=" btn-link" (click)="openModal()">Change Address</a>
+                                        <a class=" btn-link"
+                                            routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                                            Billing Address
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="form-group row mt-3">
+                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place
+                                            of Supply : </span> <span class="font-weight-normal"
+                                            id="lblContactGSTIN">{{selectedAddressBilling?.state?.state}}</span></label>
+                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
+                                        </span><span class="font-weight-normal"
+                                            id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="modal fade" id="addressModalShipping" tabindex="-1" role="dialog"
+                        aria-labelledby="addressModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Shipping Address</h1>
+                                    <button type="button" class="close" (click)="closeModalShipping()"
+                                        aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group" *ngIf="supplierAddress">
+                                        <h5 class=""><small class="text-muted"></small></h5>
+                                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                            <input type="hidden" class="form-control" name="billingcompanyname"
+                                                id="billingcompanyname" value="{{supplierAddress?.name}}">
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-sm-12 col-12"
+                                                *ngFor="let add of supplierAddress?.address">
+                                                <div *ngIf="add.address_type=='Shipping'">
+                                                    <button type="button" (click)="selectAddressShipping(add)"
+                                                        class="btn btn-primary btn-sm"
+                                                        style="float: right;">Select</button>
 
-    <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Billing Address</strong></label>
-    <div class="form-group" *ngIf="!supplierAddress">
-        <div class="m-divider"><span></span></div>
-        <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
-                Provided</small></h5>
-        <div class="form-group row mt-3">
-            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
-                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
-            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">Place of Supply <span
-                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
-        </div>
-    </div>
-    <div class="form-group" *ngIf="supplierAddress">
-        <h5 class=""><small class="text-muted"></small></h5>
-        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
-            <input type="hidden" class="form-control" name="billingcompanyname" id="billingcompanyname"
-                value="{{supplierAddress?.name}}">
-        </h5>
-        <div *ngIf="selectedAddress">
-            <p class="d-inline mb-0">
-                <span id="billing-address-line-1">
-                    {{selectedAddress?.address_line_1}}, {{selectedAddress?.address_line_2}},
-                </span>
-            </p>
-            <br>
-            <p class="d-inline mb-0">
-                <span data-address-pincode="">{{selectedAddress?.pincode}}, </span>
-                <span data-address-city="22691">{{selectedAddress?.city?.city}}</span>
-                <span class="m--font-boldest">,&nbsp;</span>
-            </p>
-            <p class="d-inline mb-0">
-                <span data-address-state="1722">{{selectedAddress?.state?.state}}</span>
-                <span class="m--font-boldest">,&nbsp;</span>
-                <span data-address-country="IR">{{selectedAddress?.country?.country_name}}</span>
-            </p>
-            <p class="mb-2">
-                <span class="">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor"
-                        class="bi bi-telephone-fill" viewBox="0 0 16 16"
-                        style="    height: 11px; width: 11px; color: #FF9F43;">
-                        <path fill-rule="evenodd"
-                            d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                    </svg>
-                    <a href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
-                    <input type="hidden" class="form-control" name="billingphone" id="billingphone"
-                        value="{{supplierAddress?.mobile_no}}">
-                </span>
-            </p>
-            <div class="d-grid">
-                <a type="button" class=" btn-link" (click)="openModal()">Change Address</a>
-                <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
-                    Billing Address
-                </a>
-            </div>
-        </div>
-        <div class="form-group row mt-3">
-            <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place of Supply
-                    : </span> <span class="font-weight-normal"
-                    id="lblContactGSTIN">{{selectedAddress?.state?.state}}</span></label>
-            <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
-                </span><span class="font-weight-normal"
-                    id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
-        </div>
-    </div>
-</div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Payment Terms</label>
-                       <select formControlName="payment_term" [ngClass]="{'is-invalid': f['payment_term'].touched && f['payment_term'].invalid}" readonly>
-                            <option value="" selected disabled>Select Payment Term</option>
-                            <option value="{{payment.id}}" *ngFor="let payment of paymentList">{{payment.title}}</option>
-                        </select>
+                                                    <p class="d-inline mb-0">
+                                                        <span id="billing-address-line-1">
+                                                            {{add?.address_line_1}}, {{add?.address_line_2}}
+                                                        </span>
+                                                    </p>
+                                                    <br>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-pincode="">{{add?.pincode}}</span>
+                                                        <span data-address-city="22691">{{add?.city?.city}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                    </p>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-state="1722">{{add?.state?.state}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                        <span
+                                                            data-address-country="IR">{{add?.country?.country_name}}</span>
+                                                    </p>
+                                                    <p class="mb-2">
+                                                        <span class="">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11"
+                                                                height="11" fill="currentColor"
+                                                                class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                                            </svg>
+                                                            <a
+                                                                href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                                            <input type="hidden" class="form-control"
+                                                                name="billingphone" id="billingphone"
+                                                                value="{{supplierAddress?.mobile_no}}">
+                                                        </span>
+                                                    </p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Shipping Address</strong></label>
+                    <div *ngIf="selectedAddressShipping && selectedAddressShipping.address_type!=='Shipping'">
+                        <h5 style="font-size: 13px;"><small class="text-muted">Shipping Address is Not
+                                Available</small></h5>
+                        <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                            Address
+                        </a>
+                    </div>
+                    <div class="form-group" *ngIf="!supplierAddress">
+                        <div class="m-divider"><span></span></div>
+                        <h5 style="font-size: 13px;"><small class="text-muted">Shipping Address is Not
+                                Provided</small></h5>
+                        <div class="form-group row mt-3">
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">Place of Supply <span
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedAddressShipping && selectedAddressShipping.address_type=='Shipping'">
+                        <div class="form-group" *ngIf="supplierAddress">
+
+                            <h5 class=""><small class="text-muted"></small></h5>
+                            <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                <input type="hidden" class="form-control" name="billingcompanyname"
+                                    id="billingcompanyname" value="{{supplierAddress?.name}}">
+                            </h5>
+                            <div *ngIf="selectedAddressShipping && selectedAddressShipping.address_type=='Shipping'">
+                                <div *ngIf="selectedAddressShipping">
+                                    <p class="d-inline mb-0">
+                                        <span id="billing-address-line-1">
+                                            {{selectedAddressShipping?.address_line_1}},
+                                            {{selectedAddressShipping?.address_line_2}},
+                                        </span>
+                                    </p>
+                                    <br>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-pincode="">{{selectedAddressShipping?.pincode}}, </span>
+                                        <span data-address-city="22691">{{selectedAddressShipping?.city?.city}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                    </p>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-state="1722">{{selectedAddressShipping?.state?.state}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                        <span
+                                            data-address-country="IR">{{selectedAddressShipping?.country?.country_name}}</span>
+                                    </p>
+                                    <p class="mb-2">
+                                        <span class="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
+                                                fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                <path fill-rule="evenodd"
+                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                            </svg>
+                                            <a href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                            <input type="hidden" class="form-control" name="billingphone"
+                                                id="billingphone" value="{{supplierAddress?.mobile_no}}">
+                                        </span>
+                                    </p>
+                                    <div class="d-grid">
+                                        <a type="button" class=" btn-link" (click)="openModalShipping()">Change
+                                            Address</a>
+                                        <a class=" btn-link"
+                                            routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                                            Shipping Address
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="form-group row mt-3">
+                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place
+                                            of Supply : </span> <span class="font-weight-normal"
+                                            id="lblContactGSTIN">{{selectedAddressShipping?.state?.state}}</span></label>
+                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
+                                        </span><span class="font-weight-normal"
+                                            id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <!-- end -->
+
+                <!-- <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Payment Terms*</label>
+                        <select formControlName="payment_term"
+                            [ngClass]="{'is-invalid': f['payment_term'].touched && f['payment_term'].invalid}">
+                            <option value="" selected disabled>Select Payment Term</option>
+                            <option value="{{payment.id}}" *ngFor="let payment of paymentList">{{payment.title}}
+                            </option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="payment_term && payment_term.invalid && payment_term.touched">Select
+                            Payment term
+                        </span>
+                    </div>
+                </div> 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Due Date*</label>
-                        <input type="date" formControlName="due_date" [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}" readonly>
+                        <input type="datetime-local" formControlName="due_date"
+                            [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}">
+                        <span class="text-danger" *ngIf="due_date && due_date.invalid && due_date.touched">Select
+                            Due date
+                        </span>
                     </div>
-                </div>
-             
+                </div> -->
+
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Reverse Charge</label>
-                        <input type="text" formControlName="reverse_charge" [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}" readonly>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Purchase order* </label>
-                       <select formControlName="purchase" [ngClass]="{'is-invalid': f['purchase'].touched && f['purchase'].invalid}" readonly>
-                            <option value="" selected disabled>Select Purchase</option>
-                            <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase.order_no}}</option>
+                         <select formControlName="reverse_charge"
+                            [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}">
+                            <option value="" selected disabled>Select Reverse Charge</option>
+                            <option value="Yes" selected>Yes</option>
+                            <option value="No">No</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Shipping Date* </label>
-                        <input type="date" formControlName="shipping_date" [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}" readonly>
+                        <label>Purchase Bill* </label>
+                        <select formControlName="purchase"
+                            [ngClass]="{'is-invalid': f['purchase'].touched && f['purchase'].invalid}">
+                            <option value="" selected disabled>Select Purchase</option>
+                            <!-- <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase?.refrence_bill_no}}</option> -->
+                            <ng-container *ngFor="let purchase of purchaseList">
+                                <option value="{{purchase?.id}}" *ngIf="purchase?.is_active==true">{{purchase?.refrence_bill_no}}</option>
+                            </ng-container>
+                        </select>
+                        <span class="text-danger" *ngIf="purchase && purchase.invalid && purchase.touched">Select
+                            Purchase Bill
+                        </span>
                     </div>
                 </div>
-              
+            
+                <!-- <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Shipping Date* </label>
+                        <input type="datetime-local" formControlName="shipping_date"
+                            [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="shipping_date && shipping_date.invalid && shipping_date.touched">Select
+                            Shipping Date
+                        </span>
+                    </div>
+                </div> -->
+               
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Reason</label>
-                        <input type="text" formControlName="reason" [ngClass]="{'is-invalid': f['reason'].touched && f['reason'].invalid}" readonly>
+                        <input type="text" formControlName="reason"
+                            [ngClass]="{'is-invalid': f['reason'].touched && f['reason'].invalid}">
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-sm-6 col-12">
+                <!-- <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Status</label>
-                        <select formControlName="status" [ngClass]="{'is-invalid': f['status'].touched && f['status'].invalid}" readonly>
+                        <select formControlName="status"
+                            [ngClass]="{'is-invalid': f['status'].touched && f['status'].invalid}">
                             <option value="" selected disabled>Select Status</option>
                             <option value="Complete">Complete</option>
                             <option value="Pending">Pending</option>
                         </select>
                     </div>
-                </div>
+                </div> -->
+             
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group my-4">
                         <div class="d-flex">
-                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true" readonly>
-                            <label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Export</label>
+                            <input type="checkbox" formControlName="export" [id]="'checkboxMeasure-'" [ngModel]="true">
+                            <label [for]="'checkboxMeasure-'" class="d_flex"
+                                style="margin-bottom: 0; margin-left: 5px;">Export</label>
                         </div>
                     </div>
                 </div>
@@ -260,11 +474,9 @@
                                 <th>Unit Cost</th>
                                 <th>Mrp <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
                                 <th>Discount</th>
-                                <th>Discount Type</th>
-                                <th>Additional Discount</th>
-                                <th>Tax % <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
+                                <th>Tax % <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
                                 <th>Landing Cost</th>
-                                <th style="width: 10%;">Batch <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
+                                <!-- <th>Batch <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th> -->
                                 <th class="text-end">Total Cost</th>
                                 <th></th>
                             </tr>
@@ -299,14 +511,14 @@
                                             <input class="input" type="text" placeholder="Search Barcode"
                                                 [attr.data-index]="i"
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                (keyup)="searchProduct(id.value,i)" (blur)="hideSearch()">
+                                                (keyup)="getVariant(id.value,i)" (blur)="hideSearch()">
                                         </td>
-                                        <td>  
-                                            <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
+                                        <td colspan="1"> 
+                                            <div class="form-group" style="margin-bottom: 0;">
+                                            <!-- <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
                                             (click)="open()" placeholder="Search Product" *ngIf="isProduct"
-                                            class="input">
-                                            
-                                        <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
+                                            class="input"> -->
+                                            <!-- <mat-form-field class="w-100" class="input">
                                                 <input type="text" placeholder="Search Product" aria-label="Produt"
                                                     matInput [formControl]="variantControl" [matAutocomplete]="auto"
                                                     style="height: 18px;">
@@ -314,46 +526,130 @@
                                                     <mat-option *ngFor="let variant of filteredVariants | async"
                                                         [value]="variant?.product_title"
                                                         (onSelectionChange)="oncheckVariant(variant,i)"
-                                                        (onSelectionChange)="variantChanged(variant, i)">{{ variant?.product_title}}</mat-option>
+                                                        (onSelectionChange)="variantChanged(variant, i)">{{
+                                                        variant?.product_title}}</mat-option>
                                                     <ng-container *ngIf="(filteredVariants | async) as variants">
                                                         <mat-option *ngIf="variants?.length === 0"
                                                             [value]="'No data found'">
-                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+ add Product</a>
+                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+
+                                                                add Product</a>
                                                         </mat-option>
                                                     </ng-container>
                                                 </mat-autocomplete>
-                                            </mat-form-field>
+                                            </mat-form-field> -->
+                                            <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                <input
+                                                  type="text"
+                                                  placeholder="Search Product"
+                                                  aria-label="Search Products"
+                                                  matInput
+                                                  [formControl]="myControls.at(i)"
+                                                  (input)="getVariant($event.target.value,i)"
+                                                  [matAutocomplete]="autos" 
+                                                  style="box-sizing: border-box;" 
+                                                />
+                                                <mat-autocomplete #autos="matAutocomplete">
+                                                    <!-- <ng-container *ngIf="myControl.value?.length > 1 && myControl.value?.length > 0"> -->
+                                                        <ng-container *ngFor="let option of variantList">
+                                                  <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
+                                                              (onSelectionChange)="oncheckVariant(option,i)"
+                                                              (onSelectionChange)="variantChanged(option, i)" style="color:#FF9F43">
+                                                    {{ option?.product_title + ' ' + option?.variant_name}}
+                                                  </mat-option>
+                                                  </ng-container>
+                                                  <!-- </ng-container> -->
+                                                  <mat-option *ngIf="variantList?.length === 0" [value]="'No data found'">
+                                                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                                                  </mat-option>
+                                                  <mat-option *ngIf="myControl?.at(i)?.value?.length < 3" class="is-loading">
+                                                    Please Enter 3 or more characters
+                                                  </mat-option>
+                                                </mat-autocomplete>
+                                              </mat-form-field>
+                                              </div>
                                         </td>
                                         <td><input type="text" formControlName="qty" class="input"></td>
                                         <td><input type="text" formControlName="unit_cost" class="input"></td>
-                                        <td><input type="text" formControlName="mrp" class="input"></td>
+                                        <td><input type="text" formControlName="mrp" class="input">
+                                            <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch()"></i>
+                                            <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
+                                                aria-labelledby="addressModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Batch</h1>
+                                                            <button type="button" class="close"
+                                                                (click)="closeModalBatch()" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group" *ngIf="selectBatch">
+                                                                <div class="row">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table datanew">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="boder space-text">Sr.No.</th>
+                                                                                    <th class="boder space-text">MRP</th>
+                                                                                    <th class="boder space-text">Purchase Price</th>
+                                                                                    <th class="boder space-text">Purchase Tax</th>
+                                                                                    <th class="boder space-text">Sale Tax</th>
+                                                                                    <th class="boder space-text">Discount</th>
+                                                                                    <th class="boder space-text">Additional Discount</th>
+                                                                                    <th class="boder space-text">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr
+                                                                                    *ngFor="let batch of selectBatch;let ind=index;">
+                                                                                    <td class="boder">{{ ind+1+'.'}}</td>
+                                                                                    <td class="boder">{{ batch?.mrp }}</td>
+                                                                                    <td class="boder">{{ batch?.cost_price }}</td>
+                                                                                    <td class="boder">{{ batch?.purchase_tax + '%'}}</td>
+                                                                                    <td class="boder">{{ batch?.sale_tax + '%'}}</td>
+                                                                                    <td class="boder">{{ batch?.discount + '%'}}</td>
+                                                                                    <td class="boder">{{ batch?.additional_discount + '%'}}</td>
+                                                                                    <td>
+                                                                                        <button type="button"
+                                                                                            (click)="selecBatchtModel(batch,i)"
+                                                                                            class="btn btn-primary btn-sm"
+                                                                                            style="float: right;">Select</button>
+                                                                                    </td>
+
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td><input type="text" formControlName="discount" class="input">
-                                            <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched"> Enter Discount ex: 1-100
-                                            </span></td>
-                                            <td>
-                                                <select formControlName="discount_type">
-                                                    <option value="" selected disabled>Select Discount Type</option>
-                                                    <option value="%">%</option>
-                                                    <option value="Rupee">Rupee</option>
-                                                </select>
-                                            </td>
-                                            <td><input type="text" formControlName="additional_discount" class="input">
-                                                <span class="text-danger" style="display: block;"
-                                            *ngIf="additional_discount(i) && additional_discount(i).invalid && additional_discount(i).touched">
-                                            Enter Additional Discount 
-                                        </span>
-                                            </td>
-                                        <td><input type="text" formControlName="tax" class="input"></td>
-                                        <td class="text-end"><input type="text" formControlName="landing_cost" class="input"></td>
-                                        <td class="text-end">
-                                            <select formControlName="batch">
-                                                <option value="" selected disabled>Select Batch</option>
-                                                <option value="{{batch.id}}" *ngFor="let batch of batchList">{{batch.mrp}}</option>
-                                            </select>
-                                            <span class="text-danger" style="display: block;" *ngIf="batch(i) && batch(i).invalid && batch(i).touched"> Select batch
+                                            <span class="text-danger" style="display: block;"
+                                                *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">
+                                                Enter Discount ex: 1-100
                                             </span>
                                         </td>
-                                        <td class="text-end"><input type="text"  class="input" [value]="calculateTotalEveryIndex(i).toString()" [ngModel]="calculateTotalEveryIndex(i).toString()"></td>
+                                        <td><input type="text" formControlName="tax" class="input"></td>
+                                        <td class="text-end"><input type="text" formControlName="landing_cost"
+                                                class="input" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)"></td>
+                                        <!-- <td class="text-end">
+                                            <select formControlName="batch">
+                                                <option value="" selected disabled>Select Batch</option>
+                                                <option value="{{batch.id}}" *ngFor="let batch of batchList">
+                                                    {{batch.mrp}}</option>
+                                            </select>
+                                            <span class="text-danger" style="display: block;"
+                                                *ngIf="batch(i) && batch(i).invalid && batch(i).touched"> select batch
+                                            </span>
+                                        </td> -->
+                                        <td class="text-end"><input type="text" formControlName="total" class="input"
+                                                [value]="calculateTotalEveryIndex(i).toString()"
+                                                [ngModel]="calculateTotalEveryIndex(i).toString()"></td>
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -361,16 +657,16 @@
                                 <td></td>
                                 <td></td>
                                 <td class="text-start"><strong>Total</strong></td>
-                                <td class="text-start">{{ calculateTotalQty()}}</td>
-                               <td class="text-start"></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                              <td class="text-start">{{calculateTotalTax()}}</td>
-                              <td></td>
-                              <td class="text-start"></td>
-                              <td> {{ calculateTotal() }}</td>
+                                <td class="text-start">{{ calculateTotalQty()}}
+                                    <input type="text" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty().toFixed(2)" style="display: none;">
+                               
+                                </td>
+                                <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td>
+                                <td class="text-start">{{calculateTotalMrp().toFixed(2)}}</td>
+                                <td class="text-start">{{calculateTotalDiscount()}}</td>
+                                <td class="text-start">{{calculateTotalTax()}}</td>
+                                <td class="text-start">{{calculateTotalLandingCost().toFixed(2)}}</td>
+                                <td> {{ calculateTotal() }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -381,20 +677,22 @@
                     <div class="total-order">
                         <ul>
                             <li>
-                                <h4>Total Qty</h4>
-                                <h5>{{ calculateTotalQty()}}</h5>
-                            </li>
-                            <li>
                                 <h4>Total Mrp</h4>
                                 <h5>{{calculateTotalMrp() | currency:'INR'}}</h5>
+                                <input type="text" formControlName="total_discount" class="input" [ngModel]="calculateTotalMrp().toFixed(2)" style="display: none;">
+                               
                             </li>
                             <li>
                                 <h4>Sub Total</h4>
                                 <h5>{{calculateSubtotal() | currency:'INR'}}</h5>
+                                <input type="text" formControlName="sub_total" class="input" [ngModel]="calculateTotalMrp().toFixed(2)" style="display: none;">
+                               
                             </li>
                             <li>
                                 <h4>Total Tax</h4>
                                 <h5>{{'₹'+calculateTotalTax() + '%'}}</h5>
+                                <input type="text" formControlName="total_tax" class="input" [ngModel]="calculateTotalTax().toFixed(2)" style="display: none;">
+                               
                             </li>
                             <li>
                                 <h4>Total Discount </h4>
@@ -404,9 +702,19 @@
                                 <h4>Landing Cost</h4>
                                 <h5>{{calculateTotalLandingCost() | currency:'INR'}}</h5>
                             </li>
+                            <li>
+                                <h4>Round Off</h4>
+                                <h5>
+                                    {{calculateRoundoffValue() | currency:'INR'}}
+                                     <input type="text" formControlName="round_off" class="input" [ngModel]="calculateTotalTax().toFixed(2)" style="display: none;">
+                                </h5>
+                            </li>
                             <li class="total">
                                 <h4>Total</h4>
-                                <h5>{{ calculateTotal() }}</h5>
+                                <h5>{{ calculateTotal() | currency:'INR' }}
+                                    <input type="text" formControlName="total" class="input" [ngModel]="calculateTotal().toFixed(2)" style="display: none;">
+                               
+                                </h5>
                             </li>
                         </ul>
                     </div>
@@ -414,10 +722,34 @@
             </div>
 
             <div class="col-lg-12">
-            <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit()">Submit</button>
-			<button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Submit</button>
-                <a routerLink="//purchase/debit-notes-list" class="btn btn-cancel white-text">Cancel</a>
+                <!-- <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit()">Submit</button>
+                <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Submit</button>
+                <a routerLink="//purchase/debit-notes-list" class="btn btn-cancel text-white">Cancel</a> -->
+
+                <div class="row">
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <a routerLink="//purchase/debit-notes-list" class="btn btn-cancel text-white"
+                            style=" background-color: #f4516c;">Cancel</a>
+                        <a class="btn btn-cancel text-white" (click)="clearForm()">Clear</a>
+                    </div>
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <button class="btn btn-submit me-2" (click)="submit('print')">Save & Print</button>
+                        <button class="btn btn-submit me-2" (click)="submit('draft')">Save as Draft</button>
+                    </div>
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>Save</button>
+                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('new')">Save & Create
+                            New</button>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save
+                            & Create New</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

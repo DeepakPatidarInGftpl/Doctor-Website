@@ -296,8 +296,8 @@ export class AddproductComponent implements OnInit {
   // }
   getFeatureByFeaturegroup(featureGroupid: any, index: number) {
     this.coreService.getFeatureByFeaturegroup(featureGroupid).subscribe(res => {
-      this.featureList[index] = res; 
-      console.log(this.featureList[index]);   
+      this.featureList[index] = res;
+      console.log(this.featureList[index]);
     });
   }
   // subcategory wise hsn code
@@ -332,10 +332,10 @@ export class AddproductComponent implements OnInit {
         this.addFeature();
         this.getFeatureByFeaturegroup(this.featureGrpBysubcatGroupList.feature_group[i].id, i); // Call the function here
       }
-  
+
       this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
         // console.log(res);
-       
+
         const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
         imageGroup.patchValue({
           feature_group: res.id
@@ -868,6 +868,8 @@ export class AddproductComponent implements OnInit {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
   }
-
-
+  clearForm() {
+    this.productForm.reset();
+    this.ngOnInit()
+  }
 } 
