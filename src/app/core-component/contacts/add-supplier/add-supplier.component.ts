@@ -17,7 +17,7 @@ export class AddSupplierComponent implements OnInit {
   get f() {
     return this.supplierForm.controls;
   }
-  searchResults: any[] = []; // This should hold your search API results
+
   selectedVariants: any[] = [];
   ngOnInit(): void {
     this.supplierForm = this.fb.group({
@@ -54,107 +54,28 @@ export class AddSupplierComponent implements OnInit {
   }
 
   variants: any[] = [];
-  filteredVariantList: any[] = [];
-  searchVariant: string = ''
   getVraiant() {
     this.contactService.productVariant().subscribe((res: any) => {
       this.variants = res
-      this.filteredVariantList = [...this.variants];
     })
   }
 
   search;
-searchProduct(product: any) {
-  if (product.value) {
-    this.contactService.searchProduct(product.value).subscribe(res => {
-      this.search = res;
-      console.log(this.search);
-      
-    });
-  } else {
-    this.search = [];
-  }
-}
-
-hideSearch() {
-  this.search = undefined;
-}
-
-
-  filterVariant() {
-    if (this.searchVariant.trim() === '') {
-      this.filteredVariantList = [...this.variants];
-    } else {
-      this.filteredVariantList = this.variants.filter(feature =>
-        feature.product_title.toLowerCase().includes(this.searchVariant.toLowerCase())
-      );
-    }
-  }
-  variantAdd(value: any): FormControl {
-    return this.fb.control(value);
-  }
-
-  getVariants(): FormArray {
-    return this.supplierForm.get('variant') as FormArray;
-  }
-
-  addVariant(value: any) {
-    this.getVariants().push(this.variantAdd(value));
-  }
-
-  removeVariant(index: number) {
-    this.getVariants().removeAt(index);
-  }
-
-  selectVariant(variant: any) {
-    this.selectedVariants.push(variant);
-    this.addVariantControl(variant);
-  }
-
-  removeSelectedVariant(index: number) {
-    this.selectedVariants.splice(index, 1);
-    this.removeVariantControl(index);
-  }
-
-  private addVariantControl(variant: any) {
-    const variantControl = this.variantAdd(variant);
-    this.getVariants().push(variantControl);
-  }
-
-  private removeVariantControl(index: number) {
-    this.getVariants().removeAt(index);
-  }
-  selectedVariantsId: any[] = [];
-  selectedBrand = 0;
-  onCheckSize(event: any) {
-    const formArray: any = this.supplierForm.get('variant') as FormArray;
-    /* Selected */
-    if (event.target.checked) {
-      // Add a new control in the arrayForm
-      formArray.push(new FormControl(parseInt(event.target.value)));
-      // parseInt(formArray.push(new FormControl(event.target.value)))
-
-      this.selectedBrand++;
-      this.selectedVariantsId = formArray.value
-      // console.log( this.selectedSubCategoryIds);
-
-    }
-    /* unselected */
-    else {
-      // find the unselected element
-      let i: number = 0;
-
-      formArray.controls.forEach((ctrl: any) => {
-        if (ctrl.value == event.target.value) {
-          formArray.removeAt(i);
-          this.selectedBrand--;
-          return;
-        }
-        i++;
+  isproduct = false
+  searchProduct(product: any) {
+    if (product.value) {
+      this.contactService.searchProduct(product.value).subscribe(res => {
+        this.search = res;
+        console.log(this.search);
+        this.isproduct = true
       });
+    } else {
+      // this.search = [];
     }
   }
-
+  hideSearch() {
+    this.search = undefined;
+  }
   //dropdown auto close stop
   onLabelClick(event: Event) {
     // Prevent the event from propagating to the dropdown menu
@@ -326,7 +247,7 @@ hideSearch() {
       this.contactService.addSupplier(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.msg == "Supplier Created Successfully") {
           this.loader = false;
           this.toastr.success(this.addRes.msg)
           this.supplierForm.reset()
@@ -455,18 +376,52 @@ hideSearch() {
     return this.getBanks().controls[index].get('bank_name');
   }
 
+  searchVariant=''
   selectData: any[] = []
   SelectedProduct(variant: any) {
     console.log('dd');
-    
     console.log(variant);
-    
-  this.getVariants().value
+    this.addVariant(variant.id)
     this.selectData.push(variant)
+    console.log(this.selectData, 'selected data');
+    //close dropdown
+    this.search = undefined
+    this.isproduct = false;
+    this.searchVariant=''
   }
-  clicl(){
-    console.log('hhhh');
-    
+  addVariant(event: any) {
+    const formArray: any = this.supplierForm.get('variant') as FormArray;
+    console.log(event);
+    if (event) {
+      formArray.push(new FormControl(parseInt(event)));
+      console.log(formArray);
+    }
+    else {
+      let i: number = 0;
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event) {
+          formArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
+  }
+  removeVariant(event:any){
+    const formArray: any = this.supplierForm.get('variant') as FormArray;
+    let i: number = 0;
+    formArray.controls.forEach((ctrl: any) => {
+      if (ctrl.value == event) {
+        formArray.removeAt(i);
+        const selectedIndex = this.selectData.findIndex(item => item.id === event);
+        if (selectedIndex !== -1) {
+          this.selectData.splice(selectedIndex, 1);
+        }
+        console.log(this.selectData);
+        return;
+      }
+      i++;
+    });
   }
 }
 

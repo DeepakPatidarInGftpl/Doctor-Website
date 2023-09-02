@@ -150,7 +150,6 @@
                 </div>
             </div>
         </div> -->
-
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
                         <div class="card">
@@ -233,6 +232,110 @@
                                 <span
                                     [ngClass]="{'bg-lightgreen': supplierDetail?.is_active === true, 'bg-lightred' : supplierDetail?.is_active === false,'bg-lightyellow' : supplierDetail?.is_active === 'Partial' }"
                                     class="badges">{{supplierDetail?.is_active}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Products">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body" *ngFor="let product of supplierDetail?.products;let i=index">
+                                <strong>{{i+1+'.'}} </strong>
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4 class="h4">Product Title</h4>
+                                            <h6>{{product?.product_title}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4 class="h4">Product variant</h4>
+                                            <h6>{{product?.variant_name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4 class="h4">Barcode</h4>
+                                            <h6>{{product?.sku}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4 class="h4">Color</h4>
+                                            <h6>{{product?.color?.title}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4 class="h4">Size</h4>
+                                            <h6>{{product?.size?.title}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4 class="h4">Batch</h4>
+                                            <!-- <h6 *ngIf="isBatch" (click)="showBatch()" style="color:#FF9F43">Show Batch</h6> -->
+                                           <h6 *ngIf="product?.batch.length>0"> 
+                                              <div class="productdetails container" *ngFor="let batch of product?.batch; let i=index">
+                                                <span>{{i+1+'.'}}</span>
+                                                <ul class="product-bar">
+                                                            <li>
+                                                                <h4>MRP</h4>
+                                                                <h6>{{batch?.mrp}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Cost Price</h4>
+                                                                <h6>{{batch?.cost_price}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Selling Price Employee</h4>
+                                                                <h6>{{batch?.selling_price_employee}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Selling Price Offline</h4>
+                                                                <h6>{{batch?.selling_price_offline}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Selling Price Online</h4>
+                                                                <h6>{{batch?.selling_price_online}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Selling Price Dealer</h4>
+                                                                <h6>{{batch?.selling_price_dealer}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Stock</h4>
+                                                                <h6>{{batch?.stock}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Opening Stock</h4>
+                                                                <h6>{{batch?.opening_stock}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Sale Tax</h4>
+                                                                <h6>{{batch?.sale_tax}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Purchase Tax</h4>
+                                                                <h6>{{batch?.purchase_tax}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Discount</h4>
+                                                                <h6>{{batch?.discount}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Additional Discount</h4>
+                                                                <h6>{{batch?.additional_discount}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Max Order Quantity</h4>
+                                                                <h6>{{batch?.max_order_quantity}}</h6>
+                                                            </li>
+                                                            <li>
+                                                                <h4>Minimum Stock Threshold</h4>
+                                                                <h6>{{batch?.minimum_stock_threshold}}</h6>
+                                                            </li>
+                                                  </ul>
+                                            </div>
+                                            <!-- <h6 *ngIf="!isBatch" (click)="hideBatch()" style="color:red">Hide Batch</h6> -->
+                                            </h6>  
+                                            <h6 *ngIf="product?.batch.length==0" style="color:#FF9F43">Batch Not Available</h6> 
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>

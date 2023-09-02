@@ -37,10 +37,10 @@ export class DetailSupplierComponent implements OnInit {
   supplierDetail: any
   getdata() {
     this.contactService.getSupplierById(this.id).subscribe(res => {
-        if(this.id==res.id){
-          this.supplierDetail = res
-          // console.log(res); 
-        }
+      if (this.id == res.id) {
+        this.supplierDetail = res
+        // console.log(res); 
+      }
     })
   }
 
@@ -56,6 +56,14 @@ export class DetailSupplierComponent implements OnInit {
     this.sho = true;
     this.sho1 = false;
     this.sho2 = !this.sho2;
+  }
+
+  isBatch = true;
+  showBatch() {
+    this.isBatch = false;
+  }
+  hideBatch() {
+    this.isBatch = true;
   }
 }
 

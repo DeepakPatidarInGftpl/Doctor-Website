@@ -44,3 +44,10 @@ textarea
     top: 40px;
     border: 1px solid #ddd;
 }
+.productDetails{
+    width: 100%; 
+    max-height: 300px; 
+    overflow-y: auto; 
+    cursor: pointer;
+    border: 1px solid #FF9F43;
+}

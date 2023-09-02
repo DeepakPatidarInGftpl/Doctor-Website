@@ -18,10 +18,11 @@
                                 [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [readonly]="true">
                             <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.company_name"
+                                <ng-container *ngFor="let supplier of filteredSuppliers | async">
+                                <mat-option *ngIf="supplier.is_active==true" [value]="supplier.company_name"
                                     (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.company_name
                                     }}</mat-option>
-
+                                </ng-container>
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
@@ -44,8 +45,10 @@
                             [ngClass]="{'is-invalid': f['purchase_order'].touched && f['purchase_order'].invalid}"
                             [disabled]="true">
                             <option value="" selected disabled>Select Purchase Order</option>
-                            <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase.order_no}}
-                            </option>
+                            <!-- <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase.order_no}} </option> -->
+                            <ng-container *ngFor="let purchase of purchaseList">
+                                <option value="{{purchase.id}}" *ngIf="purchase?.is_active==true">{{purchase?.order_no}} </option>
+                            </ng-container>
                         </select>
                     </div>
                 </div>
@@ -533,12 +536,10 @@
                             <tr>
                                 <th></th>
                                 <th>Barcode/SKU</th>
-                                <th style="width: 20%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Product Name <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
-                                <th>QTY <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
+                                <th style="width: 25%;">Product Name</th>
+                                <th>QTY</th>
                                 <th>PO QTY</th>
-                               
-                                <th>Mrp <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
-                                
+                                <th>Mrp</th>
                                 <th class="text-end">Total Cost</th>
                                 <th></th>
                             </tr>
@@ -573,13 +574,14 @@
                                             <input class="input" type="text" placeholder="Search Barcode"
                                                 [attr.data-index]="i"
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                (keyup)="searchProduct(id.value,i)" (blur)="hideSearch()">
+                                                (keyup)="getVariant(id.value,i)" (blur)="hideSearch()">
                                         </td>
                                         <td>
-                                            <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
+                                            <div class="form-group" style="margin-bottom: 0;">
+                                            <!-- <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
                                                 (click)="open()" placeholder="Search Product" *ngIf="isProduct"
-                                                class="input">
-                                            <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
+                                                class="input"> -->
+                                            <!-- <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
                                                 <input type="text" placeholder="Search Product" aria-label="Produt"
                                                     matInput [formControl]="variantControl" [matAutocomplete]="auto"
                                                     style="height: 18px;">
@@ -597,7 +599,38 @@
                                                         </mat-option>
                                                     </ng-container>
                                                 </mat-autocomplete>
-                                            </mat-form-field>
+                                            </mat-form-field> -->
+
+                                            <mat-form-field class="w-100"  style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                <input
+                                                  type="text"
+                                                  placeholder="Search Product"
+                                                  aria-label="Search Products"
+                                                  matInput
+                                                  [formControl]="myControls.at(i)"
+                                                  (input)="getVariant($event.target.value,i)"
+                                                  [matAutocomplete]="autos" 
+                                                  style="box-sizing: border-box;" 
+                                                />
+                                                <mat-autocomplete #autos="matAutocomplete">
+                                                    <!-- <ng-container *ngIf="myControl.value?.length > 1 && myControl.value?.length > 0"> -->
+                                                        <ng-container *ngFor="let option of variantList">
+                                                  <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
+                                                              (onSelectionChange)="oncheckVariant(option,i)"
+                                                              (onSelectionChange)="variantChanged(option, i)" style="color:#FF9F43">
+                                                    {{ option?.product_title + ' ' + option?.variant_name}}
+                                                  </mat-option>
+                                                  </ng-container>
+                                                  <!-- </ng-container> -->
+                                                  <mat-option *ngIf="variantList?.length === 0" [value]="'No data found'">
+                                                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                                                  </mat-option>
+                                                  <mat-option *ngIf="myControl?.at(i)?.value?.length < 3" class="is-loading">
+                                                    Please Enter 3 or more characters
+                                                  </mat-option>
+                                                </mat-autocomplete>
+                                              </mat-form-field>
+                                              </div>
                                         </td>
                                         <td><input type="text" formControlName="qty" class="input"></td>
                                         <td><input type="text" formControlName="po_qty" class="input"></td>

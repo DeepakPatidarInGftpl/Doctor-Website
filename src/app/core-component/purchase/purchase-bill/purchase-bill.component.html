@@ -93,8 +93,8 @@
                         <th (click)="sort('id')" class="thone">Due Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Shipping Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Dealer Price<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Employee Price<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Dealer Price<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Employee Price<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
@@ -118,8 +118,8 @@
                         <td>{{products.due_date}}</td>
                         <td>{{products.reverse_charge}}</td>
                         <td>{{products.shipping_date}}</td>
-                        <td>{{products.dealer_price}}</td>
-                        <td>{{products.employee_price}}</td>
+                        <!-- <td>{{products.dealer_price}}</td>
+                        <td>{{products.employee_price}}</td> -->
                         <td>
                             <span [ngClass]="{'bg-lightgreen': products.status === 'Complete', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}" class="badges">{{products.status}}</span>
                         </td>

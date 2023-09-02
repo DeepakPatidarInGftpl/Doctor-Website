@@ -53,37 +53,41 @@ export class EditpurchaseComponent implements OnInit {
   getresbyId: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
-    this.supplierControl.setValue('Loading...'); // or any other default value
+    this.supplierControl.setValue('Loading...');
+    // this.myControl.setValue('Loading...')
+    this.myControls = new FormArray([]);
+    
     this.purchaseForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       order_date: new FormControl(''),
       order_no: new FormControl('', [Validators.required]),
       shipping_date: new FormControl('', [Validators.required]),
-      shipping_note: new FormControl(''),  
+      shipping_note: new FormControl(''),
       purchase_cart: this.fb.array([]),
       note: new FormControl(''),
       status: new FormControl(''),
       export: new FormControl(''),
-      total_qty:new FormControl(''),
-      total_tax: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      total_discount: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      sub_total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      round_off: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      total: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      total_qty: new FormControl(''),
+      total_tax: new FormControl('', ),
+      total_discount: new FormControl('', ),
+      sub_total: new FormControl('', ),
+      round_off: new FormControl('', ),
+      total: new FormControl('', ),
     });
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
       // console.log(res);
       this.getresbyId = res;
       this.purchaseForm.patchValue(res);
-      this.purchaseForm.get('supplier')?.patchValue(res.party.id)
-      this.purchaseForm.setControl('purchase_cart', this.udateCart(res.cart));
+      this.purchaseForm.get('party')?.patchValue(res.party.id)
+      this.purchaseForm.setControl('purchase_cart', this.udateCart(res?.cart));
       this.displaySupplierName(res.party.id);
-
+      this.supplierId = res.party.id
+      this.getVariant('', '')
       //call detail api
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
         // console.log(res);
         this.supplierAddress = res;
-        this.supplierControl.setValue(res.name); 
+        this.supplierControl.setValue(res.name);
         this.getprefix()
         this.supplierAddress.address.map((res: any) => {
           if (res.address_type == 'Billing') {
@@ -109,12 +113,11 @@ export class EditpurchaseComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
 
-    this.getVariants();
   }
 
   displaySupplierName(supplierId: number): void {
     // console.log(supplierId);
-// console.log(this.supplierList);
+    // console.log(this.supplierList);
 
 
     // this.filteredSuppliers
@@ -133,16 +136,16 @@ export class EditpurchaseComponent implements OnInit {
     // console.log(this.supplierControl);
 
   }
-  prefixNo:any;
+  prefixNo: any;
   getprefix() {
-    this.purchaseService.getPurchaseOrderPrefix().subscribe((res:any) => {
+    this.purchaseService.getPurchaseOrderPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.isSuccess == true) {
-        this.prefixNo=res.prefix
-      }else{
+        this.prefixNo = res.prefix
+      } else {
         this.toastrService.error(res.msg)
       }
-    },err=>{
+    }, err => {
       this.toastrService.error(err.error.msg)
     })
   }
@@ -152,21 +155,18 @@ export class EditpurchaseComponent implements OnInit {
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
         qty: j.qty,
-        unit_cost: j.unit_cost,
+        purchase_rate: j.purchase_rate,
         mrp: j.mrp,
         discount: j.discount,
-        tax: j.tax,
+        tax: j.tax || 0,
         landing_cost: j.landing_cost,
-        selling_price_online:j.selling_price_online,
-        selling_price_offline:j.selling_price_offline,
-        dealer_price:j.dealer_price,
-        employee_price:j.employee_price,
-        // total: j.total,
-        // discount_type:j.discount_type,
-        additional_discount:j.additional_discount
+        total: j.total
       }))
       this.barcode[i] = j.barcode.sku;
       this.productName[i] = j.barcode.product_title;
+      // this.myControl.setValue(j.barcode.product_title)
+      this.myControls.push(new FormControl(j?.barcode?.product_title));
+
     })
     return formarr
   }
@@ -198,18 +198,14 @@ export class EditpurchaseComponent implements OnInit {
   }
   purchase_cart(): FormGroup {
     return this.fb.group({
-     barcode: (0),
-      qty: (0),
-      unit_cost: (0),
-      mrp: (0),
-      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: (0),
-      landing_cost: (0),
-      selling_price_online: (0),
-      selling_price_offline: (0),
-      dealer_price: (0),
-      employee_price: (0),
-      additional_discount:new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      barcode: (''),
+      qty: (''),
+      purchase_rate: (''),
+      mrp: (''),
+      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      landing_cost: (''),
+      total: (''),
     })
   }
 
@@ -222,20 +218,20 @@ export class EditpurchaseComponent implements OnInit {
   removeCart(i: any) {
     this.getCart().removeAt(i)
   }
-  additional_charges():FormGroup{
+  additional_charges(): FormGroup {
     return this.fb.group({
-      additional_charge:(0),
-      value:(0),
-      tax:(0)
+      additional_charge: (0),
+      value: (0),
+      tax: (0)
     })
   }
-  getAdditionalCharge():FormArray{
+  getAdditionalCharge(): FormArray {
     return this.purchaseForm.get('additional_charges') as FormArray
   }
-  addAdditionalCharge(){
+  addAdditionalCharge() {
     this.getAdditionalCharge().push(this.additional_charges())
   }
-  removeAdditionalCharge(j:any){
+  removeAdditionalCharge(j: any) {
     this.getAdditionalCharge().removeAt(j)
   }
   supplierList: any;
@@ -246,25 +242,22 @@ export class EditpurchaseComponent implements OnInit {
       // console.log(this.suppliers);
     })
   }
-  getVariants() {
-    this.purchaseService.productVariant().subscribe((res: any) => {
-      // console.log(res);
-      this.variants = res;
-    })
-  }
+
 
   supplierAddress: any;
-  
+
   selectedAddressBilling: any;
   selectedAddressShipping: any;
   selectBatch: any;
+  supplierId: any;
   oncheck(event: any) {
     // console.log(event);
     const selectedItemId = event.id;
     // console.log(selectedItemId);
-
+    this.supplierId = selectedItemId
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
+      this.getVariant('', '')
       this.supplierAddress = res;
       console.log(this.selectedAddressBilling);
       this.supplierAddress.address.map((res: any) => {
@@ -358,12 +351,12 @@ export class EditpurchaseComponent implements OnInit {
     }
     const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
     let discountRupees = (address?.cost_price * address?.discount) / 100
-      console.log(discountRupees);
-      let afterDiscountPrice=(address?.cost_price-discountRupees)
-      let taxRupee: number = (afterDiscountPrice * address?.purchase_tax) / 100
-      console.log(taxRupee);
-      let landingCost = (address?.cost_price - discountRupees) + taxRupee;
-      console.log(landingCost);
+    console.log(discountRupees);
+    let afterDiscountPrice = (address?.cost_price - discountRupees)
+    let taxRupee: number = (afterDiscountPrice * address?.purchase_tax) / 100
+    console.log(taxRupee);
+    let landingCost = (address?.cost_price - discountRupees) + taxRupee;
+    console.log(landingCost);
     barcode.patchValue({
       mrp: address?.mrp,
       qty: address?.stock,
@@ -416,6 +409,19 @@ export class EditpurchaseComponent implements OnInit {
         formdata.append('status', 'draft');
       }
       // nested addrs data 
+      // const cartArray = this.purchaseForm.get('purchase_cart') as FormArray;
+      // const cartData = [];
+      // cartArray.controls.forEach((address) => {
+      //   const cartGroup = address as FormGroup;
+      //   const cartObject = {};
+      //   Object.keys(cartGroup.controls).forEach((key) => {
+      //     const control = cartGroup.controls[key];
+      //     cartObject[key] = control.value;
+      //   });
+      //   cartData.push(cartObject);
+      // });
+      // formdata.append('purchase_cart', JSON.stringify(cartData));
+
       const cartArray = this.purchaseForm.get('purchase_cart') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
@@ -423,8 +429,14 @@ export class EditpurchaseComponent implements OnInit {
         const cartObject = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
-          cartObject[key] = control.value;
+          // Convert the value to an integer if it's a number
+          if (!isNaN(control.value)) {
+            cartObject[key] = parseInt(control.value, 10);
+          } else {
+            cartObject[key] = control.value;
+          }
         });
+
         cartData.push(cartObject);
       });
       formdata.append('purchase_cart', JSON.stringify(cartData));
@@ -458,7 +470,7 @@ export class EditpurchaseComponent implements OnInit {
       })
     } else {
       this.purchaseForm.markAllAsTouched()
-      // console.log('invLID FORM');
+      console.log('invLID FORM');
     }
   }
 
@@ -480,9 +492,12 @@ export class EditpurchaseComponent implements OnInit {
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
-  additional_discount(index:number){
-    return this.getCart().controls[index].get('additional_discount')
+  taxx(index: number) {
+    return this.getCart().controls[index].get('tax');
   }
+  // additional_discount(index: number) {
+  //   return this.getCart().controls[index].get('additional_discount')
+  // }
   private _filter(value: string | number, include: boolean): any[] {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
@@ -551,6 +566,7 @@ export class EditpurchaseComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
+    this.getVariant('', '')
   };
 
   searchs: any[] = [];
@@ -584,7 +600,7 @@ export class EditpurchaseComponent implements OnInit {
     this.isProduct = false
   }
 
-  
+
   calculateTotalQty(): number {
     let totalQty = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
@@ -619,7 +635,7 @@ export class EditpurchaseComponent implements OnInit {
   calculateTotalPurchase(): number {
     let totalPurchase = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const purchaseControl = this.getCart().controls[i].get('purchase_rate');
+      const purchaseControl = this.getCart().controls[i]?.get('purchase_rate') || 0;
       if (purchaseControl) {
         totalPurchase += +purchaseControl.value;
       }
@@ -629,7 +645,7 @@ export class EditpurchaseComponent implements OnInit {
   calculateTotalTax(): number {
     let totalTax = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const taxControl = this.getCart().controls[i].get('tax');
+      const taxControl = this.getCart().controls[i]?.get('tax') || 0;
       if (taxControl) {
         totalTax += +taxControl.value;
       }
@@ -651,9 +667,9 @@ export class EditpurchaseComponent implements OnInit {
     let totalLandingCost = 0;
     const cartControls = this.getCart().controls;
     for (let i = 0; i < cartControls.length; i++) {
-      const purchaseRateControl = cartControls[i].get('purchase_rate');
-      const discountControl = cartControls[i].get('discount');
-      const taxAmountControl = cartControls[i].get('tax');
+      const purchaseRateControl = cartControls[i]?.get('purchase_rate') || 0;
+      const discountControl = cartControls[i]?.get('discount') || 0;
+      const taxAmountControl = cartControls[i]?.get('tax') || 0;
       if (purchaseRateControl && discountControl && taxAmountControl) {
         const purchaseRate = +purchaseRateControl.value;
         const discountPercentage = +discountControl.value;
@@ -661,7 +677,7 @@ export class EditpurchaseComponent implements OnInit {
         const discountAmount = (purchaseRate * discountPercentage) / 100;
         const afterDiscountAmount = purchaseRate - discountAmount
         const taxAmount = (afterDiscountAmount * taxAmountPercentage) / 100;
-      const landingCost = (purchaseRate - discountAmount) + taxAmount;
+        const landingCost = (purchaseRate - discountAmount) + taxAmount;
         totalLandingCost += landingCost;
       }
     }
@@ -670,9 +686,9 @@ export class EditpurchaseComponent implements OnInit {
 
   calculateTotalLandingCostEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
-    const purchaseRateControl = cartItem.get('purchase_rate');
-    const taxPercentageControl = cartItem.get('tax');
-    const discountPercentageControl = cartItem.get('discount');
+    const purchaseRateControl = cartItem?.get('purchase_rate') || 0;
+    const taxPercentageControl = cartItem?.get('tax') || 0;
+    const discountPercentageControl = cartItem?.get('discount') || 0;
     if (purchaseRateControl && taxPercentageControl && discountPercentageControl) {
       const purchaseRate = +purchaseRateControl.value;
       const taxPercentage = +taxPercentageControl.value;
@@ -689,8 +705,8 @@ export class EditpurchaseComponent implements OnInit {
   calculateSubtotal(): number {
     let subtotal = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const qtyControl = this.getCart().controls[i].get('qty');
-      const mrpControl = this.getCart().controls[i].get('mrp');
+      const qtyControl = this.getCart().controls[i]?.get('qty') || 0;
+      const mrpControl = this.getCart().controls[i]?.get('mrp') || 0;
       if (qtyControl && mrpControl) {
         const qty = +qtyControl.value;
         const mrp = +mrpControl.value;
@@ -701,14 +717,14 @@ export class EditpurchaseComponent implements OnInit {
     }
     return subtotal;
   }
-  totalAmount:any
+  totalAmount: any
   calculateTotal(): number {
     let total = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const purchaseRateControl = this.getCart().controls[i].get('purchase_rate');
-      const discountControl = this.getCart().controls[i].get('discount');
-      const taxControl = this.getCart().controls[i].get('tax');
-      const qtyControl = this.getCart().controls[i].get('qty');
+      const purchaseRateControl = this.getCart().controls[i]?.get('purchase_rate') || 0;
+      const discountControl = this.getCart().controls[i]?.get('discount') || 0;
+      const taxControl = this.getCart().controls[i]?.get('tax') || 0;
+      const qtyControl = this.getCart().controls[i]?.get('qty') || 0;
       if (purchaseRateControl && discountControl && taxControl && qtyControl) {
         const purchaseRate = +purchaseRateControl.value;
         const discount = +discountControl.value;
@@ -719,42 +735,49 @@ export class EditpurchaseComponent implements OnInit {
         const taxAmount = (purchaseRate * taxAmountPercentage) / 100;
         const discountAmount = (purchaseRate * discountPercentage) / 100;
         const landingCost = (purchaseRate - discountAmount) + taxAmount;
-        const totalForItem = landingCost * qty;    
+        const totalForItem = landingCost * qty;
         total += totalForItem;
       }
     }
-    this.totalAmount=total
+    this.totalAmount = total
     // Round the total based on decimal value and add 1 if necessary
     const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
     const decimalPart = roundedTotal - Math.floor(roundedTotal);
-  
+
     if (decimalPart >= 0.5) {
       return Math.floor(roundedTotal) + 1;
     } else {
       return Math.floor(roundedTotal);
     }
   }
- 
+
   calculateRoundoffValue(): number {
     const total = this.totalAmount; // Use your existing calculateTotal function
     const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
     const integerPart = Math.floor(roundedTotal);
     const decimalPart = (roundedTotal - integerPart) * 100; // Convert decimal part to whole number
-  
+
     if (decimalPart === 0 && integerPart === 0) {
       return 0; // Both parts are 0, so subtractedValue is 0
     }
-  
+
     const subtractedValue = (100 - decimalPart) / 100; // Subtract decimal part from 100 and convert to fraction
+
+    // Check if subtractedValue is 1 and change it to 0
+    if (subtractedValue === 1) {
+      return 0;
+    }
+
     return subtractedValue;
   }
-  
+
+
   calculateTotalEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
-    const purchaseRate = +cartItem.get('purchase_rate').value;
-    const discountPercentage = +cartItem.get('discount').value;
-    const taxAmountPercentage = +cartItem.get('tax').value;
-    const qty = +cartItem.get('qty').value;
+    const purchaseRate = +cartItem?.get('purchase_rate').value || 0;
+    const discountPercentage = +cartItem?.get('discount').value || 0;
+    const taxAmountPercentage = +cartItem?.get('tax').value || 0;
+    const qty = +cartItem?.get('qty').value;
     const discountAmount = (purchaseRate * discountPercentage) / 100;
     const taxAmount = (purchaseRate * taxAmountPercentage) / 100;
     const landingCost = (purchaseRate - discountAmount) + taxAmount;
@@ -785,9 +808,9 @@ export class EditpurchaseComponent implements OnInit {
   }
   calculateTaxintoPrice(index: number): number {
     const cartItem = this.getCart().controls[index];
-    const purchaseRate = +cartItem.get('purchase_rate').value;
-    const taxPercentage = +cartItem.get('tax').value;
-    const discountPercentage = +cartItem.get('discount').value;
+    const purchaseRate = +cartItem?.get('purchase_rate').value || 0;
+    const taxPercentage = +cartItem?.get('tax').value || 0;
+    const discountPercentage = +cartItem?.get('discount').value || 0;
     const discount = (purchaseRate * discountPercentage) / 100;
     const afterDiscountAmount = purchaseRate - discount
     const taxAmount = (afterDiscountAmount * taxPercentage) / 100;
@@ -821,5 +844,33 @@ export class EditpurchaseComponent implements OnInit {
     }
   }
 
+
+  category: any;
+  subcategory: any;
+  searc: any;
+  myControls: FormArray;
+  variantList: any[] = [];
+
+  getVariant(search: any, index: any) {
+    this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+      console.log(res);
+      this.variantList = res;
+      console.log(this.variantList);
+
+      if (search) {
+        //barcode patch
+        this.searchs = res;
+        // console.log(this.searchs);
+        this.productName[index] = this.searchs[0].product_title;
+        // console.log(this.productName);
+        this.check = true;
+        const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+        barcode.patchValue({
+          barcode: this.searchs[0].id
+        });
+      }
+
+    });
+  }
 
 }

@@ -61,22 +61,7 @@
                                             <td class="th">Export</td>
                                             <td class="td">{{purchaseBillDetail?.export}}</td>
                                         </tr>
-                                        <tr>
-                                            <td class="th">Selling Price Online</td>
-                                            <td class="td">{{purchaseBillDetail?.selling_price_online}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Selling Price Offline</td>
-                                            <td class="td">{{purchaseBillDetail?.selling_price_offline}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Dealer Price</td>
-                                            <td class="td">{{purchaseBillDetail?.dealer_price}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Employee Price</td>
-                                            <td class="td">{{purchaseBillDetail?.employee_price}}</td>
-                                        </tr>
+                                        
                                         <tr>
                                             <td class="th">Notes</td>
                                             <td class="td">{{purchaseBillDetail?.note}}</td>
@@ -102,9 +87,13 @@
                                             <td class="th">MRP</td>
                                             <td class="th">Landing Cost</td>
                                             <td class="th">Unit Cost</td>
+                                          
+                                            <td class="th">Selling Price Online</td>
+                                            <td class="th">Selling Price Offline</td>
+                                            <td class="th">Dealer Price</td>
+                                            <td class="th">Employee Price</td>
+
                                             <td class="th">Discount</td>
-                                            <td class="th">Discount Type</td>
-                                            <td class="th">Additional Discount</td>
                                             <td class="th">Tax</td>
                                             <td class="th">Total</td>
                                         </tr>
@@ -116,9 +105,11 @@
                                             <td class="td">{{cart?.mrp}}</td>
                                             <td class="td">{{cart?.landing_cost}}</td>
                                             <td class="td">{{cart?.unit_cost}}</td>
+                                            <td class="td">{{cart?.selling_price_online}}</td>
+                                            <td class="td">{{cart?.selling_price_offline}}</td>
+                                            <td class="td">{{cart?.dealer_price}}</td>
+                                            <td class="td">{{cart?.employee_price}}</td>
                                             <td class="td">{{cart?.discount}}</td>
-                                            <td class="td">{{cart?.discount_type}}</td>
-                                            <td class="td">{{cart?.additional_discount}}</td>
                                             <td class="td">{{cart?.tax}}</td>
                                             <td class="td">{{cart?.total}}</td>
                                         </tr>
