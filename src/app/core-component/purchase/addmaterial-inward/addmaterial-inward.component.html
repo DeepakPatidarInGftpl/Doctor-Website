@@ -18,10 +18,11 @@
                                 [formControl]="supplierControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier.company_name"
-                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.company_name
-                                    }}</mat-option>
-
+                                <ng-container *ngFor="let supplier of filteredSuppliers | async">
+                                    <mat-option *ngIf="supplier.is_active==true"
+                                    [value]="supplier.company_name" (onSelectionChange)="oncheck(supplier.id)"
+                                    style="color:#FF9F43">{{ supplier.company_name}}</mat-option>
+                                </ng-container>
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
                                         <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
@@ -43,12 +44,13 @@
                         <select formControlName="purchase_order"
                             [ngClass]="{'is-invalid': f['purchase_order'].touched && f['purchase_order'].invalid}">
                             <option value="" selected disabled>Select Purchase Order</option>
-                            <option value="{{purchase.id}}" *ngFor="let purchase of purchaseList">{{purchase.order_no}}
+                            <ng-container *ngFor="let purchase of purchaseList">
+                            <option value="{{purchase.id}}" *ngIf="purchase.is_active==true">{{purchase?.order_no}}
                             </option>
+                            </ng-container>
                         </select>
                         <span class="text-danger"
-                            *ngIf="purchase_order && purchase_order.invalid && purchase_order.touched">Select
-                            Purchase order
+                            *ngIf="purchase_order && purchase_order.invalid && purchase_order.touched">Select Purchase order
                         </span>
                     </div>
                 </div>
@@ -423,14 +425,12 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Barcode/SKU</th>
-                                <th style="width: 20%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Product Name <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
-                                <th>QTY <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
+                                <th >Barcode/SKU</th>
+                                <th style="width: 25%;">Product Name
+                                <th>QTY </th>
                                 <th>PO QTY</th>
-                               
-                                <th>Mrp <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
-                                
-                                <th class="text-end">Total Cost</th>
+                                <th>Mrp</th>
+                                <th>Total Cost</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -464,13 +464,14 @@
                                             <input class="input" type="text" placeholder="Search Barcode"
                                                 [attr.data-index]="i"
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                (keyup)="searchProduct(id.value,i)" (blur)="hideSearch()">
+                                                (keyup)="getVariant(id.value,i)" (blur)="hideSearch()">
                                         </td>
-                                        <td>
+                                        <td colspan="1">
+                                            <div class="form-group" style="margin-bottom: 0;">
                                             <!-- <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
                                                 (click)="open()" placeholder="Search Product" *ngIf="isProduct"
                                                 class="input"> -->
-                                            <mat-form-field class="w-100" class="input">
+                                            <!-- <mat-form-field class="w-100" class="input">
                                                 <input type="text" placeholder="Search Product" aria-label="Produt"
                                                     matInput [formControl]="variantControl" [matAutocomplete]="auto"
                                                     style="height: 18px;">
@@ -488,18 +489,52 @@
                                                         </mat-option>
                                                     </ng-container>
                                                 </mat-autocomplete>
-                                            </mat-form-field>
+                                            </mat-form-field> -->
+
+                                            <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                <input
+                                                  type="text"
+                                                  placeholder="Search Product"
+                                                  aria-label="Search Products"
+                                                  matInput
+                                                  [formControl]="myControl"
+                                                  (input)="getVariant($event.target.value,i)"
+                                                  [matAutocomplete]="autos" 
+                                                  style="box-sizing: border-box;" 
+                                                />
+                                                <mat-autocomplete #autos="matAutocomplete">
+                                                    <ng-container *ngIf="myControl.value?.length > 1 && myControl.value?.length > 0">
+                                                        <ng-container *ngFor="let option of variantList">
+                                                  <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
+                                                              (onSelectionChange)="oncheckVariant(option,i)"
+                                                              (onSelectionChange)="variantChanged(option, i)" style="color:#FF9F43">
+                                                    {{ option?.product_title + ' ' + option?.variant_name}}
+                                                  </mat-option>
+                                                  </ng-container>
+                                                  </ng-container>
+                                                  <mat-option *ngIf="variantList?.length === 0" [value]="'No data found'">
+                                                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                                                  </mat-option>
+                                                  <mat-option *ngIf="myControl.value?.length < 3" class="is-loading">
+                                                    Please Enter 3 or more characters
+                                                  </mat-option>
+                                                </mat-autocomplete>
+                                              </mat-form-field>
+                                            </div>
                                         </td>
                                         <td><input type="text" formControlName="qty" class="input"></td>
                                         <td><input type="text" formControlName="po_qty" class="input"></td>
                                         <td><input type="text" formControlName="mrp" class="input">
-                                            <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch()"></i>
+                                            <i class="ion-information circle" data-bs-toggle="tooltip"
+                                                title="ion-information" (click)="openModalBatch()"></i>
                                             <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
                                                 aria-labelledby="addressModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered"
+                                                    role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Batch</h1>
+                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Batch
+                                                            </h1>
                                                             <button type="button" class="close"
                                                                 (click)="closeModalBatch()" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
@@ -512,26 +547,42 @@
                                                                         <table class="table datanew">
                                                                             <thead>
                                                                                 <tr>
-                                                                                    <th class="boder space-text">Sr.No.</th>
-                                                                                    <th class="boder space-text">MRP</th>
-                                                                                    <th class="boder space-text">Purchase Price</th>
-                                                                                    <th class="boder space-text">Purchase Tax</th>
-                                                                                    <th class="boder space-text">Sale Tax</th>
-                                                                                    <th class="boder space-text">Discount</th>
-                                                                                    <th class="boder space-text">Additional Discount</th>
-                                                                                    <th class="boder space-text">Action</th>
+                                                                                    <th class="boder space-text">Sr.No.
+                                                                                    </th>
+                                                                                    <th class="boder space-text">MRP
+                                                                                    </th>
+                                                                                    <th class="boder space-text">
+                                                                                        Purchase Price</th>
+                                                                                    <th class="boder space-text">
+                                                                                        Purchase Tax</th>
+                                                                                    <th class="boder space-text">Sale
+                                                                                        Tax</th>
+                                                                                    <th class="boder space-text">
+                                                                                        Discount</th>
+                                                                                    <th class="boder space-text">
+                                                                                        Additional Discount</th>
+                                                                                    <th class="boder space-text">Action
+                                                                                    </th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
                                                                                 <tr
                                                                                     *ngFor="let batch of selectBatch;let ind=index;">
-                                                                                    <td class="boder">{{ ind+1+'.'}}</td>
-                                                                                    <td class="boder">{{ batch?.mrp }}</td>
-                                                                                    <td class="boder">{{ batch?.cost_price }}</td>
-                                                                                    <td class="boder">{{ batch?.purchase_tax + '%'}}</td>
-                                                                                    <td class="boder">{{ batch?.sale_tax + '%'}}</td>
-                                                                                    <td class="boder">{{ batch?.discount + '%'}}</td>
-                                                                                    <td class="boder">{{ batch?.additional_discount + '%'}}</td>
+                                                                                    <td class="boder">{{ ind+1+'.'}}
+                                                                                    </td>
+                                                                                    <td class="boder">{{ batch?.mrp }}
+                                                                                    </td>
+                                                                                    <td class="boder">{{
+                                                                                        batch?.cost_price }}</td>
+                                                                                    <td class="boder">{{
+                                                                                        batch?.purchase_tax + '%'}}</td>
+                                                                                    <td class="boder">{{ batch?.sale_tax
+                                                                                        + '%'}}</td>
+                                                                                    <td class="boder">{{ batch?.discount
+                                                                                        + '%'}}</td>
+                                                                                    <td class="boder">{{
+                                                                                        batch?.additional_discount +
+                                                                                        '%'}}</td>
                                                                                     <td>
                                                                                         <button type="button"
                                                                                             (click)="selecBatchtModel(batch,i)"
@@ -550,9 +601,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                    
                                         <td class="text-end"><input type="text" class="input" [value]="(calculateTotalEveryIndex(i).toFixed(2)).toString()"></td>
-                                      
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -561,10 +610,10 @@
                                 <td></td>
                                 <td class="text-start"><strong>Total</strong></td>
                                 <td class="text-start">{{ calculateTotalQty()}}</td>
-                               <td class="text-start">{{calculateTotalPOQty()}}</td>
-                               <td class="text-start"> {{calculateTotalMrp().toFixed(2)}}</td>
-                              <td class="text-start"> {{ calculateTotal().toFixed(2) }}</td>
-                            
+                                <td class="text-start">{{calculateTotalPOQty()}}</td>
+                                <td class="text-start"> {{calculateTotalMrp().toFixed(2)}}</td>
+                                <td class="text-start"> {{ calculateTotal().toFixed(2) }}</td>
+
                             </tr>
                         </tbody>
                     </table>
@@ -581,17 +630,16 @@
                 <div class="col-lg-6 my-3">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea class="form-control" formControlName="note" [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
+                        <textarea formControlName="note" [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                     </div>
                 </div>
-
                 <div class="col-lg-6 my-3">
                     <div class="form-group">
                         <div class="total-order">
                             <ul>
                                 <li>
                                     <h4>Total Mrp</h4>
-                                    <h5>{{calculateTotalMrp().toFixed(2) | currency:'INR'}}    
+                                    <h5>{{calculateTotalMrp().toFixed(2) | currency:'INR'}}
                                     </h5>
                                 </li>
                                 <!-- <li>
@@ -672,7 +720,8 @@
 
                 <div class="row">
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <a routerLink="//purchase/material-Inward-list" class="btn btn-cancel text-white" style=" background-color: #f4516c;">Cancel</a>
+                        <a routerLink="//purchase/material-Inward-list" class="btn btn-cancel text-white"
+                            style=" background-color: #f4516c;">Cancel</a>
                         <a class="btn btn-cancel text-white" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
@@ -682,10 +731,13 @@
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('save')">Save</button>
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save</button> 
-                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('new')">Save & Create New</button>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>Save</button>
+                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('new')">Save & Create
+                            New</button>
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save & Create New</button>    
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save
+                            & Create New</button>
                     </div>
                 </div>
             </div>

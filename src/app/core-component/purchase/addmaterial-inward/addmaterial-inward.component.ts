@@ -81,7 +81,7 @@ export class AddmaterialInwardComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
     this.getSuuplier();
-    this.getVariants();
+    // this.getVariants();
     this.getPurchase();
     this.getprefix();
   }
@@ -144,13 +144,16 @@ export class AddmaterialInwardComponent implements OnInit {
   selectedAddressBilling: any;
   selectedAddressShipping: any;
   selectBatch: any;
+  supplierId:any;
   oncheck(event: any) {
     // console.log(event);
-    const selectedItemId = event; // Assuming the ID field is 'item_id'
+    const selectedItemId = event; 
     // console.log(selectedItemId);
+    this.supplierId=event;
    //call detail api
    this.contactService.getSupplierById(selectedItemId).subscribe(res => {
     // console.log(res);
+    this.getVariant('','')
     this.supplierAddress = res;
     console.log(this.selectedAddressBilling);
     this.supplierAddress.address.map((res: any) => {
@@ -269,7 +272,6 @@ export class AddmaterialInwardComponent implements OnInit {
     barcode.patchValue({
       barcode: selectedItemId
     });
-
     if (event.batch.length > 0) {
       const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
@@ -302,6 +304,20 @@ export class AddmaterialInwardComponent implements OnInit {
         formdata.append('status', 'draft');
       }
       // nested addrs data 
+      // const cartArray = this.materialForm.get('material_inward_cart') as FormArray;
+      // const cartData = [];
+      // cartArray.controls.forEach((address) => {
+      //   const cartGroup = address as FormGroup;
+      //   const cartObject = {};
+      //   Object.keys(cartGroup.controls).forEach((key) => {
+      //     const control = cartGroup.controls[key];
+      //     cartObject[key] = control.value;
+      //   });
+      //   cartData.push(cartObject);
+      // });
+      // formdata.append('material_inward_cart', JSON.stringify(cartData));
+
+
       const cartArray = this.materialForm.get('material_inward_cart') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
@@ -309,8 +325,14 @@ export class AddmaterialInwardComponent implements OnInit {
         const cartObject = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
-          cartObject[key] = control.value;
+          // Convert the value to an integer if it's a number
+          if (!isNaN(control.value)) {
+            cartObject[key] = parseInt(control.value, 10);
+          } else {
+            cartObject[key] = control.value;
+          }
         });
+
         cartData.push(cartObject);
       });
       formdata.append('material_inward_cart', JSON.stringify(cartData));
@@ -435,6 +457,7 @@ export class AddmaterialInwardComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
+    this.getVariant('','')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
@@ -593,4 +616,27 @@ export class AddmaterialInwardComponent implements OnInit {
     document.body.innerHTML = originalContents;
   }
 
+category:any;
+subcategory:any;
+searc:any;
+myControl = new FormControl('');
+variantList: any[] = []; 
+  getVariant(search:any,index:any) {
+    this.purchaseService.filterVariant(this.supplierId,this.category,this.subcategory,search).subscribe((res:any) => {
+      console.log(res);
+      this.variantList=res;
+      console.log(this.variantList);
+      //barcode patchvalue
+      this.searchs = res;
+      this.productOption = res;
+      // console.log(this.searchs);
+      this.productName[index] = this.searchs[0].product_title;
+      // console.log(this.productName);
+      this.check = true;
+      const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+      barcode.patchValue({
+        barcode: this.searchs[0].id
+      });
+    });
+  }
 }

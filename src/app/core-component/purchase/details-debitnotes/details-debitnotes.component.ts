@@ -19,7 +19,7 @@ export class DetailsDebitnotesComponent implements OnInit {
   }
   purchaseBillDetail: any
   getdata() {
-    this.purchaseService.getDebitNotesById(this.id).subscribe(res => {
+    this.purchaseService.getPurchaseReturnById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.purchaseBillDetail = res
         // console.log(res);

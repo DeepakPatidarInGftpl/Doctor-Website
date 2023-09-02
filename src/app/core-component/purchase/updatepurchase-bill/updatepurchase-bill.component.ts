@@ -13,8 +13,6 @@ import { tap } from 'rxjs/operators';
 })
 export class UpdatepurchaseBillComponent implements OnInit {
 
-
-
   searchControl = new FormControl();
   searchResults: any[] = [];
 
@@ -57,6 +55,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...'); 
+    this.myControls = new FormArray([]);
     this.puchaseBillForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       supplier_bill_date: new FormControl('', [Validators.required]),
@@ -89,11 +88,12 @@ export class UpdatepurchaseBillComponent implements OnInit {
       // console.log(res);
       this.getresbyId = res;
       this.puchaseBillForm.patchValue(res);
-      this.puchaseBillForm.get('party')?.patchValue(res.party.id);
-      this.puchaseBillForm.get('material_inward_no')?.patchValue(res.material_inward_no.id);
-      this.puchaseBillForm.setControl('purchase_bill', this.udateCart(res.cart));
+      this.puchaseBillForm.get('party')?.patchValue(res?.party.id);
+      this.puchaseBillForm.get('material_inward_no')?.patchValue(res?.material_inward_no?.id);
+      this.puchaseBillForm.setControl('purchase_bill', this.udateCart(res?.cart));
       this.displaySupplierName(res.party.id);
-
+      this.supplierId=res.party.id;
+      this.getVariant('','')
                //call detail api
      this.contactService.getSupplierById(res.party.id).subscribe(res=>{
       // console.log(res);
@@ -121,7 +121,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
     this.getSuuplier();
-    this.getVariants();
+    // this.getVariants();
     this.getPurchase();
     this.getMaterialInward();
     this.getPaymentTerms()
@@ -153,6 +153,32 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.toastrService.error(err.error.msg)
     })
   }
+
+  additionalData: any;
+  getAdditionalDiscount() {
+    this.purchaseService.getAdditionalCharge().subscribe(res => {
+      console.log(res);
+      this.additionalData = res;
+    })
+  }
+  taxData: any;
+  getTax() {
+    this.purchaseService.getTax().subscribe(res => {
+      this.taxData = res;
+    })
+  }
+  value:any[]=[]
+  getAdditional(data:any,j){
+    console.log(data);
+    this.purchaseService.getAdditionalCharge().subscribe((res:any) => {
+      res.map((res:any)=>{
+        if(data==res.additional_charge){
+          this.value[j]=res.value
+          console.log(this.value[j]);   
+        }
+      })
+    })
+  }
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
@@ -164,12 +190,18 @@ export class UpdatepurchaseBillComponent implements OnInit {
         discount: j.discount,
         tax: j.tax,
         landing_cost: j.landing_cost,
-        discount_type:j.discount_type,
-        additional_discount:j.additional_discount
+        selling_price_online: j.selling_price_online,
+        selling_price_offline: j.selling_price_offline,
+        dealer_price: j.dealer_price,
+        employee_price: j.employee_price,
+        // total: j.total,
+        // discount_type:j.discount_type,
+        additional_discount: j.additional_discount
         // total: j.total
       }))
       this.barcode[i] = j.barcode.sku;
       this.productName[i] = j.barcode.product_title;
+      this.myControls.push(new FormControl(j?.barcode?.product_title));
     })
     return formarr
   }
@@ -262,16 +294,19 @@ export class UpdatepurchaseBillComponent implements OnInit {
   selectedAddressBilling: any;
   selectedAddressShipping: any;
   selectBatch: any;
+  supplierId:any;
   oncheck(event: any) {
     // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     // console.log(selectedItemId);
+    this.supplierId=event;
+
+    this.getVariant('','')
     if (this.getresbyId.cart.length >= 0) {
       const variants = this.puchaseBillForm.get('purchase_bill') as FormArray;
       variants.clear();
       this.addCart();
     }
-
     this.puchaseBillForm.patchValue({
       party: selectedItemId
     });
@@ -455,6 +490,19 @@ export class UpdatepurchaseBillComponent implements OnInit {
       }
 
       // nested addrs data 
+      // const cartArray = this.puchaseBillForm.get('purchase_bill') as FormArray;
+      // const cartData = [];
+      // cartArray.controls.forEach((address) => {
+      //   const cartGroup = address as FormGroup;
+      //   const cartObject = {};
+      //   Object.keys(cartGroup.controls).forEach((key) => {
+      //     const control = cartGroup.controls[key];
+      //     cartObject[key] = control.value;
+      //   });
+      //   cartData.push(cartObject);
+      // });
+      // formdata.append('purchase_bill', JSON.stringify(cartData));
+
       const cartArray = this.puchaseBillForm.get('purchase_bill') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
@@ -462,11 +510,19 @@ export class UpdatepurchaseBillComponent implements OnInit {
         const cartObject = {};
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
-          cartObject[key] = control.value;
+          // Convert the value to an integer if it's a number
+          if (!isNaN(control.value)) {
+            cartObject[key] = parseInt(control.value, 10);
+          } else {
+            cartObject[key] = control.value;
+          }
         });
+
         cartData.push(cartObject);
       });
       formdata.append('purchase_bill', JSON.stringify(cartData));
+
+
       this.purchaseService.updatePurchaseBill(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.getRes = res;
@@ -565,6 +621,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
+    this.getVariant('','')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
@@ -807,5 +864,31 @@ export class UpdatepurchaseBillComponent implements OnInit {
     const totalForTax = taxAmount
     return totalForTax;
   }
+
+  category:any;
+  subcategory:any;
+  searc:any;
+  myControls: FormArray;
+  variantList: any[] = []; 
+    getVariant(search:any,index:any) {
+      this.purchaseService.filterVariant(this.supplierId,this.category,this.subcategory,search).subscribe((res:any) => {
+        console.log(res);
+        this.variantList=res;
+        console.log(this.variantList);
+        if (search) {
+           // barcode patch
+           this.searchs = res;
+           this.productOption = res;
+           // console.log(this.searchs);
+           this.productName[index] = this.searchs[0].product_title;
+           // console.log(this.productName);
+           this.check = true;
+           const barcode = (this.puchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
+           barcode.patchValue({
+             barcode: this.searchs[0].id
+           });
+          }
+      });
+    }
 }
 

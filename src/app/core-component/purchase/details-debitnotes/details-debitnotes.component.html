@@ -37,22 +37,22 @@
                                             <td class="th">Refrence Bill No</td>
                                             <td class="td">{{purchaseBillDetail?.refrence_bill_no}}</td>
                                         </tr>
-                                        <tr>
+                                        <!-- <tr>
                                             <td class="th">Payment Term</td>
                                             <td class="td">{{purchaseBillDetail?.payment_term.title}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Due Date</td>
                                             <td class="td">{{purchaseBillDetail?.due_date}}</td>
-                                        </tr>
+                                        </tr> -->
                                         <tr>
                                             <td class="th">Reverse Charge</td>
                                             <td class="td">{{purchaseBillDetail?.reverse_charge}}</td>
                                         </tr>
-                                        <tr>
+                                        <!-- <tr>
                                             <td class="th">Shipping Date</td>
                                             <td class="td">{{purchaseBillDetail?.shipping_date}}</td>
-                                        </tr>
+                                        </tr> -->
                                         <tr>
                                             <td class="th">Export</td>
                                             <td class="td">{{purchaseBillDetail?.export}}</td>
@@ -89,10 +89,8 @@
                                             <td class="th">Landing Cost</td>
                                             <td class="th">Unit Cost</td>
                                             <td class="th">Discount</td>
-                                            <td class="th">Discount Type</td>
-                                            <td class="th">Additional Discount</td>
                                             <td class="th">Tax</td>
-                                            <td class="th">Batch</td>
+                                            <td class="th">Total</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -103,10 +101,8 @@
                                             <td class="td">{{cart?.landing_cost}}</td>
                                             <td class="td">{{cart?.unit_cost}}</td>
                                             <td class="td">{{cart?.discount}}</td>
-                                            <td class="td">{{cart?.discount_type}}</td>
-                                            <td class="td">{{cart?.additional_discount}}</td>
                                             <td class="td">{{cart?.tax}}</td>
-                                            <td class="td">{{cart?.batch.mrp}}</td>
+                                            <td class="td">{{cart?.total}}</td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -371,24 +371,17 @@
 													{{brand.title}}
 												</option>
 											</select>
-											<span class="text-danger"
-												*ngIf="brand && brand.invalid && brand.touched && brandBySubcat?.length>0">Select
-												Brand
+											<span class="text-danger" *ngIf="brand && brand.invalid && brand.touched && brandBySubcat?.length>0">Select Brand
 											</span>
-											<span class="text-danger"
-												*ngIf="subcategory && subcategory.touched && brandBySubcat?.length<=0">Brands
-												not available
+											<span class="text-danger" *ngIf="subcategory && subcategory.touched && brandBySubcat?.length<=0">Brands not available
 											</span>
 										</div>
 									</div>
 									<div class="col-lg-6 col-sm-6 col-12">
 										<div class="form-group">
 											<label>Colors</label>
-
 											<div class="dropdown">
-												<button type="button" class="dropdown-toggle button" type="button"
-													data-bs-toggle="dropdown" aria-expanded="false">Select
-													Color</button>
+												<button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown" aria-expanded="false">Select Color</button>
 												<ul class="dropdown-menu"
 													style="width: 100%; max-height: 300px; overflow-y: auto;">
 													<li><input type="text" placeholder="search color"
@@ -613,7 +606,7 @@
 										</table>
 									</div>
 									<div class="col-lg-12 text-center my-5">
-										<a class="btn btn-cancel">Clear</a>
+										<a class="btn btn-cancel" (click)="clearForm()">Clear</a>
 										<!-- <button type="button" class="btn btn-submit me-2" (click)="selectTab(1)">Save & Next</button> -->
 										<button type="button" class="btn btn-submit me-2" (click)="saveAndNext()">Save &
 											Next</button>
@@ -694,7 +687,7 @@
 									</table>
 								</div>
 								<div class="col-lg-12 text-center my-5">
-									<a class="btn btn-cancel">Clear</a>
+									<a class="btn btn-cancel" (click)="clearForm()">Clear</a>
 									<button type="button" class="btn btn-submit me-2" (click)="selectTab(2)">Save &
 										Create New</button>
 								</div>
@@ -764,7 +757,7 @@
 									</tbody>
 								</table>
 								<div class="col-lg-12 text-center my-5">
-									<a class="btn btn-cancel">Clear</a>
+									<a class="btn btn-cancel" (click)="clearForm()">Clear</a>
 									<button class="btn btn-submit me-2" *ngIf="!loader">Save & Create New</button>
 
 									<button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
