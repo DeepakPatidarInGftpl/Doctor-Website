@@ -81,13 +81,25 @@ export class EditpurchaseComponent implements OnInit {
       this.purchaseForm.get('party')?.patchValue(res.party.id)
       this.purchaseForm.setControl('purchase_cart', this.udateCart(res?.cart));
       this.displaySupplierName(res.party.id);
+
+       //patch local-date
+       const formattedOrderDate = new Date(this.getresbyId?.order_date).toISOString().slice(0, 16);
+       this.purchaseForm.get('order_date')?.patchValue(formattedOrderDate);
+      
+       const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
+       this.purchaseForm.get('shipping_date')?.patchValue(formattedshipping_date);
+      
+
       this.supplierId = res.party.id
       this.getVariant('', '')
+
       //call detail api
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
         // console.log(res);
         this.supplierAddress = res;
-        this.supplierControl.setValue(res.name);
+        this.supplierControl.setValue(res?.company_name);
+        console.log(this.supplierControl);
+        
         this.getprefix()
         this.supplierAddress.address.map((res: any) => {
           if (res.address_type == 'Billing') {

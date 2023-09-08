@@ -14,7 +14,8 @@ if (localStorageData) {
     }
   });
 }
-const routes: Routes = [{path:'',component:TaxSlabUpdatedComponent, canActivate:[RolesGuardGuard],data:{allowedRoles:['change_taxslabs']}}];
+const routes: Routes = [{path:'',component:TaxSlabUpdatedComponent,
+}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

@@ -75,7 +75,6 @@ export class UpdateDebitnotesComponent implements OnInit {
       sub_total: new FormControl(''),
       round_off: new FormControl(''),
       total: new FormControl(''),
-
       cart: this.fb.array([]),
       // payment_term: new FormControl('', [Validators.required]),
       // due_date: new FormControl(defaultDateTime, [Validators.required]),
@@ -95,11 +94,16 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.displaySupplierName(res?.party?.id);
       this.supplierId=res.party.id
       this.getVariant('','')
+
+ //patch local-date
+ const formatteddebit_note_date = new Date(this.getresbyId?.debit_note_date).toISOString().slice(0, 16);
+ this.debitNotesForm.get('debit_note_date')?.patchValue(formatteddebit_note_date);
+
       //call detail api
       this.contactService.getSupplierById(res?.party?.id).subscribe(res => {
         // console.log(res);
         this.supplierAddress = res;
-        this.supplierControl.setValue(res.name);
+        this.supplierControl.setValue(res.company_name);
         this.getprefix()
         this.supplierAddress.address.map((res: any) => {
           if (res.address_type == 'Billing') {

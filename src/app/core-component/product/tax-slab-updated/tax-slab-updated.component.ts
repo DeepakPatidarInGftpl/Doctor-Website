@@ -17,71 +17,105 @@ export class TaxSlabUpdatedComponent implements OnInit {
     return this.taxSlabForm.controls;
   }
 
-  constructor(private fb: FormBuilder, private coreService: CoreService, private Arout: ActivatedRoute,
-    private router: Router,
-    private toastrService: ToastrService) { }
+  constructor(private fb: FormBuilder, private coreService: CoreService, private Arout: ActivatedRoute, private router: Router, private toastrService: ToastrService) { }
+  
   id: any;
   getRes: any;
+  isTax : boolean
+  isAddmoreTax = false;
+
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.taxSlabForm = this.fb.group({
-      subcategory_group: new FormControl('', [Validators.required]),
-      // subcategory: new FormControl('', [Validators.required]),
-      subcategory: new FormArray([], [Validators.required]),
+      // subcategory_group: new FormControl('', [Validators.required]),
+      // subcategory: new FormArray([], [Validators.required]),
+      slab_title: new FormControl('', [Validators.required]),
+      variable_tax: new FormControl('', [Validators.required]),
       amount_tax_slabs: this.fb.array([])
     })
 
     this.coreService.getTaxSlabById(this.id).subscribe(res => {
       // console.log(res);
       this.getRes = res;
-      this.selectSubcat = this.getRes.subcategory.map((res: any) => res.id);
+      // this.selectSubcat = this.getRes.subcategory.map((res: any) => res.id);
       // console.log(this.selectSubcat);
-      this.getSubcategoryBySubcatGroup(this.getRes.subcategory_group.id);
+      // this.getSubcategoryBySubcatGroup(this.getRes.subcategory_group.id);
 
-      this.taxSlabForm.patchValue({
-        subcategory_group: this.getRes.subcategory_group.id,
-        // subcategory:this.getRes.subcategory[0].id
-      })
-
+      // this.taxSlabForm.patchValue({
+      //   // subcategory_group: this.getRes.subcategory_group.id,
+      // })
+      this.taxSlabForm.patchValue(this.getRes)
+      this.isTax = this.getRes?.variable_tax
       this.taxSlabForm.setControl('amount_tax_slabs', this.udateAmount(this.getRes.amount_tax_slabs));
+
+      if (this.isTax == true) {
+        this.isAddmoreTax = true
+      } else {
+        this.isAddmoreTax = false
+        // this.taxSlabForm.get('amount_tax_slabs').reset()
+      }
     })
 
     this.addAmount()
-    this.getSubcateGroup()
+    // this.getSubcateGroup()
     this.getTax();
+  }
 
+  toggle() {
+    this.isTax = !this.isTax;
+    if (this.isTax == true) {
+      this.isAddmoreTax = true
+    } else {
+      this.isAddmoreTax = false
+      const amountTaxSlabs = this.taxSlabForm.get('amount_tax_slabs') as FormArray;
+      amountTaxSlabs.clear();
+      this.addAmount()
+    }
   }
 
   // updated data
   udateAmount(add: any): FormArray {
     let formarr = new FormArray([]);
     add.forEach((j: any) => {
-      formarr.push(this.fb.group({
-        from_amount: j.from_amount,
-        to_amount: j.to_amount,
-        tax: j.tax.id
-      }))
+      if(this.isTax == true){
+        formarr.push(this.fb.group({
+          from_amount: j.from_amount,
+          to_amount: j.to_amount,
+          tax: j.tax.id
+        }))
+      }else{
+        const amountTaxSlabs = this.taxSlabForm.get('amount_tax_slabs') as FormArray;
+        amountTaxSlabs.clear();
+        formarr.push(this.fb.group({
+          tax: j.tax.id
+        }))
+      }
+     
     })
     return formarr
   }
 
-  udateSubcat(add: any) {
+  // udateSubcat(add: any) {
+  //   add.forEach((j: any) => {
+  //     subcategory: j.id
+  //   })
 
-    add.forEach((j: any) => {
-      // console.log(j);
-      subcategory: j.id
-    })
-
-  }
-
+  // }
 
   amount_tax_slabs(): FormGroup {
-    return this.fb.group({
-      from_amount: (''),
-      to_amount: (''),
-      tax: ('')
-    });
+    if(this.isTax == true){
+      return this.fb.group({
+        from_amount: (''),
+        to_amount: (''),
+        tax: ('')
+      });
+    }else{
+      return this.fb.group({
+        tax: ('')
+      });
+    }
   }
+  
   getAmount(): FormArray {
     return this.taxSlabForm.get('amount_tax_slabs') as FormArray;
   }
@@ -92,11 +126,17 @@ export class TaxSlabUpdatedComponent implements OnInit {
     this.getAmount().removeAt(i)
   }
 
-  get subcategory_group() {
-    return this.taxSlabForm.get('subcategory_group')
+  // get subcategory_group() {
+  //   return this.taxSlabForm.get('subcategory_group')
+  // }
+  // get subcategory() {
+  //   return this.taxSlabForm.get('subcategory')
+  // }
+  get slab_title() {
+    return this.taxSlabForm.get('slab_title')
   }
-  get subcategory() {
-    return this.taxSlabForm.get('subcategory')
+  get variable_tax() {
+    return this.taxSlabForm.get('variable_tax')
   }
   get tax() {
     return this.taxSlabForm.get('tax')
@@ -118,7 +158,7 @@ export class TaxSlabUpdatedComponent implements OnInit {
     })
   }
   checks = true;
-  subcatbySubcatGroup: any[] = []; 
+  subcatbySubcatGroup: any[] = [];
   filteredSubcategory: any[] = [];
   searchTerm: string = '';
   getd: any;
@@ -167,7 +207,7 @@ export class TaxSlabUpdatedComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedSubcat++;
-      this.selectedSubCategoryIds=formArray.value
+      this.selectedSubCategoryIds = formArray.value
     }
     /* unselected */
     else {
@@ -187,19 +227,21 @@ export class TaxSlabUpdatedComponent implements OnInit {
   updateRes: any;
   loaders = false;
   submit() {
-    // console.log(this.taxSlabForm.value);
+    console.log(this.taxSlabForm.value);
     // console.log(this.id);
-    
+
     let form = this.taxSlabForm.value;
     if (this.taxSlabForm.valid) {
       this.loaders = true;
-      this.coreService.updateTaxSlab(form,this.id).subscribe(res => {
+      this.coreService.updateTaxSlab(form, this.id).subscribe(res => {
         // console.log(res);
         this.updateRes = res;
-        if (this.updateRes.msg == "Tax Slabs Updated") {
+        if (this.updateRes.msg == "Tax Slabs Updated Successfully") {
           this.loaders = false;
           this.toastrService.success(this.updateRes.msg)
           this.router.navigate(['product/taxSlabList']);
+        } else {
+          this.loaders = false;
         }
       })
     } else {

@@ -371,11 +371,12 @@ export class DealOfTheDayComponent implements OnInit {
       if (id == this.resEdit.id) {
         // console.log(this.resEdit.variant);
         this.addForm = false
-
         this.dealOfTheDayForm.patchValue({
           discount: this.resEdit.discount,
-          datetime: this.resEdit.datetime
+          // datetime: this.resEdit.datetime
         });
+        const formattedDate = new Date(this.resEdit.datetime).toISOString().slice(0, 16);
+        this.dealOfTheDayForm.get('datetime')?.patchValue(formattedDate);
         // here selected data send value in formArray
         this.resEdit.variant.map((res: any) => {
           // console.log(res);

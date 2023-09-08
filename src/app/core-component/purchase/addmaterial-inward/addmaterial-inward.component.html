@@ -409,6 +409,16 @@
                         </span>
                     </div>
                 </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Product Type</label>
+                        <select formControlName="product_type" [ngClass]="{'is-invalid': f['product_type'].touched && f['product_type'].invalid}">
+                            <option value="Demo Product">Demo Product</option>
+                            <option value="Gift">Gift</option>
+                            <option value="Saleable">Saleable</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <div class="d-flex mt-4">

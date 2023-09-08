@@ -109,9 +109,9 @@
                                 <td class="productimgname">
                                     <a routerLink="//purchase/purchaseDetails/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a>
                                 </td>
-                                <td>{{products.order_date}}</td>
+                                <td>{{products.order_date | date: 'yyyy-MM-dd'}}</td>
                                 <td>{{products.order_no}}</td>
-                                <td>{{products.shipping_date}}</td>
+                                <td>{{products.shipping_date |  date: 'yyyy-MM-dd'}}</td>
                                 <td>{{products.shipping_note}}</td>
                                 <td>{{products.note}}</td>
                                 <td>

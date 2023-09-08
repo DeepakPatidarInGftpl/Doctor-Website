@@ -80,6 +80,9 @@ export class AddproductComponent implements OnInit {
       return_time: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       cod_available: new FormControl('', [Validators.required]),
       product_or_service: new FormControl('', [Validators.required]),
+      //new field add 4-9
+      sale_tax:new FormControl('',[Validators.required]),
+      purchase_tax:new FormControl('',[Validators.required]),
       //end
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
@@ -318,6 +321,7 @@ export class AddproductComponent implements OnInit {
     })
   }
 
+ 
   // subcategory wise tax slab
   featureGrpBysubcatGroupList: any;
   featureData: any;
@@ -474,6 +478,8 @@ export class AddproductComponent implements OnInit {
     formdata.append('return_time', this.productForm.get('return_time')?.value);
     formdata.append('cod_available', this.productForm.get('cod_available')?.value);
     formdata.append('product_or_service', this.productForm.get('product_or_service')?.value);
+    formdata.append('sale_tax', this.productForm.get('sale_tax')?.value);
+    formdata.append('purchase_tax', this.productForm.get('purchase_tax')?.value);
     // end
 
     // nested formdata 
@@ -582,7 +588,7 @@ export class AddproductComponent implements OnInit {
     if (this.productForm.valid) {
       this.loader = true
       this.coreService.addProduct(formdata).subscribe(res => {
-        if (res.msg == "Data Created") {
+        if (res.msg == "Product Created Successfully") {
           this.loader = false;
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
@@ -651,6 +657,13 @@ export class AddproductComponent implements OnInit {
   get product_or_service() {
     return this.productForm.get('product_or_service')
   }
+  get purchase_tax(){
+    return this.productForm.get('purchase_tax')
+  }
+  get sale_tax(){
+    return this.productForm.get('sale_tax')
+  }
+
   getvariant_name(index: number) {
     return this.getVarinatsForm().controls[index].get('variant_name');
   }

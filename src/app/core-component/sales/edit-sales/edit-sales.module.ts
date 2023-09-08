@@ -4,6 +4,11 @@ import { DatepickerModule } from 'ng2-datepicker';
 import { EditSalesRoutingModule } from './edit-sales-routing.module';
 import { EditSalesComponent } from './edit-sales.component';
 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { NgFor, AsyncPipe } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -12,7 +17,14 @@ import { EditSalesComponent } from './edit-sales.component';
   imports: [
     CommonModule,
     EditSalesRoutingModule,
-    DatepickerModule
+    DatepickerModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    NgFor,
+    AsyncPipe,
+    MatFormFieldModule,
+    MatInputModule,
   ],
  bootstrap: [EditSalesComponent]
 })

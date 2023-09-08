@@ -23,23 +23,26 @@
         <div class="company-details-card card">
             <table>
                 <tr class="ro-border">
-                    <td colspan="2" class="f-500">Sub Category Group</td>
+                    <td colspan="2" class="f-500">Slab Title</td>
                     <td colspan="6" class="f-400">
-                        <h6>{{productDetail.subcategory_group.title}}</h6>
+                        <h6>
+                            <!-- {{productDetail.subcategory_group.title}} -->
+                            {{productDetail?.slab_title}}
+                        </h6>
                     </td>
                 </tr>
                 <tr class="ro-border">
-                    <td colspan="2" class="f-500">Sub Category</td>
+                    <td colspan="2" class="f-500">Is Variable Tax</td>
                     <td colspan="6" class="f-400 p-0">
-                        <div class="row ro-6" *ngFor="let subcategory of productDetail.subcategory">
-                            <!-- <div class="col-sm-6">
-                                <h6 class="f-500">Title</h6>                            
-                            </div> -->
+                        <h6>
+                            <span [ngClass]="{'bg-lightgreen': productDetail?.variable_tax === true, 'bg-lightred' : productDetail?.variable_tax === false }"
+                            class="badges">{{productDetail?.variable_tax}}</span>
+                        </h6>
+                        <!-- <div class="row ro-6" *ngFor="let subcategory of productDetail.subcategory">
                             <div class="col-sm-12">
                                 <h6>{{subcategory.title+','}}</h6>                              
                             </div>
-                        </div>
-                    
+                        </div> -->
                     </td>
                 </tr>   
               
@@ -65,7 +68,7 @@
                                 <h6>{{amount.tax}}</h6>
                             </div>
                         </div> -->
-
+                       
                         <div class="table-responsive">
                             <table datatable class="table datanew">
                                 <thead>
@@ -76,8 +79,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let amount of productDetail.amount_tax_slabs let i = index">
-                                       
+                                    <tr *ngFor="let amount of productDetail?.amount_tax_slabs let i = index">   
                                         <td>{{amount.from_amount}}</td>
                                         <td>{{amount.to_amount}}</td>
                                       <td>{{amount?.tax?.tax_percentage}}</td>   
@@ -89,12 +91,10 @@
                 </tr>     
             </table>
         </div>
-      
             
         <div class="d-flex align-items-center">
             <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-            <span [ngClass]="{'bg-lightgreen': productDetail.is_active === true, 'bg-lightred' : productDetail.is_active === false,'bg-lightyellow' : productDetail.is_active === 'Partial' }"
-                                class="badges">{{productDetail.is_active}}</span>
+            <span [ngClass]="{'bg-lightgreen': productDetail.is_active === true, 'bg-lightred' : productDetail.is_active === false,'bg-lightyellow' : productDetail.is_active === 'Partial' }" class="badges">{{productDetail.is_active}}</span>
         </div>
    </div>
 </div>

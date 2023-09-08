@@ -8,7 +8,6 @@ import { SalesComponent } from './sales.component';
 @NgModule({
   declarations: [
     SalesComponent,
-    
   ],
   imports: [
     CommonModule,

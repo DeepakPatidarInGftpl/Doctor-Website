@@ -10,7 +10,6 @@
     </div>
 </div>
 
-
 <!-- /product list -->
 <div class="card">
     <div class="card-body">
@@ -61,8 +60,8 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Subcategory Group <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">SubCategory <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Slab Title<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Variable Tax <i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Amount<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
@@ -79,12 +78,17 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td>
-                        {{products?.subcategory_group?.title}}
+                        <!-- {{products?.subcategory_group?.title}} -->
+                        {{products?.slab_title}}
                         </td>
                         <!-- <td><tr *ngFor="let data of products.subcategory">
                             <td>{{data.title+','}}</td>
                         </tr></td> -->
-                        <td>{{products?.subcategory[0]?.title}}</td>
+                        <td>
+                            <!-- {{products?.subcategory[0]?.title}} -->
+                            <span [ngClass]="{'bg-lightgreen': products?.variable_tax === true, 'bg-lightred' : products?.variable_tax === false }"
+                                class="badges">{{products?.variable_tax}}</span>
+                        </td>
                         <!-- <td>
                             <tr *ngFor="let amount of products.amount_tax_slabs">
                             <td>
@@ -103,11 +107,11 @@
                             <a class="me-2" routerLink="//product/taxSlabDetail/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-2" routerLink="//product/taxSlabUpdate/{{products.id}}" *ngIf="isEdit">
+                            <a class="me-2" routerLink="//product/taxSlabUpdate/{{products.id}}" >
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-2 confirm-text"
-                                href="javascript:void(0);" *ngIf="isDelete">
+                                href="javascript:void(0);" >
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
                         </td>

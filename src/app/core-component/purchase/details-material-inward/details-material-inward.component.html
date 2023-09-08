@@ -31,11 +31,11 @@
                                         </tr>
                                         <tr>
                                             <td class="th">PO Date</td>
-                                            <td class="td">{{materialDetail?.po_date}}</td>
+                                            <td class="td">{{materialDetail?.po_date |  date: 'yyyy-MM-dd hh:mm:ss a'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Material Inward Date</td>
-                                            <td class="td">{{materialDetail?.material_inward_date}}</td>
+                                            <td class="td">{{materialDetail?.material_inward_date |  date: 'yyyy-MM-dd hh:mm:ss a'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Material Inward No</td>
@@ -47,7 +47,7 @@
                                         </tr>
                                         <tr>
                                             <td class="th">Recieved By</td>
-                                            <td class="td">{{materialDetail?.shipping_note}}</td>
+                                            <td class="td">{{materialDetail?.recieved_by}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Round Off</td>
