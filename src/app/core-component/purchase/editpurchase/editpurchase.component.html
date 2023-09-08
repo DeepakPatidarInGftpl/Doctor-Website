@@ -44,7 +44,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Purchase Date</label>
-                        <input type="date" formControlName="order_date" [readonly]="true">
+                        <input type="datetime-local" formControlName="order_date" [readonly]="true">
                     </div>
                 </div>
 
@@ -58,7 +58,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Shipping Date </label>
-                        <input type="date" formControlName="shipping_date" readonly>
+                        <input type="datetime-local" formControlName="shipping_date" readonly>
                     </div>
                 </div>
 
@@ -381,6 +381,32 @@
                 </div>
             </div>
             <div class="row">
+                <!-- <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Select Product</label>
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">Select Products</button>
+                            <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                <li><input type="text" placeholder="search product" class="form-control"
+                                        [(ngModel)]="searchVariant" (ngModelChange)="filterVariant()"
+                                        [ngModelOptions]="{standalone: true}"></li>
+                                <li><a class="dropdown-item" *ngFor="let variant of filteredVariantList let i=index;">
+                                        <input type="checkbox" [value]="variant.id"
+                                            [checked]="selectedVariantsId.includes(variant.id)"
+                                            (change)="onCheckSize($event)" formArrayName="variant"
+                                            style="margin-right: 5px;" [ngClass]="{
+                                                'is-invalid': f['variant'].touched && f['variant'].invalid
+                                              }" #categoryValue [id]="'checkbox-' + i">
+                                        <label [for]="'checkbox-' + i" style="margin-bottom: 0;"
+                                            (click)="onLabelClick($event)">{{variant.product_title}}</label>
+                                    </a></li>
+                            </ul>
+                        </div>
+                        <p *ngIf="selectedBrand>0">{{selectedBrand + ' Product Selected'}}</p>
+                    </div>
+                </div> -->
+
                 <div class="table-responsive">
                     <table class="table datanew">
                         <thead>
@@ -585,7 +611,7 @@
 
 
                                         </td> -->
-                                        <td><input type="text" formControlName="tax" class="input">
+                                        <td><input type="text" formControlName="tax" class="input" readonly>
                                             <span class="text-danger" style="display: block;"
                                                 *ngIf="taxx(i) && taxx(i).invalid && taxx(i).touched">
                                                 Enter Tax ex: 1-100 %

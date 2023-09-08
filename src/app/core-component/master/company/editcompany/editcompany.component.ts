@@ -123,7 +123,7 @@ export class EditcompanyComponent implements OnInit {
       this.loaders=true;
       this.copmpanyService.updateCompany(this.companyForm.value, this.companyId).subscribe(res => {
         // console.log(res);
-        if (res.msg == "Company updated successfully") {
+        if (res.msg == "Company Updated Successfully") {
           this.loaders=false;
           this.toastr.success(res.msg);
           this.companyForm.reset();

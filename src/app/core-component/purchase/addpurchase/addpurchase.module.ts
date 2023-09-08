@@ -4,10 +4,10 @@ import { DatepickerModule } from 'ng2-datepicker';
 import { AddpurchaseRoutingModule } from './addpurchase-routing.module';
 import { AddpurchaseComponent } from './addpurchase.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {NgFor, AsyncPipe} from '@angular/common';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { NgFor, AsyncPipe } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,7 @@ import {MatInputModule} from '@angular/material/input';
     NgFor,
     AsyncPipe,
     MatFormFieldModule,
-    MatInputModule, 
+    MatInputModule,
   ],
   bootstrap: [AddpurchaseComponent]
 })

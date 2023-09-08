@@ -94,6 +94,10 @@ export class EditproductComponent implements OnInit {
        cod_available: new FormControl('', [Validators.required]),
        product_or_service: new FormControl('', [Validators.required]),
        //end
+         //new field add 4-9
+      sale_tax:new FormControl('',[Validators.required]),
+      purchase_tax:new FormControl('',[Validators.required]),
+      //end
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
       product_images: this.fb.array([])
@@ -134,7 +138,9 @@ export class EditproductComponent implements OnInit {
           // sale_tax_including: res.sale_tax_including,
           return_time:res?.return_time,
           cod_available:res?.cod_available,
-          product_or_service:res?.product_or_service
+          product_or_service:res?.product_or_service,
+          purchase_tax:res?.purchase_tax?.id,
+          sale_tax:res?.sale_tax?.id,
         })
         this.productForm.setControl('product_features', this.udateFeature(this.editRes?.product_feature_product));
         // this.productForm.setControl('product_images', this.updateImage(this.editRes?.product_images));
@@ -833,6 +839,9 @@ export class EditproductComponent implements OnInit {
       formdata.append('cod_available', this.productForm.get('cod_available')?.value);
       formdata.append('product_or_service', this.productForm.get('product_or_service')?.value);
       // end
+      formdata.append('sale_tax', this.productForm.get('sale_tax')?.value);
+      formdata.append('purchase_tax', this.productForm.get('purchase_tax')?.value);
+
     const variantsArray = this.productForm.get('variant_product') as FormArray;
     const variantsData = [];
     variantsArray.controls.forEach((variants) => {
@@ -902,7 +911,7 @@ export class EditproductComponent implements OnInit {
       const productImageDataJson = JSON.stringify(product_imageData);
       formdata.append('product_images', productImageDataJson);
       this.coreService.updateProduct(formdata, this.id).subscribe(res => {
-        if (res.msg == "Product updated successfully") {
+        if (res.msg == "Product Edited Successfully") {
           this.loader = false;
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
@@ -974,6 +983,12 @@ export class EditproductComponent implements OnInit {
   }
   get product_or_service() {
     return this.productForm.get('product_or_service')
+  }
+  get purchase_tax(){
+    return this.productForm.get('purchase_tax')
+  }
+  get sale_tax(){
+    return this.productForm.get('sale_tax')
   }
   getvariant_name(index: number) {
     return this.getVarinatsForm().controls[index].get('variant_name');

@@ -272,4 +272,35 @@ export class ContactService {
     return this.http.get(url + query);
   }
 
+
+  //terms 
+  
+  getTerms() {
+    let url = this.apiUrl + '/pv-api/terms/';
+    return this.http.get(url)
+  }
+  getTermsById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/terms/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  TermsIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/terms/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addTerms(data: any) {
+    let url = this.apiUrl + '/pv-api/terms/';
+    return this.http.post(url, data)
+  }
+  updateTerms(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/terms/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deleteTerms(id: number) {
+    let url = this.apiUrl + '/pv-api/terms/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+  getVoucherType() {
+    let url = this.apiUrl + '/pv-api/voucher-type/';
+    return this.http.get(url)
+  }
 }

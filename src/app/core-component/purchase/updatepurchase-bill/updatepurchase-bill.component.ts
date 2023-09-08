@@ -94,11 +94,18 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.displaySupplierName(res.party.id);
       this.supplierId=res.party.id;
       this.getVariant('','')
+
+        //patch local-date
+        const formatteddue_date = new Date(this.getresbyId?.due_date).toISOString().slice(0, 16);
+        this.puchaseBillForm.get('due_date')?.patchValue(formatteddue_date);
+       
+        const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
+        this.puchaseBillForm.get('shipping_date')?.patchValue(formattedshipping_date);      
                //call detail api
      this.contactService.getSupplierById(res.party.id).subscribe(res=>{
       // console.log(res);
       this.supplierAddress=res;
-      this.supplierControl.setValue(res.name); 
+      this.supplierControl.setValue(res.company_name); 
       this.getprefix()
       this.supplierAddress.address.map((res: any) => {
         if (res.address_type == 'Billing') {

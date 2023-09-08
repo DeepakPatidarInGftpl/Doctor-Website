@@ -727,75 +727,96 @@
                         Additional Charges</a>
                 </div>
             </div>
-            <div class="row my-5" *ngIf="!additionalTable">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr style="background-color:#FF9F43;">
-                                <td colspan="5" style="color:#fff">Additional Charge</td>
-                                <td (click)="hideAdditiionalTable()" style="color:#fff"><i data-bs-toggle="tooltip"
-                                        title="ion-close-circled" class="ion-close-circled"></i></td>
-                            </tr>
-                        </thead>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>#</th>
-                                <th>Additional Charge</th>
-                                <th>Value</th>
-                                <th>Tax</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container formArrayName="additional_charges">
-                                <ng-container *ngFor="let d of getAdditionalCharge().controls; let j=index">
-                                    <tr [formGroupName]="j">
-                                        <td>
-                                            <div>
-                                                <div class="me-2">
-                                                    <svg (click)="removeAdditionalCharge(j)" style="color:red"
-                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                        <path
-                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                                    </svg>
-                                                </div>
-                                                <svg *ngIf="isLastAdditionalCharge(j)" (click)="addAdditionalCharge()" style="color:green"
-                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                    <path
-                                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                </svg>
-                                            </div>
-                                        </td>
-                                        <td>{{j+1}}</td>
-                                        <td>
-                                            <select formControlName="additional_charge" #chargeValue
-                                            (change)="getAdditional(chargeValue.value,j)">
-                                                <option value="" selected disabled>Select</option>
-                                                <option value="{{discount.additional_charge}}" *ngFor="let discount of additionalData">{{discount.additional_charge}}</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" formControlName="value" [ngModel]="value[j]" class="input">
-                                        </td>
-                                        <td>    
-                                            <select formControlName="tax">
-                                                <option value="" selected disabled>Select Tax</option>
-                                                <option value="{{tax.id}}" *ngFor="let tax of taxData">{{tax.title}}</option>
-                                            </select>
+            <div class="card my-5" *ngIf="!additionalTable">
+                <div class="card-body">
+                    <div class="row my-5">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr style="background-color:#FF9F43;">
+                                        <td colspan="6" style="color:#fff">Additional Charge</td>
+                                        <td (click)="hideAdditiionalTable()" style="color:#fff"><i data-bs-toggle="tooltip"
+                                                title="ion-close-circled" class="ion-close-circled"></i></td>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>#</th>
+                                        <th>Additional Charge</th>
+                                        <th>Value</th>
+                                        <th>Tax</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="additional_charges">
+                                        <ng-container *ngFor="let d of getAdditionalCharge().controls; let j=index">
+                                            <tr [formGroupName]="j">
+                                                <td>
+                                                    <div>
+                                                        <div class="me-2">
+                                                            <svg (click)="removeAdditionalCharge(j)" style="color:red"
+                                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                                fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                <path
+                                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
+                                                        </div>
+                                                        <svg *ngIf="isLastAdditionalCharge(j)" (click)="addAdditionalCharge()" style="color:green"
+                                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path
+                                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                        </svg>
+                                                    </div>
+                                                </td>
+                                                <td>{{j+1}}</td>
+                                                <td>
+                                                    <select formControlName="additional" #chargeValue
+                                                    (change)="getAdditional(chargeValue.value,j)">
+                                                        <option value="" selected disabled>Select</option>
+                                                        <option value="{{discount.additional_charge}}" *ngFor="let discount of additionalData">{{discount.additional_charge}}</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" formControlName="value" [ngModel]="value[j]" class="input">
+                                                </td>
+                                                <td>    
+                                                    <select formControlName="tax">
+                                                        <option value="" selected disabled>Select Tax</option>
+                                                        <option value="{{tax?.tax_percentage}}" *ngFor="let tax of taxData">{{tax.title + (tax.tax_percentage)}}</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" formControlName="total" class="input"
+                                                    [value]="calculateTotalAdditionalChargeEveryIndex(j).toFixed(2)" [ngModel]="calculateTotalAdditionalChargeEveryIndex(j).toFixed(2)">
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-start"><strong>Total</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-start"> {{ calculateTotalAdditionalCharge().toFixed(2) | currency:'INR' }}
+                                            <input type="text" formControlName="additional_charge" class="input" [ngModel]="calculateTotalAdditionalCharge().toFixed(2)" style="display: none;">
+                                            
                                         </td>
                                     </tr>
-                                </ng-container>
-                            </ng-container>
-                        </tbody>
-                    </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
+          
             <!-- end additional charge -->
             <div class="row">
                 <div class="col-lg-6 my-3">

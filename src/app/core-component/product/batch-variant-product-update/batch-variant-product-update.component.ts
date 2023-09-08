@@ -64,7 +64,7 @@ batchRes:any;
       this.loader=true;
       this.coreService.updateBatch(this.batchForm.value,this.id).subscribe(res => {
         this.addRes = res
-        if (this.addRes.msg == "Batch Updated Sucessfully") {
+        if (this.addRes.msg == "Batch Updated Successfully") {
           this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.batchForm.reset()

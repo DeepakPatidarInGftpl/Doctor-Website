@@ -37,13 +37,13 @@ export class CompanylistComponent implements OnInit {
       if (t.isConfirmed) {
         this.companyService.deleteCompany(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Company Deleted successfully") {
-            this.ngOnInit();
+          if (this.delRes.msg == "Company Deleted Successfully") {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
               text: this.delRes.msg,
             });
+            this.ngOnInit();
             this.tableData.splice(index, 1);
           } else {
             Swal.fire({
