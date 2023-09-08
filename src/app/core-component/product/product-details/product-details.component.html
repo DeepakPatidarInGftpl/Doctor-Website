@@ -257,7 +257,7 @@
                     </a>
                 </div>
             </div>
-            <div class="company-details-card card">
+            <div class="company-details-card card" *ngIf="productDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
                         <mat-tab label="Product Details">
@@ -332,7 +332,7 @@
                                 </div>
                                 </div>
                             <div class="row">
-                                <div class="col-lg-5 col-sm-12">
+                                <div class="col-lg-8 col-sm-12">
                                     <div class="table-responsive mb-5">
                                     <table class="table"> 
                                         <tbody>
@@ -364,6 +364,14 @@
                                           <tr>
                                             <td class="th">Product or Service</td>
                                             <td class="td">{{productDetail?.product_or_service}}</td>
+                                          </tr>
+                                          <tr>
+                                            <td class="th">Purchase Tax</td>
+                                            <td class="td">{{productDetail?.purchase_tax?.slab_title}}</td>
+                                          </tr>
+                                          <tr>
+                                            <td class="th">Sale Tax</td>
+                                            <td class="td">{{productDetail?.sale_tax?.slab_title}}</td>
                                           </tr>
                                           <tr>
                                             <td class="th">Measurable</td>
@@ -417,7 +425,7 @@
                                     <div class="table-responsive mb-5">
                                     <table class="table"> 
                                         <tbody>     
-                                           <tr>
+                                           <tr class="my-2">
                                             <td class="th">Sizes</td>
                                             <td class="td">
                                                 <div class="table-responsive">
@@ -439,7 +447,7 @@
                                             </td>
                                            </tr>
 
-                                           <tr>
+                                           <tr class="my-2">
                                             <td class="th">Colors</td>
                                             <td class="td">
                                                 <div class="table-responsive">
@@ -460,11 +468,33 @@
                                                 </div>
                                             </td>
                                            </tr>
+                                           <tr class="my-2">
+                                            <td class="th">Features</td>
+                                            <td class="td">
+                                                <div class="table-responsive">
+                                                    <table datatable class="table datanew">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Feature Group</th>
+                                                                <th>Feature</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr
+                                                                *ngFor="let feature of productDetail?.product_feature_product let i = index">
+                                                                <td>{{feature?.feature_group.title}}</td>
+                                                                <td>{{feature?.feature.title}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         </tbody>
                                       </table>
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-sm-12">
+                                <!-- <div class="col-lg-3 col-sm-12">
                                     <div class="table-responsive mb-5">
                                         <table class="table"> 
                                             <tbody>
@@ -489,11 +519,11 @@
                                                             </table>
                                                         </div>
                                                     </td>
-                                                   </tr>
+                                                </tr>
                                             </tbody>
                                           </table>
                                         </div>
-                                </div>
+                                </div> -->
                             </div>
                         </mat-tab>
 
@@ -542,8 +572,8 @@
                                                 <th class="boder space-text">Stock</th>
                                                 <th class="boder space-text">Minimum Stock Threshold</th>
                                                 <th class="boder space-text">Max Order Quantity</th>
-                                                <th class="boder space-text">Purchase Tax</th>
-                                                <th class="boder space-text">Sale Tax</th>
+                                                <!-- <th class="boder space-text">Purchase Tax</th>
+                                                <th class="boder space-text">Sale Tax</th> -->
                                                 <th class="boder space-text">Discount</th>
                                                 <th class="boder space-text">Additional Discount</th>
                                                 <th class="boder space-text">Enable</th>
@@ -562,8 +592,8 @@
                                                 <td class="boder">{{ batch?.stock }}</td>
                                                 <td class="boder">{{ batch?.minimum_stock_threshold }}</td>
                                                 <td class="boder">{{ batch?.max_order_quantity }}</td>
-                                                <td class="boder">{{ batch?.purchase_tax + '%'}}</td>
-                                                <td class="boder">{{ batch?.sale_tax + '%'}}</td>
+                                                <!-- <td class="boder">{{ batch?.purchase_tax + '%'}}</td>
+                                                <td class="boder">{{ batch?.sale_tax + '%'}}</td> -->
                                                 <td class="boder">{{ batch?.discount + '%'}}</td>
                                                 <td class="boder">{{ batch?.additional_discount + '%'}}</td>
                                                 <td class="boder"><mat-slide-toggle (click)="batch?.is_active ? isActive(i,batch.id):Active(i,batch?.id)" [(ngModel)]="batch.is_active"></mat-slide-toggle>

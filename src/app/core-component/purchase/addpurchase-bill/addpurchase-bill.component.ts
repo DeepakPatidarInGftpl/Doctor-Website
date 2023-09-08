@@ -63,8 +63,8 @@ export class AddpurchaseBillComponent implements OnInit {
       party: new FormControl('', [Validators.required]),
       supplier_bill_date: new FormControl(defaultDateTime, [Validators.required]),
       refrence_bill_no: new FormControl('',),
-      supplier_bill_no: new FormControl('', [Validators.required, ]),
-      material_inward_no: new FormControl('', [Validators.required, ]),
+      supplier_bill_no: new FormControl('', [Validators.required,]),
+      material_inward_no: new FormControl('', [Validators.required,]),
       payment_term: new FormControl(''),
       due_date: new FormControl(defaultDateTime, [Validators.required]),
       reverse_charge: new FormControl('',),
@@ -130,15 +130,15 @@ export class AddpurchaseBillComponent implements OnInit {
       this.taxData = res;
     })
   }
-  value:any[]=[]
-  getAdditional(data:any,j){
+  value: any[] = []
+  getAdditional(data: any, j) {
     console.log(data);
-    this.purchaseService.getAdditionalCharge().subscribe((res:any) => {
-      res.map((res:any)=>{
-        if(data==res.additional_charge){
-          this.value[j]=res.value
+    this.purchaseService.getAdditionalCharge().subscribe((res: any) => {
+      res.map((res: any) => {
+        if (data == res.additional_charge) {
+          this.value[j] = res.value
           console.log(this.value[j]);
-          
+
         }
       })
     })
@@ -197,9 +197,10 @@ export class AddpurchaseBillComponent implements OnInit {
   }
   additional_charges(): FormGroup {
     return this.fb.group({
-      additional_charge: (0),
+      additional: (0),
       value: (0),
-      tax: (0)
+      tax: (0),
+      total: ''
     })
   }
   getAdditionalCharge(): FormArray {
@@ -258,14 +259,14 @@ export class AddpurchaseBillComponent implements OnInit {
   selectedAddressShipping: any;
   selectBatch: any;
   selectPaymentTerm: any
-  supplierId:any
+  supplierId: any
   oncheck(event: any) {
     // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
     // console.log(selectedItemId);
-    this.supplierId=event
+    this.supplierId = event
     //call detail api
-    this.getVariant('','')
+    this.getVariant('', '')
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
 
@@ -592,7 +593,7 @@ export class AddpurchaseBillComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('','')
+    this.getVariant('', '')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
@@ -783,6 +784,25 @@ export class AddpurchaseBillComponent implements OnInit {
     return total;
   }
 
+  calculateTotalAdditionalChargeEveryIndex(index: number): number {
+    const Items = this.getAdditionalCharge().at(index);
+    const value = +Items.get('value').value ||0;
+    const tax = +Items.get('tax').value ||0;
+    const ctax = (value * tax) / 100;
+    const total = value + ctax;
+    return total;
+  }
+  calculateTotalAdditionalCharge(): number {
+    let totaladditionalCharge = 0;
+    for (let i = 0; i < this.getAdditionalCharge()?.controls?.length; i++) {
+      const mrpControl = this.getAdditionalCharge().controls[i]?.get('total');
+      if (mrpControl) {
+        totaladditionalCharge += +mrpControl?.value;
+      }
+    }
+    return totaladditionalCharge;
+  }
+  
   clearForm() {
     this.purchaseBillForm.reset();
     this.supplierControl.reset()
@@ -836,29 +856,29 @@ export class AddpurchaseBillComponent implements OnInit {
     return totalForTax;
   }
 
-  category:any;
-  subcategory:any;
-  searc:any;
+  category: any;
+  subcategory: any;
+  searc: any;
   myControl = new FormControl('');
-  variantList: any[] = []; 
-    getVariant(search:any,index:any) {
-      this.purchaseService.filterVariant(this.supplierId,this.category,this.subcategory,search).subscribe((res:any) => {
-        console.log(res);
-        this.variantList=res;
-        console.log(this.variantList);
-        
-        // barcode patch
-        this.searchs = res;
-        this.productOption = res;
-        // console.log(this.searchs);
-        this.productName[index] = this.searchs[0].product_title;
-        // console.log(this.productName);
-        this.check = true;
-        const barcode = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
-        barcode.patchValue({
-          barcode: this.searchs[0].id
-        });
+  variantList: any[] = [];
+  getVariant(search: any, index: any) {
+    this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+      console.log(res);
+      this.variantList = res;
+      console.log(this.variantList);
+
+      // barcode patch
+      this.searchs = res;
+      this.productOption = res;
+      // console.log(this.searchs);
+      this.productName[index] = this.searchs[0].product_title;
+      // console.log(this.productName);
+      this.check = true;
+      const barcode = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
+      barcode.patchValue({
+        barcode: this.searchs[0].id
       });
-    }
+    });
+  }
 }
 

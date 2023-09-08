@@ -110,7 +110,7 @@
                         <td class="productimgname">
                             <a routerLink="//purchase/debit-notesDetails/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
-                        <td>{{products.debit_note_date}}</td>
+                        <td>{{products.debit_note_date |  date: 'yyyy-MM-dd'}}</td>
                         <td>{{products.debit_note_no}}</td>
                         <td>{{products.reverse_charge}}</td>
                         <td>{{products.purchase}}</td>

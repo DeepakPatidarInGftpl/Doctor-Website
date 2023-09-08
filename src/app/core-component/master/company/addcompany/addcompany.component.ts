@@ -121,7 +121,7 @@ yearDetails:any
       this.loaders=true;
       this.copmpanyService.postCompany(this.companyForm.value).subscribe(res => {
         // console.log(res);
-        if (res.msg == "Successfuly Added") {
+        if (res.msg == "Company Created Successfully") {
           this.loaders=false;
           this.toastr.success(res.msg)
           this.companyForm.reset()

@@ -101,7 +101,10 @@ const routes: Routes = [
     path: 'updateUser/:id',
     loadChildren: () => import('./update-user/update-user.module').then((m) => m.UpdateUserModule)
   },
-
+  {
+    path: 'terms',
+    loadChildren: () => import('./terms/terms.module').then((m) => m.TermsModule)
+  },
 ];
 
 @NgModule({

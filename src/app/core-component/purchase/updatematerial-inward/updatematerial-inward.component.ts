@@ -66,7 +66,8 @@ export class UpdatematerialInwardComponent implements OnInit {
       total: new FormControl('',),
       export: new FormControl(''),
       note: new FormControl(''),
-      status: new FormControl('')
+      status: new FormControl(''),
+      product_type: new FormControl('')
     });
 
 
@@ -79,12 +80,20 @@ export class UpdatematerialInwardComponent implements OnInit {
       this.materialForm.setControl('material_inward_cart', this.udateCart(res.cart));
       this.displaySupplierName(res.party.id);
       this.supplierId = res.party.id
-      this.getVariant('','')
+      this.getVariant('', '')
+
+      //patch local-date
+      //patch local-date
+      const formattedpodate = new Date(this.getresbyId?.po_date).toISOString().slice(0, 16);
+      this.materialForm.get('po_date')?.patchValue(formattedpodate);
+
+      const formattedmaterial_inward_date = new Date(this.getresbyId?.material_inward_date).toISOString().slice(0, 16);
+      this.materialForm.get('material_inward_date')?.patchValue(formattedmaterial_inward_date);
       //call detail api
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
         // console.log(res);
         this.supplierAddress = res;
-        this.supplierControl.setValue(res.name);
+        this.supplierControl.setValue(res.company_name);
         this.getprefix()
         this.supplierAddress.address.map((res: any) => {
           if (res.address_type == 'Billing') {
@@ -211,7 +220,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
-      this.getVariant('','')
+      this.getVariant('', '')
       this.supplierAddress = res;
       console.log(this.selectedAddressBilling);
       this.supplierAddress.address.map((res: any) => {
@@ -380,6 +389,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       formdata.append('recieved_by', this.materialForm.get('recieved_by')?.value);
       formdata.append('note', this.materialForm.get('note')?.value);
       formdata.append('total', this.materialForm.get('total')?.value);
+      formdata.append('product_type', this.materialForm.get('product_type')?.value);
       if (type == 'draft') {
         formdata.append('status', 'draft');
       }
@@ -539,7 +549,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('','')
+    this.getVariant('', '')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
@@ -702,24 +712,24 @@ export class UpdatematerialInwardComponent implements OnInit {
   searc: any;
   myControls: FormArray;
   variantList: any[] = [];
-  getVariant(search:any,index:any) {
+  getVariant(search: any, index: any) {
     this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
       console.log(res);
       this.variantList = res;
       console.log(this.variantList);
       if (search) {
-      //barcode patchvalue
-      this.searchs = res;
-      this.productOption = res;
-      // console.log(this.searchs);
-      this.productName[index] = this.searchs[0].product_title;
-      // console.log(this.productName);
-      this.check = true;
-      const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
-      barcode.patchValue({
-        barcode: this.searchs[0].id
-      });
-    }
+        //barcode patchvalue
+        this.searchs = res;
+        this.productOption = res;
+        // console.log(this.searchs);
+        this.productName[index] = this.searchs[0].product_title;
+        // console.log(this.productName);
+        this.check = true;
+        const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+        barcode.patchValue({
+          barcode: this.searchs[0].id
+        });
+      }
     });
   }
 }

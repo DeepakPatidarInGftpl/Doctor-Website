@@ -24,7 +24,7 @@ export class DebitnotesComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  filteredData: any[]; // The filtered data
+  filteredData: any[]; 
   selectedpaymentTerms: string = '';
   date: any
 

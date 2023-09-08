@@ -21,8 +21,8 @@ export class AddpurchaseComponent implements OnInit {
   discount: any;
   totalTax: any;
   roundOff: any;
-  mrpPurchase:number=0;
- 
+  mrpPurchase: number = 0;
+
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
@@ -59,7 +59,7 @@ export class AddpurchaseComponent implements OnInit {
     const minutes = now.getMinutes().toString().padStart(2, '0');
 
     const defaultDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-    
+
     this.purchaseForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       order_date: new FormControl(defaultDateTime),
@@ -77,6 +77,7 @@ export class AddpurchaseComponent implements OnInit {
       round_off: new FormControl(''),
       total: new FormControl(''),
     });
+
     this.searchForm = this.fb.group({
       search: new FormControl()
     })
@@ -84,12 +85,23 @@ export class AddpurchaseComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
     this.filteredVariants = this.variantControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filtr(value, true))
     )
     this.getSuuplier();
     this.getprefix();
+    this.getCategory()
+    const inputData = [943, 940, 939, 939, 939];
+
+    const uniqueData = inputData.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+    console.log(uniqueData);
+    const formArray = this.getCart();
+    this.userInputEntered = new Array(formArray.length).fill(false);
+
   }
   prefixNo: any;
   getprefix() {
@@ -105,32 +117,72 @@ export class AddpurchaseComponent implements OnInit {
     })
   }
 
- 
-category:any;
-subcategory:any;
-searc:any;
-myControl = new FormControl('');
-variantList: any[] = []; 
-  getVariant(search:any,index:any) {
-    this.purchaseService.filterVariant(this.supplierId,this.category,this.subcategory,search).subscribe((res:any) => {
-      console.log(res);
-      this.variantList=res;
-      console.log(this.variantList);
-      
-      //barcode patch
-      this.searchs = res;
-      this.productOption = res;
-      // console.log(this.searchs);
-      this.productName[index] = this.searchs[0].product_title;
-      // console.log(this.productName);
-      this.check = true;
-      const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
-      barcode.patchValue({
-        barcode: this.searchs[0].id
+
+  category: any;
+  subcategory: any;
+  searc: any;
+  myControl = new FormControl('');
+  variantList: any[] = [];
+
+  getVariant(search: any, index: any) {
+    if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
+      if (this.selectData.length > 0) {
+        this.category = JSON.stringify(this.selectData);
+        console.log(this.category);
+      } else {
+        this.category = undefined
+        console.log(this.category, 'else part');
+      }
+      if (this.selectSubCate.length > 0) {
+        this.subcategory = JSON.stringify(this.selectSubCate)
+      } else {
+        this.subcategory = undefined
+      }
+      this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+        console.log(res);
+        this.variantList = res;
+        console.log(this.variantList);
+        if (search) {
+          //barcode patch
+          this.searchs = res;
+          this.productOption = res;
+          // console.log(this.searchs);
+          this.productName[index] = this.searchs[0]?.product_title;
+          // console.log(this.productName);
+          this.check = true;
+          const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            barcode: this.searchs[0].id
+          });
+        }
+
       });
-    });
+    }
+    else {
+      this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+        console.log(res);
+        this.variantList = res;
+        console.log(this.variantList);
+        if (search) {
+          //barcode patch
+          this.searchs = res;
+          this.productOption = res;
+          // console.log(this.searchs);
+          this.productName[index] = this.searchs[0]?.product_title;
+          // console.log(this.productName);
+          this.check = true;
+          const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            barcode: this.searchs[0]?.id
+          });
+        }
+
+      });
+    }
+
+
   }
- 
+
   get supplier() {
     return this.purchaseForm.get('party') as FormControl;
   }
@@ -141,11 +193,9 @@ variantList: any[] = [];
       purchase_rate: (0),
       mrp: (0),
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      tax: new FormControl(0,[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       landing_cost: (0),
       total: (0),
-      // discount_type: (0),
-      // additional_discount: new FormControl(0, [Validators.pattern(/^[0-9]*$/)])
     })
   }
 
@@ -177,29 +227,25 @@ variantList: any[] = [];
   supplierList: any;
   getSuuplier() {
     this.purchaseService.getSupplier().subscribe((res: any) => {
-      // console.log(res);
       this.suppliers = res;
-      // this.variants=res;
     })
   }
-
-  addresses: string[] = ['Address 1', 'Address 2', 'Address 3'];
 
   supplierAddress: any;
   selectedAddressBilling: any;
   selectedAddressShipping: any;
   selectBatch: any;
-  supplierId:any;
+  supplierId: any;
   oncheck(event: any) {
     // console.log(event);
-    const selectedItemId = event; 
-    this.supplierId=event;
+    const selectedItemId = event;
+    this.supplierId = event;
     // console.log(selectedItemId);
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
       this.supplierAddress = res;
-      this.getVariant('','')
+      this.getVariant('', '')
       console.log(this.selectedAddressBilling);
       this.supplierAddress.address.map((res: any) => {
         if (res.address_type == 'Billing') {
@@ -272,7 +318,7 @@ variantList: any[] = [];
     const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
     let discountRupees = (address?.cost_price * address?.discount) / 100
     console.log(discountRupees);
-    let afterDiscountPrice=(address?.cost_price-discountRupees)
+    let afterDiscountPrice = (address?.cost_price - discountRupees)
     let taxRupee: number = (afterDiscountPrice * address?.purchase_tax) / 100
     console.log(taxRupee);
     let landingCost = (address?.cost_price - discountRupees) + taxRupee;
@@ -284,9 +330,6 @@ variantList: any[] = [];
       discount: address?.discount,
       purchase_rate: address?.cost_price,
       landing_cost: landingCost
-      // additional_discount: address?.additional_discount,
-      // discount_type: '%',
-      // purchase_rate: 0,
     });
   }
   closeModal() {
@@ -311,41 +354,206 @@ variantList: any[] = [];
     }
   }
   selectedProductName: any;
+  originalCoastPrice: any;
+  apiPurchaseTax: number;
+  isTaxAvailable: any[]=[];
+  taxIntoRupees: any[] = [];
+  tax: any[] = [];
+  batchDiscount: any;
+  landingCost: any;
+  batchCostPrice:any[]=[];
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
-    this.selectedProductName = event.product_title
-    this.selectBatch = event.batch
-    console.log(event.batch.length);
-
+    this.selectedProductName = event.product_title;
+    this.selectBatch = event.batch;
+    this.apiPurchaseTax = event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    this.batchDiscount = event.batch[0]?.discount || 0;
+    this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
+    this.batchCostPrice[index]=event?.batch[0]?.cost_price || 0;
+    if (event?.product?.purchase_tax_including == true) {
+      let costprice = event?.batch[0]?.cost_price || 0;
+      // landing cost
+      let getDiscountPrice = (costprice * this.batchDiscount) / 100
+      console.log(getDiscountPrice);
+      let getCoastPrice = costprice - getDiscountPrice;
+      console.log(getCoastPrice, 'getCoastPrice');
+      this.landingCost = getCoastPrice;
+      // cost price
+      let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
+      console.log(taxPrice, 'taxprice');
+      this.taxIntoRupees[index] = taxPrice;
+      this.originalCoastPrice = getCoastPrice - taxPrice;
+    } else {
+      let costprice = event?.batch[0]?.cost_price || 0;
+      let purchaseTax = 18
+      // cost price 
+      let getDiscountPrice = (costprice * this.batchDiscount) / 100
+      console.log(getDiscountPrice);
+      let getCoastPrice = costprice - getDiscountPrice;
+      this.originalCoastPrice = getCoastPrice
+      // landing cost
+      let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
+      this.taxIntoRupees[index] = taxPrice;
+      let landingcost = getCoastPrice + taxPrice;
+      this.landingCost = landingcost;
+      console.log(landingcost);
+    }
     if (event.batch.length > 0) {
       const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
-      
-      let discountRupees = (event.batch[0]?.cost_price * event.batch[0]?.discount) / 100
-      console.log(discountRupees);
-      let afterDiscountPrice=(event.batch[0]?.cost_price-discountRupees)
-      let taxRupee: number = (afterDiscountPrice * event.batch[0]?.purchase_tax) / 100
-      let landingCost = (event.batch[0]?.cost_price - discountRupees) + taxRupee;
-      console.log(landingCost);
+      this.tax[index] = this.apiPurchaseTax
+      console.log(this.originalCoastPrice, 'this.originalCoastPrice');
+      console.log(this.landingCost, 'this.landingCost');
+      if (event?.product?.purchase_tax_including == true) {
+        barcode.patchValue({
+          barcode: selectedItemId,
+          mrp: event.batch[0]?.mrp,
+          qty: event.batch[0]?.stock,
+          tax: this.apiPurchaseTax,
+          discount: event.batch[0]?.discount,
+          purchase_rate: this.originalCoastPrice.toFixed(2),
+          // landing_cost: this.landingCost
+        });
+      } else {
+        this.tax[index] = 18
+        barcode.patchValue({
+          barcode: selectedItemId,
+          mrp: event.batch[0]?.mrp,
+          qty: event.batch[0]?.stock,
+          tax: 18,
+          discount: event.batch[0]?.discount,
+          purchase_rate: event.batch[0]?.cost_price,
+          // landing_cost: this.landingCost || 0
+        });
+      }
+      console.log(event.batch);
+    } else {
+      this.tax[index] = 18
+      const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         barcode: selectedItemId,
-        mrp: event.batch[0]?.mrp,
-        qty: event.batch[0]?.stock,
-        tax: event.batch[0]?.purchase_tax,
-        discount: event.batch[0]?.discount,
-        purchase_rate: event.batch[0]?.cost_price,
-        landing_cost: landingCost
-        // additional_discount: event.batch[0]?.additional_discount,
-        // discount_type: '%',
-        // purchase_rate: 0,
+        tax: 18,
       });
-
-      console.log(event.batch);
     }
-
+  }
+  coastprice: any[] = []
+  landingPrice: any[] = []
+  isdiscount:any[]=[]
+  getPurchaseCalculation(index: number) {
+    console.log(this.coastprice[index]);
+    this.batchCostPrice[index]=this.coastprice[index];
+    console.log(this.batchCostPrice[index],'index+',index);
+    if (this.isTaxAvailable[index] == true) {
+      let costprice = this.coastprice[index] || 0;
+      // landing cost
+      let getDiscountPrice = (costprice * this.batchDiscount) / 100
+      console.log(getDiscountPrice);
+      let getCoastPrice = costprice - getDiscountPrice;
+      console.log(getCoastPrice, 'getCoastPrice');
+      this.landingCost = getCoastPrice;
+      // cost price 
+      let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
+      this.taxIntoRupees[index] = taxprice
+      let purchasePrice = getCoastPrice - taxprice;
+      this.originalCoastPrice = purchasePrice;
+      console.log(this.originalCoastPrice);
+      // this.coastprice[index] = this.originalCoastPrice.toFixed(2);
+      // this.landingPrice[index]=this.landingCost.toFixed(2)
+    } else {
+      let costprice = this.coastprice[index] || 0;
+      let purchaseTax = 18;
+         // cost price 
+         let getDiscountPrice = (costprice * this.batchDiscount) / 100
+         console.log(getDiscountPrice,'getDiscountPrice');
+         let getCoastPrice = costprice - getDiscountPrice;
+         this.originalCoastPrice = getCoastPrice;
+      // this.coastprice[index] = this.originalCoastPrice.toFixed(2);
+      console.log(this.coastprice[index]);
+      // this.landingPrice[index]=this.landingCost.toFixed(2)
+    }
+  }
+  userInputEntered: boolean[] = [];
+  purchase(index){
+    this.userInputEntered[index]=true;
+    const result = this.calculatePurchaseEveryIndex(index); 
+    console.log(result,'result'); 
+    this.coastprice[index]=result.toFixed(2)
+  }
+  calculatePurchaseEveryIndex(index: number): number {  
+    const cartItem = this.getCart().controls[index];
+    const purchaseRateControl = cartItem.get('purchase_rate');
+    const taxPercentageControl = cartItem.get('tax');
+    const discountPercentageControl = cartItem.get('discount');
+    this.batchCostPrice[index]=this.coastprice[index];
+    if (purchaseRateControl && taxPercentageControl && discountPercentageControl) {
+      if (this.isTaxAvailable[index] == true) {
+        const discountPercentage = +discountPercentageControl.value || 0;
+        const taxPercentage = +taxPercentageControl.value || 0;
+        const purchaseRate= +purchaseRateControl.value || 0;
+      // landing cost
+      let getDiscountPrice = (purchaseRate * discountPercentage) / 100
+      let getCoastPrice = purchaseRate - getDiscountPrice;
+      console.log(getCoastPrice, 'getCoastPrice');
+      // cost price 
+      let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage)))
+      this.taxIntoRupees[index] = taxprice
+      let purchasePrice = getCoastPrice - taxprice;
+      console.log(purchasePrice,'purchasePrice');
+      return purchasePrice;
+      }else{
+        const discountPercentage = +discountPercentageControl.value || 0;
+        const purchaseRate= +purchaseRateControl.value || 0;
+           // cost price 
+           let getDiscountPrice = (this.coastprice[index] * discountPercentage) / 100
+           console.log(getDiscountPrice,'getDiscountPrice');
+           let getCoastPrice = this.coastprice[index] - getDiscountPrice;
+           return getCoastPrice;
+      }
+    }
+    return 0
   }
 
-
+  calculateTotalLandingCostEveryIndex(index: number): number {  
+    const cartItem = this.getCart().controls[index];
+    const purchaseRateControl = cartItem.get('purchase_rate');
+    const taxPercentageControl = cartItem.get('tax');
+    const discountPercentageControl = cartItem.get('discount');
+    console.log(this.isTaxAvailable[index],'taxavailableeee');
+    console.log(this.batchCostPrice[index],'this.batchCostPrice[index]');
+    
+    if (purchaseRateControl && taxPercentageControl && discountPercentageControl) {
+      if (this.isTaxAvailable[index] == true) {
+        const purchaseRate = +purchaseRateControl.value || 0;
+        const discountPercentage = +discountPercentageControl.value || 0;
+        if(this.batchCostPrice[index]>0){
+          const discountAmount = (this.batchCostPrice[index] * discountPercentage) / 100;
+          const afterDiscountAmount = this.batchCostPrice[index]- discountAmount
+          const landingCost = afterDiscountAmount
+          return landingCost;
+        }else{
+          const discountAmount = (this.coastprice[index] * discountPercentage) / 100;
+          const afterDiscountAmount = this.coastprice[index]- discountAmount
+          const landingCost = afterDiscountAmount
+          return landingCost;
+        }
+        
+      }else{
+        let purchaseTax = 18
+        const discountPercentage = +discountPercentageControl.value || 0;
+        // cost price 
+        let getDiscountPrice = (this.batchCostPrice[index] * discountPercentage) / 100
+        let getCoastPrice = this.batchCostPrice[index]  - getDiscountPrice;
+        this.originalCoastPrice = getCoastPrice
+        // landing cost
+        let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
+        this.taxIntoRupees[index] = taxPrice;
+        let landingCost = getCoastPrice + taxPrice;
+        return landingCost;
+      }
+    }
+    return 0;
+  }
+  
   getRes: any;
   loader = false;
   submit(type: any) {
@@ -397,11 +605,9 @@ variantList: any[] = [];
             cartObject[key] = control.value;
           }
         });
-
         cartData.push(cartObject);
       });
       formdata.append('purchase_cart', JSON.stringify(cartData));
-
       this.purchaseService.addPurchase(formdata).subscribe(res => {
         // console.log(res);
         this.getRes = res;
@@ -527,20 +733,18 @@ variantList: any[] = [];
   v_id: any;
   variantChanged(value: any, index) {
     console.log(value);
-
     // console.log(index);
     // console.log(value?.sku);
     this.barcode[index] = value.sku;
     // console.log(this.barcode[index]);
     // console.log(this.barcode);
-
     this.v_id = value.id;
     const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('','')
+    this.getVariant('', '')
   };
 
   staticValue: string = 'Static Value';
@@ -562,7 +766,7 @@ variantList: any[] = [];
         this.check = true;
         const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
         barcode.patchValue({
-          barcode: this.searchs[0].id
+          barcode: this.searchs[0]?.id
         });
       });
     } else {
@@ -577,7 +781,7 @@ variantList: any[] = [];
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const qtyControl = this.getCart().controls[i].get('qty');
       if (qtyControl) {
-        totalQty += +qtyControl.value;
+        totalQty += +qtyControl.value || 0;
       }
     }
     return totalQty;
@@ -585,9 +789,9 @@ variantList: any[] = [];
   calculateTotalMrp(): number {
     let totalMrp = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const mrpControl = this.getCart().controls[i]?.get('mrp') || 0;
+      const mrpControl = this.getCart().controls[i]?.get('mrp');
       if (mrpControl) {
-        totalMrp += +mrpControl.value;
+        totalMrp += +mrpControl.value || 0;
       }
     }
     return totalMrp;
@@ -597,7 +801,7 @@ variantList: any[] = [];
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const discountControl = this.getCart().controls[i].get('discount');
       if (discountControl) {
-        totalDiscount += +discountControl.value;
+        totalDiscount += +discountControl.value || 0;
       }
     }
     return totalDiscount;
@@ -607,7 +811,7 @@ variantList: any[] = [];
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const discountControl = this.getCart().controls[i].get('additional_discount');
       if (discountControl) {
-        totalDiscount += +discountControl.value;
+        totalDiscount += +discountControl.value || 0;
       }
     }
     return totalDiscount;
@@ -617,7 +821,7 @@ variantList: any[] = [];
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const purchaseControl = this.getCart().controls[i].get('purchase_rate');
       if (purchaseControl) {
-        totalPurchase += +purchaseControl.value;
+        totalPurchase += +purchaseControl.value || 0;
       }
     }
     return totalPurchase;
@@ -627,12 +831,11 @@ variantList: any[] = [];
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const taxControl = this.getCart().controls[i].get('tax');
       if (taxControl) {
-        totalTax += +taxControl.value;
+        totalTax += +taxControl.value || 0;
       }
     }
     return totalTax;
   }
-
   // calculateTotalLandingCost(): number {
   //   let totalLandingCost = 0;
   //   for (let i = 0; i < this.getCart().controls.length; i++) {
@@ -645,41 +848,15 @@ variantList: any[] = [];
   // }
   calculateTotalLandingCost(): number {
     let totalLandingCost = 0;
-    const cartControls = this.getCart().controls;
-    for (let i = 0; i < cartControls.length; i++) {
-      const purchaseRateControl = cartControls[i].get('purchase_rate');
-      const discountControl = cartControls[i].get('discount');
-      const taxAmountControl = cartControls[i].get('tax');
-      if (purchaseRateControl && discountControl && taxAmountControl) {
-        const purchaseRate = +purchaseRateControl.value;
-        const discountPercentage = +discountControl.value;
-        const taxAmountPercentage = +taxAmountControl.value;
-        const discountAmount = (purchaseRate * discountPercentage) / 100;
-        const afterDiscountAmount = purchaseRate - discountAmount
-        const taxAmount = (afterDiscountAmount * taxAmountPercentage) / 100;
-      const landingCost = (purchaseRate - discountAmount) + taxAmount;
-        totalLandingCost += landingCost;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const landingCostControl = this.getCart().controls[i].get('landing_cost');
+      if (landingCostControl) {
+        totalLandingCost += +landingCostControl.value || 0;
       }
     }
     return totalLandingCost;
   }
-  calculateTotalLandingCostEveryIndex(index: number): number {
-    const cartItem = this.getCart().controls[index];
-    const purchaseRateControl = cartItem.get('purchase_rate');
-    const taxPercentageControl = cartItem.get('tax');
-    const discountPercentageControl = cartItem.get('discount');
-    if (purchaseRateControl && taxPercentageControl && discountPercentageControl) {
-      const purchaseRate = +purchaseRateControl.value;
-      const taxPercentage = +taxPercentageControl.value;
-      const discountPercentage = +discountPercentageControl.value;
-      const discountAmount = (purchaseRate * discountPercentage) / 100;
-      const afterDiscountAmount = purchaseRate - discountAmount
-      const taxAmount = (afterDiscountAmount * taxPercentage) / 100;
-      const landingCost = purchaseRate - discountAmount + taxAmount;
-      return landingCost;
-    }
-    return 0;
-  }
+
   // subTotal
   calculateSubtotal(): number {
     let subtotal = 0;
@@ -687,8 +864,8 @@ variantList: any[] = [];
       const qtyControl = this.getCart().controls[i].get('qty');
       const mrpControl = this.getCart().controls[i].get('mrp');
       if (qtyControl && mrpControl) {
-        const qty = +qtyControl.value;
-        const mrp = +mrpControl.value;
+        const qty = +qtyControl.value || 0;
+        const mrp = +mrpControl.value || 0;
 
         const itemSubtotal = mrp * qty;
         subtotal += itemSubtotal;
@@ -729,19 +906,11 @@ variantList: any[] = [];
     let total = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const purchaseRateControl = this.getCart().controls[i].get('purchase_rate');
-      const discountControl = this.getCart().controls[i].get('discount');
-      const taxControl = this.getCart().controls[i].get('tax');
+      const landingcost = this.getCart().controls[i].get('landing_cost');
       const qtyControl = this.getCart().controls[i].get('qty');
-      if (purchaseRateControl && discountControl && taxControl && qtyControl) {
-        const purchaseRate = +purchaseRateControl.value;
-        const discount = +discountControl.value;
-        const tax = +taxControl.value;
-        const qty = +qtyControl.value;
-        const discountPercentage = +discount;
-        const taxAmountPercentage = +tax;
-        const taxAmount = (purchaseRate * taxAmountPercentage) / 100;
-        const discountAmount = (purchaseRate * discountPercentage) / 100;
-        const landingCost = (purchaseRate - discountAmount) + taxAmount;
+      if (purchaseRateControl && landingcost && qtyControl) {
+        const landingCost = +landingcost.value || 0;
+        const qty = +qtyControl.value || 0;
         const totalForItem = landingCost * qty;
         total += totalForItem;
       }
@@ -758,29 +927,23 @@ variantList: any[] = [];
     }
   }
   calculateRoundoffValue(): number {
-    const total = this.totalAmount; 
+    const total = this.totalAmount;
     const roundedTotal = Math.round(total * 100) / 100;
     const integerPart = Math.floor(roundedTotal);
-    const decimalPart = (roundedTotal - integerPart) * 100; 
+    const decimalPart = (roundedTotal - integerPart) * 100;
     if (decimalPart === 0 && integerPart === 0) {
-      return 0; 
+      return 0;
     }
-    const subtractedValue = (100 - decimalPart) / 100; 
+    const subtractedValue = (100 - decimalPart) / 100;
     if (subtractedValue === 1) {
       return 0;
     }
     return subtractedValue;
   }
-  
   calculateTotalEveryIndex(index: number) {
     const cartItem = this.getCart().controls[index];
-    const purchaseRate = +cartItem.get('purchase_rate').value;
-    const discountPercentage = +cartItem.get('discount').value;
-    const taxAmountPercentage = +cartItem.get('tax').value;
-    const qty = +cartItem.get('qty').value;
-    const discountAmount = (purchaseRate * discountPercentage) / 100;
-    const taxAmount = (purchaseRate * taxAmountPercentage) / 100;
-    const landingCost = (purchaseRate - discountAmount) + taxAmount;
+    const landingCost = +cartItem.get('landing_cost').value || 0;
+    const qty = +cartItem.get('qty').value || 0;
     const totalForItem = landingCost * qty;
     return totalForItem;
   }
@@ -791,9 +954,9 @@ variantList: any[] = [];
       const taxControl = this.getCart().controls[i].get('tax');
       const discountControl = this.getCart().controls[i].get('discount');
       if (purchaseRateControl && discountControl) {
-        const purchaseRate = +purchaseRateControl.value;
-        const tax = +taxControl.value;
-        const discount = +discountControl.value
+        const purchaseRate = +purchaseRateControl.value || 0;
+        const tax = +taxControl.value || 0;
+        const discount = +discountControl.value || 0
 
         const discountAmountPercentage = +discount
         const discountAmount = (purchaseRate * discountAmountPercentage) / 100;
@@ -808,9 +971,9 @@ variantList: any[] = [];
   }
   calculateTaxintoPrice(index: number): number {
     const cartItem = this.getCart().controls[index];
-    const purchaseRate = +cartItem.get('purchase_rate').value;
-    const taxPercentage = +cartItem.get('tax').value;
-    const discountPercentage = +cartItem.get('discount').value;
+    const purchaseRate = +cartItem.get('purchase_rate').value || 0;
+    const taxPercentage = +cartItem.get('tax').value || 0;
+    const discountPercentage = +cartItem.get('discount').value || 0;
     const discount = (purchaseRate * discountPercentage) / 100;
     const afterDiscountAmount = purchaseRate - discount
     const taxAmount = (afterDiscountAmount * taxPercentage) / 100;
@@ -830,6 +993,54 @@ variantList: any[] = [];
     document.body.innerHTML = originalContents;
   }
 
+  categoryList: any[] = [];
+  filteredCategoryList: any[] = [];
+  searchCategory: string = '';
+  getCategory() {
+    this.purchaseService.getSearchProduct().subscribe((res: any) => {
+      this.categoryList = res;
+      this.filteredCategoryList = [...this.categoryList];
+    })
+  }
+  filterCategory() {
+    if (this.searchCategory.trim() === '') {
+      this.filteredCategoryList = [...this.categoryList];
+    } else {
+      this.filteredCategoryList = this.categoryList.filter(product =>
+        product?.product_title?.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  }
 
+  selectData: any[] = []
+  SelectedProduct(variant: any) {
+    // this.selectData.push(variant)
+    const index = this.selectData.indexOf(variant);
+    if (index !== -1) {
+      this.selectData.splice(index, 1);
+    } else {
+      this.selectData.push(variant);
+    }
+    console.log(this.selectData, 'selected data');
 
+    this.getVariant('', '')
+  }
+
+  selectSubCate: any[] = []
+  SelectedProductSubCat(variant: any) {
+    // this.selectData.push(variant)
+    const index = this.selectSubCate.indexOf(variant);
+    if (index !== -1) {
+      this.selectSubCate.splice(index, 1);
+    } else {
+      this.selectSubCate.push(variant);
+    }
+    console.log(this.selectSubCate, 'selected data');
+    this.getVariant('', '')
+  }
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
+  }
 }

@@ -1,0 +1,112 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Update Credit Note</h4>
+        <h6>Edit Credit Note </h6>
+    </div>
+</div>
+<!-- /add -->
+<div class="card">
+    <div class="card-body">
+        <form [formGroup]="debitNoteForm" (ngSubmit)="submit()">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="form-group">
+                        <label>Account Name*</label>
+                        <select formControlName="account" class="w-100 h-100 border" required id="account"
+                            [ngClass]="{'is-invalid': f['account'].touched && f['account'].invalid}">
+                            <option value="" selected disabled>Select Account</option>
+                            <option value="{{account?.id}}" *ngFor="let account of accountList"> {{account?.accounts_type}}</option>
+                        </select>
+                        <span class="text-danger" *ngIf="account && account.invalid && account.touched">Select
+                            Account
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Credit Note Date*</label>
+                        <input type="date" formControlName="date" id="date"
+                            [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
+                        <span class="text-danger" *ngIf="date && date.invalid && date.touched">Enter date name </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Credit Note No.</label>
+                        <input type="text" formControlName="credit_note_no" id="credit_note_no"
+                            [ngClass]="{ 'is-invalid': f['credit_note_no'].touched && f['credit_note_no'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="credit_note_no && credit_note_no.invalid && credit_note_no.touched">Enter Credit Note
+                            no</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Sale Bill*</label>
+                        <select formControlName="sale_bill_no" class="w-100 h-100 border" id="sale_bill_no"
+                            [ngClass]="{'is-invalid': f['sale_bill_no'].touched && f['sale_bill_no'].invalid}">
+                            <option value="" selected disabled>Select Sale Bill</option>
+                            <!-- <option value="{{purchasebill?.id}}" *ngFor="let purchasebill of accountList">
+                                {{purchasebill?.refrence_bill_no}}</option> -->
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="sale_bill_no && sale_bill_no.invalid && sale_bill_no.touched">Select Sale Bill No.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Reason</label>
+                        <input type="text" formControlName="reason" [ngClass]="{ 'is-invalid': f['reason'].touched && f['reason'].invalid}">
+                        <span class="text-danger" *ngIf="reason && reason.invalid && reason.touched">Enter Reason</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Round off</label>
+                        <input type="number" formControlName="roundoff" [ngClass]="{ 'is-invalid': f['roundoff'].touched && f['roundoff'].invalid}">
+                        <span class="text-danger" *ngIf="roundoff && roundoff.invalid && roundoff.touched">Enter round off</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Tax</label>
+                        <input type="number" formControlName="tax" [ngClass]="{ 'is-invalid': f['tax'].touched && f['tax'].invalid}">
+                        <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax ex: (1-100)</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Total</label>
+                        <input type="number" formControlName="total"
+                            id="total" [ngClass]="{ 'is-invalid': f['total'].touched && f['total'].invalid}">
+                        <span class="text-danger" *ngIf="total && total.invalid && total.touched">Enter total</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Note</label>
+                        <textarea formControlName="note"></textarea>
+                        <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                    <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
+                    <a routerLink="//transaction/creditnoteList" class="btn btn-cancel text-white">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- /add -->

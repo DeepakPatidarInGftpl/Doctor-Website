@@ -70,7 +70,8 @@ export class AddmaterialInwardComponent implements OnInit {
       total: new FormControl('', ),
       export:new FormControl(''),
       note: new FormControl(''),
-      status:new FormControl('')
+      status:new FormControl(''),
+      product_type:new FormControl('')
     });
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
@@ -165,9 +166,7 @@ export class AddmaterialInwardComponent implements OnInit {
         console.log(this.selectedAddressShipping);
       }
     })
-
   })
-
     const variants = this.materialForm.get('material_inward_cart') as FormArray;
     variants.clear();
     this.addCart();
@@ -300,6 +299,7 @@ export class AddmaterialInwardComponent implements OnInit {
       formdata.append('recieved_by', this.materialForm.get('recieved_by')?.value);
       formdata.append('note', this.materialForm.get('note')?.value);
       formdata.append('total', this.materialForm.get('total')?.value);
+      formdata.append('product_type', this.materialForm.get('product_type')?.value);
       if (type == 'draft') {
         formdata.append('status', 'draft');
       }

@@ -16,31 +16,52 @@ export class TaxSlabsComponent implements OnInit {
   get f() {
     return this.taxSlabForm.controls;
   }
-
-
+  isTax = false
+  isAddmoreTax = false
   constructor(private fb: FormBuilder, private coreService: CoreService,
-    private router :Router,
-     private toastrService: ToastrService) { }
+    private router: Router,
+    private toastrService: ToastrService) { }
 
 
   ngOnInit(): void {
     this.taxSlabForm = this.fb.group({
-      subcategory_group: new FormControl('', [Validators.required]),
-      // subcategory: new FormControl('', [Validators.required]),
-      subcategory: new FormArray([], [Validators.required]),
+      // subcategory_group: new FormControl('', [Validators.required]),
+      // subcategory: new FormArray([], [Validators.required]),
+      slab_title: new FormControl('', [Validators.required]),
+      variable_tax: new FormControl('', [Validators.required]),
       amount_tax_slabs: this.fb.array([])
     })
     this.addAmount()
-    this.getSubcateGroup()
+    // this.getSubcateGroup()
     this.getTax();
+    if (this.isTax == true) {
+      this.isAddmoreTax = true
+    } else {
+      this.isAddmoreTax = false
+    }
   }
 
+  toggle() {
+    this.isTax = !this.isTax;
+    if (this.isTax == true) {
+      this.isAddmoreTax = true
+    } else {
+      this.isAddmoreTax = false
+      console.log('false'); 
+    }
+  }
   amount_tax_slabs(): FormGroup {
-    return this.fb.group({
-      from_amount: (''),
-      to_amount: (''),
-      tax: ('')
-    });
+    if(this.isTax == true){
+      return this.fb.group({
+        from_amount: (''),
+        to_amount: (''),
+        tax: ('')
+      });
+    }else{
+      return this.fb.group({
+        tax: ('')
+      });
+    }
 
   }
   getAmount(): FormArray {
@@ -59,11 +80,17 @@ export class TaxSlabsComponent implements OnInit {
     // }
   }
 
-  get subcategory_group() {
-    return this.taxSlabForm.get('subcategory_group')
+  // get subcategory_group() {
+  //   return this.taxSlabForm.get('subcategory_group')
+  // }
+  // get subcategory() {
+  //   return this.taxSlabForm.get('subcategory')
+  // }
+  get slab_title() {
+    return this.taxSlabForm.get('slab_title')
   }
-  get subcategory() {
-    return this.taxSlabForm.get('subcategory')
+  get variable_tax() {
+    return this.taxSlabForm.get('variable_tax')
   }
   get tax() {
     return this.taxSlabForm.get('tax')
@@ -87,7 +114,7 @@ export class TaxSlabsComponent implements OnInit {
     })
   }
 
-  subcatbySubcatGroup: any[] = []; 
+  subcatbySubcatGroup: any[] = [];
   filteredSubcategory: any[] = [];
   searchTerm: string = '';
   selectSubcat: any = [];
@@ -129,7 +156,7 @@ export class TaxSlabsComponent implements OnInit {
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
-      this.selectedSubCategoryIds=formArray.value
+      this.selectedSubCategoryIds = formArray.value
       this.selectedSubcat++;
     }
     /* unselected */
@@ -149,16 +176,16 @@ export class TaxSlabsComponent implements OnInit {
   }
 
   addRes: any;
-  loaders=false;
+  loaders = false;
   submit() {
     // console.log(this.taxSlabForm.value);
     if (this.taxSlabForm.valid) {
-      this.loaders=true;
+      this.loaders = true;
       this.coreService.addTaxSlab(this.taxSlabForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res;
-        if(this.addRes.msg == "Tax Slabs Created") {
-          this.loaders=false;
+        if (this.addRes.msg == "Tax Slabs Created") {
+          this.loaders = false;
           this.toastrService.success(this.addRes.msg);
           this.router.navigate(['product/taxSlabList']);
         }

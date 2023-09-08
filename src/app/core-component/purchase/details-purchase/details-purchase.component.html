@@ -27,7 +27,7 @@
                                         </tr>
                                         <tr>
                                             <td class="th">Purchase Order Date</td>
-                                            <td class="td">{{purchaseDetail?.order_date}}</td>
+                                            <td class="td">{{purchaseDetail?.order_date |  date: 'yyyy-MM-dd hh:mm:ss a'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Purchase Order No.</td>
@@ -35,7 +35,7 @@
                                         </tr>
                                         <tr>
                                             <td class="th">Shipping Date</td>
-                                            <td class="td">{{purchaseDetail?.shipping_date}}</td>
+                                            <td class="td">{{purchaseDetail?.shipping_date |  date: 'yyyy-MM-dd hh:mm:ss a'}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Shipping Note</td>

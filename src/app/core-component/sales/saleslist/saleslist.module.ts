@@ -1,11 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DatepickerModule } from 'ng2-datepicker';
 import { SaleslistRoutingModule } from './saleslist-routing.module';
 import { SaleslistComponent } from './saleslist.component';
-import { DataTablesModule } from 'angular-datatables';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { FormsModule } from '@angular/forms';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [
@@ -14,10 +11,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     SaleslistRoutingModule,
-    DataTablesModule,
-    FormsModule,
-    DatepickerModule,
-    SweetAlert2Module.forRoot()
+    SharedModuleModule
   ],
   bootstrap: [SaleslistComponent]
 })

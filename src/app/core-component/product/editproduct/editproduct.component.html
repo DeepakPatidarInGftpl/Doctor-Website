@@ -538,6 +538,26 @@
 											<span class="text-danger" *ngIf="return_time && return_time.invalid && return_time.touched">Enter Return Time</span>
 										</div>
 									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Sale Tax*</label>
+											<select class="form-select" formControlName="sale_tax" [ngClass]="{'is-invalid': f['sale_tax'].touched && f['sale_tax'].invalid}" >
+												<option value="" selected disabled>Select Sale Tax</option>
+												<option value="{{taxslab.id}}" *ngFor="let taxslab of taxSlabList">{{taxslab?.slab_title}}</option>
+											</select>
+											<span class="text-danger" *ngIf="sale_tax && sale_tax.invalid && sale_tax.touched">Select Sale Tax</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Purchase Tax*</label>
+											<select class="form-select" formControlName="purchase_tax" [ngClass]="{'is-invalid': f['purchase_tax'].touched && f['purchase_tax'].invalid}" >
+												<option value="" selected disabled>Select Sale Tax</option>
+												<option value="{{taxslab.id}}" *ngFor="let taxslab of taxSlabList">{{taxslab?.slab_title}}</option>
+											</select>
+											<span class="text-danger" *ngIf="purchase_tax && purchase_tax.invalid && purchase_tax.touched">Select Purchase Tax</span>
+										</div>
+									</div>
 									<div class="col-lg-12">
 										<div class="form-group">
 											<label>Description</label>
