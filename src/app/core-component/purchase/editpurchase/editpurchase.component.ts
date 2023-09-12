@@ -56,7 +56,7 @@ export class EditpurchaseComponent implements OnInit {
     this.supplierControl.setValue('Loading...');
     // this.myControl.setValue('Loading...')
     this.myControls = new FormArray([]);
-    
+
     this.purchaseForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       order_date: new FormControl(''),
@@ -68,11 +68,11 @@ export class EditpurchaseComponent implements OnInit {
       status: new FormControl(''),
       export: new FormControl(''),
       total_qty: new FormControl(''),
-      total_tax: new FormControl('', ),
-      total_discount: new FormControl('', ),
-      sub_total: new FormControl('', ),
-      round_off: new FormControl('', ),
-      total: new FormControl('', ),
+      total_tax: new FormControl('',),
+      total_discount: new FormControl('',),
+      sub_total: new FormControl('',),
+      round_off: new FormControl('',),
+      total: new FormControl('',),
     });
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
       // console.log(res);
@@ -81,14 +81,16 @@ export class EditpurchaseComponent implements OnInit {
       this.purchaseForm.get('party')?.patchValue(res.party.id)
       this.purchaseForm.setControl('purchase_cart', this.udateCart(res?.cart));
       this.displaySupplierName(res.party.id);
+      this.totalAmount = res?.total;
+      this.subTotal = res?.sub_total;
+      this.roudoffValue = res?.round_off;
 
-       //patch local-date
-       const formattedOrderDate = new Date(this.getresbyId?.order_date).toISOString().slice(0, 16);
-       this.purchaseForm.get('order_date')?.patchValue(formattedOrderDate);
-      
-       const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
-       this.purchaseForm.get('shipping_date')?.patchValue(formattedshipping_date);
-      
+      //patch local-date
+      const formattedOrderDate = new Date(this.getresbyId?.order_date).toISOString().slice(0, 16);
+      this.purchaseForm.get('order_date')?.patchValue(formattedOrderDate);
+      const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
+      this.purchaseForm.get('shipping_date')?.patchValue(formattedshipping_date);
+
 
       this.supplierId = res.party.id
       this.getVariant('', '')
@@ -99,7 +101,7 @@ export class EditpurchaseComponent implements OnInit {
         this.supplierAddress = res;
         this.supplierControl.setValue(res?.company_name);
         console.log(this.supplierControl);
-        
+
         this.getprefix()
         this.supplierAddress.address.map((res: any) => {
           if (res.address_type == 'Billing') {
@@ -164,6 +166,18 @@ export class EditpurchaseComponent implements OnInit {
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
+      const purchaseRate = j.purchase_rate || 0;
+      const taxPercentage = j.tax || 0;
+      const calculatedTax = purchaseRate - (purchaseRate * (100 / (100 + taxPercentage)))
+      this.taxIntoRupees[i]=calculatedTax;
+      console.log(this.taxIntoRupees[i]);
+      
+      // tax including & excluding
+      if(j.tax==18){
+        this.TotalWithoutTax[i]=j.purchase_rate*j.qty;  
+      }else{
+        this.TotalWithoutTax[i]=j.landing_cost*j.qty;
+      }
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
         qty: j.qty,
@@ -174,6 +188,10 @@ export class EditpurchaseComponent implements OnInit {
         landing_cost: j.landing_cost,
         total: j.total
       }))
+      this.coastprice[i] = j.purchase_rate;
+      this.totalCost[i] = j.total;
+      this.landingCostEveryIndex[i] = j.landing_cost
+      this.tax[i] = j.tax;
       this.barcode[i] = j.barcode.sku;
       this.productName[i] = j.barcode.product_title;
       // this.myControl.setValue(j.barcode.product_title)
@@ -211,7 +229,7 @@ export class EditpurchaseComponent implements OnInit {
   purchase_cart(): FormGroup {
     return this.fb.group({
       barcode: (''),
-      qty: (''),
+      qty: (1),
       purchase_rate: (''),
       mrp: (''),
       discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -388,14 +406,271 @@ export class EditpurchaseComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
+
+  selectedProductName: any;
+  originalCoastPrice: any;
+  apiPurchaseTax: number;
+  isTaxAvailable: any[] = [];
+  taxIntoRupees: any[] = [];
+  tax: any[] = [];
+  batchDiscount: any;
+  landingCost: any;
+  batchCostPrice: any[] = [];
+
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
-    // console.log(selectedItemId);
-    const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
-    barcode.patchValue({
-      barcode: selectedItemId
-    });
+    // const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+    // barcode.patchValue({
+    //   barcode: selectedItemId
+    // });
+
+    // calculation
+    this.selectedProductName = event.product_title;
+    this.selectBatch = event.batch;
+    this.apiPurchaseTax = event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    this.batchDiscount = event.batch[0]?.discount || 0;
+    this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
+    this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
+    if (event?.product?.purchase_tax_including == true) {
+      let costprice = event?.batch[0]?.cost_price || 0;
+      // landing cost
+      let getDiscountPrice = (costprice * this.batchDiscount) / 100;
+      let getCoastPrice = costprice - getDiscountPrice;
+      this.landingCost = getCoastPrice;
+      // cost price
+      let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
+      this.taxIntoRupees[index] = taxPrice || 0;
+      this.originalCoastPrice = getCoastPrice - taxPrice;
+    } else {
+      let costprice = event?.batch[0]?.cost_price || 0;
+      let purchaseTax = 18
+      // cost price 
+      let getDiscountPrice = (costprice * this.batchDiscount) / 100
+      console.log(getDiscountPrice);
+      let getCoastPrice = costprice - getDiscountPrice;
+      this.originalCoastPrice = getCoastPrice
+      // landing cost
+      let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
+      this.taxIntoRupees[index] = taxPrice || 0;
+      let landingcost = getCoastPrice + taxPrice;
+      this.landingCost = landingcost;
+    }
+    if (event.batch.length > 0) {
+      const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+      this.tax[index] = this.apiPurchaseTax
+      console.log(this.originalCoastPrice, 'this.originalCoastPrice');
+      console.log(this.landingCost, 'this.landingCost');
+      if (event?.product?.purchase_tax_including == true) {
+        barcode.patchValue({
+          barcode: selectedItemId,
+          mrp: event.batch[0]?.mrp,
+          qty: event.batch[0]?.stock,
+          tax: this.apiPurchaseTax,
+          discount: event.batch[0]?.discount || 0,
+          purchase_rate: this.originalCoastPrice.toFixed(2),
+          // landing_cost: this.landingCost
+        });
+      } else {
+        this.tax[index] = 18
+        barcode.patchValue({
+          barcode: selectedItemId,
+          mrp: event.batch[0]?.mrp,
+          qty: event.batch[0]?.stock,
+          tax: 18,
+          discount: event.batch[0]?.discount || 0,
+          purchase_rate: event.batch[0]?.cost_price,
+          // landing_cost: this.landingCost || 0
+        });
+      }
+    } else {
+      this.tax[index] = 18
+      const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+      barcode.patchValue({
+        barcode: selectedItemId,
+        tax: 18,
+      });
+    }
+    this.calculateTotalLandingCostEveryIndex(index);
+    this.calculateTotal();
+    this.calculateTotalEveryIndex(index);
   }
+
+  // calculations
+  coastprice: any[] = []
+  landingPrice: any[] = []
+  isdiscount: any[] = []
+  getPurchaseCalculation(index: number) {
+    console.log(this.coastprice[index]);
+    this.batchCostPrice[index] = this.coastprice[index];
+    console.log(this.batchCostPrice[index], 'index+', index);
+    if (this.isTaxAvailable[index] == true) {
+      let costprice = this.coastprice[index] || 0;
+      // landing cost
+      let getDiscountPrice = (costprice * this.batchDiscount) / 100
+      console.log(getDiscountPrice);
+      let getCoastPrice = costprice - getDiscountPrice;
+      console.log(getCoastPrice, 'getCoastPrice');
+      this.landingCost = getCoastPrice;
+      // cost price 
+      let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
+      this.taxIntoRupees[index] = taxprice || 0;
+      let purchasePrice = getCoastPrice - taxprice;
+      this.originalCoastPrice = purchasePrice;
+      console.log(this.originalCoastPrice);
+      // this.coastprice[index] = this.originalCoastPrice.toFixed(2);
+      // this.landingPrice[index]=this.landingCost.toFixed(2)
+    } else {
+      let costprice = this.coastprice[index] || 0;
+      let purchaseTax = 18;
+      // cost price 
+      let getDiscountPrice = (costprice * this.batchDiscount) / 100
+      console.log(getDiscountPrice, 'getDiscountPrice');
+      let getCoastPrice = costprice - getDiscountPrice;
+      this.originalCoastPrice = getCoastPrice;
+      // this.coastprice[index] = this.originalCoastPrice.toFixed(2);
+      console.log(this.coastprice[index]);
+      // this.landingPrice[index]=this.landingCost.toFixed(2)
+    }
+  }
+
+  userInputEntered: boolean[] = [];
+  purchase(index) {  
+     this.userInputEntered[index] = true;
+    const result = this.calculatePurchaseEveryIndex(index);
+    this.calculateTotalLandingCostEveryIndex(index)
+    this.calculateTotalEveryIndex(index)
+    this.coastprice[index] = result.toFixed(2);
+    setTimeout(() => {
+      this.calculateRoundoffValue()
+    }, 2000);
+  }
+
+
+  calculatePurchaseEveryIndex(index: number): number {
+    console.log('gfg');
+    const cartItem = this.getCart().controls[index];
+    const purchaseRateControl = cartItem.get('purchase_rate');
+    const taxPercentageControl = cartItem.get('tax');
+    const discountPercentageControl = cartItem.get('discount');
+    this.batchCostPrice[index] = this.coastprice[index];
+    if (purchaseRateControl && taxPercentageControl && discountPercentageControl) {
+      if (this.isTaxAvailable[index] == true) {
+        const discountPercentage = +discountPercentageControl.value || 0;
+        const taxPercentage = +taxPercentageControl.value || 0;
+        const purchaseRate = +purchaseRateControl.value || 0;
+        // landing cost
+        let getDiscountPrice = (purchaseRate * discountPercentage) / 100
+        let getCoastPrice = purchaseRate - getDiscountPrice;
+        // cost price 
+        let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
+        this.taxIntoRupees[index] = taxprice || 0;
+        let purchasePrice = getCoastPrice - taxprice;
+        return purchasePrice;
+      } else {
+        const discountPercentage = +discountPercentageControl.value || 0;
+        const purchaseRate = +purchaseRateControl.value || 0;
+        // cost price 
+        let getDiscountPrice = (this.coastprice[index] * discountPercentage) / 100
+        let getCoastPrice = this.coastprice[index] - getDiscountPrice;
+        return getCoastPrice;
+      }
+    }
+    return 0
+  }
+  TotalWithTax: any[] = [];
+  TotalWithoutTax: any[] = [];
+  landingCostEveryIndex: any[] = [];
+  calculateTotalLandingCostEveryIndex(index: number): number {
+    const cartItem = this.getCart().controls[index];
+    const purchaseRateControl = cartItem.get('purchase_rate');
+    const taxPercentageControl = cartItem.get('tax');
+    const discountPercentageControl = cartItem.get('discount');
+    const qtyControlControl = cartItem.get('qty');
+    if (purchaseRateControl && taxPercentageControl && discountPercentageControl && qtyControlControl) {
+      const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+      if (this.isTaxAvailable[index] == true) {
+        const purchaseRate = +purchaseRateControl.value || 0;
+        const discountPercentage = +discountPercentageControl.value || 0;
+        const qty = +qtyControlControl.value || 0;
+        if (this.batchCostPrice[index] > 0) {
+          const discountAmount = (this.batchCostPrice[index] * discountPercentage) / 100;
+          const afterDiscountAmount = this.batchCostPrice[index] - discountAmount
+          this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
+          const landingCost = afterDiscountAmount || 0;
+          
+          barcode.patchValue({
+            landing_cost: landingCost.toFixed(2),
+          });
+          this.landingCostEveryIndex[index] = landingCost
+          // without tax price 
+          return landingCost;
+        } else {
+          const discountAmount = (this.coastprice[index] * discountPercentage) / 100;
+          const afterDiscountAmount = this.coastprice[index] - discountAmount;
+          this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
+          const landingCost = afterDiscountAmount || 0;
+          this.landingCostEveryIndex[index] = landingCost
+          barcode.patchValue({
+            landing_cost: landingCost.toFixed(2),
+          });
+          return landingCost;
+        }
+      } else {
+        let purchaseTax = 18
+        const discountPercentage = +discountPercentageControl.value || 0;
+        const qty = +qtyControlControl.value || 0;
+        // cost price 
+        let getDiscountPrice = (this.batchCostPrice[index] * discountPercentage) / 100
+        let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
+        this.originalCoastPrice = getCoastPrice
+        // without tax price 
+        this.TotalWithoutTax[index] = getCoastPrice * qty || 0;
+        // landing cost
+        let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
+        this.taxIntoRupees[index] = taxPrice || 0;
+        let landingCost = getCoastPrice + taxPrice || 0;
+        barcode.patchValue({
+          landing_cost: landingCost.toFixed(2),
+        });
+        this.landingCostEveryIndex[index] = landingCost
+        return landingCost;
+      }
+    }
+    return 0;
+  }
+
+  calculateTotalWithTax(): number {
+    let total = 0;
+    this?.TotalWithTax?.forEach((number: any) => {
+      total += number;
+    })
+    return total;
+  }
+  subTotal = 0
+  calculateTotalWithoutTax(): number {
+  let total=0
+    this?.TotalWithoutTax?.forEach((number: any) => {
+      total += number;
+    })
+    return total;
+  }
+  //when assign subtotal value fro api
+  // calculateTotalWithoutTax(): number {
+  //   let totalWithoutTax = 0;
+    
+  //   if (this.TotalWithoutTax && this.TotalWithoutTax.length > 0) {
+  //     totalWithoutTax = this.TotalWithoutTax.reduce((accumulator: number, currentValue: any) => {
+  //       if (typeof currentValue === 'number') {
+  //         return accumulator + currentValue;
+  //       }
+  //       return accumulator;
+  //     }, 0);
+  //   }
+  
+  //   return this.subTotal + totalWithoutTax;
+  // }
+  
+  //
   loader = false;
   getRes: any;
   submit(type: any) {
@@ -612,13 +887,12 @@ export class EditpurchaseComponent implements OnInit {
     this.isProduct = false
   }
 
-
   calculateTotalQty(): number {
     let totalQty = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const qtyControl = this.getCart().controls[i].get('qty');
+      const qtyControl = this.getCart().controls[i].get('qty'); 
       if (qtyControl) {
-        totalQty += +qtyControl.value;
+        totalQty += +qtyControl.value || 0;
       }
     }
     return totalQty;
@@ -626,9 +900,9 @@ export class EditpurchaseComponent implements OnInit {
   calculateTotalMrp(): number {
     let totalMrp = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const mrpControl = this.getCart().controls[i].get('mrp');
+      const mrpControl = this.getCart().controls[i]?.get('mrp');
       if (mrpControl) {
-        totalMrp += +mrpControl.value;
+        totalMrp += +mrpControl.value || 0;
       }
     }
     return totalMrp;
@@ -638,18 +912,27 @@ export class EditpurchaseComponent implements OnInit {
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const discountControl = this.getCart().controls[i].get('discount');
       if (discountControl) {
-        totalDiscount += +discountControl.value;
+        totalDiscount += +discountControl.value || 0;
       }
     }
     return totalDiscount;
   }
-
+  calculateTotalAdditionDiscount(): number {
+    let totalDiscount = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const discountControl = this.getCart().controls[i].get('additional_discount');
+      if (discountControl) {
+        totalDiscount += +discountControl.value || 0;
+      }
+    }
+    return totalDiscount;
+  }
   calculateTotalPurchase(): number {
     let totalPurchase = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const purchaseControl = this.getCart().controls[i]?.get('purchase_rate') || 0;
+      const purchaseControl = this.getCart().controls[i].get('purchase_rate');
       if (purchaseControl) {
-        totalPurchase += +purchaseControl.value;
+        totalPurchase += +purchaseControl.value || 0;
       }
     }
     return totalPurchase;
@@ -657,14 +940,13 @@ export class EditpurchaseComponent implements OnInit {
   calculateTotalTax(): number {
     let totalTax = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const taxControl = this.getCart().controls[i]?.get('tax') || 0;
+      const taxControl = this.getCart()?.controls[i].get('tax') || 0;
       if (taxControl) {
-        totalTax += +taxControl.value;
+        totalTax += +taxControl.value || 0;
       }
     }
     return totalTax;
   }
-
   // calculateTotalLandingCost(): number {
   //   let totalLandingCost = 0;
   //   for (let i = 0; i < this.getCart().controls.length; i++) {
@@ -675,78 +957,70 @@ export class EditpurchaseComponent implements OnInit {
   //   }
   //   return totalLandingCost;
   // }
-  calculateTotalLandingCost(): number {
+
+  calculateTotalLandingCost(): any {
     let totalLandingCost = 0;
-    const cartControls = this.getCart().controls;
-    for (let i = 0; i < cartControls.length; i++) {
-      const purchaseRateControl = cartControls[i]?.get('purchase_rate') || 0;
-      const discountControl = cartControls[i]?.get('discount') || 0;
-      const taxAmountControl = cartControls[i]?.get('tax') || 0;
-      if (purchaseRateControl && discountControl && taxAmountControl) {
-        const purchaseRate = +purchaseRateControl.value;
-        const discountPercentage = +discountControl.value;
-        const taxAmountPercentage = +taxAmountControl.value;
-        const discountAmount = (purchaseRate * discountPercentage) / 100;
-        const afterDiscountAmount = purchaseRate - discountAmount
-        const taxAmount = (afterDiscountAmount * taxAmountPercentage) / 100;
-        const landingCost = (purchaseRate - discountAmount) + taxAmount;
-        totalLandingCost += landingCost;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const landingCostControl = this.getCart().controls[i]?.get('landing_cost') || 0;
+      if (landingCostControl) {
+        totalLandingCost += +landingCostControl.value || 0;
       }
     }
     return totalLandingCost;
-  }
-
-  calculateTotalLandingCostEveryIndex(index: number): number {
-    const cartItem = this.getCart().controls[index];
-    const purchaseRateControl = cartItem?.get('purchase_rate') || 0;
-    const taxPercentageControl = cartItem?.get('tax') || 0;
-    const discountPercentageControl = cartItem?.get('discount') || 0;
-    if (purchaseRateControl && taxPercentageControl && discountPercentageControl) {
-      const purchaseRate = +purchaseRateControl.value;
-      const taxPercentage = +taxPercentageControl.value;
-      const discountPercentage = +discountPercentageControl.value;
-      const discountAmount = (purchaseRate * discountPercentage) / 100;
-      const afterDiscountAmount = purchaseRate - discountAmount
-      const taxAmount = (afterDiscountAmount * taxPercentage) / 100;
-      const landingCost = purchaseRate - discountAmount + taxAmount;
-      return landingCost;
-    }
-    return 0;
   }
   // subTotal
   calculateSubtotal(): number {
     let subtotal = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const qtyControl = this.getCart().controls[i]?.get('qty') || 0;
-      const mrpControl = this.getCart().controls[i]?.get('mrp') || 0;
+      const qtyControl = this.getCart().controls[i].get('qty');
+      const mrpControl = this.getCart().controls[i].get('mrp');
       if (qtyControl && mrpControl) {
-        const qty = +qtyControl.value;
-        const mrp = +mrpControl.value;
-
+        const qty = +qtyControl.value || 0;
+        const mrp = +mrpControl.value || 0;
         const itemSubtotal = mrp * qty;
         subtotal += itemSubtotal;
       }
     }
     return subtotal;
   }
+  // calculateTotal(): number {
+  //   let total = 0;
+  //   for (let i = 0; i < this.getCart().controls.length; i++) {
+  //     const purchaseRateControl = this.getCart().controls[i].get('purchase_rate');
+  //     const discountControl = this.getCart().controls[i].get('discount');
+  //     const taxControl = this.getCart().controls[i].get('tax');
+  //     const qtyControl = this.getCart().controls[i].get('qty');
+
+  //     if (purchaseRateControl && discountControl && taxControl && qtyControl) {
+  //       const purchaseRate = +purchaseRateControl.value;
+  //       const discount = +discountControl.value;
+  //       const tax = +taxControl.value;
+  //       const qty = +qtyControl.value;
+
+  //       const discountPercentage = +discount
+  //       const taxAmountPercentage = +tax;
+
+  //       const taxAmount = (purchaseRate * taxAmountPercentage) / 100;
+  //       const discountAmount = (purchaseRate * discountPercentage) / 100;
+  //       const landingCost = (purchaseRate - discountAmount) + taxAmount;
+
+  //       const totalForItem = landingCost * qty;
+
+  //       total += totalForItem;
+  //     }
+  //   }
+  //   return total;
+  // }
   totalAmount: any
-  calculateTotal(): number {
+  calculateTotal() {
     let total = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const purchaseRateControl = this.getCart().controls[i]?.get('purchase_rate') || 0;
-      const discountControl = this.getCart().controls[i]?.get('discount') || 0;
-      const taxControl = this.getCart().controls[i]?.get('tax') || 0;
-      const qtyControl = this.getCart().controls[i]?.get('qty') || 0;
-      if (purchaseRateControl && discountControl && taxControl && qtyControl) {
-        const purchaseRate = +purchaseRateControl.value;
-        const discount = +discountControl.value;
-        const tax = +taxControl.value;
-        const qty = +qtyControl.value;
-        const discountPercentage = +discount;
-        const taxAmountPercentage = +tax;
-        const taxAmount = (purchaseRate * taxAmountPercentage) / 100;
-        const discountAmount = (purchaseRate * discountPercentage) / 100;
-        const landingCost = (purchaseRate - discountAmount) + taxAmount;
+      const purchaseRateControl = this.getCart().controls[i].get('purchase_rate');
+      const landingcost = this.getCart().controls[i].get('landing_cost');
+      const qtyControl = this.getCart().controls[i].get('qty');
+      if (purchaseRateControl && landingcost && qtyControl) {
+        const landingCost = +landingcost.value || 0;
+        const qty = +qtyControl.value || 0;
         const totalForItem = landingCost * qty;
         total += totalForItem;
       }
@@ -755,74 +1029,82 @@ export class EditpurchaseComponent implements OnInit {
     // Round the total based on decimal value and add 1 if necessary
     const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
     const decimalPart = roundedTotal - Math.floor(roundedTotal);
-
+    this.calculateRoundoffValue()
     if (decimalPart >= 0.5) {
+      this.totalAmount = Math.floor(roundedTotal) + 1;
       return Math.floor(roundedTotal) + 1;
     } else {
+      this.totalAmount = Math.floor(roundedTotal);
       return Math.floor(roundedTotal);
     }
+
   }
-
-  calculateRoundoffValue(): number {
-    const total = this.totalAmount; // Use your existing calculateTotal function
-    const roundedTotal = Math.round(total * 100) / 100; // Round to two decimal places
+  roudoffValue: any
+  // calculateRoundoffValue(): any {
+  //   const total = this.totalAmount || 0;
+  //   const roundedTotal = Math.round(total * 100) / 100;
+  //   const integerPart = Math.floor(roundedTotal);
+  //   const decimalPart = (roundedTotal - integerPart) * 100;
+  //   if (decimalPart === 0 && integerPart === 0) {
+  //     return 0;
+  //   }
+  //   const subtractedValue = (100 - decimalPart) / 100;
+  //   if (subtractedValue === 1) {
+  //     return 0;
+  //   }
+  //   console.log(decimalPart,'decimalPart');
+  //   console.log(subtractedValue,'subtractedValue');
+  //   this.roudoffValue=subtractedValue;
+  //   return subtractedValue;
+  // }
+  calculateRoundoffValue(): any {
+    const total = this.totalAmount || 0;
+    const roundedTotal = Math.round(total * 100) / 100;
     const integerPart = Math.floor(roundedTotal);
-    const decimalPart = (roundedTotal - integerPart) * 100; // Convert decimal part to whole number
-
+    const decimalPart = (roundedTotal - integerPart) * 100;
+ 
     if (decimalPart === 0 && integerPart === 0) {
-      return 0; // Both parts are 0, so subtractedValue is 0
-    }
-
-    const subtractedValue = (100 - decimalPart) / 100; // Subtract decimal part from 100 and convert to fraction
-
-    // Check if subtractedValue is 1 and change it to 0
-    if (subtractedValue === 1) {
+      this.roudoffValue = 0;
+      this.purchaseForm.get('round_off').patchValue(this.roudoffValue)
       return 0;
     }
-
+    const subtractedValue = (100 - decimalPart) / 100;
+    if (subtractedValue === 1) {
+      this.roudoffValue = 0
+      this.purchaseForm.get('round_off').patchValue(this.roudoffValue)
+      return 0;
+    }
+    this.roudoffValue = subtractedValue;
+    this.purchaseForm.get('round_off').patchValue(this.roudoffValue)
     return subtractedValue;
   }
-
-
-  calculateTotalEveryIndex(index: number): number {
+  totalCost: any[] = []
+  calculateTotalEveryIndex(index: any) {
     const cartItem = this.getCart().controls[index];
-    const purchaseRate = +cartItem?.get('purchase_rate').value || 0;
-    const discountPercentage = +cartItem?.get('discount').value || 0;
-    const taxAmountPercentage = +cartItem?.get('tax').value || 0;
-    const qty = +cartItem?.get('qty').value;
-    const discountAmount = (purchaseRate * discountPercentage) / 100;
-    const taxAmount = (purchaseRate * taxAmountPercentage) / 100;
-    const landingCost = (purchaseRate - discountAmount) + taxAmount;
+    const landingCost = +cartItem.get('landing_cost').value || 0;
+    const qty = +cartItem.get('qty').value || 0;
     const totalForItem = landingCost * qty;
+    this.totalCost[index] = totalForItem;
+    const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+    barcode.patchValue({
+     total:totalForItem.toFixed(2)
+    });
     return totalForItem;
   }
-  calculateTotalTaxIntoRupees() {
-    let total = 0;
-    for (let i = 0; i < this.getCart().controls.length; i++) {
-      const purchaseRateControl = this.getCart().controls[i].get('purchase_rate');
-      const taxControl = this.getCart().controls[i].get('tax');
-      const discountControl = this.getCart().controls[i].get('discount');
-      if (purchaseRateControl && discountControl) {
-        const purchaseRate = +purchaseRateControl.value;
-        const tax = +taxControl.value;
-        const discount = +discountControl.value
-
-        const discountAmountPercentage = +discount
-        const discountAmount = (purchaseRate * discountAmountPercentage) / 100;
-        const afterDiscuntAmount = purchaseRate - discountAmount
-        const taxAmountPercentage = +tax;
-        const taxAmount = (afterDiscuntAmount * taxAmountPercentage) / 100;
-
-        total += taxAmount;
-      }
-    }
+  taxIntoPrice = 0;
+  calculateTotalTaxIntoRupees(): any {
+    let total=0;
+    this.taxIntoRupees?.forEach((number: any) => {
+      total+= number || 0
+    });
     return total;
   }
-  calculateTaxintoPrice(index: number): number {
+
+  calculateTaxintoPrice(index: number): any {
     const cartItem = this.getCart().controls[index];
-    const purchaseRate = +cartItem?.get('purchase_rate').value || 0;
-    const taxPercentage = +cartItem?.get('tax').value || 0;
-    const discountPercentage = +cartItem?.get('discount').value || 0;
+    const purchaseRate = +cartItem.get('purchase_rate').value || 0;
+    const taxPercentage = +cartItem.get('tax').value || 0;
+    const discountPercentage = +cartItem.get('discount').value || 0;
     const discount = (purchaseRate * discountPercentage) / 100;
     const afterDiscountAmount = purchaseRate - discount
     const taxAmount = (afterDiscountAmount * taxPercentage) / 100;
