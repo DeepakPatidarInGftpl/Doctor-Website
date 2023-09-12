@@ -30,7 +30,7 @@ export class SalesService {
     return this.http.post(url, data)
   }
   updateSalesOrder(data: any, id: number) {
-    let url = this.apiUrl + '/pv-api/sale_order/?id=';
+    let url = this.apiUrl + '/pv-api/sale_order/?sale_order_id=';
     return this.http.put(`${url}${id}`, data)
   }
   deleteSalesOrder(id: number) {
