@@ -50,10 +50,12 @@ export class EditSalesComponent implements OnInit {
   searchForm!: FormGroup;
   subcategoryList;
   id: any;
+  editRes:any;
   ngOnInit(): void {
     this.id=this.Arout.snapshot.paramMap.get('id');
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
-
+    this.customerControl.setValue('Loading...');
+    this.myControl = new FormArray([]);
     this.saleForm = this.fb.group({
       customer: new FormControl('', [Validators.required]),
       sale_order_date: new FormControl(defaultDate, [Validators.required]),
@@ -79,8 +81,12 @@ export class EditSalesComponent implements OnInit {
 
     //patch value
     this.saleService.getSalesOrderById(this.id).subscribe(res=>{
-      console.log(res);
-      this.saleForm.patchValue(res)
+      this.editRes=res;
+      this.saleForm.patchValue(this.editRes);
+      this.saleForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
+      this.saleForm.setControl('sale_order_cart', this.udateCart(this.editRes?.cart));
+      this.saleForm.get('customer')?.patchValue(this.editRes?.customer?.id);
+      this.customerControl.setValue(this.editRes?.customer?.company_name);
     })
 
     this.filteredcustomers = this.customerControl.valueChanges.pipe(
@@ -99,7 +105,7 @@ export class EditSalesComponent implements OnInit {
   category: any;
   subcategory: any;
   searc: any;
-  myControl = new FormControl('');
+  myControl: FormArray;
   variantList: any[] = [];
   getVariant(search: any, index: any) {
     this.contactService.searchProduct(search).subscribe((res: any) => {
@@ -125,11 +131,33 @@ export class EditSalesComponent implements OnInit {
     return this.saleForm.get('customer') as FormControl;
   }
 
+  udateCart(add: any): FormArray {
+    console.log(add); 
+    let formarr = new FormArray([]);
+    add.forEach((j: any, i) => {
+      formarr.push(this.fb.group({
+        barcode: j.barcode.id,
+        item_name: j.item_name,
+        qty: j.qty,
+        price: j.price,
+        amount: j.amount,
+        tax: j.tax || 0,
+        discount: j.discount,
+        total: j.total
+      }))
+      this.barcode[i] = j.barcode.sku;
+      this.productName[i] = j.barcode.product_title;
+      // this.myControl.setValue(j.barcode.product_title)
+      this.myControl.push(new FormControl(j?.barcode?.product_title));
+
+    })
+    return formarr
+  }
   sale_order_cart(): FormGroup {
     return this.fb.group({
       barcode: (0),
       item_name: (''),
-      qty: (0),
+      qty: (1),
       price: (0),
       amount: (0),
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -158,8 +186,6 @@ export class EditSalesComponent implements OnInit {
     })
   }
 
-  addresses: string[] = ['Address 1', 'Address 2', 'Address 3'];
-
   supplierAddress: any;
   selectedAddressBilling: any;
   selectedAddressShipping: any;
@@ -178,7 +204,7 @@ export class EditSalesComponent implements OnInit {
       this.supplierAddress = res;
       this.getVariant('', '')
       this.saleForm.patchValue({
-        payment_terms: res.payment_terms.id
+        payment_terms: res?.payment_terms.id
       })
       this.supplierAddress.address.map((res: any) => {
         if (res.address_type == 'Billing') {
@@ -322,10 +348,10 @@ export class EditSalesComponent implements OnInit {
           status: 'Draft'
         })
       }
-      this.saleService.addSalesOrder(this.saleForm.value).subscribe(res => {
+      this.saleService.updateSalesOrder(this.saleForm.value,this.id).subscribe(res => {
         // console.log(res);
         this.getRes = res;
-        if (this.getRes.msg == "Sale Order Created Successfully") {
+        if (this.getRes.msg == "Sale Order Updated Successfully") {
           this.loader = false;
           this.toastrService.success(this.getRes.msg);
           if (type == 'new') {
