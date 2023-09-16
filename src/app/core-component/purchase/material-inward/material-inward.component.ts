@@ -47,7 +47,7 @@ export class MaterialInwardComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.deleteMaterial(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "MATERIAL INWARD Deleted successfully") {
+          if (this.delRes.msg == "Material Inward Deleted Successfully") {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',

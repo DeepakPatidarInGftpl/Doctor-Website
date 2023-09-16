@@ -5,12 +5,12 @@
                 <div class="page-title">
                     <h6 class="subhead-color" (click)="goBack()"><mat-icon
                             style="vertical-align: middle;">keyboard_backspace</mat-icon>
-                            Back to Debit Notes</h6>
-                    <h4>New Debit Notes</h4>
+                            Back to Purchase Return</h6>
+                    <h4>New Purchase Return</h4>
                 </div>
                 <div class="page-btn">
                     <a routerLink="//purchase/editdebit-notes/{{purchaseBillDetail ?.id}}" class="btn btn-added">
-                        <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Debit Note
+                        <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Purchase Return
                     </a>
                 </div>
             </div>
@@ -22,16 +22,16 @@
                                 <table class="table">
                                     <tbody>
                                         <tr>
-                                            <td class="th">Supplier Name</td>
-                                            <td class="td">{{purchaseBillDetail?.party?.name}}</td>
+                                            <td class="th">Company Name</td>
+                                            <td class="td">{{purchaseBillDetail?.party?.company_name}}</td>
                                         </tr>
                                         <tr>
-                                            <td class="th">Debit Note Date</td>
-                                            <td class="td">{{purchaseBillDetail?.debit_note_date |  date: 'yyyy-MM-dd hh:mm:ss a'}}</td>
+                                            <td class="th">Purchase Return Date</td>
+                                            <td class="td">{{purchaseBillDetail?.purchase_return_date |  date: 'yyyy-MM-dd hh:mm:ss a'}}</td>
                                         </tr>
                                         <tr>
-                                            <td class="th">Debit Note No</td>
-                                            <td class="td">{{purchaseBillDetail?.debit_note_no}}</td>
+                                            <td class="th">Purchase Return No</td>
+                                            <td class="td">{{purchaseBillDetail?.purchase_return_no}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Refrence Bill No</td>
@@ -83,6 +83,7 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
+                                            <td class="th">Product Name</td>
                                             <td class="th">Barcode</td>
                                             <td class="th">Qty</td>
                                             <td class="th">MRP</td>
@@ -95,6 +96,7 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let cart of purchaseBillDetail?.cart">
+                                            <td class="td">{{cart?.barcode?.product_title + ' ' + cart?.barcode?.variant_name }}</td>  
                                             <td class="td">{{cart?.barcode?.sku}}</td>
                                             <td class="td">{{cart?.qty}}</td>
                                             <td class="td">{{cart?.mrp}}</td>

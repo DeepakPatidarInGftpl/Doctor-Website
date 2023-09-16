@@ -90,7 +90,7 @@ export class AddmaterialInwardComponent implements OnInit {
   getprefix() {
     this.purchaseService.getMaterialInwardPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.isSuccess == true) {
+      if (res.success == true) {
         this.prefixNo = res.prefix
       } else {
         this.toastrService.error(res.msg)
@@ -104,11 +104,11 @@ export class AddmaterialInwardComponent implements OnInit {
   }
   material_inward_cart(): FormGroup {
     return this.fb.group({
-      barcode: (''),
-      qty: (''),
-      po_qty: (''),
-      mrp: (''),
-  
+      barcode: (0),
+      qty: (1),
+      po_qty: (1),
+      mrp: (0),
+      // unit_cost:(0)
     })
   }
   getCart(): FormArray {
@@ -233,9 +233,10 @@ export class AddmaterialInwardComponent implements OnInit {
     let landingCost = (address?.purchase_rate - discountRupees) + taxRupee;
     console.log(landingCost); 
     barcode.patchValue({
-      mrp: address?.mrp,
-      // po_qty: address?.stock,
-      qty: address?.stock,
+      mrp: address?.mrp || 0,
+      po_qty: 1,
+      qty: address?.stock || 1,
+      // unit_cost:address?.cost_price || 0
     });
   }
   closeModal() {
@@ -276,6 +277,8 @@ export class AddmaterialInwardComponent implements OnInit {
       barcode.patchValue({
         mrp: event.batch[0]?.mrp,
         qty: event.batch[0]?.stock,
+        po_qty:1,
+        // unit_cost:event.batch[0]?.cost_price
       });
 
       console.log(event.batch);
@@ -301,7 +304,7 @@ export class AddmaterialInwardComponent implements OnInit {
       formdata.append('total', this.materialForm.get('total')?.value);
       formdata.append('product_type', this.materialForm.get('product_type')?.value);
       if (type == 'draft') {
-        formdata.append('status', 'draft');
+        formdata.append('status', 'Draft');
       }
       // nested addrs data 
       // const cartArray = this.materialForm.get('material_inward_cart') as FormArray;
@@ -341,7 +344,7 @@ export class AddmaterialInwardComponent implements OnInit {
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
           this.loader = false;
-          this.toastrService.success(this.getRes.msg);
+          this.toastrService.success(this.getRes.msg,'', {timeOut: 2000,});
           // this.router.navigate(['//purchase/material-Inward-list'])
           if (type == 'new') {
             this.materialForm.reset()
@@ -520,48 +523,17 @@ export class AddmaterialInwardComponent implements OnInit {
     }
     return totalMrp;
   }
-  // calculateTotalDiscount(): number {
-  //   let totalDiscount = 0;
-  //   for (let i = 0; i < this.getCart().controls.length; i++) {
-  //     const discountControl = this.getCart().controls[i].get('discount');
-  //     if (discountControl) {
-  //       totalDiscount += +discountControl.value;
-  //     }
-  //   }
-  //   return totalDiscount;
-  // }
-  // calculateTotalPurchase(): number {
-  //   let totalPurchase = 0;
-  //   for (let i = 0; i < this.getCart().controls.length; i++) {
-  //     const purchaseControl = this.getCart().controls[i].get('purchase_rate');
-  //     if (purchaseControl) {
-  //       totalPurchase += +purchaseControl.value;
-  //     }
-  //   }
-  //   return totalPurchase;
-  // }
-  // calculateTotalTax(): number {
-  //   let totalTax = 0;
-  //   for (let i = 0; i < this.getCart().controls.length; i++) {
-  //     const taxControl = this.getCart().controls[i].get('tax');
-  //     if (taxControl) {
-  //       totalTax += +taxControl.value;
-  //     }
-  //   }
-  //   return totalTax;
-  // }
-  // calculateTotalLandingCost(): number {
-  //   let totalLandingCost = 0;
-  //   for (let i = 0; i < this.getCart().controls.length; i++) {
-  //     const landingControl = this.getCart().controls[i].get('landing_cost');
-  //     if (landingControl) {
-  //       totalLandingCost += +landingControl.value;
-  //     }
-  //   }
-  //   return totalLandingCost;
-  // }
-  // subTotal
-  calculateSubtotal(): number {
+  calculateTotalUnitCost(): number {
+    let totalunitCost = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const unitCostControl = this.getCart().controls[i].get('unit_cost') || 0;
+      if (unitCostControl) {
+        totalunitCost += +unitCostControl.value;
+      }
+    }
+    return totalunitCost;
+  }
+ calculateSubtotal(): number {
     let subtotal = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const qtyControl = this.getCart().controls[i].get('qty');
@@ -581,14 +553,11 @@ export class AddmaterialInwardComponent implements OnInit {
     let total = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const qtyControl = this.getCart().controls[i].get('qty');
-      const mrpControl = this.getCart().controls[i].get('mrp');
-      if (qtyControl && mrpControl) {
+      const unitCostControl = this.getCart().controls[i].get('unit_cost') || 0;
+      if (qtyControl && unitCostControl) {
         const qty = +qtyControl.value;
-        const mrp = +mrpControl.value;
-        const subtotal = mrp * qty;
-        // const taxAmount = (subtotal * tax) / 100;
-        // const discountAmount = (subtotal * discount) / 100;
-
+        const unitCost = +unitCostControl.value;
+        const subtotal = unitCost * qty;
         total += subtotal;
       }
     }
@@ -597,10 +566,8 @@ export class AddmaterialInwardComponent implements OnInit {
   calculateTotalEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const qty = +cartItem.get('qty').value;
-    const mrp = +cartItem.get('mrp').value;
+    const mrp = +cartItem.get('unit_cost').value || 0;
     const subtotal = mrp * qty;
-    console.log(subtotal);
-    
     return subtotal;
   }
 

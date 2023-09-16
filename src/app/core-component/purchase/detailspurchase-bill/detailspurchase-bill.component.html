@@ -82,36 +82,64 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
+                                            <td class="th">Product Name</td>
                                             <td class="th">Barcode</td>
                                             <td class="th">Qty</td>
                                             <td class="th">MRP</td>
-                                            <td class="th">Landing Cost</td>
+                                            <td class="th">Discount</td>
+                                            <td class="th">Additional Discount</td>
                                             <td class="th">Unit Cost</td>
-                                          
                                             <td class="th">Selling Price Online</td>
                                             <td class="th">Selling Price Offline</td>
                                             <td class="th">Dealer Price</td>
                                             <td class="th">Employee Price</td>
-
-                                            <td class="th">Discount</td>
                                             <td class="th">Tax</td>
+                                            <td class="th">Landing Cost</td>
                                             <td class="th">Total</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let cart of purchaseBillDetail?.cart">
+                                            <td class="td">{{cart?.barcode?.product_title + ' ' + cart?.barcode?.variant_name }}</td>
                                             <td class="td">{{cart?.barcode?.sku}}</td>
                                             <td class="td">{{cart?.qty}}</td>
                                             <td class="td">{{cart?.mrp}}</td>
-                                            <td class="td">{{cart?.landing_cost}}</td>
+                                            <td class="td">{{cart?.discount}}</td>
+                                            <td class="td">{{cart?.additional_discount}}</td>
                                             <td class="td">{{cart?.unit_cost}}</td>
                                             <td class="td">{{cart?.selling_price_online}}</td>
                                             <td class="td">{{cart?.selling_price_offline}}</td>
                                             <td class="td">{{cart?.dealer_price}}</td>
                                             <td class="td">{{cart?.employee_price}}</td>
-                                            <td class="td">{{cart?.discount}}</td>
                                             <td class="td">{{cart?.tax}}</td>
+                                            <td class="td">{{cart?.landing_cost}}</td>
                                             <td class="td">{{cart?.total}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Tax Rate">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <td class="th">Tax Rate</td>
+                                            <td class="th">Taxable Amount</td>
+                                            <td class="th">IGST Amount</td>
+                                            <td class="th">SGST Amount</td>
+                                            <td class="th">CGST Amount</td>
+                                            <td class="th">Total Tax</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let tax of purchaseBillDetail?.tax_rate">
+                                            <td class="td">{{tax?.tax_rate}}</td>
+                                            <td class="td">{{tax?.taxable_amount}}</td>
+                                            <td class="td">{{tax?.igst_amount}}</td>
+                                            <td class="td">{{tax?.sgst_amount}}</td>
+                                            <td class="td">{{tax?.cgst_amount}}</td>
+                                            <td class="td">{{tax?.total_tax}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
