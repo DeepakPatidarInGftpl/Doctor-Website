@@ -89,8 +89,8 @@
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Debit Note Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Debit Note No<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Purchase Return Date<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Purchase Return No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Purchase<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
@@ -110,10 +110,10 @@
                         <td class="productimgname">
                             <a routerLink="//purchase/debit-notesDetails/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
-                        <td>{{products.debit_note_date |  date: 'yyyy-MM-dd'}}</td>
-                        <td>{{products.debit_note_no}}</td>
-                        <td>{{products.reverse_charge}}</td>
-                        <td>{{products.purchase}}</td>
+                        <td>{{products?.purchase_return_date |  date:'yyyy-MM-dd hh:mm:ss a'}}</td>
+                        <td>{{products?.purchase_return_no}}</td>
+                        <td>{{products?.reverse_charge}}</td>
+                        <td>{{products?.purchase_bill}}</td>
                         <td>
                             <span [ngClass]="{'bg-lightgreen': products.status === 'Complete', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}" class="badges">{{products.status}}</span>
                         </td>

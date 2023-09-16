@@ -50,6 +50,10 @@
                                             <td class="td">{{materialDetail?.recieved_by}}</td>
                                         </tr>
                                         <tr>
+                                            <td class="th">Product Type</td>
+                                            <td class="td">{{materialDetail?.product_type}}</td>
+                                        </tr>
+                                        <!-- <tr>
                                             <td class="th">Round Off</td>
                                             <td class="td">{{materialDetail?.round_off}}</td>
                                         </tr>
@@ -60,15 +64,15 @@
                                         <tr>
                                             <td class="th">Total Tax</td>
                                             <td class="td">{{materialDetail?.total_tax}}</td>
-                                        </tr>
+                                        </tr> -->
                                         <tr>
                                             <td class="th">Export</td>
                                             <td class="td">{{materialDetail?.export}}</td>
                                         </tr>
-                                        <tr>
+                                        <!-- <tr>
                                             <td class="th">Sub Total</td>
                                             <td class="td">{{materialDetail?.sub_total}}</td>
-                                        </tr>
+                                        </tr> -->
                                         <tr>
                                             <td class="th">Total</td>
                                             <td class="td">{{materialDetail?.total}}</td>
@@ -93,31 +97,23 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
+                                            <td class="th">Product Name</td>
                                             <td class="th">Barcode</td>
                                             <td class="th">Qty</td>
                                             <td class="th">PO Qty</td>
                                             <td class="th">MRP</td>
-                                            <td class="th">Landing Cost</td>
                                             <td class="th">Unit Cost</td>
-                                            <td class="th">Discount</td>
-                                            <td class="th">Discount Type</td>
-                                            <td class="th">Additional Discount</td>
-                                            <td class="th">Tax</td>
                                             <td class="th">Total</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let cart of materialDetail?.cart">
+                                            <td class="td">{{cart?.barcode?.product_title + ' ' + cart?.barcode?.variant_name }}</td>
                                             <td class="td">{{cart?.barcode?.sku}}</td>
                                             <td class="td">{{cart?.qty}}</td>
                                             <td class="td">{{cart?.po_qty}}</td>
                                             <td class="td">{{cart?.mrp}}</td>
-                                            <td class="td">{{cart?.landing_cost}}</td>
                                             <td class="td">{{cart?.unit_cost}}</td>
-                                            <td class="td">{{cart?.discount}}</td>
-                                            <td class="td">{{cart?.discount_type}}</td>
-                                            <td class="td">{{cart?.additional_discount}}</td>
-                                            <td class="td">{{cart?.tax}}</td>
                                             <td class="td">{{cart?.total}}</td>
                                         </tr>
                                     </tbody>

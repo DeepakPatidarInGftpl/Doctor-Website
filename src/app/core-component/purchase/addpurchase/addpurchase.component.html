@@ -145,7 +145,7 @@
                     <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Billing Address</strong></label>
                     <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type!=='Billing'">
                         <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not Available</small></h5>
-                        <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit  Address</a>
+                        <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit Address</a>
                     </div>
 
                     <div class="form-group" *ngIf="!supplierAddress">
@@ -482,11 +482,10 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <input class="input" type="text" placeholder="Search Barcode"
+                                              <input class="input" type="text" placeholder="Search Barcode"
                                                     [attr.data-index]="i"
                                                     [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                    (keyup)="getVariant(id.value,i)" (blur)="hideSearch()"
-                                                    >
+                                                    (keyup)="getVariant(id.value,i)" (blur)="hideSearch()">
                                             </td>
                                             <td colspan="1">
                                                 <div class="form-group" style="margin-bottom: 0;">

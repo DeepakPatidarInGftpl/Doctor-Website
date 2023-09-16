@@ -107,7 +107,7 @@ export class AddpurchaseComponent implements OnInit {
   getprefix() {
     this.purchaseService.getPurchaseOrderPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.isSuccess == true) {
+      if (res.success == true) {
         this.prefixNo = res.prefix
       } else {
         this.toastrService.error(res.msg)
@@ -637,7 +637,7 @@ export class AddpurchaseComponent implements OnInit {
         this.getRes = res;
         if (this.getRes.IsSuccess == "True") {
           this.loader = false;
-          this.toastrService.success(this.getRes.msg);
+          this.toastrService.success(this.getRes.msg, '', {timeOut: 2000,})
           if (type == 'new') {
             this.purchaseForm.reset()
             this.ngOnInit()
@@ -970,7 +970,6 @@ export class AddpurchaseComponent implements OnInit {
   //   this.roudoffValue=subtractedValue;
   //   return subtractedValue;
   // }
-
   calculateRoundoffValue(): any {
     const total = this.totalAmount || 0;
     const roundedTotal = Math.round(total * 100) / 100;
@@ -987,7 +986,6 @@ export class AddpurchaseComponent implements OnInit {
     this.roudoffValue = subtractedValue;
     return subtractedValue;
   }
-
   calculateTotalEveryIndex(index: any) {
     const cartItem = this.getCart().controls[index];
     const landingCost = +cartItem.get('landing_cost').value || 0;
@@ -1002,7 +1000,6 @@ export class AddpurchaseComponent implements OnInit {
     });
     return total;
   }
-
   calculateTaxintoPrice(index: number): any {
     const cartItem = this.getCart().controls[index];
     const purchaseRate = +cartItem.get('purchase_rate').value || 0;
