@@ -695,7 +695,7 @@ export class EditpurchaseComponent implements OnInit {
       formdata.append('total', this.purchaseForm.get('total')?.value);
 
       if (type == 'draft') {
-        formdata.append('status', 'draft');
+        formdata.append('status', 'Draft');
       }
       // nested addrs data 
       // const cartArray = this.purchaseForm.get('purchase_cart') as FormArray;

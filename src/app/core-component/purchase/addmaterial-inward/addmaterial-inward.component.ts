@@ -304,7 +304,7 @@ export class AddmaterialInwardComponent implements OnInit {
       formdata.append('total', this.materialForm.get('total')?.value);
       formdata.append('product_type', this.materialForm.get('product_type')?.value);
       if (type == 'draft') {
-        formdata.append('status', 'draft');
+        formdata.append('status', 'Draft');
       }
       // nested addrs data 
       // const cartArray = this.materialForm.get('material_inward_cart') as FormArray;

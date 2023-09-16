@@ -580,7 +580,7 @@ export class AddDebitnotesComponent implements OnInit {
       formdata.append('round_off', this.debitNotesForm.get('round_off')?.value);
       formdata.append('total', this.debitNotesForm.get('total')?.value);
       if (type == 'draft') {
-        formdata.append('status', 'draft');
+        formdata.append('status', 'Draft');
       }
       
       const cartArray = this.debitNotesForm.get('cart') as FormArray;
