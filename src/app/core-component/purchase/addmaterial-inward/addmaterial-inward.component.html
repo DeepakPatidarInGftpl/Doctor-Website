@@ -439,8 +439,9 @@
                                 <th style="width: 25%;">Product Name
                                 <th>QTY </th>
                                 <th>PO QTY</th>
+                                <!-- <th>Unit Cost</th> -->
                                 <th>Mrp</th>
-                                <th>Total Cost</th>
+                                <!-- <th>Total Cost</th> -->
                                 <th></th>
                             </tr>
                         </thead>
@@ -513,7 +514,7 @@
                                                   style="box-sizing: border-box;" 
                                                 />
                                                 <mat-autocomplete #autos="matAutocomplete">
-                                                    <ng-container *ngIf="myControl.value?.length > 1 && myControl.value?.length > 0">
+                                                    <ng-container *ngIf="myControl.value?.length >= 1 && myControl.value?.length > 0">
                                                         <ng-container *ngFor="let option of variantList">
                                                   <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
                                                               (onSelectionChange)="oncheckVariant(option,i)"
@@ -534,6 +535,7 @@
                                         </td>
                                         <td><input type="text" formControlName="qty" class="input"></td>
                                         <td><input type="text" formControlName="po_qty" class="input"></td>
+                                        <!-- <td><input type="text" formControlName="unit_cost" class="input"></td> -->
                                         <td><input type="text" formControlName="mrp" class="input">
                                             <i class="ion-information circle" data-bs-toggle="tooltip"
                                                 title="ion-information" (click)="openModalBatch()"></i>
@@ -611,7 +613,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="text-end"><input type="text" class="input" [value]="(calculateTotalEveryIndex(i).toFixed(2)).toString()"></td>
+                                        <!-- <td class="text-end"><input type="text" class="input" [value]="(calculateTotalEveryIndex(i).toFixed(2)).toString()"></td> -->
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -621,9 +623,9 @@
                                 <td class="text-start"><strong>Total</strong></td>
                                 <td class="text-start">{{ calculateTotalQty()}}</td>
                                 <td class="text-start">{{calculateTotalPOQty()}}</td>
+                                <!-- <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td> -->
                                 <td class="text-start"> {{calculateTotalMrp().toFixed(2)}}</td>
-                                <td class="text-start"> {{ calculateTotal().toFixed(2) }}</td>
-
+                                <!-- <td class="text-start"> {{ calculateTotal().toFixed(2) }}</td> -->
                             </tr>
                         </tbody>
                     </table>
@@ -648,10 +650,19 @@
                         <div class="total-order">
                             <ul>
                                 <li>
+                                    <h4>Total QTY</h4>
+                                    <h5>{{calculateTotalQty().toFixed(2) | currency:'INR'}}
+                                    </h5>
+                                </li>
+                                <!-- <li>
                                     <h4>Total Mrp</h4>
                                     <h5>{{calculateTotalMrp().toFixed(2) | currency:'INR'}}
                                     </h5>
                                 </li>
+                                <li>
+                                    <h4>Total Unit Cost</h4>
+                                    <h5>{{calculateTotalUnitCost().toFixed(2) | currency:'INR'}}</h5>
+                                </li> -->
                                 <!-- <li>
                                     <h4>Sub Total</h4>
                                     <h5>{{calculateSubtotal() | currency:'INR'}}</h5>
@@ -667,13 +678,13 @@
                                 <li>
                                     <h4>Landing Cost</h4>
                                     <h5>{{calculateTotalLandingCost() | currency:'INR'}}</h5>
-                                </li>  -->
+                                </li> 
                                 <li class="total">
                                     <h4>Total</h4>
                                     <h5>{{ calculateTotal().toFixed(2) | currency:'INR'}}
                                         <input type="text" formControlName="total" class="input" [ngModel]="calculateTotal()" style="display: none;">
                                     </h5>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>

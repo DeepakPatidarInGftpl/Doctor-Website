@@ -90,7 +90,7 @@
                                         <div class="row">
                                             <div class="col-lg-12 col-sm-12 col-12"
                                                 *ngFor="let add of supplierAddress?.address">
-                                                <div *ngIf="add.address_type=='Billing'">
+                                                <!-- <div *ngIf="add.address_type=='Billing'"> -->
                                                     <button type="button" (click)="selectAddressBilling(add)"
                                                         class="btn btn-primary btn-sm"
                                                         style="float: right;">Select</button>
@@ -129,7 +129,7 @@
                                                         </span>
                                                     </p>
 
-                                                </div>
+                                                <!-- </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -139,18 +139,18 @@
                     </div>
 
                     <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Billing Address</strong></label>
-                    <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type!=='Billing'">
+                    <!-- <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type!=='Billing'">
                         <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
                                 Available</small></h5>
                         <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
                             Address
                         </a>
-                    </div>
+                    </div> -->
 
                     <div class="form-group" *ngIf="!supplierAddress">
                         <div class="m-divider"><span></span></div>
-                        <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
-                                Provided</small></h5>
+                        <!-- <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
+                                Provided</small></h5> -->
                         <div class="form-group row mt-3">
                             <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
                                     class="font-weight-normal" id="lblContactGSTIN">-</span></label>
@@ -158,7 +158,7 @@
                                     class="font-weight-normal" id="lblContactGSTIN">-</span></label>
                         </div>
                     </div>
-                    <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'">
+                    <!-- <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'"> -->
                         <div class="form-group" *ngIf="supplierAddress">
 
                             <h5 class=""><small class="text-muted"></small></h5>
@@ -166,7 +166,7 @@
                                 <input type="hidden" class="form-control" name="billingcompanyname"
                                     id="billingcompanyname" value="{{supplierAddress?.name}}">
                             </h5>
-                            <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'">
+                            <!-- <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'"> -->
                                 <div *ngIf="selectedAddressBilling">
                                     <p class="d-inline mb-0">
                                         <span id="billing-address-line-1">
@@ -199,11 +199,10 @@
                                                 id="billingphone" value="{{supplierAddress?.mobile_no}}">
                                         </span>
                                     </p>
-                                    <div class="d-grid">
-                                        <a type="button" class=" btn-link" (click)="openModal()">Change Address</a>
+                                    <div class="d-block">
+                                        <a type="button" class="btn-link mx-2" (click)="openModal()">Change Address</a>
                                         <a class=" btn-link"
-                                            routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
-                                            Billing Address
+                                            routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}"><i data-bs-toggle="tooltip" title="fa fa-edit" class="fa fa-edit"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -216,10 +215,10 @@
                                             id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        <!-- </div> -->
+                    <!-- </div> -->
                 </div>
-                <div class="col-lg-3 col-sm-3 col-12">
+                <!-- <div class="col-lg-3 col-sm-3 col-12">
                     <div class="modal fade" id="addressModalShipping" tabindex="-1" role="dialog"
                         aria-labelledby="addressModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -369,7 +368,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- end -->
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
@@ -477,18 +476,20 @@
                                 <th class="space">Barcode/SKU</th>
                                 <th style="width: 30%;">Product Name 
                               </th>
-                                <th class="space" style="width: 10%;">QTY  </th>
-                                <th class="space" style="width: 10%;">Unit Cost</th>
-                                <th class="space" style="width: 10%;" >Mrp </th>
-                                <th class="space" style="width: 10%;">Discount</th>
-                                <th class="space" style="width: 10%;">Additional Discount</th>
+                                <th class="space" style="width: 10%;"> QTY  </th>
+                                <th class="space" style="width: 10%;"> Unit Cost </th>
+                                <th class="space" style="width: 10%;" > Mrp </th>
+                                <th class="space" style="width: 10%;">Discount %</th>
+                                <th class="space" style="width: 10%;">Additional Discount %</th>
                                 <th class="space" style="width: 10%;">Selling Price Online</th>
                                 <th class="space" style="width: 10%;">Selling Price Offline</th>
                                 <th class="space" style="width: 10%;">Dealer Price</th>
                                 <th class="space" style="width: 10%;">Employee Price</th>
                                 <th class="space" style="width: 10%;">Tax % </th>                               
                                 <th class="space" style="width: 12%;">Landing Cost</th>
-                                <th class="space" style="width: 12%;">Total Cost</th>
+                                <!-- <th class="space" style="width: 12%;">Total Cost</th> -->
+                                <th class="space" style="width: 12%;">Total Cost Without Tax</th>
+                                <th class="space" style="width: 12%;">Total Cost With Tax</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -525,50 +526,7 @@
                                                 (keyup)="getVariant(id.value,i)" (blur)="hideSearch()">
                                         </td>
                                         <td colspan="1">
-                                            <div class="form-group" style="margin-bottom: 0;"> 
-                                            <!-- <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
-                                            (click)="open()" placeholder="Search Product" *ngIf="isProduct"
-                                            class="input">
-
-                                        <mat-form-field class="w-100" *ngIf="!isProduct" class="input">
-                                            <input type="text" placeholder="Search Product" aria-label="Produt"
-                                                matInput [formControl]="variantControl" [matAutocomplete]="auto"
-                                                style="height: 18px;">
-                                            <mat-autocomplete #auto="matAutocomplete">
-                                                <mat-option *ngFor="let variant of filteredVariants | async"
-                                                    [value]="variant?.product_title"
-                                                    (onSelectionChange)="oncheckVariant(variant,i)"
-                                                    (onSelectionChange)="variantChanged(variant, i)">{{
-                                                    variant?.product_title}}</mat-option>
-                                                <ng-container *ngIf="(filteredVariants | async) as variants">
-                                                    <mat-option *ngIf="variants?.length === 0"
-                                                        [value]="'No data found'">
-                                                        <a routerLink="//product/addproduct" style="color:#FF9F43">+
-                                                            add Product</a>
-                                                    </mat-option>
-                                                </ng-container>
-                                            </mat-autocomplete>
-                                        </mat-form-field> 
-                                         <mat-form-field class="w-100">
-                                                <input type="text" placeholder="Search Product" aria-label="Produt"
-                                                    matInput [formControl]="variantControl" [matAutocomplete]="auto"
-                                                    style="height: 18px;">
-                                                <mat-autocomplete #auto="matAutocomplete">
-                                                    <mat-option *ngFor="let variant of filteredVariants | async"
-                                                        [value]="variant?.product_title"
-                                                        (onSelectionChange)="oncheckVariant(variant,i)"
-                                                        (onSelectionChange)="variantChanged(variant, i)">{{
-                                                        variant?.product_title}}</mat-option>
-                                                    <ng-container *ngIf="(filteredVariants | async) as variants">
-                                                        <mat-option *ngIf="variants?.length === 0"
-                                                            [value]="'No data found'">
-                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+
-                                                                add Product</a>
-                                                        </mat-option>
-                                                    </ng-container>
-                                                </mat-autocomplete>
-                                            </mat-form-field> -->
-                                          
+                                            <div class="form-group" style="margin-bottom: 0;">     
                                             <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
                                                 <input
                                                   type="text"
@@ -601,7 +559,7 @@
                                         </div>
                                         </td>
                                         <td><input type="text" formControlName="qty" class="input"></td>
-                                        <td><input type="text" formControlName="unit_cost" class="input"></td>
+                                        <td><input type="text" formControlName="unit_cost" class="input" [(ngModel)]="coastprice[i]" (blur)="purchasee(i)" #price (blur)="purchase2(price.value,i)"></td>
                                         <td><input type="text" formControlName="mrp" class="input">
                                             <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch()"></i>
                                             <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -672,13 +630,13 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><input type="text" formControlName="discount" class="input">
+                                        <td><input type="text" formControlName="discount" class="input" (blur)="purchase4(i)">
                                             <span class="text-danger" style="display: block;"
                                                 *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">
                                                 Enter Discount ex: 1-100
                                             </span>
                                         </td>
-                                        <td><input type="text" formControlName="additional_discount" class="input">
+                                        <td><input type="text" formControlName="additional_discount" class="input" (blur)="purchase3(i)">
                                             <span class="text-danger" style="display: block;"
                                             *ngIf="additional_discount(i) && additional_discount(i).invalid && additional_discount(i).touched">
                                             Enter Discount ex: 1-100
@@ -690,10 +648,20 @@
                                         </td>
                                         <td><input type="text" formControlName="dealer_price" class="input"></td>
                                         <td><input type="text" formControlName="employee_price" class="input"></td>
-                                        <td><input type="text" formControlName="tax" class="input"></td>
-                                        
-                                        <td class="text-end"><input type="text" formControlName="landing_cost" class="input"></td>
-                                        <td class="text-end"><input type="text" class="input" [value]="calculateTotalEveryIndex(i).toString()" [ngModel]="calculateTotalEveryIndex(i).toString()"></td>
+                                        <td>
+                                            <!-- <input type="text" formControlName="tax" class="input"> -->
+                                            <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' + tax[i] + ' (' + tax[i] + '%)' }}</span>
+                                            <br>
+                                        <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
+                                        </td>
+                                        <td class="text-end"><input type="text" formControlName="landing_cost" class="input" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)"></td>
+                                        <!-- <td class="text-end"><input type="text" class="input" formControlName="total" [value]="calculateTotalEveryIndex(i).toString()" [ngModel]="calculateTotalEveryIndex(i).toString()"></td> -->
+                                        <td class="text-end">
+                                            <input type="text" class="input" readonly [value]="TotalWithoutTax[i] | number:'1.2-2'" >
+                                        </td>
+                                        <td class="text-end">
+                                        <input type="text" formControlName="total" class="input" readonly [value]="calculateTotalEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
+                                        </td>
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -702,17 +670,19 @@
                                 <td></td>
                                 <td class="text-start"><strong>Total</strong></td>
                                 <td class="text-start">{{ calculateTotalQty()}}</td>
-                                <td class="text-start">{{calculateTotalUnitCost()}}</td>
-                                <td class="text-start">{{calculateTotalMrp()}}</td>
+                                <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td>
+                                <td class="text-start">{{calculateTotalMrp().toFixed(2)}}</td>
                                 <td class="text-start">{{calculateTotalDiscount()}}</td>
-                                <td class="text-start">{{calculateTotalSellingPriceOnline()}}</td>
-                                <td class="text-start">{{calculateTotalSellingPriceOffline()}}</td>
-                                <td class="text-start">{{calculateTotalDealerPrice()}}</td>
-                                <td class="text-start">{{calculateTotalEmployeePrice()}}</td>
-                                <td class="text-start">{{calculateTotalTax()}}</td>
                                 <th class="text-start">{{calculateTotalAdditionalDiscount()}}</th>
-                                <td class="text-start">{{calculateTotalLandingCost()}}</td>
-                                <td class="text-start"> {{ calculateTotal() }}</td>
+                                <td class="text-start">{{calculateTotalSellingPriceOnline().toFixed(2)}}</td>
+                                <td class="text-start">{{calculateTotalSellingPriceOffline().toFixed(2)}}</td>
+                                <td class="text-start">{{calculateTotalDealerPrice().toFixed(2)}}</td>
+                                <td class="text-start">{{calculateTotalEmployeePrice().toFixed(2)}}</td>
+                                <!-- <td class="text-start">{{calculateTotalTax()}}</td> -->
+                                <td class="text-start">{{ calculateTotalTax() + '%' + ' (' + (calculateTotalTaxIntoRupees() | number:'1.2-2' | currency:'INR') + ')' }}</td>
+                                <td class="text-start">{{calculateTotalLandingCost().toFixed(2)}}</td>
+                                <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
+                                <td>{{calculateTotal()?.toFixed(2)}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -720,16 +690,16 @@
             </div>
 
             <!-- aditional charge -->
-            <div class="m-demo-icon pt-0 pl-0 my-5" *ngIf="additionalTable">
+            <div class="m-demo-icon pt-0 pl-0 my-2" *ngIf="additionalTable">
                 <div class="m-demo-icon__class">
                     <a class="m-link m--font-boldest" (click)="displayAdditiionalTable()"><i class="ion-ios7-plus"
                             data-bs-toggle="tooltip" title="ion-ios7-plus"></i>Add
                         Additional Charges</a>
                 </div>
             </div>
-            <div class="card my-5" *ngIf="!additionalTable">
+            <div class="card my-2" *ngIf="!additionalTable">
                 <div class="card-body">
-                    <div class="row my-5">
+                    <div class="row my-2">
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -819,25 +789,71 @@
           
             <!-- end additional charge -->
             <div class="row">
-                <div class="col-lg-6 my-3">
+                <div class="col-lg-6 my-1">
                     <div class="form-group">
                         <label>Note</label>
                         <textarea class="form-control" formControlName="note"
                             [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                     </div>
-                </div>
 
-                <div class="col-lg-6 my-3">
+                 <div class="card my-2">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr style="background-color:#FF9F43;">
+                                                    <th>SR.No.</th>
+                                                    <th>Tax Rate %</th>
+                                                    <th>Taxable Amt.</th>
+                                                    <th *ngIf="!supplierAddress?.check_sgst_cgst">IGST Amt.</th>
+                                                    <th *ngIf="supplierAddress?.check_sgst_cgst">SGST Amt.</th>
+                                                    <th *ngIf="supplierAddress?.check_sgst_cgst">CGST Amt.</th>
+                                                    <th>Total Tax</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container formArrayName="tax_rate">
+                                                    <ng-container *ngFor="let t of getTaxRate().controls; let k=index">
+                                                        <tr [formGroupName]="k">
+                                                            <td>{{k+1}}</td>
+                                                            <td><input type="text" formControlName="tax_rate" [ngModel]="gstTaxRate[k]" class="input"></td>
+                                                            <td><input type="text" formControlName="taxable_amount" [ngModel]="coastprice[k]" class="input"></td>
+                                                            <td *ngIf="!supplierAddress?.check_sgst_cgst"><input type="text" formControlName="igst_amount" [ngModel]="getcgst[k].toFixed(2)" class="input"></td>
+                                                            <td *ngIf="supplierAddress?.check_sgst_cgst"><input type="text" formControlName="sgst_amount" [ngModel]="(getcgst[k].toFixed(2)/2)" class="input"></td>
+                                                            <td *ngIf="supplierAddress?.check_sgst_cgst"><input type="text" formControlName="cgst_amount" [ngModel]="(getcgst[k].toFixed(2)/2)" class="input"></td>
+                                                            <td><input type="text" formControlName="total_tax" class="input" [ngModel]="supplierAddress?.check_sgst_cgst ? getcgst[k].toFixed(2)  : (getcgst[k].toFixed(2)+getcgst[k].toFixed(2))"></td>
+                                                        </tr>
+                                                </ng-container>
+                                                </ng-container>
+                                                <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                                    <td class="text-start"><strong>Total</strong></td>
+                                                    <td class="text-start">{{calculateTotalTaxrate().toFixed(2) | currency:'INR' }}</td>
+                                                    <td class="text-start">{{calculateTotalTaxAmount().toFixed(2) | currency:'INR' }}</td>
+                                                    <td class="text-start" *ngIf="!supplierAddress?.check_sgst_cgst">{{calculateTotalIgst().toFixed(2) | currency:'INR' }}</td>
+                                                    <td class="text-start" *ngIf="supplierAddress?.check_sgst_cgst"> {{calculateTotalSgst().toFixed(2) | currency:'INR' }} </td>
+                                                    <td class="text-start" *ngIf="supplierAddress?.check_sgst_cgst"> {{calculateTotalCgst().toFixed(2) | currency:'INR' }} </td>
+                                                    <td class="text-start"> {{calculateTotalTaxRate().toFixed(2) | currency:'INR' }} </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    
+                    </div>
+                <div class="col-lg-6 my-1">
                     <div class="form-group">
                         <div class="total-order">
                             <ul>
-                                <li>
+                                <!-- <li>
                                     <h4>Total Mrp</h4>
                                     <h5>{{calculateTotalMrp() | currency:'INR'}}</h5>
-                                </li>
+                                </li> -->
                                 <li>
                                     <h4>Sub Total</h4>
-                                    <h5>{{calculateSubtotal() | currency:'INR'}}</h5>
+                                    <h5>{{calculateTotalWithoutTax() | currency:'INR'}}</h5>
                                 </li>
                                 <!-- <li>
                                     <h4>Total Discount </h4>
@@ -848,20 +864,30 @@
                                     <h5>{{'₹'+calculateTotalTax() + '%'}}</h5>
                                 </li> -->
                                 <li>
-                                    <h4>Total Additional Discount</h4>
-                                    <h5>{{calculateTotalAdditionalDiscount().toFixed(2) | currency:'INR'}}</h5>
+                                    <h4>Additional Charges</h4>
+                                    <h5>{{ calculateTotalAdditionalCharge().toFixed(2) | currency:'INR' }}</h5>
+                                </li>
+                                <li>
+                                    <h4>Total Discount</h4>
+                                    <h5>{{calculateTotalAdditionalDiscount() + calculateTotalDiscount() | currency:'INR'}}</h5>
                                 </li>
                                 <li>
                                     <h4>Tax Amount</h4>
                                     <h5>{{calculateTotalTaxIntoRupees().toFixed(2) | currency:'INR'}}</h5>
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <h4>Landing Cost</h4>
                                     <h5>{{calculateTotalLandingCost() | currency:'INR'}}</h5>
+                                </li> -->
+                                <li>
+                                    <h4>Round Off</h4>
+                                    <h5><input type="text" formControlName="round_off" class="input" [ngModel]="calculateRoundoffValue().toFixed(2) " style="width: 34%;"></h5>
                                 </li>
                                 <li class="total">
                                     <h4>Total</h4>
-                                    <h5>{{ calculateTotal() }}</h5>
+                                    <h5>{{ calculateTotal() }}
+                                        <input type="text" formControlName="total" class="input" [ngModel]="calculateTotal().toFixed(2)" style="display: none;">
+                                    </h5>
                                 </li>
                             </ul>
                         </div>
@@ -869,53 +895,7 @@
                 </div>
             </div>
 
-            <!-- <div class="col-lg-12 my-3">
-                <div class="form-group">
-                    <label>Note</label>
-                    <textarea class="form-control" formControlName="note"></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 float-md-right">
-                    <div class="total-order">
-                        <ul>
-                            <li>
-                                <h4>Total Qty</h4>
-                                <h5>{{ calculateTotalQty()}}</h5>
-                            </li>
-                            <li>
-                                <h4>Total Mrp</h4>
-                                <h5>{{calculateTotalMrp() | currency:'INR'}}</h5>
-                            </li>
-                            <li>
-                                <h4>Sub Total</h4>
-                                <h5>{{calculateSubtotal() | currency:'INR'}}</h5>
-                            </li>
-                            <li>
-                                <h4>Total Tax</h4>
-                                <h5>{{'₹'+calculateTotalTax() + '%'}}</h5>
-                            </li>
-                            <li>
-                                <h4>Total Discount </h4>
-                                <h5>{{'₹'+calculateTotalDiscount() + '%'}}</h5>
-                            </li>
-                            <li>
-                                <h4>Landing Cost</h4>
-                                <h5>{{calculateTotalLandingCost() | currency:'INR'}}</h5>
-                            </li>
-                            <li>
-                                <h4>Total Purchase </h4>
-                                <h5>{{calculateTotalPurchase() | currency:'INR'}}</h5>
-                            </li>
-                            <li class="total">
-                                <h4>Total</h4>
-                                <h5>{{ calculateTotal() }}</h5>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div> -->
-
+        
             <div class="col-lg-12">
                 <!-- <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit()">Submit</button>
                 <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>

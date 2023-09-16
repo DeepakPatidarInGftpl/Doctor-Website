@@ -46,7 +46,7 @@ export class PurchaseBillComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.deletePurchaseBill(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "PURCHASE BILL Deleted successfully") {
+          if (this.delRes.success == true) {
             
             Swal.fire({
               icon: 'success',

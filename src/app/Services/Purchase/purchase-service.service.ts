@@ -152,7 +152,7 @@ export class PurchaseServiceService {
     return this.http.get(url)
   }
   getDebitNotePrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=DebitNote';
+    let url =this.apiUrl+'/pv-api/prefix/?id=PurchaseReturn';
     return this.http.get(url)
   }
   getMaterialInwardPrefix(){

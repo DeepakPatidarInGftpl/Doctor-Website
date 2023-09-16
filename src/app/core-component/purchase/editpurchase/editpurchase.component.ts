@@ -154,7 +154,7 @@ export class EditpurchaseComponent implements OnInit {
   getprefix() {
     this.purchaseService.getPurchaseOrderPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.isSuccess == true) {
+      if (res.success == true) {
         this.prefixNo = res.prefix
       } else {
         this.toastrService.error(res.msg)
@@ -168,22 +168,28 @@ export class EditpurchaseComponent implements OnInit {
     add.forEach((j: any, i) => {
       const purchaseRate = j.purchase_rate || 0;
       const taxPercentage = j.tax || 0;
+      const landingCost = j.landing_cost || 0;
       const calculatedTax = purchaseRate - (purchaseRate * (100 / (100 + taxPercentage)))
-      this.taxIntoRupees[i]=calculatedTax;
+      this.taxIntoRupees[i] = calculatedTax;
       console.log(this.taxIntoRupees[i]);
-      
+
       // tax including & excluding
-      if(j.tax==18){
-        this.TotalWithoutTax[i]=j.purchase_rate*j.qty;  
-      }else{
-        this.TotalWithoutTax[i]=j.landing_cost*j.qty;
+      if (j.tax == 18) {
+        this.TotalWithoutTax[i] = j.unit_cost * j.qty;
+        const calculatedTax = purchaseRate - (purchaseRate * (100 / (100 + taxPercentage)))
+        this.taxIntoRupees[i] = calculatedTax;
+        console.log(this.taxIntoRupees[i]);
+      } else {
+        this.TotalWithoutTax[i] = j.landing_cost * j.qty;
+        let taxPrice = landingCost - (landingCost * (100 / (100 + taxPercentage)))
+        this.taxIntoRupees[i] = taxPrice;
       }
       formarr.push(this.fb.group({
         barcode: j.barcode.id,
         qty: j.qty,
         purchase_rate: j.purchase_rate,
         mrp: j.mrp,
-        discount: j.discount,
+        discount: j.discount == null ? 0 : j.discount,
         tax: j.tax || 0,
         landing_cost: j.landing_cost,
         total: j.total
@@ -191,7 +197,7 @@ export class EditpurchaseComponent implements OnInit {
       this.coastprice[i] = j.purchase_rate;
       this.totalCost[i] = j.total;
       this.landingCostEveryIndex[i] = j.landing_cost
-      this.tax[i] = j.tax;
+      this.tax[i] = j.tax || 0;
       this.barcode[i] = j.barcode.sku;
       this.productName[i] = j.barcode.product_title;
       // this.myControl.setValue(j.barcode.product_title)
@@ -532,10 +538,9 @@ export class EditpurchaseComponent implements OnInit {
       // this.landingPrice[index]=this.landingCost.toFixed(2)
     }
   }
-
   userInputEntered: boolean[] = [];
-  purchase(index) {  
-     this.userInputEntered[index] = true;
+  purchase(index) {
+    this.userInputEntered[index] = true;
     const result = this.calculatePurchaseEveryIndex(index);
     this.calculateTotalLandingCostEveryIndex(index)
     this.calculateTotalEveryIndex(index)
@@ -544,8 +549,6 @@ export class EditpurchaseComponent implements OnInit {
       this.calculateRoundoffValue()
     }, 2000);
   }
-
-
   calculatePurchaseEveryIndex(index: number): number {
     console.log('gfg');
     const cartItem = this.getCart().controls[index];
@@ -597,7 +600,7 @@ export class EditpurchaseComponent implements OnInit {
           const afterDiscountAmount = this.batchCostPrice[index] - discountAmount
           this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
           const landingCost = afterDiscountAmount || 0;
-          
+
           barcode.patchValue({
             landing_cost: landingCost.toFixed(2),
           });
@@ -638,7 +641,6 @@ export class EditpurchaseComponent implements OnInit {
     }
     return 0;
   }
-
   calculateTotalWithTax(): number {
     let total = 0;
     this?.TotalWithTax?.forEach((number: any) => {
@@ -648,7 +650,7 @@ export class EditpurchaseComponent implements OnInit {
   }
   subTotal = 0
   calculateTotalWithoutTax(): number {
-  let total=0
+    let total = 0
     this?.TotalWithoutTax?.forEach((number: any) => {
       total += number;
     })
@@ -657,7 +659,7 @@ export class EditpurchaseComponent implements OnInit {
   //when assign subtotal value fro api
   // calculateTotalWithoutTax(): number {
   //   let totalWithoutTax = 0;
-    
+
   //   if (this.TotalWithoutTax && this.TotalWithoutTax.length > 0) {
   //     totalWithoutTax = this.TotalWithoutTax.reduce((accumulator: number, currentValue: any) => {
   //       if (typeof currentValue === 'number') {
@@ -666,10 +668,10 @@ export class EditpurchaseComponent implements OnInit {
   //       return accumulator;
   //     }, 0);
   //   }
-  
+
   //   return this.subTotal + totalWithoutTax;
   // }
-  
+
   //
   loader = false;
   getRes: any;
@@ -693,7 +695,7 @@ export class EditpurchaseComponent implements OnInit {
       formdata.append('total', this.purchaseForm.get('total')?.value);
 
       if (type == 'draft') {
-        formdata.append('status', 'draft');
+        formdata.append('status', 'Draft');
       }
       // nested addrs data 
       // const cartArray = this.purchaseForm.get('purchase_cart') as FormArray;
@@ -890,7 +892,7 @@ export class EditpurchaseComponent implements OnInit {
   calculateTotalQty(): number {
     let totalQty = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const qtyControl = this.getCart().controls[i].get('qty'); 
+      const qtyControl = this.getCart().controls[i].get('qty');
       if (qtyControl) {
         totalQty += +qtyControl.value || 0;
       }
@@ -1062,7 +1064,7 @@ export class EditpurchaseComponent implements OnInit {
     const roundedTotal = Math.round(total * 100) / 100;
     const integerPart = Math.floor(roundedTotal);
     const decimalPart = (roundedTotal - integerPart) * 100;
- 
+
     if (decimalPart === 0 && integerPart === 0) {
       this.roudoffValue = 0;
       this.purchaseForm.get('round_off').patchValue(this.roudoffValue)
@@ -1087,15 +1089,15 @@ export class EditpurchaseComponent implements OnInit {
     this.totalCost[index] = totalForItem;
     const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
-     total:totalForItem.toFixed(2)
+      total: totalForItem.toFixed(2)
     });
     return totalForItem;
   }
   taxIntoPrice = 0;
   calculateTotalTaxIntoRupees(): any {
-    let total=0;
+    let total = 0;
     this.taxIntoRupees?.forEach((number: any) => {
-      total+= number || 0
+      total += number || 0
     });
     return total;
   }
