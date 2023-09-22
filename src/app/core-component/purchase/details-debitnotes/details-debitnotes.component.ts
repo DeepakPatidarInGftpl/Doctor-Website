@@ -10,7 +10,6 @@ import { Location } from '@angular/common';
 })
 export class DetailsDebitnotesComponent implements OnInit {
 
-  
   constructor(private Arout: ActivatedRoute, private purchaseService: PurchaseServiceService, private location: Location) { }
   id: any;
   ngOnInit(): void {

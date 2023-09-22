@@ -1,0 +1,124 @@
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                            style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                            Back to Sales Estimate</h6>
+                    <h4>New Sales Estimate</h4>
+                </div>
+                <div class="page-btn">
+                    <a routerLink="//sales/updatesalesEstimate/{{estimateDetail ?.id}}" class="btn btn-added">
+                        <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Sales Estimate
+                    </a>
+                </div>
+            </div>
+            <div class="company-details-card card" *ngIf="estimateDetail">
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="Debit Notes">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="th">Customer Name</td>
+                                            <td class="td">{{estimateDetail?.customer?.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Estimate Date</td>
+                                            <td class="td">{{estimateDetail?.estimate_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Estimate Expire Date</td>
+                                            <td class="td">{{estimateDetail?.estimate_expiry_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Estimate No.</td>
+                                            <td class="td">{{estimateDetail?.estimate_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Payment Terms</td>
+                                            <td class="td">{{estimateDetail?.payment_terms?.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total QTY</td>
+                                            <td class="td">{{estimateDetail?.total_qty}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total Discount</td>
+                                            <td class="td">{{estimateDetail?.total_discount}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total Tax</td>
+                                            <td class="td">{{estimateDetail?.total_tax}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Sub Total</td>
+                                            <td class="td">{{estimateDetail?.export}}</td>
+                                        </tr>
+                                      
+                                        <tr>
+                                            <td class="th">Round off</td>
+                                            <td class="td">{{estimateDetail?.roundoff}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="th">Total</td>
+                                            <td class="td">{{estimateDetail?.total}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Note</td>
+                                            <td class="td">{{estimateDetail?.note}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Status</td>
+                                            <td class="td"><span
+                                                    [ngClass]="{'bg-lightgreen': estimateDetail?.status === 'Complete', 'bg-lightred' : estimateDetail?.status === 'Pending','bg-lightyellow' : estimateDetail?.status === 'Draft'}"
+                                                    class="badges">{{estimateDetail?.status}}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Cart">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <td class="th">Product Name</td>
+                                            <td class="th">Barcode</td>
+                                            <td class="th">Qty</td>
+                                            <td class="th">Price</td>
+                                            <td class="th">Discount</td>
+                                            <td class="th">Tax</td>
+                                            <td class="th">Total</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let cart of estimateDetail?.cart">
+                                            <td class="td">{{cart?.barcode?.product_title + ' ' + cart?.barcode?.variant_name }}</td>  
+                                            <td class="td">{{cart?.barcode?.sku}}</td>
+                                            <td class="td">{{cart?.qty}}</td>
+                                            <td class="td">{{cart?.price}}</td>
+                                            <td class="td">{{cart?.discount}}</td>
+                                            <td class="td">{{cart?.tax}}</td>
+                                            <td class="td">{{cart?.total}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+                <div class="d-flex align-items-center my-3 mx-3">
+                    <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                    <span
+                        [ngClass]="{'bg-lightgreen': estimateDetail?.is_active === true, 'bg-lightred' : estimateDetail?.is_active === false,'bg-lightyellow' : estimateDetail?.is_active === 'Partial' }"
+                        class="badges">{{estimateDetail?.is_active}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

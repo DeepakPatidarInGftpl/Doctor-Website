@@ -6,7 +6,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'saleslist', pathMatch: 'full' },
   {
     path: '',
-    component:SalesComponent,
+    component: SalesComponent,
     children: [
       {
         path: 'saleslist',
@@ -57,8 +57,9 @@ const routes: Routes = [
             (m) => m.SalesDetailsModule
           ),
       },
+      //sales bill
       {
-        path: 'salesbilllist',
+        path: 'salesbill-list',
         loadChildren: () =>
           import('./sale-bill-list/sale-bill-list.module').then(
             (m) => m.SaleBillListModule
@@ -85,6 +86,93 @@ const routes: Routes = [
             (m) => m.DetailsSaleBillModule
           ),
       },
+      // material outward
+      {
+        path: 'salesMaterialOutward-list',
+        loadChildren: () =>
+          import('./material-outward-list/material-outward-list.module').then(
+            (m) => m.MaterialOutwardListModule
+          ),
+      },
+      {
+        path: 'addSalesMaterialOutward',
+        loadChildren: () =>
+          import('./add-material-outward/add-material-outward.module').then(
+            (m) => m.AddMaterialOutwardModule
+          ),
+      },
+      {
+        path: 'updatesalesMaterialOutward/:id',
+        loadChildren: () =>
+          import('./update-material-outward/update-material-outward.module').then(
+            (m) => m.UpdateMaterialOutwardModule
+          ),
+      },
+      {
+        path: 'salesMaterialOutwardDetails/:id',
+        loadChildren: () =>
+          import('./details-material-outward/details-material-outward.module').then(
+            (m) => m.DetailsMaterialOutwardModule
+          ),
+      },
+      // sales Estimate
+      {
+        path: 'salesEstimatelist',
+        loadChildren: () =>
+          import('./estimate-list/estimate-list.module').then(
+            (m) => m.EstimateListModule
+          ),
+      },
+      {
+        path: 'addsalesEstimate',
+        loadChildren: () =>
+          import('./add-estimate/add-estimate.module').then(
+            (m) => m.AddEstimateModule
+          ),
+      },
+      {
+        path: 'updatesalesEstimate/:id',
+        loadChildren: () =>
+          import('./update-estimate/update-estimate.module').then(
+            (m) => m.UpdateEstimateModule
+          ),
+      },
+      {
+        path: 'salesEstimatedetails/:id',
+        loadChildren: () =>
+          import('./details-estimate/details-estimate.module').then(
+            (m) => m.DetailsEstimateModule
+          ),
+      },
+      // sales return
+      {
+        path: 'salesReturnlist',
+        loadChildren: () =>
+          import('./sales-return-list/sales-return-list.module').then(
+            (m) => m.SalesReturnListModule
+          ),
+      },
+      {
+        path: 'addsalesReturn',
+        loadChildren: () =>
+          import('./add-sales-return/add-sales-return.module').then(
+            (m) => m.AddSalesReturnModule
+          ),
+      },
+      {
+        path: 'updatesalesReturn/:id',
+        loadChildren: () =>
+          import('./update-sales-return/update-sales-return.module').then(
+            (m) => m.UpdateSalesReturnModule
+          ),
+      },
+      {
+        path: 'salesReturnedetails/:id',
+        loadChildren: () =>
+          import('./details-sales-return/details-sales-return.module').then(
+            (m) => m.DetailsSalesReturnModule
+          ),
+      },
       // {
       //   path: 'posOrder',
       //   loadChildren: () =>
@@ -99,15 +187,15 @@ const routes: Routes = [
       //       (m) => m.DetailsPosOrderModule
       //     ),
       // },
-  
-    
+
+
     ],
   },
- 
+
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class SalesRoutingModule {}
+export class SalesRoutingModule { }

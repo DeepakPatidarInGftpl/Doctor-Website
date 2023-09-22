@@ -410,9 +410,9 @@
                                     </li>
                                     <li><a class="dropdown-item"
                                             *ngFor="let category of filteredCategoryList let i=index;">
-                                            <input type="checkbox" [value]="category.id" (change)="SelectedProduct(category.id)" 
+                                            <input type="checkbox" [value]="category.id" (change)="SelectedProduct(category?.product?.category?.id)" 
                                                 [id]="'checkboxCat-' + i">
-                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category.product_title}}</label>
+                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category?.product?.category?.title}}</label>
                                         </a></li>
                                 </ul>
                             </div>
@@ -428,7 +428,7 @@
                                     </li>
                                     <li><a class="dropdown-item"
                                             *ngFor="let subcategory of filteredCategoryList let i=index;">
-                                            <input type="checkbox" [value]="subcategory.id" (change)="SelectedProductSubCat(subcategory.id)" 
+                                            <input type="checkbox" [value]="subcategory.id" (change)="SelectedProductSubCat(subcategory?.product?.subcategory?.id)" 
                                                 [id]="'checkboxSubCat-' + i">
                                             <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory.product_title}}</label>
                                         </a></li>
