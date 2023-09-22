@@ -482,7 +482,6 @@ export class AddpurchaseComponent implements OnInit {
       this.calculateRoundoffValue()
     }, 2000);
   }
-
   calculatePurchaseEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('purchase_rate');
@@ -515,7 +514,6 @@ export class AddpurchaseComponent implements OnInit {
   }
   TotalWithTax: any[] = [];
   TotalWithoutTax: any[] = [];
-
   calculateTotalLandingCostEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('purchase_rate');
@@ -561,7 +559,6 @@ export class AddpurchaseComponent implements OnInit {
     }
     return 0;
   }
-
   calculateTotalWithTax(): number {
     let total = 0;
     this?.TotalWithTax?.forEach((number: any) => {
@@ -569,7 +566,6 @@ export class AddpurchaseComponent implements OnInit {
     })
     return total;
   }
-
   calculateTotalWithoutTax(): number {
     let total = 0;
     this?.TotalWithoutTax?.forEach((number: any) => {
@@ -1042,7 +1038,6 @@ export class AddpurchaseComponent implements OnInit {
       );
     }
   }
-
   selectData: any[] = []
   SelectedProduct(variant: any) {
     // this.selectData.push(variant)
@@ -1056,7 +1051,6 @@ export class AddpurchaseComponent implements OnInit {
 
     this.getVariant('', '')
   }
-
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
     // this.selectData.push(variant)

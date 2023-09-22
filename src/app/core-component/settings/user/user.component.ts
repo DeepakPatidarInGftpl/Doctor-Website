@@ -120,7 +120,7 @@ export class UserComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.contactService.SupplierIsActive(id,'').subscribe(res => {
+        this.contactService.UserIsActive(id,'').subscribe(res => {
           this.delRes = res
           if (this.delRes.msg == "User Is active Updated Successfully") {
             this.ngOnInit()

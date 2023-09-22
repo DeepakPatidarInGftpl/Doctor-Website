@@ -422,8 +422,11 @@
            <li class="submenu" >
                   <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span class="menu-arrow"></span></a>
                   <ul>
-                      <li><a routerLink="/sales/saleslist" routerLinkActive="active">Sales List</a></li> 
-                      <li><a routerLink="/sales/salesbilllist" routerLinkActive="active">Sales Bill List</a></li> 
+                      <li><a routerLink="/sales/salesEstimatelist" routerLinkActive="active">Sales Estimate</a></li>
+                      <li><a routerLink="/sales/saleslist" routerLinkActive="active">Sales Order</a></li> 
+                      <li><a routerLink="/sales/salesbill-list" routerLinkActive="active">Sales Bill </a></li>
+                      <li><a routerLink="/sales/salesReturnlist" routerLinkActive="active">Sales Return</a></li>
+                      <li><a routerLink="/sales/salesMaterialOutward-list" routerLinkActive="active">Sales Material Outward</a></li>
                       <!-- <li *ngIf="isPosOrder"><a routerLink="/sales/posOrder" routerLinkActive="active">POS Order</a></li>
                       <li *ngIf="isPosOrder"><a routerLink="/sales/payment" routerLinkActive="active">Payment</a></li>
                       <li *ngIf="isReciept"><a routerLink="/sales/reciept" routerLinkActive="active">Payment</a></li>

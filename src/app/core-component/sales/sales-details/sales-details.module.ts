@@ -4,6 +4,13 @@ import { CommonModule } from '@angular/common';
 import { SalesDetailsRoutingModule } from './sales-details-routing.module';
 import { SalesDetailsComponent } from './sales-details.component';
 
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatIconModule} from '@angular/material/icon';
+
+import {MatSelectModule} from '@angular/material/select';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -11,7 +18,13 @@ import { SalesDetailsComponent } from './sales-details.component';
   ],
   imports: [
     CommonModule,
-    SalesDetailsRoutingModule
+    SalesDetailsRoutingModule,
+    MatTabsModule,
+    MatIconModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatSlideToggleModule,
+    FormsModule
   ]
 })
 export class SalesDetailsModule { }

@@ -44,9 +44,9 @@ export class SaleBillListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.saleService.deleteSalesOrder(id).subscribe(res => {
+        this.saleService.deleteSalesBill(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Sale Deleted successfully") {
+          if (this.delRes.success) {
            this.ngOnInit();
            Swal.fire({
             icon: 'success',
@@ -69,7 +69,7 @@ export class SaleBillListComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this sale!",
+      text: "Do you want to Deactivate this sale bill!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -81,16 +81,16 @@ export class SaleBillListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.saleService.SalesOrderIsActive(id,'').subscribe(res => {
+        this.saleService.SalesBillIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Sale Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Sale Is Deactivate Successfully.',
+          text: 'Sale Bill Is Deactivate Successfully.',
         });
       }
     });
@@ -98,7 +98,7 @@ export class SaleBillListComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this sale!",
+      text: "Do you want to Active this sale bill!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -110,16 +110,16 @@ export class SaleBillListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.saleService.SalesOrderIsActive(id,'').subscribe(res => {
+        this.saleService.SalesBillIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Sale Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Sale Is Active Successfully.',
+          text: 'Sale Bill Is Active Successfully.',
         });
       }
     });
@@ -130,7 +130,7 @@ isEdit:any;
 isDelete:any;
 userDetails:any;
   ngOnInit(): void {
-    this.saleService.getSalesOrder().subscribe(res => {
+    this.saleService.getSalesBill().subscribe(res => {
       this.tableData = res;
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
