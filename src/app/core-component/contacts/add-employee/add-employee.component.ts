@@ -235,7 +235,7 @@ export class AddEmployeeComponent implements OnInit {
       this.contactService.addEmployee(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Successfuly Added") {
+        if (this.addRes.success) {
           this.loader = false
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()

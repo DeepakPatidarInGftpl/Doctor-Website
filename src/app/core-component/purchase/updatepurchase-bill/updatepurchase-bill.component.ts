@@ -102,8 +102,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.puchaseBillForm.get('due_date')?.patchValue(formatteddue_date);
       this.puchaseBillForm.get('round_off')?.patchValue(this.getresbyId?.round_off)
       
-      const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
-      this.puchaseBillForm.get('shipping_date')?.patchValue(formattedshipping_date);
+      // const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
+      // this.puchaseBillForm.get('shipping_date')?.patchValue(formattedshipping_date);
       
       const formattedsupplier_bill_date = new Date(this.getresbyId?.supplier_bill_date).toISOString().slice(0, 16);
       this.puchaseBillForm.get('supplier_bill_date')?.patchValue(formattedsupplier_bill_date);
@@ -367,6 +367,18 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.contactService.getPaymentTerms().subscribe(res => {
       // console.log(res);
       this.paymentList = res;
+
+       // select auto due date with time from days fields
+       const today = new Date();
+       const sevenDaysFromToday = new Date(today);
+       sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
+       const year = sevenDaysFromToday.getFullYear();
+       const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
+       const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
+       const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+       const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
+       const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+       this.puchaseBillForm.get('due_date').patchValue(defaultDateago7);
     })
   }
   selectedAddressBilling: any;
@@ -391,6 +403,19 @@ export class UpdatepurchaseBillComponent implements OnInit {
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
+
+       // select auto due date with time from days fields
+       const today = new Date();
+       const sevenDaysFromToday = new Date(today);
+       sevenDaysFromToday.setDate(today.getDate() + res?.payment_terms?.days);
+       const year = sevenDaysFromToday.getFullYear();
+       const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
+       const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
+       const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+       const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
+       const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+       this.puchaseBillForm.get('due_date').patchValue(defaultDateago7);
+
       this.supplierAddress = res;
       this.supplierAddress.address.map((res: any) => {
         this.selectedAddressBilling = res
@@ -1052,15 +1077,32 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.puchaseBillForm.markAllAsTouched()
     }
   }
+
+  // private _filter(value: string | number, include: boolean): any[] {
+  //   // console.log(value);
+  //   const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+  //   const filteredSuppliers = include
+  //     ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
+  //     : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
+  //   if (!include && filteredSuppliers.length === 0) {
+  //     // console.log("No results found");
+  //     filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
+  //   }
+  //   return filteredSuppliers;
+  // }
+
+  // search with name & companyname 
   private _filter(value: string | number, include: boolean): any[] {
-    // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
-      ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
-      : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
+      ? this.suppliers.filter(supplier =>
+          supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue)
+        )
+      : this.suppliers.filter(supplier =>
+          !(supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
+        );
     if (!include && filteredSuppliers.length === 0) {
-      // console.log("No results found");
-      filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
+      filteredSuppliers.push({ name: "No data found" });
     }
     return filteredSuppliers;
   }

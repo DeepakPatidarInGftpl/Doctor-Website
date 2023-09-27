@@ -53,7 +53,7 @@ export class EmployeeComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deleteEmployee(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Deleted successfully") {
+          if (this.delRes.success) {
            
             Swal.fire({
               icon: 'success',
@@ -93,7 +93,7 @@ export class EmployeeComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.EmployeeIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -122,7 +122,7 @@ export class EmployeeComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.EmployeeIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })

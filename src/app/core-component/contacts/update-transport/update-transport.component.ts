@@ -302,7 +302,7 @@ export class UpdateTransportComponent implements OnInit {
       this.contactService.updateTransport(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Transport updated successfully") {
+        if (this.addRes.success) {
           this.toastr.success(this.addRes.msg)
           this.transportForm.reset()
           this.router.navigate(['//contacts/transport'])

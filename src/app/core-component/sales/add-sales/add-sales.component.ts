@@ -716,7 +716,6 @@ export class AddSalesComponent implements OnInit {
     if (this.saleForm.valid) {
       this.loader = true;
       let formdata: any = new FormData();
-
       formdata.append('customer', this.saleForm.get('customer')?.value);
       formdata.append('sale_order_date', this.saleForm.get('sale_order_date')?.value);
       formdata.append('sale_order_no', this.saleForm.get('sale_order_no')?.value);

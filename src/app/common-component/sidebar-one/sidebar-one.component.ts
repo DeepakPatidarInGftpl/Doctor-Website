@@ -112,7 +112,12 @@ isReciept:any;
 isPurchasepos:any;
 isExpence:any;
 isCompanyBank:any;
-
+//sales
+isSalesOrder;
+isSalesBill;
+isSalesOutward;
+isSalesReturn;
+isSalesEstimate;
 
 userDetails:any
   ngOnInit(): void {
@@ -269,7 +274,18 @@ userDetails:any
       } else if (res.content_type.app_label === 'account' && res.content_type.model === 'additionalcharge' && res.codename == 'view_additionalcharge') {
         this.isAdditional = res.codename;
       }
-
+      // sales
+      else if (res.content_type.app_label === 'sale' && res.content_type.model === 'saleorder' && res.codename == 'view_saleorder') {
+        this.isSalesOrder = res.codename;
+      }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'salebill' && res.codename == 'view_salebill') {
+        this.isSalesBill = res.codename;
+      }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'materialoutward' && res.codename == 'view_materialoutward') {
+        this.isSalesOutward = res.codename;
+      }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'salereturn' && res.codename == 'view_salereturn') {
+        this.isSalesReturn = res.codename
+      } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename == 'view_estimate') {
+        this.isSalesEstimate = res.codename;
+      }
       });
     }
 

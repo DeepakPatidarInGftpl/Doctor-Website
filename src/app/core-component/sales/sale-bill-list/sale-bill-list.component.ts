@@ -144,13 +144,13 @@ userDetails:any;
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master'  && res.content_type.model === 'dealer' && res.codename=='add_dealer') {
+        if (res.content_type.app_label === 'sale'  && res.content_type.model === 'salebill' && res.codename=='add_salebill') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename=='change_dealer') {
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'salebill' && res.codename=='change_salebill') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'dealer' && res.codename=='delete_dealer') {
+        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'salebill' && res.codename=='delete_salebill') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }

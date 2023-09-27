@@ -146,13 +146,13 @@ userDetails:any;
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'sale'  && res.content_type.model === 'estimate' && res.codename=='add_estimate') {
+        if (res.content_type.app_label === 'sale'  && res.content_type.model === 'salereturn' && res.codename=='add_salereturn') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename=='change_estimate') {
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'salereturn' && res.codename=='change_salereturn') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename=='delete_estimate') {
+        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'salereturn' && res.codename=='delete_salereturn') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }

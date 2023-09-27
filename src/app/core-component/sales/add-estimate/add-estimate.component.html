@@ -70,7 +70,7 @@
                     </div>
                 </div>
              
-                <div class="col-lg-3 col-sm-3 col-12">
+                <!-- <div class="col-lg-3 col-sm-3 col-12">
                     <div class="modal fade" id="addressModal" tabindex="-1" role="dialog"
                         aria-labelledby="addressModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -370,7 +370,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
@@ -419,14 +419,11 @@
                                 <button type="button" class="dropdown-toggle button" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
                                 <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                    <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory"  (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}">
-                                    </li>
-                                    <li><a class="dropdown-item"
-                                            *ngFor="let subcategory of filteredCategoryList let i=index;">
-                                            <input type="checkbox" [value]="subcategory.id" (change)="SelectedProductSubCat(subcategory?.product?.subcategory?.id)" 
-                                                [id]="'checkboxSubCat-' + i">
-                                            <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory?.product?.subcategory?.title}}</label>
-                                        </a></li>
+                                    <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory" (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}"> </li>
+                                    <li> <a class="dropdown-item" *ngFor="let subcategory of filteredCategoryList let i=index;">
+                                      <input type="checkbox" [value]="subcategory.id" (change)="SelectedProductSubCat(subcategory?.product?.subcategory?.id)" [id]="'checkboxSubCat-' + i">
+                                      <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory?.product?.subcategory?.title}}</label>
+                                    </a></li>
                                 </ul>
                             </div>
                         </div>

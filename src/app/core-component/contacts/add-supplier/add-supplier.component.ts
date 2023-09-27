@@ -182,6 +182,8 @@ export class AddSupplierComponent implements OnInit {
   }
 
   loader = false;
+  mobileErr:any;
+  gstinErr:any;
   submit() {
     console.log(this.supplierForm.value);
     let formdata: any = new FormData();
@@ -247,23 +249,45 @@ export class AddSupplierComponent implements OnInit {
       this.contactService.addSupplier(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Supplier Created Successfully") {
+        if (this.addRes.success) {
           this.loader = false;
           this.toastr.success(this.addRes.msg)
           this.supplierForm.reset()
           this.router.navigate(['//contacts/supplier'])
         } else {
-          this.loader = false
-          this.toastr.error(this.addRes?.opening_balance[0]);
-          if (this.addRes?.email) {
+          this.loader = false;
+          console.log(this.addRes.error);
+          
+          if(this.addRes?.error?.mobile_no){
+            this.toastr.error(this.addRes?.error?.mobile_no[0])
+            this.mobileErr=this.addRes?.error?.mobile_no[0];
+            setTimeout(() => {
+              this.mobileErr=''
+            }, 5000);
+          }else if(this.addRes?.error?.gstin){
+            this.toastr.error(this.addRes?.error?.gstin[0]);
+            this.gstinErr=this.addRes?.error?.gstin[0];
+            setTimeout(() => {
+              this.gstinErr=''
+            }, 5000);
+          }else if(this.addRes?.opening_balance){
+            this.toastr.error(this.addRes?.opening_balance[0]);
+          }else if(this.addRes?.error?.email){
             this.toastr.error(this.addRes?.error?.email[0])
           }
+
         }
       }, err => {
         this.loader = false
         // console.log(err.error);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
+          if(err.error.msg=="Mobile Number Already Exists"){
+            this.mobileErr=err.error.msg
+            setTimeout(() => {
+              this.mobileErr=''
+            }, 5000);
+          }
         }
         else if (err.error) {
           this.toastr.error(err.error?.opening_balance[0]);

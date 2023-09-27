@@ -88,8 +88,8 @@ export class EditpurchaseComponent implements OnInit {
       //patch local-date
       const formattedOrderDate = new Date(this.getresbyId?.order_date).toISOString().slice(0, 16);
       this.purchaseForm.get('order_date')?.patchValue(formattedOrderDate);
-      const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
-      this.purchaseForm.get('shipping_date')?.patchValue(formattedshipping_date);
+      // const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
+      // this.purchaseForm.get('shipping_date')?.patchValue(formattedshipping_date);
 
 
       this.supplierId = res.party.id
