@@ -364,34 +364,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- end -->
-
-                <!-- <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Payment Terms*</label>
-                        <select formControlName="payment_term"
-                            [ngClass]="{'is-invalid': f['payment_term'].touched && f['payment_term'].invalid}">
-                            <option value="" selected disabled>Select Payment Term</option>
-                            <option value="{{payment.id}}" *ngFor="let payment of paymentList">{{payment.title}}
-                            </option>
-                        </select>
-                        <span class="text-danger"
-                            *ngIf="payment_term && payment_term.invalid && payment_term.touched">Select
-                            Payment term
-                        </span>
-                    </div>
-                </div> 
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Due Date*</label>
-                        <input type="date" formControlName="due_date"
-                            [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}">
-                        <span class="text-danger" *ngIf="due_date && due_date.invalid && due_date.touched">Select
-                            Due date
-                        </span>
-                    </div>
-                </div> -->
-
+            
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Reverse Charge</label>
@@ -420,18 +393,6 @@
                     </div>
                 </div>
             
-                <!-- <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Shipping Date* </label>
-                        <input type="date" formControlName="shipping_date"
-                            [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}">
-                        <span class="text-danger"
-                            *ngIf="shipping_date && shipping_date.invalid && shipping_date.touched">Select
-                            Shipping Date
-                        </span>
-                    </div>
-                </div> -->
-               
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Reason</label>
@@ -440,18 +401,6 @@
                     </div>
                 </div>
 
-                <!-- <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select formControlName="status"
-                            [ngClass]="{'is-invalid': f['status'].touched && f['status'].invalid}">
-                            <option value="" selected disabled>Select Status</option>
-                            <option value="Complete">Complete</option>
-                            <option value="Pending">Pending</option>
-                        </select>
-                    </div>
-                </div> -->
-             
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group my-4">
                         <div class="d-flex">
@@ -463,205 +412,7 @@
                 </div>
             </div>
             <div class="row">
-                <!-- <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Barcode/SKU</th>
-                                <th style="width: 20%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Product Name <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
-                                <th>QTY <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
-                                <th>Unit Cost</th>
-                                <th>Mrp <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
-                                <th>Discount</th>
-                                <th>Tax % <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
-                                <th>Landing Cost</th>
-                              <th class="text-end">Total Cost</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container formArrayName="cart">
-                                <ng-container *ngFor="let d of getCart().controls; let i=index">
-                                    <tr [formGroupName]="i">
-                                        <td>
-                                            <div>
-                                                <div class="me-2">
-                                                    <svg (click)="removeCart(i)" style="color:red"
-                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                        <path
-                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                                    </svg>
-                                                </div>
-                                                <svg *ngIf="isLastCart(i)" (click)="addCart()" style="color:green"
-                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                    <path
-                                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                </svg>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <input class="input" type="text" placeholder="Search Barcode"
-                                                [attr.data-index]="i"
-                                                [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                (keyup)="getVariant(id.value,i)" (blur)="hideSearch()">
-                                        </td>
-                                        <td colspan="1"> 
-                                            <div class="form-group" style="margin-bottom: 0;">
-                                            <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
-                                            (click)="open()" placeholder="Search Product" *ngIf="isProduct"
-                                            class="input"> 
-                                            <mat-form-field class="w-100" class="input">
-                                                <input type="text" placeholder="Search Product" aria-label="Produt"
-                                                    matInput [formControl]="variantControl" [matAutocomplete]="auto"
-                                                    style="height: 18px;">
-                                                <mat-autocomplete #auto="matAutocomplete">
-                                                    <mat-option *ngFor="let variant of filteredVariants | async"
-                                                        [value]="variant?.product_title"
-                                                        (onSelectionChange)="oncheckVariant(variant,i)"
-                                                        (onSelectionChange)="variantChanged(variant, i)">{{
-                                                        variant?.product_title}}</mat-option>
-                                                    <ng-container *ngIf="(filteredVariants | async) as variants">
-                                                        <mat-option *ngIf="variants?.length === 0"
-                                                            [value]="'No data found'">
-                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+
-                                                                add Product</a>
-                                                        </mat-option>
-                                                    </ng-container>
-                                                </mat-autocomplete>
-                                            </mat-form-field> 
-                                            <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                                                <input
-                                                  type="text"
-                                                  placeholder="Search Product"
-                                                  aria-label="Search Products"
-                                                  matInput
-                                                  [formControl]="myControls.at(i)"
-                                                  (input)="getVariant($event.target.value,i)"
-                                                  [matAutocomplete]="autos" 
-                                                  style="box-sizing: border-box;" 
-                                                />
-                                                <mat-autocomplete #autos="matAutocomplete">
-                                                    <ng-container *ngIf="myControl.value?.length > 1 && myControl.value?.length > 0">
-                                                        <ng-container *ngFor="let option of variantList">
-                                                  <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
-                                                              (onSelectionChange)="oncheckVariant(option,i)"
-                                                              (onSelectionChange)="variantChanged(option, i)" style="color:#FF9F43">
-                                                    {{ option?.product_title + ' ' + option?.variant_name}}
-                                                  </mat-option>
-                                                  </ng-container>
-                                                  </ng-container>
-                                                  <mat-option *ngIf="variantList?.length === 0" [value]="'No data found'">
-                                                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
-                                                  </mat-option>
-                                                  <mat-option *ngIf="myControl?.at(i)?.value?.length < 3" class="is-loading">
-                                                    Please Enter 3 or more characters
-                                                  </mat-option>
-                                                </mat-autocomplete>
-                                              </mat-form-field>
-                                              </div>
-                                        </td>
-                                        <td><input type="text" formControlName="qty" class="input"></td>
-                                        <td><input type="text" formControlName="unit_cost" class="input"></td>
-                                        <td><input type="text" formControlName="mrp" class="input">
-                                            <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch()"></i>
-                                            <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
-                                                aria-labelledby="addressModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Batch</h1>
-                                                            <button type="button" class="close"
-                                                                (click)="closeModalBatch()" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="form-group" *ngIf="selectBatch">
-                                                                <div class="row">
-                                                                    <div class="table-responsive">
-                                                                        <table class="table datanew">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th class="boder space-text">Sr.No.</th>
-                                                                                    <th class="boder space-text">MRP</th>
-                                                                                    <th class="boder space-text">Purchase Price</th>
-                                                                                    <th class="boder space-text">Purchase Tax</th>
-                                                                                    <th class="boder space-text">Sale Tax</th>
-                                                                                    <th class="boder space-text">Discount</th>
-                                                                                    <th class="boder space-text">Additional Discount</th>
-                                                                                    <th class="boder space-text">Action</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <tr
-                                                                                    *ngFor="let batch of selectBatch;let ind=index;">
-                                                                                    <td class="boder">{{ ind+1+'.'}}</td>
-                                                                                    <td class="boder">{{ batch?.mrp }}</td>
-                                                                                    <td class="boder">{{ batch?.cost_price }}</td>
-                                                                                    <td class="boder">{{ batch?.purchase_tax + '%'}}</td>
-                                                                                    <td class="boder">{{ batch?.sale_tax + '%'}}</td>
-                                                                                    <td class="boder">{{ batch?.discount + '%'}}</td>
-                                                                                    <td class="boder">{{ batch?.additional_discount + '%'}}</td>
-                                                                                    <td>
-                                                                                        <button type="button"
-                                                                                            (click)="selecBatchtModel(batch,i)"
-                                                                                            class="btn btn-primary btn-sm"
-                                                                                            style="float: right;">Select</button>
-                                                                                    </td>
-
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><input type="text" formControlName="discount" class="input">
-                                            <span class="text-danger" style="display: block;"
-                                                *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">
-                                                Enter Discount ex: 1-100
-                                            </span>
-                                        </td>
-                                        <td><input type="text" formControlName="tax" class="input"></td>
-                                        <td class="text-end"><input type="text" formControlName="landing_cost"
-                                                class="input" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)"></td>
-                                     
-                                        <td class="text-end"><input type="text" formControlName="total" class="input"
-                                                [value]="calculateTotalEveryIndex(i).toString()"
-                                                [ngModel]="calculateTotalEveryIndex(i).toString()"></td>
-                                    </tr>
-                                </ng-container>
-                            </ng-container>
-                            <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                <td></td>
-                                <td></td>
-                                <td class="text-start"><strong>Total</strong></td>
-                                <td class="text-start">{{ calculateTotalQty()}}
-                                    <input type="text" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty().toFixed(2)" style="display: none;">
-                               
-                                </td>
-                                <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td>
-                                <td class="text-start">{{calculateTotalMrp().toFixed(2)}}</td>
-                                <td class="text-start">{{calculateTotalDiscount()}}</td>
-                                <td class="text-start">{{calculateTotalTax()}}</td>
-                                <td class="text-start">{{calculateTotalLandingCost().toFixed(2)}}</td>
-                                <td> {{ calculateTotal() }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div> -->
-                <div class="table-responsive">
+                 <div class="table-responsive">
                     <table class="table datanew">
                         <thead>
                             <tr>
@@ -671,8 +422,8 @@
                                 <th class="qty space-text" style="width: 7%;">QTY</th>
                                 <th class="space-text" style="width: 12%;">Cost Price</th>
                                 <th class="mrp space-text" style="width: 10%;">Mrp</th>
-                                <th class="space-text">Discount</th>
-                                <th class="space-text" style="width: 7%;">Tax %</th>
+                                <th class="space-text" style="width: 10%;">Deduction</th>
+                                <th class="space-text" style="width: 7%; text-align: center;">Tax %</th>
                                 <th class="space-text" style="width: 10%;">Landing Cost</th>
                                 <!-- <th class="space-text" style="width: 10%;">Total Cost</th> -->
                                 <th class="space-text" style="width: 10%;">Total Cost Without Tax</th>
@@ -747,7 +498,7 @@
                                            </div>
                                         </td>
                                         <td><input type="text" formControlName="qty" class="input"></td>
-                                        <td><input type="text" formControlName="unit_cost" class="input" [(ngModel)]="coastprice[i]" (blur)="purchasee(i)">
+                                        <td><input type="text" formControlName="unit_cost" class="input" [(ngModel)]="coastprice[i]" (blur)="purchasee(i)" #price (blur)="purchase2(price.value,i)">
                                         <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch()"></i>
                                             <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
                                                 aria-labelledby="addressModalLabel" aria-hidden="true">
@@ -802,9 +553,10 @@
                                             </div>
                                         </td>
                                         <td><input type="text" formControlName="mrp" class="input"></td>
-                                        <td><input type="text" formControlName="discount" class="input" (blur)="purchasee(i)">
-                                        <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span>
-                                        </td>
+                                        <td style="padding-left: 2%;"><input type="number" formControlName="deduction" class="input" (blur)="purchase4(i)">
+                                            <span class="symbol" (click)="percentage(i)"  *ngIf="isPercentage[i]">%</span> 
+                                            <span class=symbol (click)="amount(i)" *ngIf="isAmount[i]">&#8377;</span> 
+                                        </td>  
                                          <td>
                                             <!-- <input type="text" formControlName="tax" class="input" readonly> -->
                                          <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' + tax[i] + ' (' + tax[i] + '%)' }}</span>

@@ -115,7 +115,16 @@
                                 <td>{{products.shipping_note}}</td>
                                 <td>{{products.note}}</td>
                                 <td>
-                                    <span [ngClass]="{'bg-lightgreen': products.status === 'Received', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}" class="badges">{{products.status}}</span>
+                                    <!-- <span [ngClass]="{'bg-lightgreen': products.status === 'Received', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}" class="badges">{{products.status}}</span> -->
+                                    <span [ngClass]="{
+                                        'bg-lightgreen': products.status === 'Completed',
+                                        'bg-lightred': products.status === 'Overdue',
+                                        'bg-lightyellow': products.status === 'Pending' || products.status === 'New',
+                                        'bg-lightblue': products.status === 'Inprogress' || products.status === 'Approved',
+                                        'bg-lightorange': products.status === 'Received' || products.status === 'Partially Received' || products.status === 'Exceed',
+                                        'bg-lightgray': products.status === 'Cancel'
+                                      }" class="badges">{{ products.status }}</span>
+                                      
                                 </td>
                                 <td>
                                     <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>

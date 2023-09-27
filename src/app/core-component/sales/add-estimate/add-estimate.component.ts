@@ -53,16 +53,15 @@ export class AddEstimateComponent implements OnInit {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
 
     const today = new Date();
-const sevenDaysFromToday = new Date(today);
-sevenDaysFromToday.setDate(today.getDate() + 7);
-
-const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
+    const sevenDaysFromToday = new Date(today);
+    sevenDaysFromToday.setDate(today.getDate() + 7);
+    const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
 
     this.saleEstimateForm = this.fb.group({
       customer: new FormControl('', [Validators.required]),
       estimate_date: new FormControl(defaultDate, [Validators.required]),
       estimate_no: new FormControl('', [Validators.required]),
-      estimate_expiry_date: new FormControl(defaultDateago7,[Validators.required]),
+      estimate_expiry_date: new FormControl(defaultDateago7, [Validators.required]),
       payment_terms: new FormControl(''),
       estimate_cart: this.fb.array([]),
       total_qty: new FormControl(''),
@@ -127,7 +126,7 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
       } else {
         this.subcategory = undefined
       }
-      this.saleService.filterVariant( this.category, this.subcategory, search).subscribe((res: any) => {
+      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
@@ -140,7 +139,7 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
           // console.log(this.productName);
           this.check = true;
           console.log(this.searchs[0]?.variant_name);
-          
+
           const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
           barcode.patchValue({
             // barcode: this.searchs[0].id,
@@ -148,7 +147,7 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
           });
         }
         console.log(this.saleEstimateForm.value);
-        
+
 
       });
     }
@@ -263,12 +262,12 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
   selectedAddressShipping: any;
   selectBatch: any;
   paymentTerms: any;
-  userType:any;
+  userType: any;
 
   oncheck(data: any) {
     console.log(data);
     const selectedItemId = data.id;
-    this.userType=data?.user_type;
+    this.userType = data?.user_type;
     //call detail api
     this.contactService.getCustomerById(selectedItemId).subscribe(res => {
       // console.log(res);
@@ -291,7 +290,7 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
     this.addCart();
     this.saleEstimateForm.patchValue({
       customer: selectedItemId,
-      
+
     });
   }
 
@@ -407,7 +406,7 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
   // }
 
   originalCoastPrice: any;
-  originalPrice:any[]=[]
+  originalPrice: any[] = []
   apiPurchaseTax: number;
   isTaxAvailable: any[] = [];
   taxIntoRupees: any[] = [];
@@ -425,9 +424,9 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
     this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
     if (event?.product?.purchase_tax_including) {
-      if(this.userType=='Employee'){
+      if (this.userType == 'Employee') {
         let Employeeprice = event?.batch[0]?.selling_price_employee || 0;
-        this.originalPrice[index]=event?.batch[0]?.selling_price_employee || 0;
+        this.originalPrice[index] = event?.batch[0]?.selling_price_employee || 0;
         // landing cost
         let getDiscountPrice = (Employeeprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
@@ -437,9 +436,9 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
         let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice + taxPrice;
-      }else if(this.userType=='Dealer'){
+      } else if (this.userType == 'Dealer') {
         let dealerprice = event?.batch[0]?.selling_price_dealer || 0;
-        this.originalPrice[index]=event?.batch[0]?.selling_price_dealer || 0;
+        this.originalPrice[index] = event?.batch[0]?.selling_price_dealer || 0;
         // landing cost
         let getDiscountPrice = (dealerprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
@@ -450,22 +449,22 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice + taxPrice;
-      }else{
+      } else {
         let offlineprice = event?.batch[0]?.selling_price_offline || 0;
-        this.originalPrice[index]=event?.batch[0]?.selling_price_offline || 0;
+        this.originalPrice[index] = event?.batch[0]?.selling_price_offline || 0;
         // landing cost
         let getDiscountPrice = (offlineprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
         let getCoastPrice = offlineprice - getDiscountPrice;
-        console.log(getCoastPrice,'getCoastPrice');
+        console.log(getCoastPrice, 'getCoastPrice');
         this.TotalWithoutTax[index] = getCoastPrice * event.batch[0]?.stock || 1;
-        console.log(this.TotalWithoutTax[index],'this.TotalWithoutTax[index]');
+        console.log(this.TotalWithoutTax[index], 'this.TotalWithoutTax[index]');
         // cost price
         let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice + taxPrice;
-      }  
+      }
     } else {
       let offlineprice = event?.batch[0]?.selling_price_offline || 0;
       let purchaseTax = 18
@@ -474,7 +473,7 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
       console.log(getDiscountPrice);
       let getCoastPrice = offlineprice - getDiscountPrice;
       this.TotalWithoutTax[index] = getCoastPrice * event.batch[0]?.stock || 0;
-// here adding tax into getcostprice
+      // here adding tax into getcostprice
       let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
       this.taxIntoRupees[index] = taxPrice || 0;
       this.originalCoastPrice = getCoastPrice + taxPrice;
@@ -485,16 +484,16 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
       this.tax[index] = this.apiPurchaseTax
       console.log(this.originalCoastPrice, 'this.originalCoastPrice');
       if (event?.product?.purchase_tax_including == true) {
-          barcode.patchValue({
-            barcode: selectedItemId,
-            item_name: event?.product_title,
-            amount: event.batch[0]?.mrp,
-            qty: event.batch[0]?.stock,
-            tax: this.apiPurchaseTax,
-            discount: event.batch[0]?.discount || 0,
-            price: this.originalCoastPrice.toFixed(2),
-          });
-       
+        barcode.patchValue({
+          barcode: selectedItemId,
+          item_name: event?.product_title,
+          amount: event.batch[0]?.mrp,
+          qty: event.batch[0]?.stock,
+          tax: this.apiPurchaseTax,
+          discount: event.batch[0]?.discount || 0,
+          price: this.originalCoastPrice.toFixed(2),
+        });
+
       } else {
         this.tax[index] = 18
         barcode.patchValue({
@@ -589,16 +588,16 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
         let getCoastPrice = purchaseRate - getDiscountPrice;
         console.log(getCoastPrice);
         console.log(qty);
-        
+
         this.TotalWithoutTax[index] = getCoastPrice * qty || 0
         console.log(this.TotalWithoutTax[index]);
-        
+
         // cost price 
         let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
         this.taxIntoRupees[index] = taxprice || 0;
         let purchasePrice = getCoastPrice + taxprice;
         console.log(purchasePrice);
-        
+
         return purchasePrice;
       } else {
         const discountPercentage = +discountPercentageControl.value || 0;
@@ -610,21 +609,21 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
         let getCoastPrice = this.coastprice[index] - getDiscountPrice;
         console.log(getCoastPrice);
         this.TotalWithoutTax[index] = getCoastPrice * qty || 0
-           // tax price 
-      let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
-      this.taxIntoRupees[index] = taxprice || 0;
-      let purchasePrice = getCoastPrice + taxprice;
-      this.originalCoastPrice = purchasePrice;
+        // tax price 
+        let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
+        this.taxIntoRupees[index] = taxprice || 0;
+        let purchasePrice = getCoastPrice + taxprice;
+        this.originalCoastPrice = purchasePrice;
         return purchasePrice;
-      } 
+      }
     }
     return 0
   }
   purchase4(index) {
     const result = this.calculationDiscountCostPrice(index);
     this.coastprice[index] = result.toFixed(2);
-    console.log(this.coastprice[index],'this.coastprice[index]');
-    
+    console.log(this.coastprice[index], 'this.coastprice[index]');
+
     setTimeout(() => {
       this.calculateRoundoffValue()
     }, 2000);
@@ -642,32 +641,32 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
         const discountPercentage = +discountPercentageControl.value || 0;
         const taxPercentage = +taxPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        const qty = +QtyControl.value ;
+        const qty = +QtyControl.value;
         if (this.costPrice > 0) {
-          console.log(this.costPrice,'this.costPrice > 0');
+          console.log(this.costPrice, 'this.costPrice > 0');
           let getDiscountPrice = (this.costPrice * discountPercentage) / 100;
           console.log(getDiscountPrice);
           let getCoastPrice = this.costPrice - getDiscountPrice;
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
           // cost price 
-          console.log(getCoastPrice,'cost price this');
+          console.log(getCoastPrice, 'cost price this');
           let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
           this.taxIntoRupees[index] = taxprice || 0;
           console.log(taxprice);
           let purchasePrice = getCoastPrice + taxprice;
           return purchasePrice;
         } else {
-          console.log(this.originalPrice[index],'this.originalPrice[index]'); 
-          let getDiscountPrice = (this.originalPrice[index]  * discountPercentage) / 100
-          let getCoastPrice = this.originalPrice[index]  - getDiscountPrice;
+          console.log(this.originalPrice[index], 'this.originalPrice[index]');
+          let getDiscountPrice = (this.originalPrice[index] * discountPercentage) / 100
+          let getCoastPrice = this.originalPrice[index] - getDiscountPrice;
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
           console.log(this.TotalWithoutTax[index]);
-          console.log(getCoastPrice,'getCoastPrice');
+          console.log(getCoastPrice, 'getCoastPrice');
           // cost price 
           let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
           this.taxIntoRupees[index] = taxprice || 0;
           let purchasePrice = getCoastPrice + taxprice;
-         console.log(purchasePrice,'purchasePrice');
+          console.log(purchasePrice, 'purchasePrice');
 
           return purchasePrice;
         }
@@ -683,7 +682,7 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
         const discountPercentage = +discountPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         let purchaseTax = 18;
-        const qty = +QtyControl.value ;
+        const qty = +QtyControl.value;
         // cost price 
         let getDiscountPrice = (this.costPrice * discountPercentage) / 100
         let getCoastPrice = this.costPrice - getDiscountPrice;
@@ -755,7 +754,7 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
         cartData.push(cartObject);
       });
       formdata.append('estimate_cart', JSON.stringify(cartData));
-      
+
 
       this.saleService.addSalesEstimate(formdata).subscribe(res => {
         // console.log(res);
@@ -1030,9 +1029,9 @@ const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
     const price = +cartItem.get('price').value || 0;
     const tax = +cartItem.get('tax').value || 0;
     const discount = +cartItem.get('discount').value || 0;
-    const subtotal=this.TotalWithoutTax[index]
+    const subtotal = this.TotalWithoutTax[index]
     const qty = +cartItem.get('qty').value || 0;
-    const totalForItem = price*qty ||0
+    const totalForItem = price * qty || 0
     return totalForItem;
   }
   calculateTotalTaxIntoRupees() {

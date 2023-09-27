@@ -50,7 +50,7 @@ export class EditSalesComponent implements OnInit {
   searchForm!: FormGroup;
   subcategoryList;
   id: any;
-  editRes:any;
+  editRes: any;
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -227,7 +227,7 @@ export class EditSalesComponent implements OnInit {
   }
 
   udateCart(add: any): FormArray {
-    console.log(add); 
+    console.log(add);
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
       const price = j.price || 0;
@@ -542,7 +542,7 @@ export class EditSalesComponent implements OnInit {
         this.tax[index] = 18
         barcode.patchValue({
           barcode: selectedItemId,
-         item_name: event?.product_title,
+          item_name: event?.product_title,
           qty: event.batch[0]?.stock,
           tax: 18,
           discount: event.batch[0]?.discount || 0,
@@ -803,7 +803,7 @@ export class EditSalesComponent implements OnInit {
       });
       formdata.append('sale_order_cart', JSON.stringify(cartData));
 
-      this.saleService.updateSalesOrder(formdata,this.id).subscribe(res => {
+      this.saleService.updateSalesOrder(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {

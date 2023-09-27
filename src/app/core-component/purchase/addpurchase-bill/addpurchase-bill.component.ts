@@ -50,13 +50,13 @@ export class AddpurchaseBillComponent implements OnInit {
   subcategoryList;
 
   ngOnInit(): void {
+    const defaultDate = new Date().toISOString().split('T')[0];
     const now = new Date();
     const year = now.getFullYear();
     const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-indexed
     const day = now.getDate().toString().padStart(2, '0');
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
-
     const defaultDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
 
     this.purchaseBillForm = this.fb.group({
@@ -68,7 +68,7 @@ export class AddpurchaseBillComponent implements OnInit {
       payment_term: new FormControl(''),
       due_date: new FormControl(defaultDateTime, [Validators.required]),
       reverse_charge: new FormControl('',),
-      shipping_date: new FormControl(defaultDateTime, [Validators.required]),
+      shipping_date: new FormControl(defaultDate, [Validators.required]),
       export: new FormControl('', [Validators.required]),
       // selling_price_online: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       // selling_price_offline: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
@@ -273,6 +273,17 @@ export class AddpurchaseBillComponent implements OnInit {
     this.contactService.getPaymentTerms().subscribe(res => {
       // console.log(res);
       this.paymentList = res;
+           // select auto due date with time from days fields
+           const today = new Date();
+           const sevenDaysFromToday = new Date(today);
+           sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
+           const year = sevenDaysFromToday.getFullYear();
+           const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
+           const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
+           const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+           const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
+           const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+           this.purchaseBillForm.get('due_date').patchValue(defaultDateago7);
     })
   }
   supplierAddress: any;
@@ -290,6 +301,26 @@ export class AddpurchaseBillComponent implements OnInit {
     this.getVariant('', '')
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
+      console.log(res?.payment_terms?.days);
+
+      // select auto due date from days fields
+      // const today = new Date();
+      // const sevenDaysFromToday = new Date(today);
+      // sevenDaysFromToday.setDate(today.getDate() + res?.payment_terms?.days);
+      // const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
+      // this.purchaseBillForm.get('due_date').patchValue(defaultDateago7)
+
+      // select auto due date with time from days fields
+      const today = new Date();
+      const sevenDaysFromToday = new Date(today);
+      sevenDaysFromToday.setDate(today.getDate() + res?.payment_terms?.days);
+      const year = sevenDaysFromToday.getFullYear();
+      const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
+      const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
+      const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+      const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
+      const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+      this.purchaseBillForm.get('due_date').patchValue(defaultDateago7);
 
       this.purchaseBillForm.get('payment_term').patchValue(this.getPaymentTerms)
       this.supplierAddress = res;
@@ -664,8 +695,8 @@ export class AddpurchaseBillComponent implements OnInit {
           let purchasePrice = getCoastPrice - taxprice;
           return purchasePrice;
         } else {
-          let getDiscountPrice = (this.batchCostPrice[index]  * totalDiscount) / 100
-          let getCoastPrice = this.batchCostPrice[index]  - getDiscountPrice;
+          let getDiscountPrice = (this.batchCostPrice[index] * totalDiscount) / 100
+          let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
           // cost price 
           let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
           this.taxIntoRupees[index] = taxprice || 0;
@@ -718,8 +749,8 @@ export class AddpurchaseBillComponent implements OnInit {
           let purchasePrice = getCoastPrice - taxprice;
           return purchasePrice;
         } else {
-          let getDiscountPrice = (this.batchCostPrice[index]  * totalDiscount) / 100
-          let getCoastPrice = this.batchCostPrice[index]  - getDiscountPrice;
+          let getDiscountPrice = (this.batchCostPrice[index] * totalDiscount) / 100
+          let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
           // cost price 
           let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
           this.taxIntoRupees[index] = taxprice || 0;
@@ -764,7 +795,7 @@ export class AddpurchaseBillComponent implements OnInit {
         const totalDiscount = discountPercentage + additionalDiscountPercentage;
         const qty = +qtyControlControl.value || 0;
         // console.log(this.batchCostPrice[index],'this.batchCostPrice[index]');
-        
+
         if (this.batchCostPrice[index] > 0) {
           const discountAmount = (this.batchCostPrice[index] * totalDiscount) / 100;
           const afterDiscountAmount = this.batchCostPrice[index] - discountAmount
@@ -989,19 +1020,35 @@ export class AddpurchaseBillComponent implements OnInit {
       this.purchaseBillForm.markAllAsTouched()
     }
   }
+  //search with name only
+  // private _filter(value: string | number, include: boolean): any[] {
+  //   // console.log(value);
+  //   const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+  //   const filteredSuppliers = include
+  //     ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
+  //     : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
+  //   if (!include && filteredSuppliers.length === 0) {
+  //     // console.log("No results found");
+  //     filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
+  //   }
+  //   return filteredSuppliers;
+  // }
+// search with name & companyname 
   private _filter(value: string | number, include: boolean): any[] {
-    // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
-      ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
-      : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
+      ? this.suppliers.filter(supplier =>
+          supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue)
+        )
+      : this.suppliers.filter(supplier =>
+          !(supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
+        );
     if (!include && filteredSuppliers.length === 0) {
-      // console.log("No results found");
-      filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
+      filteredSuppliers.push({ name: "No data found" });
     }
     return filteredSuppliers;
   }
-
+  
   private _filtr(value: string | number, include: boolean): any[] {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
@@ -1314,7 +1361,7 @@ export class AddpurchaseBillComponent implements OnInit {
 
   //calculate total tax rates
 
- calculateTotalTaxrate(): any {
+  calculateTotalTaxrate(): any {
     let totalTax = 0;
     for (let i = 0; i < this.getTaxRate().controls.length; i++) {
       const taxControl = this.getTaxRate().controls[i].get('tax_rate') || 0;
@@ -1364,15 +1411,19 @@ export class AddpurchaseBillComponent implements OnInit {
     }
     return totalTax;
   }
-  calculateTotalTaxRate(): any {
+  calculateTotalTaxPrice(): any {
     let totalTax = 0;
-    for (let i = 0; i < this.getTaxRate().controls.length; i++) {
-      const taxControl = this.getTaxRate().controls[i].get('total_tax') || 0;
-      if (taxControl) {
-        totalTax += +taxControl.value || 0;
-      }
-    }
+    // for (let i = 0; i < this.getTaxRate().controls.length; i++) {
+    //   const taxControl = this.getTaxRate().controls[i].get('total_tax') || 0; 
+    //   if (taxControl) {
+    //     totalTax += +taxControl.value || 0; 
+    //   }  
+    // }
+    this.getcgst.forEach((res:any)=>{
+      totalTax +=+res
+    })
     return totalTax;
+
   }
 
   clearForm() {

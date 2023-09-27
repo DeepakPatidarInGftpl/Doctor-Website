@@ -52,7 +52,7 @@ export class SupplierComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deleteSupplier(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Supplier Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -90,7 +90,7 @@ export class SupplierComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.SupplierIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -119,7 +119,7 @@ export class SupplierComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.SupplierIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Employee Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })

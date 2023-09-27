@@ -52,7 +52,7 @@ branchList:any;
       this.contactService.addUser(this.userForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.Is_Success == "True") {
+        if (this.addRes.success) {
           this.loader = false;
           this.toastr.success(this.addRes.msg)
           this.userForm.reset()

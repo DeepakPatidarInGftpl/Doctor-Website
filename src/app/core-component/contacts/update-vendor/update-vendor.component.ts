@@ -246,6 +246,8 @@ export class UpdateVendorComponent implements OnInit {
 
   }
   loader = false;
+  mobileErr:any;
+  gstinErr:any;
   submit() {
     // console.log(this.vendorForm.value);
     let formdata: any = new FormData();
@@ -302,7 +304,7 @@ export class UpdateVendorComponent implements OnInit {
       this.contactService.updateVendor(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Vendor updated successfully") {
+        if (this.addRes.success) {
           this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.vendorForm.reset()
@@ -310,7 +312,21 @@ export class UpdateVendorComponent implements OnInit {
         }else{
           this.loader=false
           this.toastr.error(this.addRes?.opening_balance[0]);
-          if (this.addRes?.email) {
+          if(this.addRes?.error?.mobile_no){
+            this.toastr.error(this.addRes?.error?.mobile_no[0])
+            this.mobileErr=this.addRes?.error?.mobile_no[0];
+            setTimeout(() => {
+              this.mobileErr=''
+            }, 5000);
+          }else if(this.addRes?.error?.gstin){
+            this.toastr.error(this.addRes?.error?.gstin[0]);
+            this.gstinErr=this.addRes?.error?.gstin[0];
+            setTimeout(() => {
+              this.gstinErr=''
+            }, 5000);
+          }else if(this.addRes?.opening_balance){
+            this.toastr.error(this.addRes?.opening_balance[0]);
+          }else if(this.addRes?.error?.email){
             this.toastr.error(this.addRes?.error?.email[0])
           }
         }
@@ -319,6 +335,12 @@ export class UpdateVendorComponent implements OnInit {
         // console.log(err.error.gst);
         if (err.error.msg) {
           this.toastr.error(err.error.msg)
+          if(err.error.msg=="Mobile Number Already Exists"){
+            this.mobileErr=err.error.msg
+            setTimeout(() => {
+              this.mobileErr=''
+            }, 5000);
+          }
         }
         else if (err.error) {
           this.toastr.error(err.error?.opening_balance[0]);

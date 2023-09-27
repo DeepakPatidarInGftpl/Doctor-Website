@@ -89,12 +89,12 @@
                         <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Bill Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Bill No<i class="fa fa-sort"></i></th>
-                        <!-- <th (click)="sort('id')" class="thone">Material Inward No<i class="fa fa-sort"></i></th> -->
+                        <th (click)="sort('id')" class="thone">Refrence Bill No<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Material Inward No<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Payment Term<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Due Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Shipping Date<i class="fa fa-sort"></i></th>
-                        <!-- <th (click)="sort('id')" class="thone">Dealer Price<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Employee Price<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
@@ -114,14 +114,16 @@
                         </td>
                         <td>{{products.supplier_bill_date |  date: 'yyyy-MM-dd'}}</td>
                         <td>{{products.supplier_bill_no}}</td>
-                        <!-- <td>{{products.material_inward_no.material_inward_no}}</td> -->
+                        <td>{{products.refrence_bill_no}}</td>
+                        <td>{{products.material_inward_no.material_inward_no}}</td>
+                        <td>{{products.payment_term}}</td>
                         <td>{{products.due_date |  date: 'yyyy-MM-dd'}}</td>
                         <td>{{products.reverse_charge}}</td>
                         <td>{{products.shipping_date}}</td>
-                        <!-- <td>{{products.dealer_price}}</td>
-                        <td>{{products.employee_price}}</td> -->
+                        
+                        
                         <td>
-                            <span [ngClass]="{'bg-lightgreen': products.status === 'Complete', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}" class="badges">{{products.status}}</span>
+                            <span [ngClass]="{'bg-lightgreen': products.status === 'Completed', 'bg-lightred' : products.status === 'Overdue','bg-lightyellow' : products.status === 'Pending'||'New'}" class="badges">{{products.status}}</span>
                         </td>
                         <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>

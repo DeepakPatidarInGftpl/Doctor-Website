@@ -19,9 +19,8 @@
                                 [readonly]="true">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let supplier of filteredSuppliers | async">
-                                <mat-option *ngIf="supplier.is_active==true" [value]="supplier.name"
-                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier.name
-                                    }}</mat-option>
+                                <mat-option *ngIf="supplier.is_active==true" [value]="supplier?.name + ' - ' +  supplier?.company_name "
+                                    (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{ supplier?.name + ' - ' +  supplier?.company_name }}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
@@ -414,14 +413,11 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Shipping Date* </label>
-                        <input type="datetime-local" formControlName="shipping_date"
+                        <input type="date" formControlName="shipping_date"
                             [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}"
                             readonly>
                     </div>
                 </div>
-
-
-
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <div class="d-flex">

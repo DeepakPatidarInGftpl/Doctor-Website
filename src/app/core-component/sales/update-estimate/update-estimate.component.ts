@@ -148,8 +148,8 @@ export class UpdateEstimateComponent implements OnInit {
           this.check = true;
           const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
           barcode.patchValue({
-            barcode: this.searchs[0].id,
-            item_name: this.searchs[0]?.variant_name
+            // barcode: this.searchs[0].id,
+            // item_name: this.searchs[0]?.variant_name
           });
         }
 
@@ -170,8 +170,8 @@ export class UpdateEstimateComponent implements OnInit {
           this.check = true;
           const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray)?.at(index) as FormGroup;
           barcode.patchValue({
-            barcode: this.searchs[0]?.id,
-            item_name: this.searchs[0]?.variant_name
+            // barcode: this.searchs[0]?.id,
+            // item_name: this.searchs[0]?.variant_name
           });
         }
 
@@ -526,7 +526,8 @@ export class UpdateEstimateComponent implements OnInit {
       if (event?.product?.purchase_tax_including == true) {
           barcode.patchValue({
             barcode: selectedItemId,
-            amount: event.batch[0]?.mrp,
+            item_name: event?.product_title,
+            // amount: event.batch[0]?.mrp,
             qty: event.batch[0]?.stock,
             tax: this.apiPurchaseTax,
             discount: event.batch[0]?.discount || 0,
@@ -537,7 +538,7 @@ export class UpdateEstimateComponent implements OnInit {
         this.tax[index] = 18
         barcode.patchValue({
           barcode: selectedItemId,
-          // amount: event.batch[0]?.mrp,
+          item_name: event?.product_title,
           qty: event.batch[0]?.stock,
           tax: 18,
           discount: event.batch[0]?.discount || 0,
@@ -551,6 +552,7 @@ export class UpdateEstimateComponent implements OnInit {
       const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
       barcode.patchValue({
         barcode: selectedItemId,
+        item_name: event?.product_title,
         tax: 18,
       });
     }

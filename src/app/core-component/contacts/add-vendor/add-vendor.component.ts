@@ -28,8 +28,8 @@ export class AddVendorComponent implements OnInit {
       whatsapp_no: new FormControl('', [Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       email: new FormControl('',),
       remark: new FormControl(''),
-      date_of_birth: new FormControl('', ),
-      anniversary_date: new FormControl('', ),
+      date_of_birth: new FormControl('',),
+      anniversary_date: new FormControl('',),
       gst_type: new FormControl('',),
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
@@ -39,10 +39,10 @@ export class AddVendorComponent implements OnInit {
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
       payment_terms: new FormControl(''),
-      opening_balance: new FormControl(0,[Validators.pattern(/^[0-9]*$/)]),
+      opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       invite_code: new FormControl(''),
-      membership: new FormControl('', ),
-      opening_balance_type:new FormControl('',[Validators.required])
+      membership: new FormControl('',),
+      opening_balance_type: new FormControl('', [Validators.required])
     })
     this.addAddress();
     this.addBank();
@@ -72,7 +72,7 @@ export class AddVendorComponent implements OnInit {
       country: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
-      pincode: new FormControl('',[Validators.maxLength(6),Validators.minLength(6),Validators.pattern(/^[0-9]*$/)]),
+      pincode: new FormControl('', [Validators.maxLength(6), Validators.minLength(6), Validators.pattern(/^[0-9]*$/)]),
       address_type: ('')
     });
   }
@@ -115,20 +115,20 @@ export class AddVendorComponent implements OnInit {
   country: any[] = [];
   state: any[][] = []; // Array of arrays to store states for each formArray item
   city: any[][] = []; // Array of arrays to store cities for each formArray item
-  
+
   getCountry() {
     this.coreService.countryList().subscribe((res: any) => {
       this.country = res;
       // console.log(this.country);
     });
   }
-  
+
   selectState(val: any, i) {
     // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('country');
     addressControl.setValue(val);
-  
+
     this.coreService.getStateByCountryId(val).subscribe(res => {
       this.state[i] = res;
       // console.log(this.state[i]);
@@ -136,23 +136,24 @@ export class AddVendorComponent implements OnInit {
       this.city[i] = [];
     });
   }
-  
+
   selectCity(val: any, i) {
     // console.log(val);
     const addressArray = this.getAddresss();
     const addressControl = addressArray.at(i).get('state');
     addressControl.setValue(val);
-  
+
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city[i] = res;
       // console.log(this.city[i]);
     });
   }
-  
-loader=false;
+
+  loader = false;
+  gstinErr: any;
+  mobileErr: any;
   submit() {
     // console.log(this.vendorForm.value);
-
     let formdata: any = new FormData();
     formdata.append('login_access', this.vendorForm.get('login_access')?.value);
     formdata.append('name', this.vendorForm.get('name')?.value);
@@ -173,7 +174,7 @@ loader=false;
     formdata.append('opening_balance', this.vendorForm.get('opening_balance')?.value);
     formdata.append('invite_code', this.vendorForm.get('invite_code')?.value);
     formdata.append('membership', this.vendorForm.get('membership')?.value);
-    formdata.append('opening_balance_type',this.vendorForm.get('opening_balance_type')?.value)
+    formdata.append('opening_balance_type', this.vendorForm.get('opening_balance_type')?.value)
     // nested addrs data 
     const addressArray = this.vendorForm.get('address') as FormArray;
     const addressData = [];
@@ -188,62 +189,81 @@ loader=false;
     });
     formdata.append('address', JSON.stringify(addressData));
 
-     // nested bank data 
-     const bankArray = this.vendorForm.get('bank_id') as FormArray;
-     const bankData = [];
-     bankArray.controls.forEach((bank) => {
-       const featuresGroup = bank as FormGroup;
-       const featureObj = {};
-       Object.keys(featuresGroup.controls).forEach((key) => {
-         const control = featuresGroup.controls[key];
-         featureObj[key] = control.value;
-       });
-       bankData.push(featureObj);
-     });
-     formdata.append('bank_id', JSON.stringify(bankData));
+    // nested bank data 
+    const bankArray = this.vendorForm.get('bank_id') as FormArray;
+    const bankData = [];
+    bankArray.controls.forEach((bank) => {
+      const featuresGroup = bank as FormGroup;
+      const featureObj = {};
+      Object.keys(featuresGroup.controls).forEach((key) => {
+        const control = featuresGroup.controls[key];
+        featureObj[key] = control.value;
+      });
+      bankData.push(featureObj);
+    });
+    formdata.append('bank_id', JSON.stringify(bankData));
 
     if (this.vendorForm.valid) {
-      this.loader=true;
-    this.contactService.addVendor(formdata).subscribe(res => {
-      // console.log(res);
-      this.addRes = res
-      if (this.addRes.msg == "Data Created") {
-        this.loader=false;
-        this.toastr.success(this.addRes.msg)
-        this.vendorForm.reset()
-        this.router.navigate(['//contacts/vendor'])
-      } else {
-        this.loader=false;
-        this.toastr.error(this.addRes?.opening_balance[0]);
-        if (this.addRes?.email) {
-          this.toastr.error(this.addRes?.error?.email[0])
+      this.loader = true;
+      this.contactService.addVendor(formdata).subscribe(res => {
+        // console.log(res);
+        this.addRes = res
+        if (this.addRes.success) {
+          this.loader = false;
+          this.toastr.success(this.addRes.msg)
+          this.vendorForm.reset()
+          this.router.navigate(['//contacts/vendor'])
+        } else {
+          this.loader = false;
+          if (this.addRes?.error?.mobile_no) {
+            this.toastr.error(this.addRes?.error?.mobile_no[0])
+            this.mobileErr = this.addRes?.error?.mobile_no[0];
+            setTimeout(() => {
+              this.mobileErr = ''
+            }, 5000);
+          } else if (this.addRes?.error?.gstin) {
+            this.toastr.error(this.addRes?.error?.gstin[0]);
+            this.gstinErr = this.addRes?.error?.gstin[0];
+            setTimeout(() => {
+              this.gstinErr = ''
+            }, 5000);
+          } else if (this.addRes?.opening_balance) {
+            this.toastr.error(this.addRes?.opening_balance[0]);
+          } else if (this.addRes?.error?.email) {
+            this.toastr.error(this.addRes?.error?.email[0])
+          }
         }
-      }
-    }, err => {
-      this.loader=false;
-      // console.log(err.error.gst);
-      if (err.error.msg) {
-        this.toastr.error(err.error.msg)
-      }
-      if (err.error) {
-        this.toastr.error(err.error?.opening_balance[0]);
-        this.toastr.error(err.error?.email[0])
-      }
-      else if (err.error.dob) {
-        this.dateError = 'Date (format:dd/mm/yyyy)';
-        setTimeout(() => {
-          this.dateError = ''
-        }, 2000);
-      } else if (err.error.anniversary) {
-        this.dateError = 'Date (format:dd/mm/yyyy)';
-        setTimeout(() => {
-          this.dateError = ''
-        }, 2000);
-      }
-    })
+      }, err => {
+        this.loader = false;
+        // console.log(err.error.gst);
+        if (err.error.msg) {
+          this.toastr.error(err.error.msg)
+          if(err.error.msg=="Mobile Number Already Exists"){
+            this.mobileErr=err.error.msg
+            setTimeout(() => {
+              this.mobileErr=''
+            }, 5000);
+          }
+        }
+        if (err.error) {
+          this.toastr.error(err.error?.opening_balance[0]);
+          this.toastr.error(err.error?.email[0])
+        }
+        else if (err.error.dob) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError = ''
+          }, 2000);
+        } else if (err.error.anniversary) {
+          this.dateError = 'Date (format:dd/mm/yyyy)';
+          setTimeout(() => {
+            this.dateError = ''
+          }, 2000);
+        }
+      })
     } else {
-    this.vendorForm.markAllAsTouched()
-    // console.log('hhhhhh');
+      this.vendorForm.markAllAsTouched()
+      // console.log('hhhhhh');
     }
   }
 
@@ -310,9 +330,9 @@ loader=false;
   get credit_limit() {
     return this.vendorForm.get('credit_limit')
   }
-get opening_balance_type(){
-  return this.vendorForm.get('opening_balance_type')
-}
+  get opening_balance_type() {
+    return this.vendorForm.get('opening_balance_type')
+  }
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');
   }
@@ -325,7 +345,7 @@ get opening_balance_type(){
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
   }
-  
+
   getBankHolderName(index: number) {
     return this.getBanks().controls[index].get('account_holder_name');
   }

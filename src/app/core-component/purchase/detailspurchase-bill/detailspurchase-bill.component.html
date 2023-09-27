@@ -17,7 +17,7 @@
             <div class="company-details-card card" *ngIf="purchaseBillDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
-                        <mat-tab label="Purchase Details">
+                        <mat-tab label="General Details">
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
@@ -38,6 +38,10 @@
                                             <td class="td">{{purchaseBillDetail?.refrence_bill_no}}</td>
                                         </tr>
                                         <tr>
+                                            <td class="th">Shipping Date</td>
+                                            <td class="td">{{purchaseBillDetail?.shipping_date}}</td>
+                                        </tr>
+                                        <tr>
                                             <td class="th">Material Inward No</td>
                                             <td class="td">{{purchaseBillDetail?.material_inward_no?.material_inward_no}}</td>
                                         </tr>
@@ -49,14 +53,24 @@
                                             <td class="th">Due Date</td>
                                             <td class="td">{{purchaseBillDetail?.due_date}}</td>
                                         </tr>
+                                    
+                                        <tr>
+                                            <td class="th">Total Round Off</td>
+                                            <td class="td">{{purchaseBillDetail?.round_off}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total</td>
+                                            <td class="td">{{purchaseBillDetail?.total}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Additional Charge</td>
+                                            <td class="td">{{purchaseBillDetail?.additional_charge}}</td>
+                                        </tr>
                                         <tr>
                                             <td class="th">Reverse Charge</td>
                                             <td class="td">{{purchaseBillDetail?.reverse_charge}}</td>
                                         </tr>
-                                        <tr>
-                                            <td class="th">Shipping Date</td>
-                                            <td class="td">{{purchaseBillDetail?.shipping_date}}</td>
-                                        </tr>
+                                       
                                         <tr>
                                             <td class="th">Export</td>
                                             <td class="td">{{purchaseBillDetail?.export}}</td>
@@ -68,9 +82,8 @@
                                         </tr>
                                         <tr>
                                             <td class="th">Status</td>
-                                            <td class="td"><span
-                                                    [ngClass]="{'bg-lightgreen': purchaseBillDetail?.status === 'Complete', 'bg-lightred' : purchaseBillDetail?.status === 'Pending','bg-lightyellow' : purchaseBillDetail?.status === 'Ordered'}"
-                                                    class="badges">{{purchaseBillDetail?.status}}</span>
+                                            <td class="td"> <span [ngClass]="{'bg-lightgreen': purchaseBillDetail.status === 'Completed', 'bg-lightred' : purchaseBillDetail.status === 'Overdue','bg-lightyellow' : purchaseBillDetail.status === 'Pending'||'New'}" class="badges">{{purchaseBillDetail?.status}}</span>
+                       
                                             </td>
                                         </tr>
                                     </tbody>

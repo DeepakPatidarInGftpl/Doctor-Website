@@ -1,0 +1,112 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Add Countra Voucher</h4>
+        <h6>Create new Countra Voucher </h6>
+    </div>
+</div>
+<!-- /add -->
+<div class="card">
+    <div class="card-body">
+        <form [formGroup]="countraVoucherForm" (ngSubmit)="submit()">
+            <div class="row">
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Date*</label>
+                        <input type="date" formControlName="date" id="date"
+                            [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
+                        <span class="text-danger" *ngIf="date && date.invalid && date.touched">Select Date </span>
+                    </div>
+                </div>
+
+               
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Contra Voucher No.<span style="color:red">*</span></label>
+                        <input type="text" formControlName="countra_voucher_no" [ngModel]="prefixNo" readonly
+                            [ngClass]="{'is-invalid': f['countra_voucher_no'].touched && f['countra_voucher_no'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="countra_voucher_no && countra_voucher_no.invalid && countra_voucher_no.touched">Enter
+                            Contra Voucher No.</span>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>From Account*</label>
+                        <select formControlName="from_account" id="from_account"
+                            [ngClass]="{'is-invalid': f['from_account'].touched && f['from_account'].invalid}">
+                            <option value="" selected disabled>Select From Account</option>
+                            <option value="{{account?.id}}" *ngFor="let account of accountList">
+                                {{account?.account_id}}</option>
+                        </select>
+
+                        <!-- <mat-form-field class="w-100" style="padding: 0;
+                        width: 100%;
+                        min-width: 100%;border-top: none;">
+                            <input type="text" placeholder="Select From Account" aria-label="from_account" matInput
+                                [formControl]="fromAccountControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
+                                [ngClass]="{'is-invalid': f['from_account'].touched && f['from_account'].invalid}" >
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <ng-container *ngFor="let account of filteredFromAccount | async">
+                                    <mat-option *ngIf="account.is_active==true"
+                                    [value]="account?.account_id" (onSelectionChange)="oncheck(account)"
+                                    style="color:#FF9F43">{{account?.account_id }}</mat-option>
+                                </ng-container>
+                                <ng-container *ngIf="(filteredFromAccount | async) as accounts">
+                                    <mat-option *ngIf="accounts.length === 0" [value]="'No data found'">
+                                        <a routerLink="//account/accountlist" style="color:#FF9F43">+ Add Account</a>
+                                    </mat-option>
+                                    <mat-option *ngIf="fromAccountControl.value?.length < 3" class="is-loading">Please
+                                        Enter 1 or more characters</mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                        </mat-form-field> -->
+
+                        <span class="text-danger"
+                            *ngIf="from_account && from_account.invalid && from_account.touched">Select From Account
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>To Account*</label>
+                        <select formControlName="to_account"  id="to_account"
+                            [ngClass]="{'is-invalid': f['to_account'].touched && f['to_account'].invalid}">
+                            <option value="" selected disabled>Select From Account</option>
+                            <option value="{{account?.id}}" *ngFor="let account of accountList">
+                                {{account?.account_id}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="to_account && to_account.invalid && to_account.touched">Select To Account
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" formControlName="amount" [ngClass]="{ 'is-invalid': f['amount'].touched && f['amount'].invalid}">
+                        <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter round off</span>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Note</label>
+                        <textarea formControlName="note" style="height: 45px;"></textarea>
+                        <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter note</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                    <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
+                    <a routerLink="//transaction/creditnoteList" class="btn btn-cancel text-white">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- /add -->
