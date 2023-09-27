@@ -17,7 +17,7 @@
             <div class="company-details-card card" *ngIf="purchaseBillDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
-                        <mat-tab label="Debit Notes">
+                        <mat-tab label="General Details">
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
@@ -37,22 +37,39 @@
                                             <td class="th">Refrence Bill No</td>
                                             <td class="td">{{purchaseBillDetail?.refrence_bill_no}}</td>
                                         </tr>
-                                        <!-- <tr>
-                                            <td class="th">Payment Term</td>
-                                            <td class="td">{{purchaseBillDetail?.payment_term.title}}</td>
-                                        </tr>
+                                       
                                         <tr>
-                                            <td class="th">Due Date</td>
-                                            <td class="td">{{purchaseBillDetail?.due_date}}</td>
-                                        </tr> -->
+                                            <td class="th">Purchase Bill</td>
+                                            <td class="td">{{purchaseBillDetail?.purchase_bill}}</td>
+                                        </tr>
                                         <tr>
                                             <td class="th">Reverse Charge</td>
                                             <td class="td">{{purchaseBillDetail?.reverse_charge}}</td>
                                         </tr>
-                                        <!-- <tr>
-                                            <td class="th">Shipping Date</td>
-                                            <td class="td">{{purchaseBillDetail?.shipping_date}}</td>
-                                        </tr> -->
+                                        <tr>
+                                            <td class="th">Total Qty</td>
+                                            <td class="td">{{purchaseBillDetail?.total_qty}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total Tax</td>
+                                            <td class="td">{{purchaseBillDetail?.total_tax}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total Deduction</td>
+                                            <td class="td">{{purchaseBillDetail?.total_deduction}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total Round Off</td>
+                                            <td class="td">{{purchaseBillDetail?.round_off}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Sub Total</td>
+                                            <td class="td">{{purchaseBillDetail?.sub_total}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total</td>
+                                            <td class="td">{{purchaseBillDetail?.total}}</td>
+                                        </tr>
                                         <tr>
                                             <td class="th">Export</td>
                                             <td class="td">{{purchaseBillDetail?.export}}</td>
@@ -89,7 +106,7 @@
                                             <td class="th">MRP</td>
                                             <td class="th">Landing Cost</td>
                                             <td class="th">Unit Cost</td>
-                                            <td class="th">Discount</td>
+                                            <td class="th">Deduction</td>
                                             <td class="th">Tax</td>
                                             <td class="th">Total</td>
                                         </tr>
@@ -102,7 +119,7 @@
                                             <td class="td">{{cart?.mrp}}</td>
                                             <td class="td">{{cart?.landing_cost}}</td>
                                             <td class="td">{{cart?.unit_cost}}</td>
-                                            <td class="td">{{cart?.discount}}</td>
+                                            <td class="td">{{cart?.deduction}}</td>
                                             <td class="td">{{cart?.tax}}</td>
                                             <td class="td">{{cart?.total}}</td>
                                         </tr>

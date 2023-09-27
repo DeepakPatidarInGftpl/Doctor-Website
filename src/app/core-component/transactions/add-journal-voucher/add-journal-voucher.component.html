@@ -1,0 +1,152 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Journal Voucher Add</h4>
+        <h6>Add/Update Journal Voucher</h6>
+    </div>
+</div>
+
+<div class="card" id="purchaseForm">
+    <div class="card-body">
+        <form [formGroup]="journalvoucherForm" (ngSubmit)="submit()">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Date<span style="color:red">*</span></label>
+                        <input type="date" formControlName="date"
+                            [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
+                        <span class="text-danger" *ngIf="date && date.invalid && date.touched">Select Date</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Journal Voucher No.<span style="color:red">*</span></label>
+                        <input type="text" formControlName="journal_voucher_no" [ngModel]="prefixNo" readonly
+                            [ngClass]="{'is-invalid': f['journal_voucher_no'].touched && f['journal_voucher_no'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="journal_voucher_no && journal_voucher_no.invalid && journal_voucher_no.touched">Enter
+                            Journal Voucher No.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table datanew">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>From Account<span style="color:red">*</span></th>
+                                        <th>Amount Type<span style="color:red">*</span></th>
+                                        <th>Debit<span style="color:red">*</span></th>
+                                        <th>Credit<span style="color:red">*</span></th>
+                                        <th>Note</th>
+                                        <!-- <th></th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="journal_voucher_cart">
+                                        <ng-container *ngFor="let d of getCart().controls; let i=index">
+                                            <tr [formGroupName]="i">
+                                                <td>
+                                                    <div>
+                                                        <div class="me-2">
+                                                            <svg (click)="removeCart(i)" style="color:red"
+                                                                xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-x-circle"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                <path
+                                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
+                                                        </div>
+                                                        <svg *ngIf="isLastCart(i)" (click)="addCart()"
+                                                            style="color:green" xmlns="http://www.w3.org/2000/svg"
+                                                            width="16" height="16" fill="currentColor"
+                                                            class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path
+                                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                        </svg>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <select formControlName="from_account">
+                                                        <option value="" selected disabled>Select From Account</option>
+                                                        <option value="{{account.id}}"
+                                                            *ngFor="let account of accountList">{{account?.account_id}}
+                                                        </option>
+                                                    </select>
+                                                    <span class="text-danger" style="display: block;"
+                                                        *ngIf="from_account(i) && from_account(i).invalid && from_account(i).touched">Select
+                                                        Account</span>
+                                                </td>
+                                                <td>
+                                                    <select formControlName="amount_type">
+                                                        <option value="" selected disabled>Select Amount Type</option>
+                                                        <option value="Credit">Credit</option>
+                                                        <option value="Debit">Debit</option>
+                                                    </select>
+                                                    <span class="text-danger" style="display: block;"
+                                                        *ngIf="amount_type(i) && amount_type(i).invalid && amount_type(i).touched">Select
+                                                        Amount Type</span>
+                                                </td>
+                                                <td><input type="number" formControlName="amount"
+                                                        [value]="debitAmount[i]" #cr (keyup)="debit(i,cr.value)"
+                                                        class="input">
+                                                    <span class="text-danger" style="display: block;"
+                                                        *ngIf="amount(i) && amount(i).invalid && amount(i).touched">Enter
+                                                        debit Amount</span>
+                                                </td>
+                                                <td><input type="number" formControlName="amount"
+                                                        [value]="creditAmount[i]" #dr (keyup)="credit(i,dr.value)"
+                                                        class="input">
+                                                    <span class="text-danger" style="display: block;"
+                                                        *ngIf="amount(i) && amount(i).invalid && amount(i).touched">Enter
+                                                        credit Amount</span>
+                                                </td>
+                                                <td><input type="text" formControlName="description" class="input"></td>
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-start"><strong>Total</strong></td>
+                                        <td class="text-start"> <strong>{{calculateTotalDebit().toFixed(2)}}</strong>
+                                            <input type="text" class="input" formControlName="total_debit" [ngModel]="calculateTotalDebit()" [ngClass]="{'is-invalid': f['total_debit'].touched && f['total_debit'].invalid}" style="display: none;">
+                                        </td>
+                                        <td class="text-start">
+                                            <strong>{{calculateTotalCredit().toFixed(2)}}</strong>
+                                            <input type="text" class="input" formControlName="total_credit" [ngModel]="calculateTotalCredit()"
+                                                [ngClass]="{'is-invalid': f['total_credit'].touched && f['total_credit'].invalid}" style="display: none;">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12 my-3">
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea formControlName="description"
+                        [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}"></textarea>
+                    <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter description</span>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
+                <a routerLink="//transaction/debitnoteList" class="btn btn-cancel text-white">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,215 +1,128 @@
-
-        <div class="page-header">
-            <div class="page-title">
-                <h4>Sale Details</h4>
-                <h6>View sale details</h6>
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                            style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                            Back to Sales Order</h6>
+                    <h4>New Sales Order</h4>
+                </div>
+                <div class="page-btn">
+                    <a routerLink="//sales/editsalesreturns/{{orderDetail ?.id}}" class="btn btn-added">
+                        <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Sales Order
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="card-sales-split">
-                    <h2>Sale Detail : SL0101</h2>
-                    <ul>
-                        <li>
-                            <a href="javascript:void(0);"><img src="assets/img/icons/edit.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="assets/img/icons/excel.svg" alt="img"></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);"><img src="assets/img/icons/printer.svg" alt="img"></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="invoice-box table-height" style="max-width: 1600px;width:100%;overflow: auto;margin:15px auto;padding: 0;font-size: 14px;line-height: 24px;color: #555;">
-                    <table cellpadding="0" cellspacing="0" style="width: 100%;line-height: inherit;text-align: left;">
-                        <tbody><tr class="top">
-                            <td colspan="6" style="padding: 5px;vertical-align: top;">
-                                <table style="width: 100%;line-height: inherit;text-align: left;">
-                                    <tbody><tr>
-                                        <td style="padding:5px;vertical-align:top;text-align:left;padding-bottom:20px">
-                                            <font style="vertical-align: inherit;margin-bottom:25px;"><font style="vertical-align: inherit;font-size:14px;color:#7367F0;font-weight:600;line-height: 35px; ">Customer Info</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"> walk-in-customer</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"> walk-in-customer@example.com</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"> 123456780</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"> N45 , Dhaka</font></font><br>
-                                        </td>
-                                        <td style="padding:5px;vertical-align:top;text-align:left;padding-bottom:20px">
-                                            <font style="vertical-align: inherit;margin-bottom:25px;"><font style="vertical-align: inherit;font-size:14px;color:#7367F0;font-weight:600;line-height: 35px; ">Company Info</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"> DGT </font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"> admin@example.com</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">6315996770</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"> 3618 Abia Martin Drive</font></font><br>
-                                        </td>
-                                        <td style="padding:5px;vertical-align:top;text-align:left;padding-bottom:20px">
-                                            <font style="vertical-align: inherit;margin-bottom:25px;"><font style="vertical-align: inherit;font-size:14px;color:#7367F0;font-weight:600;line-height: 35px; ">Invoice Info</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"> Reference </font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">  Payment Status</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;"> Status</font></font><br>
-                                        </td>
-                                        <td style="padding:5px;vertical-align:top;text-align:right;padding-bottom:20px">
-                                            <font style="vertical-align: inherit;margin-bottom:25px;"><font style="vertical-align: inherit;font-size:14px;color:#7367F0;font-weight:600;line-height: 35px; ">&nbsp;</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#000;font-weight: 400;">SL0101 </font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;"> Paid</font></font><br>
-                                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;font-size: 14px;color:#2E7D32;font-weight: 400;">  Completed</font></font><br>
-                                        </td>
-                                    </tr>
-                                </tbody></table>
-                            </td>
-                        </tr>
-                        <tr class="heading " style="background: #F3F2F7;">
-                            <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                Product Name
-                            </td>
-                            <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                QTY
-                            </td>
-                            <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                Price
-                            </td>
-                            <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                Discount
-                            </td>
-                            <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                TAX
-                            </td>
-                            <td style="padding: 5px;vertical-align: middle;font-weight: 600;color: #5E5873;font-size: 14px;padding: 10px; ">
-                                Subtotal
-                            </td>
-                        </tr>
-
-                        <tr class="details" style="border-bottom:1px solid #E9ECEF ;">
-                            <td style="padding: 10px;vertical-align: top; display: flex;align-items: center;">
-                                <img src="assets/img/product/product1.jpg" alt="img" class="me-2" style="width:40px;height:40px;">
-                                Macbook pro
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                1.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                1500.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                0.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                0.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                1500.00
-                            </td>
-                        </tr>
-                        <tr class="details" style="border-bottom:1px solid #E9ECEF ;">
-                            <td style="padding: 10px;vertical-align: top; display: flex;align-items: center;">
-                                <img src="assets/img/product/product7.jpg" alt="img" class="me-2" style="width:40px;height:40px;">
-                                Apple Earpods
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                1.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                2000.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                0.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                0.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                1500.00
-                            </td>
-                        </tr>
-                        <tr class="details" style="border-bottom:1px solid #E9ECEF ;">
-                            <td style="padding: 10px;vertical-align: top; display: flex;align-items: center;">
-                                <img src="assets/img/product/product8.jpg" alt="img" class="me-2" style="width:40px;height:40px;">
-                                samsung
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                1.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                8000.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                0.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                0.00
-                            </td>
-                            <td style="padding: 10px;vertical-align: top; ">
-                                1500.00
-                            </td>
-                        </tr>
-                    </tbody></table>
-
-                </div>
-                <div class="row">
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Order Tax</label>
-                            <input type="text">
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Discount</label>
-                            <input type="text">
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Shipping</label>
-                            <input type="text">
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-12">
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select class="form-select">
-                                <option>Choose Status</option>
-                                <option>Completed</option>
-                                <option>Inprogress</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 ">
-                            <div class="total-order w-100 max-widthauto m-auto mb-4">
-                                <ul>
-                                    <li>
-                                        <h4>Order Tax</h4>
-                                        <h5>$ 0.00 (0.00%)</h5>
-                                    </li>
-                                    <li>
-                                        <h4>Discount	</h4>
-                                        <h5>$ 0.00</h5>
-                                    </li>
-                                </ul>
+            <div class="company-details-card card" *ngIf="orderDetail">
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="Debit Notes">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="th">Customer Name</td>
+                                            <td class="td">{{orderDetail?.customer?.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Sale Order Date</td>
+                                            <td class="td">{{orderDetail?.sale_order_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Sale Order Due Date</td>
+                                            <td class="td">{{orderDetail?.due_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Sale Order No.</td>
+                                            <td class="td">{{orderDetail?.sale_order_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Payment Terms</td>
+                                            <td class="td">{{orderDetail?.payment_terms?.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Estimate</td>
+                                            <td class="td">{{orderDetail?.estimate}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total QTY</td>
+                                            <td class="td">{{orderDetail?.total_qty}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total Discount</td>
+                                            <td class="td">{{orderDetail?.total_discount}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total Tax</td>
+                                            <td class="td">{{orderDetail?.total_tax}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Sub Total</td>
+                                            <td class="td">{{orderDetail?.export}}</td>
+                                        </tr>
+                                      
+                                        <tr>
+                                            <td class="th">Round off</td>
+                                            <td class="td">{{orderDetail?.roundoff}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="th">Total</td>
+                                            <td class="td">{{orderDetail?.total}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Note</td>
+                                            <td class="td">{{orderDetail?.note}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Status</td>
+                                            <td class="td"><span
+                                                    [ngClass]="{'bg-lightgreen': orderDetail?.status === 'Complete', 'bg-lightred' : orderDetail?.status === 'Pending','bg-lightyellow' : orderDetail?.status === 'Draft'}"
+                                                    class="badges">{{orderDetail?.status}}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
-                        <div class="col-lg-6 ">
-                            <div class="total-order w-100 max-widthauto m-auto mb-4">
-                                <ul>
-                                    <li>
-                                        <h4>Shipping</h4>
-                                        <h5>$ 0.00</h5>
-                                    </li>
-                                    <li class="total">
-                                        <h4>Grand Total</h4>
-                                        <h5>$ 0.00</h5>
-                                    </li>
-                                </ul>
+                        </mat-tab>
+                        <mat-tab label="Cart">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <td class="th">Product Name</td>
+                                            <td class="th">Barcode</td>
+                                            <td class="th">Qty</td>
+                                            <td class="th">Price</td>
+                                            <td class="th">Discount</td>
+                                            <td class="th">Tax</td>
+                                            <td class="th">Total</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let cart of orderDetail?.cart">
+                                            <td class="td">{{cart?.barcode?.product_title + ' ' + cart?.barcode?.variant_name }}</td>  
+                                            <td class="td">{{cart?.barcode?.sku}}</td>
+                                            <td class="td">{{cart?.qty}}</td>
+                                            <td class="td">{{cart?.price}}</td>
+                                            <td class="td">{{cart?.discount}}</td>
+                                            <td class="td">{{cart?.tax}}</td>
+                                            <td class="td">{{cart?.total}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <a href="javascript:void(0);" class="btn btn-submit me-2">Update</a>
-                        <a href="javascript:void(0);" class="btn btn-cancel">Cancel</a>
-                    </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+                <div class="d-flex align-items-center my-3 mx-3">
+                    <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                    <span
+                        [ngClass]="{'bg-lightgreen': orderDetail?.is_active === true, 'bg-lightred' : orderDetail?.is_active === false,'bg-lightyellow' : orderDetail?.is_active === 'Partial' }"
+                        class="badges">{{orderDetail?.is_active}}</span>
                 </div>
             </div>
         </div>
+    </div>
+</div>

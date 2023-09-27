@@ -1,0 +1,200 @@
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { SalesService } from 'src/app/Services/salesService/sales.service';
+import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
+
+@Component({
+  selector: 'app-add-journal-voucher',
+  templateUrl: './add-journal-voucher.component.html',
+  styleUrls: ['./add-journal-voucher.component.scss']
+})
+export class AddJournalVoucherComponent implements OnInit {
+
+  constructor(private saleService: SalesService, private fb: FormBuilder,
+    private router: Router,
+    private toastrService: ToastrService,
+    private transactionService: TransactionService) {
+  }
+  journalvoucherForm!: FormGroup;
+  get f() {
+    return this.journalvoucherForm.controls;
+  }
+  ngOnInit(): void {
+    const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
+    this.journalvoucherForm = this.fb.group({
+      date: new FormControl(defaultDate, [Validators.required]),
+      journal_voucher_no: new FormControl('', [Validators.required]),
+      journal_voucher_cart: this.fb.array([]),
+      total_credit: new FormControl(0),
+      total_debit: new FormControl(0),
+      description: new FormControl(''),
+    });
+    this.getAccount();
+    this.getprefix();
+    this.addCart();
+  }
+
+  prefixNo: any;
+  getprefix() {
+    this.transactionService.getJournalVoucherPrefix().subscribe((res: any) => {
+      console.log(res);
+      if (res.success == true) {
+        this.prefixNo = res.prefix
+      } else {
+        this.toastrService.error(res.msg)
+      }
+    }, err => {
+      this.toastrService.error(err.error.msg)
+    })
+  }
+
+  accountList: any;
+  getAccount() {
+    this.transactionService.getAccount().subscribe(res => {
+      this.accountList = res;
+    })
+  }
+  cart(): FormGroup {
+    return this.fb.group({
+      from_account: new FormControl('', [Validators.required]),
+      amount_type: new FormControl('', [Validators.required]),
+      amount: new FormControl(0, [Validators.required]),
+      description: ('')
+    })
+  }
+  getCart(): FormArray {
+    return this.journalvoucherForm.get('journal_voucher_cart') as FormArray;
+  }
+  addCart() {
+    this.getCart().push(this.cart())
+  }
+  removeCart(i: any) {
+    this.getCart().removeAt(i)
+  }
+
+  isLastCart(index: number): boolean {
+    const cartControls = this.getCart().controls;
+    return index === cartControls.length - 1;
+  }
+
+  addRes: any;
+  dateError = null;
+  loaders = false;
+
+  submit() {
+    console.log(this.journalvoucherForm.value);
+    console.log(this.debitAmount);
+    console.log(this.creditAmount);
+    let debit = 0
+    this.debitAmount.forEach((res: any) => {
+      debit += +res
+    })
+    let credit = 0
+    this.creditAmount.forEach((res: any) => {
+      credit += +res
+    })
+    if (debit == credit) {
+      console.log(credit, debit);
+      if (this.journalvoucherForm.valid) {
+        this.loaders = true;
+        let formdata: any = new FormData();
+        formdata.append('date', this.journalvoucherForm.get('date')?.value);
+        formdata.append('journal_voucher_no', this.journalvoucherForm.get('journal_voucher_no')?.value);
+        formdata.append('total_credit', this.journalvoucherForm.get('total_credit')?.value);
+        formdata.append('total_debit', this.journalvoucherForm.get('total_debit')?.value);
+        formdata.append('description', this.journalvoucherForm.get('description')?.value);
+
+        const cartArray = this.journalvoucherForm.get('journal_voucher_cart') as FormArray;
+        const cartData = [];
+        cartArray.controls.forEach((address) => {
+          const cartGroup = address as FormGroup;
+          const cartObject: any = {};
+          Object.keys(cartGroup.controls).forEach((key) => {
+            const control = cartGroup.controls[key];
+            if (key === 'amount_type' || key === 'description') {
+              cartObject[key] = control.value;
+            } else if (!isNaN(control.value)) {
+              cartObject[key] = parseFloat(control.value);
+            } else {
+              cartObject[key] = control.value;
+            }
+          });
+          cartData.push(cartObject);
+        });
+        formdata.append('journal_voucher_cart', JSON.stringify(cartData));
+        this.transactionService.addJournalVoucher(formdata).subscribe(res => {
+          this.loaders = false;
+          this.addRes = res
+          if (this.addRes.success) {
+            this.toastrService.success(this.addRes.msg)
+            this.journalvoucherForm.reset()
+            this.router.navigate(['//transaction/journalvoucherList'])
+          } else {
+            this.loaders = false;
+          }
+        }, err => {
+          this.loaders = false;
+        })
+      } else {
+        this.journalvoucherForm.markAllAsTouched()
+      }
+    } else {
+      console.log(debit, credit);
+      this.toastrService.error('Debit and credit amount total should be same')
+      this.journalvoucherForm.markAllAsTouched()
+    }
+  }
+  get date() {
+    return this.journalvoucherForm.get('date')
+  }
+  get total_debit() {
+    return this.journalvoucherForm.get('total_debit')
+  }
+  get total_credit() {
+    return this.journalvoucherForm.get('total_credit')
+  }
+  get note() {
+    return this.journalvoucherForm.get('description')
+  }
+  get journal_voucher_no() {
+    return this.journalvoucherForm.get('journal_voucher_no')
+  }
+  from_account(index: number) {
+    return this.getCart().controls[index].get('from_account');
+  }
+  amount_type(index: number) {
+    return this.getCart().controls[index].get('amount_type');
+  }
+  amount(index: number) {
+    return this.getCart().controls[index].get('amount');
+  }
+
+  debitAmount: number[] = [];
+  creditAmount: number[] = [];
+  debit(i: number, dr: number) {
+    this.creditAmount[i] = 0;
+    this.debitAmount[i] = dr;
+  }
+  credit(i: number, cr: number) {
+    this.creditAmount[i] = cr;
+    this.debitAmount[i] = 0;
+  }
+
+  calculateTotalDebit(): number {
+    let debit = 0
+    this.debitAmount.forEach((res: any) => {
+      debit += +res
+    })
+    return debit
+  }
+  calculateTotalCredit(): number {
+    let credit = 0
+    this.creditAmount.forEach((res: any) => {
+      credit += +res
+    })
+    return credit
+  }
+}
+

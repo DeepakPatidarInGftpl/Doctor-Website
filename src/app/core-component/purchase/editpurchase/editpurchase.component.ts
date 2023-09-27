@@ -88,8 +88,8 @@ export class EditpurchaseComponent implements OnInit {
       //patch local-date
       const formattedOrderDate = new Date(this.getresbyId?.order_date).toISOString().slice(0, 16);
       this.purchaseForm.get('order_date')?.patchValue(formattedOrderDate);
-      const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
-      this.purchaseForm.get('shipping_date')?.patchValue(formattedshipping_date);
+      // const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
+      // this.purchaseForm.get('shipping_date')?.patchValue(formattedshipping_date);
 
 
       this.supplierId = res.party.id
@@ -175,7 +175,7 @@ export class EditpurchaseComponent implements OnInit {
 
       // tax including & excluding
       if (j.tax == 18) {
-        this.TotalWithoutTax[i] = j.unit_cost * j.qty;
+        this.TotalWithoutTax[i] = j.purchase_rate * j.qty;
         const calculatedTax = purchaseRate - (purchaseRate * (100 / (100 + taxPercentage)))
         this.taxIntoRupees[i] = calculatedTax;
         console.log(this.taxIntoRupees[i]);
@@ -584,12 +584,15 @@ export class EditpurchaseComponent implements OnInit {
   TotalWithoutTax: any[] = [];
   landingCostEveryIndex: any[] = [];
   calculateTotalLandingCostEveryIndex(index: number): number {
+    
+    
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('purchase_rate');
     const taxPercentageControl = cartItem.get('tax');
     const discountPercentageControl = cartItem.get('discount');
     const qtyControlControl = cartItem.get('qty');
     if (purchaseRateControl && taxPercentageControl && discountPercentageControl && qtyControlControl) {
+    
       const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
       if (this.isTaxAvailable[index] == true) {
         const purchaseRate = +purchaseRateControl.value || 0;
@@ -733,7 +736,7 @@ export class EditpurchaseComponent implements OnInit {
       this.purchaseService.updatePurchase(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.getRes = res;
-        if (this.getRes.IsSuccess == "True") {
+        if (this.getRes.success) {
           this.toastrService.success(this.getRes.msg);
           // this.router.navigate(['//purchase/purchaselist'])
           if (type == 'new') {
@@ -1139,7 +1142,6 @@ export class EditpurchaseComponent implements OnInit {
       })
     }
   }
-
 
   category: any;
   subcategory: any;

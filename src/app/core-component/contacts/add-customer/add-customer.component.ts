@@ -167,7 +167,7 @@ export class AddCustomerComponent implements OnInit {
     this.contactService.addCustomer(formdata).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Data Created") {
+      if (this.addRes.success) {
         this.toastr.success(this.addRes.msg)
         this.loaders = false;
         this.customerForm.reset()

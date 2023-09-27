@@ -51,7 +51,7 @@ export class TransportComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deleteTransport(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "TRANSPORT Deleted successfully") {
+          if (this.delRes.success) {
            this.ngOnInit();
            Swal.fire({
             icon: 'success',
@@ -89,7 +89,7 @@ export class TransportComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.TransportIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Transport Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -118,7 +118,7 @@ export class TransportComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.TransportIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Transport Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })

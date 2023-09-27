@@ -307,7 +307,7 @@ export class UpdateDealerComponent implements OnInit {
       this.contactService.updateDealer(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Dealer updated successfully") {
+        if (this.addRes.success) {
           this.loader = false;
           this.toastr.success(this.addRes.msg)
           this.dealerForm.reset()

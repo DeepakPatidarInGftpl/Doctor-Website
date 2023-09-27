@@ -47,7 +47,7 @@ export class PurchaselistComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.deletePurchase(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "PURCHASE ORDER Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -86,7 +86,7 @@ export class PurchaselistComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.PurchaseIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Purchase Order Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -115,7 +115,7 @@ export class PurchaselistComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.PurchaseIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Purchase Order Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })

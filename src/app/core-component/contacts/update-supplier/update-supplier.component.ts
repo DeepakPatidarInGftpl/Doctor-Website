@@ -245,6 +245,8 @@ export class UpdateSupplierComponent implements OnInit {
     }
   }
   loader = false;
+  gstinErr:any;
+  mobileErr:any;
   submit() {
     // console.log(this.id);
     console.log(this.supplierForm.value);
@@ -300,22 +302,41 @@ export class UpdateSupplierComponent implements OnInit {
       this.contactService.updateSupplier(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Supplier Updated Successfully") {
+        if (this.addRes.success) {
           this.loader = false;
           this.toastr.success(this.addRes.msg)
           this.supplierForm.reset()
           this.router.navigate(['//contacts/supplier'])
         } else {
-          this.loader = false
-          this.toastr.error(this.addRes?.error)
-          this.toastr.error(this.addRes?.opening_balance[0]);
-          if (this.addRes?.email) {
+          this.loader = false;   
+          if(this.addRes?.error?.mobile_no){
+            this.toastr.error(this.addRes?.error?.mobile_no[0])
+            this.mobileErr=this.addRes?.error?.mobile_no[0];
+            setTimeout(() => {
+              this.mobileErr=''
+            }, 5000);
+          }else if(this.addRes?.error?.gstin){
+            this.toastr.error(this.addRes?.error?.gstin[0]);
+            this.gstinErr=this.addRes?.error?.gstin[0];
+            setTimeout(() => {
+              this.gstinErr=''
+            }, 5000);
+          }else if(this.addRes?.opening_balance){
+            this.toastr.error(this.addRes?.opening_balance[0]);
+          }else if(this.addRes?.error?.email){
             this.toastr.error(this.addRes?.error?.email[0])
           }
         }
       }, err => {
         this.loader = false
         // console.log(err.error.gst);
+        this.toastr.error(err.error.msg)
+        if(err.error.msg=="Mobile Number Already Exists"){
+          this.mobileErr=err.error.msg
+          setTimeout(() => {
+            this.mobileErr=''
+          }, 5000);
+        }
         if (err.error.email) {
           this.toastr.error(err.error.email[0])
         }

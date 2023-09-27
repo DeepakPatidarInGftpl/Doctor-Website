@@ -198,7 +198,7 @@ export class AddTransportComponent implements OnInit {
       this.contactService.addTransport(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.transportForm.reset()

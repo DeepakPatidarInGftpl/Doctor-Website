@@ -98,7 +98,7 @@
                 </ul>
             </li>
             <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation">
-                <a  [ngClass]="{'active': activePath === 'product'}"><img src="assets/img/icons/product.svg" alt="img"><span>Inventory</span> <span
+                <a  [ngClass]="{'active': activePath === 'product'}"><img src="assets/img/icons/product.svg" alt="img"><span>Product Management</span> <span
                         class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isProduct"><a routerLink="/product/productlist" routerLinkActive="active">Product</a></li>
@@ -142,9 +142,9 @@
             <li class="submenu">
                 <a  [ngClass]="{'active': activePath === 'transaction'}"><i data-bs-toggle="tooltip" title="fa fa-university" class="fa fa-university"></i><span>Transaction</span> <span class="menu-arrow"></span></a>
                 <ul >
-                    <!-- <li><a routerLink="/transaction/adddebitnote" routerLinkActive="active">New Country</a></li> -->
+                    <li><a routerLink="/transaction/journalvoucherList" routerLinkActive="active">Journal Voucher </a> </li>
+                    <li><a routerLink="/transaction/countravoucherList" routerLinkActive="active">Countra Voucher</a></li>
                     <li *ngIf="isCountry"><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
-                    <!-- <li><a routerLink="/places/newstate" routerLinkActive="active">New State </a> </li> -->
                     <li *ngIf="isState"><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
                </ul>
             </li>
@@ -200,7 +200,25 @@
                       <li><a routerLink="/settings/taxrates" routerLinkActive="active">Tax Rates</a></li> -->
                   </ul>
               </li> 
-
+           <li class="submenu" *ngIf="isSalesEstimate || isSalesOrder || isSalesBill || isSalesOutward || isSalesReturn">
+                  <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span class="menu-arrow"></span></a>
+                  <ul>
+                      <li *ngIf="isSalesEstimate"><a routerLink="/sales/salesEstimatelist" routerLinkActive="active">Sales Estimate</a></li>
+                      <li *ngIf="isSalesOrder"><a routerLink="/sales/saleslist" routerLinkActive="active">Sales Order</a></li> 
+                      <li *ngIf="isSalesBill"><a routerLink="/sales/salesbill-list" routerLinkActive="active">Sales Bill </a></li>
+                      <li *ngIf="isSalesReturn"><a routerLink="/sales/salesReturnlist" routerLinkActive="active">Sales Return</a></li>
+                      <li *ngIf="isSalesOutward"><a routerLink="/sales/salesMaterialOutward-list" routerLinkActive="active">Sales Material Outward</a></li>
+                      <!-- <li *ngIf="isPosOrder"><a routerLink="/sales/posOrder" routerLinkActive="active">POS Order</a></li>
+                      <li *ngIf="isPosOrder"><a routerLink="/sales/payment" routerLinkActive="active">Payment</a></li>
+                      <li *ngIf="isReciept"><a routerLink="/sales/reciept" routerLinkActive="active">Payment</a></li>
+                      <li *ngIf="isPosOrder"><a routerLink="/sales/expence" routerLinkActive="active">Payment</a></li>
+                      <li><a routerLink="/poss/pos" routerLinkActive="active">POS</a></li>
+                      <li><a routerLink="poss/pos" target="_blank" routerLinkActive="active">POS New</a></li>
+                      <li><a routerLink="/sales/add-sales" routerLinkActive="active">New Sales</a></li>
+                      <li><a routerLink="/sales/salesreturnlists" routerLinkActive="active">Sales Return List</a></li>
+                      <li><a routerLink="/sales/createsalesreturns" routerLinkActive="active">New Sales Return</a></li> -->
+                  </ul>
+              </li> 
             <!-- <li class="submenu">
                 <h6 class="sub-head mb-2">Master</h6> 
                 <div class="sub-ul">
@@ -418,23 +436,7 @@
                         </div>
                 </div>
               </li> -->
-                    
-           <li class="submenu" >
-                  <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span class="menu-arrow"></span></a>
-                  <ul>
-                      <li><a routerLink="/sales/saleslist" routerLinkActive="active">Sales List</a></li> 
-                      <li><a routerLink="/sales/salesbilllist" routerLinkActive="active">Sales Bill List</a></li> 
-                      <!-- <li *ngIf="isPosOrder"><a routerLink="/sales/posOrder" routerLinkActive="active">POS Order</a></li>
-                      <li *ngIf="isPosOrder"><a routerLink="/sales/payment" routerLinkActive="active">Payment</a></li>
-                      <li *ngIf="isReciept"><a routerLink="/sales/reciept" routerLinkActive="active">Payment</a></li>
-                      <li *ngIf="isPosOrder"><a routerLink="/sales/expence" routerLinkActive="active">Payment</a></li>
-                      <li><a routerLink="/poss/pos" routerLinkActive="active">POS</a></li>
-                      <li><a routerLink="poss/pos" target="_blank" routerLinkActive="active">POS New</a></li>
-                      <li><a routerLink="/sales/add-sales" routerLinkActive="active">New Sales</a></li>
-                      <li><a routerLink="/sales/salesreturnlists" routerLinkActive="active">Sales Return List</a></li>
-                      <li><a routerLink="/sales/createsalesreturns" routerLinkActive="active">New Sales Return</a></li> -->
-                  </ul>
-              </li>  
+           
             
               <!-- <li class="submenu">
         <h6 class="sub-head mb-2">Sales</h6>

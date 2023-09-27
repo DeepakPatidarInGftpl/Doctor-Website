@@ -51,7 +51,7 @@ export class CustomerComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deleteCustomer(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Customer Deleted successfully") {
+          if (this.delRes.success) {
            this.ngOnInit()
            Swal.fire({
             icon: 'success',
@@ -89,7 +89,7 @@ export class CustomerComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.CustomerIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Customer Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -118,7 +118,7 @@ export class CustomerComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.CustomerIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Customer Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })

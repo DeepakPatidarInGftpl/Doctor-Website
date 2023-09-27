@@ -297,7 +297,7 @@ loader=false;
       this.contactService.updateEmployee(formdata,this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Employee updated successfully") {
+        if (this.addRes.success) {
           this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.employeeForm.reset()

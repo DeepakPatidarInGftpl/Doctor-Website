@@ -49,7 +49,7 @@ export class DealerListComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deleteDealer(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Dealer Deleted successfully") {
+          if (this.delRes.success) {
            this.ngOnInit();
            Swal.fire({
             icon: 'success',
@@ -87,7 +87,7 @@ export class DealerListComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.DealerIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Dealer Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -116,7 +116,7 @@ export class DealerListComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.DealerIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Dealer Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })

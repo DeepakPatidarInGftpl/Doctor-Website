@@ -60,7 +60,7 @@ id:any;
       this.contactService.updateUser(this.userForm.value,this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.Is_Success == "True") {
+        if (this.addRes.success) {
           this.loader = false;
           this.toastr.success(this.addRes.msg)
           this.userForm.reset()

@@ -82,7 +82,7 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No. <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Company Name <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">User Name <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Sale Order Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Sale Order no <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Terms <i class="fa fa-sort"></i></th>
@@ -105,13 +105,13 @@
                         <td>{{i+1}}</td>
                         <td class="productimgname">
                             <a routerLink="//sales/sales-details/{{products.id}}"
-                                style="line-height: 3;">{{products?.customer?.company_name}}</a>
+                                style="line-height: 3;">{{products?.customer?.name}}</a>
                         </td>
                         <td>{{products.sale_order_date}}</td>
                         <td>{{products.sale_order_no}}</td>
                         <td>{{products.payment_terms.title}}</td>
                         <td>{{products.due_date}}</td>
-                        <td>{{products?.estimate}}</td>
+                        <td>{{products?.estimate?.estimate_no}}</td>
                         
                         <td>{{products?.total}}</td>
                         <td>

@@ -251,7 +251,7 @@ export class UpdateCustomerComponent implements OnInit {
       this.contactService.updateCustomer(formdata,this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "customer updated successfully") {
+        if (this.addRes.success) {
           this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.customerForm.reset()

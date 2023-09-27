@@ -55,7 +55,9 @@
                                         </tr>
                                         <tr>
                                             <td class="th">Export</td>
-                                            <td class="td">{{purchaseDetail?.export}}</td>
+                                            <td class="td">
+                                                <span [ngClass]="{'bg-lightgreen': purchaseDetail?.export === true, 'bg-lightred' : purchaseDetail?.export === false,'bg-lightyellow' : purchaseDetail?.is_active === 'Partial' }" class="badges">{{purchaseDetail?.is_active}}</span>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="th">Sub Total</td>
@@ -71,9 +73,16 @@
                                         </tr>
                                         <tr>
                                             <td class="th">Status</td>
-                                            <td class="td"><span
-                                                    [ngClass]="{'bg-lightgreen': purchaseDetail?.status === 'Received', 'bg-lightred' : purchaseDetail?.status === 'Pending','bg-lightyellow' : purchaseDetail?.status === 'Ordered'}"
-                                                    class="badges">{{purchaseDetail?.status}}</span>
+                                            <td class="td">
+                                                <!-- <span [ngClass]="{'bg-lightgreen': purchaseDetail?.status === 'Received', 'bg-lightred' : purchaseDetail?.status === 'Pending','bg-lightyellow' : purchaseDetail?.status === 'Ordered'}" class="badges">{{purchaseDetail?.status}}</span> -->
+                                                <span [ngClass]="{
+                                                    'bg-lightgreen': purchaseDetail?.status === 'Completed',
+                                                    'bg-lightred': purchaseDetail?.status === 'Overdue',
+                                                    'bg-lightyellow': purchaseDetail?.status === 'Pending' || purchaseDetail?.status === 'New',
+                                                    'bg-lightblue': purchaseDetail?.status === 'Inprogress' || purchaseDetail?.status === 'Approved',
+                                                    'bg-lightorange': purchaseDetail?.status === 'Received' || purchaseDetail?.status === 'Partially Received' || purchaseDetail?.status === 'Exceed',
+                                                    'bg-lightgray': purchaseDetail?.status === 'Cancel'
+                                                  }" class="badges">{{ purchaseDetail?.status }}</span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -92,8 +101,6 @@
                                             <td class="th">Landing Cost</td>
                                             <td class="th">Purchase Rate</td>
                                             <td class="th">Discount</td>
-                                            <td class="th">Discount Type</td>
-                                            <td class="th">Additional Discount</td>
                                             <td class="th">Tax</td>
                                             <td class="th">Total</td>
                                         </tr>
@@ -107,8 +114,6 @@
                                             <td class="td">{{cart?.landing_cost}}</td>
                                             <td class="td">{{cart?.purchase_rate}}</td>
                                             <td class="td">{{cart?.discount}}</td>
-                                            <td class="td">{{cart?.discount_type}}</td>
-                                            <td class="td">{{cart?.additional_discount}}</td>
                                             <td class="td">{{cart?.tax}}</td>
                                             <td class="td">{{cart?.total}}</td>
                                         </tr>
@@ -120,9 +125,7 @@
                 </div>
                 <div class="d-flex align-items-center my-3 mx-3">
                     <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                    <span
-                        [ngClass]="{'bg-lightgreen': purchaseDetail?.is_active === true, 'bg-lightred' : purchaseDetail?.is_active === false,'bg-lightyellow' : purchaseDetail?.is_active === 'Partial' }"
-                        class="badges">{{purchaseDetail?.is_active}}</span>
+                    <span [ngClass]="{'bg-lightgreen': purchaseDetail?.is_active === true, 'bg-lightred' : purchaseDetail?.is_active === false,'bg-lightyellow' : purchaseDetail?.is_active === 'Partial' }" class="badges">{{purchaseDetail?.is_active}}</span>
                 </div>
             </div>
         </div>

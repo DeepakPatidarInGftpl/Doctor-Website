@@ -50,7 +50,7 @@ export class AddpurchaseComponent implements OnInit {
   subcategoryList;
 
   ngOnInit(): void {
-    // const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
+    const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     const now = new Date();
     const year = now.getFullYear();
     const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-indexed
@@ -64,7 +64,7 @@ export class AddpurchaseComponent implements OnInit {
       party: new FormControl('', [Validators.required]),
       order_date: new FormControl(defaultDateTime),
       order_no: new FormControl('', [Validators.required]),
-      shipping_date: new FormControl(defaultDateTime, [Validators.required]),
+      shipping_date: new FormControl(defaultDate, [Validators.required]),
       shipping_note: new FormControl(''),
       purchase_cart: this.fb.array([]),
       note: new FormControl(''),
@@ -482,7 +482,7 @@ export class AddpurchaseComponent implements OnInit {
       this.calculateRoundoffValue()
     }, 2000);
   }
-
+  
   calculatePurchaseEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('purchase_rate');
@@ -515,7 +515,6 @@ export class AddpurchaseComponent implements OnInit {
   }
   TotalWithTax: any[] = [];
   TotalWithoutTax: any[] = [];
-
   calculateTotalLandingCostEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('purchase_rate');
@@ -561,7 +560,6 @@ export class AddpurchaseComponent implements OnInit {
     }
     return 0;
   }
-
   calculateTotalWithTax(): number {
     let total = 0;
     this?.TotalWithTax?.forEach((number: any) => {
@@ -569,7 +567,6 @@ export class AddpurchaseComponent implements OnInit {
     })
     return total;
   }
-
   calculateTotalWithoutTax(): number {
     let total = 0;
     this?.TotalWithoutTax?.forEach((number: any) => {
@@ -1042,7 +1039,6 @@ export class AddpurchaseComponent implements OnInit {
       );
     }
   }
-
   selectData: any[] = []
   SelectedProduct(variant: any) {
     // this.selectData.push(variant)
@@ -1056,7 +1052,6 @@ export class AddpurchaseComponent implements OnInit {
 
     this.getVariant('', '')
   }
-
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
     // this.selectData.push(variant)

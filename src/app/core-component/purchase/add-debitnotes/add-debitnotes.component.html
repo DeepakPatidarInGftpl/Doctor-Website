@@ -649,8 +649,8 @@
                                 <th class="qty space-text" style="width: 7%;">QTY</th>
                                 <th class="space-text" style="width: 12%;">Cost Price</th>
                                 <th class="mrp space-text" style="width: 10%;">Mrp</th>
-                                <th class="space-text">Discount</th>
-                                <th class="space-text" style="width: 7%;">Tax %</th>
+                                <th class="space-text" style="width: 10%;">Deduction</th>
+                                <th class="space-text" style="width: 7%; text-align: center;">Tax %</th>
                                 <th class="space-text" style="width: 10%;">Landing Cost</th>
                                 <!-- <th class="space-text" style="width: 10%;">Total Cost</th> -->
                                 <th class="space-text" style="width: 10%;">Total Cost Without Tax</th>
@@ -674,7 +674,7 @@
                                                             d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                                                     </svg>
                                                 </div>
-                                                <svg *ngIf="isLastCart(i)" (click)="addCart()" style="color:green"
+                                                <svg *ngIf="isLastCart(i)" (click)="addCart(i)" style="color:green"
                                                     xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                                                     <path
@@ -710,7 +710,7 @@
                                             </div>
                                         </td>
                                         <td><input type="text" formControlName="qty" class="input"></td>
-                                        <td><input type="text" formControlName="unit_cost" class="input" [(ngModel)]="coastprice[i]" (blur)="purchasee(i)">
+                                        <td><input type="text" formControlName="unit_cost" class="input" [(ngModel)]="coastprice[i]" (blur)="purchasee(i)" #price (blur)="purchase2(price.value,i)">
                                         <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch()"></i>
                                             <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
                                                 aria-labelledby="addressModalLabel" aria-hidden="true">
@@ -765,10 +765,14 @@
                                             </div>
                                         </td>
                                         <td><input type="text" formControlName="mrp" class="input"></td>
-                                        <td><input type="text" formControlName="discount" class="input" (blur)="purchasee(i)">
+                                        <!-- <td><input type="text" formControlName="discount" class="input" (blur)="purchasee(i)">
                                         <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span>
-                                        </td>
-                                         <td>
+                                        </td> -->
+                                        <td ><input type="number" formControlName="deduction" class="input" (blur)="purchase4(i)">
+                                            <span class="symbol" (click)="percentage(i)"  *ngIf="isPercentage[i]">%</span> 
+                                            <span class=symbol (click)="amount(i)" *ngIf="isAmount[i]">&#8377;</span> 
+                                        </td>  
+                                         <td style="padding-left: 2%;">
                                             <!-- <input type="text" formControlName="tax" class="input" readonly> -->
                                          <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' + tax[i] + ' (' + tax[i] + '%)' }}</span>
                                             <br>
@@ -795,8 +799,8 @@
                                 <td class="text-start">{{calculateTotalPurchase()?.toFixed(2)}}   
                                 </td>
                                 <td class="text-start">{{calculateTotalMrp()?.toFixed(2)}}</td>
-                                <td class="text-start">{{calculateTotalDiscount()?.toFixed(2)}}
-                                <input type="text" formControlName="total_discount" class="input" [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
+                                <td class="text-start">{{calculateTotalDeduction()?.toFixed(2)}}
+                                <input type="text" formControlName="total_deduction" class="input" [ngModel]="calculateTotalDeduction()?.toFixed(2)" style="display: none;">
                                 </td>
                                 <td class="text-start">{{ calculateTotalTax() + '%' + ' (' + (calculateTotalTaxIntoRupees() | number:'1.2-2' | currency:'INR') + ')' }}
                                 <input type="text" formControlName="total_tax" class="input" [ngModel]="calculateTotalTax()?.toFixed(2)" style="display: none;">
