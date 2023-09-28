@@ -91,7 +91,7 @@ export class TransactionService {
   }
 
    // Countra voucher
-   getCountraVoucher() {
+  getCountraVoucher() {
     let url = this.apiUrl + '/pv-api/countra_voucher/';
     return this.http.get(url)
   }
@@ -116,7 +116,31 @@ export class TransactionService {
     return this.http.delete(`${url}${id}`)
   }
 
-
+  // Reciept voucher
+  getRecieptVoucher() {
+    let url = this.apiUrl + '/pv-api/receipt_voucher/';
+    return this.http.get(url)
+  }
+  getRecieptVoucherById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/receipt_voucher/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  RecieptVoucherIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/receipt_voucher/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addRecieptVoucher(data: any) {
+    let url = this.apiUrl + '/pv-api/receipt_voucher/';
+    return this.http.post(url, data)
+  }
+  updateRecieptVoucher(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/receipt_voucher/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deleteRecieptVoucher(id: number) {
+    let url = this.apiUrl + '/pv-api/receipt_voucher/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
   //prefix
   getJournalVoucherPrefix(){
     let url =this.apiUrl+'/pv-api/prefix/?id=JournalVoucher';

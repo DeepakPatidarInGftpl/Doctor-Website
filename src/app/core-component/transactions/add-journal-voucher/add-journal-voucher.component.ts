@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { SalesService } from 'src/app/Services/salesService/sales.service';
+import { Observable, map, startWith } from 'rxjs';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class AddJournalVoucherComponent implements OnInit {
 
-  constructor(private saleService: SalesService, private fb: FormBuilder,
+  constructor(private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
     private transactionService: TransactionService) {
@@ -21,6 +21,8 @@ export class AddJournalVoucherComponent implements OnInit {
   get f() {
     return this.journalvoucherForm.controls;
   }
+  fromAccountControl = new FormControl();
+  filteredFromAccount: Observable<any[]>;
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     this.journalvoucherForm = this.fb.group({
@@ -34,6 +36,11 @@ export class AddJournalVoucherComponent implements OnInit {
     this.getAccount();
     this.getprefix();
     this.addCart();
+    
+    this.filteredFromAccount = this.fromAccountControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, true))
+    );
   }
 
   prefixNo: any;
@@ -50,11 +57,27 @@ export class AddJournalVoucherComponent implements OnInit {
     })
   }
 
-  accountList: any;
+  accountList: any[]=[];
   getAccount() {
-    this.transactionService.getAccount().subscribe(res => {
+    this.transactionService.getAccount().subscribe((res:any) => {
       this.accountList = res;
     })
+  }
+  private _filter(value: string | number, include: boolean): any[] {
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+    const filteredFromAccount = include
+      ? this.accountList.filter(account => account?.account_id?.toLowerCase().includes(filterValue))
+      : this.accountList.filter(account => !account?.account_id?.toLowerCase().includes(filterValue));
+    if (!include && filteredFromAccount.length === 0) {
+      filteredFromAccount.push({ account: "No data found" }); 
+    }
+    return filteredFromAccount;
+  }
+  oncheck(data:any,index:number) {
+    const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(index) as FormGroup;
+    cart.patchValue({
+      from_account: data?.id,
+    });
   }
   cart(): FormGroup {
     return this.fb.group({
@@ -69,6 +92,7 @@ export class AddJournalVoucherComponent implements OnInit {
   }
   addCart() {
     this.getCart().push(this.cart())
+    
   }
   removeCart(i: any) {
     this.getCart().removeAt(i)

@@ -73,12 +73,37 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <select formControlName="from_account">
+                                                    <!-- <select formControlName="from_account">
                                                         <option value="" selected disabled>Select From Account</option>
-                                                        <option value="{{account.id}}"
-                                                            *ngFor="let account of accountList">{{account?.account_id}}
-                                                        </option>
-                                                    </select>
+                                                        <option value="{{account.id}}" *ngFor="let account of accountList">{{account?.account_id}}</option>
+                                                    </select> -->
+                                                    <div class="form-group" style="margin-bottom:-1%"> 
+                                                            <mat-form-field  class="w-100"
+                                                               style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                               <input type="text" placeholder="Search Product"
+                                                                   aria-label="Search Products" matInput [formControl]="myControls.at(i)"
+                                                                   (input)="getFilter($event.target.value)"
+                                                                   [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                                               <mat-autocomplete #autos="matAutocomplete">
+                                                                 <ng-container *ngFor="let option of filterAccount">
+                                                                       <mat-option *ngIf="option?.is_active==true"
+                                                                           [value]="option?.account_id"
+                                                                           (onSelectionChange)="oncheck(option,i)"
+                                                                           style="color:#FF9F43">
+                                                                           {{ option?.account_id}}
+                                                                       </mat-option>
+                                                                   </ng-container>
+                                                                   <mat-option *ngIf="accountList?.length === 0" [value]="'No data found'">
+                                                                       <a routerLink="//account/accountlist" style="color:#FF9F43">+ Add Account</a>
+                                                                   </mat-option>
+                                                                   <mat-option *ngIf="myControls.at(i)?.value?.length < 1"
+                                                                       class="is-loading">
+                                                                       Please Enter 1 or more characters
+                                                                   </mat-option>
+                                                               </mat-autocomplete>
+                                                           </mat-form-field>
+                                                     
+                                                    </div>
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="from_account(i) && from_account(i).invalid && from_account(i).touched">Select
                                                         Account</span>
