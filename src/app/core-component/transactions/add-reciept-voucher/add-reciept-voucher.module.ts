@@ -1,28 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { UpdateJournalVoucherRoutingModule } from './update-journal-voucher-routing.module';
-import { UpdateJournalVoucherComponent } from './update-journal-voucher.component';
-
+import { AddRecieptVoucherRoutingModule } from './add-reciept-voucher-routing.module';
+import { AddRecieptVoucherComponent } from './add-reciept-voucher.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgFor, AsyncPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import {MatTabsModule} from '@angular/material/tabs';
 @NgModule({
   declarations: [
-    UpdateJournalVoucherComponent
+    AddRecieptVoucherComponent
   ],
   imports: [
     CommonModule,
-    UpdateJournalVoucherRoutingModule,
+    AddRecieptVoucherRoutingModule,
     SharedModuleModule,
     MatAutocompleteModule,
     NgFor,
     AsyncPipe,
     MatFormFieldModule,
     MatInputModule,
+    MatTabsModule
   ]
 })
-export class UpdateJournalVoucherModule { }
+export class AddRecieptVoucherModule { }

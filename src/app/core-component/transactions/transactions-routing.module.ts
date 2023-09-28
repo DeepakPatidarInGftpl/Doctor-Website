@@ -20,6 +20,11 @@ const routes: Routes = [
   {path:'updatecountravoucher/:id',loadChildren:()=>import('./update-countra-voucher/update-countra-voucher.module').then((m)=>m.UpdateCountraVoucherModule)},
   {path:'detailscountravoucher/:id',loadChildren:()=>import('./details-countra-voucher/details-countra-voucher.module').then((m)=>m.DetailsCountraVoucherModule)},
 
+  {path:'recieptVoucherList',loadChildren:()=>import('./list-reciept-voucher/list-reciept-voucher.module').then((m)=>m.ListRecieptVoucherModule)},
+  {path:'addrecieptVoucher',loadChildren:()=>import('./add-reciept-voucher/add-reciept-voucher.module').then((m)=>m.AddRecieptVoucherModule)},
+  {path:'updaterecieptVoucher/:id',loadChildren:()=>import('./update-reciept-voucher/update-reciept-voucher.module').then((m)=>m.UpdateRecieptVoucherModule)},
+  {path:'detailsrecieptVoucher/:id',loadChildren:()=>import('./details-reciept-voucher/details-reciept-voucher.module').then((m)=>m.DetailsRecieptVoucherModule)},
+
 ];
 
 @NgModule({
