@@ -1,0 +1,149 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Reciept Voucher Add</h4>
+        <h6>Add/Update Reciept Voucher</h6>
+    </div>
+</div>
+
+<mat-tab-group>
+    <mat-tab label="Cash"> 
+        <div class="card">
+            <div class="card-body">
+                <form [formGroup]="recieptVoucherForm" (ngSubmit)="onSubmit()">
+                    <div class="row">  
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Receipt Type*</label>
+                               <input type="radio" formControlName="receipt_type" [ngModel]="true">
+                               <label for="">Cash</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="form-group">
+                                <label>Customer*</label>
+                                <mat-form-field class="w-100" style="padding: 0;
+                                    width: 100%;
+                                    min-width: 100%;border-top: none;">
+                                    <input type="text" placeholder="Search Customer" aria-label="Customer" matInput
+                                        [formControl]="customerControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
+                                        [ngClass]="{'is-invalid': h['customer'].touched && h['customer'].invalid}">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let customer of filteredCustomer | async"
+                                            [value]="customer.mobile_no" (onSelectionChange)="oncheck(customer.id)"
+                                            style="color:#FF9F43">{{ customer.mobile_no }}</mat-option>
+        
+                                        <ng-container *ngIf="(filteredCustomer | async) as customers">
+                                            <!-- <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
+                                                    <a routerLink="//contacts/addSupplier" style="color:#FF9F43">+ Add Supplier</a>
+                                                </mat-option> -->
+                                            <mat-option *ngIf="customerControl.value?.length < 3" class="is-loading">Please
+                                                Enter 3 or more characters</mat-option>
+                                        </ng-container>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
+                                    customer
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Date*</label>
+                                <input type="number" formControlName="date" id="date" [ngClass]="{'is-invalid': h['date'].touched && h['date'].invalid}">
+                                <!-- <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span> -->
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-sm-10 col-12">
+                            <div class="form-group">
+                             <div class="row">
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                <div class="card" (click)="setRadioValue('On Account')">
+                                    <div class="card-body">
+                                        <div class="display-flex">
+                                            <div class="display-block">
+                                                <input type="radio" formControlName="mode_type" [value]="'On Account'" id="on-account-radio">
+                                                <label for="on-account-radio">On Account</label>
+                                            </div>
+                                            <span>Upfront Payment</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4 col-12">
+                                    <div class="card" (click)="setRadioValue('Advance Payment')">
+                                        <div class="card-body">
+                                            <div class="display-flex">
+                                                <div class="display-block">
+                                                    <input type="radio" formControlName="mode_type" [value]="'Advance Payment'" id="advance-payment-radio">
+                                                    <label for="advance-payment-radio">Advance Payment</label>
+                                                </div>
+                                                <span>Will be offset by upcoming bills</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-4 col-12">
+                                        <div class="card" (click)="setRadioValue('Against Bill')">
+                                            <div class="card-body">
+                                                <div class="display-flex">
+                                                    <div class="display-block">
+                                                        <input type="radio" formControlName="mode_type" [value]="'Against Bill'" id="against-bill-radio">
+                                                        <label for="against-bill-radio">Against Bill</label>
+                                                    </div>
+                                                    <span>Offset against Current Bills</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                             </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Amount*</label>
+                                <input type="number" formControlName="amount" id="amount" [ngClass]="{'is-invalid': h['amount'].touched && h['amount'].invalid}">
+                                <!-- <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span> -->
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Amount*</label>
+                                <input type="number" formControlName="amount" id="amount" [ngClass]="{'is-invalid': h['amount'].touched && h['amount'].invalid}">
+                                <!-- <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span> -->
+                            </div>
+                        </div>
+                     
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Amount*</label>
+                                <input type="number" formControlName="amount" id="amount" [ngClass]="{'is-invalid': h['amount'].touched && h['amount'].invalid}">
+                                <!-- <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span> -->
+                            </div>
+                        </div>
+                     
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Description*</label>
+                                <textarea formControlName="note"
+                                    [ngClass]="{'is-invalid': h['note'].touched && h['note'].invalid}"></textarea>
+                                <!-- <span class="text-danger"
+                                    *ngIf="description && description.invalid && description.touched">Enter description</span> -->
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Submit</button>
+                            <a routerLink="//bank/reciept" class="btn btn-cancel">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Bank"> 
+      
+    </mat-tab>
+  </mat-tab-group>
+  

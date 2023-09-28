@@ -25,9 +25,11 @@ export class UpdateJournalVoucherComponent implements OnInit {
   }
   id: any
   editRes: any;
+  myControls: FormArray;
   ngOnInit(): void {
-    const defaultDate = new Date().toISOString().split('T')[0]; 
+    const defaultDate = new Date().toISOString().split('T')[0];
     this.id = this.Arout.snapshot.paramMap.get('id');
+    this.myControls = new FormArray([]);
 
     this.journalvoucherForm = this.fb.group({
       date: new FormControl(defaultDate, [Validators.required]),
@@ -63,15 +65,15 @@ export class UpdateJournalVoucherComponent implements OnInit {
   }
 
   udateCart(add: any): FormArray {
-    console.log(add); 
+    console.log(add);
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
-      if(j?.amount_type=='Credit'){
-        this.creditAmount[i]=j?.amount;
-        console.log(this.debitAmount[i]);    
-      }else if(j?.amount_type=='Debit'){
-        this.debitAmount[i]=j?.amount;
-        console.log(this.creditAmount[i]); 
+      if (j?.amount_type == 'Credit') {
+        this.creditAmount[i] = j?.amount;
+        console.log(this.debitAmount[i]);
+      } else if (j?.amount_type == 'Debit') {
+        this.debitAmount[i] = j?.amount;
+        console.log(this.creditAmount[i]);
       }
       formarr.push(this.fb.group({
         from_account: j.from_account?.id,
@@ -79,14 +81,34 @@ export class UpdateJournalVoucherComponent implements OnInit {
         amount: j?.amount,
         description: j?.description,
       }))
+      this.myControls.push(new FormControl(j.from_account?.account_id));
     })
     return formarr
   }
-  accountList: any;
+  accountList: any[] = [];
+  filterAccount: any[] = [];
   getAccount() {
-    this.transactionService.getAccount().subscribe(res => {
+    this.transactionService.getAccount().subscribe((res: any) => {
       this.accountList = res;
+      this.filterAccount = res
     })
+  }
+
+  getFilter(data: any) {
+    this.filterAccount = this.accountList.filter(account => {
+      if (account && account.account_id) {
+        const aliasLower = account.account_id.toLowerCase();
+        return aliasLower.includes(data);
+      }
+      return false; 
+    });
+    console.log(this.filterAccount);
+  }
+  oncheck(data:any,index:number) {
+    const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(index) as FormGroup;
+    cart.patchValue({
+      from_account: data?.id,
+    });
   }
   cart(): FormGroup {
     return this.fb.group({
@@ -156,7 +178,7 @@ export class UpdateJournalVoucherComponent implements OnInit {
           cartData.push(cartObject);
         });
         formdata.append('journal_voucher_cart', JSON.stringify(cartData));
-        this.transactionService.updateJournalVoucher(formdata,this.id).subscribe(res => {
+        this.transactionService.updateJournalVoucher(formdata, this.id).subscribe(res => {
           this.loaders = false;
           this.addRes = res
           if (this.addRes.success) {
@@ -210,7 +232,7 @@ export class UpdateJournalVoucherComponent implements OnInit {
     this.debitAmount[i] = dr;
     const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(i) as FormGroup;
     cart.patchValue({
-      amount:this.debitAmount[i]
+      amount: this.debitAmount[i]
     })
   }
   credit(i: number, cr: number) {
@@ -218,7 +240,7 @@ export class UpdateJournalVoucherComponent implements OnInit {
     this.debitAmount[i] = 0;
     const cart = (this.journalvoucherForm.get('journal_voucher_cart') as FormArray).at(i) as FormGroup;
     cart.patchValue({
-      amount:this.creditAmount[i]
+      amount: this.creditAmount[i]
     })
   }
 

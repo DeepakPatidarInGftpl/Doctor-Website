@@ -8,11 +8,11 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
 @Component({
-  selector: 'app-list-journal-voucher',
-  templateUrl: './list-journal-voucher.component.html',
-  styleUrls: ['./list-journal-voucher.component.scss']
+  selector: 'app-list-reciept-voucher',
+  templateUrl: './list-reciept-voucher.component.html',
+  styleUrls: ['./list-reciept-voucher.component.scss']
 })
-export class ListJournalVoucherComponent implements OnInit {
+export class ListRecieptVoucherComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
@@ -44,7 +44,7 @@ export class ListJournalVoucherComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.deleteJournalVoucher(id).subscribe(res => {
+        this.transactionService.deleteRecieptVoucher(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit();
@@ -71,7 +71,7 @@ export class ListJournalVoucherComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this Journal Voucher!",
+      text: "Do you want to Deactivate this Debit Note!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -83,7 +83,7 @@ export class ListJournalVoucherComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.JournalVoucherIsActive(id, '').subscribe(res => {
+        this.transactionService.DebitNoteIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -107,7 +107,7 @@ export class ListJournalVoucherComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this Journal Voucher!",
+      text: "Do you want to Active this Debit Note!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -148,7 +148,7 @@ export class ListJournalVoucherComponent implements OnInit {
   isDelete: any;
   userDetails: any;
   ngOnInit(): void {
-    this.transactionService.getJournalVoucher().subscribe(res => {
+    this.transactionService.getRecieptVoucher().subscribe(res => {
       // console.log(res);
       this.tableData = res;
       this.loader = false;
