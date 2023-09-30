@@ -26,9 +26,9 @@
                     <a class="btn btn-searchset">
                       <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                      <input type="search" class="form-control form-control-sm" placeholder="Search Supplier" [(ngModel)]="titlee" (ngModelChange)="search()">
+                      <input type="search" class="form-control form-control-sm" placeholder="Search Voucher No." [(ngModel)]="titlee" (ngModelChange)="search()">
                     </label>
-                  </div>
+                </div>
          </div>
             </div>
             <div class="wordset">
@@ -53,14 +53,14 @@
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Debit Note Date</label>
-                                    <input type="datetime-local" [(ngModel)]="date" (change)="filterData()">
+                                    <label>Journal Voucher Date</label>
+                                    <input type="date" [(ngModel)]="date" (change)="filterData()">
                                 </div>
                             </div>
                         </div>
                          <div class="form-group" (click)="clearFilters()">
-                                    <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
-                                </div>     
+                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
+                         </div>     
                     </div>
                 </div>
             </div>

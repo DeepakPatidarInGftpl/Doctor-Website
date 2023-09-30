@@ -83,7 +83,7 @@ export class AddMaterialOutwardComponent implements OnInit {
 
   prefixNo: any;
   getprefix() {
-    this.saleService.getEstimatePrefix().subscribe((res: any) => {
+    this.saleService.getMaterialOutwardPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
         this.prefixNo = res.prefix

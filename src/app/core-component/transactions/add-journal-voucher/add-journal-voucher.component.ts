@@ -56,7 +56,6 @@ export class AddJournalVoucherComponent implements OnInit {
       this.toastrService.error(err.error.msg)
     })
   }
-
   accountList: any[]=[];
   getAccount() {
     this.transactionService.getAccount().subscribe((res:any) => {

@@ -18,10 +18,11 @@ export class AddDebitNoteComponent implements OnInit {
   get f() {
     return this.debitNoteForm.controls;
   }
-  supplierControlName = 'party';
+
   supplierControl = new FormControl();
   filteredSuppliers: Observable<any[]>;
-
+  //
+  billControl = new FormControl();
 
   ngOnInit(): void {
     const now = new Date();
@@ -47,21 +48,40 @@ export class AddDebitNoteComponent implements OnInit {
 
     this.getSupplier();
     this.getPurchaseBill();
+    this.getprefix()
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
     );
+
   }
-  amounts: number;
+
+  prefixNo: any;
+  getprefix() {
+    this.transactionService.getDebitNotePrefix().subscribe((res: any) => {
+      console.log(res);
+      if (res.success == true) {
+        this.prefixNo = res.prefix
+      } else {
+        this.toastr.error(res.msg)
+      }
+    }, err => {
+      this.toastr.error(err.error.msg)
+    })
+  }
+  amounts: any;
   taxs: number;
   totals: number;
   calculateTax() {
     if (this.taxs) {
-      let taxAmount = (this.amounts * this.taxs) / 100;
-      this.totals = this.amounts + taxAmount;
+      // let taxAmount = (this.amounts * this.taxs) / 100;
+      let taxAmount = this.amounts - (this.amounts * (100 / (100 + this.taxs)))
+      let total = this.amounts + taxAmount;
+      this.totals = total.toFixed(2);
     } else {
-      this.totals = this.amounts
+      this.totals = this.amounts.toFixed(2)
+
     }
 
   }
@@ -73,33 +93,48 @@ export class AddDebitNoteComponent implements OnInit {
       this.suppliers = res
     })
   }
-  purchaseList: any
+  purchaseList: any[] = []
+  filterPurchaseBill: any[] = []
   getPurchaseBill() {
-    this.purchaseService.getPurchaseBill().subscribe(res => {
+    this.purchaseService.getPurchaseBill().subscribe((res: any) => {
       this.purchaseList = res;
     })
   }
 
+  getFilterBill(data: any) {
+    this.filterPurchaseBill = this.purchaseList.filter(salebill => {
+      if (salebill && salebill?.refrence_bill_no) {
+        const aliasLower = salebill?.refrence_bill_no.toLowerCase();
+        return aliasLower.includes(data);
+      }
+      return false;
+    });
+    console.log(this.filterPurchaseBill);
+  }
   private _filter(value: string | number, include: boolean): any[] {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
-      ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
-      : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
+      ? this.suppliers.filter(supplier => supplier.company_name.toLowerCase().includes(filterValue))
+      : this.suppliers.filter(supplier => !supplier.company_name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
-      // console.log("No results found");
-      filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
+      filteredSuppliers.push({ company_name: "No data found" });
     }
     return filteredSuppliers;
   }
 
-  oncheck(event: any) {
-    console.log(event);
+  oncheck(data: any) {
+    console.log(data);
     this.debitNoteForm.patchValue({
-      party: event
+      party: data
     })
   }
-
+  oncheck2(data: any) {
+    console.log(data);
+    this.debitNoteForm.patchValue({
+      purchase_bill: data.id
+    })
+  }
   get supplier() {
     return this.debitNoteForm.get('party') as FormControl;
   }
@@ -109,7 +144,18 @@ export class AddDebitNoteComponent implements OnInit {
   submit() {
     if (this.debitNoteForm.valid) {
       this.loaders = true;
-      this.transactionService.addDebitNote(this.debitNoteForm.value).subscribe(res => {
+      const formdata = new FormData();
+      formdata.append('party', this.debitNoteForm.get('party')?.value);
+      formdata.append('purchase_bill', this.debitNoteForm.get('purchase_bill')?.value);
+      formdata.append('date', this.debitNoteForm.get('date')?.value);
+      formdata.append('debit_note_no', this.debitNoteForm.get('debit_note_no')?.value);
+      formdata.append('reason', this.debitNoteForm.get('reason')?.value);
+      formdata.append('amount', this.debitNoteForm.get('amount')?.value);
+      formdata.append('note', this.debitNoteForm.get('note')?.value);
+      formdata.append('tax', this.debitNoteForm.get('tax')?.value);
+      formdata.append('total', this.debitNoteForm.get('total')?.value);
+
+      this.transactionService.addDebitNote(formdata).subscribe(res => {
         // console.log(res);
         this.loaders = false;
         this.addRes = res

@@ -162,15 +162,12 @@ export class ListRecieptVoucherComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'add_debitnote') {
+        if (res.content_type.app_label === 'transactions' && res.content_type.model === 'receiptvoucher' && res.codename == 'add_receiptvoucher') {
           this.isAdd = res.codename;
-          // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'change_debitnote') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'receiptvoucher' && res.codename == 'change_receiptvoucher') {
           this.isEdit = res.codename;
-          // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'delete_debitnote') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'receiptvoucher' && res.codename == 'delete_receiptvoucher') {
           this.isDelete = res.codename;
-          // console.log(this.isDelete);
         }
       });
     });
@@ -197,16 +194,23 @@ export class ListRecieptVoucherComponent implements OnInit {
   }
 
   search() {
-    if (this.titlee === "") {
+    if (this.titlee == "") {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.party.name.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
+        const nameLower = res?.customer?.account_id.toLocaleLowerCase();
+        const companyNameLower = res?.receipt_voucher_no.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)) {
+          return true;
+        } else if (companyNameLower.match(searchTerm)) {
+          return true;
+        }
+        return false;
       });
     }
   }
+
   key = 'id'
   reverse: boolean = false;
   sort(key) {
@@ -217,15 +221,12 @@ export class ListRecieptVoucherComponent implements OnInit {
 
   // convert to pdf
   generatePDF() {
-    // table data with pagination
     const doc = new jsPDF();
-    const title = 'Debit Note';
+    const title = 'Reciept Voucher';
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
-    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
     autoTable(doc,
-
       {
         html: '#mytable',
         theme: 'grid',
@@ -235,19 +236,20 @@ export class ListRecieptVoucherComponent implements OnInit {
         columns: [
           //remove action filed
           { header: 'Sr No.' },
-          { header: 'Company Name ' },
-          { header: 'Debit Note Date' },
-          { header: 'Debit Note No' },
-          { header: 'Purchase Bill' },
-          { header: 'Reason' },
+          { header: 'Account' },
+          { header: 'Reciept Type' },
+          { header: 'Mode Type' },
+          { header: 'Voucher No.' },
+          { header: 'Payer' },
+          { header: 'Bank Payment' },
+          { header: 'Date' },
+          { header: 'Transaction Date' },
+          { header: 'Transaction Id' },
           { header: 'Amount' },
-          { header: 'Tax' },
-          { header: 'Total' },
-          { header: 'Status' },
           { header: 'Is Active' }
         ],
       })
-    doc.save('debitnote.pdf');
+    doc.save('recieptVoucher.pdf');
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -264,8 +266,6 @@ export class ListRecieptVoucherComponent implements OnInit {
       }
     });
     visibleData.push(headerData);
-
-    // Include visible data rows
     dataRows.forEach(row => {
       const rowData = [];
       row.querySelectorAll('td').forEach(cell => {
@@ -275,73 +275,51 @@ export class ListRecieptVoucherComponent implements OnInit {
     });
     return visibleData;
   }
-  // Modify your exportToExcel() function
   exportToExcel(): void {
     const visibleDataToExport = this.getVisibleDataFromTable();
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const fileName = 'debitnote.xlsx';
-    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+    saveAs(blob, fileName); 
   }
 
   printTable(): void {
     // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-
-    // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
-
-    // Clone the table element to manipulate
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-    // Remove the "Is Active" column header from the cloned table
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(12)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(14)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
-
-    // Remove the "Action" column header from the cloned table
     const actionTh = clonedTable.querySelector('th.thone:last-child');
     if (actionTh) {
       actionTh.remove();
     }
-
-    // Loop through each row and remove the "Is Active" column and "Action" column data cells
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
-      // Remove the "Is Active" column data cell
-      const isActiveTd = row.querySelector('td:nth-child(12)');
+      const isActiveTd = row.querySelector('td:nth-child(14)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
-      // Remove the "Action" column data cell
       const actionTd = row.querySelector('td:last-child');
       if (actionTd) {
         actionTd.remove();
       }
     });
-
-    // Get the modified table's HTML content
     const modifiedTableHTML = clonedTable.outerHTML;
-    // Apply styles to add some space from the top after the title
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-    // Combine the title and table content
     const combinedContent = styledTitleHTML + modifiedTableHTML;
-    // Store the original contents
     const originalContents = document.body.innerHTML;
-    // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
-    // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }
-  //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {

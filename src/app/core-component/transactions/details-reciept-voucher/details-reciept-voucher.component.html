@@ -1,1 +1,113 @@
-<p>details-reciept-voucher works!</p>
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                            style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                        Back to Reciept Voucher</h6>
+                    <h4>Reciept Voucher Details</h4>
+                </div>
+                <div class="page-btn">
+                    <a routerLink="//transaction/updaterecieptVoucher/{{recieptVoucherDetail?.id}}"
+                        class="btn btn-added">
+                        <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Reciept Voucher
+                    </a>
+                </div>
+            </div>
+            <div class="company-details-card card" *ngIf="recieptVoucherDetail">
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="General Details">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="th">Customer</td>
+                                            <td class="td">{{recieptVoucherDetail?.customer.account_id}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Receipt Type</td>
+                                            <td class="td">{{recieptVoucherDetail?.receipt_type}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Mode Type</td>
+                                            <td class="td">{{recieptVoucherDetail?.mode_type}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Payer</td>
+                                            <td class="td">{{recieptVoucherDetail?.payer.account_id}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Reciept Voucher No.</td>
+                                            <td class="td">{{recieptVoucherDetail?.receipt_voucher_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Amount</td>
+                                            <td class="td">{{recieptVoucherDetail?.amount}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Date</td>
+                                            <td class="td">{{recieptVoucherDetail?.date}}</td>
+                                        </tr>
+                                      <ng-container *ngIf="recieptVoucherDetail?.receipt_type=='Bank'">
+                                        <tr>
+                                            <td class="th">Transaction Date</td>
+                                            <td class="td">{{recieptVoucherDetail?.transaction_date}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Transaction Id</td>
+                                            <td class="td">{{recieptVoucherDetail?.transaction_id}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Bank Payment</td>
+                                            <td class="td">{{recieptVoucherDetail?.bank_payment}}</td>
+                                        </tr>
+                                      </ng-container>
+                                       
+                                        <tr>
+                                            <td class="th">Description</td>
+                                            <td class="td">{{recieptVoucherDetail?.note}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Cart" *ngIf="recieptVoucherDetail?.mode_type=='Against Bill'">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="th">Sr. No.</th>
+                                            <th class="th">Sale Bill</th>
+                                            <th class="th">Original Amount</th>
+                                            <th class="th">Paid Amount</th>
+                                            <th class="th">Pending Amount</th>
+                                            <th class="th">Payment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let cart of recieptVoucherDetail?.bill_cart; index as i">
+                                            <td class="td">{{i+1}}</td>
+                                            <td class="td">{{cart?.sale_bill}}</td>
+                                            <td class="td">{{cart?.original_amount}}</td>
+                                            <td class="td">{{cart?.paid_amount}}</td>
+                                            <td class="td">{{cart?.pending_amount}}</td>
+                                            <td class="td">{{cart?.payment}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+                <div class="d-flex align-items-center my-3 mx-3">
+                    <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                    <span
+                        [ngClass]="{'bg-lightgreen': recieptVoucherDetail?.is_active === true, 'bg-lightred' : recieptVoucherDetail?.is_active === false,'bg-lightyellow' : recieptVoucherDetail?.is_active === 'Partial' }"
+                        class="badges">{{recieptVoucherDetail?.is_active}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
