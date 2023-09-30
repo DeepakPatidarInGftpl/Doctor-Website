@@ -26,10 +26,10 @@
                     <a class="btn btn-searchset">
                       <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                      <input type="search" class="form-control form-control-sm" placeholder="Search Supplier" [(ngModel)]="titlee" (ngModelChange)="search()">
+                      <input type="search" class="form-control form-control-sm" placeholder="Search Account Id/Receipt Voucher No" [(ngModel)]="titlee" (ngModelChange)="search()">
                     </label>
                   </div>
-         </div>
+                </div>
             </div>
             <div class="wordset">
                 <ul>
@@ -53,14 +53,14 @@
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Debit Note Date</label>
-                                    <input type="datetime-local" [(ngModel)]="date" (change)="filterData()">
+                                    <label>Reciept Voucher Date</label>
+                                    <input type="date" [(ngModel)]="date" (change)="filterData()">
                                 </div>
                             </div>
                         </div>
                          <div class="form-group" (click)="clearFilters()">
-                                    <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
-                                </div>     
+                            <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
+                          </div>     
                     </div>
                 </div>
             </div>
@@ -79,11 +79,15 @@
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Account<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Journal Voucher No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Reciept Type<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Mode Type<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Payer<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Bank Payment<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Total Debit<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Total Credit<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Description<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Transaction Date<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Transaction Id<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Amount<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
                     </tr>
@@ -97,12 +101,16 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td class="productimgname"><a routerLink="//transaction/detailsrecieptVoucher/{{products.id}}" style="line-height: 3;">{{products?.cart[0]?.from_account?.account_id}}</a></td>
-                        <td class="text-center">{{products?.journal_voucher_no}}</td>
+                        <td class="productimgname"><a routerLink="//transaction/detailsrecieptVoucher/{{products.id}}" style="line-height: 3;">{{products?.customer?.account_id}}</a></td>
+                        <td class="text-center">{{products?.receipt_type}}</td>
+                        <td>{{products.mode_type}}</td>
+                        <td>{{products.receipt_voucher_no}}</td>
+                        <td>{{products?.payer?.account_id}}</td>
+                        <td>{{products?.bank_payment}}</td>
                         <td>{{products?.date}}</td>
-                        <td class="text-center">{{products?.total_debit}}</td>
-                        <td class="text-center">{{products?.total_credit}}</td>
-                        <td>{{products?.description}}</td>
+                        <td>{{products?.transaction_date}}</td>
+                        <td class="text-center">{{products?.transaction_id}}</td>
+                        <td>{{products?.amount}}</td>
                         <td><mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle></td>
                         <td>
                             <a class="me-1" routerLink="//transaction/detailsrecieptVoucher/{{products?.id}}">

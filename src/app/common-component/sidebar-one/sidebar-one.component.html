@@ -139,14 +139,15 @@
                 </ul>
             </li> 
 
-            <li class="submenu">
+            <li class="submenu" *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher">
                 <a  [ngClass]="{'active': activePath === 'transaction'}"><i data-bs-toggle="tooltip" title="fa fa-university" class="fa fa-university"></i><span>Transaction</span> <span class="menu-arrow"></span></a>
                 <ul>
-                     <li><a routerLink="/transaction/recieptVoucherList" routerLinkActive="active">Reciept Voucher</a></li>
-                    <li><a routerLink="/transaction/journalvoucherList" routerLinkActive="active">Journal Voucher</a></li>
-                    <li><a routerLink="/transaction/countravoucherList" routerLinkActive="active">Countra Voucher</a></li>
-                    <li><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
-                    <li><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
+                     <!-- <li *ngIf="isPaymentVoucher"><a routerLink="/transaction/recieptVoucherList" routerLinkActive="active">Reciept Voucher</a></li> -->
+                     <li *ngIf="isRecieptVoucher"><a routerLink="/transaction/recieptVoucherList" routerLinkActive="active">Reciept Voucher</a></li>
+                    <li *ngIf="isJournalVoucher"><a routerLink="/transaction/journalvoucherList" routerLinkActive="active">Journal Voucher</a></li>
+                    <li *ngIf="isCountraVoucher"><a routerLink="/transaction/countravoucherList" routerLinkActive="active">Countra Voucher</a></li>
+                    <li *ngIf="isDebit"><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
+                    <li *ngIf="isCredit"><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
                </ul>
             </li>
 

@@ -58,11 +58,30 @@
           <div class="col-lg-4 col-sm-4 col-12">
             <div class="form-group">
               <label>Purchase Bill*</label>
-              <select formControlName="purchase_bill" class="w-100 h-100 border" required id="purchase_bill"
-                [ngClass]="{'is-invalid': f['purchase_bill'].touched && f['purchase_bill'].invalid}">
+              <!-- <select formControlName="purchase_bill" class="w-100 h-100 border" required id="purchase_bill"[ngClass]="{'is-invalid': f['purchase_bill'].touched && f['purchase_bill'].invalid}">
                 <option value="" selected disabled>Select Purchase Bill</option>
                 <option value="{{purchasebill?.id}}" *ngFor="let purchasebill of purchaseList">{{purchasebill?.refrence_bill_no}}</option>
-              </select>
+              </select> -->
+              <mat-form-field class="w-100"
+              style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+              <input type="text" placeholder="Search purchase Bill"
+                  aria-label="Search purchase Bills" matInput
+                  [formControl]="billControl"
+                  (input)="getFilterBill($event.target.value)"
+                  [matAutocomplete]="autos"
+                  style="box-sizing: border-box;" />
+              <mat-autocomplete #autos="matAutocomplete">
+                  <ng-container *ngFor="let option of filterPurchaseBill">
+                      <mat-option *ngIf="option?.is_active==true" [value]="option?.refrence_bill_no" (onSelectionChange)="oncheck2(option)" style="color:#FF9F43">
+                          {{ option?.refrence_bill_no}}
+                      </mat-option>
+                  </ng-container>
+                  <mat-option *ngIf="filterPurchaseBill?.length === 0" [value]="'No data found'">
+                      <a routerLink="//purchase/addpurchase-bill" style="color:#FF9F43">+ Add purchase Bill</a>
+                  </mat-option>
+                  <mat-option *ngIf="billControl?.value?.length < 1" class="is-loading"> Please Enter 1 or more characters </mat-option>
+              </mat-autocomplete>
+          </mat-form-field>
               <span class="text-danger" *ngIf="purchase_bill && purchase_bill.invalid && purchase_bill.touched">Select Purchase Bill </span>
             </div>
           </div>
@@ -86,7 +105,7 @@
 
           <div class="col-lg-4 col-sm-4 col-12">
             <div class="form-group">
-              <label>Tax</label>
+              <label>Tax %</label>
               <input type="number" formControlName="tax" [(ngModel)]="taxs" (input)="calculateTax()"  id="tax" [ngClass]="{ 'is-invalid': f['tax'].touched && f['tax'].invalid}">
               <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax ex: (1-100)</span>
             </div>

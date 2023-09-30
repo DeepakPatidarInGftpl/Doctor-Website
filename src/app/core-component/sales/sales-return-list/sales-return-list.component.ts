@@ -19,14 +19,14 @@ export class SalesReturnListComponent implements OnInit {
   public tableData: any;
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs:CompanyService) {}
+  constructor(private saleService: SalesService, private cs: CompanyService) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -47,14 +47,14 @@ export class SalesReturnListComponent implements OnInit {
         this.saleService.deleteSaleReturn(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-           this.ngOnInit();
-           Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: this.delRes.msg,
-          });
-          this.tableData.splice(index, 1);
-          }else {
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
+            this.tableData.splice(index, 1);
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -81,7 +81,7 @@ export class SalesReturnListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.saleService.SalesMaterialOutwardIsActive(id,'').subscribe(res => {
+        this.saleService.SalesMaterialOutwardIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -92,7 +92,7 @@ export class SalesReturnListComponent implements OnInit {
             this.ngOnInit()
           }
         })
-       
+
       }
     });
   }
@@ -111,7 +111,7 @@ export class SalesReturnListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.saleService.SaleReturnIsActive(id,'').subscribe(res => {
+        this.saleService.SaleReturnIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -122,51 +122,51 @@ export class SalesReturnListComponent implements OnInit {
             this.ngOnInit()
           }
         })
-      
+
       }
     });
   }
-loader=true;
-isAdd:any;
-isEdit:any;
-isDelete:any;
-userDetails:any;
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any;
   ngOnInit(): void {
     this.saleService.getSaleReturn().subscribe(res => {
       this.tableData = res;
-      this.loader=false;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
     })
 
     //permission from profile api
-  
+
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'sale'  && res.content_type.model === 'salereturn' && res.codename=='add_salereturn') {
+        if (res.content_type.app_label === 'sale' && res.content_type.model === 'salereturn' && res.codename == 'add_salereturn') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'salereturn' && res.codename=='change_salereturn') {
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'salereturn' && res.codename == 'change_salereturn') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'salereturn' && res.codename=='delete_salereturn') {
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'salereturn' && res.codename == 'delete_salereturn') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
-    });
-  })
+      });
+    })
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
 
-select=false
+  select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -178,15 +178,15 @@ select=false
       })
     }
   }
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res.name.toLocaleLowerCase();
-        const companyNameLower = res.company_name.toLocaleLowerCase();
+        const nameLower = res?.customer?.name.toLocaleLowerCase();
+        const companyNameLower = res?.sale_return_bill_no.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
           return true;
         } else if (companyNameLower.match(searchTerm)) {
@@ -204,18 +204,15 @@ select=false
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
-    const title = 'Dealer List';
-
+    const title = 'Sales Return List';
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
-    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
     autoTable(doc,
-
       {
         html: '#mytable',
         theme: 'grid',
@@ -223,20 +220,19 @@ select=false
           fillColor: [255, 159, 67]
         },
         columns: [
-          //remove action filed
           { header: 'Sr No.' },
-          { header: 'Name' },
-          { header: 'Company Name' },
-          { header: 'Mobile Number' },
-          { header: 'Opening Balance' },
-          { header: 'GSTIN' },
-          { header: 'PanCard' },
-          { header: 'Membership' },
+          { header: 'User Name ' },
+          { header: 'Bill Date' },
+          { header: 'Bill No.' },
+          { header: 'Sales Bill' },
+          { header: 'Sub Total' },
+          { header: 'Total' },
+          { header: 'Status' },
           { header: 'Is Active' }
         ],
       })
-    doc.save('dealer.pdf');
- }
+    doc.save('salesReturn.pdf');
+  }
 
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -254,7 +250,6 @@ select=false
     });
     visibleData.push(headerData);
 
-    // Include visible data rows
     dataRows.forEach(row => {
       const rowData = [];
       row.querySelectorAll('td').forEach(cell => {
@@ -264,99 +259,65 @@ select=false
     });
     return visibleData;
   }
-
-  // Modify your exportToExcel() function
   exportToExcel(): void {
     const visibleDataToExport = this.getVisibleDataFromTable();
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'dealer.xlsx';
-    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+    const fileName = 'saleReturn.xlsx';
+    saveAs(blob, fileName);
   }
-
   printTable(): void {
-    // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-
-    // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
-
-    // Clone the table element to manipulate
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-    // Remove the "Is Active" column header from the cloned table
     const isActiveTh = clonedTable.querySelector('th.thone:nth-child(10)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
-
-    // Remove the "Action" column header from the cloned table
     const actionTh = clonedTable.querySelector('th.thone:last-child');
     if (actionTh) {
       actionTh.remove();
     }
-
-    // Loop through each row and remove the "Is Active" column and "Action" column data cells
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
-      // Remove the "Is Active" column data cell
       const isActiveTd = row.querySelector('td:nth-child(10)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
-
-      // Remove the "Action" column data cell
       const actionTd = row.querySelector('td:last-child');
       if (actionTd) {
         actionTd.remove();
       }
     });
-
-    // Get the modified table's HTML content
     const modifiedTableHTML = clonedTable.outerHTML;
-
-    // Apply styles to add some space from the top after the title
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-
-    // Combine the title and table content
     const combinedContent = styledTitleHTML + modifiedTableHTML;
-
-    // Store the original contents
     const originalContents = document.body.innerHTML;
-
-    // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
-
-    // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }
-
   // filter data
+  date: any
+  espireDate: any;
   filterData() {
     let filteredData = this.tableData.slice();
-    // if (this.supplierType) {
-    //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
-    // }
-    
-    if (this.selectedCompany) {
-      const searchTerm = this.selectedCompany.toLowerCase();
+    if (this.date) {
+      const selectedDate = new Date(this.date).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
-        const aliasLower = item?.company_name.toLowerCase();
-        return aliasLower.includes(searchTerm);
+        const receiptDate = new Date(item?.bill_date).toISOString().split('T')[0];
+        return receiptDate === selectedDate;
       });
     }
     this.filteredData = filteredData;
   }
   clearFilter() {
-    // this.supplierType = null;
-    this.selectedCompany = null;
+    this.date = null;
     this.filterData();
   }
 }

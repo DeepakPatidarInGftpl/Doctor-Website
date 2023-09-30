@@ -18,7 +18,7 @@
             <div class="company-details-card card" *ngIf="journelVoucherDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
-                        <mat-tab label="Debit Notes">
+                        <mat-tab label="General Details">
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
@@ -58,7 +58,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let cart of journelVoucherDetail?.cart">
+                                        <tr *ngFor="let cart of journelVoucherDetail?.cart; index as i">
                                             <td class="td">{{i+1}}</td>
                                             <td class="td">{{cart?.from_account?.account_id}}</td>
                                             <td class="td">{{cart?.amount_type}}</td>

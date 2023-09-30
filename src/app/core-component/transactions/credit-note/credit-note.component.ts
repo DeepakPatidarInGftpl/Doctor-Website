@@ -46,7 +46,7 @@ export class CreditNoteComponent implements OnInit {
       if (t.isConfirmed) {
         this.transactionService.deleteCreditNote(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Credit Note Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -83,9 +83,9 @@ export class CreditNoteComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.DebitNoteIsActive(id, '').subscribe(res => {
+        this.transactionService.CreditNoteIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Credit Note is actived successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deactivate!',
@@ -119,9 +119,9 @@ export class CreditNoteComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.DebitNoteIsActive(id, '').subscribe(res => {
+        this.transactionService.CreditNoteIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Credit Note is actived successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Active!',
@@ -149,7 +149,6 @@ export class CreditNoteComponent implements OnInit {
   userDetails: any;
   ngOnInit(): void {
     this.transactionService.getCreditNote().subscribe(res => {
-      // console.log(res);
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
@@ -157,18 +156,17 @@ export class CreditNoteComponent implements OnInit {
       this.filterData();
     })
 
-    // permissin from api profile
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master' && res.content_type.model === 'creditnote' && res.codename == 'add_creditnote') {
+        if (res.content_type.app_label === 'transactions' && res.content_type.model === 'creditnote' && res.codename == 'add_creditnote') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'creditnote' && res.codename == 'change_creditnote') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'creditnote' && res.codename == 'change_creditnote') {
           this.isEdit = res.codename;
           console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'creditnote' && res.codename == 'delete_creditnote') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'creditnote' && res.codename == 'delete_creditnote') {
           this.isDelete = res.codename;
           console.log(this.isDelete);
         }
@@ -195,15 +193,20 @@ export class CreditNoteComponent implements OnInit {
       })
     }
   }
-
   search() {
-    if (this.titlee === "") {
+    if (this.titlee == "") {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.party.name.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
+        const nameLower = res?.account?.account_id.toLocaleLowerCase();
+        const companyNameLower = res?.credit_note_no.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)) {
+          return true;
+        } else if (companyNameLower.match(searchTerm)) {
+          return true;
+        }
+        return false;
       });
     }
   }
@@ -219,7 +222,7 @@ export class CreditNoteComponent implements OnInit {
   generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
-    const title = 'Debit Note';
+    const title = 'Credit Note';
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
@@ -236,18 +239,18 @@ export class CreditNoteComponent implements OnInit {
           //remove action filed
           { header: 'Sr No.' },
           { header: 'Company Name ' },
-          { header: 'Debit Note Date' },
-          { header: 'Debit Note No' },
-          { header: 'Purchase Bill' },
+          { header: 'Credit Note Date' },
+          { header: 'Credit Note No' },
+          { header: 'Sale Bill' },
           { header: 'Reason' },
-          { header: 'Amount' },
+          { header: 'Round off' },
           { header: 'Tax' },
           { header: 'Total' },
           { header: 'Status' },
           { header: 'Is Active' }
         ],
       })
-    doc.save('debitnote.pdf');
+    doc.save('creditNote.pdf');
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -264,7 +267,6 @@ export class CreditNoteComponent implements OnInit {
       }
     });
     visibleData.push(headerData);
-
     // Include visible data rows
     dataRows.forEach(row => {
       const rowData = [];
@@ -284,7 +286,7 @@ export class CreditNoteComponent implements OnInit {
     // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'debitnote.xlsx';
+    const fileName = 'creditNote.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
 
@@ -292,15 +294,9 @@ export class CreditNoteComponent implements OnInit {
     // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-
-    // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
-
-    // Clone the table element to manipulate
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-    // Remove the "Is Active" column header from the cloned table
     const isActiveTh = clonedTable.querySelector('th.thone:nth-child(12)');
     if (isActiveTh) {
       isActiveTh.remove();

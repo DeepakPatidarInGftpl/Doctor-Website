@@ -168,4 +168,9 @@ export class TransactionService {
     let url = this.apiUrl + '/pv-api/account/';
     return this.http.get(url)
   }
+  // sale bill
+  getSalesBill() {
+    let url = this.apiUrl + '/pv-api/sale_bill/';
+    return this.http.get(url)
+  }
 }

@@ -46,7 +46,7 @@ export class DebitNoteComponent implements OnInit {
       if (t.isConfirmed) {
         this.transactionService.deleteDebitNote(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Debit Note Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -85,11 +85,11 @@ export class DebitNoteComponent implements OnInit {
       if (t.isConfirmed) {
         this.transactionService.DebitNoteIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Debit Note is actived successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deactivate!',
-              text: 'Purchase Return Is Deactivate Successfully.',
+              text: this.delRes.msg,
             });
             this.ngOnInit()
           }else{
@@ -121,11 +121,11 @@ export class DebitNoteComponent implements OnInit {
       if (t.isConfirmed) {
         this.transactionService.DebitNoteIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Debit Note is actived successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Active!',
-              text: 'Purchase Return Is Active Successfully.',
+              text: this.delRes.msg,
             });
             this.ngOnInit()
           }else{
@@ -162,13 +162,13 @@ export class DebitNoteComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'add_debitnote') {
+        if (res.content_type.app_label === 'transactions' && res.content_type.model === 'debitnote' && res.codename == 'add_debitnote') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'change_debitnote') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'debitnote' && res.codename == 'change_debitnote') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'delete_debitnote') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'debitnote' && res.codename == 'delete_debitnote') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -197,13 +197,19 @@ export class DebitNoteComponent implements OnInit {
   }
 
   search() {
-    if (this.titlee === "") {
+    if (this.titlee == "") {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.party.name.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
+        const nameLower = res?.party?.company_name.toLocaleLowerCase();
+        const companyNameLower = res?.debit_note_no.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)) {
+          return true;
+        } else if (companyNameLower.match(searchTerm)) {
+          return true;
+        }
+        return false;
       });
     }
   }
@@ -223,9 +229,7 @@ export class DebitNoteComponent implements OnInit {
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
-    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
     autoTable(doc,
-
       {
         html: '#mytable',
         theme: 'grid',
@@ -233,7 +237,6 @@ export class DebitNoteComponent implements OnInit {
           fillColor: [255, 159, 67]
         },
         columns: [
-          //remove action filed
           { header: 'Sr No.' },
           { header: 'Company Name ' },
           { header: 'Debit Note Date' },
@@ -264,7 +267,6 @@ export class DebitNoteComponent implements OnInit {
       }
     });
     visibleData.push(headerData);
-
     // Include visible data rows
     dataRows.forEach(row => {
       const rowData = [];
@@ -287,12 +289,10 @@ export class DebitNoteComponent implements OnInit {
     const fileName = 'debitnote.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
-
   printTable(): void {
     // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-
     // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;

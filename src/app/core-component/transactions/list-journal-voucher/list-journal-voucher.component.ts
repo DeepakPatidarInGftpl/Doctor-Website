@@ -26,7 +26,7 @@ export class ListJournalVoucherComponent implements OnInit {
   selectedpaymentTerms: string = '';
   date: any
 
-  constructor( private transactionService: TransactionService,private cs: CompanyService,) { }
+  constructor(private transactionService: TransactionService, private cs: CompanyService,) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -92,7 +92,7 @@ export class ListJournalVoucherComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.ngOnInit()
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not-Deactivate!',
@@ -100,7 +100,7 @@ export class ListJournalVoucherComponent implements OnInit {
             });
           }
         })
-      
+
       }
     });
   }
@@ -128,16 +128,16 @@ export class ListJournalVoucherComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.ngOnInit()
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not-Active!',
               text: this.delRes.error,
             });
           }
-          
+
         })
-      
+
       }
     });
   }
@@ -153,7 +153,7 @@ export class ListJournalVoucherComponent implements OnInit {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); 
+      this.filteredData = this.tableData.slice();
       this.filterData();
     })
 
@@ -162,13 +162,13 @@ export class ListJournalVoucherComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'add_debitnote') {
+        if (res.content_type.app_label === 'transactions' && res.content_type.model === 'journalvoucher' && res.codename == 'add_journalvoucher') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'change_debitnote') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'journalvoucher' && res.codename == 'change_journalvoucher') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'delete_debitnote') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'journalvoucher' && res.codename == 'delete_journalvoucher') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -176,7 +176,7 @@ export class ListJournalVoucherComponent implements OnInit {
     });
   }
 
- 
+
   allSelected: boolean = false;
   selectedRows: boolean[]
   selectAlll() {
@@ -202,30 +202,27 @@ export class ListJournalVoucherComponent implements OnInit {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.party.name.toLocaleLowerCase();
+        const nameLower = res?.journal_voucher_no.toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
     }
   }
+
   key = 'id'
   reverse: boolean = false;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
   }
-
-
+  
   // convert to pdf
   generatePDF() {
-    // table data with pagination
     const doc = new jsPDF();
-    const title = 'Debit Note';
+    const title = 'Journal Voucher';
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
-    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
     autoTable(doc,
-
       {
         html: '#mytable',
         theme: 'grid',
@@ -233,21 +230,17 @@ export class ListJournalVoucherComponent implements OnInit {
           fillColor: [255, 159, 67]
         },
         columns: [
-          //remove action filed
           { header: 'Sr No.' },
-          { header: 'Company Name ' },
-          { header: 'Debit Note Date' },
-          { header: 'Debit Note No' },
-          { header: 'Purchase Bill' },
-          { header: 'Reason' },
-          { header: 'Amount' },
-          { header: 'Tax' },
-          { header: 'Total' },
-          { header: 'Status' },
+          { header: 'Account' },
+          { header: 'Journal Voucher No.' },
+          { header: 'Date' },
+          { header: 'Total Debit' },
+          { header: 'Total Credit' },
+          { header: 'Description' },
           { header: 'Is Active' }
         ],
       })
-    doc.save('debitnote.pdf');
+    doc.save('journalVoucher.pdf');
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -284,64 +277,43 @@ export class ListJournalVoucherComponent implements OnInit {
     // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'debitnote.xlsx';
+    const fileName = 'journalVoucher.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
 
   printTable(): void {
-    // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-
-    // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
-
-    // Clone the table element to manipulate
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-    // Remove the "Is Active" column header from the cloned table
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(12)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(9)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
-
-    // Remove the "Action" column header from the cloned table
     const actionTh = clonedTable.querySelector('th.thone:last-child');
     if (actionTh) {
       actionTh.remove();
     }
-
-    // Loop through each row and remove the "Is Active" column and "Action" column data cells
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
-      // Remove the "Is Active" column data cell
-      const isActiveTd = row.querySelector('td:nth-child(12)');
+      const isActiveTd = row.querySelector('td:nth-child(9)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
-      // Remove the "Action" column data cell
       const actionTd = row.querySelector('td:last-child');
       if (actionTd) {
         actionTd.remove();
       }
     });
-
-    // Get the modified table's HTML content
     const modifiedTableHTML = clonedTable.outerHTML;
-    // Apply styles to add some space from the top after the title
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-    // Combine the title and table content
     const combinedContent = styledTitleHTML + modifiedTableHTML;
-    // Store the original contents
     const originalContents = document.body.innerHTML;
-    // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
-    // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }
-  //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -351,11 +323,7 @@ export class ListJournalVoucherComponent implements OnInit {
         return receiptDate === selectedDate;
       });
     }
-    // Now, filteredData contains the filtered results based on the selected date
     console.log(filteredData);
-    // if (this.selectedpaymentTerms) {
-    //   filteredData = filteredData.filter((item) => item?.payment_term?.title === this.selectedpaymentTerms);
-    // }
     this.filteredData = filteredData;
   }
   clearFilters() {

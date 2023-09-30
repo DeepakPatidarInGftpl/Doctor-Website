@@ -9,12 +9,12 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class DetailsCreditNoteComponent implements OnInit {
   constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,) { }
-  debitnoteDetails: any
+ creditnoteDetails: any
   id: any
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
-    this.transactionService.getDebitNoteById(this.id).subscribe(res=>{
-      this.debitnoteDetails=res
+    this.transactionService.getCreditNoteById(this.id).subscribe(res=>{
+      this.creditnoteDetails=res
     })
   }
 
