@@ -118,6 +118,13 @@ isSalesBill;
 isSalesOutward;
 isSalesReturn;
 isSalesEstimate;
+// transaction
+isCredit;
+isDebit;
+isCountraVoucher;
+isJournalVoucher;
+isRecieptVoucher;
+isPaymentVoucher
 
 userDetails:any
   ngOnInit(): void {
@@ -285,6 +292,21 @@ userDetails:any
         this.isSalesReturn = res.codename
       } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename == 'view_estimate') {
         this.isSalesEstimate = res.codename;
+      }
+      // transaction
+  
+      else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'creditnote' && res.codename == 'view_creditnote') {
+        this.isCredit = res.codename;
+      }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'debitnote' && res.codename == 'view_debitnote') {
+        this.isDebit = res.codename;
+      }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'countravoucher' && res.codename == 'view_countravoucher') {
+        this.isCountraVoucher = res.codename;
+      }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'journalvoucher' && res.codename == 'view_journalvoucher') {
+        this.isJournalVoucher = res.codename
+      } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'receiptvoucher' && res.codename == 'view_receiptvoucher') {
+        this.isRecieptVoucher = res.codename;
+      }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'payment' && res.codename == 'view_payment') {
+        this.isPaymentVoucher = res.codename;
       }
       });
     }
