@@ -390,7 +390,7 @@
                         <label>Sales Order</label>
                         <select formControlName="sale_order">
                             <option value="" selected disabled>Select Sales Order</option>
-                            <option value="{{estimate.id}}" *ngFor="let estimate of saleOderList">{{estimate.title}}</option>
+                            <option value="{{estimate.id}}" *ngFor="let estimate of saleOderList">{{estimate?.sale_order_no}}</option>
                         </select>
                         <span class="text-danger"
                             *ngIf="sale_order && sale_order.invalid && sale_order.touched">Select

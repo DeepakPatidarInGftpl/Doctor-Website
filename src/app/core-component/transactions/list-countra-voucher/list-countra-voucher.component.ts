@@ -83,7 +83,7 @@ export class ListCountraVoucherComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.DebitNoteIsActive(id, '').subscribe(res => {
+        this.transactionService.CountraVoucherIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -119,7 +119,7 @@ export class ListCountraVoucherComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.DebitNoteIsActive(id, '').subscribe(res => {
+        this.transactionService.CountraVoucherIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -162,21 +162,17 @@ export class ListCountraVoucherComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'add_debitnote') {
+        if (res.content_type.app_label === 'transactions' && res.content_type.model === 'countravoucher' && res.codename == 'add_countravoucher') {
           this.isAdd = res.codename;
-          // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'change_debitnote') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'countravoucher' && res.codename == 'change_countravoucher') {
           this.isEdit = res.codename;
-          // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'debitnote' && res.codename == 'delete_debitnote') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'countravoucher' && res.codename == 'delete_countravoucher') {
           this.isDelete = res.codename;
-          // console.log(this.isDelete);
         }
       });
     });
   }
 
- 
   allSelected: boolean = false;
   selectedRows: boolean[]
   selectAlll() {
@@ -202,11 +198,12 @@ export class ListCountraVoucherComponent implements OnInit {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.party.name.toLocaleLowerCase();
+        const nameLower = res?.countra_voucher_no.toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
     }
   }
+  
   key = 'id'
   reverse: boolean = false;
   sort(key) {
@@ -217,37 +214,28 @@ export class ListCountraVoucherComponent implements OnInit {
 
   // convert to pdf
   generatePDF() {
-    // table data with pagination
     const doc = new jsPDF();
-    const title = 'Debit Note';
+    const title = 'Countra Voucher';
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
-    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
     autoTable(doc,
-
       {
         html: '#mytable',
         theme: 'grid',
-        headStyles: {
-          fillColor: [255, 159, 67]
-        },
+        headStyles: { fillColor: [255, 159, 67] },
         columns: [
-          //remove action filed
           { header: 'Sr No.' },
-          { header: 'Company Name ' },
-          { header: 'Debit Note Date' },
-          { header: 'Debit Note No' },
-          { header: 'Purchase Bill' },
-          { header: 'Reason' },
+          { header: 'Countra Voucher No.' },
+          { header: 'From Account' },
+          { header: 'To Account' },
           { header: 'Amount' },
-          { header: 'Tax' },
-          { header: 'Total' },
-          { header: 'Status' },
+          { header: 'Date' },
+          { header: 'Description' },
           { header: 'Is Active' }
         ],
       })
-    doc.save('debitnote.pdf');
+    doc.save('countravoucher.pdf');
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -264,8 +252,6 @@ export class ListCountraVoucherComponent implements OnInit {
       }
     });
     visibleData.push(headerData);
-
-    // Include visible data rows
     dataRows.forEach(row => {
       const rowData = [];
       row.querySelectorAll('td').forEach(cell => {
@@ -284,7 +270,7 @@ export class ListCountraVoucherComponent implements OnInit {
     // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'debitnote.xlsx';
+    const fileName = 'countravoucher.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
 
@@ -301,7 +287,7 @@ export class ListCountraVoucherComponent implements OnInit {
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
 
     // Remove the "Is Active" column header from the cloned table
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(12)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(9)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
@@ -316,7 +302,7 @@ export class ListCountraVoucherComponent implements OnInit {
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
       // Remove the "Is Active" column data cell
-      const isActiveTd = row.querySelector('td:nth-child(12)');
+      const isActiveTd = row.querySelector('td:nth-child(9)');
       if (isActiveTd) {
         isActiveTd.remove();
       }

@@ -52,9 +52,11 @@ export class EditSalesComponent implements OnInit {
   id: any;
   editRes: any;
   ngOnInit(): void {
-    const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
+    const defaultDate = new Date().toISOString().split('T')[0]; 
+
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.userControl.setValue('Loading...');
+
     this.myControl = new FormArray([]);
     this.saleForm = this.fb.group({
       customer: new FormControl('', [Validators.required]),
@@ -81,6 +83,7 @@ export class EditSalesComponent implements OnInit {
       this.saleForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
       this.saleForm.setControl('sale_order_cart', this.udateCart(this.editRes?.cart));
       this.saleForm.get('customer')?.patchValue(this.editRes?.customer?.id);
+      this.saleForm.get('estimate')?.patchValue(this?.editRes?.estimate?.id)
       this.userControl.setValue(this.editRes?.customer?.name);
     })
     this.searchForm = this.fb.group({

@@ -46,7 +46,7 @@ export class SaleslistComponent implements OnInit {
       if (t.isConfirmed) {
         this.saleService.deleteSalesOrder(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Sale Order Deleted successfully") {
+          if (this.delRes.success) {
            this.ngOnInit();
            Swal.fire({
             icon: 'success',
@@ -83,7 +83,7 @@ export class SaleslistComponent implements OnInit {
       if (t.isConfirmed) {
         this.saleService.SalesOrderIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Sale Order is actived Successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deactivate!',
@@ -113,7 +113,7 @@ export class SaleslistComponent implements OnInit {
       if (t.isConfirmed) {
         this.saleService.SalesOrderIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Sale Order is actived Successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Active!',
@@ -185,8 +185,8 @@ select=false
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res.name.toLocaleLowerCase();
-        const companyNameLower = res.company_name.toLocaleLowerCase();
+        const nameLower = res?.customer?.name.toLocaleLowerCase();
+        const companyNameLower = res?.sale_order_no.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
           return true;
         } else if (companyNameLower.match(searchTerm)) {
@@ -206,16 +206,12 @@ select=false
 
    // convert to pdf
    generatePDF() {
-    // table data with pagination
     const doc = new jsPDF();
-    const title = 'Dealer List';
-
+    const title = 'Sale Order List';
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
-    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
     autoTable(doc,
-
       {
         html: '#mytable',
         theme: 'grid',
@@ -223,28 +219,25 @@ select=false
           fillColor: [255, 159, 67]
         },
         columns: [
-          //remove action filed
           { header: 'Sr No.' },
-          { header: 'Name' },
-          { header: 'Company Name' },
-          { header: 'Mobile Number' },
-          { header: 'Opening Balance' },
-          { header: 'GSTIN' },
-          { header: 'PanCard' },
-          { header: 'Membership' },
+          { header: 'User Name' },
+          { header: 'Sale Order Date' },
+          { header: 'Sale Order no' },
+          { header: 'Payment Terms' },
+          { header: 'Due Date' },
+          { header: 'Estimate' },
+          { header: 'Total' },
           { header: 'Is Active' }
         ],
       })
-    doc.save('dealer.pdf');
+    doc.save('saleOrder.pdf');
  }
-
-  // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
     const table = document.getElementById('mytable');
     const headerRow = table.querySelector('thead tr');
     const dataRows = table.querySelectorAll('tbody tr');
-    //table heading
+
     const headerData = [];
     headerRow.querySelectorAll('th').forEach(cell => {
       const columnHeader = cell.textContent.trim();
@@ -274,34 +267,29 @@ select=false
     // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'dealer.xlsx';
-    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+    const fileName = 'saleOrder.xlsx';
+    saveAs(blob, fileName); 
   }
 
   printTable(): void {
     // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-
     // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
-
     // Clone the table element to manipulate
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
     // Remove the "Is Active" column header from the cloned table
     const isActiveTh = clonedTable.querySelector('th.thone:nth-child(10)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
-
     // Remove the "Action" column header from the cloned table
     const actionTh = clonedTable.querySelector('th.thone:last-child');
     if (actionTh) {
       actionTh.remove();
     }
-
     // Loop through each row and remove the "Is Active" column and "Action" column data cells
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
@@ -320,16 +308,12 @@ select=false
 
     // Get the modified table's HTML content
     const modifiedTableHTML = clonedTable.outerHTML;
-
     // Apply styles to add some space from the top after the title
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-
     // Combine the title and table content
     const combinedContent = styledTitleHTML + modifiedTableHTML;
-
     // Store the original contents
     const originalContents = document.body.innerHTML;
-
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
@@ -338,25 +322,29 @@ select=false
     document.body.innerHTML = originalContents;
   }
 
-  // filter data
+  date: any
+  espireDate:any;
   filterData() {
     let filteredData = this.tableData.slice();
-    // if (this.supplierType) {
-    //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
-    // }
-    
-    if (this.selectedCompany) {
-      const searchTerm = this.selectedCompany.toLowerCase();
+    if (this.date) {
+      const selectedDate = new Date(this.date).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
-        const aliasLower = item?.company_name.toLowerCase();
-        return aliasLower.includes(searchTerm);
+        const receiptDate = new Date(item?.sale_order_date).toISOString().split('T')[0];
+        return receiptDate === selectedDate;
+      });
+    }
+    if (this.espireDate) {
+      const selectedDate = new Date(this.espireDate).toISOString().split('T')[0];
+      filteredData = filteredData.filter((item) => {
+        const receiptDate = new Date(item?.due_date).toISOString().split('T')[0];
+        return receiptDate === selectedDate;
       });
     }
     this.filteredData = filteredData;
   }
   clearFilter() {
-    // this.supplierType = null;
-    this.selectedCompany = null;
+    this.date = null;
+    this.espireDate = null;
     this.filterData();
   }
 }

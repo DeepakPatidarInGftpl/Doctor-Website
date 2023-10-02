@@ -69,7 +69,7 @@ export class MaterialOutwardListComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this sale order!",
+      text: "Do you want to Deactivate this material outward!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -99,7 +99,7 @@ export class MaterialOutwardListComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this sale order!",
+      text: "Do you want to Active this material outward!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -141,7 +141,6 @@ userDetails:any;
     })
 
     //permission from profile api
-  
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
@@ -185,8 +184,8 @@ select=false
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res.name.toLocaleLowerCase();
-        const companyNameLower = res.company_name.toLocaleLowerCase();
+        const nameLower = res?.customer?.name.toLocaleLowerCase();
+        const companyNameLower = res?.voucher_number.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
           return true;
         } else if (companyNameLower.match(searchTerm)) {
@@ -208,14 +207,12 @@ select=false
    generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
-    const title = 'Dealer List';
+    const title = 'Material Outward List';
 
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
-    // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
     autoTable(doc,
-
       {
         html: '#mytable',
         theme: 'grid',
@@ -223,19 +220,18 @@ select=false
           fillColor: [255, 159, 67]
         },
         columns: [
-          //remove action filed
           { header: 'Sr No.' },
-          { header: 'Name' },
-          { header: 'Company Name' },
-          { header: 'Mobile Number' },
-          { header: 'Opening Balance' },
-          { header: 'GSTIN' },
-          { header: 'PanCard' },
-          { header: 'Membership' },
+          { header: 'User Name' },
+          { header: 'Material Outward Date ' },
+          { header: 'Refund Status' },
+          { header: 'Voucher Number' },
+          { header: 'Total Qty' },
+          { header: 'Note' },
+          { header: 'Status' },
           { header: 'Is Active' }
         ],
       })
-    doc.save('dealer.pdf');
+    doc.save('materialoutward.pdf');
  }
 
   // excel export only filtered data
@@ -274,7 +270,7 @@ select=false
     // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'dealer.xlsx';
+    const fileName = 'materialoutward.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
 
@@ -282,81 +278,54 @@ select=false
     // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-
-    // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
-
-    // Clone the table element to manipulate
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-    // Remove the "Is Active" column header from the cloned table
     const isActiveTh = clonedTable.querySelector('th.thone:nth-child(10)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
-
-    // Remove the "Action" column header from the cloned table
     const actionTh = clonedTable.querySelector('th.thone:last-child');
     if (actionTh) {
       actionTh.remove();
     }
-
-    // Loop through each row and remove the "Is Active" column and "Action" column data cells
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
-      // Remove the "Is Active" column data cell
       const isActiveTd = row.querySelector('td:nth-child(10)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
-
-      // Remove the "Action" column data cell
       const actionTd = row.querySelector('td:last-child');
       if (actionTd) {
         actionTd.remove();
       }
     });
-
-    // Get the modified table's HTML content
     const modifiedTableHTML = clonedTable.outerHTML;
-
-    // Apply styles to add some space from the top after the title
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
 
-    // Combine the title and table content
     const combinedContent = styledTitleHTML + modifiedTableHTML;
-
-    // Store the original contents
     const originalContents = document.body.innerHTML;
-
-    // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
-
-    // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }
 
   // filter data
+  date: any
+  espireDate:any;
   filterData() {
     let filteredData = this.tableData.slice();
-    // if (this.supplierType) {
-    //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
-    // }
-    
-    if (this.selectedCompany) {
-      const searchTerm = this.selectedCompany.toLowerCase();
+    if (this.date) {
+      const selectedDate = new Date(this.date).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
-        const aliasLower = item?.company_name.toLowerCase();
-        return aliasLower.includes(searchTerm);
+        const receiptDate = new Date(item?.mo_date).toISOString().split('T')[0];
+        return receiptDate === selectedDate;
       });
     }
     this.filteredData = filteredData;
   }
   clearFilter() {
-    // this.supplierType = null;
-    this.selectedCompany = null;
+    this.date = null;
     this.filterData();
   }
 }

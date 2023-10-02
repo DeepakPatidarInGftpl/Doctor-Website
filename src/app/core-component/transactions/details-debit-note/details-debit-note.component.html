@@ -37,7 +37,7 @@
                         </li>
                         <li>
                             <h4>Purchase Bill</h4>
-                            <h6>{{debitnoteDetails?.purchase_bill}}</h6>
+                            <h6>{{debitnoteDetails?.purchase_bill?.refrence_bill_no}}</h6>
                         </li>
                         <li>
                             <h4>Reason</h4>
@@ -52,7 +52,7 @@
                             <h6>{{debitnoteDetails?.amount | currency:'INR'}}</h6>
                         </li>
                         <li>
-                            <h4>Tax</h4>
+                            <h4>Tax %</h4>
                             <h6>{{debitnoteDetails?.tax +'%'}}</h6>
                         </li>
                         <li>
@@ -74,8 +74,7 @@
             </div>
             <div class="d-flex align-items-center mx-4">
                 <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                <span [ngClass]="{'bg-lightgreen': debitnoteDetails?.is_active === true, 'bg-lightred' : debitnoteDetails?.is_active === false }"
-                                    class="badges">{{debitnoteDetails?.is_active}}</span>
+                <span [ngClass]="{'bg-lightgreen': debitnoteDetails?.is_active === true, 'bg-lightred' : debitnoteDetails?.is_active === false }" class="badges">{{debitnoteDetails?.is_active}}</span>
             </div>
         </div>
     </div>

@@ -193,12 +193,10 @@ export class AddSalesComponent implements OnInit {
       this.selectData.push(variant);
     }
     console.log(this.selectData, 'selected data');
-
     this.getVariant('', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
-    // this.selectData.push(variant)
     const index = this.selectSubCate.indexOf(variant);
     if (index !== -1) {
       this.selectSubCate.splice(index, 1);
@@ -241,7 +239,7 @@ export class AddSalesComponent implements OnInit {
   paymentTermsList: any
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
-      this.paymentTermsList = res
+      this.paymentTermsList = res;
     })
   }
 

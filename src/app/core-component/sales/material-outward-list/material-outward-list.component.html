@@ -25,8 +25,8 @@
                     <a class="btn btn-searchset">
                         <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                            <input type="search" class="form-control form-control-sm" placeholder="Search..."
-                                [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                            <input type="search" class="form-control form-control-sm" placeholder="Search User Name/Voucher No."
+                                [(ngModel)]="titlee" (ngModelChange)="search()">
                         </label>
                     </div>
                 </div>
@@ -56,9 +56,8 @@
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Company Name</label>
-                                    <input type="search" [(ngModel)]="selectedCompany" (ngModelChange)="filterData()"
-                                        class="search" placeholder="Search Company">
+                                    <label>Material Outward Date</label>
+                                    <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search" >
                                 </div>
                             </div>
                         </div>

@@ -12,7 +12,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class UpdateJournalVoucherComponent implements OnInit {
 
-  constructor(private saleService: SalesService, private fb: FormBuilder,
+  constructor( private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
     private transactionService: TransactionService,

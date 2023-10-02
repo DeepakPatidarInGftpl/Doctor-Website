@@ -26,10 +26,10 @@
                     <a class="btn btn-searchset">
                       <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                      <input type="search" class="form-control form-control-sm" placeholder="Search Supplier" [(ngModel)]="titlee" (ngModelChange)="search()">
+                      <input type="search" class="form-control form-control-sm" placeholder="Search Cuntra Voucher No." [(ngModel)]="titlee" (ngModelChange)="search()">
                     </label>
                   </div>
-         </div>
+              </div>
             </div>
             <div class="wordset">
                 <ul>
@@ -53,14 +53,14 @@
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Debit Note Date</label>
-                                    <input type="datetime-local" [(ngModel)]="date" (change)="filterData()">
+                                    <label>Countra Voucher Date</label>
+                                    <input type="date" [(ngModel)]="date" (change)="filterData()">
                                 </div>
                             </div>
                         </div>
                          <div class="form-group" (click)="clearFilters()">
-                                    <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
-                                </div>     
+                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
+                          </div>     
                     </div>
                 </div>
             </div>
@@ -80,8 +80,7 @@
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Countra Voucher No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">From Account<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">To Account<i class="fa fa-sort"></i></th>
-                        
+                        <th (click)="sort('id')" class="thone">To Account<i class="fa fa-sort"></i></th> 
                         <th (click)="sort('id')" class="thone">Amount<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Description<i class="fa fa-sort"></i></th>
