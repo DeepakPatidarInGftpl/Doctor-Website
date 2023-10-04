@@ -141,6 +141,32 @@ export class TransactionService {
     let url = this.apiUrl + '/pv-api/receipt_voucher/?id=';
     return this.http.delete(`${url}${id}`)
   }
+
+  // payment voucher
+   getPaymentVoucher() {
+    let url = this.apiUrl + '/pv-api/payment_voucher/';
+    return this.http.get(url)
+  }
+  getPaymentVoucherById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/payment_voucher/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  PaymentVoucherIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/payment_voucher/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addPaymentVoucher(data: any) {
+    let url = this.apiUrl + '/pv-api/payment_voucher/';
+    return this.http.post(url, data)
+  }
+  updatePaymentVoucher(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/payment_voucher/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deletePaymentVoucher(id: number) {
+    let url = this.apiUrl + '/pv-api/payment_voucher/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
   //prefix
   getJournalVoucherPrefix(){
     let url =this.apiUrl+'/pv-api/prefix/?id=JournalVoucher';
@@ -162,6 +188,10 @@ export class TransactionService {
     let url =this.apiUrl+'/pv-api/prefix/?id=ReceiptVoucher';
     return this.http.get(url)
   } 
+  getPaymentVoucherPrefix(){
+    let url =this.apiUrl+'/pv-api/prefix/?id=PaymentVoucher';
+    return this.http.get(url)
+  } 
 
   // account service
   getAccount() {
@@ -171,6 +201,16 @@ export class TransactionService {
   // sale bill
   getSalesBill() {
     let url = this.apiUrl + '/pv-api/sale_bill/';
+    return this.http.get(url)
+  }
+  // purchase bill
+  getPurchaseBill(){
+    let url =this.apiUrl+'/pv-api/purchase_bill/';
+    return this.http.get(url);
+  }
+ // supplier 
+  getSupplier() {
+    let url = this.apiUrl + '/pv-api/supplier/';
     return this.http.get(url)
   }
 }

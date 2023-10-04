@@ -24,6 +24,11 @@ const routes: Routes = [
   {path:'addrecieptVoucher',loadChildren:()=>import('./add-reciept-voucher/add-reciept-voucher.module').then((m)=>m.AddRecieptVoucherModule)},
   {path:'updaterecieptVoucher/:id',loadChildren:()=>import('./update-reciept-voucher/update-reciept-voucher.module').then((m)=>m.UpdateRecieptVoucherModule)},
   {path:'detailsrecieptVoucher/:id',loadChildren:()=>import('./details-reciept-voucher/details-reciept-voucher.module').then((m)=>m.DetailsRecieptVoucherModule)},
+ 
+  {path:'paymentVoucherList',loadChildren:()=>import('./list-payment-voucher/list-payment-voucher.module').then((m)=>m.ListPaymentVoucherModule)},
+  {path:'addpaymentVoucher',loadChildren:()=>import('./add-payment-voucher/add-payment-voucher.module').then((m)=>m.AddPaymentVoucherModule)},
+  {path:'updatepaymentVoucher/:id',loadChildren:()=>import('./update-payment-voucher/update-payment-voucher.module').then((m)=>m.UpdatePaymentVoucherModule)},
+  {path:'detailspaymentVoucher/:id',loadChildren:()=>import('./details-payment-voucher/details-payment-voucher.module').then((m)=>m.DetailsPaymentVoucherModule)},
 
 ];
 

@@ -305,7 +305,7 @@ userDetails:any
         this.isJournalVoucher = res.codename
       } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'receiptvoucher' && res.codename == 'view_receiptvoucher') {
         this.isRecieptVoucher = res.codename;
-      }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'payment' && res.codename == 'view_payment') {
+      }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'paymentvoucher' && res.codename == 'view_paymentvoucher') {
         this.isPaymentVoucher = res.codename;
       }
       });
