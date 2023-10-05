@@ -156,7 +156,7 @@
                                                                 d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                                                         </svg>
                                                     </div>
-                                                    <svg *ngIf="isLastCart(i)" (click)="addCart(i)" style="color:green"
+                                                    <svg *ngIf="isLastCart(i)" (click)="addCart(i+1)" style="color:green"
                                                         xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                         fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                                                         <path
@@ -275,7 +275,7 @@
                                             <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
                                             <td class="text-end"> <input type="number" class="input" readonly [value]="TotalWithoutTax[i]"></td>
                                             <td class="text-end">
-                                            <input type="number" formControlName="total" class="input" readonly [value]="calculateTotalEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
+                                            <input type="number" formControlName="total" class="input" readonly >
                                          </td>          
                                         </tr>
                                     </ng-container>
@@ -284,20 +284,20 @@
                                     <td></td>
                                     <td></td>
                                     <td class="text-start"><strong>Total</strong></td>
-                                    <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
-                                        <input type="text" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
+                                    <td class="text-start">{{calculateTotalQty()| number:'1.2-2'}}
+                                        <input type="text" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty()| number:'1.2-2'" style="display: none;">
                                     </td>
-                                    <td class="text-start">{{calculateTotalPrice()?.toFixed(2)}}</td>
-                                    <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
-                                    <td class="text-start">{{calculateTotalDeduction()?.toFixed(2)}}
-                                        <input type="text" formControlName="total_discount" class="input" [ngModel]="calculateTotalDeduction()?.toFixed(2)" style="display: none;">
+                                    <td class="text-start">{{calculateTotalPrice()| number:'1.2-2'}}</td>
+                                    <!-- <td class="text-start">{{calculateTotalAmount()| number:'1.2-2'}}</td> -->
+                                    <td class="text-start">{{calculateTotalDeduction()| number:'1.2-2'}}
+                                        <input type="text" formControlName="total_discount" class="input" [ngModel]="calculateTotalDeduction()| number:'1.2-2'" style="display: none;">
                                     </td>
                                     <td class="text-start">{{calculateTotalTax() + '%'}}
-                                        <input type="text" formControlName="total_tax" class="input" [ngModel]="calculateTotalTax()?.toFixed(2)" style="display: none;">
+                                        <input type="text" formControlName="total_tax" class="input" [ngModel]="calculateTotalTax()| number:'1.2-2'" style="display: none;">
                                     </td>
-                                    <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->
-                                    <td>{{calculateTotalWithoutTax()?.toFixed(2)}}</td>
-                                    <td> {{ calculateTotal()?.toFixed(2) }}</td>
+                                    <!-- <td class="text-start">{{calculateTotalAmount()| number:'1.2-2'}}</td> -->
+                                    <td>{{calculateTotalWithoutTax()| number:'1.2-2'}}</td>
+                                    <td> {{ calculateTotal()| number:'1.2-2' }}</td>
                                 </tr>
                             </tbody>
                         </table>

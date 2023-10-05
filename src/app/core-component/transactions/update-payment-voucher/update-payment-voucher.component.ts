@@ -408,6 +408,9 @@ editRes:any;
     const cart = (this.paymentVoucherForm.get('payment_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       purchase_bill: data?.id,
+      original_amount: data?.total || 0,
+      paid_amount: data?.paid_amount || 0,
+      pending_amount: data?.pending_amount || 0,
     });
   }
   oncheckBankDebit1(data: any, index: number, debitNoteIndex: number) {
@@ -415,6 +418,9 @@ editRes:any;
     const debitNoteCart = cart.get('debit_note_cart') as FormArray;
     debitNoteCart.at(debitNoteIndex).patchValue({
       debit_note: data?.id,
+      original_amount: data?.total || 0,
+      redeem_amount: data?.redeem_amount || 0,
+      pending_amount: data?.pending_amount || 0,
     });
   }
 
@@ -435,6 +441,9 @@ editRes:any;
     const cart = (this.paymentVoucherBankForm.get('payment_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       purchase_bill: data?.id,
+      original_amount: data?.total || 0,
+      paid_amount: data?.paid_amount || 0,
+      pending_amount: data?.pending_amount || 0,
     });
   }
   oncheckBankDebit2(data: any, index: number, debitNoteIndex: number) {
@@ -442,6 +451,9 @@ editRes:any;
     const debitNoteCart = cart.get('debit_note_cart') as FormArray;
     debitNoteCart.at(debitNoteIndex).patchValue({
       debit_note: data?.id,
+      original_amount: data?.total||0,
+      redeem_amount: data?.redeem_amount ||0,
+      pending_amount: data?.pending_amount ||0,
     });
   }
 

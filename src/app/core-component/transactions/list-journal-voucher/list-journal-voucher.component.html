@@ -57,6 +57,20 @@
                                     <input type="date" [(ngModel)]="date" (change)="filterData()">
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Enter Debit Amount</label>
+                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedDebit" (change)="filterData()">
+                                    <span class="text-success">Debit Amount Filter (Less than & Equal to Amount value)</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Enter credit Amount</label>
+                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedcredit" (change)="filterData()">
+                                    <span class="text-success">credit Amount Filter (Less than & Equal to Amount value)</span>
+                                </div>
+                            </div>
                         </div>
                          <div class="form-group" (click)="clearFilters()">
                              <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
@@ -132,8 +146,7 @@
             <div class="row" *ngIf="!loader">
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
-                    <select [(ngModel)]="itemsPerPage" class="pagination" >
-                        
+                    <select [(ngModel)]="itemsPerPage" class="pagination" > 
                         <option value="10">10</option>
                         <option value="20">20</option>
                         <option value="30">30</option>

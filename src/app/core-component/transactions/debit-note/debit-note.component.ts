@@ -343,6 +343,7 @@ export class DebitNoteComponent implements OnInit {
     document.body.innerHTML = originalContents;
   }
   //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
+  selectedAmount:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -352,15 +353,13 @@ export class DebitNoteComponent implements OnInit {
         return receiptDate === selectedDate;
       });
     }
-    // Now, filteredData contains the filtered results based on the selected date
-    console.log(filteredData);
-    // if (this.selectedpaymentTerms) {
-    //   filteredData = filteredData.filter((item) => item?.payment_term?.title === this.selectedpaymentTerms);
-    // }
+    if (this.selectedAmount) {
+      filteredData = filteredData.filter((item) => item?.amount <= this.selectedAmount);
+    }
     this.filteredData = filteredData;
   }
   clearFilters() {
-    this.selectedpaymentTerms = null;
+    this.selectedAmount = null;
     this.date = null;
     this.filterData();
   }

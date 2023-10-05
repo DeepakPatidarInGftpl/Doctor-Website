@@ -37,7 +37,7 @@ export class CompanylistComponent implements OnInit {
       if (t.isConfirmed) {
         this.companyService.deleteCompany(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Company Deleted Successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -138,10 +138,8 @@ export class CompanylistComponent implements OnInit {
 
   delete(i: any, id: any) {
     this.tableData.splice(id, 1)
-
     this.companyService.deleteC('/pv-api/company/', i.id).subscribe(res => {
       // console.log(res);
-
     })
 
   }

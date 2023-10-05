@@ -135,7 +135,7 @@ export class EditaccountComponent implements OnInit {
         // console.log(res);
         this.loaders=false;
         this.addRes = res
-        if (this.addRes.msg == "Account updated successfully") {
+        if (this.addRes.success) {
           this.toastr.success(this.addRes.msg)
           this.accountForm.reset()
           this.router.navigate(['//account/accountlist'])

@@ -64,7 +64,7 @@ export class AddBranchComponent implements OnInit {
       this.coreService.addBranch(this.branchForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "BRANCH CREATED SUCESSFULLY") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.branchForm.reset()
