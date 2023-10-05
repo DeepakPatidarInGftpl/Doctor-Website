@@ -23,7 +23,7 @@ export class ListPaymentVoucherComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
-  selectedpaymentTerms: string = '';
+  selectedRecieptType: string = '';
   date: any
 
   constructor( private transactionService: TransactionService,private cs: CompanyService,) { }
@@ -224,7 +224,7 @@ export class ListPaymentVoucherComponent implements OnInit {
   // convert to pdf
   generatePDF() {
     const doc = new jsPDF();
-    const title = 'Reciept Voucher';
+    const title = 'Payment Voucher';
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
@@ -238,11 +238,11 @@ export class ListPaymentVoucherComponent implements OnInit {
         columns: [
           //remove action filed
           { header: 'Sr No.' },
-          { header: 'Account' },
+          { header: 'Supplier' },
           { header: 'Reciept Type' },
           { header: 'Mode Type' },
           { header: 'Voucher No.' },
-          { header: 'Payer' },
+          { header: 'Payment Account' },
           { header: 'Bank Payment' },
           { header: 'Date' },
           { header: 'Transaction Date' },
@@ -251,7 +251,7 @@ export class ListPaymentVoucherComponent implements OnInit {
           { header: 'Is Active' }
         ],
       })
-    doc.save('recieptVoucher.pdf');
+    doc.save('paymentVoucher.pdf');
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -284,7 +284,7 @@ export class ListPaymentVoucherComponent implements OnInit {
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'debitnote.xlsx';
+    const fileName = 'paymentVoucher.xlsx';
     saveAs(blob, fileName); 
   }
 
@@ -295,7 +295,7 @@ export class ListPaymentVoucherComponent implements OnInit {
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(14)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(15)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
@@ -305,7 +305,7 @@ export class ListPaymentVoucherComponent implements OnInit {
     }
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
-      const isActiveTd = row.querySelector('td:nth-child(14)');
+      const isActiveTd = row.querySelector('td:nth-child(15)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
@@ -322,6 +322,8 @@ export class ListPaymentVoucherComponent implements OnInit {
     window.print();
     document.body.innerHTML = originalContents;
   }
+  selectedModeType:any
+  selectedAmount:any
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -331,15 +333,21 @@ export class ListPaymentVoucherComponent implements OnInit {
         return receiptDate === selectedDate;
       });
     }
-    // Now, filteredData contains the filtered results based on the selected date
-    console.log(filteredData);
-    // if (this.selectedpaymentTerms) {
-    //   filteredData = filteredData.filter((item) => item?.payment_term?.title === this.selectedpaymentTerms);
-    // }
+    if (this.selectedRecieptType) {
+      filteredData = filteredData.filter((item) => item?.receipt_type === this.selectedRecieptType);
+    }
+    if (this.selectedModeType) {
+      filteredData = filteredData.filter((item) => item?.mode_type === this.selectedModeType);
+    }
+    if (this.selectedAmount) {
+      filteredData = filteredData.filter((item) => item?.amount <= this.selectedAmount);
+    }
     this.filteredData = filteredData;
   }
   clearFilters() {
-    this.selectedpaymentTerms = null;
+    this.selectedAmount=null;
+    this.selectedModeType=null
+    this.selectedRecieptType = null;
     this.date = null;
     this.filterData();
   }

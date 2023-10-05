@@ -318,9 +318,13 @@ export class AddPaymentVoucherComponent implements OnInit {
     });
   }
   oncheck3(data: any, index: number) {
+    console.log(data);
     const cart = (this.paymentVoucherForm.get('payment_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       purchase_bill: data?.id,
+      original_amount: data?.total ||0,
+      paid_amount: data?.paid_amount ||0,
+      pending_amount: data?.pending_amount ||0,
     });
   }
   oncheckBankDebit1(data: any, index: number, debitNoteIndex: number) {
@@ -328,6 +332,9 @@ export class AddPaymentVoucherComponent implements OnInit {
     const debitNoteCart = cart.get('debit_note_cart') as FormArray;
     debitNoteCart.at(debitNoteIndex).patchValue({
       debit_note: data?.id,
+      original_amount: data?.total||0,
+      redeem_amount: data?.redeem_amount ||0,
+      pending_amount: data?.pending_amount ||0,
     });
   }
 
@@ -348,6 +355,9 @@ export class AddPaymentVoucherComponent implements OnInit {
     const cart = (this.paymentVoucherBankForm.get('payment_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       purchase_bill: data?.id,
+      original_amount: data?.total ||0,
+      paid_amount: data?.paid_amount ||0,
+      pending_amount: data?.pending_amount ||0,
     });
   }
   oncheckBankDebit2(data: any, index: number, debitNoteIndex: number) {
@@ -355,6 +365,9 @@ export class AddPaymentVoucherComponent implements OnInit {
     const debitNoteCart = cart.get('debit_note_cart') as FormArray;
     debitNoteCart.at(debitNoteIndex).patchValue({
       debit_note: data?.id,
+      original_amount: data?.total||0,
+      redeem_amount: data?.redeem_amount ||0,
+      pending_amount: data?.pending_amount ||0,
     });
   }
 
@@ -527,11 +540,14 @@ export class AddPaymentVoucherComponent implements OnInit {
     }
   }
   //bank
+  get Supplier(){
+    return this.paymentVoucherBankForm.get('supplier')
+  }
   get date1() {
     return this.paymentVoucherBankForm.get('date')
   }
   get payer1() {
-    return this.paymentVoucherBankForm.get('payer')
+    return this.paymentVoucherBankForm.get('payment_account')
   }
   get amount1() {
     return this.paymentVoucherBankForm.get('amount')
@@ -546,7 +562,7 @@ export class AddPaymentVoucherComponent implements OnInit {
     return this.paymentVoucherBankForm.get('mode_type')
   }
   sale_bill1(index: number) {
-    return this.getCartBank().controls[index].get('sale_bill');
+    return this.getCartBank().controls[index].get('purchase_bill');
   }
   original_amount1(index: number) {
     return this.getCartBank().controls[index].get('original_amount');
@@ -570,11 +586,14 @@ export class AddPaymentVoucherComponent implements OnInit {
     return this.paymentVoucherBankForm.get('transaction_date')
   }
   // bank end
+  get Supplier1(){
+    return this.paymentVoucherForm.get('supplier')
+  }
   get date() {
     return this.paymentVoucherForm.get('date')
   }
   get payer() {
-    return this.paymentVoucherForm.get('payer')
+    return this.paymentVoucherForm.get('payment_account')
   }
   get amount() {
     return this.paymentVoucherForm.get('amount')
@@ -589,7 +608,7 @@ export class AddPaymentVoucherComponent implements OnInit {
     return this.paymentVoucherForm.get('mode_type')
   }
   sale_bill(index: number) {
-    return this.getCart().controls[index].get('sale_bill');
+    return this.getCart().controls[index].get('purchase_bill');
   }
   original_amount(index: number) {
     return this.getCart().controls[index].get('original_amount');

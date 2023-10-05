@@ -57,6 +57,35 @@
                                     <input type="date" [(ngModel)]="date" (change)="filterData()">
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Reciept Type</label>
+                                    <select [(ngModel)]="selectedRecieptType" (change)="filterData()"> 
+                                        <option value="" selected disabled>Select Reciept Type</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Bank">Bank</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Mode Type</label>
+                                    <select [(ngModel)]="selectedModeType" (change)="filterData()">
+                                        <option value="" selected disabled>Select Mode Type</option>
+                                        <option value="On Account">On Account</option>
+                                        <option value="Advance Payment">Advance Payment</option>
+                                        <option value="Against Bill">Against Bill</option>
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Enter Amount</label>
+                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount" (change)="filterData()">
+                                    <span class="text-success">Amount Filter (Less than & Equal to Amount value)</span>
+                                </div>
+                            </div>
                         </div>
                          <div class="form-group" (click)="clearFilters()">
                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
@@ -83,7 +112,7 @@
                         <th (click)="sort('id')" class="thone">Mode Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payer<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Bank Payment<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Payment<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Transaction Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Transaction Id<i class="fa fa-sort"></i></th>

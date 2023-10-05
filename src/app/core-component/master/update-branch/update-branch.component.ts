@@ -74,7 +74,7 @@ id:any;
       this.coreService.updateBranch(this.branchForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Branch Updated Sucessfully") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.router.navigate(['//masters/branch'])

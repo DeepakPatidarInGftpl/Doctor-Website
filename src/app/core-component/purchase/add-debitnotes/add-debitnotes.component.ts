@@ -99,10 +99,9 @@ export class AddDebitnotesComponent implements OnInit {
     // this.getVariants();
     this.getPurchaseBill();
     this.getPaymentTerms();
-    this.getprefix()
-    this.isPercentage.push(true)
-    this.isAmount.push(false)
-    
+    this.getprefix();
+    this.isPercentage[0] = true;
+    this.isAmount[0] = false;
   }
 
   get supplier() {
@@ -138,10 +137,13 @@ export class AddDebitnotesComponent implements OnInit {
   getCart(): FormArray {
     return this.debitNotesForm.get('cart') as FormArray;
   }
-  addCart(i) {
+  addCart(i:any) {
     this.getCart().push(this.cart())
-    this.isPercentage[i] = true;
-    this.isAmount[i]=false;
+    console.log(i);
+    if(i>0){
+      this.isPercentage[i] = true;
+      this.isAmount[i] = false;
+    }
   }
   removeCart(i: any) {
     this.getCart().removeAt(i)
@@ -203,7 +205,7 @@ export class AddDebitnotesComponent implements OnInit {
     })
     const variants = this.debitNotesForm.get('cart') as FormArray;
     variants.clear();
-    this.addCart('');
+    this.addCart(0);
     this.debitNotesForm.patchValue({
       party: selectedItemId
     });
@@ -340,7 +342,7 @@ export class AddDebitnotesComponent implements OnInit {
   batchDiscount: any;
   landingCost: any;
   batchCostPrice: any[] = [];
-  originalPrice:any[]=[];
+  originalPrice: any[] = [];
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
@@ -350,7 +352,7 @@ export class AddDebitnotesComponent implements OnInit {
     this.batchDiscount = event.batch[0]?.discount || 0;
     this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
-    this.originalPrice[index]=event?.batch[0]?.cost_price || 0;
+    this.originalPrice[index] = event?.batch[0]?.cost_price || 0;
     if (event?.product?.purchase_tax_including == true) {
       let costprice = event?.batch[0]?.cost_price || 0;
       // landing cost
@@ -395,8 +397,8 @@ export class AddDebitnotesComponent implements OnInit {
           qty: event.batch[0]?.stock,
           tax: this.apiPurchaseTax,
           // discount: event.batch[0]?.discount || 0,
-          unit_cost: this.originalCoastPrice.toFixed(2),
-          // landing_cost: this.landingCost
+          unit_cost: this.originalCoastPrice,
+          landing_cost: this.landingCost
         });
       } else {
         this.tax[index] = 18
@@ -407,7 +409,7 @@ export class AddDebitnotesComponent implements OnInit {
           tax: 18,
           // discount: event.batch[0]?.discount || 0,
           unit_cost: event.batch[0]?.cost_price,
-          // landing_cost: this.landingCost || 0
+          landing_cost: this.landingCost || 0
         });
       }
       console.log(event.batch);
@@ -456,19 +458,22 @@ export class AddDebitnotesComponent implements OnInit {
       // this.landingPrice[index]=this.landingCost.toFixed(2)
     }
   }
-  
+
   isPercentage: boolean[] = [];
   isAmount: boolean[] = [];
   percentage(index) {
     this.isPercentage[index] = false;
     this.isAmount[index] = true;
     console.log(this.isPercentage[index]);
-    console.log(this.isAmount[index] );   
+    console.log(this.isAmount[index]);
   }
   amount(index) {
     this.isPercentage[index] = true;
     this.isAmount[index] = false;
+    console.log(this.isPercentage[index]);
+    console.log(this.isAmount[index])
   }
+
   userInputEntered: boolean[] = [];
   purchasee(index) {
     this.userInputEntered[index] = true;
@@ -477,6 +482,8 @@ export class AddDebitnotesComponent implements OnInit {
     setTimeout(() => {
       this.calculateRoundoffValue()
     }, 2000);
+    this.calculateTotalLandingCostEveryIndex(index);
+    this.calculateTotalEveryIndex(index)
   }
   costPrice: any[] = [];
   purchase2(costPrice: any, i) {
@@ -490,6 +497,8 @@ export class AddDebitnotesComponent implements OnInit {
     setTimeout(() => {
       this.calculateRoundoffValue()
     }, 2000);
+    this.calculateTotalLandingCostEveryIndex(index);
+      this.calculateTotalEveryIndex(index)
   }
   calculationDiscountCostPrice(index) {
     const cartItem = this.getCart().controls[index];
@@ -504,10 +513,10 @@ export class AddDebitnotesComponent implements OnInit {
         const deductionPercentage = +deductionPercentageControl.value || 0;
         const taxPercentage = +taxPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        console.log(this.originalPrice[index] ,'this.originalPrice[index] ');
+        console.log(this.originalPrice[index], 'this.originalPrice[index] ');
         if (this.costPrice[index] > 0) {
           // landing cost
-          if (this.isPercentage[index]) {
+          if (this.isPercentage[index]==true) {
             let getDiscountPrice = (this.costPrice[index] * deductionPercentage) / 100
             let getCoastPrice = this.costPrice[index] - getDiscountPrice;
             // cost price 
@@ -515,7 +524,7 @@ export class AddDebitnotesComponent implements OnInit {
             this.taxIntoRupees[index] = taxprice || 0;
             let purchasePrice = getCoastPrice - taxprice;
             return purchasePrice;
-          } else if (this.isAmount[index] = true) {
+          } else if (this.isAmount[index] == true) {
             // let getDiscountPrice = (purchaseRate * discountPercentage) / 100
             let getCoastPrice = this.costPrice[index] - deductionPercentage;
             // cost price 
@@ -525,19 +534,18 @@ export class AddDebitnotesComponent implements OnInit {
             return purchasePrice;
           }
         } else {
-          
           // landing cost
-          if (this.isPercentage[index]) {
-            let getDiscountPrice = (this.originalPrice[index]  * deductionPercentage) / 100
-            let getCoastPrice = this.originalPrice[index]  - getDiscountPrice;
+          if (this.isPercentage[index]==true) {
+            let getDiscountPrice = (this.originalPrice[index] * deductionPercentage) / 100
+            let getCoastPrice = this.originalPrice[index] - getDiscountPrice;
             // cost price 
             let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
             this.taxIntoRupees[index] = taxprice || 0;
             let purchasePrice = getCoastPrice - taxprice;
             return purchasePrice;
-          } else if (this.isAmount[index] = true) {
+          } else if (this.isAmount[index] ==true) {
             // let getDiscountPrice = (purchaseRate * discountPercentage) / 100
-            let getCoastPrice = this.originalPrice[index]  - deductionPercentage;
+            let getCoastPrice = this.originalPrice[index] - deductionPercentage;
             // cost price 
             let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
             this.taxIntoRupees[index] = taxprice || 0;
@@ -550,12 +558,12 @@ export class AddDebitnotesComponent implements OnInit {
         // const discountPercentage = +discountPercentageControl.value || 0;
         const deductionPercentage = +deductionPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        if (this.isPercentage[index] = true) {
+        if (this.isPercentage[index] == true) {
           // cost price 
           let getDiscountPrice = (this.coastprice[index] * deductionPercentage) / 100
           let getCoastPrice = this.coastprice[index] - getDiscountPrice;
           return getCoastPrice;
-        } else if (this.isAmount[index] = true) {
+        } else if (this.isAmount[index] == true) {
           // cost price 
           let getCoastPrice = this.coastprice[index] - deductionPercentage;
           return getCoastPrice;
@@ -578,7 +586,7 @@ export class AddDebitnotesComponent implements OnInit {
         const taxPercentage = +taxPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         // landing cost
-        if (this.isPercentage[index]) {
+        if (this.isPercentage[index]==true) {
           let getDiscountPrice = (purchaseRate * deductionPercentage) / 100
           let getCoastPrice = purchaseRate - getDiscountPrice;
           // cost price 
@@ -586,7 +594,7 @@ export class AddDebitnotesComponent implements OnInit {
           this.taxIntoRupees[index] = taxprice || 0;
           let purchasePrice = getCoastPrice - taxprice;
           return purchasePrice;
-        } else if (this.isAmount[index] = true) {
+        } else if (this.isAmount[index] == true) {
           // let getDiscountPrice = (purchaseRate * discountPercentage) / 100
           let getCoastPrice = purchaseRate - deductionPercentage;
           // cost price 
@@ -599,12 +607,12 @@ export class AddDebitnotesComponent implements OnInit {
         // const discountPercentage = +discountPercentageControl.value || 0;
         const deductionPercentage = +deductionPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        if (this.isPercentage[index] = true) {
+        if (this.isPercentage[index] == true) {
           // cost price 
           let getDiscountPrice = (this.coastprice[index] * deductionPercentage) / 100
           let getCoastPrice = this.coastprice[index] - getDiscountPrice;
           return getCoastPrice;
-        } else if (this.isAmount[index] = true) {
+        } else if (this.isAmount[index] == true) {
           // cost price 
           let getCoastPrice = this.coastprice[index] - deductionPercentage;
           return getCoastPrice;
@@ -629,31 +637,47 @@ export class AddDebitnotesComponent implements OnInit {
         const qty = +qtyControlControl.value || 0;
         const deductionPercentage = +deductionPercentageControl.value || 0;
         if (this.batchCostPrice[index] > 0) {
-          if (this.isPercentage[index] = true) {
+          if (this.isPercentage[index] == true) {
             const discountAmount = (this.batchCostPrice[index] * deductionPercentage) / 100;
             const afterDiscountAmount = this.batchCostPrice[index] - discountAmount
             this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
             const landingCost = afterDiscountAmount || 0
             // without tax price 
+              const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+              barcode.patchValue({
+                landing_cost: landingCost.toFixed(2)
+              });
             return landingCost;
-          } else if (this.isAmount[index] = true) {
+          } else if (this.isAmount[index] == true) {
             const afterDiscountAmount = this.batchCostPrice[index] - deductionPercentage
             this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
             const landingCost = afterDiscountAmount || 0
             // without tax price 
+            const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+            barcode.patchValue({
+              landing_cost: landingCost.toFixed(2)
+            });
             return landingCost;
           }
         } else {
-          if (this.isPercentage[index] = true) {
+          if (this.isPercentage[index] == true) {
             const discountAmount = (this.coastprice[index] * deductionPercentage) / 100;
             const afterDiscountAmount = this.coastprice[index] - discountAmount;
             this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
             const landingCost = afterDiscountAmount || 0
+            const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+            barcode.patchValue({
+              landing_cost: landingCost.toFixed(2)
+            });
             return landingCost;
-          } else if (this.isAmount[index] = true) {
+          } else if (this.isAmount[index] == true) {
             const afterDiscountAmount = this.coastprice[index] - deductionPercentage;
             this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
             const landingCost = afterDiscountAmount || 0
+            const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+            barcode.patchValue({
+              landing_cost: landingCost.toFixed(2)
+            });
             return landingCost;
           }
         }
@@ -662,7 +686,7 @@ export class AddDebitnotesComponent implements OnInit {
         // const discountPercentage = +discountPercentageControl.value || 0;
         const deductionPercentage = +deductionPercentageControl.value || 0;
         const qty = +qtyControlControl.value || 0;
-        if (this.isPercentage[index] = true) {
+        if (this.isPercentage[index] == true) {
           // cost price 
           let getDiscountPrice = (this.costPrice[index] * deductionPercentage) / 100
           let getCoastPrice = this.costPrice[index] - getDiscountPrice;
@@ -673,8 +697,12 @@ export class AddDebitnotesComponent implements OnInit {
           let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
           this.taxIntoRupees[index] = taxPrice || 0;
           let landingCost = getCoastPrice + taxPrice || 0;
+          const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            landing_cost: landingCost.toFixed(2)
+          });
           return landingCost;
-        } else if (this.isAmount[index] = true) {
+        } else if (this.isAmount[index] == true) {
           // cost price 
           let getCoastPrice = this.costPrice[index] - deductionPercentage;
           this.originalCoastPrice = getCoastPrice
@@ -684,6 +712,10 @@ export class AddDebitnotesComponent implements OnInit {
           let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
           this.taxIntoRupees[index] = taxPrice || 0;
           let landingCost = getCoastPrice + taxPrice || 0;
+          const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            landing_cost: landingCost.toFixed(2)
+          });
           return landingCost;
         }
       }
@@ -730,7 +762,6 @@ export class AddDebitnotesComponent implements OnInit {
       formdata.append('purchase_bill', this.debitNotesForm.get('purchase_bill')?.value);
       formdata.append('export', this.debitNotesForm.get('export')?.value);
       formdata.append('reason', this.debitNotesForm.get('reason')?.value);
-
       formdata.append('total_qty', this.debitNotesForm.get('total_qty')?.value);
       formdata.append('total_tax', this.debitNotesForm.get('total_tax')?.value);
       formdata.append('total_deduction', this.debitNotesForm.get('total_deduction')?.value);
@@ -740,7 +771,6 @@ export class AddDebitnotesComponent implements OnInit {
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
-
       const cartArray = this.debitNotesForm.get('cart') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
@@ -1084,11 +1114,19 @@ export class AddDebitnotesComponent implements OnInit {
     this.roudoffValue = subtractedValue;
     return subtractedValue;
   }
+  totalCost: any[] = []
   calculateTotalEveryIndex(index: any) {
     const cartItem = this.getCart().controls[index];
     const landingCost = +cartItem.get('landing_cost').value || 0;
     const qty = +cartItem.get('qty').value || 0;
+    console.log(landingCost,'landing cost');
+    console.log(qty);
     const totalForItem = landingCost * qty;
+    this.totalCost[index] = totalForItem;
+    const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+    barcode.patchValue({
+      total: totalForItem.toFixed(2)
+    });
     return totalForItem;
   }
   calculateTotalTaxIntoRupees(): any {

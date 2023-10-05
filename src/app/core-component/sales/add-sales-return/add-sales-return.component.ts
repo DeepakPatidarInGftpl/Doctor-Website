@@ -83,8 +83,8 @@ export class AddSalesReturnComponent implements OnInit {
     this.getCategory();
     this.getsalesBill();
     this.getprefix();
-    this.isPercentage = [true];
-    this.isAmount=[false]
+    this.isPercentage[0] = true;
+    this.isAmount[0] = false;
   }
 
   prefixNo: any;
@@ -233,9 +233,11 @@ export class AddSalesReturnComponent implements OnInit {
     return this.saleReturnForm.get('sale_return_cart') as FormArray;
   }
   addCart(i) {
-    this.getCart().push(this.cart())
-    this.isPercentage[i] = true;
-    this.isAmount[i]=false;
+    this.getCart().push(this.cart());
+    if(i>0){
+      this.isPercentage[i] = true;
+      this.isAmount[i]=false;
+    }
   }
   removeCart(i: any) {
     this.getCart().removeAt(i)
@@ -282,10 +284,9 @@ export class AddSalesReturnComponent implements OnInit {
     })
     const variants = this.saleReturnForm.get('sale_return_cart') as FormArray;
     variants.clear();
-    this.addCart('');
+    this.addCart(0);
     this.saleReturnForm.patchValue({
       customer: selectedItemId,
-
     });
   }
 
@@ -566,6 +567,7 @@ export class AddSalesReturnComponent implements OnInit {
     setTimeout(() => {
       this.calculateRoundoffValue()
     }, 2000);
+    this.calculateTotalEveryIndex(index)
   }
   costPrice: any
   purchase2(costPrice: any) {
@@ -586,7 +588,7 @@ export class AddSalesReturnComponent implements OnInit {
         const purchaseRate = +purchaseRateControl.value || 0;
         const qty = +QtyControl.value || 1;
         // landing cost
-        if(this.isPercentage[index] = true){
+        if(this.isPercentage[index] == true){
           let getDiscountPrice = (purchaseRate * deductionPercentage) / 100;
           let getCoastPrice = purchaseRate - getDiscountPrice;
           console.log(getCoastPrice);
@@ -599,7 +601,7 @@ export class AddSalesReturnComponent implements OnInit {
           let purchasePrice = getCoastPrice + taxprice;
           console.log(purchasePrice);
           return purchasePrice;
-        }else if(this.isAmount[index] = true){
+        }else if(this.isAmount[index] == true){
           let getCoastPrice = purchaseRate - deductionPercentage;
           console.log(getCoastPrice);
           console.log(qty);
@@ -618,7 +620,7 @@ export class AddSalesReturnComponent implements OnInit {
         const qty = +QtyControl.value || 1;
         let purchaseTax = 18;
         // cost price 
-        if(this.isPercentage[index] = true){
+        if(this.isPercentage[index] == true){
           let getDiscountPrice = (this.coastprice[index] * deductionPercentage) / 100
           let getCoastPrice = this.coastprice[index] - getDiscountPrice;
           console.log(getCoastPrice);
@@ -629,7 +631,7 @@ export class AddSalesReturnComponent implements OnInit {
           let purchasePrice = getCoastPrice + taxprice;
           this.originalCoastPrice = purchasePrice;
           return purchasePrice;
-        }else if(this.isAmount[index] = true){
+        }else if(this.isAmount[index] == true){
           let getCoastPrice = this.coastprice[index] - deductionPercentage;
           console.log(getCoastPrice);
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
@@ -651,6 +653,7 @@ export class AddSalesReturnComponent implements OnInit {
     setTimeout(() => {
       this.calculateRoundoffValue()
     }, 2000);
+    this.calculateTotalEveryIndex(index)
   }
   calculationDiscountCostPrice(index) {
     console.log(this.costPrice);
@@ -667,7 +670,7 @@ export class AddSalesReturnComponent implements OnInit {
         const purchaseRate = +purchaseRateControl.value || 0;
         const qty = +QtyControl.value;
         if (this.costPrice > 0) {
-          if(this.isPercentage[index] = true){
+          if(this.isPercentage[index] == true){
             console.log(this.costPrice, 'this.costPrice > 0');
             let getDiscountPrice = (this.costPrice * deductionPercentage) / 100;
             console.log(getDiscountPrice);
@@ -680,7 +683,7 @@ export class AddSalesReturnComponent implements OnInit {
             console.log(taxprice);
             let purchasePrice = getCoastPrice + taxprice;
             return purchasePrice;
-          }else if(this.isAmount[index] = true){
+          }else if(this.isAmount[index] == true){
             let getCoastPrice = this.costPrice - deductionPercentage;
             this.TotalWithoutTax[index] = getCoastPrice * qty || 0
             // cost price 
@@ -693,7 +696,7 @@ export class AddSalesReturnComponent implements OnInit {
           }
         } else {
           console.log(this.originalPrice[index], 'this.originalPrice[index]');
-          if(this.isPercentage[index] = true){
+          if(this.isPercentage[index] == true){
             let getDiscountPrice = (this.originalPrice[index] * deductionPercentage) / 100
             let getCoastPrice = this.originalPrice[index] - getDiscountPrice;
             this.TotalWithoutTax[index] = getCoastPrice * qty || 0
@@ -705,7 +708,7 @@ export class AddSalesReturnComponent implements OnInit {
             let purchasePrice = getCoastPrice + taxprice;
             console.log(purchasePrice, 'purchasePrice');
             return purchasePrice;
-          }else if(this.isAmount[index] = true){
+          }else if(this.isAmount[index] == true){
             let getCoastPrice = this.originalPrice[index] - deductionPercentage;
             this.TotalWithoutTax[index] = getCoastPrice * qty || 0
             console.log(this.TotalWithoutTax[index]);
@@ -732,7 +735,7 @@ export class AddSalesReturnComponent implements OnInit {
         let purchaseTax = 18;
         const qty = +QtyControl.value;
         // cost price 
-        if(this.isPercentage[index] = true){
+        if(this.isPercentage[index] == true){
           let getDiscountPrice = (this.costPrice * deductionPercentage) / 100
           let getCoastPrice = this.costPrice - getDiscountPrice;
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
@@ -742,7 +745,7 @@ export class AddSalesReturnComponent implements OnInit {
           let purchasePrice = getCoastPrice + taxprice;
           this.originalCoastPrice = purchasePrice;
           return purchasePrice;
-        }else if(this.isAmount[index] = true){
+        }else if(this.isAmount[index] == true){
           let getCoastPrice = this.costPrice - deductionPercentage;
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
           console.log(this.TotalWithoutTax[index]);
@@ -1097,7 +1100,11 @@ export class AddSalesReturnComponent implements OnInit {
     // const discount = +cartItem.get('discount').value || 0;
     const subtotal = this.TotalWithoutTax[index]
     const qty = +cartItem.get('qty').value || 0;
-    const totalForItem = price * qty || 0
+    const totalForItem = price * qty || 0;
+    const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
+    barcode.patchValue({
+      total: totalForItem.toFixed(2)
+    });
     return totalForItem;
   }
  
