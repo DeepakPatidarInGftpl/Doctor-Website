@@ -50,7 +50,7 @@ export class BranchComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteBranch(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Branch Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             Swal.fire({
@@ -90,14 +90,14 @@ export class BranchComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.BranchIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Branch Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Branch Is Deactivate Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -119,14 +119,14 @@ export class BranchComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.BranchIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Branch Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Branch Is Active Successfully.',
+          text: this.delRes?.msg,
         });
       }
     });
@@ -229,7 +229,6 @@ export class BranchComponent implements OnInit {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Branch List';
-
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);

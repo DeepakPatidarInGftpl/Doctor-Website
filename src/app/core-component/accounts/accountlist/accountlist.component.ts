@@ -33,8 +33,7 @@ export class AccountlistComponent implements OnInit {
   selectedAccountSubType: string = '';
   selectedAccountId: string = '';
 
-  constructor(private coreService: CoreService, private QueryService: QueryService,
-    private companyService: CompanyService) {
+  constructor(private coreService: CoreService, private QueryService: QueryService,) {
     this.QueryService.filterToggle()
   }
 
@@ -56,7 +55,7 @@ export class AccountlistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteAccount(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Account Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -94,14 +93,14 @@ export class AccountlistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.accountIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Account Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Account Is Deactivate Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -123,14 +122,14 @@ export class AccountlistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.accountIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Account Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Account Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });

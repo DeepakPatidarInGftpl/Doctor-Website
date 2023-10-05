@@ -282,7 +282,7 @@ export class ListRecieptVoucherComponent implements OnInit {
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'debitnote.xlsx';
+    const fileName = 'reciept.xlsx';
     saveAs(blob, fileName); 
   }
 
@@ -320,6 +320,9 @@ export class ListRecieptVoucherComponent implements OnInit {
     window.print();
     document.body.innerHTML = originalContents;
   }
+  selectedModeType:any
+  selectedAmount:any
+  selectedRecieptType:any
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -329,15 +332,21 @@ export class ListRecieptVoucherComponent implements OnInit {
         return receiptDate === selectedDate;
       });
     }
-    // Now, filteredData contains the filtered results based on the selected date
-    console.log(filteredData);
-    // if (this.selectedpaymentTerms) {
-    //   filteredData = filteredData.filter((item) => item?.payment_term?.title === this.selectedpaymentTerms);
-    // }
+    if (this.selectedRecieptType) {
+      filteredData = filteredData.filter((item) => item?.receipt_type === this.selectedRecieptType);
+    }
+    if (this.selectedModeType) {
+      filteredData = filteredData.filter((item) => item?.mode_type === this.selectedModeType);
+    }
+    if (this.selectedAmount) {
+      filteredData = filteredData.filter((item) => item?.amount <= this.selectedAmount);
+    }
     this.filteredData = filteredData;
   }
   clearFilters() {
-    this.selectedpaymentTerms = null;
+    this.selectedAmount=null;
+    this.selectedModeType=null
+    this.selectedRecieptType = null;
     this.date = null;
     this.filterData();
   }

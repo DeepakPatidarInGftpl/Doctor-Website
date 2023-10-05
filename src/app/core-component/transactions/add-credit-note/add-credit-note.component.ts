@@ -3,7 +3,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 

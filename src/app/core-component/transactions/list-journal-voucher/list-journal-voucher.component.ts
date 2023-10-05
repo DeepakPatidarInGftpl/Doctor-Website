@@ -314,6 +314,9 @@ export class ListJournalVoucherComponent implements OnInit {
     window.print();
     document.body.innerHTML = originalContents;
   }
+  selectedDebit:any
+  selectedcredit:any;
+
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -323,11 +326,18 @@ export class ListJournalVoucherComponent implements OnInit {
         return receiptDate === selectedDate;
       });
     }
+    if (this.selectedDebit) {
+      filteredData = filteredData.filter((item) => item?.total_debit <= this.selectedDebit);
+    }
+    if (this.selectedcredit) {
+      filteredData = filteredData.filter((item) => item?.total_credit <= this.selectedcredit);
+    }
     console.log(filteredData);
     this.filteredData = filteredData;
   }
   clearFilters() {
-    this.selectedpaymentTerms = null;
+    this.selectedDebit = null;
+    this.selectedcredit = null;
     this.date = null;
     this.filterData();
   }

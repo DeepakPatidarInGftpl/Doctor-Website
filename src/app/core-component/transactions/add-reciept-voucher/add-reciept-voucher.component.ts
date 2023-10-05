@@ -227,9 +227,13 @@ export class AddRecieptVoucherComponent implements OnInit {
     });
   }
   oncheck3(data: any, index: number) {
+    console.log(data); 
     const cart = (this.recieptVoucherForm.get('receipt_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       sale_bill: data?.id,
+      original_amount: data?.original_amount,
+      paid_amount: data?.paid_amount,
+      pending_amount: data?.pending_amount,
     });
   }
   //bank
@@ -249,6 +253,9 @@ export class AddRecieptVoucherComponent implements OnInit {
     const cart = (this.recieptVoucherBankForm.get('receipt_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       sale_bill: data?.id,
+      original_amount: data?.original_amount,
+      paid_amount: data?.paid_amount,
+      pending_amount: data?.pending_amount,
     });
   }
 

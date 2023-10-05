@@ -60,7 +60,7 @@ export class AccountSubTypeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteAccountSubType(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Account Subtype Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             Swal.fire({
@@ -100,14 +100,14 @@ export class AccountSubTypeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.AccountSubTypeIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Account Subtype Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Account Subtype Is Deactivate Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -129,14 +129,14 @@ export class AccountSubTypeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.AccountSubTypeIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Account Subtype Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Account Subtype Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -243,7 +243,7 @@ export class AccountSubTypeComponent implements OnInit {
       this.coreService.addAccountSubType(this.accountSubTypeForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "ACCOUNT SUBTYPE CREATED SUCESSFULLY") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.accountSubTypeForm.reset()
@@ -273,7 +273,7 @@ export class AccountSubTypeComponent implements OnInit {
       this.coreService.updateAccountSubType(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Account Subtype Updated Sucessfully") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.accountSubTypeForm.reset()
@@ -356,15 +356,12 @@ export class AccountSubTypeComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-
   // convert to pdf
-
 
   generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Account Sub Type List';
-
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
@@ -384,11 +381,9 @@ export class AccountSubTypeComponent implements OnInit {
         { header: 'Account Id' },
       ],
     });
-
     const fileName = 'accountSubType.pdf'; // Change the filename as needed
     doc.save(fileName);
   }
-
 
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -416,7 +411,6 @@ export class AccountSubTypeComponent implements OnInit {
     });
     return visibleData;
   }
-
   // Modify your exportToExcel() function
   exportToExcel(): void {
     const visibleDataToExport = this.getVisibleDataFromTable();
