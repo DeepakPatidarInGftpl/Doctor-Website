@@ -763,10 +763,15 @@ export class EditSalesComponent implements OnInit {
 
   getRes: any;
   loader = false;
+  loaderCreate = false;
   submit(type: any) {
     console.log(this.saleForm.value);
     if (this.saleForm.valid) {
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate = true;
+      } else if (type == 'save') {
+        this.loader = true;
+      }
       let formdata: any = new FormData();
 
       formdata.append('customer', this.saleForm.get('customer')?.value);
@@ -810,9 +815,8 @@ export class EditSalesComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-          this.loader = false;
-          this.toastrService.success(this.getRes.msg);
           if (type == 'new') {
+            this.loaderCreate = false;
             this.saleForm.reset()
             this.ngOnInit()
             this.userControl.reset()
@@ -825,16 +829,30 @@ export class EditSalesComponent implements OnInit {
             }, 3000);
           }
           else {
+            this.loader = false;
+            this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//sales/saleslist'])
           }
         } else {
-          this.loader = false
+            if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      }
         }
       }, err => {
-        this.loader = false
+          if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      }
       })
     } else {
-      this.loader = false;
+        if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      };
       this.saleForm.markAllAsTouched()
       console.log('invald');
     }

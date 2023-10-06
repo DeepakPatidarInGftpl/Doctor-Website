@@ -137,10 +137,10 @@ export class AddDebitnotesComponent implements OnInit {
   getCart(): FormArray {
     return this.debitNotesForm.get('cart') as FormArray;
   }
-  addCart(i:any) {
+  addCart(i: any) {
     this.getCart().push(this.cart())
     console.log(i);
-    if(i>0){
+    if (i > 0) {
       this.isPercentage[i] = true;
       this.isAmount[i] = false;
     }
@@ -498,7 +498,7 @@ export class AddDebitnotesComponent implements OnInit {
       this.calculateRoundoffValue()
     }, 2000);
     this.calculateTotalLandingCostEveryIndex(index);
-      this.calculateTotalEveryIndex(index)
+    this.calculateTotalEveryIndex(index)
   }
   calculationDiscountCostPrice(index) {
     const cartItem = this.getCart().controls[index];
@@ -516,7 +516,7 @@ export class AddDebitnotesComponent implements OnInit {
         console.log(this.originalPrice[index], 'this.originalPrice[index] ');
         if (this.costPrice[index] > 0) {
           // landing cost
-          if (this.isPercentage[index]==true) {
+          if (this.isPercentage[index] == true) {
             let getDiscountPrice = (this.costPrice[index] * deductionPercentage) / 100
             let getCoastPrice = this.costPrice[index] - getDiscountPrice;
             // cost price 
@@ -535,7 +535,7 @@ export class AddDebitnotesComponent implements OnInit {
           }
         } else {
           // landing cost
-          if (this.isPercentage[index]==true) {
+          if (this.isPercentage[index] == true) {
             let getDiscountPrice = (this.originalPrice[index] * deductionPercentage) / 100
             let getCoastPrice = this.originalPrice[index] - getDiscountPrice;
             // cost price 
@@ -543,7 +543,7 @@ export class AddDebitnotesComponent implements OnInit {
             this.taxIntoRupees[index] = taxprice || 0;
             let purchasePrice = getCoastPrice - taxprice;
             return purchasePrice;
-          } else if (this.isAmount[index] ==true) {
+          } else if (this.isAmount[index] == true) {
             // let getDiscountPrice = (purchaseRate * discountPercentage) / 100
             let getCoastPrice = this.originalPrice[index] - deductionPercentage;
             // cost price 
@@ -586,7 +586,7 @@ export class AddDebitnotesComponent implements OnInit {
         const taxPercentage = +taxPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         // landing cost
-        if (this.isPercentage[index]==true) {
+        if (this.isPercentage[index] == true) {
           let getDiscountPrice = (purchaseRate * deductionPercentage) / 100
           let getCoastPrice = purchaseRate - getDiscountPrice;
           // cost price 
@@ -643,10 +643,10 @@ export class AddDebitnotesComponent implements OnInit {
             this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
             const landingCost = afterDiscountAmount || 0
             // without tax price 
-              const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
-              barcode.patchValue({
-                landing_cost: landingCost.toFixed(2)
-              });
+            const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+            barcode.patchValue({
+              landing_cost: landingCost.toFixed(2)
+            });
             return landingCost;
           } else if (this.isAmount[index] == true) {
             const afterDiscountAmount = this.batchCostPrice[index] - deductionPercentage
@@ -748,10 +748,15 @@ export class AddDebitnotesComponent implements OnInit {
   }
   getRes: any;
   loader = false;
+  loaderCreate = false;
   submit(type: any) {
     // console.log(this.debitNotesForm.value);
     if (this.debitNotesForm.valid) {
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate = true;
+      } else if (type == 'save') {
+        this.loader = true;
+      }
       let formdata: any = new FormData();
       formdata.append('party', this.debitNotesForm.get('party')?.value);
       formdata.append('purchase_return_date', this.debitNotesForm.get('purchase_return_date')?.value);
@@ -785,19 +790,15 @@ export class AddDebitnotesComponent implements OnInit {
             cartObject[key] = control.value;
           }
         });
-
         cartData.push(cartObject);
       });
       formdata.append('cart', JSON.stringify(cartData));
-
-
       this.purchaseService.addPurchaseReturn(formdata).subscribe(res => {
         // console.log(res);
         this.getRes = res;
-        if (this.getRes.Is_Success == "True") {
-          this.loader = false;
-          this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
+        if (this.getRes.success) {
           if (type == 'new') {
+            this.loaderCreate = false;
             this.debitNotesForm.reset()
             this.supplierControl.reset()
             this.ngOnInit()
@@ -810,14 +811,24 @@ export class AddDebitnotesComponent implements OnInit {
             }, 3000);
           }
           else {
+            this.loader = false;
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
             this.router.navigate(['//purchase/debit-notes-list'])
           }
         } else {
           this.toastrService.error(this.getRes.purchase[0])
-          this.loader = false
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          }
         }
       }, err => {
-        this.loader = false
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        }
       })
     } else {
       this.debitNotesForm.markAllAsTouched()
@@ -1119,7 +1130,7 @@ export class AddDebitnotesComponent implements OnInit {
     const cartItem = this.getCart().controls[index];
     const landingCost = +cartItem.get('landing_cost').value || 0;
     const qty = +cartItem.get('qty').value || 0;
-    console.log(landingCost,'landing cost');
+    console.log(landingCost, 'landing cost');
     console.log(qty);
     const totalForItem = landingCost * qty;
     this.totalCost[index] = totalForItem;

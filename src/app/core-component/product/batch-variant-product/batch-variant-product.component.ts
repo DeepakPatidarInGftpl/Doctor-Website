@@ -63,7 +63,7 @@ export class BatchVariantProductComponent implements OnInit {
       this.loader=true;
       this.coreService.addBatch(this.batchForm.value,this.id).subscribe(res => {
         this.addRes = res
-        if (this.addRes.Is_Sucess == "True") {
+        if (this.addRes.sucess=="True") {
           this.loader=false;
           this.toastr.success(this.addRes.msg)
           this.batchForm.reset()

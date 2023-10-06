@@ -100,7 +100,7 @@ export class EmployeeComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Employee Is Deactivate Successfully.',
+          text: 'Employee is Deactivate Successfully.',
         });
       }
     });
@@ -129,7 +129,7 @@ export class EmployeeComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Employee Is Active Successfully.',
+          text: 'Employee is Active Successfully.',
         });
       }
     });

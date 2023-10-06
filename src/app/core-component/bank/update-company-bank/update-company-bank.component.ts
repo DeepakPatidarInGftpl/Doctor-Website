@@ -47,11 +47,11 @@ export class UpdateCompanyBankComponent implements OnInit {
       // console.log(res.counntry);
       
       this.companyBankForm.patchValue(res)
-      this.companyBankForm.get('counntry')?.patchValue(res.counntry)
+      this.companyBankForm.get('counntry')?.patchValue(res.counntry?.id)
       this.selectState(res?.counntry)
-      this.companyBankForm.get('state')?.patchValue(res.state)
+      this.companyBankForm.get('state')?.patchValue(res.state?.id)
       this.selectCity(res?.state)
-      this.companyBankForm.get('city')?.patchValue(res.city)
+      this.companyBankForm.get('city')?.patchValue(res.city?.id)
     })
     this.getCountry();
   }
@@ -86,7 +86,7 @@ export class UpdateCompanyBankComponent implements OnInit {
       this.coreService.updateCompanyBank(this.companyBankForm.value,this.id).subscribe(res => {
         // console.log(res);
         this.addRes=res;
-        if (this.addRes.Is_Success == "True") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.companyBankForm.reset()

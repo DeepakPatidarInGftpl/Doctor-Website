@@ -97,7 +97,7 @@ export class BranchComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: this.delRes.msg,
+          text: 'Branch is Deactived successfully',
         });
       }
     });

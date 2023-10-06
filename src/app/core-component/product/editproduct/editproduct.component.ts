@@ -911,7 +911,7 @@ export class EditproductComponent implements OnInit {
       const productImageDataJson = JSON.stringify(product_imageData);
       formdata.append('product_images', productImageDataJson);
       this.coreService.updateProduct(formdata, this.id).subscribe(res => {
-        if (res.msg == "Product Edited Successfully") {
+        if (res.success) {
           this.loader = false;
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])

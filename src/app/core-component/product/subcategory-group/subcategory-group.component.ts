@@ -59,7 +59,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
         this.coreServ.deleteSubCategGroup(id).subscribe(res => {
           // console.log(res)
           this.delRes = res;
-          if (this.delRes.msg == 'Subcategory Group Deleted successfully') {
+          if (this.delRes.success) {
             // console.log('abssssss');
             
             Swal.fire({
@@ -101,7 +101,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
       if (t.isConfirmed) {
         this.coreServ.subcategoryGroupIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Subcategory Group Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -130,7 +130,7 @@ export class SubcategoryGroupComponent implements OnInit, OnDestroy {
       if (t.isConfirmed) {
         this.coreServ.subcategoryGroupIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Subcategory Group Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -397,7 +397,7 @@ this.getFeatureGroup()
         if (imageFile && imageFile instanceof File) {
           formdata.append('image', imageFile);
           this.coreServ.editSubCategoryGroup(formdata, this.editMode.id).subscribe((res: any) => {
-            if (res.msg == 'SubCategory Group updated successfully') {
+            if (res.success) {
               this.selectedSubCat=0
               this.selectedFeatureGrp=0
               this.loaders = false;
@@ -417,7 +417,7 @@ this.getFeatureGroup()
           })
         }else{
           this.coreServ.editSubCategoryGroup(formdata, this.editMode.id).subscribe((res: any) => {
-            if (res.msg == 'SubCategory Group updated successfully') {
+            if (res.success) {
               this.selectedSubCat=0
               this.selectedFeatureGrp=0
               this.loaders = false;
@@ -443,7 +443,7 @@ this.getFeatureGroup()
         formdata.append("subcategories", `[${this.selectedSubCats}]`);
         formdata.append("feature_group", `[${this.selectedFeature}]`);
         this.coreServ.postCategoriesGroup(formdata).subscribe((res: any) => {
-          if (res.msg == 'Data Created') {
+          if (res.success) {
             this.selectedSubCat=0
             this.selectedFeatureGrp=0
             this.url='';

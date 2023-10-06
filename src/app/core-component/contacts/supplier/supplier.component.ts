@@ -76,7 +76,7 @@ export class SupplierComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this employee!",
+      text: "Do you want to Deactivate this Supplier!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -97,7 +97,7 @@ export class SupplierComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Employee Is Deactivate Successfully.',
+          text: 'Supplier is Deactivate Successfully.',
         });
       }
     });
@@ -105,7 +105,7 @@ export class SupplierComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this employee!",
+      text: "Do you want to Active this Supplier!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -126,7 +126,7 @@ export class SupplierComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Employee Is Active Successfully.',
+          text: 'Supplier is Active Successfully.',
         });
       }
     });

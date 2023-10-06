@@ -54,13 +54,13 @@ export class FooterFeaturesComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteFooterFeature(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Footer Features Deleted successfully") {
-            this.tableData
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
               text: this.delRes.msg,
             });
+            this.ngOnInit();
           }
         })
         Swal.fire({
@@ -77,7 +77,7 @@ export class FooterFeaturesComponent implements OnInit {
   deActivate(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this footer!",
+      text: "Do you want to Deactivate this Footer Feature!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -91,7 +91,7 @@ export class FooterFeaturesComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.footerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Footer Features Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -106,7 +106,7 @@ export class FooterFeaturesComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this footer!",
+      text: "Do you want to Active this Footer Feature!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -120,14 +120,14 @@ export class FooterFeaturesComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.footerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Footer Features Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Footer Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -250,7 +250,7 @@ export class FooterFeaturesComponent implements OnInit {
       this.websiteService.addFooterFeature(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.url=''
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
@@ -286,7 +286,7 @@ export class FooterFeaturesComponent implements OnInit {
         this.websiteService.updateFooterFeature(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
-          if (this.addRes.msg == "Footer Features Updated Sucessfully") {
+          if (this.addRes.success) {
             this.loaders = false;
             this.updateData = '';
             this.toastr.success(this.addRes.msg)
@@ -305,7 +305,7 @@ export class FooterFeaturesComponent implements OnInit {
         this.websiteService.updateFooterFeature(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
-          if (this.addRes.msg == "Footer Features Updated Sucessfully") {
+          if (this.addRes.success) {
             this.updateData = '';
             this.loaders = false;
             this.toastr.success(this.addRes.msg)

@@ -55,7 +55,7 @@ export class HsncodeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteHSNcode(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "HSNCode Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -94,7 +94,7 @@ export class HsncodeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.hsncodeIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "HSNCode Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -123,7 +123,7 @@ export class HsncodeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.hsncodeIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "HSNCode Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -373,7 +373,7 @@ export class HsncodeComponent implements OnInit {
       this.coreService.addHSNcode(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "HSNCode Successfuly Added") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.selectedSubcat = 0
           this.toastr.success(this.addRes.msg)
@@ -419,7 +419,7 @@ export class HsncodeComponent implements OnInit {
       this.coreService.updateHSNcode(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "HSNCode updated successfully") {
+        if (this.addRes.success) {
           this.loaders = false
           this.selectedSubcat = 0
           this.toastr.success(this.addRes.msg)

@@ -70,7 +70,7 @@ export class TrendingProductsComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteTrendingProducts(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Trending product Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             Swal.fire({
               icon: 'success',
@@ -108,7 +108,7 @@ export class TrendingProductsComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.TrendingProductsIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Trending product Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -137,14 +137,14 @@ export class TrendingProductsComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.TrendingProductsIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Trending product Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Trending Products Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -291,7 +291,7 @@ export class TrendingProductsComponent implements OnInit {
         // console.log(res);
         this.loaders=false;
         this.addRes = res;
-        if (this.addRes.Is_Sucess == "True") {
+        if (this.addRes.success) {
           this.toastr.success(this.addRes.msg);
           this.trendingProductsForm.reset();
           this.selectedItems = [];
@@ -326,7 +326,7 @@ export class TrendingProductsComponent implements OnInit {
       this.websiteService.updateTrendingProducts(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.Is_Sucess == "True") {
+        if (this.addRes.success) {
           this.toastr.success(this.addRes.msg)
           this.loaders=false
           this.trendingProductsForm.reset()

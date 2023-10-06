@@ -51,7 +51,7 @@ export class ProductlistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteProduct(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Prodct Deleted successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -90,7 +90,7 @@ export class ProductlistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.productIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Product Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -119,7 +119,7 @@ export class ProductlistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.productIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Product Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })

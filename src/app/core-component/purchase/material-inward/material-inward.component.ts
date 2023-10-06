@@ -47,7 +47,7 @@ export class MaterialInwardComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.deleteMaterial(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Material Inward Deleted Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -85,7 +85,7 @@ export class MaterialInwardComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.MaterialIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Material Inward Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -114,14 +114,14 @@ export class MaterialInwardComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.MaterialIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Material Inward Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Material Inward Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });

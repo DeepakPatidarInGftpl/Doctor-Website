@@ -156,7 +156,7 @@ isDelete:any
       if (t.isConfirmed) {
         this.coreService.BatchIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Batch Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -185,14 +185,14 @@ isDelete:any
       if (t.isConfirmed) {
         this.coreService.BatchIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Batch Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Batch Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });

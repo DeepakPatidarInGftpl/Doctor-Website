@@ -59,7 +59,7 @@ export class FinancialYearComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteFinancialYear(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             Swal.fire({
@@ -99,7 +99,7 @@ export class FinancialYearComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.financialYearIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "FinancialYear Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
@@ -128,14 +128,14 @@ export class FinancialYearComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.financialYearIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "FinancialYear Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
        Swal.fire({
          icon: 'success',
          title: 'Active!',
-         text: 'FinancialYear Is Active Successfully.',
+         text: this.delRes.msg,
        });
      }
    });
@@ -213,7 +213,7 @@ export class FinancialYearComponent implements OnInit {
   deleteId(id: number) {
     this.coreService.deletesize(id).subscribe(res => {
       this.delRes = res
-      if (this.delRes.msg == "Deleted successfully") {
+      if (this.delRes.success) {
         window.location.reload()
       }
     })
@@ -239,7 +239,7 @@ export class FinancialYearComponent implements OnInit {
     this.coreService.addFinancialYear(this.FinancialYearForm.value).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Data Created") {
+      if (this.addRes.success) {
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.FinancialYearForm.reset()
@@ -261,7 +261,7 @@ update(){
     this.coreService.updateFinancialYear(this.FinancialYearForm.value, this.id).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Finincial Year Updated Sucessfully") {
+      if (this.addRes.success) {
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.FinancialYearForm.reset()

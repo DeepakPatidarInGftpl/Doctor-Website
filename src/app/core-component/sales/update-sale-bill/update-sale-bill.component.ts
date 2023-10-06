@@ -840,11 +840,15 @@ export class UpdateSaleBillComponent implements OnInit {
 
   getRes: any;
   loader = false;
+  loaderCreate = false;
   submit(type: any) {
     console.log(this.saleBillForm.value);
     if (this.saleBillForm.valid) {
-      this.loader = true;
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate = true;
+      } else if (type == 'save') {
+        this.loader = true;
+      }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleBillForm.get('customer')?.value);
       formdata.append('bill_date', this.saleBillForm.get('bill_date')?.value);
@@ -884,9 +888,8 @@ export class UpdateSaleBillComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-          this.loader = false;
-          this.toastrService.success(this.getRes.msg);
           if (type == 'new') {
+            this.loaderCreate = false;
             this.saleBillForm.reset()
             this.ngOnInit()
             this.userControl.reset()
@@ -899,16 +902,30 @@ export class UpdateSaleBillComponent implements OnInit {
             }, 3000);
           }
           else {
+            this.loader = false;
+            this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//sales/salesbill-list'])
           }
         } else {
-          this.loader = false
+            if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      }
         }
       }, err => {
-        this.loader = false
+          if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      }
       })
     } else {
-      this.loader = false;
+        if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      };
       this.saleBillForm.markAllAsTouched()
       console.log('invald');
     }

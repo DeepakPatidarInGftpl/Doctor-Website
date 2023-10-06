@@ -107,7 +107,7 @@ export class UpdateAddressStoreComponent implements OnInit {
       this.websiteService.updateAddressStore(formdata,this.id).subscribe((res: any) => {
         // console.log(res);
         this.addRes = res;
-        if (this.addRes.Is_Success == "True") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.addressStoreForm.reset()

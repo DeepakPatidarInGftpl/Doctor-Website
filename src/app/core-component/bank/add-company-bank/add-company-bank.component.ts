@@ -86,7 +86,7 @@ yearDetails:any
       this.coreService.addCompanyBank(this.companyBankForm.value).subscribe(res => {
         // console.log(res);
         this.addRes=res;
-        if (this.addRes.Is_Success == "True") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.companyBankForm.reset()

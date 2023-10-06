@@ -122,7 +122,7 @@ export class PurchaselistComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Purchase Order Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });

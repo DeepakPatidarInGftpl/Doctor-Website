@@ -75,7 +75,7 @@ export class CustomerComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this customer!",
+      text: "Do you want to Deactivate this Customer!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -96,7 +96,7 @@ export class CustomerComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Customer Is Deactivate Successfully.',
+          text: 'Customer is Deactivate Successfully.',
         });
       }
     });
@@ -104,7 +104,7 @@ export class CustomerComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this customer!",
+      text: "Do you want to Active this Customer!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',

@@ -50,7 +50,7 @@ export class BannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteBanner(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Banner Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             Swal.fire({
@@ -88,7 +88,7 @@ export class BannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.bannerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Banner Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -117,14 +117,14 @@ export class BannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.bannerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Banner active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Banner Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -259,7 +259,7 @@ export class BannerComponent implements OnInit {
       this.websiteService.addBanner(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.bannerForm.reset()
@@ -267,10 +267,11 @@ export class BannerComponent implements OnInit {
           this.ngOnInit()
         }else{
           this.loaders=false;  
-          this.toastr.error(this.addRes.url[0])
+          this.toastr.error(this.addRes.error?.url[0])
         }
       }, err => {
         this.loaders=false
+        this.toastr.error(err.error?.url[0])
         // console.log(err.error.gst);
       })
     } else {
@@ -296,7 +297,7 @@ export class BannerComponent implements OnInit {
         this.websiteService.updateBanner(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res;
-          if (this.addRes.msg == "Banner Updated Sucessfully") {   
+          if (this.addRes.success) {   
             this.loaders = false;
             this.updateData='';
             this.toastr.success(this.addRes.msg);
@@ -317,7 +318,7 @@ export class BannerComponent implements OnInit {
         this.websiteService.updateBanner(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res;
-          if (this.addRes.msg == "Banner Updated Sucessfully") {
+          if (this.addRes.success) {
             this.loaders = false;
             this.updateData='';
             this.toastr.success(this.addRes.msg);

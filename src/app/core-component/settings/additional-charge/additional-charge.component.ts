@@ -53,7 +53,7 @@ export class AdditionalChargeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteAdditionalCharges(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Additional Charge Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             Swal.fire({
@@ -93,7 +93,7 @@ export class AdditionalChargeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.AdditionalChargesIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Additional Charge Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -122,14 +122,14 @@ export class AdditionalChargeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.AdditionalChargesIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Additional Charge Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Additional Charge Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -228,7 +228,7 @@ export class AdditionalChargeComponent implements OnInit {
       this.coreService.addAdditionalCharges(this.additionForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.Is_Success == "True") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.additionForm.reset()
@@ -253,7 +253,7 @@ export class AdditionalChargeComponent implements OnInit {
       this.coreService.updateAdditionalCharges(this.additionForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.Is_Success == "True") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.addForm = false;
           this.toastr.success(this.addRes.msg)

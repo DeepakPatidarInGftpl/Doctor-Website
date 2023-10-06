@@ -52,7 +52,7 @@ export class FooterListComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteFooter(slug).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Footer Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
           this.ngOnInit();
           Swal.fire({
@@ -94,7 +94,7 @@ export class FooterListComponent implements OnInit {
      if (t.isConfirmed) {
        this.websiteService.FooterIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Footer Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
@@ -123,14 +123,14 @@ export class FooterListComponent implements OnInit {
      if (t.isConfirmed) {
        this.websiteService.FooterIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Footer Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
        Swal.fire({
          icon: 'success',
          title: 'Active!',
-         text: 'Footer Is Active Successfully.',
+         text: this.delRes.msg,
        });
      }
    });

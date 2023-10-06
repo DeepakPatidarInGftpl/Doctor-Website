@@ -53,12 +53,12 @@ export class StatelistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deletestate(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "State Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
           } else {
             // console.log(this.delRes);
@@ -95,7 +95,7 @@ export class StatelistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.stateIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "State Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -124,14 +124,14 @@ export class StatelistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.stateIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "State Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'State Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -255,7 +255,7 @@ export class StatelistComponent implements OnInit {
       this.coreService.addstate(this.stateForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.stateForm.reset()
@@ -277,7 +277,7 @@ export class StatelistComponent implements OnInit {
       this.coreService.updatestate(this.stateForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "State updated successfully") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.stateForm.reset();
