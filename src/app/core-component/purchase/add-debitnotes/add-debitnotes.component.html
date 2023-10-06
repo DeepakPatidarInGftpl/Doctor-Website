@@ -48,13 +48,13 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Purchase Return No.</label>
-                        <input type="text" formControlName="purchase_return_no" [ngClass]="{'is-invalid': f['purchase_return_no'].touched && f['purchase_return_no'].invalid}">
+                        <input type="text" formControlName="purchase_return_no" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['purchase_return_no'].touched && f['purchase_return_no'].invalid}">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Refrence Bill No*</label>
-                        <input type="text" formControlName="refrence_bill_no" [ngModel]="prefixNo "
+                        <input type="text" formControlName="refrence_bill_no" [ngModel]="prefixNo"
                             [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}">
                         <span class="text-danger"
                             *ngIf="refrence_bill_no && refrence_bill_no.invalid && refrence_bill_no.touched">Enter
@@ -860,7 +860,7 @@
 
                 <div class="row">
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <a routerLink="//purchase/debit-notes-list" class="btn btn-cancel text-white"
+                        <a routerLink="//purchase/debit-notes-list" class="btn btn-cancel text-white me-2"
                             style=" background-color: #f4516c;">Cancel</a>
                         <a class="btn btn-cancel text-white" (click)="clearForm()">Clear</a>
                     </div>
@@ -871,13 +871,10 @@
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('save')">Save</button>
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                            <span class="spinner-border spinner-border-sm" role="status"
-                                aria-hidden="true"></span>Save</button>
-                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('new')">Save & Create
-                            New</button>
-                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save
-                            & Create New</button>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save</button>
+                        <button class="btn btn-submit me-2" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create New</button>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaderCreate" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save & Create New</button>
                     </div>
                 </div>
             </div>

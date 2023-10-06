@@ -100,7 +100,7 @@ export class AccountlistComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: this.delRes.msg,
+          text: 'Account is Deactived successfully',
         });
       }
     });

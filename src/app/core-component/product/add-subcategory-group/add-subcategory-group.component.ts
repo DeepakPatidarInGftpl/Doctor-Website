@@ -169,7 +169,7 @@ export class AddSubcategoryGroupComponent implements OnInit {
       formdata.append('feature_group', JSON.stringify(this.subCategoryGroupForm.get('feature_group')?.value));
 
       this.coreService.postCategoriesGroup(formdata).subscribe((res: any) => {
-        if (res.msg == 'Data Created') {
+        if (res.success) {
           this.toastr.success(res.msg)
           this.loaders=false
           this.router.navigate(['/product/subCategoryGroup'])

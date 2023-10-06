@@ -433,11 +433,15 @@ export class AddMaterialOutwardComponent implements OnInit {
 
   getRes: any;
   loader = false;
+  loaderCreate = false;
   submit(type: any) {
     console.log(this.saleMaterialOutwardForm.value);
     if (this.saleMaterialOutwardForm.valid) {
-      this.loader = true;
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate = true;
+      } else if (type == 'save') {
+        this.loader = true;
+      }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleMaterialOutwardForm.get('customer')?.value);
       formdata.append('mo_date', this.saleMaterialOutwardForm.get('mo_date')?.value);
@@ -470,9 +474,8 @@ export class AddMaterialOutwardComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-          this.loader = false;
-          this.toastrService.success(this.getRes.msg);
           if (type == 'new') {
+            this.loaderCreate = false;
             this.saleMaterialOutwardForm.reset()
             this.ngOnInit()
             this.userControl.reset()
@@ -485,16 +488,30 @@ export class AddMaterialOutwardComponent implements OnInit {
             }, 3000);
           }
           else {
+            this.loader = false;
+            this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//sales/salesMaterialOutward-list'])
           }
         } else {
-          this.loader = false
+               if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      }
         }
       }, err => {
-        this.loader = false
+             if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      }
       })
     } else {
-      this.loader = false;
+           if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      };
       this.saleMaterialOutwardForm.markAllAsTouched()
       console.log('invald');
     }

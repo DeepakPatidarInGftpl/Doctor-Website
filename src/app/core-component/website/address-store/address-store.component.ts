@@ -49,7 +49,7 @@ export class AddressStoreComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteAddressStore(slug).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Store Address Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             Swal.fire({
               icon: 'success',
@@ -88,7 +88,7 @@ export class AddressStoreComponent implements OnInit {
      if (t.isConfirmed) {
        this.websiteService.AddressStoreIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Store Address Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
@@ -117,14 +117,14 @@ export class AddressStoreComponent implements OnInit {
      if (t.isConfirmed) {
        this.websiteService.AddressStoreIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Store Address Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
        Swal.fire({
          icon: 'success',
          title: 'Active!',
-         text: 'Store Address Is Active Successfully.',
+         text: this.delRes.msg,
        });
      }
    });

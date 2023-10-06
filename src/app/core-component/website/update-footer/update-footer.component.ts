@@ -126,7 +126,7 @@ url:any;
         this.websiteService.updateFooter(formdata,this.id).subscribe((res: any) => {
           // console.log(res);
           this.addRes = res;
-          if (this.addRes.msg == "Footer Updated Sucessfully") {
+          if (this.addRes.success) {
             this.loaders = false;
             this.toastr.success(this.addRes.msg)
             this.footerForm.reset()
@@ -149,7 +149,7 @@ url:any;
         this.websiteService.updateFooter(formdata,this.id).subscribe((res: any) => {
           // console.log(res);
           this.addRes = res;
-          if (this.addRes.msg == "Footer Updated Sucessfully") {
+          if (this.addRes.success) {
             this.loaders = false;
             this.toastr.success(this.addRes.msg)
             this.footerForm.reset()

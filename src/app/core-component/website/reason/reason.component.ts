@@ -50,7 +50,7 @@ export class ReasonComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteReason(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Reason Deleted successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -88,7 +88,7 @@ export class ReasonComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.ReasonIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Reason Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -117,14 +117,14 @@ export class ReasonComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.ReasonIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Reason Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Reason Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -211,7 +211,7 @@ export class ReasonComponent implements OnInit {
       this.websiteService.addReason(this.reasonForm.value).subscribe(res => {
         // console.log("response", res);
         this.addRes = res
-        if (this.addRes.Is_Success == 'True') {
+        if (this.addRes.success) {
           this.loaders = false
           this.toastr.success(this.addRes.msg);
           this.reasonForm.reset();
@@ -238,7 +238,7 @@ export class ReasonComponent implements OnInit {
       this.websiteService.updateReason(this.reasonForm.value,this.id).subscribe(res => {
         // console.log("response", res);
         this.addRes = res
-        if (this.addRes.Is_Success == 'True') {
+        if (this.addRes.success) {
           this.loaders = false;
           this.addForm=true
           this.toastr.success(this.addRes.msg);

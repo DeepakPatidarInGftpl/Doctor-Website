@@ -52,7 +52,7 @@ export class CountrieslistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteCountry(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Country Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
             Swal.fire({
               icon: 'success',
@@ -93,7 +93,7 @@ export class CountrieslistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.countryIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Country Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -122,14 +122,14 @@ export class CountrieslistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.countryIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Country Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Country Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -252,7 +252,7 @@ export class CountrieslistComponent implements OnInit {
       this.coreService.addCountry(this.countryForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.countryForm.reset()
@@ -274,7 +274,7 @@ export class CountrieslistComponent implements OnInit {
       this.coreService.updateCountry(this.countryForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Country updated successfully") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.countryForm.reset();

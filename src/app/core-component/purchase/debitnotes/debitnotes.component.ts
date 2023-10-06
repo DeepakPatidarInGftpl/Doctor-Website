@@ -48,7 +48,7 @@ export class DebitnotesComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.deletePurchaseReturn(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Purchase Return Deleted Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -73,7 +73,7 @@ export class DebitnotesComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this Debit Note!",
+      text: "Do you want to Deactivate this Purchase Return!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -87,7 +87,7 @@ export class DebitnotesComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.PurchaseReturnIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Purchase Return Is active Updated Successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deactivate!',
@@ -109,7 +109,7 @@ export class DebitnotesComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this Debit Note!",
+      text: "Do you want to Active this Purchase Return!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -123,11 +123,11 @@ export class DebitnotesComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.PurchaseReturnIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Purchase Return Is active Updated Successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Active!',
-              text: 'Purchase Return Is Active Successfully.',
+              text: this.delRes.msg,
             });
             this.ngOnInit()
           }else{

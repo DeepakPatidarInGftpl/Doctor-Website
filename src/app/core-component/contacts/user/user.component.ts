@@ -44,7 +44,7 @@ export class UserComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deleteUser(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "User Deleted successfully") {
+          if (this.delRes.success) {
            this.ngOnInit();
            Swal.fire({
             icon: 'success',
@@ -83,14 +83,14 @@ export class UserComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.UserIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "User Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'User Is Deactivate Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -112,14 +112,14 @@ export class UserComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.SupplierIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "User Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'User Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });

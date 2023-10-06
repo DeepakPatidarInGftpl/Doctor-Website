@@ -97,7 +97,7 @@ export class AddAddressStoreComponent implements OnInit {
       this.websiteService.addAddressStore(formdata).subscribe((res:any) => {
         // console.log(res);
         this.addRes=res;
-        if (this.addRes.Is_Success == "True") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.addressStoreForm.reset()

@@ -222,7 +222,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
       if (imageFile && imageFile instanceof File) {
         formdata.append('image', imageFile);
         this.coreService.editSubCategoryGroup(formdata, this.id).subscribe((res: any) => {
-          if (res.msg == 'SubCategory Group updated successfully') {
+          if (res.success) {
             this.toastr.success(res.msg)
             this.loaders = false
             this.router.navigate(['/product/subCategoryGroup'])
@@ -247,7 +247,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
         )
       } else {
         this.coreService.editSubCategoryGroup(formdata, this.id).subscribe((res: any) => {
-          if (res.msg == 'SubCategory Group updated successfully') {
+          if (res.success) {
             this.toastr.success(res.msg)
             this.loaders = false
             this.router.navigate(['/product/subCategoryGroup'])

@@ -65,7 +65,7 @@ export class CouponComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteCoupon(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Coupon Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             Swal.fire({
               icon: 'success',
@@ -103,7 +103,7 @@ export class CouponComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.bannerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Banner Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -132,14 +132,14 @@ export class CouponComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.bannerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Banner active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Banner Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -250,7 +250,7 @@ export class CouponComponent implements OnInit {
       this.websiteService.addCoupon(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "COUPON CREATED SUCESSFULLY") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.couponForm.reset()
@@ -281,7 +281,7 @@ export class CouponComponent implements OnInit {
       this.websiteService.updateCoupon(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Coupon Updated Sucessfully") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.couponForm.reset()

@@ -48,7 +48,7 @@ export class CompanyBankComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteCompanyBank(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Company Bank Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -86,7 +86,7 @@ export class CompanyBankComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.CompanyBankIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Company Bank Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -115,7 +115,7 @@ export class CompanyBankComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.CompanyBankIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Company Bank Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -133,8 +133,6 @@ export class CompanyBankComponent implements OnInit {
   isDelete:any;
   userDetails:any
   ngOnInit(): void {
-console.log('');
-
     this.coreService.getCompanyBank().subscribe(res=>{
       this.tableData=res;
       this.loader=false;

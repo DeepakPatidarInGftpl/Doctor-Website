@@ -50,7 +50,7 @@ export class RatingAndReviewComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteFooter(slug).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Footer Deleted successfully") {
+          if (this.delRes.success) {
           
             Swal.fire({
               icon: 'success',
@@ -92,7 +92,7 @@ export class RatingAndReviewComponent implements OnInit {
         this.websiteService.updateratingAndReview({ status: status }, id).subscribe(res => {
           this.delRes = res
           // console.log(this.delRes);
-          if (this.delRes.error == "Rating And Reviews is not in New status") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'error',
               title: 'Reject!',
@@ -143,7 +143,7 @@ export class RatingAndReviewComponent implements OnInit {
         this.websiteService.updateratingAndReview({ status: 'Accept' }, id).subscribe((res) => {
             this.delRes = res;
             // console.log(this.delRes);
-            if (this.delRes.msg == 'Rating And Reviews Updated Sucessfully') {
+            if (this.delRes.success) {
               Swal.fire({
                 icon: 'success',
                 title: 'Accepted!',
@@ -156,7 +156,7 @@ export class RatingAndReviewComponent implements OnInit {
         this.websiteService.updateratingAndReview({ status: 'Reject' }, id).subscribe((res) => {
             this.delRes = res;
             // console.log(this.delRes);
-            if (this.delRes.msg == 'Rating And Reviews Updated Sucessfully') {
+            if (this.delRes.success) {
               Swal.fire({
                 icon: 'success',
                 title: 'Rejected!',
@@ -232,7 +232,7 @@ export class RatingAndReviewComponent implements OnInit {
   deleteId(id: number) {
     this.websiteService.deleteAddressStore(id).subscribe(res => {
       this.delRes = res
-      if (this.delRes.msg == "Colors Deleted successfully") {
+      if (this.delRes.success) {
         window.location.reload()
       }
 

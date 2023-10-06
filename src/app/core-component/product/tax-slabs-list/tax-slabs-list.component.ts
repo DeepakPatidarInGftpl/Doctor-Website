@@ -25,9 +25,7 @@ export class TaxSlabsListComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage:number=10;
   row:boolean=false;
-  constructor(private coreService: CoreService,private cs:CompanyService) {
-
-  }
+  constructor(private coreService: CoreService,private cs:CompanyService) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -47,12 +45,12 @@ export class TaxSlabsListComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteTaxSlab(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Tax Slabs Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
           }else{
             Swal.fire({
@@ -62,7 +60,6 @@ export class TaxSlabsListComponent implements OnInit {
             });
           }
         })
-      
         // this.tableData.splice(index, 1);
       }
     });
@@ -71,7 +68,7 @@ export class TaxSlabsListComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this product!",
+      text: "Do you want to Deactivate this Tax Slabs!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -85,7 +82,7 @@ export class TaxSlabsListComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.taxSlabIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Tax Slabs Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -100,7 +97,7 @@ export class TaxSlabsListComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this product!",
+      text: "Do you want to Active this Tax Slabs!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -114,7 +111,7 @@ export class TaxSlabsListComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.taxSlabIsActive(id,'').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Tax Slabs Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })

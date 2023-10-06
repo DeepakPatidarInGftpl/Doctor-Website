@@ -52,7 +52,7 @@ export class FeatureComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteFeature(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Feature Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             this.tableData.splice(index, 1);
@@ -95,7 +95,7 @@ export class FeatureComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.featureIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Feature Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
@@ -292,7 +292,7 @@ export class FeatureComponent implements OnInit {
     this.coreService.addFeature(this.featureForm.value).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Feature Successfuly Added") {
+      if (this.addRes.success) {
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.featureForm.reset()
@@ -314,7 +314,7 @@ update(){
     this.coreService.updateFeature(this.featureForm.value, this.id).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Feature updated successfully") {
+      if (this.addRes.success) {
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.featureForm.reset()

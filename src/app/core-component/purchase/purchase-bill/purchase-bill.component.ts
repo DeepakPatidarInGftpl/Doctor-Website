@@ -46,8 +46,7 @@ export class PurchaseBillComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.deletePurchaseBill(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.success == true) {
-            
+          if (this.delRes.success) { 
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -72,7 +71,7 @@ export class PurchaseBillComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this purchase Bill!",
+      text: "Do you want to Deactivate this Purchase Bill!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -86,7 +85,7 @@ export class PurchaseBillComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.PurchaseBillIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Purchase Bill Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -115,14 +114,14 @@ export class PurchaseBillComponent implements OnInit {
       if (t.isConfirmed) {
         this.purchaseService.PurchaseBillIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Purchase Bill Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Purchase Bill Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
