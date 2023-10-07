@@ -52,7 +52,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Supplier Bill No*</label>
-                        <input type="text" formControlName="supplier_bill_no"
+                        <input type="text" formControlName="supplier_bill_no" [ngModel]="prefixNo"
                             [ngClass]="{'is-invalid': f['supplier_bill_no'].touched && f['supplier_bill_no'].invalid}">
                         <span class="text-danger"
                             *ngIf="supplier_bill_no && supplier_bill_no.invalid && supplier_bill_no.touched">Enter
@@ -903,7 +903,7 @@
                 <a routerLink="//purchase/purchase-bill-list" class="btn btn-cancel text-white">Cancel</a> -->
                 <div class="row">
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <a routerLink="//purchase/purchase-bill-list" class="btn btn-cancel text-white"
+                        <a routerLink="//purchase/purchase-bill-list" class="btn btn-cancel text-white me-2"
                             style=" background-color: #f4516c;">Cancel</a>
                         <a class="btn btn-cancel text-white" (click)="clearForm()">Clear</a>
                     </div>
@@ -916,9 +916,9 @@
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>Save</button>
-                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('new')">Save & Create
+                        <button class="btn btn-submit me-2" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create
                             New</button>
-                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaderCreate" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save
                             & Create New</button>
                     </div>

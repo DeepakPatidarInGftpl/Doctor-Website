@@ -96,7 +96,7 @@ export class TransportComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Transport Is Deactivate Successfully.',
+          text: 'Transport is Deactivate Successfully.',
         });
       }
     });
@@ -125,7 +125,7 @@ export class TransportComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Transport Is Active Successfully.',
+          text: 'Transport is Active Successfully.',
         });
       }
     });

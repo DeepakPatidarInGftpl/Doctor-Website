@@ -54,7 +54,7 @@ export class UnitComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteUnits(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Unit Deleted successfully") {
+          if (this.delRes.success) {
            this.ngOnInit();
            Swal.fire({
             icon: 'success',
@@ -93,14 +93,14 @@ export class UnitComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.unitIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Unit Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
        Swal.fire({
          icon: 'success',
          title: 'Deactivate!',
-         text: 'Unit Group Is Deactivate Successfully.',
+         text: 'Unit Is Deactivate Successfully.',
        });
      }
    });
@@ -122,14 +122,14 @@ export class UnitComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.unitIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Unit Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
        Swal.fire({
          icon: 'success',
          title: 'Active!',
-         text: 'Unit Group Is Active Successfully.',
+         text: this.delRes.msg,
        });
      }
    });
@@ -291,7 +291,7 @@ loaders=false;
       this.coreService.addUnits(this.unitsForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()
@@ -313,7 +313,7 @@ loaders=false;
       this.coreService.updateUnits(this.unitsForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Unit updated successfully") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()

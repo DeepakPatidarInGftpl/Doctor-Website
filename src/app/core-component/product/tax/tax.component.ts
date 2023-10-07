@@ -53,7 +53,7 @@ export class TaxComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deletetax(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Tax Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             Swal.fire({
@@ -92,7 +92,7 @@ export class TaxComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.taxIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Tax Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -121,7 +121,7 @@ export class TaxComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.taxIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Tax Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -281,7 +281,7 @@ export class TaxComponent implements OnInit {
       this.coreService.addtax(this.taxForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.taxForm.reset()
@@ -306,7 +306,7 @@ export class TaxComponent implements OnInit {
       this.coreService.updatetax(this.taxForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Tax updated successfully") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.addForm = true
           this.toastr.success(this.addRes.msg)

@@ -92,7 +92,7 @@ export class AddFooterComponent implements OnInit {
       this.websiteService.addFooter(formdata).subscribe((res: any) => {
         // console.log(res);
         this.addRes = res;
-        if (this.addRes.msg == "FOOTER CREATED SUCESSFULLY") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.footerForm.reset()

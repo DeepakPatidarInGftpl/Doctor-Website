@@ -45,7 +45,7 @@ export class BrandlistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deletebrand(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Brands Deleted successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -84,7 +84,7 @@ export class BrandlistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.brandIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Brands Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -113,7 +113,7 @@ export class BrandlistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.brandIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Brands Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })

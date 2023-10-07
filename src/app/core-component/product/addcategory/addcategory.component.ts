@@ -19,7 +19,7 @@ export class AddcategoryComponent implements OnInit {
   token = localStorage.getItem('token')
   imgUrl = 'https://pv.greatfuturetechno.com';
   editRoute: any;
-  updateData: any
+  updateData: any;
   isAdd:any;
   isEdit:any;
   ngOnInit() {
@@ -77,14 +77,11 @@ export class AddcategoryComponent implements OnInit {
   }
 
   submitForm() {
-
     if (this.formaddCateg.invalid) {
       this.formaddCateg.markAllAsTouched()
     } else {
       if (this.editRoute) {
-
         var formData: any = new FormData();
-
         formData.append("title", this.formaddCateg.get('title')?.value);
         // formData.append("discount", this.formaddCateg.get('discount')?.value);
         // formData.append("image", this.formaddCateg.get('image')?.value);
@@ -94,7 +91,7 @@ export class AddcategoryComponent implements OnInit {
           formData.append('image', imageFile);
           this.CoreServ.editHttp(formData, this.editRoute.id).subscribe((res: any) => {
             this.toastr.success(res.msg)
-            if (res.msg == 'Product Category updated successfully') {
+            if (res.success) {
               this.formaddCateg.reset();
               this.updateData = '';
               this.url = '';
@@ -106,32 +103,25 @@ export class AddcategoryComponent implements OnInit {
         } else {
           this.CoreServ.editHttp(formData, this.editRoute.id).subscribe((res: any) => {
             this.toastr.success(res.msg)
-            if (res.msg == 'Product Category updated successfully') {
+            if (res.success) {
               this.formaddCateg.reset()
               this.updateData = '';
               this.url = '';
-              
               // this.ngOnInit();
               window.location.reload()
             }
             // console.log(res);
-
           })
         }
-
       } else {
-
         var formData: any = new FormData();
-
-
         formData.append("title", this.formaddCateg.get('title')?.value);
         // formData.append("discount", this.formaddCateg.get('discount')?.value);
         formData.append("image", this.formaddCateg.get('image')?.value);
-
         this.CoreServ.addCategory(formData).subscribe((res: any) => {
           // console.log(res);
           this.toastr.success(res.msg)
-          if (res.msg == 'Data Created') {
+          if (res.success) {
             this.formaddCateg.reset()
             window.location.reload()
           }

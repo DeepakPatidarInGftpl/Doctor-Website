@@ -51,7 +51,7 @@ export class VendorComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deleteVendor(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Vendor Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -90,14 +90,14 @@ export class VendorComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.VendorIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Vendor Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Vendor Is Deactivate Successfully.',
+          text: 'Vendor is Deactivate Successfully.',
         });
       }
     });
@@ -119,14 +119,14 @@ export class VendorComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.VendorIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Vendor Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Vendor Is Active Successfully.',
+          text: 'Vendor is Active Successfully.',
         });
       }
     });

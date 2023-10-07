@@ -50,7 +50,7 @@ export class FeatureGroupComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteFuature_group(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "FeatureGroup Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             this.tableData.splice(index, 1);
@@ -92,7 +92,7 @@ export class FeatureGroupComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.featureGroupIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "FeatureGroup Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -121,7 +121,7 @@ export class FeatureGroupComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.featureGroupIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "FeatureGroup Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -351,7 +351,7 @@ export class FeatureGroupComponent implements OnInit {
       this.coreService.addFuature_group(formData).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "FeatureGroup Successfuly Added") {
+        if (this.addRes.success) {
           this.selectedFeature = 0
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
@@ -380,7 +380,7 @@ export class FeatureGroupComponent implements OnInit {
       this.coreService.updateFuature_group(formData, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "FeatureGroup updated successfully") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.selectedFeature = 0
           this.toastr.success(this.addRes.msg)
@@ -415,6 +415,7 @@ export class FeatureGroupComponent implements OnInit {
         this.getFeature()
         this.addForm = false
         this.featureForm.patchValue(res);
+        // this.featureForm.get('feature').patchValue(res?.feature?.id)
         this.editFormdata = res
         this.features = res?.feature.map((res: any) => res.id);
       }

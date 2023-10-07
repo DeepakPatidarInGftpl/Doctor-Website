@@ -67,7 +67,7 @@ export class NewArrivalBannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deletenewArrivalBanner(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "New Arrivals Banner Deleted successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -104,7 +104,7 @@ export class NewArrivalBannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.newArrivalBannerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "New Arrival Banner Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -133,14 +133,14 @@ export class NewArrivalBannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.newArrivalBannerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "New Arrival Banner active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'New Arrival Banner Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -253,7 +253,7 @@ url:any;
       this.websiteService.addnewArrivalBanner(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "NEW ARRIVALS BANNER CREATED SUCESSFULLY") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.bannerForm.reset()
@@ -292,7 +292,7 @@ url:any;
         this.websiteService.updatenewArrivalBanner(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
-          if (this.addRes.msg == "New Arrivals Banner Updated Sucessfully") {
+          if (this.addRes.success) {
             this.loaders=false;
             this.updateData=''
             this.toastr.success(this.addRes.msg)
@@ -315,7 +315,7 @@ url:any;
         this.websiteService.updatenewArrivalBanner(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
-          if (this.addRes.msg == "New Arrivals Banner Updated Sucessfully") {
+          if (this.addRes.success) {
             this.loaders=false;
             this.updateData=''
             this.toastr.success(this.addRes.msg)

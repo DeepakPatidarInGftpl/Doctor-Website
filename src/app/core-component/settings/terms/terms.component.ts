@@ -53,7 +53,7 @@ export class TermsComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deleteTerms(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Size Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             Swal.fire({
@@ -93,7 +93,7 @@ export class TermsComponent implements OnInit {
      if (t.isConfirmed) {
        this.contactService.TermsIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Size Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
@@ -122,14 +122,14 @@ export class TermsComponent implements OnInit {
      if (t.isConfirmed) {
        this.contactService.TermsIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Size Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
        Swal.fire({
          icon: 'success',
          title: 'Active!',
-         text: 'Size Is Active Successfully.',
+         text: this.delRes.msg,
        });
      }
    });
@@ -207,7 +207,7 @@ export class TermsComponent implements OnInit {
     this.contactService.addTerms(this.sizeForm.value).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.Is_Success == "True") {
+      if (this.addRes.success) {
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.sizeForm.reset()
@@ -232,7 +232,7 @@ update(){
     this.contactService.updateTerms(this.sizeForm.value, this.id).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.Is_Success == "True") {
+      if (this.addRes.success) {
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.sizeForm.reset()

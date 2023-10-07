@@ -47,7 +47,7 @@ export class ListExpenseComponent implements OnInit {
       if (t.isConfirmed) {
         this.posService.deleteExpence(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Company Bank Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',

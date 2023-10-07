@@ -54,7 +54,7 @@ export class SubcategorylistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteProductSubcategory(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Product Subcategory Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -94,7 +94,7 @@ export class SubcategorylistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.subCategoryIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Product Subcategory Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -123,7 +123,7 @@ export class SubcategorylistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.subCategoryIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Product Subcategory Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -392,7 +392,7 @@ export class SubcategorylistComponent implements OnInit {
         // console.log(res);
         this.loader = false;
         this.addRes = res
-        if (this.addRes.msg == "Successfuly Added") {
+        if (this.addRes.success) {
           this.toastr.success(this.addRes.msg)
           this.subcategoryForm.reset()
           // window.location.reload()
@@ -428,7 +428,7 @@ export class SubcategorylistComponent implements OnInit {
           // console.log(res);
           this.addRes = res
           this.loader = false;
-          if (this.addRes.msg == "Product Subcategory updated successfully") {
+          if (this.addRes.success) {
             this.toastr.success(this.addRes.msg);
             this.updateData='';
             this.subcategoryForm.reset();
@@ -451,7 +451,7 @@ export class SubcategorylistComponent implements OnInit {
           // console.log(res);
           this.addRes = res
           this.loader = false;
-          if (this.addRes.msg == "Product Subcategory updated successfully") {
+          if (this.addRes.success) {
             this.toastr.success(this.addRes.msg);
             this.subcategoryForm.reset();
             this.updateData=''

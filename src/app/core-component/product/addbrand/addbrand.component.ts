@@ -266,7 +266,7 @@ export class AddbrandComponent implements OnInit {
       this.coreService.addbrand(formData).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.toastr.success(this.addRes.msg)
           this.router.navigate(['//product/brandlist'])
           this.url = '';

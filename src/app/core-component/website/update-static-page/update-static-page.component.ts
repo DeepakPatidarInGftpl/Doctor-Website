@@ -76,15 +76,15 @@ export class UpdateStaticPageComponent implements OnInit, OnDestroy {
       this.coreService.updateStaticPage(this.staticPgForm.value, this.slugid).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Updated Sucessfully") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.staticPgForm.reset()
           // window.location.reload();
         this.router.navigate(['/website/staticPage'])
-        }else if(this.addRes.slug[0]=="Static Pages with this slug already exists."){
+        }else if(this.addRes?.error?.slug[0]=="Static Pages with this slug already exists."){
           this.loaders=false;
-          this.toastr.error(this.addRes.slug[0])
+          this.toastr.error(this.addRes?.error?.slug[0])
         }
         else{
           this.loaders=false;

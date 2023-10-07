@@ -51,7 +51,7 @@ export class CitylistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deletecity(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "City Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -83,7 +83,7 @@ export class CitylistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.cityIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "City Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -112,14 +112,14 @@ export class CitylistComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.cityIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "City Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'City Is Active Successfully.',
+          text:this.delRes.msg,
         });
       }
     });
@@ -242,7 +242,7 @@ export class CitylistComponent implements OnInit {
       this.coreService.addcity(this.cityForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.cityForm.reset()
@@ -265,7 +265,7 @@ export class CitylistComponent implements OnInit {
       this.coreService.updatecity(this.cityForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "City updated successfully") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.cityForm.reset();

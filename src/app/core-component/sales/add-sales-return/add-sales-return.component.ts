@@ -779,11 +779,15 @@ export class AddSalesReturnComponent implements OnInit {
 
   getRes: any;
   loader = false;
+  loaderCreate = false;
   submit(type: any) {
     console.log(this.saleReturnForm.value);
     if (this.saleReturnForm.valid) {
-      this.loader = true;
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate = true;
+      } else if (type == 'save') {
+        this.loader = true;
+      }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleReturnForm.get('customer')?.value);
       formdata.append('bill_date', this.saleReturnForm.get('bill_date')?.value);
@@ -816,15 +820,12 @@ export class AddSalesReturnComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('sale_return_cart', JSON.stringify(cartData));
-
-
       this.saleService.addSaleReturn(formdata).subscribe(res => {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-          this.loader = false;
-          this.toastrService.success(this.getRes.msg);
           if (type == 'new') {
+            this.loaderCreate = false;
             this.saleReturnForm.reset()
             this.ngOnInit()
             this.userControl.reset()
@@ -837,16 +838,30 @@ export class AddSalesReturnComponent implements OnInit {
             }, 3000);
           }
           else {
+            this.loader = false;
+            this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//sales/salesReturnlist'])
           }
         } else {
-          this.loader = false
+               if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      }
         }
       }, err => {
-        this.loader = false
+             if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      }
       })
     } else {
-      this.loader = false;
+           if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
+        this.loader = false;
+      };
       this.saleReturnForm.markAllAsTouched()
       console.log('invald');
     }

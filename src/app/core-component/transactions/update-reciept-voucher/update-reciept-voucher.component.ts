@@ -43,6 +43,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.customerControl.setValue('Loading...');
     this.payerControl.setValue('Loading...');
 
+    
     this.recieptVoucherForm = this.fb.group({
       receipt_type: new FormControl('Cash'),
       customer: new FormControl('', [Validators.required]),
@@ -126,15 +127,17 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
+      console.log(j);
+      
       this.isAgainstBill = true;
       formarr.push(this.fb.group({
-        sale_bill: j.sale_bill,
+        sale_bill: j.sale_bill?.id,
         original_amount: j?.original_amount,
         paid_amount: j?.paid_amount,
         pending_amount: j?.pending_amount,
         payment: j?.payment,
       }))
-      this.myControls.push(new FormControl(j?.sale_bill));
+      this.myControls.push(new FormControl(j?.sale_bill?.customer_bill_no));
     })
     return formarr
   }
@@ -143,13 +146,15 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     add.forEach((j: any, i) => {
       this.isAgainstBillBank = true;
       formarr.push(this.fb.group({
-        sale_bill: j.sale_bill,
+        sale_bill: j.sale_bill?.id,
         original_amount: j?.original_amount,
         paid_amount: j?.paid_amount,
         pending_amount: j?.pending_amount,
         payment: j?.payment,
       }))
-      this.myControls.push(new FormControl(j?.sale_bill));
+      console.log(j);
+      
+      this.myControls.push(new FormControl(j?.sale_bill?.customer_bill_no));
     })
     return formarr
   }

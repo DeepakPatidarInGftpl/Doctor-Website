@@ -856,11 +856,15 @@ export class UpdateDebitnotesComponent implements OnInit {
   }
   getRes: any;
   loader = false;
+  loaderCreate = false;
   submit(type: any) {
     // console.log(this.debitNotesForm.value);
     if (this.debitNotesForm.valid) {
-
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate = true;
+      } else if (type == 'save') {
+        this.loader = true;
+      }
       let formdata: any = new FormData();
       formdata.append('party', this.debitNotesForm.get('party')?.value);
       formdata.append('purchase_return_date', this.debitNotesForm.get('purchase_return_date')?.value);
@@ -898,15 +902,13 @@ export class UpdateDebitnotesComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('cart', JSON.stringify(cartData));
-
       this.purchaseService.updatePurchaseReturn(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.getRes = res;
-        if (this.getRes.Is_Success == "True") {
-          this.loader = false;
-          this.toastrService.success(this.getRes.msg);
+        if (this.getRes.success) {
           // this.router.navigate(['//purchase/debit-notes-list'])
           if (type == 'new') {
+            this.loaderCreate = false;
             this.debitNotesForm.reset()
             this.supplierControl.reset()
             this.ngOnInit()
@@ -919,13 +921,23 @@ export class UpdateDebitnotesComponent implements OnInit {
             }, 3000);
           }
           else {
+            this.loader = false;
+            this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//purchase/debit-notes-list'])
           }
         } else {
-          this.loader = false;
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          }
         }
       }, err => {
-        this.loader = false
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        }
       })
     } else {
       this.debitNotesForm.markAllAsTouched()

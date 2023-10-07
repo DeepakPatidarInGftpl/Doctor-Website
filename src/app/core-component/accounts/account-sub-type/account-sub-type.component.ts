@@ -107,7 +107,7 @@ export class AccountSubTypeComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: this.delRes.msg,
+          text: 'Account Subtype is Deactived successfully',
         });
       }
     });

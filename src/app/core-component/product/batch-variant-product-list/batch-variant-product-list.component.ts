@@ -44,12 +44,12 @@ export class BatchVariantProductListComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteBatch(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Batch Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
-              text: 'Your file has been deleted.',
+              text: this.delRes.msg,
             });
             this.tableData.splice(index, 1);
           }else{
@@ -83,7 +83,7 @@ export class BatchVariantProductListComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.BatchIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Batch Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -112,14 +112,14 @@ export class BatchVariantProductListComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.BatchIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Batch Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Batch Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });

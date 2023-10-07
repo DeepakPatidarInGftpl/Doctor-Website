@@ -584,15 +584,15 @@ export class EditpurchaseComponent implements OnInit {
   TotalWithoutTax: any[] = [];
   landingCostEveryIndex: any[] = [];
   calculateTotalLandingCostEveryIndex(index: number): number {
-    
-    
+
+
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('purchase_rate');
     const taxPercentageControl = cartItem.get('tax');
     const discountPercentageControl = cartItem.get('discount');
     const qtyControlControl = cartItem.get('qty');
     if (purchaseRateControl && taxPercentageControl && discountPercentageControl && qtyControlControl) {
-    
+
       const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
       if (this.isTaxAvailable[index] == true) {
         const purchaseRate = +purchaseRateControl.value || 0;
@@ -677,11 +677,16 @@ export class EditpurchaseComponent implements OnInit {
 
   //
   loader = false;
+  loaderCreate = false;
   getRes: any;
   submit(type: any) {
     // console.log(this.purchaseForm.value);
     if (this.purchaseForm.valid) {
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate = true;
+      } else if (type == 'save') {
+        this.loader = true;
+      }
       let formdata: any = new FormData();
       formdata.append('party', this.purchaseForm.get('party')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
@@ -737,9 +742,10 @@ export class EditpurchaseComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-          this.toastrService.success(this.getRes.msg);
+         
           // this.router.navigate(['//purchase/purchaselist'])
           if (type == 'new') {
+            this.loaderCreate = false;
             this.purchaseForm.reset()
             this.ngOnInit()
             this.supplierControl.reset()
@@ -752,13 +758,23 @@ export class EditpurchaseComponent implements OnInit {
             }, 3000);
           }
           else {
+            this.loader=false;
+            this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//purchase/purchaselist'])
           }
         } else {
-          this.loader = false
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          }
         }
       }, err => {
-        this.loader = false
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        }
       })
     } else {
       this.purchaseForm.markAllAsTouched()

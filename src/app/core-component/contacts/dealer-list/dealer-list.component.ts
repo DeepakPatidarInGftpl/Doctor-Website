@@ -73,7 +73,7 @@ export class DealerListComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this dealer!",
+      text: "Do you want to Deactivate this Dealer!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -94,7 +94,7 @@ export class DealerListComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Dealer Is Deactivate Successfully.',
+          text: 'Dealer is Deactivate Successfully.',
         });
       }
     });
@@ -102,7 +102,7 @@ export class DealerListComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this dealer!",
+      text: "Do you want to Active this Dealer!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -123,7 +123,7 @@ export class DealerListComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Dealer Is Active Successfully.',
+          text: 'Dealer is Active Successfully.',
         });
       }
     });

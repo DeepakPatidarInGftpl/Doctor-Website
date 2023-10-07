@@ -387,13 +387,12 @@ export class EditbrandComponent implements OnInit {
         this.coreService.updatebrand(formData, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
-          if (this.addRes.msg == "Brands updated successfully") {
+          if (this.addRes.success) {
             this.loaders = false;
             this.toastr.success(this.addRes.msg)
             this.router.navigate(['//product/brandlist'])
             this.updateData = '';
             this.url = '';
-
             this.brandForm.reset()
             this.selectedSubcat = 0;
             this.selectedSubCatGrp = 0;
@@ -407,7 +406,7 @@ export class EditbrandComponent implements OnInit {
         this.coreService.updatebrand(formData, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
-          if (this.addRes.msg == "Brands updated successfully") {
+          if (this.addRes.success) {
             this.loaders = false;
             this.updateData = '';
             this.url = '';

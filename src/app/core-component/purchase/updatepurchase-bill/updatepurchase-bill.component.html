@@ -975,7 +975,7 @@
                 <div class="col-lg-6 my-1">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea class="form-control" formControlName="note" [readOnly]="true"></textarea>
+                        <textarea class="form-control" formControlName="note"></textarea>
                     </div>
                 </div>
                 <div class="card my-2">
@@ -1074,8 +1074,7 @@
                 <a routerLink="//purchase/purchase-bill-list" class="btn btn-cancel text-white">Cancel</a> -->
                 <div class="row">
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <a routerLink="//purchase/purchase-bill-list" class="btn btn-cancel text-white"
-                            style=" background-color: #f4516c;">Cancel</a>
+                        <a routerLink="//purchase/purchase-bill-list" class="btn btn-cancel text-white me-2" style=" background-color: #f4516c;">Cancel</a>
                         <a class="btn btn-cancel text-white" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
@@ -1087,9 +1086,9 @@
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>Save</button>
-                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('new')">Save & Create
+                        <button class="btn btn-submit me-2" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create
                             New</button>
-                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaderCreate" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save
                             & Create New</button>
                     </div>

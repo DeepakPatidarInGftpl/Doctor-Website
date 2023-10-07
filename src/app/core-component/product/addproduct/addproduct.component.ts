@@ -588,7 +588,7 @@ export class AddproductComponent implements OnInit {
     if (this.productForm.valid) {
       this.loader = true
       this.coreService.addProduct(formdata).subscribe(res => {
-        if (res.msg == "Product Created Successfully") {
+        if (res.success) {
           this.loader = false;
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])

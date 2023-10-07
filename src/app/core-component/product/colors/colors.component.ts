@@ -52,7 +52,7 @@ export class ColorsComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deletecolor(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Colour Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             Swal.fire({
@@ -92,7 +92,7 @@ export class ColorsComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.colorIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Color Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -143,7 +143,6 @@ export class ColorsComponent implements OnInit {
     this.form = this.fb.group({
       img: new FormControl('')
     })
-
     this.colorForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
       color_code: new FormControl('', [Validators.required]),
@@ -295,7 +294,7 @@ loaders=false;
       this.coreService.addcolor(this.colorForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.colorForm.reset()
@@ -317,7 +316,7 @@ loaders=false;
       this.coreService.updatecolor(this.colorForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Colour updated successfully") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.colorForm.reset()

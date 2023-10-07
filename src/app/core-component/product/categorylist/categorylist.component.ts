@@ -51,7 +51,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
         this.coreServ.deleteProductCateg(id).subscribe(res => {
           this.delRes = res;
           // console.log(this.delRes);
-          if (this.delRes.msg == 'Product Category Deleted successfully') {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -93,7 +93,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
       if (t.isConfirmed) {
         this.coreServ.categoryIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Product Category Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -122,7 +122,7 @@ export class CategorylistComponent implements OnInit, OnDestroy {
       if (t.isConfirmed) {
         this.coreServ.categoryIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Product Category Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -151,8 +151,6 @@ export class CategorylistComponent implements OnInit, OnDestroy {
     //     this.tableData = Object.values(JSON.parse(localStorage.getItem("prodCategories")))
     //   }
     // })
-
-
     // this.dtOptions = {
     //   dom: 'Btlpif',
     //   pagingType: 'numbers',

@@ -51,7 +51,7 @@ export class SizeComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deletesize(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Size Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             Swal.fire({
@@ -91,7 +91,7 @@ export class SizeComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.sizeIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Size Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
@@ -120,7 +120,7 @@ export class SizeComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.sizeIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Size Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
@@ -140,7 +140,7 @@ export class SizeComponent implements OnInit {
   ngOnInit(): void {
     this.sizeForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      code: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),   
+      code: new FormControl('', [Validators.required,]),   
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -246,7 +246,7 @@ export class SizeComponent implements OnInit {
     this.coreService.addsize(this.sizeForm.value).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Data Created") {
+      if (this.addRes.success) {
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.sizeForm.reset()
@@ -268,7 +268,7 @@ update(){
     this.coreService.updatesize(this.sizeForm.value, this.id).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Size updated successfully") {
+      if (this.addRes.success) {
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.sizeForm.reset()

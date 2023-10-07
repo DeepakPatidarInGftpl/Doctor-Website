@@ -969,10 +969,15 @@ export class UpdatepurchaseBillComponent implements OnInit {
 
   getRes: any;
   loader = false;
+  loaderCreate=false;
   submit(type: any) {
     console.log(this.puchaseBillForm.value);
     if (this.puchaseBillForm.valid) {
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate=true;
+      }else if(type=='save'){
+        this.loader = true;
+      }
       let formdata: any = new FormData();
       formdata.append('party', this.puchaseBillForm.get('party')?.value);
       formdata.append('supplier_bill_date', this.puchaseBillForm.get('supplier_bill_date')?.value);
@@ -1053,10 +1058,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-          this.loader = false;
-          this.toastrService.success(this.getRes.msg);
           // this.router.navigate(['//purchase/purchase-bill-list'])
           if (type == 'new') {
+            this.loaderCreate=false;
             this.puchaseBillForm.reset()
             this.supplierControl.reset()
             this.ngOnInit()
@@ -1069,8 +1073,23 @@ export class UpdatepurchaseBillComponent implements OnInit {
             }, 3000);
           }
           else {
+            this.loader = false;
+            this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//purchase/purchase-bill-list'])
           }
+        }
+        else{
+          if (type == 'new') {
+            this.loaderCreate=false;
+          }else if(type=='save'){
+            this.loader = false;
+          }
+        }
+      },err=>{
+        if (type == 'new') {
+          this.loaderCreate=false;
+        }else if(type=='save'){
+          this.loader = false;
         }
       })
     } else {

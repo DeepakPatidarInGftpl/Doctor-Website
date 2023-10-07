@@ -352,7 +352,7 @@ export class PaymentComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           // console.log('response receipt', response);
-          if (response.isSuccess) {
+          if (response.success) {
             // this.discardCurrentBill();
             this.toastr.success(response.msg)
             this.receiptPaymentForm.reset();
@@ -495,7 +495,7 @@ export class PaymentComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           // console.log('response receipt', response);
-          if (response.isSuccess) {
+          if (response.success) {
             // this.discardCurrentBill();
             this.toastr.success(response.msg)
             this.receiptPaymentForm.reset();
@@ -636,7 +636,7 @@ export class PaymentComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           // console.log('response receipt', response);
-          if (response.isSuccess) {
+          if (response.success) {
             // this.discardCurrentBill();
             this.toastr.success(response.msg)
             this.receiptPaymentForm.reset();

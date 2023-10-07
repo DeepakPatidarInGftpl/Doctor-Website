@@ -577,10 +577,17 @@ export class AddpurchaseComponent implements OnInit {
 
   getRes: any;
   loader = false;
+  loaderCreate=false;
+  
   submit(type: any) {
     console.log(this.purchaseForm.value);
     if (this.purchaseForm.valid) {
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate=true;
+      }else if(type=='save'){
+        this.loader = true;
+      }
+     
       let formdata: any = new FormData();
       formdata.append('party', this.purchaseForm.get('party')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
@@ -632,11 +639,10 @@ export class AddpurchaseComponent implements OnInit {
       this.purchaseService.addPurchase(formdata).subscribe(res => {
         // console.log(res);
         this.getRes = res;
-        if (this.getRes.IsSuccess == "True") {
-          this.loader = false;
-          this.toastrService.success(this.getRes.msg, '', {timeOut: 2000,})
+        if (this.getRes.success) {
           if (type == 'new') {
-            this.purchaseForm.reset()
+            this.purchaseForm.reset();
+            this.loaderCreate=false;
             this.ngOnInit()
             this.supplierControl.reset()
           } else if (type == 'print') {
@@ -646,18 +652,32 @@ export class AddpurchaseComponent implements OnInit {
               this.ngOnInit()
               this.supplierControl.reset()
             }, 3000);
-          }
+          } 
           else {
+            this.loader = false;
+            this.toastrService.success(this.getRes.msg, '', {timeOut: 1000,})
             this.router.navigate(['//purchase/purchaselist'])
           }
         } else {
-          this.loader = false
+          if (type == 'new') {
+            this.loaderCreate=true;
+          }else if(type=='save'){
+            this.loader = true;
+          }
         }
       }, err => {
-        this.loader = false
-      })
+         if (type == 'new') {
+        this.loaderCreate=true;
+      }else if(type=='save'){
+        this.loader = true;
+      }      
+    })
     } else {
-      this.loader = false;
+       if (type == 'new') {
+        this.loaderCreate=false;
+      }else if(type=='save'){
+        this.loader = false;
+      }
       this.purchaseForm.markAllAsTouched()
       console.log('invald');
     }
@@ -692,11 +712,11 @@ export class AddpurchaseComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
-      ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue))
-      : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue));
+      ? this.suppliers.filter(supplier => supplier.company_name.toLowerCase().includes(filterValue))
+      : this.suppliers.filter(supplier => !supplier.company_name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
       // console.log("No results found");
-      filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
+      filteredSuppliers.push({ company_name: "No data found" }); // Add a dummy entry for displaying "No data found"
     }
     return filteredSuppliers;
   }

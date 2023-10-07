@@ -184,7 +184,7 @@ export class TaxSlabsComponent implements OnInit {
       this.coreService.addTaxSlab(this.taxSlabForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res;
-        if (this.addRes.msg == "Tax Slabs Created") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastrService.success(this.addRes.msg);
           this.router.navigate(['product/taxSlabList']);

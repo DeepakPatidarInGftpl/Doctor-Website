@@ -70,7 +70,7 @@ export class DealOfTheDayComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteDealOfTheDay(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Deals Of The Day Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             Swal.fire({
               icon: 'success',
@@ -108,7 +108,7 @@ export class DealOfTheDayComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.DealOfTheDayIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Deals Of The Day Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -137,14 +137,14 @@ export class DealOfTheDayComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.DealOfTheDayIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Deals Of The Day Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Deals Of The Day Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -292,7 +292,7 @@ export class DealOfTheDayComponent implements OnInit {
         // console.log(res);
         this.loaders = false;
         this.addRes = res
-        if (this.addRes.Is_Sucess == "True") {
+        if (this.addRes.success) {
           this.toastr.success(this.addRes.msg);
           this.selectedItems = [];
           this.dealOfTheDayForm.reset();
@@ -327,7 +327,7 @@ export class DealOfTheDayComponent implements OnInit {
         // console.log(res);
 
         this.addRes = res
-        if (this.addRes.Is_Sucess == "True") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.dealOfTheDayForm.reset()

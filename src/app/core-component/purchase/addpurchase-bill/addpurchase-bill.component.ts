@@ -905,11 +905,15 @@ export class AddpurchaseBillComponent implements OnInit {
 
   getRes: any;
   loader = false;
+  loaderCreate=false;
   submit(type: any) {
     console.log(this.purchaseBillForm.value);
     if (this.purchaseBillForm.valid) {
-
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate=true;
+      }else if(type=='save'){
+        this.loader = true;
+      }
       let formdata: any = new FormData();
       formdata.append('party', this.purchaseBillForm.get('party')?.value);
       formdata.append('supplier_bill_date', this.purchaseBillForm.get('supplier_bill_date')?.value);
@@ -966,9 +970,7 @@ export class AddpurchaseBillComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('purchase_bill', JSON.stringify(cartData));
-
       //taxrate
-
       const textArray = this.purchaseBillForm.get('tax_rate') as FormArray;
       const textData = [];
       textArray.controls.forEach((tax) => {
@@ -992,10 +994,9 @@ export class AddpurchaseBillComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success == true) {
-          this.loader = false;
-          this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
           // this.router.navigate(['//purchase/purchase-bill-list'])
           if (type == 'new') {
+            this.loaderCreate=false;
             this.purchaseBillForm.reset()
             this.supplierControl.reset()
             this.ngOnInit()
@@ -1008,13 +1009,23 @@ export class AddpurchaseBillComponent implements OnInit {
             }, 3000);
           }
           else {
+            this.loader = false;
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 1000, });
             this.router.navigate(['//purchase/purchase-bill-list'])
           }
         } else {
-          this.loader = false;
+          if (type == 'new') {
+            this.loaderCreate=false;
+          }else if(type=='save'){
+            this.loader = false;
+          }
         }
       }, err => {
-        this.loader = false
+        if (type == 'new') {
+          this.loaderCreate=false;
+        }else if(type=='save'){
+          this.loader = false;
+        }
       })
     } else {
       this.purchaseBillForm.markAllAsTouched()

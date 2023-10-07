@@ -50,7 +50,7 @@ export class UnitConversionComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteUnitConversion(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Unit Conversion Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit();
             Swal.fire({
               icon: 'success',
@@ -89,7 +89,7 @@ export class UnitConversionComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.unitConversionIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "UnitConversion Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
@@ -118,14 +118,14 @@ export class UnitConversionComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.unitConversionIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "UnitConversion Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
        Swal.fire({
          icon: 'success',
          title: 'Active!',
-         text: 'Unit Conversion Is Active Successfully.',
+         text: this.delRes.msg,
        });
      }
    });
@@ -291,7 +291,7 @@ loaders=false;
       this.coreService.addUnitConversion(this.unitConversionForm.value).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Data Created") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.unitConversionForm.reset()
@@ -312,7 +312,7 @@ loaders=false;
       this.coreService.updateUnitConversion(this.unitConversionForm.value, this.id).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "Unit Conversion updated successfully") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.unitConversionForm.reset()

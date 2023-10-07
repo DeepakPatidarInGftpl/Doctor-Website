@@ -54,7 +54,7 @@ export class PaymentTermsComponent implements OnInit {
       if (t.isConfirmed) {
         this.contactService.deletePaymentTerms(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "PAYMENT TERMS Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
             this.ngOnInit();
             Swal.fire({
@@ -94,7 +94,7 @@ export class PaymentTermsComponent implements OnInit {
      if (t.isConfirmed) {
        this.contactService.PaymentTermsIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "FinancialYear Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
@@ -123,14 +123,14 @@ export class PaymentTermsComponent implements OnInit {
      if (t.isConfirmed) {
        this.contactService.PaymentTermsIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "FinancialYear Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
        Swal.fire({
          icon: 'success',
          title: 'Active!',
-         text: 'FinancialYear Is Active Successfully.',
+         text: this.delRes.msg,
        });
      }
    });
@@ -232,7 +232,7 @@ export class PaymentTermsComponent implements OnInit {
     this.contactService.addPaymentTerms(this.paymentTermsForm.value).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Data Created") {
+      if (this.addRes.success) {
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.paymentTermsForm.reset()
@@ -254,7 +254,7 @@ update(){
     this.contactService.updatePaymentTerms(this.paymentTermsForm.value, this.id).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Payment Terms Updated Sucessfully") {
+      if (this.addRes.success) {
         this.loaders=false;
         this.toastr.success(this.addRes.msg)
         this.paymentTermsForm.reset()
@@ -342,13 +342,11 @@ get days() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Payment Terms';
-
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
     // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
     autoTable(doc,
-
       {
         html: '#mytable',
         theme: 'grid',

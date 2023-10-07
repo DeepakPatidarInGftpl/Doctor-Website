@@ -287,11 +287,15 @@ export class AddmaterialInwardComponent implements OnInit {
 
   getRes: any;
   loader = false;
+  loaderCreate = false;
   submit(type: any) {
     // console.log(this.materialForm.value);
     if (this.materialForm.valid) {
-
-      this.loader = true;
+      if (type == 'new') {
+        this.loaderCreate = true;
+      } else if (type == 'save') {
+        this.loader = true;
+      }
       let formdata: any = new FormData();
       formdata.append('party', this.materialForm.get('party')?.value);
       formdata.append('purchase_order', this.materialForm.get('purchase_order')?.value);
@@ -342,11 +346,10 @@ export class AddmaterialInwardComponent implements OnInit {
       this.purchaseService.addMaterial(formdata).subscribe(res => {
         // console.log(res);
         this.getRes = res;
-        if (this.getRes.IsSuccess == "True") {
-          this.loader = false;
-          this.toastrService.success(this.getRes.msg,'', {timeOut: 2000,});
+        if (this.getRes.success) {
           // this.router.navigate(['//purchase/material-Inward-list'])
           if (type == 'new') {
+            this.loaderCreate = false;
             this.materialForm.reset()
             this.ngOnInit()
             this.supplierControl.reset()
@@ -359,13 +362,23 @@ export class AddmaterialInwardComponent implements OnInit {
             }, 3000);
           }
           else {
+            this.loader = false;
+            this.toastrService.success(this.getRes.msg,'', {timeOut: 2000,});
             this.router.navigate(['//purchase/material-Inward-list'])
           }
         }else{
-          this.loader=false;
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          }
         }
       },err=>{
-        this.loader=false
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        }
       })
     } else {
       this.materialForm.markAllAsTouched()
@@ -553,7 +566,7 @@ export class AddmaterialInwardComponent implements OnInit {
     let total = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const qtyControl = this.getCart().controls[i].get('qty');
-      const unitCostControl = this.getCart().controls[i].get('unit_cost') || 0;
+      const unitCostControl = this.getCart().controls[i].get('mrp') || 0;
       if (qtyControl && unitCostControl) {
         const qty = +qtyControl.value;
         const unitCost = +unitCostControl.value;

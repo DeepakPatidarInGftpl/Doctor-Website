@@ -68,7 +68,7 @@ export class AboutFooterBannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteaboutFooterBanner(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "About Footer Banner Deleted successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -105,7 +105,7 @@ export class AboutFooterBannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.aboutFooterBannerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "About Footer Banner Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -134,14 +134,14 @@ export class AboutFooterBannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.aboutFooterBannerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "About Footer Banner active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'About Footer Banner Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -250,7 +250,7 @@ export class AboutFooterBannerComponent implements OnInit {
       this.websiteService.addaboutFooterBanner(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "ABOUT FOOTER BANNER CREATED SUCESSFULLY") {
+        if (this.addRes.success) {
           this.loaders=false;
           this.toastr.success(this.addRes.msg)
           this.bannerForm.reset()
@@ -288,7 +288,7 @@ export class AboutFooterBannerComponent implements OnInit {
         this.websiteService.updateaboutFooterBanner(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
-          if (this.addRes.msg == "About Footer Banner Updated Sucessfully") {
+          if (this.addRes.success) {
             this.loaders=false;
             this.updateData='';
             this.toastr.success(this.addRes.msg)
@@ -311,7 +311,7 @@ export class AboutFooterBannerComponent implements OnInit {
         this.websiteService.updateaboutFooterBanner(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
-          if (this.addRes.msg == "About Footer Banner Updated Sucessfully") {
+          if (this.addRes.success) {
             this.loaders=false;
             this.updateData='';
             this.toastr.success(this.addRes.msg)

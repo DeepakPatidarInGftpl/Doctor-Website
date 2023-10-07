@@ -51,7 +51,7 @@ export class StaticPagesComponent implements OnInit {
       if (t.isConfirmed) {
         this.coreService.deleteStaticPage(slug).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Deleted successfully") {
+          if (this.delRes.success) {
             this.tableData
           this.ngOnInit();
           Swal.fire({
@@ -90,7 +90,7 @@ export class StaticPagesComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.staticPageIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Static Pages Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
@@ -119,14 +119,14 @@ export class StaticPagesComponent implements OnInit {
      if (t.isConfirmed) {
        this.coreService.staticPageIsActive(id,'').subscribe(res => {
          this.delRes = res
-         if (this.delRes.msg == "Static Pages Is active Updated Successfully") {
+         if (this.delRes.success) {
            this.ngOnInit()
          }
        })
        Swal.fire({
          icon: 'success',
          title: 'Active!',
-         text: 'Static Page Is Active Successfully.',
+         text: this.delRes.msg,
        });
      }
    });
@@ -246,7 +246,7 @@ selectAlll() {
     this.coreService.addcolor(this.staticPgForm.value).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Data Created") {
+      if (this.addRes.success) {
         this.toastr.success(this.addRes.msg)
         this.staticPgForm.reset()
         // window.location.reload();
@@ -268,7 +268,7 @@ update(){
     this.coreService.updatecolor(this.staticPgForm.value, this.id).subscribe(res => {
       // console.log(res);
       this.addRes = res
-      if (this.addRes.msg == "Colour updated successfully") {
+      if (this.addRes.success) {
         this.toastr.success(this.addRes.msg)
         this.staticPgForm.reset()
         this.addForm=true
@@ -348,19 +348,16 @@ update(){
     this.key = key;
     this.reverse = !this.reverse
   }
-
      // convert to pdf
      generatePDF() {
       // table data with pagination
       const doc = new jsPDF();
       const title = 'Static Pages List';
-  
       doc.setFontSize(15);
       doc.setTextColor(33, 43, 54);
       doc.text(title, 10, 10);
       // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
       autoTable(doc,
-  
         {
           html: '#mytable',
           theme: 'grid',

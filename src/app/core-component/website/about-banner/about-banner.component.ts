@@ -69,7 +69,7 @@ export class AboutBannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.deleteaboutBanner(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "About Banner Deleted successfully") {
+          if (this.delRes.success) {
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -106,7 +106,7 @@ export class AboutBannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.aboutBannerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "About Banner Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
@@ -135,14 +135,14 @@ export class AboutBannerComponent implements OnInit {
       if (t.isConfirmed) {
         this.websiteService.aboutBannerIsActive(id, '').subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "About Banner Is active Updated Successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
           }
         })
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'About Banner Is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -251,7 +251,7 @@ export class AboutBannerComponent implements OnInit {
       this.websiteService.addaboutBanner(formdata).subscribe(res => {
         // console.log(res);
         this.addRes = res
-        if (this.addRes.msg == "ABOUT BANNER CREATED SUCESSFULLY") {
+        if (this.addRes.success) {
           this.loaders = false;
           this.toastr.success(this.addRes.msg)
           this.bannerForm.reset()
@@ -289,7 +289,7 @@ export class AboutBannerComponent implements OnInit {
         this.websiteService.updateaboutBanner(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
-          if (this.addRes.msg == "About Banner Updated Sucessfully") {
+          if (this.addRes.success) {
             this.loaders = false;
             this.updateData=''
             this.toastr.success(this.addRes.msg)
@@ -312,7 +312,7 @@ export class AboutBannerComponent implements OnInit {
         this.websiteService.updateaboutBanner(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
-          if (this.addRes.msg == "About Banner Updated Sucessfully") {
+          if (this.addRes.success) {
             this.loaders = false;
             this.updateData=''
             this.toastr.success(this.addRes.msg)
@@ -332,9 +332,6 @@ export class AboutBannerComponent implements OnInit {
           }, 5000);
         })
       }
-
-
-
     } else {
       this.bannerForm.markAllAsTouched()
       // console.log('forms invalid');
