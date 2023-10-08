@@ -40,7 +40,7 @@ export class UpdateVendorComponent implements OnInit {
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
       apply_tds: new FormControl(''),
-      credit_limit: new FormControl('',),
+      credit_limit: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),

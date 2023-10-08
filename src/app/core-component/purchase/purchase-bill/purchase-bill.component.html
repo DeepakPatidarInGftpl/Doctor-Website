@@ -61,10 +61,26 @@
                                 <div class="form-group">
                                     <label>Supplier Bill No.</label>
                                     <input type="search" [(ngModel)]="selectedPurchaseNo" (ngModelChange)="filterData()" class="search" placeholder="Search Supplier Bill No.">
-                         
                                 </div>
                             </div>
-                           
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                   <label>Payment terms</label>
+                                    <select [(ngModel)]="filterPaymentTerms" (change)="filterData()" class="form-select">
+                                        <option value="" selected disabled>Select Payment Terms</option>
+                                        <option value="{{acc?.title}}" *ngFor="let acc of paymentList">{{acc?.title}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                   <label>Material Inward </label>
+                                    <select [(ngModel)]="filterMaterial" (change)="filterData()" class="form-select">
+                                        <option value="" selected disabled>Select Material Inward</option>
+                                        <option value="{{acc?.material_inward_no}}" *ngFor="let acc of materialList">{{acc?.material_inward_no}}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                          <div class="form-group" (click)="clearFilters()">
                                     <a class="btn btn-filters ms-auto" style="width: 10%;">Clear Filter</a>
@@ -90,7 +106,7 @@
                         <th (click)="sort('id')" class="thone">Supplier Bill Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Bill No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Refrence Bill No<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Material Inward No<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Inward No<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Payment Term<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Due Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
@@ -116,7 +132,7 @@
                         <td>{{products.supplier_bill_no}}</td>
                         <td>{{products.refrence_bill_no}}</td>
                         <td>{{products.material_inward_no.material_inward_no}}</td>
-                        <td>{{products.payment_term}}</td>
+                        <td>{{products.payment_term?.title}}</td>
                         <td>{{products.due_date |  date: 'yyyy-MM-dd'}}</td>
                         <td>{{products.reverse_charge}}</td>
                         <td>{{products.shipping_date}}</td>

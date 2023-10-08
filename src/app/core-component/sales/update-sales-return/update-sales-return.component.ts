@@ -80,7 +80,7 @@ export class UpdateSalesReturnComponent implements OnInit {
       this.saleService.getSaleReturnById(this.id).subscribe(res=>{
         this.editRes=res;
         this.saleReturnForm.patchValue(this.editRes);
-        this.saleReturnForm.get('sale_bill').patchValue(this.editRes?.sale_bill)
+        this.saleReturnForm.get('sale_bill').patchValue(this.editRes?.sale_bill?.id)
         this.saleReturnForm.setControl('sale_return_cart', this.udateCart(this.editRes?.cart));
         this.saleReturnForm.get('customer')?.patchValue(this.editRes?.customer?.id);
         this.userControl.setValue(this.editRes?.customer?.name);
@@ -120,7 +120,7 @@ export class UpdateSalesReturnComponent implements OnInit {
   myControl: FormArray;
   variantList: any[] = [];
 
-  getVariant(search: any, index: any) {
+  getVariant(search: any, index: any,barcode:any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -138,6 +138,10 @@ export class UpdateSalesReturnComponent implements OnInit {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControl.push(new FormControl(res[0]?.product_title));
+        }
         if (search) {
           //barcode patch
           this.searchs = res;
@@ -160,6 +164,10 @@ export class UpdateSalesReturnComponent implements OnInit {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         this.variantList = res;
         console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControl.push(new FormControl(res[0]?.product_title));
+        }
         if (search) {
           //barcode patch
           this.searchs = res;
@@ -209,7 +217,7 @@ export class UpdateSalesReturnComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '')
+    this.getVariant('', '','')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -221,7 +229,7 @@ export class UpdateSalesReturnComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '')
+    this.getVariant('', '','')
   }
 
   get customer() {
@@ -1025,7 +1033,7 @@ export class UpdateSalesReturnComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '')
+    this.getVariant('', '','')
   };
 
   searchs: any[] = [];

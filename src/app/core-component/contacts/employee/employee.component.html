@@ -124,7 +124,7 @@
                             products?.opening_balance : '') }}</td>
                         <td>{{products.commision}}</td>
                         <td>{{products.pan_no}}</td>
-                        <td>{{products?.role?.name}}</td>
+                        <td>{{products?.userid?.role?.name}}</td>
                         <td>
                             <mat-slide-toggle
                                 (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"

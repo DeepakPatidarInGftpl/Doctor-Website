@@ -29,7 +29,7 @@ export class AddDebitnotesComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private coreService: CoreService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
   }
 
@@ -88,6 +88,7 @@ export class AddDebitnotesComponent implements OnInit {
     });
 
     this.getSuuplier();
+    this.getCategory();
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
@@ -190,7 +191,7 @@ export class AddDebitnotesComponent implements OnInit {
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
-      this.getVariant('', '')
+      this.getVariant('', '','')
       // this.debitNotesForm.get('payment_term').patchValue(this.getPaymentTerms)
       this.supplierAddress = res;
       this.supplierAddress.address.map((res: any) => {
@@ -421,6 +422,7 @@ export class AddDebitnotesComponent implements OnInit {
         tax: 18,
       });
     }
+    this.purchase4(index)
   }
   coastprice: any[] = []
   landingPrice: any[] = []
@@ -927,7 +929,7 @@ export class AddDebitnotesComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '')
+    this.getVariant('', '','')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
@@ -1177,30 +1179,137 @@ export class AddDebitnotesComponent implements OnInit {
   searc: any;
   myControl = new FormControl('');
   variantList: any[] = [];
-  getVariant(search, index: any) {
-    this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
-      console.log(res);
-      this.variantList = res;
-      console.log(this.variantList);
-      //fetch barcode
-      if (search) {
-        this.searchs = res;
-        this.productOption = res;
-        // console.log(this.searchs);
-        this.productName[index] = this.searchs[0]?.product_title;
-        // console.log(this.productName);
-        this.check = true;
-        const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
-        barcode.patchValue({
-          barcode: this.searchs[0]?.id
-        });
-        this.coreService.getBatchById(this.searchs[0].id).subscribe(res => {
-          // console.log(res);
-          this.batchList = res;
-        })
+  getVariant(search: any, index: any,barcode:any) {
+    if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
+      if (this.selectData.length > 0) {
+        this.category = JSON.stringify(this.selectData);
+        console.log(this.category);
+      } else {
+        this.category = undefined
+        console.log(this.category, 'else part');
       }
-
-    });
+      if (this.selectSubCate.length > 0) {
+        this.subcategory = JSON.stringify(this.selectSubCate)
+      } else {
+        this.subcategory = undefined
+      }
+      this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+        console.log(res);
+        this.variantList = res;
+        console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControl.setValue(res[0].product_title)
+        }
+        if (search) {
+          //barcode patch
+          this.searchs = res;
+          this.productOption = res;
+          // console.log(this.searchs);
+          this.productName[index] = this.searchs[0]?.product_title;
+          // console.log(this.productName);
+          this.check = true;
+          const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            barcode: this.searchs[0].id
+          });
+        }
+      });
+    }
+    else {
+      this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+        console.log(res);
+        this.variantList = res;
+        console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index)
+          this.myControl.setValue(res[0].product_title)
+        }
+        if (search) {
+          //barcode patch
+          this.searchs = res;
+          this.productOption = res;
+          // console.log(this.searchs);
+          this.productName[index] = this.searchs[0]?.product_title;
+          // console.log(this.productName);
+          this.check = true;
+          const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            barcode: this.searchs[0]?.id
+          });
+        }
+      });
+    }
   }
+
+
+  categoryList: any[] = [];
+  filteredCategoryList: any[] = [];
+  searchCategory: string = '';
+  getCategory() {
+    this.coreService.getCategory().subscribe((res: any) => {
+      this.categoryList = res;
+      this.filteredCategoryList = [...this.categoryList];
+    })
+  }
+  filterCategory() {
+    if (this.searchCategory.trim() === '') {
+      this.filteredCategoryList = [...this.categoryList];
+    } else {
+      this.filteredCategoryList = this.categoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  }
+
+  SubcategoryList: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchSubCategory: string = '';
+  getSubCategory(val:any) {
+    this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
+      this.SubcategoryList = res;
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    })
+  }
+  filterSubCategory() {
+    if (this.searchSubCategory.trim() === '') {
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    } else {
+      this.filteredSubCategoryList = this.SubcategoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchSubCategory.toLowerCase())
+      );
+    }
+  }
+  selectData: any[] = []
+  SelectedProduct(variant: any) {
+    // this.selectData.push(variant)
+    const index = this.selectData.indexOf(variant);
+    if (index !== -1) {
+      this.selectData.splice(index, 1);
+    } else {
+      this.selectData.push(variant);
+    }
+    console.log(this.selectData, 'selected data');
+
+    this.getVariant('', '','')
+  }
+  selectSubCate: any[] = []
+  SelectedProductSubCat(variant: any) {
+    // this.selectData.push(variant)
+    const index = this.selectSubCate.indexOf(variant);
+    if (index !== -1) {
+      this.selectSubCate.splice(index, 1);
+    } else {
+      this.selectSubCate.push(variant);
+    }
+    console.log(this.selectSubCate, 'selected data');
+    this.getVariant('', '','')
+  }
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
+  }
+
 }
 

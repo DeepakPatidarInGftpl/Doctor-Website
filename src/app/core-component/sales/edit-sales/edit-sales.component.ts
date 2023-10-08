@@ -123,7 +123,7 @@ export class EditSalesComponent implements OnInit {
   myControl: FormArray;
   variantList: any[] = [];
 
-  getVariant(search: any, index: any) {
+  getVariant(search: any, index: any,barcode:any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -141,6 +141,10 @@ export class EditSalesComponent implements OnInit {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControl.push(new FormControl(res[0]?.product_title));
+        }
         if (search) {
           //barcode patch
           this.searchs = res;
@@ -163,6 +167,10 @@ export class EditSalesComponent implements OnInit {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControl.push(new FormControl(res[0]?.product_title));
+        }
         if (search) {
           //barcode patch
           this.searchs = res;
@@ -210,7 +218,7 @@ export class EditSalesComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '')
+    this.getVariant('', '','')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -222,7 +230,7 @@ export class EditSalesComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '')
+    this.getVariant('', '','')
   }
 
   get customer() {
@@ -834,6 +842,7 @@ export class EditSalesComponent implements OnInit {
             this.router.navigate(['//sales/saleslist'])
           }
         } else {
+          this.toastrService.error(this.getRes?.error?.due_date[0])
             if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
@@ -959,7 +968,7 @@ export class EditSalesComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '')
+    this.getVariant('', '','')
   };
 
   searchs: any[] = [];

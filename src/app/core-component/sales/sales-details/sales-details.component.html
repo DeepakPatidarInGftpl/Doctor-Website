@@ -9,7 +9,7 @@
                     <h4>New Sales Order</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//sales/editsalesreturns/{{orderDetail ?.id}}" class="btn btn-added">
+                    <a routerLink="//sales/edit-sales/{{orderDetail?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Sales Order
                     </a>
                 </div>
@@ -43,7 +43,7 @@
                                         </tr>
                                         <tr>
                                             <td class="th">Estimate</td>
-                                            <td class="td">{{orderDetail?.estimate}}</td>
+                                            <td class="td">{{orderDetail?.estimate?.estimate_no}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Total QTY</td>

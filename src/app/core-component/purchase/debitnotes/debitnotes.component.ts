@@ -198,7 +198,7 @@ export class DebitnotesComponent implements OnInit {
 
   paymentList: any;
   getPaymentTerms() {
-    this.contactService.getPaymentTerms().subscribe(res => {
+    this.purchaseService.getPurchaseBill().subscribe(res => {
       // console.log(res);
       this.paymentList = res;
     })
@@ -283,7 +283,6 @@ export class DebitnotesComponent implements OnInit {
     doc.text(title, 10, 10);
     // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
     autoTable(doc,
-
       {
         html: '#mytable',
         theme: 'grid',
@@ -294,13 +293,10 @@ export class DebitnotesComponent implements OnInit {
           //remove action filed
           { header: 'Sr No.' },
           { header: 'Supplier Name ' },
-          { header: 'Debit Note Date' },
-          { header: 'Debit Note No' },
-          { header: 'Due Date' },
+          { header: 'Return Date' },
+          { header: 'Return No' },
           { header: 'Reverse Charge' },
-          { header: 'Shipping Date' },
-          { header: 'Purchase' },
-          { header: 'Payment Terms' },
+          { header: 'Purchase Bill' },
           { header: 'Status' },
           { header: 'Is Active' }
         ],
@@ -359,7 +355,7 @@ export class DebitnotesComponent implements OnInit {
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
 
     // Remove the "Is Active" column header from the cloned table
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(12)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(9)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
@@ -374,7 +370,7 @@ export class DebitnotesComponent implements OnInit {
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
       // Remove the "Is Active" column data cell
-      const isActiveTd = row.querySelector('td:nth-child(12)');
+      const isActiveTd = row.querySelector('td:nth-child(9)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
@@ -411,7 +407,7 @@ export class DebitnotesComponent implements OnInit {
       });
     }
     if (this.selectedpaymentTerms) {
-      filteredData = filteredData.filter((item) => item?.payment_term?.title === this.selectedpaymentTerms);
+      filteredData = filteredData.filter((item) => item?.purchase_bill?.refrence_bill_no === this.selectedpaymentTerms);
     }
     this.filteredData = filteredData;
   }

@@ -19,9 +19,9 @@
                                 [ngClass]="{'is-invalid': f['party'].touched && f['party'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let supplier of filteredSuppliers | async">
-                                    <mat-option *ngIf="supplier.is_active==true"
-                                    [value]="supplier.company_name" (onSelectionChange)="oncheck(supplier.id)"
-                                    style="color:#FF9F43">{{ supplier.company_name}}</mat-option>
+                                    <mat-option *ngIf="supplier.is_active==true" [value]="supplier.company_name"
+                                        (onSelectionChange)="oncheck(supplier.id)" style="color:#FF9F43">{{
+                                        supplier.company_name}}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredSuppliers | async) as suppliers">
                                     <mat-option *ngIf="suppliers.length === 0" [value]="'No data found'">
@@ -45,12 +45,13 @@
                             [ngClass]="{'is-invalid': f['purchase_order'].touched && f['purchase_order'].invalid}">
                             <option value="" selected disabled>Select Purchase Order</option>
                             <ng-container *ngFor="let purchase of purchaseList">
-                            <option value="{{purchase.id}}" *ngIf="purchase.is_active==true">{{purchase?.order_no}}
-                            </option>
+                                <option value="{{purchase.id}}" *ngIf="purchase.is_active==true">{{purchase?.order_no}}
+                                </option>
                             </ng-container>
                         </select>
                         <span class="text-danger"
-                            *ngIf="purchase_order && purchase_order.invalid && purchase_order.touched">Select Purchase order
+                            *ngIf="purchase_order && purchase_order.invalid && purchase_order.touched">Select Purchase
+                            order
                         </span>
                     </div>
                 </div>
@@ -412,7 +413,9 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Product Type</label>
-                        <select formControlName="product_type" [ngClass]="{'is-invalid': f['product_type'].touched && f['product_type'].invalid}">
+                        <select formControlName="product_type"
+                            [ngClass]="{'is-invalid': f['product_type'].touched && f['product_type'].invalid}">
+                            <option value="" selected disabled>Select Product Type</option>
                             <option value="Demo Product">Demo Product</option>
                             <option value="Gift">Gift</option>
                             <option value="Saleable">Saleable</option>
@@ -429,206 +432,265 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th >Barcode/SKU</th>
-                                <th style="width: 25%;">Product Name
-                                <th>QTY </th>
-                                <th>PO QTY</th>
-                                <!-- <th>Unit Cost</th> -->
-                                <th>Mrp</th>
-                                <!-- <th>Total Cost</th> -->
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container formArrayName="material_inward_cart">
-                                <ng-container *ngFor="let d of getCart().controls; let i=index">
-                                    <tr [formGroupName]="i">
-                                        <td>
-                                            <div>
-                                                <div class="me-2">
-                                                    <svg (click)="removeCart(i)" style="color:red"
-                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                        <path
-                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                                    </svg>
-                                                </div>
-                                                <svg *ngIf="isLastCart(i)" (click)="addCart()" style="color:green"
-                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                    <path
-                                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                                </svg>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <input class="input" type="text" placeholder="Search Barcode"
-                                                [attr.data-index]="i"
-                                                [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                (keyup)="getVariant(id.value,i)" (blur)="hideSearch()">
-                                        </td>
-                                        <td colspan="1">
-                                            <div class="form-group" style="margin-bottom: 0;">
-                                            <!-- <input type="text" [value]="productName[i]!== undefined ? productName[i]:''"
-                                                (click)="open()" placeholder="Search Product" *ngIf="isProduct"
-                                                class="input"> -->
-                                            <!-- <mat-form-field class="w-100" class="input">
-                                                <input type="text" placeholder="Search Product" aria-label="Produt"
-                                                    matInput [formControl]="variantControl" [matAutocomplete]="auto"
-                                                    style="height: 18px;">
-                                                <mat-autocomplete #auto="matAutocomplete">
-                                                    <mat-option *ngFor="let variant of filteredVariants | async"
-                                                        [value]="variant?.product_title"
-                                                        (onSelectionChange)="oncheckVariant(variant,i)"
-                                                        (onSelectionChange)="variantChanged(variant, i)">{{
-                                                        variant?.product_title}}</mat-option>
-                                                    <ng-container *ngIf="(filteredVariants | async) as variants">
-                                                        <mat-option *ngIf="variants?.length === 0"
-                                                            [value]="'No data found'">
-                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+
-                                                                add Product</a>
-                                                        </mat-option>
-                                                    </ng-container>
-                                                </mat-autocomplete>
-                                            </mat-form-field> -->
-
-                                            <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                                                <input
-                                                  type="text"
-                                                  placeholder="Search Product"
-                                                  aria-label="Search Products"
-                                                  matInput
-                                                  [formControl]="myControl"
-                                                  (input)="getVariant($event.target.value,i)"
-                                                  [matAutocomplete]="autos" 
-                                                  style="box-sizing: border-box;" 
-                                                />
-                                                <mat-autocomplete #autos="matAutocomplete">
-                                                    <ng-container *ngIf="myControl.value?.length >= 1 && myControl.value?.length > 0">
-                                                        <ng-container *ngFor="let option of variantList">
-                                                  <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
-                                                              (onSelectionChange)="oncheckVariant(option,i)"
-                                                              (onSelectionChange)="variantChanged(option, i)" style="color:#FF9F43">
-                                                    {{ option?.product_title + ' ' + option?.variant_name}}
-                                                  </mat-option>
-                                                  </ng-container>
-                                                  </ng-container>
-                                                  <mat-option *ngIf="variantList?.length === 0" [value]="'No data found'">
-                                                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
-                                                  </mat-option>
-                                                  <mat-option *ngIf="myControl.value?.length < 3" class="is-loading">
-                                                    Please Enter 3 or more characters
-                                                  </mat-option>
-                                                </mat-autocomplete>
-                                              </mat-form-field>
-                                            </div>
-                                        </td>
-                                        <td><input type="text" formControlName="qty" class="input"></td>
-                                        <td><input type="text" formControlName="po_qty" class="input"></td>
-                                        <!-- <td><input type="text" formControlName="unit_cost" class="input"></td> -->
-                                        <td><input type="text" formControlName="mrp" class="input">
-                                            <i class="ion-information circle" data-bs-toggle="tooltip"
-                                                title="ion-information" (click)="openModalBatch()"></i>
-                                            <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
-                                                aria-labelledby="addressModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg modal-dialog-centered"
-                                                    role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Batch
-                                                            </h1>
-                                                            <button type="button" class="close"
-                                                                (click)="closeModalBatch()" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-2 col-sm-2 col-12">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                        <li><input type="text" placeholder="search category" class="form-control"
+                                                [(ngModel)]="searchCategory" (ngModelChange)="filterCategory()"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                *ngFor="let category of filteredCategoryList let i=index;">
+                                                <input type="checkbox" [value]="category.id"
+                                                    (change)="SelectedProduct(category?.id)" [id]="'checkboxCat-' + i"
+                                                    #categoryValue (change)="getSubCategory(categoryValue.value)">
+                                                <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                                    (click)="onLabelClick($event)">{{category?.title}}</label>
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <p *ngIf="selectData.length>0">{{selectData.length + ' Category Selected'}}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                        <li><input type="text" placeholder="search category" class="form-control"
+                                                [(ngModel)]="searchSubCategory" (ngModelChange)="filterSubCategory()"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                *ngFor="let subcategory of filteredSubCategoryList let i=index;">
+                                                <input type="checkbox" [value]="subcategory.id"
+                                                    (change)="SelectedProductSubCat(subcategory?.id)"
+                                                    [id]="'checkboxSubCat-' + i">
+                                                <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;"
+                                                    (click)="onLabelClick($event)">{{subcategory?.title}}</label>
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <p *ngIf="selectSubCate.length>0">{{selectSubCate.length + ' Sub Category Selected'}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Barcode/SKU</th>
+                                        <th style="width: 25%;">Product Name
+                                        <th>QTY </th>
+                                        <th>PO QTY</th>
+                                        <!-- <th>Unit Cost</th> -->
+                                        <th>Mrp</th>
+                                        <!-- <th>Total Cost</th> -->
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="material_inward_cart">
+                                        <ng-container *ngFor="let d of getCart().controls; let i=index">
+                                            <tr [formGroupName]="i">
+                                                <td>
+                                                    <div>
+                                                        <div class="me-2">
+                                                            <svg (click)="removeCart(i)" style="color:red"
+                                                                xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-x-circle"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                <path
+                                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
                                                         </div>
-                                                        <div class="modal-body">
-                                                            <div class="form-group" *ngIf="selectBatch">
-                                                                <div class="row">
-                                                                    <div class="table-responsive">
-                                                                        <table class="table datanew">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th class="boder space-text">Sr.No.
-                                                                                    </th>
-                                                                                    <th class="boder space-text">MRP
-                                                                                    </th>
-                                                                                    <th class="boder space-text">
-                                                                                        Purchase Price</th>
-                                                                                    <th class="boder space-text">
-                                                                                        Purchase Tax</th>
-                                                                                    <th class="boder space-text">Sale
-                                                                                        Tax</th>
-                                                                                    <th class="boder space-text">
-                                                                                        Discount</th>
-                                                                                    <th class="boder space-text">
-                                                                                        Additional Discount</th>
-                                                                                    <th class="boder space-text">Action
-                                                                                    </th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <tr
-                                                                                    *ngFor="let batch of selectBatch;let ind=index;">
-                                                                                    <td class="boder">{{ ind+1+'.'}}
-                                                                                    </td>
-                                                                                    <td class="boder">{{ batch?.mrp }}
-                                                                                    </td>
-                                                                                    <td class="boder">{{
-                                                                                        batch?.cost_price }}</td>
-                                                                                    <td class="boder">{{
-                                                                                        batch?.purchase_tax + '%'}}</td>
-                                                                                    <td class="boder">{{ batch?.sale_tax
-                                                                                        + '%'}}</td>
-                                                                                    <td class="boder">{{ batch?.discount
-                                                                                        + '%'}}</td>
-                                                                                    <td class="boder">{{
-                                                                                        batch?.additional_discount +
-                                                                                        '%'}}</td>
-                                                                                    <td>
-                                                                                        <button type="button"
-                                                                                            (click)="selecBatchtModel(batch,i)"
-                                                                                            class="btn btn-primary btn-sm"
-                                                                                            style="float: right;">Select</button>
-                                                                                    </td>
+                                                        <svg *ngIf="isLastCart(i)" (click)="addCart()"
+                                                            style="color:green" xmlns="http://www.w3.org/2000/svg"
+                                                            width="16" height="16" fill="currentColor"
+                                                            class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path
+                                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                        </svg>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input class="input" type="text" placeholder="Search Barcode"
+                                                        [attr.data-index]="i"
+                                                        [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
+                                                        (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
+                                                </td>
+                                                <td colspan="1">
+                                                    <div class="form-group" style="margin-bottom: 0;">
+                                                        <mat-form-field class="w-100"
+                                                            style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                            <input type="text" placeholder="Search Product"
+                                                                aria-label="Search Products" matInput
+                                                                [formControl]="myControl"
+                                                                (input)="getVariant($event.target.value,i,'')"
+                                                                [matAutocomplete]="autos"
+                                                                style="box-sizing: border-box;" />
+                                                            <mat-autocomplete #autos="matAutocomplete">
+                                                                <ng-container
+                                                                    *ngIf="myControl.value?.length >= 1 && myControl.value?.length > 0">
+                                                                    <ng-container *ngFor="let option of variantList">
+                                                                        <mat-option *ngIf="option.is_active==true"
+                                                                            [value]="option?.product_title + ' ' + option?.variant_name"
+                                                                            (onSelectionChange)="oncheckVariant(option,i)"
+                                                                            (onSelectionChange)="variantChanged(option, i)"
+                                                                            style="color:#FF9F43">
+                                                                            {{ option?.product_title + ' ' +
+                                                                            option?.variant_name}}
+                                                                        </mat-option>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                                <mat-option *ngIf="variantList?.length === 0"
+                                                                    [value]="'No data found'">
+                                                                    <a routerLink="//product/addproduct"
+                                                                        style="color:#FF9F43">+add Product</a>
+                                                                </mat-option>
+                                                                <mat-option *ngIf="myControl.value?.length < 3"
+                                                                    class="is-loading">
+                                                                    Please Enter 3 or more characters
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </td>
+                                                <td><input type="text" formControlName="qty" class="input"></td>
+                                                <td><input type="text" formControlName="po_qty" class="input"></td>
+                                                <!-- <td><input type="text" formControlName="unit_cost" class="input"></td> -->
+                                                <td><input type="text" formControlName="mrp" class="input">
+                                                    <i class="ion-information circle" data-bs-toggle="tooltip"
+                                                        title="ion-information" (click)="openModalBatch()"></i>
+                                                    <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
+                                                        aria-labelledby="addressModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg modal-dialog-centered"
+                                                            role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5"
+                                                                        id="staticBackdropLabel">Batch
+                                                                    </h1>
+                                                                    <button type="button" class="close"
+                                                                        (click)="closeModalBatch()" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="form-group" *ngIf="selectBatch">
+                                                                        <div class="row">
+                                                                            <div class="table-responsive">
+                                                                                <table class="table datanew">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Sr.No.
+                                                                                            </th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                MRP
+                                                                                            </th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Purchase Price</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Purchase Tax</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Sale
+                                                                                                Tax</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Discount</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Additional Discount</th>
+                                                                                            <th
+                                                                                                class="boder space-text">
+                                                                                                Action
+                                                                                            </th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr
+                                                                                            *ngFor="let batch of selectBatch;let ind=index;">
+                                                                                            <td class="boder">{{
+                                                                                                ind+1+'.'}}
+                                                                                            </td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.mrp }}
+                                                                                            </td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.cost_price }}
+                                                                                            </td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.purchase_tax +
+                                                                                                '%'}}</td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.sale_tax
+                                                                                                + '%'}}</td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.discount
+                                                                                                + '%'}}</td>
+                                                                                            <td class="boder">{{
+                                                                                                batch?.additional_discount
+                                                                                                +
+                                                                                                '%'}}</td>
+                                                                                            <td>
+                                                                                                <button type="button"
+                                                                                                    (click)="selecBatchtModel(batch,i)"
+                                                                                                    class="btn btn-primary btn-sm"
+                                                                                                    style="float: right;">Select</button>
+                                                                                            </td>
 
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <!-- <td class="text-end"><input type="text" class="input" [value]="(calculateTotalEveryIndex(i).toFixed(2)).toString()"></td> -->
+                                                </td>
+                                                <!-- <td class="text-end"><input type="text" class="input" [value]="(calculateTotalEveryIndex(i).toFixed(2)).toString()"></td> -->
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-start"><strong>Total</strong></td>
+                                        <td class="text-start">{{ calculateTotalQty()}}</td>
+                                        <td class="text-start">{{calculateTotalPOQty()}}</td>
+                                        <!-- <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td> -->
+                                        <td class="text-start"> {{calculateTotalMrp().toFixed(2)}}</td>
+                                        <!-- <td class="text-start"> {{ calculateTotal().toFixed(2) }}</td> -->
                                     </tr>
-                                </ng-container>
-                            </ng-container>
-                            <tr style=" background: rgba(145, 158, 171, 0.32);">
-                                <td></td>
-                                <td></td>
-                                <td class="text-start"><strong>Total</strong></td>
-                                <td class="text-start">{{ calculateTotalQty()}}</td>
-                                <td class="text-start">{{calculateTotalPOQty()}}</td>
-                                <!-- <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td> -->
-                                <td class="text-start"> {{calculateTotalMrp().toFixed(2)}}</td>
-                                <!-- <td class="text-start"> {{ calculateTotal().toFixed(2) }}</td> -->
-                            </tr>
-                        </tbody>
-                    </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- <div class="col-lg-12 my-3">
@@ -642,7 +704,8 @@
                 <div class="col-lg-6 my-3">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea formControlName="note" [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
+                        <textarea formControlName="note"
+                            [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                     </div>
                 </div>
                 <div class="col-lg-6 my-3">
@@ -657,7 +720,8 @@
                                 <li class="total">
                                     <h4>Total</h4>
                                     <h5>{{ calculateTotal().toFixed(2) | currency :'INR'}}
-                                        <input type="text" formControlName="total" class="input" [ngModel]="calculateTotal()" style="display: none;">
+                                        <input type="text" formControlName="total" class="input"
+                                            [ngModel]="calculateTotal()" style="display: none;">
                                     </h5>
                                 </li>
                                 <!-- <li>
@@ -747,22 +811,23 @@
 
                 <div class="row">
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <a routerLink="//purchase/material-Inward-list" class="btn btn-cancel text-white me-2"
+                        <a routerLink="//purchase/material-Inward-list" class="btn btn-cancel text-white me-2 mb-1"
                             style=" background-color: #f4516c;">Cancel</a>
-                        <a class="btn btn-cancel text-white" (click)="clearForm()">Clear</a>
+                        <a class="btn btn-cancel text-white mb-1" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2" (click)="submit('print')">Save & Print</button>
-                        <button class="btn btn-submit me-2" (click)="submit('draft')">Save as Draft</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')">Save & Print</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')">Save as Draft</button>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('save')">Save</button>
-                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                             <span class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>Save</button>
-                        <button class="btn btn-submit me-2" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create
+                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save &
+                            Create
                             New</button>
-                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaderCreate" disabled>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save
                             & Create New</button>
                     </div>

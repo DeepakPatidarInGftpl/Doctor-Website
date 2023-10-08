@@ -34,7 +34,7 @@ export class AddVendorComponent implements OnInit {
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
       apply_tds: new FormControl(''),
-      credit_limit: new FormControl('',),
+      credit_limit: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
@@ -231,6 +231,8 @@ export class AddVendorComponent implements OnInit {
             this.toastr.error(this.addRes?.opening_balance[0]);
           } else if (this.addRes?.error?.email) {
             this.toastr.error(this.addRes?.error?.email[0])
+          }else if(this.addRes?.error?.credit_limit){
+            this.toastr.error(this.addRes?.error?.credit_limit[0])
           }
         }
       }, err => {

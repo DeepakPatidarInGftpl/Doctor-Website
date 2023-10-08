@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 
 @Component({
@@ -23,7 +24,7 @@ export class AddpurchaseComponent implements OnInit {
   roundOff: any;
   mrpPurchase: number = 0;
 
-  constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
+  constructor(private purchaseService: PurchaseServiceService, private coreService: CoreService, private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
     private contactService: ContactService) {
@@ -92,7 +93,8 @@ export class AddpurchaseComponent implements OnInit {
     )
     this.getSuuplier();
     this.getprefix();
-    this.getCategory()
+    this.getCategory();
+    // this.getSubCategory();
     const inputData = [943, 940, 939, 939, 939];
 
     const uniqueData = inputData.filter((value, index, self) => {
@@ -124,7 +126,7 @@ export class AddpurchaseComponent implements OnInit {
   myControl = new FormControl('');
   variantList: any[] = [];
 
-  getVariant(search: any, index: any) {
+  getVariant(search: any, index: any,barcode:any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -142,6 +144,10 @@ export class AddpurchaseComponent implements OnInit {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index)
+          this.myControl.setValue(res[0].product_title)
+        }
         if (search) {
           //barcode patch
           this.searchs = res;
@@ -155,7 +161,6 @@ export class AddpurchaseComponent implements OnInit {
             barcode: this.searchs[0].id
           });
         }
-
       });
     }
     else {
@@ -163,6 +168,10 @@ export class AddpurchaseComponent implements OnInit {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index)
+          this.myControl.setValue(res[0].product_title)
+        }
         if (search) {
           //barcode patch
           this.searchs = res;
@@ -176,11 +185,8 @@ export class AddpurchaseComponent implements OnInit {
             barcode: this.searchs[0]?.id
           });
         }
-
       });
     }
-
-
   }
 
   get supplier() {
@@ -246,7 +252,7 @@ export class AddpurchaseComponent implements OnInit {
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
       this.supplierAddress = res;
-      this.getVariant('', '')
+      this.getVariant('', '','')
       console.log(this.selectedAddressBilling);
       this.supplierAddress.address.map((res: any) => {
         if (res.address_type == 'Billing') {
@@ -784,7 +790,7 @@ export class AddpurchaseComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '')
+    this.getVariant('', '','')
   };
 
   staticValue: string = 'Static Value';
@@ -1045,7 +1051,7 @@ export class AddpurchaseComponent implements OnInit {
   filteredCategoryList: any[] = [];
   searchCategory: string = '';
   getCategory() {
-    this.purchaseService.getSearchProduct().subscribe((res: any) => {
+    this.coreService.getCategory().subscribe((res: any) => {
       this.categoryList = res;
       this.filteredCategoryList = [...this.categoryList];
     })
@@ -1055,7 +1061,26 @@ export class AddpurchaseComponent implements OnInit {
       this.filteredCategoryList = [...this.categoryList];
     } else {
       this.filteredCategoryList = this.categoryList.filter(product =>
-        product?.product_title?.toLowerCase().includes(this.searchCategory.toLowerCase())
+        product?.title?.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  }
+
+  SubcategoryList: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchSubCategory: string = '';
+  getSubCategory(val:any) {
+    this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
+      this.SubcategoryList = res;
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    })
+  }
+  filterSubCategory() {
+    if (this.searchSubCategory.trim() === '') {
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    } else {
+      this.filteredSubCategoryList = this.SubcategoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchSubCategory.toLowerCase())
       );
     }
   }
@@ -1070,7 +1095,7 @@ export class AddpurchaseComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '')
+    this.getVariant('', '','')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -1082,7 +1107,7 @@ export class AddpurchaseComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '')
+    this.getVariant('', '','')
   }
   //dropdown auto close stop
   onLabelClick(event: Event) {

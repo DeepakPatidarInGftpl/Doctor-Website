@@ -286,13 +286,13 @@ export class AccountlistComponent implements OnInit {
     if (this.selectedAccountSubType) {
       filteredData = filteredData.filter((item) => item?.account_subtype?.title === this.selectedAccountSubType);
     }
-    
-
     if (this.selectedAccountId) {
       const searchTerm = this.selectedAccountId.toLowerCase();
       filteredData = filteredData.filter((item) => {
-        const aliasLower = item?.account_id.toString().toLowerCase();
-        return aliasLower.includes(searchTerm);
+        const account_id = item?.account_id?.toString()?.toLowerCase();
+        console.log(account_id);
+        
+        return account_id?.includes(searchTerm);
       });
     }
     this.filteredData = filteredData;

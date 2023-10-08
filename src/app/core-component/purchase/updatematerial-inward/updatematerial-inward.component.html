@@ -538,8 +538,53 @@
                 </div>
             </div> -->
 
-
+            <div class="card">
+                <div class="card-body">
             <div class="row">
+                <div class="col-lg-2 col-sm-2 col-12">
+                    <div class="page-title">
+                        <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-toggle button" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
+                            <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory"  (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}">
+                                </li>
+                                <li><a class="dropdown-item"
+                                        *ngFor="let category of filteredCategoryList let i=index;">
+                                        <input type="checkbox" [value]="category.id" (change)="SelectedProduct(category?.id)" 
+                                            [id]="'checkboxCat-' + i" #categoryValue
+                                            (change)="getSubCategory(categoryValue.value)">
+                                        <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category?.title}}</label>
+                                    </a></li>
+                            </ul>
+                        </div>
+                        <p *ngIf="selectData.length>0">{{selectData.length + ' Category Selected'}}</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-toggle button" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
+                            <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchSubCategory"  (ngModelChange)="filterSubCategory()" [ngModelOptions]="{standalone: true}">
+                                </li>
+                                <li><a class="dropdown-item"
+                                        *ngFor="let subcategory of filteredSubCategoryList let i=index;">
+                                        <input type="checkbox" [value]="subcategory.id" (change)="SelectedProductSubCat(subcategory?.id)" 
+                                            [id]="'checkboxSubCat-' + i">
+                                        <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory?.title}}</label>
+                                    </a></li>
+                            </ul>
+                        </div>
+                        <p *ngIf="selectSubCate.length>0">{{selectSubCate.length + ' Sub Category Selected'}}</p>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -585,7 +630,7 @@
                                             <input class="input" type="text" placeholder="Search Barcode"
                                                 [attr.data-index]="i"
                                                 [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                (keyup)="getVariant(id.value,i)" (blur)="hideSearch()">
+                                                (keyup)="getVariant(id.value,i,'barcode')"  (blur)="hideSearch()">
                                         </td>
                                         <td>
                                             <div class="form-group" style="margin-bottom: 0;">
@@ -597,7 +642,7 @@
                                                   aria-label="Search Products"
                                                   matInput
                                                   [formControl]="myControls.at(i)"
-                                                  (input)="getVariant($event.target.value,i)"
+                                                  (input)="getVariant($event.target.value,i,'')"
                                                   [matAutocomplete]="autos" 
                                                   style="box-sizing: border-box;" 
                                                 />
@@ -700,6 +745,8 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            </div>
             </div>
             <!-- <div class="col-lg-12 my-3">
                 <div class="form-group">
@@ -816,19 +863,19 @@
 
                 <div class="row">
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <a routerLink="//purchase/material-Inward-list" class="btn btn-cancel text-white me-2" style=" background-color: #f4516c;">Cancel</a>
-                        <a class="btn btn-cancel text-white" (click)="clearForm()">Clear</a>
+                        <a routerLink="//purchase/material-Inward-list" class="btn btn-cancel text-white me-2 mb-1" style=" background-color: #f4516c;">Cancel</a>
+                        <a class="btn btn-cancel text-white mb-1" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2" (click)="submit('print')">Save & Print</button>
-                        <button class="btn btn-submit me-2" (click)="submit('draft')">Save as Draft</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')">Save & Print</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')">Save as Draft</button>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2" *ngIf="!loader" (click)="submit('save')">Save</button>
-                        <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save</button> 
-                        <button class="btn btn-submit me-2" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create New</button>
-                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaderCreate" disabled>
+                        <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create New</button>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save & Create New</button>    
                     </div>
                 </div>

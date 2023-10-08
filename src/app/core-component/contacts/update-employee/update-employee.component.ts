@@ -238,8 +238,8 @@ export class UpdateEmployeeComponent implements OnInit {
 
   }
 loader=false;
+userError:any;
   submit() {
-
     let formdata: any = new FormData();
     formdata.append('login_access', this.employeeForm.get('login_access')?.value);
     formdata.append('name', this.employeeForm.get('name')?.value);
@@ -304,7 +304,13 @@ loader=false;
           this.router.navigate(['//contacts/employee'])
         }else{
           this.loader=false;
-          this.toastr.error(this.addRes.error)
+          this.toastr.error(this.addRes.error);
+          if(this.addRes.msg.includes('Username')){
+            this.userError=this.addRes.msg;
+            setTimeout(() => {
+              this.userError=''
+            }, 5000);
+          }
         }
       }, err => {
         this.loader=false;
