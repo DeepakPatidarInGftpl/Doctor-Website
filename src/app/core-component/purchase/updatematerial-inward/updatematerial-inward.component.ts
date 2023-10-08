@@ -6,6 +6,7 @@ import { Observable, map, startWith } from 'rxjs';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { tap } from 'rxjs/operators';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 @Component({
   selector: 'app-updatematerial-inward',
   templateUrl: './updatematerial-inward.component.html',
@@ -26,7 +27,8 @@ export class UpdatematerialInwardComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private Arout: ActivatedRoute,
-    private contactService: ContactService) {
+    private contactService: ContactService,
+    private coreService:CoreService) {
   }
 
   supplierControlName = 'party';
@@ -80,7 +82,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       this.materialForm.setControl('material_inward_cart', this.udateCart(res.cart));
       this.displaySupplierName(res.party.id);
       this.supplierId = res.party.id
-      this.getVariant('', '')
+      this.getVariant('', '','')
 
       //patch local-date
       //patch local-date
@@ -117,6 +119,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     )
     this.getSuuplier();
     this.getPurchase();
+    this.getCategory();
   }
 
   prefixNo: any;
@@ -220,7 +223,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
-      this.getVariant('', '')
+      this.getVariant('', '','')
       this.supplierAddress = res;
       console.log(this.selectedAddressBilling);
       this.supplierAddress.address.map((res: any) => {
@@ -564,7 +567,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '')
+    this.getVariant('', '','')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
@@ -731,24 +734,135 @@ export class UpdatematerialInwardComponent implements OnInit {
   searc: any;
   myControls: FormArray;
   variantList: any[] = [];
-  getVariant(search: any, index: any) {
-    this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
-      console.log(res);
-      this.variantList = res;
-      console.log(this.variantList);
-      if (search) {
-        //barcode patchvalue
-        this.searchs = res;
-        this.productOption = res;
-        // console.log(this.searchs);
-        this.productName[index] = this.searchs[0].product_title;
-        // console.log(this.productName);
-        this.check = true;
-        const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
-        barcode.patchValue({
-          barcode: this.searchs[0].id
-        });
+  getVariant(search: any, index: any,barcode: any) {
+    if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
+      if (this.selectData.length > 0) {
+        this.category = JSON.stringify(this.selectData);
+        console.log(this.category);
+      } else {
+        this.category = undefined
+        console.log(this.category, 'else part');
       }
-    });
+      if (this.selectSubCate.length > 0) {
+        this.subcategory = JSON.stringify(this.selectSubCate)
+      } else {
+        this.subcategory = undefined
+      }
+      this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+        console.log(res);
+        this.variantList = res;
+        console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControls.push(new FormControl(res[0]?.product_title));
+        }
+        if (search) {
+          //barcode patch
+          this.searchs = res;
+          this.productOption = res;
+          // console.log(this.searchs);
+          this.productName[index] = this.searchs[0]?.product_title;
+          // console.log(this.productName);
+          this.check = true;
+          const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            barcode: this.searchs[0].id
+          });
+        }
+      });
+    }
+    else {
+      this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+        console.log(res);
+        this.variantList = res;
+        console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index)
+          this.myControls.push(new FormControl(res[0]?.product_title));
+        }
+        if (search) {
+          //barcode patch
+          this.searchs = res;
+          this.productOption = res;
+          // console.log(this.searchs);
+          this.productName[index] = this.searchs[0]?.product_title;
+          // console.log(this.productName);
+          this.check = true;
+          const barcode = (this.materialForm.get('material_inward_cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            barcode: this.searchs[0]?.id
+          });
+        }
+      });
+    }
+  }
+
+  
+  categoryList: any[] = [];
+  filteredCategoryList: any[] = [];
+  searchCategory: string = '';
+  getCategory() {
+    this.coreService.getCategory().subscribe((res: any) => {
+      this.categoryList = res;
+      this.filteredCategoryList = [...this.categoryList];
+    })
+  }
+  filterCategory() {
+    if (this.searchCategory.trim() === '') {
+      this.filteredCategoryList = [...this.categoryList];
+    } else {
+      this.filteredCategoryList = this.categoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  }
+
+  SubcategoryList: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchSubCategory: string = '';
+  getSubCategory(val:any) {
+    this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
+      this.SubcategoryList = res;
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    })
+  }
+  filterSubCategory() {
+    if (this.searchSubCategory.trim() === '') {
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    } else {
+      this.filteredSubCategoryList = this.SubcategoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchSubCategory.toLowerCase())
+      );
+    }
+  }
+  selectData: any[] = []
+  SelectedProduct(variant: any) {
+    // this.selectData.push(variant)
+    const index = this.selectData.indexOf(variant);
+    if (index !== -1) {
+      this.selectData.splice(index, 1);
+    } else {
+      this.selectData.push(variant);
+    }
+    console.log(this.selectData, 'selected data');
+
+    this.getVariant('', '','')
+  }
+  selectSubCate: any[] = []
+  SelectedProductSubCat(variant: any) {
+    // this.selectData.push(variant)
+    const index = this.selectSubCate.indexOf(variant);
+    if (index !== -1) {
+      this.selectSubCate.splice(index, 1);
+    } else {
+      this.selectSubCate.push(variant);
+    }
+    console.log(this.selectSubCate, 'selected data');
+    this.getVariant('', '','')
+  }
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
   }
 }

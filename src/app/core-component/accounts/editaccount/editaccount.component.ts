@@ -55,7 +55,7 @@ export class EditaccountComponent implements OnInit {
     this.coreService.getAccountById(this.id).subscribe(res => {
       this.data = res
       // console.log(this.data?.account_subtype?.id);
-      
+      this.getAccountSubType(this.data?.accounts_type)
       this.accountForm.patchValue({
         title:this.data.title,
         accounts_type:this.data?.accounts_type,
@@ -64,7 +64,7 @@ export class EditaccountComponent implements OnInit {
         // account_id:this.data?.account_id,
         account_subtype:this.data?.account_subtype?.id
       })
-      this.getAccountSubType(this.data?.accounts_type)
+    
     })
 
     this.getCountry();
@@ -115,7 +115,6 @@ export class EditaccountComponent implements OnInit {
   accountSubTypeLsit: any;
   getAccountSubType(val: any) {
     // console.log();
-    
     this.coreService.getAccountTypeById(val).subscribe(res => {
       this.accountSubTypeLsit = res;
       // console.log(this.accountSubTypeLsit);  

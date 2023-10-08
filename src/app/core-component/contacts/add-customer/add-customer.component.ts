@@ -36,7 +36,7 @@ export class AddCustomerComponent implements OnInit {
       gstin: new FormControl('', [Validators.pattern("^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}")]),
       pan_no: new FormControl('', [Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")]),
       apply_tds: new FormControl('',),
-      credit_limit: new FormControl('',),
+      credit_limit: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       // address: new FormArray<any>([], ),
       address: this.fb.array([]),
       payment_terms: new FormControl(''),
@@ -172,25 +172,19 @@ export class AddCustomerComponent implements OnInit {
         this.loaders = false;
         this.customerForm.reset()
         this.router.navigate(['//contacts/customer'])
-      } else if (this.addRes.msg == "Username already exists") {
-        this.loaders = false;
-        this.toastr.success(this.addRes.msg)
-      }
+      } 
       else {
         this.loaders = false;
-        this.toastr.error(this.addRes?.opening_balance[0]);
-        if (this.addRes?.email) {
-          this.toastr.error(this.addRes?.email[0])
-        }
+        this.toastr.error(this.addRes.msg)
+        // if (this.addRes?.email) {
+        //   this.toastr.error(this.addRes?.email[0])
+        // }
       }
     }, err => {
       this.loaders = false
       // console.log(err.error.gst);
-      if (err.error) {
-        this.toastr.error(err.error?.opening_balance[0]);
-        this.toastr.error(err.error?.email[0])
-      }
-      else if (err.error.dob) {
+      this.toastr.error(err.error.msg)
+      if (err.error.dob) {
         this.dateError = 'Date (format:dd/mm/yyyy)';
         setTimeout(() => {
           this.dateError = ''

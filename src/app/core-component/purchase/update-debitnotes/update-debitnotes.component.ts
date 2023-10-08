@@ -89,11 +89,11 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.debitNotesForm.get('party')?.patchValue(res?.party.id);
       this.debitNotesForm.get('reverse_charge')?.patchValue(res?.reverse_charge);
       // this.debitNotesForm.get('payment_term')?.patchValue(res?.payment_term.id);
-      this.debitNotesForm.get('purchase_bill')?.patchValue(res?.purchase_bill);
+      this.debitNotesForm.get('purchase_bill')?.patchValue(res?.purchase_bill?.id);
       this.debitNotesForm.setControl('cart', this.udateCart(res?.cart));
       this.displaySupplierName(res?.party?.id);
       this.supplierId = res.party.id
-      this.getVariant('', '')
+      this.getVariant('', '','')
       const formattedOrderDate = new Date(this.getresbyId?.purchase_return_date).toISOString().slice(0, 16);
       this.debitNotesForm.get('purchase_return_date')?.patchValue(formattedOrderDate);
       //call detail api
@@ -126,6 +126,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     // this.getVariants();
     // this.getBatchComplete()
     this.getPurchaseBill();
+    this.getCategory();
     // this.getPaymentTerms()
   }
 
@@ -269,45 +270,6 @@ export class UpdateDebitnotesComponent implements OnInit {
     })
   }
 
-  // selectedAddressBilling: any;
-  // selectedAddressShipping: any;
-  // selectBatch: any;
-  // selectPaymentTerm: any
-  // supplierId
-  // oncheck(event: any) {
-  //   // console.log(event);
-  //   const selectedItemId = event; // Assuming the ID field is 'item_id'
-  //   // console.log(selectedItemId);
-  //   this.supplierId=event
-  //   if (this.getresbyId.cart.length >= 0) {
-  //     const variants = this.debitNotesForm.get('cart') as FormArray;
-  //     variants.clear();
-  //     this.addCart();
-  //   }
-  //   this.debitNotesForm.patchValue({
-  //     party: selectedItemId
-  //   });
-
-  //   //call detail api
-  //   this.contactService.getSupplierById(selectedItemId).subscribe(res => {
-  //     this.getPaymentTerms = res?.payment_terms?.id;
-  //     this.getVariant('','')
-  //     // this.debitNotesForm.get('payment_term').patchValue(this.getPaymentTerms)
-  //     this.supplierAddress = res;
-  //     this.supplierAddress.address.map((res: any) => {
-  //       if (res.address_type == 'Billing') {
-  //         this.selectedAddressBilling = res
-  //         console.log(this.selectedAddressBilling);
-  //       } else if (res.address_type == 'Shipping') {
-  //         this.selectedAddressShipping = res
-  //         console.log(this.selectedAddressShipping);
-  //       }
-  //     })
-  //   })
-  // }
-
-  // address 
-
 
   selectedAddressBilling: any;
   selectedAddressShipping: any;
@@ -323,7 +285,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
-      this.getVariant('', '')
+      this.getVariant('', '','')
       // this.debitNotesForm.get('payment_term').patchValue(this.getPaymentTerms)
       this.supplierAddress = res;
       this.supplierAddress.address.map((res: any) => {
@@ -431,7 +393,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     }
   }
 
-  selectedProductName: any;
+ 
   originalCoastPrice: any;
   apiPurchaseTax: number;
   isTaxAvailable: any[] = [];
@@ -440,7 +402,8 @@ export class UpdateDebitnotesComponent implements OnInit {
   batchDiscount: any;
   landingCost: any;
   batchCostPrice: any[] = [];
-  originalPrice:any[]=[];
+  originalPrice: any[] = [];
+  selectedProductName: any;
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
@@ -450,7 +413,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     this.batchDiscount = event.batch[0]?.discount || 0;
     this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
-    this.originalPrice[index]=event?.batch[0]?.cost_price || 0;
+    this.originalPrice[index] = event?.batch[0]?.cost_price || 0;
     if (event?.product?.purchase_tax_including == true) {
       let costprice = event?.batch[0]?.cost_price || 0;
       // landing cost
@@ -495,8 +458,8 @@ export class UpdateDebitnotesComponent implements OnInit {
           qty: event.batch[0]?.stock,
           tax: this.apiPurchaseTax,
           // discount: event.batch[0]?.discount || 0,
-          unit_cost: this.originalCoastPrice.toFixed(2),
-          // landing_cost: this.landingCost
+          unit_cost: this.originalCoastPrice,
+          landing_cost: this.landingCost
         });
       } else {
         this.tax[index] = 18
@@ -507,7 +470,7 @@ export class UpdateDebitnotesComponent implements OnInit {
           tax: 18,
           // discount: event.batch[0]?.discount || 0,
           unit_cost: event.batch[0]?.cost_price,
-          // landing_cost: this.landingCost || 0
+          landing_cost: this.landingCost || 0
         });
       }
       console.log(event.batch);
@@ -519,8 +482,8 @@ export class UpdateDebitnotesComponent implements OnInit {
         tax: 18,
       });
     }
+    this.purchase4(index)
   }
-
   // calculations
   coastprice: any[] = []
   landingPrice: any[] = []
@@ -1011,7 +974,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '')
+    this.getVariant('', '','')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = []; productName: any[] = [];
@@ -1309,29 +1272,135 @@ export class UpdateDebitnotesComponent implements OnInit {
   searc: any;
   myControls: FormArray;
   variantList: any[] = [];
-  getVariant(search: any, index: any) {
-    this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
-      console.log(res);
-      this.variantList = res;
-      console.log(this.variantList);
-      if (search) {
-        //fetch barcode
-        this.searchs = res;
-        this.productOption = res;
-        // console.log(this.searchs);
-        this.productName[index] = this.searchs[0].product_title;
-        // console.log(this.productName);
-        this.check = true;
-        const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
-        barcode.patchValue({
-          barcode: this.searchs[0].id
-        });
-        this.coreService.getBatchById(this.searchs[0].id).subscribe(res => {
-          // console.log(res);
-          this.batchList = res;
-        })
+  getVariant(search: any, index: any,barcode:any) {
+    if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
+      if (this.selectData.length > 0) {
+        this.category = JSON.stringify(this.selectData);
+        console.log(this.category);
+      } else {
+        this.category = undefined
+        console.log(this.category, 'else part');
       }
-    });
+      if (this.selectSubCate.length > 0) {
+        this.subcategory = JSON.stringify(this.selectSubCate)
+      } else {
+        this.subcategory = undefined
+      }
+      this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+        console.log(res);
+        this.variantList = res;
+        console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControls.push(new FormControl(res[0]?.product_title));
+        }
+        if (search) {
+          //barcode patch
+          this.searchs = res;
+          this.productOption = res;
+          // console.log(this.searchs);
+          this.productName[index] = this.searchs[0]?.product_title;
+          // console.log(this.productName);
+          this.check = true;
+          const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            barcode: this.searchs[0].id
+          });
+        }
+      });
+    }
+    else {
+      this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+        console.log(res);
+        this.variantList = res;
+        console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControls.push(new FormControl(res[0]?.product_title));
+        }
+        if (search) {
+          //barcode patch
+          this.searchs = res;
+          this.productOption = res;
+          // console.log(this.searchs);
+          this.productName[index] = this.searchs[0]?.product_title;
+          // console.log(this.productName);
+          this.check = true;
+          const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            barcode: this.searchs[0]?.id
+          });
+        }
+      });
+    }
+  }
+
+  categoryList: any[] = [];
+  filteredCategoryList: any[] = [];
+  searchCategory: string = '';
+  getCategory() {
+    this.coreService.getCategory().subscribe((res: any) => {
+      this.categoryList = res;
+      this.filteredCategoryList = [...this.categoryList];
+    })
+  }
+  filterCategory() {
+    if (this.searchCategory.trim() === '') {
+      this.filteredCategoryList = [...this.categoryList];
+    } else {
+      this.filteredCategoryList = this.categoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  }
+
+  SubcategoryList: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchSubCategory: string = '';
+  getSubCategory(val:any) {
+    this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
+      this.SubcategoryList = res;
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    })
+  }
+  filterSubCategory() {
+    if (this.searchSubCategory.trim() === '') {
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    } else {
+      this.filteredSubCategoryList = this.SubcategoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchSubCategory.toLowerCase())
+      );
+    }
+  }
+  selectData: any[] = []
+  SelectedProduct(variant: any) {
+    // this.selectData.push(variant)
+    const index = this.selectData.indexOf(variant);
+    if (index !== -1) {
+      this.selectData.splice(index, 1);
+    } else {
+      this.selectData.push(variant);
+    }
+    console.log(this.selectData, 'selected data');
+
+    this.getVariant('', '','')
+  }
+  selectSubCate: any[] = []
+  SelectedProductSubCat(variant: any) {
+    // this.selectData.push(variant)
+    const index = this.selectSubCate.indexOf(variant);
+    if (index !== -1) {
+      this.selectSubCate.splice(index, 1);
+    } else {
+      this.selectSubCate.push(variant);
+    }
+    console.log(this.selectSubCate, 'selected data');
+    this.getVariant('', '','')
+  }
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
   }
 }
 

@@ -262,13 +262,14 @@ export class UpdateCustomerComponent implements OnInit {
           // if(this.addRes.error== "'NoneType' object has no attribute 'name'"){
           //   this.router.navigate(['//contacts/customer'])
           // } 
-          this.toastr.error(this.addRes?.opening_balance[0]);
+          // this.toastr.error(this.addRes?.opening_balance[0]);
           if(this.addRes?.email){
             this.toastr.error(this.addRes?.email[0])
           } 
         }
       }, err => {
         this.loader=false;
+        
         if(err.error.error== "'NoneType' object has no attribute 'name'"){
           this.router.navigate(['//contacts/customer'])
         } else if(err.error.msg){

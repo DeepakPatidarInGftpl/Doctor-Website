@@ -129,7 +129,7 @@ export class EmployeeComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Active!',
-          text: 'Employee is Active Successfully.',
+          text: this.delRes.msg,
         });
       }
     });
@@ -390,9 +390,8 @@ export class EmployeeComponent implements OnInit {
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.roleType) {
-      filteredData = filteredData.filter((item) => item?.role?.name === this.roleType);
+      filteredData = filteredData.filter((item) => item?.userid?.role?.name === this.roleType);
     }
-    
     if (this.selectedCompany) {
       const searchTerm = this.selectedCompany.toLowerCase();
       filteredData = filteredData.filter((item) => {

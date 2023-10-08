@@ -150,6 +150,41 @@
                     </div>
                 </div>
             </mat-tab>
+            <mat-tab label="Bank Details">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body" *ngFor="let bank of vendorDetail?.bank_id;let i=index">
+                                <strong>{{i+1+'.'}} </strong>
+                                <div class="productdetails">
+                                    <ul class="product-bar">
+                                        <li>
+                                            <h4>Account Holder Name</h4>
+                                            <h6>{{bank?.account_holder_name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Bank Name</h4>
+                                            <h6>{{bank?.bank_name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Branch Name</h4>
+                                            <h6>{{bank?.branch_name}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Account Number</h4>
+                                            <h6>{{bank?.account_no}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Bank IFSC Code</h4>
+                                            <h6>{{bank?.bank_ifsc_code}}</h6>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
         </mat-tab-group>
 
         <div class="container" *ngIf="vendorDetail?.length==[]">
