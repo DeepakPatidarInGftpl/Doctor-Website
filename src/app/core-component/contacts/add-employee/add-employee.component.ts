@@ -173,9 +173,9 @@ export class AddEmployeeComponent implements OnInit {
   // }
 
   loader = false;
+  userError:any;
   submit() {
     // console.log(this.employeeForm.value);
-
     let formdata: any = new FormData();
     formdata.append('login_access', this.employeeForm.get('login_access')?.value);
     formdata.append('name', this.employeeForm.get('name')?.value);
@@ -243,6 +243,12 @@ export class AddEmployeeComponent implements OnInit {
         } else {
           this.loader = false;
           this.toastr.error(this.addRes.msg)
+          if(this.addRes.msg.includes('Username')){
+            this.userError=this.addRes.msg;
+            setTimeout(() => {
+              this.userError=''
+            }, 5000);
+          }
         }
       }, err => {
         this.loader = false;

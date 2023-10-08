@@ -33,7 +33,7 @@
                         <label>Mobile No*</label>
                         <input type="text" formControlName="mobile_no" maxlength="10" minlength="10" id="mobile_no"
                             [ngClass]="{
-                      'is-invalid': f['mobile_no'].touched && f['mobile_no'].invalid}"  [ngStyle]="{'border': mobileErr ? '1px solid red' : ''}">
+                      'is-invalid': f['mobile_no'].touched && f['mobile_no'].invalid}" [ngStyle]="{'border': mobileErr ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="mobile && mobile.invalid && mobile.touched">Enter your 10
                             digits mobile phone number</span>
                             <span class="text-danger" *ngIf="mobileErr">{{mobileErr}}</span>
@@ -142,7 +142,7 @@
                       'is-invalid': f['credit_limit'].touched && f['credit_limit'].invalid}">
                         <span class="text-danger"
                             *ngIf="credit_limit && credit_limit.invalid && credit_limit.touched">Enter your
-                            credit limit</span>
+                            credit limit (ex-123)</span>
                     </div>
                 </div>
 

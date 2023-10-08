@@ -28,7 +28,7 @@ export class EditpurchaseComponent implements OnInit {
   selectedProduct: any[] = [];
   //
   constructor(private purchaseService: PurchaseServiceService, private fb: FormBuilder,
-    private router: Router,
+    private router: Router, private coreService: CoreService,
     private toastrService: ToastrService, private Arout: ActivatedRoute, private contactService: ContactService) {
   }
 
@@ -93,7 +93,7 @@ export class EditpurchaseComponent implements OnInit {
 
 
       this.supplierId = res.party.id
-      this.getVariant('', '')
+      this.getVariant('', '','')
 
       //call detail api
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
@@ -126,9 +126,46 @@ export class EditpurchaseComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-
+    this.getCategory();
   }
 
+
+  categoryList: any[] = [];
+  filteredCategoryList: any[] = [];
+  searchCategory: string = '';
+  getCategory() {
+    this.coreService.getCategory().subscribe((res: any) => {
+      this.categoryList = res;
+      this.filteredCategoryList = [...this.categoryList];
+    })
+  }
+  filterCategory() {
+    if (this.searchCategory.trim() === '') {
+      this.filteredCategoryList = [...this.categoryList];
+    } else {
+      this.filteredCategoryList = this.categoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  }
+  SubcategoryList: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchSubCategory: string = '';
+  getSubCategory(val:any) {
+    this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
+      this.SubcategoryList = res;
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    })
+  }
+  filterSubCategory() {
+    if (this.searchSubCategory.trim() === '') {
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    } else {
+      this.filteredSubCategoryList = this.SubcategoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchSubCategory.toLowerCase())
+      );
+    }
+  }
   displaySupplierName(supplierId: number): void {
     // console.log(supplierId);
     // console.log(this.supplierList);
@@ -293,7 +330,7 @@ export class EditpurchaseComponent implements OnInit {
     this.supplierId = selectedItemId
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
-      this.getVariant('', '')
+      this.getVariant('', '','')
       this.supplierAddress = res;
       console.log(this.selectedAddressBilling);
       this.supplierAddress.address.map((res: any) => {
@@ -742,7 +779,7 @@ export class EditpurchaseComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-         
+
           // this.router.navigate(['//purchase/purchaselist'])
           if (type == 'new') {
             this.loaderCreate = false;
@@ -758,7 +795,7 @@ export class EditpurchaseComponent implements OnInit {
             }, 3000);
           }
           else {
-            this.loader=false;
+            this.loader = false;
             this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//purchase/purchaselist'])
           }
@@ -874,7 +911,7 @@ export class EditpurchaseComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '')
+    this.getVariant('', '','')
   };
 
   searchs: any[] = [];
@@ -1165,26 +1202,94 @@ export class EditpurchaseComponent implements OnInit {
   myControls: FormArray;
   variantList: any[] = [];
 
-  getVariant(search: any, index: any) {
-    this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
-      console.log(res);
-      this.variantList = res;
-      console.log(this.variantList);
-
-      if (search) {
-        //barcode patch
-        this.searchs = res;
-        // console.log(this.searchs);
-        this.productName[index] = this.searchs[0].product_title;
-        // console.log(this.productName);
-        this.check = true;
-        const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
-        barcode.patchValue({
-          barcode: this.searchs[0].id
-        });
+  getVariant(search: any, index: any,barcode:any) {
+    if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
+      if (this.selectData.length > 0) {
+        this.category = JSON.stringify(this.selectData);
+        console.log(this.category);
+      } else {
+        this.category = undefined
+        console.log(this.category, 'else part');
       }
-
-    });
+      if (this.selectSubCate.length > 0) {
+        this.subcategory = JSON.stringify(this.selectSubCate)
+      } else {
+        this.subcategory = undefined
+      }
+      this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+        console.log(res);
+        this.variantList = res;
+        console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControls.push(new FormControl(res[0]?.product_title));
+        }
+        if (search) {
+          //barcode patch
+          this.searchs = res;
+          // console.log(this.searchs);
+          this.productName[index] = this.searchs[0]?.product_title;
+          // console.log(this.productName);
+          this.check = true;
+          const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            barcode: this.searchs[0].id
+          });
+        }
+      });
+    }
+    else {
+      this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
+        console.log(res);
+        this.variantList = res;
+        console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControls.push(new FormControl(res[0]?.product_title));
+        }
+        if (search) {
+          //barcode patch
+          this.searchs = res;
+          // console.log(this.searchs);
+          this.productName[index] = this.searchs[0]?.product_title;
+          // console.log(this.productName);
+          this.check = true;
+          const barcode = (this.purchaseForm.get('purchase_cart') as FormArray).at(index) as FormGroup;
+          barcode.patchValue({
+            barcode: this.searchs[0]?.id
+          });
+        }
+      });
+    }
   }
+  selectData: any[] = []
+  SelectedProduct(variant: any) {
+    // this.selectData.push(variant)
+    const index = this.selectData.indexOf(variant);
+    if (index !== -1) {
+      this.selectData.splice(index, 1);
+    } else {
+      this.selectData.push(variant);
+    }
+    console.log(this.selectData, 'selected data');
 
+    this.getVariant('', '','')
+  }
+  selectSubCate: any[] = []
+  SelectedProductSubCat(variant: any) {
+    // this.selectData.push(variant)
+    const index = this.selectSubCate.indexOf(variant);
+    if (index !== -1) {
+      this.selectSubCate.splice(index, 1);
+    } else {
+      this.selectSubCate.push(variant);
+    }
+    console.log(this.selectSubCate, 'selected data');
+    this.getVariant('', '','')
+  }
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
+  }
 }

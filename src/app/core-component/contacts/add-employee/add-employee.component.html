@@ -303,9 +303,10 @@
                     <div class="form-group">
                         <label>UserName*</label>
                         <input type="text" formControlName="username" id="username"
-                            [ngClass]="{'is-invalid': f['username'].touched && f['username'].invalid}">
+                            [ngClass]="{'is-invalid': f['username'].touched && f['username'].invalid}" [ngStyle]="{'border': userError ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="username && username.invalid && username.touched">Enter your
                             UserName</span>
+                            <span class="text-danger" *ngIf="userError">{{userError}}</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">

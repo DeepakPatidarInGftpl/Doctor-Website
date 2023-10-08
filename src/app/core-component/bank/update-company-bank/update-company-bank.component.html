@@ -13,12 +13,8 @@
                     <div class="col-lg-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label>Name*</label>
-                            <input type="text" formControlName="name" id="name"
-                            [ngClass]="{
-                              'is-invalid': f['name'].touched && f['name'].invalid
-                            }">
+                            <input type="text" formControlName="name" id="name" [ngClass]="{'is-invalid': f['name'].touched && f['name'].invalid}">
                             <span class="text-danger"*ngIf="name && name.invalid && name.touched">Enter your name </span>
-                  
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-3 col-12">
@@ -40,51 +36,35 @@
                   <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Branch Name*</label>
-                        <input type="text" formControlName="branch_name"  id="branch_name"
-                        [ngClass]="{
-                          'is-invalid': f['branch_name'].touched && f['branch_name'].invalid
-                        }">
+                        <input type="text" formControlName="branch_name"  id="branch_name" [ngClass]="{'is-invalid': f['branch_name'].touched && f['branch_name'].invalid }">
                         <span class="text-danger"*ngIf="branch_name && branch_name.invalid && branch_name.touched">Enter your Branch Name </span>
                     </div>
                </div>
                     <div class="col-lg-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label>IFSC Code*</label>
-                            <input type="text" formControlName="IFSC_code" id="IFSC_code"
-                            [ngClass]="{
-                              'is-invalid': f['IFSC_code'].touched && f['IFSC_code'].invalid
-                            }">
-
+                            <input type="text" formControlName="IFSC_code" id="IFSC_code" [ngClass]="{'is-invalid': f['IFSC_code'].touched && f['IFSC_code'].invalid}">
                             <span class="text-danger"*ngIf="IFSC_code && IFSC_code.invalid && IFSC_code.touched">Enter your IFSC Code</span>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label>Swift Code*</label>
-                            <input type="text" formControlName="Swift_code" id="Swift_code"
-                            [ngClass]="{
-                              'is-invalid': f['Swift_code'].touched && f['Swift_code'].invalid
-                            }">
+                            <input type="text" formControlName="Swift_code" id="Swift_code" [ngClass]="{'is-invalid': f['Swift_code'].touched && f['Swift_code'].invalid}">
                             <span class="text-danger"*ngIf="Swift_code && Swift_code.invalid && Swift_code.touched">Enter Swift Code</span>            
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label>Credit Balance*</label>
-                            <input type="text" formControlName="credit_balance" id="credit_balance"
-                            [ngClass]="{
-                              'is-invalid': f['credit_balance'].touched && f['credit_balance'].invalid
-                            }">            
+                            <input type="text" formControlName="credit_balance" id="credit_balance" [ngClass]="{'is-invalid': f['credit_balance'].touched && f['credit_balance'].invalid}">            
                             <span class="text-danger"*ngIf="credit_balance && credit_balance.invalid && credit_balance.touched">Credit Balance</span>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-3 col-12">
                       <div class="form-group">
                           <label>Debit Balance*</label>
-                          <input type="text" formControlName="debit_balance" id="debit_balance"
-                          [ngClass]="{
-                            'is-invalid': f['debit_balance'].touched && f['debit_balance'].invalid
-                          }">            
+                          <input type="text" formControlName="debit_balance" id="debit_balance" [ngClass]="{'is-invalid': f['debit_balance'].touched && f['debit_balance'].invalid}">            
                           <span class="text-danger"*ngIf="debit_balance && debit_balance.invalid && debit_balance.touched">Debit Balance</span>
                       </div>
                   </div>
@@ -101,7 +81,6 @@
                         <label>Country*</label>
                         <!-- <input type="text" formControlName="counntry"  id="counntry"
                         [ngClass]="{'is-invalid': f['counntry'].touched && f['counntry'].invalid}"> -->
-
                         <select formControlName="counntry" class="w-100 h-100 border" required 
                         #countryValue (change)="selectState(countryValue.value)" id="counntry"
                         [ngClass]="{'is-invalid': f['counntry'].touched && f['counntry'].invalid}">
@@ -121,9 +100,7 @@
                           'is-invalid': f['state'].touched && f['state'].invalid
                         }"> -->
                           <select formControlName="state" class="w-100 h-100 border" required id="state"
-                          [ngClass]="{
-                            'is-invalid': f['state'].touched && f['state'].invalid
-                          }"   #stateValue (change)="selectCity(stateValue.value)">
+                          [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}" #stateValue (change)="selectCity(stateValue.value)">
                             <option value="" selected disabled>State</option>
                             <option value="{{state.id}}" *ngFor="let state of state">{{state.state}}</option>
                           </select>

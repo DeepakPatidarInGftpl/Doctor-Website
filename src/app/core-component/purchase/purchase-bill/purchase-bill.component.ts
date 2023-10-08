@@ -7,6 +7,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 
 @Component({
   selector: 'app-purchase-bill',
@@ -26,7 +27,8 @@ export class PurchaseBillComponent implements OnInit {
   filteredData: any[]; // The filtered data
   selectedPurchaseNo: any;
   date:any
-  constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService) { }
+  constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,
+    private contactService:ContactService) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -176,8 +178,26 @@ export class PurchaseBillComponent implements OnInit {
           }
         });
       });
+
+      this.getPaymentTerms();
+      this.getMaterial();
   }
 
+
+  paymentList: any;
+  getPaymentTerms() {
+    this.contactService.getPaymentTerms().subscribe(res => {
+      // console.log(res);
+      this.paymentList = res;
+    })
+  }
+materialList: any;
+  getMaterial() {
+    this.purchaseService.getMaterial().subscribe(res => {
+      // console.log(res);
+      this.materialList = res;
+    })
+  }
   allSelected: boolean = false;
   selectedRows: boolean[]
   selectAlll() {
@@ -364,6 +384,8 @@ export class PurchaseBillComponent implements OnInit {
       document.body.innerHTML = originalContents;
     }
          //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
+       filterMaterial:any;
+       filterPaymentTerms:any;
          filterData() {
           let filteredData = this.tableData.slice(); 
           if (this.date) {
@@ -380,11 +402,19 @@ export class PurchaseBillComponent implements OnInit {
               return aliasLower.includes(searchTerm);
             });
           }
+          if (this.filterMaterial) {
+            filteredData = filteredData.filter((item) => item?.material_inward_no?.material_inward_no === this.filterMaterial);
+          }
+          if (this.filterPaymentTerms) {
+            filteredData = filteredData.filter((item) => item?.payment_term?.title === this.filterPaymentTerms);
+          }
           this.filteredData = filteredData;
         }
         clearFilters() {
           this.selectedPurchaseNo = null;
           this.date=null;
+          this.filterPaymentTerms=null;
+          this.filterMaterial=null
           this.filterData();
         }
 

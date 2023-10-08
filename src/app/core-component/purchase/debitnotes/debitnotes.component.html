@@ -59,10 +59,10 @@
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                   <label>Payment Terms</label>
+                                   <label>Purchase Bill </label>
                                     <select [(ngModel)]="selectedpaymentTerms" (change)="filterData()" class="form-select">
-                                        <option value="" selected disabled>Select Account Sub Type</option>
-                                        <option value="{{acc.title}}" *ngFor="let acc of paymentList">{{acc.title}}</option>
+                                        <option value="" selected disabled>Select Purchase Bill</option>
+                                        <option value="{{acc?.refrence_bill_no}}" *ngFor="let acc of paymentList">{{acc?.refrence_bill_no}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -89,10 +89,10 @@
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Supplier Name <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Purchase Return Date<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Purchase Return No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Return Date<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Return No.<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Purchase<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Purchase Bill<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
@@ -113,7 +113,7 @@
                         <td>{{products?.purchase_return_date |  date:'yyyy-MM-dd hh:mm:ss a'}}</td>
                         <td>{{products?.purchase_return_no}}</td>
                         <td>{{products?.reverse_charge}}</td>
-                        <td>{{products?.purchase_bill}}</td>
+                        <td>{{products?.purchase_bill?.refrence_bill_no}}</td>
                         <td>
                             <span [ngClass]="{'bg-lightgreen': products.status === 'Approved', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Sent'}" class="badges">{{products.status}}</span>
                         </td>

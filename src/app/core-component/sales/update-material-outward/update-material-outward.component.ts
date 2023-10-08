@@ -115,7 +115,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
   myControl: FormArray;
   variantList: any[] = [];
 
-  getVariant(search: any, index: any) {
+  getVariant(search: any, index: any,barcode:any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -133,6 +133,10 @@ export class UpdateMaterialOutwardComponent implements OnInit {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControl.push(new FormControl(res[0]?.product_title));
+        }
         if (search) {
           //barcode patch
           this.searchs = res;
@@ -160,6 +164,10 @@ console.log(this.searchs);
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
+        if (barcode === 'barcode') {
+          this.oncheckVariant(res[0], index);
+          this.myControl.push(new FormControl(res[0]?.product_title));
+        }
         if (search) {
           //barcode patch
           this.searchs = res;
@@ -209,7 +217,7 @@ console.log(this.searchs);
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '')
+    this.getVariant('', '','')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -221,7 +229,7 @@ console.log(this.searchs);
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '')
+    this.getVariant('', '','')
   }
 
   get customer() {
@@ -635,7 +643,7 @@ console.log(this.searchs);
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '')
+    this.getVariant('', '','')
   };
 
   searchs: any[] = [];
