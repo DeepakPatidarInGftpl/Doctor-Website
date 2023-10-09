@@ -48,7 +48,7 @@ editRes:any;
     this.paymentVoucherForm = this.fb.group({
       receipt_type: new FormControl('Cash'),
       supplier: new FormControl('', [Validators.required]),
-      payment_account: new FormControl(''),
+      payment_account: new FormControl('',[Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
@@ -60,7 +60,7 @@ editRes:any;
     this.paymentVoucherBankForm = this.fb.group({
       receipt_type: new FormControl('Bank'),
       supplier: new FormControl('', [Validators.required]),
-      payment_account: new FormControl(''),
+      payment_account: new FormControl('',[Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
@@ -99,15 +99,15 @@ editRes:any;
         this.paymentVoucherBankForm.get('supplier').patchValue(this.editRes?.supplier);
         this.paymentVoucherBankForm.get('payment_account').patchValue(this.editRes?.payment_account);
         this.paymentVoucherBankForm.setControl('payment_voucher_cart', this.udateCartBank(this.editRes?.payment_cart));
-        this.supplierControl.setValue(this.editRes?.supplier);
-        this.payerControl.setValue(this.editRes?.payment_account);
+        this.supplierControl.setValue(this.editRes?.supplier?.company_name);
+        this.payerControl.setValue(this.editRes?.payment_account?.account_id);
       } else {
         this.paymentVoucherForm.patchValue(this.editRes);
-        this.paymentVoucherForm.get('supplier').patchValue(this.editRes?.supplier);
-        this.paymentVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account);
+        this.paymentVoucherForm.get('supplier').patchValue(this.editRes?.supplier?.id);
+        this.paymentVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
         this.paymentVoucherForm.setControl('payment_voucher_cart', this.udateCart(this.editRes?.payment_cart));
-        this.supplierControl.setValue(this.editRes?.supplier);
-        this.payerControl.setValue(this.editRes?.payment_account);
+        this.supplierControl.setValue(this.editRes?.supplier?.company_name);
+        this.payerControl.setValue(this.editRes?.payment_account?.account_id);
       }
 
     })
@@ -145,7 +145,10 @@ editRes:any;
   //update cart
   updateDebitNoteCart(debit_Cart:any,i:any): FormArray {
     console.log(debit_Cart);
-    this.isDebitNoteCart1[i] = true;
+    if(debit_Cart.length>0){
+      this.isDebitNoteCart1[i] = true;
+    }
+    // this.isDebitNoteCart1[i] = true;
     console.log(this.isDebitNoteCart1); 
     let formarr = new FormArray([]);
     debit_Cart.forEach((j: any, i) => {
@@ -181,7 +184,10 @@ editRes:any;
  //update cart
  updateDebitNoteCartBank(debit_Cart:any,i:any): FormArray {
   console.log(debit_Cart);
-  this.isDebitNoteCart[i] = true;
+  if(debit_Cart.length>0){
+    this.isDebitNoteCart[i] = true;
+  }
+ 
   console.log(this.isDebitNoteCart); 
   let formarr = new FormArray([]);
   debit_Cart.forEach((j: any, i) => {
@@ -212,11 +218,16 @@ editRes:any;
     return this.paymentVoucherForm.get('payment_voucher_cart') as FormArray;
   }
   addCart() {
-    this.getCart().push(this.cart())
+    this.getCart().push(this.cart());
     this.myControls.push(new FormControl(''));
+    this.isCart=false;
   }
+  isCart=false;
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if (this.paymentVoucherForm?.value?.payment_voucher_cart?.length==0) {
+     this.isCart=true;
+    }
   }
 
   // debit note cart
@@ -239,17 +250,25 @@ editRes:any;
   }
   removeDebitNoteForm1(e: any, i: any) {
     this.getDebitNoteCartForm1(e).removeAt(i);
+    if (this.paymentVoucherForm?.value?.payment_voucher_cart[e]?.debit_note_cart?.length==0) {
+      this.isDebitNoteCart1[e] = false;  
+    }
   }
   // bank
   getCartBank(): FormArray {
     return this.paymentVoucherBankForm.get('payment_voucher_cart') as FormArray;
   }
   addCartBank() {
-    this.getCartBank().push(this.cart())
+    this.getCartBank().push(this.cart());
     this.myControls.push(new FormControl(''));
+    this.isCartBank=false;
   }
+  isCartBank=false;
   removeCartBank(i: any) {
-    this.getCartBank().removeAt(i)
+    this.getCartBank().removeAt(i);
+    if (this.paymentVoucherBankForm?.value?.payment_voucher_cart?.length==0) {
+      this.isCartBank=true;
+     }
   }
   // debit not cart
   getDebitNoteCartForm(i: any): FormArray {
@@ -261,6 +280,9 @@ editRes:any;
   }
   removeDebitNoteForm(e: any, i: any) {
     this.getDebitNoteCartForm(e).removeAt(i);
+    if(this.paymentVoucherBankForm?.value?.payment_voucher_cart[e]?.debit_note_cart?.length==0){
+      this.isDebitNoteCart[e]=false;
+    }
   }
 
   // end 

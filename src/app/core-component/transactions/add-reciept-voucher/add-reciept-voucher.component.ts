@@ -111,24 +111,32 @@ export class AddRecieptVoucherComponent implements OnInit {
     return this.recieptVoucherForm.get('receipt_voucher_cart') as FormArray;
   }
   addCart() {
-    this.getCart().push(this.cart())
+    this.getCart().push(this.cart());
     this.myControls.push(new FormControl(''));
+    this.isCart = false;
   }
+  isCart = false;
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if (i == 0) {
+      this.isCart = true;
+    }
   }
   // bank
   getCartBank(): FormArray {
     return this.recieptVoucherBankForm.get('receipt_voucher_cart') as FormArray;
   }
+  isCartBank=false;
   addCartBank() {
-    console.log('jhj');
-
     this.getCartBank().push(this.cart())
     this.myControls.push(new FormControl(''));
+    this.isCartBank=false;
   }
   removeCartBank(i: any) {
-    this.getCartBank().removeAt(i)
+    this.getCartBank().removeAt(i);
+    if(this.recieptVoucherBankForm?.value?.receipt_voucher_cart?.length==0){
+      this.isCartBank=true;
+    }
   }
 
   isAgainstBill = false;
@@ -227,7 +235,7 @@ export class AddRecieptVoucherComponent implements OnInit {
     });
   }
   oncheck3(data: any, index: number) {
-    console.log(data); 
+    console.log(data);
     const cart = (this.recieptVoucherForm.get('receipt_voucher_cart') as FormArray).at(index) as FormGroup;
     cart.patchValue({
       sale_bill: data?.id,

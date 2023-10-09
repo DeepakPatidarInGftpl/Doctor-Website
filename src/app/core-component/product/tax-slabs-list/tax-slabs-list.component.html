@@ -78,8 +78,8 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td>
-                        <!-- {{products?.subcategory_group?.title}} -->
-                        {{products?.slab_title}}
+                        <td class="productimgname">
+                            <a routerLink="//product/taxSlabDetail/{{products.id}}" style="line-height: 3;">{{products?.slab_title}}</a>
                         </td>
                         <!-- <td><tr *ngFor="let data of products.subcategory">
                             <td>{{data.title+','}}</td>

@@ -21,9 +21,10 @@
                     <div class="form-group">
                         <label>User Name*</label>
                         <input type="text" formControlName="username" id="username" [ngClass]="{
-                      'is-invalid': f['username'].touched && f['username'].invalid}">
+                      'is-invalid': f['username'].touched && f['username'].invalid}" [ngStyle]="{'border':errUser?'1px solid red':''}">
                         <span class="text-danger" *ngIf="username && username.invalid && username.touched">Enter your
                             username </span>
+                        <span class="text-danger" *ngIf="errUser">{{errUser}}</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
@@ -31,9 +32,10 @@
                         <label>Mobile Number*</label>
                         <input type="text" formControlName="phone_number" id="phone_number" [ngClass]="{
                       'is-invalid': f['phone_number'].touched && f['phone_number'].invalid}" minlength="10"
-                            maxlength="10">
+                            maxlength="10" [ngStyle]="{'border':errPhone?'1px solid red':''}">
                         <span class="text-danger" *ngIf="mobile_no&& mobile_no.invalid && mobile_no.touched">Enter your
                             mobile No</span>
+                         <span class="text-danger" *ngIf="errPhone">{{errPhone}}</span>
                     </div>
                 </div>
 
@@ -74,8 +76,10 @@
                             <option value="" selected disabled>Select User Type</option>
                             <option value="Supplier">Supplier</option>
                             <option value="Vendor">Vendor</option>
+                            <option value="Dealer">Dealer</option>
                             <option value="Employee">Employee</option>
                             <option value="Customer">Customer</option>
+                            <option value="Transport">Transport</option>
                         </select>
                         <span class="text-danger" *ngIf="user_type && user_type.invalid && user_type.touched">Select
                             User Type</span>

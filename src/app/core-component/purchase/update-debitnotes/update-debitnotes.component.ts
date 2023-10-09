@@ -226,15 +226,20 @@ export class UpdateDebitnotesComponent implements OnInit {
   getCart(): FormArray {
     return this.debitNotesForm.get('cart') as FormArray;
   }
+  isCart=false;
   addCart(i:any) {
     this.getCart().push(this.cart())
     if(i>0){
       this.isPercentage[i] = true;
       this.isAmount[i] = false;
     }
+    this.isCart=false;
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if (this.debitNotesForm?.value?.cart?.length == 0) {
+      this.isCart = true
+    }
   }
   supplierList: any;
   getSuuplier() {

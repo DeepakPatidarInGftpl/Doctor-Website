@@ -89,7 +89,7 @@ export class CouponComponent implements OnInit {
   deActivate(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this banner!",
+      text: "Do you want to Deactivate this coupon!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -101,7 +101,7 @@ export class CouponComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.websiteService.bannerIsActive(id, '').subscribe(res => {
+        this.websiteService.CouponIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit()
@@ -110,7 +110,7 @@ export class CouponComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Deactivate!',
-          text: 'Banner Is Deactivate Successfully.',
+          text: 'Coupon Is Deactivate Successfully.',
         });
       }
     });
@@ -118,7 +118,7 @@ export class CouponComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this banner!",
+      text: "Do you want to Active this coupon!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -130,7 +130,7 @@ export class CouponComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.websiteService.bannerIsActive(id, '').subscribe(res => {
+        this.websiteService.CouponIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             this.ngOnInit()
@@ -338,18 +338,6 @@ export class CouponComponent implements OnInit {
     this.couponForm.reset();
   }
 
-  // search() {
-  //   if (this.titlee == "") {
-  //     this.ngOnInit();
-  //   } else {
-  //     this.tableData = this.tableData.filter(res => {
-  //       console.log(res);
-  //       console.log(res.title.toLocaleLowerCase());
-  //       console.log(res.title.match(this.titlee));
-  //       return res.title.match(this.titlee);
-  //     })
-  //   }
-  // }
   search() {
     if (this.titlee === "") {
       this.ngOnInit();

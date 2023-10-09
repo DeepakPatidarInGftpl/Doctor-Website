@@ -1,1 +1,64 @@
-<p>details-countra-voucher works!</p>
+<div class="page-header">
+    <div class="page-title">
+        <h4>Countra Voucher Details</h4>
+        <h6>Full details of a Countra Voucher</h6>
+    </div>
+    <div class="page-btn">
+        <a routerLink="//transaction/updatecountravoucher/{{countraVooucherDetails?.id}}" class="btn btn-added">
+            <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Countra Voucher
+        </a>
+    </div>
+</div>
+
+<!-- /add -->
+<div class="row">
+    <div class="col-lg-12 col-sm-12" *ngIf="countraVooucherDetails">
+        <div class="card">
+            <div class="card-body">
+                <!-- <div class="bar-code-view">
+                    <img src="assets/img/barcode1.png" alt="barcode">
+                    <a class="printimg">
+                        <img src="assets/img/icons/printer.svg" alt="print">
+                    </a>
+                </div> -->
+                <div class="productdetails">                  
+                    <ul class="product-bar">
+                       
+                        <li>
+                            <h4>To Account</h4>
+                            <h6>{{countraVooucherDetails?.to_account?.account_id}}</h6>
+                        <li>
+                            <h4>From Account</h4>
+                            <h6>
+                                {{countraVooucherDetails?.from_account?.account_id}}                            
+                            </h6>
+                        </li>
+                        <li>
+                            <h4>Countra Voucher No.</h4>
+                            <h6>{{countraVooucherDetails?.countra_voucher_no}}</h6>
+                        </li>
+                        <li>
+                            <h4>Amount</h4>
+                            <h6>{{countraVooucherDetails?.amount | currency:'INR'}}</h6>
+                        </li>
+                        <li>
+                            <h4>Date</h4>
+                            <h6>{{countraVooucherDetails?.date}}</h6>
+                        </li>
+                        <li>
+                            <h4>Note</h4>
+                            <h6>{{countraVooucherDetails?.note}}</h6>
+                        </li>
+                    </ul>
+                </div>
+    
+            </div>
+            <div class="d-flex align-items-center mx-4">
+                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                <span [ngClass]="{'bg-lightgreen': countraVooucherDetails?.is_active === true, 'bg-lightred' : countraVooucherDetails?.is_active === false }" class="badges">{{countraVooucherDetails?.is_active}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- /add -->

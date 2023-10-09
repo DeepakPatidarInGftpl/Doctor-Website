@@ -138,6 +138,7 @@ export class AddDebitnotesComponent implements OnInit {
   getCart(): FormArray {
     return this.debitNotesForm.get('cart') as FormArray;
   }
+  isCart = false;
   addCart(i: any) {
     this.getCart().push(this.cart())
     console.log(i);
@@ -145,9 +146,14 @@ export class AddDebitnotesComponent implements OnInit {
       this.isPercentage[i] = true;
       this.isAmount[i] = false;
     }
+    this.isCart = false
   }
+
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if (this.debitNotesForm?.value?.cart?.length == 0) {
+      this.isCart = true
+    }
   }
   supplierList: any;
   getSuuplier() {
@@ -191,7 +197,7 @@ export class AddDebitnotesComponent implements OnInit {
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
-      this.getVariant('', '','')
+      this.getVariant('', '', '')
       // this.debitNotesForm.get('payment_term').patchValue(this.getPaymentTerms)
       this.supplierAddress = res;
       this.supplierAddress.address.map((res: any) => {
@@ -929,7 +935,7 @@ export class AddDebitnotesComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
@@ -1179,7 +1185,7 @@ export class AddDebitnotesComponent implements OnInit {
   searc: any;
   myControl = new FormControl('');
   variantList: any[] = [];
-  getVariant(search: any, index: any,barcode:any) {
+  getVariant(search: any, index: any, barcode: any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -1265,7 +1271,7 @@ export class AddDebitnotesComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -1291,7 +1297,7 @@ export class AddDebitnotesComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -1303,7 +1309,7 @@ export class AddDebitnotesComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   //dropdown auto close stop
   onLabelClick(event: Event) {

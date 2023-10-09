@@ -166,6 +166,7 @@
                                 <table class="table datanew">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th></th>
                                             <th>Sale Bill</th>
                                             <th>Original Amount</th>
@@ -174,11 +175,15 @@
                                             <th>Payment</th>
                                             <!-- <th></th> -->
                                         </tr>
+                                        <tr>
+                                            <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         <ng-container formArrayName="receipt_voucher_cart">
                                             <ng-container *ngFor="let d of getCart().controls; let i=index">
                                                 <tr [formGroupName]="i">
+                                                    <td>{{i+1+'.'}}</td>
                                                     <td>
                                                         <div>
                                                             <div class="me-2">
@@ -204,7 +209,6 @@
                                                         </div>
                                                     </td>
                                                     <td>
-
                                                         <div class="form-group" style="margin-bottom:-1%">
                                                             <mat-form-field class="w-100"
                                                                 style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
@@ -462,6 +466,7 @@
                                 <table class="table datanew">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th></th>
                                             <th>Sale Bill</th>
                                             <th>Original Amount</th>
@@ -469,11 +474,15 @@
                                             <th>Pending Amount</th>
                                             <th>Payment</th>
                                         </tr>
+                                        <tr>
+                                            <th colspan="3"> <span (click)="addCartBank()" class="debitIntoCart" *ngIf="isCartBank">Add Cart+</span></th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         <ng-container formArrayName="receipt_voucher_cart">
                                             <ng-container *ngFor="let d of getCartBank().controls; let i=index">
                                                 <tr [formGroupName]="i">
+                                                    <td>{{i+1+'.'}}</td>
                                                     <td>
                                                         <div>
                                                             <div class="me-2">
@@ -536,17 +545,11 @@
                                                             Sale Bill</span>
                                                     </td>
                                                     <td>
-                                                        <input type="number" formControlName="original_amount"
-                                                            class="input">
-                                                        <span class="text-danger" style="display: block;"
-                                                            *ngIf="original_amount1(i) && original_amount1(i).invalid && original_amount1(i).touched">Enter
-                                                            Original
-                                                            Amount </span>
+                                                        <input type="number" formControlName="original_amount" class="input">
+                                                        <span class="text-danger" style="display: block;" *ngIf="original_amount1(i) && original_amount1(i).invalid && original_amount1(i).touched">Enter Original Amount </span>
                                                     </td>
-                                                    <td><input type="number" formControlName="paid_amount"
-                                                            class="input">
-                                                        <span class="text-danger" style="display: block;"
-                                                            *ngIf="paid_amount1(i) && paid_amount1(i).invalid && paid_amount1(i).touched">Enter
+                                                    <td><input type="number" formControlName="paid_amount" class="input">
+                                                        <span class="text-danger" style="display: block;" *ngIf="paid_amount1(i) && paid_amount1(i).invalid && paid_amount1(i).touched">Enter
                                                             debit Paid Amount</span>
                                                     </td>
                                                     <td><input type="number" formControlName="pending_amount"

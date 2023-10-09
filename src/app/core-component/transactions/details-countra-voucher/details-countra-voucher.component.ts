@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
   selector: 'app-details-countra-voucher',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetailsCountraVoucherComponent implements OnInit {
 
-  constructor() { }
+ 
 
+  constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,) { }
+  countraVooucherDetails: any
+  id: any
   ngOnInit(): void {
+    this.id = this.Arout.snapshot.paramMap.get('id');
+    this.transactionService.getCountraVoucherById(this.id).subscribe(res=>{
+      this.countraVooucherDetails=res
+    })
   }
 
 }
+

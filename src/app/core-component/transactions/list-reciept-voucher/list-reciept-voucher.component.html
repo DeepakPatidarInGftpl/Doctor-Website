@@ -82,7 +82,7 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Enter Amount</label>
-                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount" (change)="filterData()">
+                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount" (keyup)="filterData()">
                                     <span class="text-success">Amount Filter (Less than & Equal to Amount value)</span>
                                 </div>
                             </div>

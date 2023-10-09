@@ -240,15 +240,20 @@ export class AddSalesReturnComponent implements OnInit {
   getCart(): FormArray {
     return this.saleReturnForm.get('sale_return_cart') as FormArray;
   }
+  isCart=false;
   addCart(i) {
     this.getCart().push(this.cart());
+    this.isCart=false;
     if(i>0){
       this.isPercentage[i] = true;
       this.isAmount[i]=false;
     }
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if(this.saleReturnForm?.value?.sale_return_cart?.length==0){
+      this.isCart=true;
+    }
   }
   getUser() {
     this.saleService.getUser().subscribe((res: any) => {
