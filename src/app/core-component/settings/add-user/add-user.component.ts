@@ -53,6 +53,8 @@ branchList:any;
   dateError = null
   addRes: any;
   loader = false;
+  errPhone:any;
+  errUser:any;
   submit() {
     // console.log(this.userForm.value);
     if (this.userForm.valid) {
@@ -69,19 +71,23 @@ branchList:any;
           this.loader=false;
           if(this.addRes.phone_number){
             this.toastr.error(this.addRes.phone_number)
+            this.errPhone=this.addRes.phone_number;
+            setTimeout(() => {
+              this.errPhone='';
+            }, 5000);
           }else if(this.addRes.username){
-            this.toastr.error(this.addRes.username)
+            this.toastr.error(this.addRes.username);
+            this.errUser=this.addRes.username;
+            setTimeout(() => {
+              this.errUser='';
+            }, 5000);
           }
         }
       }, err => {
-        // console.log(err.error.gst);
-       
-        
+        // console.log(err.error.gst);    
       })
     } else {
       this.userForm.markAllAsTouched()
-      // console.log('hhhhhh');
-
     }
   }
 

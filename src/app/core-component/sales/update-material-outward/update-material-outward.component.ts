@@ -261,11 +261,16 @@ console.log(this.searchs);
   getCart(): FormArray {
     return this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray;
   }
+  isCart=false;
   addCart() {
-    this.getCart().push(this.cart())
+    this.getCart().push(this.cart());
+    this.isCart=false;
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if(this.saleMaterialOutwardForm?.value?.material_outward_cart?.length==0){
+      this.isCart=true
+    }
   }
   getUser() {
     this.saleService.getUser().subscribe((res: any) => {

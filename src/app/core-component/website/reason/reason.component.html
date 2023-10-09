@@ -19,11 +19,9 @@
                             <a class="btn btn-searchset">
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                                    <input type="search" class="form-control form-control-sm" placeholder="Search..."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
-                                </label>
+                                    <input type="search" class="form-control form-control-sm" placeholder="Search Title/Type" [(ngModel)]="titlee" (ngModelChange)="search()">
+                            </label>
                             </div>
-
                         </div>
                     </div>
                     <div class="wordset">
@@ -71,18 +69,10 @@
                                     </label>
                                 </td>
                                 <td>{{i+1}}</td>
+                                <td>{{products?.title}}</td>
+                                <td> {{products?.type}}</td>
                                 <td>
-                                    {{products?.title}}
-
-                                </td>
-
-                                <td>
-                                    {{products?.type}}
-                                </td>
-                                <td>
-                                    <mat-slide-toggle
-                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
-                                        [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                    <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
                                     <!-- <a class="me-1" routerLink="//website/details-dealoftheDay/{{products.id}}">

@@ -91,14 +91,13 @@ export class UpdatepurchaseBillComponent implements OnInit {
       // console.log(res);
       this.getresbyId = res;
       this.puchaseBillForm.patchValue(res);
-      this.puchaseBillForm.get('party')?.patchValue(res?.party.id);
-      this.puchaseBillForm.get('payment_term')?.patchValue(res?.payment_term.id);
+      this.puchaseBillForm.get('party')?.patchValue(res?.party?.id);
+      this.puchaseBillForm.get('payment_term')?.patchValue(res?.payment_term?.id);
       this.puchaseBillForm.get('material_inward_no')?.patchValue(res?.material_inward_no?.id);
       this.puchaseBillForm.setControl('purchase_bill', this.udateCart(res?.cart));
-      this.puchaseBillForm.setControl('tax_rate', this.udateTaxRate(res?.tax_rate));
-      
-      this.displaySupplierName(res.party.id);
-      this.supplierId = res.party.id;
+      this.puchaseBillForm.setControl('tax_rate', this.udateTaxRate(res?.tax_rate));   
+      this.displaySupplierName(res?.party?.id);
+      this.supplierId = res?.party?.id;
       this.getVariant('', '','')
       this.totaladditionalCharge = res.additional_charge
       //patch local-date
@@ -294,11 +293,16 @@ export class UpdatepurchaseBillComponent implements OnInit {
   getCart(): FormArray {
     return this.puchaseBillForm.get('purchase_bill') as FormArray;
   }
+  isCart=false;
   addCart() {
-    this.getCart().push(this.cart())
+    this.getCart().push(this.cart());
+    this.isCart=false;
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if(this.puchaseBillForm.value?.purchase_bill?.length==0){
+      this.isCart=true
+    }
   }
 
   additional_charges(): FormGroup {

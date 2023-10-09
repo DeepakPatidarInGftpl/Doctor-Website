@@ -24,10 +24,9 @@
                         </div> -->
                 <div class="search-input">
                     <a class="btn btn-searchset">
-                        <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                       <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                            <input type="search" class="form-control form-control-sm" placeholder="Search..."
-                                [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                            <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()">
                         </label>
                     </div>
                 </div>
@@ -61,10 +60,11 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Slug <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Title<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Slug<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Choice Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="tableData?.length>=0">
@@ -79,14 +79,15 @@
                         <td>{{i+1}}</td>
                         <td class="productimgname">
                             <a routerLink="//website/staticPage/details/{{products.slug}}"
-                                style="line-height: 3;">{{products.title}}</a>
+                                style="line-height: 3;">{{products?.title}}</a>
                         </td>
-                        <td>{{products.slug}}</td>
+                        <td>{{products?.slug}}</td>
+                        <td>{{products?.choice_type}}</td>
                         <td>
                             <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                             class="badges">{{products.is_active}}</span> -->
                             <mat-slide-toggle
-                                (click)="products.is_active ? deActivate(i,products.slug):Active(i,products.slug)"
+                                (click)="products.is_active ? deActivate(i,products?.slug):Active(i,products?.slug)"
                                 [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
                         <td>

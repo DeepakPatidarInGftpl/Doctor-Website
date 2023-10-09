@@ -42,7 +42,7 @@ export class AddPaymentVoucherComponent implements OnInit {
     this.paymentVoucherForm = this.fb.group({
       receipt_type: new FormControl('Cash'),
       supplier: new FormControl('', [Validators.required]),
-      payment_account: new FormControl(''),
+      payment_account: new FormControl('',[Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
@@ -54,14 +54,14 @@ export class AddPaymentVoucherComponent implements OnInit {
     this.paymentVoucherBankForm = this.fb.group({
       receipt_type: new FormControl('Bank'),
       supplier: new FormControl('', [Validators.required]),
-      payment_account: new FormControl(''),
+      payment_account: new FormControl('',[Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
       amount: new FormControl(''),
       note: new FormControl(''),
       // against bill
-      bank_payment: new FormControl(''),
+      bank_payment: new FormControl('',),
       transaction_id: new FormControl(''),
       transaction_date: new FormControl(defaultDate),
       payment_voucher_cart: this.fb.array([]),
@@ -109,12 +109,17 @@ export class AddPaymentVoucherComponent implements OnInit {
   getCart(): FormArray {
     return this.paymentVoucherForm.get('payment_voucher_cart') as FormArray;
   }
+  isCart=false;
   addCart() {
     this.getCart().push(this.cart())
     this.myControls.push(new FormControl(''));
+    this.isCart=false;
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if (this.paymentVoucherForm?.value?.payment_voucher_cart?.length==0) {
+      this.isCart=true;
+     }
   }
 
   // debit note cart
@@ -137,6 +142,9 @@ export class AddPaymentVoucherComponent implements OnInit {
   }
   removeDebitNoteForm1(e: any, i: any) {
     this.getDebitNoteCartForm1(e).removeAt(i);
+    if (this.paymentVoucherForm?.value?.payment_voucher_cart[e]?.debit_note_cart?.length==0) {
+      this.isDebitNoteCart1[e] = false;  
+    }
   }
   // bank
   getCartBank(): FormArray {
@@ -145,9 +153,14 @@ export class AddPaymentVoucherComponent implements OnInit {
   addCartBank() {
     this.getCartBank().push(this.cart())
     this.myControls.push(new FormControl(''));
+    this.isCartBank=false;
   }
+  isCartBank=false;
   removeCartBank(i: any) {
-    this.getCartBank().removeAt(i)
+    this.getCartBank().removeAt(i);
+    if (this.paymentVoucherBankForm?.value?.payment_voucher_cart?.length==0) {
+      this.isCartBank=true;
+     }
   }
   // debit not cart
   getDebitNoteCartForm(i: any): FormArray {
@@ -158,7 +171,10 @@ export class AddPaymentVoucherComponent implements OnInit {
     this.debitNoteControl.push(new FormControl(''));
   }
   removeDebitNoteForm(e: any, i: any) {
-    this.getDebitNoteCartForm(e).removeAt(i);
+    this.getDebitNoteCartForm(e).removeAt(i); 
+    if (this.paymentVoucherBankForm?.value?.payment_voucher_cart[e]?.debit_note_cart?.length==0) {
+      this.isDebitNoteCart[e] = false;  
+    }
   }
 
   // end 

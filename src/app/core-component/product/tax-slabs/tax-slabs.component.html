@@ -65,17 +65,12 @@
 					</span>
 
                         </div>
-                    </div> -->
-                  
+                    </div> --> 
                     <div class="col-lg-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label>Title*</label>
-                            <input type="text" placeholder="Title" formControlName="slab_title" [ngClass]="{
-                                    'is-invalid': f['slab_title'].touched && f['slab_title'].invalid}">
-                            <span class="text-danger"
-                                *ngIf="slab_title && slab_title.invalid && slab_title.touched">Enter
-                               Tax Slab Title
-                            </span>
+                            <input type="text" placeholder="Title" formControlName="slab_title" [ngClass]="{'is-invalid': f['slab_title'].touched && f['slab_title'].invalid}">
+                            <span class="text-danger" *ngIf="slab_title && slab_title.invalid && slab_title.touched">Enter Tax Slab Title </span>
                         </div>
                     </div>
 
@@ -161,6 +156,7 @@
                         <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
+                        <a routerLink="//product/taxSlabList" class="btn btn-cancel">Cancel</a>
                     </div>
                 </div>
             </div>

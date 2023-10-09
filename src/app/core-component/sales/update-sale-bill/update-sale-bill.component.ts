@@ -309,14 +309,19 @@ export class UpdateSaleBillComponent implements OnInit {
       total: (0),
     })
   }
+  isCart=false;
   getCart(): FormArray {
     return this.saleBillForm.get('sale_bill_cart') as FormArray;
   }
   addCart() {
-    this.getCart().push(this.cart())
+    this.getCart().push(this.cart());
+    this.isCart=false;
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if(this.saleBillForm?.value?.sale_bill_cart?.length==0){
+      this.isCart=true;
+    }
   }
 
   additional_charge(): FormGroup {

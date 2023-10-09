@@ -292,7 +292,7 @@ export class DealOfTheDayComponent implements OnInit {
         // console.log(res);
         this.loaders = false;
         this.addRes = res
-        if (this.addRes.success) {
+        if (this.addRes.sucess) {
           this.toastr.success(this.addRes.msg);
           this.selectedItems = [];
           this.dealOfTheDayForm.reset();

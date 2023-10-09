@@ -56,12 +56,12 @@ export class PaymentTermsComponent implements OnInit {
           this.delRes = res
           if (this.delRes.success) {
             this.tableData
-            this.ngOnInit();
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
               text: this.delRes.msg,
             });
+            this.ngOnInit();
             this.tableData.splice(index, 1);
           }else{
             Swal.fire({
@@ -80,7 +80,7 @@ export class PaymentTermsComponent implements OnInit {
   deActivate(index: any, id: any) {
    Swal.fire({
      title: 'Are you sure?',
-     text: "Do you want to Deactivate this financial year!",
+     text: "Do you want to Deactivate this payment terms!",
      showCancelButton: true,
      confirmButtonColor: '#3085d6',
      cancelButtonColor: '#d33',
@@ -101,7 +101,7 @@ export class PaymentTermsComponent implements OnInit {
        Swal.fire({
          icon: 'success',
          title: 'Deactivate!',
-         text: 'Financial Year Is Deactivate Successfully.',
+         text: 'Payment Terms Is Deactivate Successfully.',
        });
      }
    });
@@ -109,7 +109,7 @@ export class PaymentTermsComponent implements OnInit {
  Active(index: any, id: any) {
    Swal.fire({
      title: 'Are you sure?',
-     text: "Do you want to Active this financial year!",
+     text: "Do you want to Active this payment terms!",
      showCancelButton: true,
      confirmButtonColor: '#3085d6',
      cancelButtonColor: '#d33',
@@ -124,14 +124,15 @@ export class PaymentTermsComponent implements OnInit {
        this.contactService.PaymentTermsIsActive(id,'').subscribe(res => {
          this.delRes = res
          if (this.delRes.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Active!',
+            text: this.delRes.msg,
+          });
            this.ngOnInit()
          }
        })
-       Swal.fire({
-         icon: 'success',
-         title: 'Active!',
-         text: this.delRes.msg,
-       });
+     
      }
    });
  }

@@ -35,6 +35,7 @@
                             <table class="table datanew">
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th></th>
                                         <th>From Account<span style="color:red">*</span></th>
                                         <th>Amount Type<span style="color:red">*</span></th>
@@ -43,11 +44,15 @@
                                         <th>Note</th>
                                         <!-- <th></th> -->
                                     </tr>
+                                    <tr>
+                                        <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <ng-container formArrayName="journal_voucher_cart">
                                         <ng-container *ngFor="let d of getCart().controls; let i=index">
                                             <tr [formGroupName]="i">
+                                              <td>{{i+1+'.'}}</td>
                                                 <td>
                                                     <div>
                                                         <div class="me-2">
@@ -139,6 +144,7 @@
                                     <tr style=" background: rgba(145, 158, 171, 0.32);">
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                         <td class="text-start"><strong>Total</strong></td>
                                         <td class="text-start"> 
                                             <strong>{{calculateTotalDebit().toFixed(2)}}</strong>
@@ -171,7 +177,7 @@
                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
-                <a routerLink="//transaction/debitnoteList" class="btn btn-cancel text-white">Cancel</a>
+                <a routerLink="//transaction/journalvoucherList" class="btn btn-cancel text-white">Cancel</a>
             </div>
         </form>
     </div>

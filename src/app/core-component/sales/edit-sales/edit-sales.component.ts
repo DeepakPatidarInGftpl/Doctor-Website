@@ -288,11 +288,16 @@ export class EditSalesComponent implements OnInit {
   getCart(): FormArray {
     return this.saleForm.get('sale_order_cart') as FormArray;
   }
+  isCart=false;
   addCart() {
-    this.getCart().push(this.cart())
+    this.getCart().push(this.cart());
+    this.isCart=false;
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if(this.saleForm?.value?.sale_order_cart?.length==0){
+      this.isCart=true;
+    }
   }
   getUser() {
     this.saleService.getUser().subscribe((res: any) => {

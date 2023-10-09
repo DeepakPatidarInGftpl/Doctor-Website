@@ -48,9 +48,9 @@ export class UpdateCompanyBankComponent implements OnInit {
       
       this.companyBankForm.patchValue(res)
       this.companyBankForm.get('counntry')?.patchValue(res.counntry?.id)
-      this.selectState(res?.counntry)
+      this.selectState(res?.counntry?.id)
       this.companyBankForm.get('state')?.patchValue(res.state?.id)
-      this.selectCity(res?.state)
+      this.selectCity(res?.state?.id)
       this.companyBankForm.get('city')?.patchValue(res.city?.id)
     })
     this.getCountry();

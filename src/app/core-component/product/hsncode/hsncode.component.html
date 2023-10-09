@@ -78,7 +78,9 @@
                                     </label>
                                 </td>
                                 <td> {{i+1}} </td>
-                                <td>{{products.hsn_code}}</td>
+                                <td class="productimgname">
+                                    <a routerLink="//product/hsncode-details/{{products.id}}" style="line-height: 3;">{{products?.hsn_code}}</a>
+                                </td>
                                 <td>
                             <!-- <tr *ngFor="let subcat of products.subcategory">
                                 <td>{{subcat.title}}</td>
