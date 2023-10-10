@@ -21,7 +21,7 @@ import { NgxEditorModule } from 'ngx-editor';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgxUiLoaderModule } from "ngx-ui-loader";
+
 import{NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 
 const icons = {
@@ -53,7 +53,6 @@ const icons = {
       registrationStrategy: 'registerWhenStable:30000'
     }),
     NgMultiSelectDropDownModule,
-    NgxUiLoaderModule,
   ],
   exports: [
     FeatherModule
