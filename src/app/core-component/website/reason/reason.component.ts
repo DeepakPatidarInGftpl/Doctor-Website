@@ -288,14 +288,22 @@ export class ReasonComponent implements OnInit {
     this.addForm = true;
     this.reasonForm.reset();
   }
+
+  
   search() {
-    if (this.titlee === "") {
+    if (this.titlee == "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase();
-        return nameLower.includes(searchTerm); 
+        const nameLower = res?.title.toLocaleLowerCase();
+        const companyNameLower = res?.type.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)) {
+          return true;
+        } else if (companyNameLower.match(searchTerm)) {
+          return true;
+        }
+        return false;
       });
     }
   }

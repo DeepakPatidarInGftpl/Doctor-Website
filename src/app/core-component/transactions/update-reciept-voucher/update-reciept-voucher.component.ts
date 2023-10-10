@@ -170,25 +170,34 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   getCart(): FormArray {
     return this.recieptVoucherForm.get('receipt_voucher_cart') as FormArray;
   }
+  isCart=false;
   addCart() {
     this.getCart().push(this.cart())
     this.myControls.push(new FormControl(''));
+    this.isCart=false;
   }
+
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if(i==0){
+      this.isCart=true;
+    }
   }
   // bank
   getCartBank(): FormArray {
     return this.recieptVoucherBankForm.get('receipt_voucher_cart') as FormArray;
   }
   addCartBank() {
-    console.log('jhj');
-
     this.getCartBank().push(this.cart())
     this.myControls.push(new FormControl(''));
+    this.isCartBank=false;
   }
+  isCartBank=false;
   removeCartBank(i: any) {
-    this.getCartBank().removeAt(i)
+    this.getCartBank().removeAt(i);
+    if(this.recieptVoucherBankForm?.value?.receipt_voucher_cart?.length==0){
+      this.isCartBank=true;
+    }
   }
 
   isAgainstBill = false;

@@ -224,12 +224,17 @@ export class AddpurchaseComponent implements OnInit {
   getCart(): FormArray {
     return this.purchaseForm.get('purchase_cart') as FormArray;
   }
+  isCart=false;
   addCart() {
     this.getCart().push(this.purchase_cart());
     this.taxIntoRupees = new Array(this.getCart().controls.length).fill(0);
+    this.isCart=false
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if(this.purchaseForm?.value?.purchase_cart?.length==0){
+      this.isCart=true;
+    }
   }
   supplierList: any;
   getSuuplier() {

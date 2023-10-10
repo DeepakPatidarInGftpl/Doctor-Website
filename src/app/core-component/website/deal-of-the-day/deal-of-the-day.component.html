@@ -19,11 +19,9 @@
                             <a class="btn btn-searchset">
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                                    <input type="search" class="form-control form-control-sm" placeholder="Search..."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
-                                </label>
+                                 <input type="search" class="form-control form-control-sm" placeholder="Search Variant" [(ngModel)]="titlee" (ngModelChange)="search()">
+                            </label>
                             </div>
-
                         </div>
                     </div>
                     <div class="wordset">
@@ -73,7 +71,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    {{products?.discount}}
+                                    {{products?.discount +'%'}}
                                 </td>
                                 <td>
                                     <ng-container *ngFor="let variant of products?.variant; let last = last">
@@ -84,8 +82,7 @@
                                     {{products?.datetime | date:'dd-MM-yyyy'}}
                                 </td>
                                 <td>
-                                    <mat-slide-toggle
-                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                    <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
@@ -154,8 +151,7 @@
         </div>
         <div class="card">
             <div *ngIf="isAdd">
-            <div class="card-body" *ngIf="addForm">
-                
+            <div class="card-body" *ngIf="addForm"> 
                 <form [formGroup]="dealOfTheDayForm" (ngSubmit)="submit()">
                     <div class="row">
                         <div class="col-lg-10 col-sm-10 col-12">

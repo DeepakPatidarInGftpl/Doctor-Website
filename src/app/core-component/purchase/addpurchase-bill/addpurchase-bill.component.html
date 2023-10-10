@@ -537,6 +537,9 @@
                                 <th class="space" style="width: 12%;">Total Cost With Tax</th>
                                 <th></th>
                             </tr>
+                            <tr>
+                                <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                            </tr>
                         </thead>
                         <tbody>
                             <ng-container formArrayName="purchase_bill">

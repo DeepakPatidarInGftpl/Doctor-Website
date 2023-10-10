@@ -117,11 +117,16 @@ export class AddmaterialInwardComponent implements OnInit {
   getCart(): FormArray {
     return this.materialForm.get('material_inward_cart') as FormArray;
   }
+  isCart = false;
   addCart() {
-    this.getCart().push(this.material_inward_cart())
+    this.getCart().push(this.material_inward_cart());
+    this.isCart = false;
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if (this.materialForm.value?.material_inward_cart?.length == 0) {
+      this.isCart = true;
+    }
   }
   supplierList: any;
   getSuuplier() {

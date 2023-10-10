@@ -193,11 +193,16 @@ export class AddpurchaseBillComponent implements OnInit {
   getCart(): FormArray {
     return this.purchaseBillForm.get('purchase_bill') as FormArray;
   }
+  isCart=false
   addCart() {
-    this.getCart().push(this.cart())
+    this.getCart().push(this.cart());
+    this.isCart=false
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+    if(this.purchaseBillForm.value?.purchase_bill?.length==0){
+      this.isCart=true
+    }
   }
   additional_charges(): FormGroup {
     return this.fb.group({

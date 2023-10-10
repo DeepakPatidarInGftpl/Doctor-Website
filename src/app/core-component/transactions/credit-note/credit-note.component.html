@@ -26,7 +26,7 @@
                     <a class="btn btn-searchset">
                       <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                      <input type="search" class="form-control form-control-sm" placeholder="Search Account ID/Credit Note No." [(ngModel)]="titlee" (ngModelChange)="search()">
+                      <input type="search" class="form-control form-control-sm" placeholder="AccountID/CreditNote No." [(ngModel)]="titlee" (ngModelChange)="search()">
                     </label>
                   </div>
          </div>
@@ -60,7 +60,7 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Enter Total</label>
-                                    <input type="number" placeholder="Enter Total" [(ngModel)]="selectedAmount" (change)="filterData()">
+                                    <input type="number" placeholder="Enter Total" [(ngModel)]="selectedAmount" (keyup)="filterData()">
                                     <span class="text-success">Total Filter (Less than & Equal to Total value)</span>
                                 </div>
                             </div>

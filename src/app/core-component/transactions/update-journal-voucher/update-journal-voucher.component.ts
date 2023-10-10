@@ -121,11 +121,16 @@ export class UpdateJournalVoucherComponent implements OnInit {
   getCart(): FormArray {
     return this.journalvoucherForm.get('journal_voucher_cart') as FormArray;
   }
+  isCart=false;
   addCart() {
-    this.getCart().push(this.cart())
+    this.getCart().push(this.cart());
+    this.isCart=false;
   }
   removeCart(i: any) {
-    this.getCart().removeAt(i)
+    this.getCart().removeAt(i);
+   if(this.journalvoucherForm?.value?.journal_voucher_cart?.length==0){
+    this.isCart==true;
+   }
   }
 
   isLastCart(index: number): boolean {

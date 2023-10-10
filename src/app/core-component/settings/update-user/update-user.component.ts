@@ -38,7 +38,7 @@ id:any;
     this.contactService.getUserById(this.id).subscribe(res=>{
       // console.log(res);
       this.userForm.patchValue(res)
-      this.userForm.get('branch')?.patchValue(res?.branch);
+      this.userForm.get('branch')?.patchValue(res?.branch?.id);
       this.userForm.get('user_type')?.patchValue(res?.user_type)
       this.userForm.get('role')?.patchValue(res?.role)
     })

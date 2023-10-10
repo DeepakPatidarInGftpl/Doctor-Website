@@ -79,7 +79,7 @@ export class TermsComponent implements OnInit {
   deActivate(index: any, id: any) {
    Swal.fire({
      title: 'Are you sure?',
-     text: "Do you want to Deactivate this size!",
+     text: "Do you want to Deactivate this terms!",
      showCancelButton: true,
      confirmButtonColor: '#3085d6',
      cancelButtonColor: '#d33',
@@ -100,7 +100,7 @@ export class TermsComponent implements OnInit {
        Swal.fire({
          icon: 'success',
          title: 'Deactivate!',
-         text: 'Size Is Deactivate Successfully.',
+         text: 'Terms Is Deactivate Successfully.',
        });
      }
    });
@@ -108,7 +108,7 @@ export class TermsComponent implements OnInit {
  Active(index: any, id: any) {
    Swal.fire({
      title: 'Are you sure?',
-     text: "Do you want to Active this size!",
+     text: "Do you want to Active this terms!",
      showCancelButton: true,
      confirmButtonColor: '#3085d6',
      cancelButtonColor: '#d33',
@@ -123,14 +123,14 @@ export class TermsComponent implements OnInit {
        this.contactService.TermsIsActive(id,'').subscribe(res => {
          this.delRes = res
          if (this.delRes.success) {
-           this.ngOnInit()
+          Swal.fire({
+            icon: 'success',
+            title: 'Active!',
+            text: this.delRes.msg,
+          });
+           this.ngOnInit();
          }
        })
-       Swal.fire({
-         icon: 'success',
-         title: 'Active!',
-         text: this.delRes.msg,
-       });
      }
    });
  }

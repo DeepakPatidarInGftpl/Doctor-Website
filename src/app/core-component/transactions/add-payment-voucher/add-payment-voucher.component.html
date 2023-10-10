@@ -121,7 +121,7 @@
 
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Payment Account</label>
+                        <label>Payment Account*</label>
                         <mat-form-field class="w-100"
                             style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
                             <input type="text" placeholder="Search Payment Account" aria-label="payment_account" matInput
@@ -142,7 +142,7 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="payer && payer.invalid && payer.touched">Enter
+                        <span class="text-danger" *ngIf="payer && payer.invalid && payer.touched">Select
                             Payment Account</span>
                     </div>
                 </div>
@@ -162,6 +162,7 @@
                                 <table class="table datanew">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th></th>
                                             <th>Purchase Bill</th>
                                             <th>Original Amount</th>
@@ -170,12 +171,16 @@
                                             <th>Payment</th>
                                             <!-- <th></th> -->
                                         </tr>
+                                        <tr>
+                                            <th colspan="2"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                                         </tr>
                                     </thead>
                                     <tbody>
                                         <ng-container formArrayName="payment_voucher_cart">
                                             <ng-container *ngFor="let d of getCart().controls; let i=index">
                                                 <ng-container [formGroupName]="i">  
                                                 <tr>
+                                                    <td>{{i+1+'.'}}</td>
                                                     <td>
                                                         <div>
                                                             <div class="me-2">
@@ -269,6 +274,7 @@
                                                             <table class="table datanew">
                                                                 <thead>
                                                                     <tr>
+                                                                        <td>#</td>
                                                                         <th></th>
                                                                         <th>Debit Note</th>
                                                                         <th>Original Amount</th>
@@ -281,6 +287,7 @@
                                                                     <ng-container formArrayName="debit_note_cart">
                                                                         <ng-container *ngFor="let debit of getDebitNoteCartForm1(i).controls; let j=index">
                                                                             <tr [formGroupName]="j">
+                                                                                <td>{{j+1+'.'}}</td>
                                                                                 <td>
                                                                                     <div>
                                                                                         <div class="me-2">
@@ -490,7 +497,7 @@
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Payment Account</label>
+                        <label>Payment Account*</label>
                         <mat-form-field class="w-100"
                             style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
                             <input type="text" placeholder="Search Payment Account" aria-label="payment_account" matInput
@@ -510,7 +517,7 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="payer1 && payer1.invalid && payer1.touched">Enter Payment Account</span>
+                        <span class="text-danger" *ngIf="payer1 && payer1.invalid && payer1.touched">Select Payment Account</span>
                     </div>
                 </div>
 
@@ -539,6 +546,9 @@
                                             <th>Paid Amount</th>
                                             <th>Pending Amount</th>
                                             <th>Payment</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2"> <span (click)="addCartBank()" class="debitIntoCart" *ngIf="isCartBank">Add Cart+</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -623,6 +633,7 @@
                                                             <table class="table datanew">
                                                                 <thead>
                                                                     <tr>
+                                                                        <th>#</th>
                                                                         <th></th>
                                                                         <th>Debit Note</th>
                                                                         <th>Original Amount</th>
@@ -635,6 +646,7 @@
                                                                     <ng-container formArrayName="debit_note_cart">
                                                                         <ng-container *ngFor="let debit of getDebitNoteCartForm(i).controls; let j=index">
                                                                             <tr [formGroupName]="j">
+                                                                                <td>{{j+1+'.'}}</td>
                                                                                 <td>
                                                                                     <div>
                                                                                         <div class="me-2">

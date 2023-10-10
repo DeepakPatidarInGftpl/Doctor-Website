@@ -53,12 +53,12 @@ export class StaticPagesComponent implements OnInit {
           this.delRes = res
           if (this.delRes.success) {
             this.tableData
-          this.ngOnInit();
           Swal.fire({
             icon: 'success',
             title: 'Deleted!',
             text: this.delRes.msg,
           });
+          this.ngOnInit();
           }
         })
         Swal.fire({

@@ -25,11 +25,15 @@
                     <ul class="product-bar" *ngIf="details">
                         <li>
                             <h4>Title</h4>
-                            <h6>{{details.title}}</h6>
+                            <h6>{{details?.title}}</h6>
+                        </li>
+                        <li>
+                            <h4>Slug Type </h4>
+                            <h6>{{details?.slug}}</h6>
                         </li>
                         <li>
                             <h4>Choice Type</h4>
-                            <h6>{{details.choice_type}}</h6>
+                            <h6>{{details?.choice_type}}</h6>
                         </li>
                         <li>
                             <h4>Description</h4>

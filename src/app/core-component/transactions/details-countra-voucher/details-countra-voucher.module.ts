@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { DetailsCountraVoucherRoutingModule } from './details-countra-voucher-routing.module';
 import { DetailsCountraVoucherComponent } from './details-countra-voucher.component';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { DetailsCountraVoucherComponent } from './details-countra-voucher.compon
   ],
   imports: [
     CommonModule,
-    DetailsCountraVoucherRoutingModule
+    DetailsCountraVoucherRoutingModule,
+    SharedModuleModule
   ]
 })
 export class DetailsCountraVoucherModule { }
