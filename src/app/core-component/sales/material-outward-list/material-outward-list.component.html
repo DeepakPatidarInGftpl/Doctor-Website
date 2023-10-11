@@ -60,6 +60,24 @@
                                     <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search" >
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                   <label>Select Refund Status</label>
+                                    <select [(ngModel)]="selectRefundStatus" (change)="filterData()" class="form-select">
+                                        <option value="" selected disabled>Select Refund Status</option>
+                                        <option value="Refundable">Refundable</option>
+                                        <option value="Non Refundable">Non Refundable</option>
+                                        <option value="Scrap">Scrap</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Enter Total Qty</label>
+                                    <input type="number" placeholder="Enter Qty" [(ngModel)]="selectedAmount" (keyup)="filterData()">
+                                    <span class="text-success">Qty Filter (Less than & Equal to Total qty value)</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group" (click)="clearFilter()">
                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>

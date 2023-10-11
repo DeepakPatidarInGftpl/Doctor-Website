@@ -30,8 +30,7 @@
                             <a class="btn btn-searchset">
                               <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                              <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()"
-                              placeholder="search">
+                              <input type="search" class="form-control form-control-sm" placeholder="Search Alternate Unit..." [(ngModel)]="titlee" (ngModelChange)="search()">
                             </label>
                           </div>
                  </div>
@@ -81,23 +80,23 @@
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
 
-                                    <a href="javascript:void(0);" style="line-height: 3;">{{products.alternate_unit.title}}</a>
+                                    <a href="javascript:void(0);" style="line-height: 3;">{{products?.alternate_unit.title}}</a>
                                 </td>
-                                <td>{{products.unit.title}}</td>
-                                <td>{{products.quantity}}</td>
+                                <td>{{products?.unit.title}}</td>
+                                <td>{{products?.quantity}}</td>
                                 <td>
                                     <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                             class="badges">{{products.is_active}}</span> -->
                                     <mat-slide-toggle
-                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        (click)="products?.is_active ? deActivate(i,products?.id):Active(i,products?.id)"
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
 
-                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
+                                    <a class="me-3" (click)="editForm(products?.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
-                                    <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
+                                    <a (click)="confirmText(i,products?.id)" class="me-3 confirm-text"
                                         href="javascript:void(0);" *ngIf="isDelete">
                                         <img src="assets/img/icons/delete.svg" alt="img">
                                     </a>
@@ -187,9 +186,9 @@
 
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
-                                <label>Alternate Unit*</label>
+                                <label>Select Alternate Unit*</label>
                                 
-                                <select formControlName="alternate_unit" class="w-100 h-100 border" required
+                                <select formControlName="alternate_unit"  class="w-100 h-100 border" required
                                 #unitValue id="alternate_unit" [ngClass]="{
                           'is-invalid': f['alternate_unit'].touched && f['alternate_unit'].invalid}">
                                 <option value="" selected disabled>Alternate unit</option>
@@ -205,17 +204,14 @@
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Quantity*</label>
-                                <input type="number" formControlName="quantity" id="quantity" [ngClass]="{
-                                    'is-invalid': f['quantity'].touched && f['quantity'].invalid
-                                  }">
-                                <span class="text-danger" *ngIf="quantity && quantity.invalid && quantity.touched">Enter Quantity
-                                </span>
-
+                                <input type="number" formControlName="quantity" id="quantity" placeholder="Enter Quantity" [ngClass]="{
+                                    'is-invalid': f['quantity'].touched && f['quantity'].invalid}">
+                                <span class="text-danger" *ngIf="quantity && quantity.invalid && quantity.touched">Enter Quantity</span>
                             </div>
                         </div>
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
-                                <label>Units*</label>
+                                <label>Select Units*</label>
                                 <select formControlName="unit" class="w-100 h-100 border" required
                                     #unitValue id="unit" [ngClass]="{
                               'is-invalid': f['unit'].touched && f['unit'].invalid

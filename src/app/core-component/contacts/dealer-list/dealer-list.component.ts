@@ -369,6 +369,7 @@ select=false
   }
 
   // filter data
+  selectCredit:any;
   filterData() {
     let filteredData = this.tableData.slice();
     // if (this.supplierType) {
@@ -382,11 +383,15 @@ select=false
         return aliasLower.includes(searchTerm);
       });
     }
+    if (this.selectCredit) {
+      filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
-    // this.supplierType = null;
+    this.selectCredit = null;
     this.selectedCompany = null;
+    this.selectCredit=null;
     this.filterData();
   }
 }

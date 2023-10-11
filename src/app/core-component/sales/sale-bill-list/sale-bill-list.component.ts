@@ -6,6 +6,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 @Component({
   selector: 'app-sale-bill-list',
   templateUrl: './sale-bill-list.component.html',
@@ -26,7 +27,7 @@ export class SaleBillListComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs:CompanyService) {}
+  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -129,9 +130,11 @@ isAdd:any;
 isEdit:any;
 isDelete:any;
 userDetails:any;
+
   ngOnInit(): void {
     this.saleService.getSalesBill().subscribe(res => {
       this.tableData = res;
+   
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
@@ -156,8 +159,23 @@ userDetails:any;
         }
     });
   })
+  this.getPaymentTerms();
+  this.getEstimate();
   }
 
+  paymentList: any;
+  getPaymentTerms() {
+    this.contactService.getPaymentTerms().subscribe(res => {
+      // console.log(res);
+      this.paymentList = res;
+    })
+  }
+  saleOrderList:any
+  getEstimate(){
+    this.saleService.getSalesOrder().subscribe(res=>{
+      this.saleOrderList=res
+    })
+  }
   allSelected: boolean = false;
   selectedRows:boolean[]
   selectAlll() {
@@ -311,6 +329,9 @@ select=false
   // filter data
   date: any
   espireDate:any;
+  selectEstimateNo:any;
+  filterPaymentTerms:any;
+  selectedAmount:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -327,11 +348,23 @@ select=false
         return receiptDate === selectedDate;
       });
     }
+    if (this.selectEstimateNo) {
+      filteredData = filteredData.filter((item) => item?.sale_order?.sale_order_no=== this.selectEstimateNo);
+    }
+    if (this.filterPaymentTerms) {
+      filteredData = filteredData.filter((item) => item?.payment_terms?.title=== this.filterPaymentTerms);
+    }
+    if (this.selectedAmount) {
+      filteredData = filteredData.filter((item) => item?.total <= this.selectedAmount);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.date = null;
     this.espireDate = null;
+    this.selectedAmount=null;
+    this.filterPaymentTerms=null;
+    this.selectEstimateNo=null;
     this.filterData();
   }
 }

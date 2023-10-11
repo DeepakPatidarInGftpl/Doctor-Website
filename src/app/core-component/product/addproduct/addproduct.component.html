@@ -292,12 +292,12 @@
 								<div class="row mt-3">
 									<div class="col-lg-6 col-sm-6 col-12">
 										<div class="form-group">
-											<label>Title*</label>
-											<input type="text" placeholder="Title" formControlName="title" [ngClass]="{
+											<label>Product Name*</label>
+											<input type="text" placeholder="Product Name" formControlName="title" [ngClass]="{
 													'is-invalid': f['title'].touched && f['title'].invalid}" [(ngModel)]="productNamme">
 											<span class="text-danger"
 												*ngIf="title && title.invalid && title.touched">Enter
-												title
+												Product Name
 											</span>
 										</div>
 									</div>
@@ -406,11 +406,9 @@
 													</li>
 												</ul>
 											</div>
-
 											<!-- <mat-select formControlName="color" multiple placeholder="Select Subcategory">
                                   <mat-option *ngFor="let color of colorList; let i=index" [value]="color.id" (click)="onCheckColors(color.title)"> {{color.title}}</mat-option>
                                 </mat-select> -->
-
 											<p *ngIf="selectedColor>0">{{selectedColor + ' Colors Selected'}}</p>
 											<span class="text-danger" *ngIf="color && color.invalid && color.touched">
 												Select Color </span>
@@ -543,7 +541,7 @@
 									<div class="col-lg-6 col-sm-6 col-12">
 										<div class="form-group">
 											<label>Return Time*</label>
-											<input type="text" formControlName="return_time" [ngClass]="{'is-invalid': f['return_time'].touched && f['return_time'].invalid}">
+											<input type="text" formControlName="return_time" placeholder="Return Time" [ngClass]="{'is-invalid': f['return_time'].touched && f['return_time'].invalid}">
 											<span class="text-danger" *ngIf="return_time && return_time.invalid && return_time.touched">Enter Return Time</span>
 										</div>
 									</div>

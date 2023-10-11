@@ -6,6 +6,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 
 @Component({
   selector: 'app-saleslist',
@@ -26,7 +27,7 @@ export class SaleslistComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs:CompanyService) {}
+  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -158,8 +159,23 @@ userDetails:any;
         }
     });
   })
+  this.getPaymentTerms();
+  this.getEstimate();
   }
-
+  
+  paymentList: any;
+  getPaymentTerms() {
+    this.contactService.getPaymentTerms().subscribe(res => {
+      // console.log(res);
+      this.paymentList = res;
+    })
+  }
+  estimateList:any;
+  getEstimate(){
+    this.saleService.getSalesEstimate().subscribe(res=>{
+      this.estimateList=res
+    })
+  }
   allSelected: boolean = false;
   selectedRows:boolean[]
   selectAlll() {
@@ -324,6 +340,9 @@ select=false
 
   date: any
   espireDate:any;
+  filterPaymentTerms:any;
+  selectedAmount:any;
+  selectEstimateNo:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -340,11 +359,24 @@ select=false
         return receiptDate === selectedDate;
       });
     }
+    if (this.selectEstimateNo) {
+      filteredData = filteredData.filter((item) => item?.estimate?.estimate_no=== this.selectEstimateNo);
+    }
+    if (this.filterPaymentTerms) {
+      filteredData = filteredData.filter((item) => item?.payment_terms?.title=== this.filterPaymentTerms);
+    }
+    if (this.selectedAmount) {
+      filteredData = filteredData.filter((item) => item?.total <= this.selectedAmount);
+    }
+
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.date = null;
     this.espireDate = null;
+    this.selectedAmount=null;
+    this.filterPaymentTerms=null;
+    this.selectEstimateNo=null;
     this.filterData();
   }
 }

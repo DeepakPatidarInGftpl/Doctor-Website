@@ -76,7 +76,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'purchase-bill-list',
+    path: 'goodsReceivedNote-list',
     loadChildren: () =>
       import('./purchase-bill/purchase-bill.module').then(
         (m) => m.PurchaseBillModule
@@ -84,14 +84,14 @@ const routes: Routes = [
   },
 
   {
-    path: 'addpurchase-bill',
+    path: 'add-goodsReceivedNote',
     loadChildren: () =>
       import('./addpurchase-bill/addpurchase-bill.module').then(
         (m) => m.AddpurchaseBillModule
       ),
   },
   {
-    path: 'editpurchase-bill/:id',
+    path: 'edit-goodsReceivedNote/:id',
     loadChildren: () =>
       import('./updatepurchase-bill/updatepurchase-bill.module').then(
         (m) => m.UpdatepurchaseBillModule
@@ -106,7 +106,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'debit-notes-list',
+    path: 'purchaseReturn-list',
     loadChildren: () =>
       import('./debitnotes/debitnotes.module').then(
         (m) => m.DebitnotesModule
@@ -114,21 +114,21 @@ const routes: Routes = [
   },
 
   {
-    path: 'adddebit-notes',
+    path: 'add-purchaseReturn',
     loadChildren: () =>
       import('./add-debitnotes/add-debitnotes.module').then(
         (m) => m.AddDebitnotesModule
       ),
   },
   {
-    path: 'editdebit-notes/:id',
+    path: 'edit-purchaseReturn/:id',
     loadChildren: () =>
       import('./update-debitnotes/update-debitnotes.module').then(
         (m) => m.UpdateDebitnotesModule
       ),
   },
   {
-    path: 'debit-notesDetails/:id',
+    path: 'details-purchaseReturn/:id',
     loadChildren: () =>
       import('./details-debitnotes/details-debitnotes.module').then(
         (m) => m.DetailsDebitnotesModule

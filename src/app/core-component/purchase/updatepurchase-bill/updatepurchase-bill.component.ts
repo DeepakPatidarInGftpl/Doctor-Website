@@ -1067,7 +1067,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-          // this.router.navigate(['//purchase/purchase-bill-list'])
+          // this.router.navigate(['//purchase/goodsReceivedNote-list'])
           if (type == 'new') {
             this.loaderCreate=false;
             this.puchaseBillForm.reset()
@@ -1084,7 +1084,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
           else {
             this.loader = false;
             this.toastrService.success(this.getRes.msg);
-            this.router.navigate(['//purchase/purchase-bill-list'])
+            this.router.navigate(['//purchase/goodsReceivedNote-list'])
           }
         }
         else{
