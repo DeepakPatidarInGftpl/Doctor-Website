@@ -28,7 +28,7 @@ export class AddpurchaseBillComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private contactService: ContactService,
-    private coreService:CoreService) {
+    private coreService:CoreService,) {
   }
 
   supplierControlName = 'party';
@@ -1002,7 +1002,7 @@ export class AddpurchaseBillComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success == true) {
-          // this.router.navigate(['//purchase/purchase-bill-list'])
+          // this.router.navigate(['//purchase/goodsReceivedNote-list'])
           if (type == 'new') {
             this.loaderCreate=false;
             this.purchaseBillForm.reset()
@@ -1019,7 +1019,7 @@ export class AddpurchaseBillComponent implements OnInit {
           else {
             this.loader = false;
             this.toastrService.success(this.getRes.msg, '', { timeOut: 1000, });
-            this.router.navigate(['//purchase/purchase-bill-list'])
+            this.router.navigate(['//purchase/goodsReceivedNote-list'])
           }
         } else {
           if (type == 'new') {

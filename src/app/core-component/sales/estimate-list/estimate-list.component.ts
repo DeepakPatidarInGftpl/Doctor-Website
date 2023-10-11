@@ -324,6 +324,7 @@ select=false
   date: any
   espireDate:any;
   filterPaymentTerms:any
+  selectedAmount:any
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -343,12 +344,16 @@ select=false
     if (this.filterPaymentTerms) {
       filteredData = filteredData.filter((item) => item?.payment_terms?.title=== this.filterPaymentTerms);
     }
+    if (this.selectedAmount) {
+      filteredData = filteredData.filter((item) => item?.total <= this.selectedAmount);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.date = null;
     this.espireDate = null;
     this.filterPaymentTerms=null
+    this.selectedAmount=null;
     this.filterData();
   }
 }

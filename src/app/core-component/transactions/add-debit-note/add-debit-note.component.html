@@ -79,7 +79,7 @@
                       </mat-option>
                   </ng-container>
                   <mat-option *ngIf="filterPurchaseBill?.length === 0" [value]="'No data found'">
-                      <a routerLink="//purchase/addpurchase-bill" style="color:#FF9F43">+ Add purchase Bill</a>
+                      <a routerLink="//purchase/add-goodsReceivedNote" style="color:#FF9F43">+ Add purchase Bill</a>
                   </mat-option>
                   <mat-option *ngIf="billControl?.value?.length < 1" class="is-loading"> Please Enter 1 or more characters </mat-option>
               </mat-autocomplete>

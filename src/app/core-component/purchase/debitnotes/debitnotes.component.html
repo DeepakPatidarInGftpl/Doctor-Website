@@ -5,7 +5,7 @@
         <h6>Manage your Purchase Return</h6>
     </div>
     <div class="page-btn" *ngIf="isAdd">
-        <a routerLink="//purchase/adddebit-notes" class="btn btn-added">
+        <a routerLink="//purchase/add-purchaseReturn" class="btn btn-added">
             <img src="assets/img/icons/plus.svg" alt="img">Add New Purchase Return
         </a>
     </div>
@@ -66,6 +66,16 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                   <label>Reverse Charge </label>
+                                    <select [(ngModel)]="filterReverseCharge" (change)="filterData()" class="form-select">
+                                        <option value="" selected disabled>Select Reverse Charge</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
                            
                         </div>
                          <div class="form-group" (click)="clearFilters()">
@@ -108,7 +118,7 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//purchase/debit-notesDetails/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a>
+                            <a routerLink="//purchase/details-purchaseReturn/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
                         <td>{{products?.purchase_return_date |  date:'yyyy-MM-dd hh:mm:ss a'}}</td>
                         <td>{{products?.purchase_return_no}}</td>
@@ -121,10 +131,10 @@
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
                         <td>
-                            <a class="me-1" routerLink="//purchase/debit-notesDetails/{{products.id}}">
+                            <a class="me-1" routerLink="//purchase/details-purchaseReturn/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//purchase/editdebit-notes/{{products.id}}" *ngIf="isEdit">
+                            <a class="me-1" routerLink="//purchase/edit-purchaseReturn/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" *ngIf="isDelete">
