@@ -54,6 +54,7 @@
                     <div class="form-group">
                         <label>Refund Status</label>
                             <select formControlName="refund_status" [ngClass]="{'is-invalid': f['refund_status'].touched && f['refund_status'].invalid}">
+                                <option value="" selected disabled>Select Refund Status</option>
                                 <option value="Refundable">Refundable</option>
                                 <option value="Non Refundable">Non Refundable</option>
                                 <option value="Scrap">Scrap</option>

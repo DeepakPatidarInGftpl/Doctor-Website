@@ -1,12 +1,12 @@
 
 <div class="page-header">
     <div class="page-title">
-        <h4 class="titl">GRN LIST</h4>
-        <h6>Manage your GRN</h6>
+        <h4 class="titl">Goods Received Note  LIST</h4>
+        <h6>Manage your Goods Received Note </h6>
     </div>
     <div class="page-btn" *ngIf="isAdd">
-        <a routerLink="//purchase/addpurchase-bill" class="btn btn-added">
-            <img src="assets/img/icons/plus.svg" alt="img">Add New GRN
+        <a routerLink="//purchase/add-goodsReceivedNote" class="btn btn-added">
+            <img src="assets/img/icons/plus.svg" alt="img">Add New Goods Received Note 
         </a>
     </div>
 </div>
@@ -148,7 +148,7 @@
                             <a class="me-1" routerLink="//purchase/purchase-billDetails/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//purchase/editpurchase-bill/{{products.id}}" *ngIf="isEdit">
+                            <a class="me-1" routerLink="//purchase/edit-goodsReceivedNote/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
                             <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" *ngIf="isDelete">

@@ -13,16 +13,16 @@
                 <div class="row">
                 <div class="col-lg-4 col-sm-6 col-12">
                   <div class="form-group">
-                    <label>Title</label>
+                    <label>SubCategory Group Name</label>
                     <div class="image-upload mb-2">
-                      <input type="text" formControlName="title">
+                      <input type="text" formControlName="title" placeholder="SubCategory Group Name">
                     </div>
-                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter The Title</span>
+                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Sub Category Group Name</span>
                   </div>
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
                   <div class="form-group">
-                    <label>Category</label>
+                    <label>Select Category</label>
                     <div class="image-upload mb-2">
                       <select class="w-100" formControlName="category" #categoryValue
                         (change)="getSubcategoryByCategory(categoryValue.value)">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="col-lg-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Subcategory</label>
+                        <label>Select Subcategory</label>
                         <div class="dropdown">
                             <button type="button" class="dropdown-toggle button" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
@@ -68,7 +68,7 @@
                 <div class="col-lg-4 col-sm-6 col-12">
       
                   <div class="form-group">
-                    <label>Feature Group*</label>
+                    <label>Select Feature Group*</label>
                     <div class="dropdown">
                       <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">Select Feature Group</button>

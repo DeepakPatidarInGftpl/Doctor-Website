@@ -74,6 +74,13 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Enter Total Amount</label>
+                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount" (keyup)="filterData()">
+                                    <span class="text-success">Amount Filter (Less than & Equal to Total amount value)</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group" (click)="clearFilter()">
                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>

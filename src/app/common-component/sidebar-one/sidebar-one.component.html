@@ -92,8 +92,8 @@
                     <!-- <li><a routerLink="/purchase/addpurchase" routerLinkActive="active">Add Purchase</a></li> -->
                     <!-- <li><a routerLink="/purchase/importpurchase" routerLinkActive="active">Import Purchase</a></li> -->
                     <li *ngIf="isMaterialInward"><a routerLink="/purchase/material-Inward-list" routerLinkActive="active">Material Inward List</a></li>
-                    <li *ngIf="isPurchaseBill"><a routerLink="/purchase/purchase-bill-list" routerLinkActive="active">GRN List</a></li>
-                    <li *ngIf="isDebitNotes"><a routerLink="/purchase/debit-notes-list" routerLinkActive="active">Purchase Return List</a></li>
+                    <li *ngIf="isPurchaseBill"><a routerLink="/purchase/goodsReceivedNote-list" routerLinkActive="active">GRN List</a></li>
+                    <li *ngIf="isDebitNotes"><a routerLink="/purchase/purchaseReturn-list" routerLinkActive="active">Purchase Return List</a></li>
 
                 </ul>
             </li>
@@ -491,11 +491,11 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>  Material Inward List</a>
                         </div>
                         <div>
-                                <a class="sub-li" routerLink="/purchase/purchase-bill-list" routerLinkActive="active">
+                                <a class="sub-li" routerLink="/purchase/goodsReceivedNote-list" routerLinkActive="active">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> Purchase Bill List</a>
                         </div>
                         <div>
-                                <a class="sub-li" routerLink="/purchase/debit-notes-list" routerLinkActive="active">
+                                <a class="sub-li" routerLink="/purchase/purchaseReturn-list" routerLinkActive="active">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> Debit Notes List</a>
                         </div>
                         <div>

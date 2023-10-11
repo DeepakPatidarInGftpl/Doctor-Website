@@ -370,6 +370,7 @@ export class SupplierComponent implements OnInit {
   }
 
   // filter data
+  selectCredit:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.supplierType) {
@@ -383,11 +384,15 @@ export class SupplierComponent implements OnInit {
         return aliasLower.includes(searchTerm);
       });
     }
+    if (this.selectCredit) {
+      filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.supplierType = null;
     this.selectedCompany = null;
+    this.selectCredit=null;
     this.filterData();
   }
 

@@ -1,7 +1,7 @@
 <div class="main-wrapper">
     <div class="account-content">
         <div class="login-wrapper">
-            <div class="login-content">
+            <div class="login-content w-50">
                 <div class="login-userset">
                     <div class="login-logo logo-normal">
                         <img src="assets/dummy/pos.png" alt="img">
@@ -17,7 +17,7 @@
                    <div class="form-login">
                         <label>Username</label>
                         <div class="form-addons">
-                            <input type="text" placeholder="Enter your username address"   formControlName="username"
+                            <input type="text" placeholder="Enter your username"   formControlName="username"
                             id="username"
                             [ngClass]="{
                               'is-invalid': f['username'].touched && f['username'].invalid
@@ -66,18 +66,18 @@
                         <button class="btn btn-login" type="submit">Sign In</button>
                     </div>
                   </form>
-                  <div class="form-login">
-                        <!-- <div class="alreadyuser">
+                  <!-- <div class="form-login">
+                        <div class="alreadyuser">
                             <h4><a routerLink="/auth/forgetpassword" class="hover-a">Forgot Password?</a></h4>
                         </div>
                     </div>
                     <div class="form-login">
                         <a class="btn btn-login" routerLink="//dashboard">Sign In</a>
-                    </div> -->
-                    <!-- <div class="signinform text-center">
+                    </div>
+                    <div class="signinform text-center">
                         <h4>Don’t have an account? <a routerLink="/auth/signup" class="hover-a">Sign Up</a></h4>
-                    </div> -->
-                    <!-- <div class="form-setlogin">
+                    </div>
+                  <div class="form-setlogin">
                         <h4>Or sign up with</h4>
                     </div>
                     <div class="form-sociallink">
@@ -95,13 +95,14 @@
                                 </a>
                             </li>
                         </ul>
-                    </div> -->
-               
+                    </div>  -->
+                 
                 </div>
             </div>
-            <!-- <div class="login-img">
-                <img src="assets/img/login.jpg" alt="img">
-            </div> -->
-        </div>
+            <div class="login-img w-50">
+                <!-- <img src="assets/img/login.jpg" alt="img"> -->
+                <img src="assets/img/LoginImage.webp" alt="" >
+            </div>
+        </div>  
     </div>
 </div>

@@ -874,7 +874,7 @@ export class UpdateDebitnotesComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-          // this.router.navigate(['//purchase/debit-notes-list'])
+          // this.router.navigate(['//purchase/purchaseReturn-list'])
           if (type == 'new') {
             this.loaderCreate = false;
             this.debitNotesForm.reset()
@@ -891,7 +891,7 @@ export class UpdateDebitnotesComponent implements OnInit {
           else {
             this.loader = false;
             this.toastrService.success(this.getRes.msg);
-            this.router.navigate(['//purchase/debit-notes-list'])
+            this.router.navigate(['//purchase/purchaseReturn-list'])
           }
         } else {
           if (type == 'new') {

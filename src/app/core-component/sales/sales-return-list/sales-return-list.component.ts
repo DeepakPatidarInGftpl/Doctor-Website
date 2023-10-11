@@ -139,9 +139,7 @@ export class SalesReturnListComponent implements OnInit {
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
     })
-
     //permission from profile api
-
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
@@ -157,6 +155,13 @@ export class SalesReturnListComponent implements OnInit {
           // console.log(this.isDelete);
         }
       });
+    });
+    this.getSellBill();
+  }
+  saleBillList: any;
+  getSellBill() {
+    this.saleService.getSalesBill().subscribe(res => {
+      this.saleBillList = res;
     })
   }
 
@@ -305,6 +310,8 @@ export class SalesReturnListComponent implements OnInit {
   // filter data
   date: any
   espireDate: any;
+  selectSellBillNo: any;
+  selectedAmount: any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -314,10 +321,18 @@ export class SalesReturnListComponent implements OnInit {
         return receiptDate === selectedDate;
       });
     }
+    if (this.selectSellBillNo) {
+      filteredData = filteredData.filter((item) => item?.sale_bill?.customer_bill_no === this.selectSellBillNo);
+    }
+    if (this.selectedAmount) {
+      filteredData = filteredData.filter((item) => item?.total <= this.selectedAmount);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.date = null;
+    this.selectedAmount = null;
+    this.selectSellBillNo = null
     this.filterData();
   }
 }

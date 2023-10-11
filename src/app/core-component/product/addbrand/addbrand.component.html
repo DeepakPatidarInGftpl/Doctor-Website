@@ -13,17 +13,17 @@
                         <div class="row">
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title" [ngClass]="{
+                                    <label>Brand*</label>
+                                    <input type="text" formControlName="title" id="title" placeholder="Enter Brand" [ngClass]="{
                                         'is-invalid': f['title'].touched && f['title'].invalid}">
-                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Brand
                                     </span>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Code</label>
-                                    <input type="text" formControlName="code" id="code" [ngClass]="{
+                                    <input type="text" formControlName="code" id="code" placeholder="Enter Code" [ngClass]="{
                                         'is-invalid': f['code'].touched && f['code'].invalid }">
                                     <span class="text-danger" *ngIf="code && code.invalid && code.touched">Enter code
                                     </span>
@@ -32,7 +32,7 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Discount</label>
-                                    <input type="text" formControlName="discount" id="discount" [ngClass]="{'is-invalid': f['discount'].touched && f['discount'].invalid}">
+                                    <input type="text" formControlName="discount" placeholder="Enter Discount" id="discount" [ngClass]="{'is-invalid': f['discount'].touched && f['discount'].invalid}">
                                     <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex-1-100) </span>
     
                                 </div>
@@ -40,7 +40,7 @@
                            
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Category</label>
+                                <label>Select Category</label>
                                 <div class="dropdown">
                                     <button type="button" class="dropdown-toggle button" type="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
@@ -64,7 +64,7 @@
 
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Subcategory group</label>
+                                    <label>Select Subcategory group</label>
                                     <div class="dropdown">
                                         <button type="button" class="dropdown-toggle button" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory
@@ -92,7 +92,7 @@
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>SubCategory</label>
+                                    <label>Select SubCategory</label>
                                     <div class="dropdown">
                                         <button type="button" class="dropdown-toggle button" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
@@ -120,7 +120,7 @@
                             </div>
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label> Brand Image*</label>
+                                    <label>Brand Image*</label>
                                     <!-- <div class="image-upload">
                                         <input type="file" formControlName="image" (change)="onSelect($event)">
                                         <div class="image-uploads">

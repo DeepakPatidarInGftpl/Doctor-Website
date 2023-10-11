@@ -313,6 +313,8 @@ select=false
   // filter data
   date: any
   espireDate:any;
+  selectRefundStatus:any;
+  selectedAmount:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -322,10 +324,18 @@ select=false
         return receiptDate === selectedDate;
       });
     }
+    if (this.selectRefundStatus) {
+      filteredData = filteredData.filter((item) => item?.refund_status === this.selectRefundStatus);
+    }
+    if (this.selectedAmount) {
+      filteredData = filteredData.filter((item) => item?.total_qty <= this.selectedAmount);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.date = null;
+    this.selectRefundStatus=null;
+    this.selectedAmount=null;
     this.filterData();
   }
 }

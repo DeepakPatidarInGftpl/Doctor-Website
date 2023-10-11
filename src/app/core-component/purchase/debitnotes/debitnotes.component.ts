@@ -397,6 +397,7 @@ export class DebitnotesComponent implements OnInit {
     document.body.innerHTML = originalContents;
   }
   //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
+filterReverseCharge:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -409,10 +410,14 @@ export class DebitnotesComponent implements OnInit {
     if (this.selectedpaymentTerms) {
       filteredData = filteredData.filter((item) => item?.purchase_bill?.refrence_bill_no === this.selectedpaymentTerms);
     }
+    if (this.filterReverseCharge) {
+      filteredData = filteredData.filter((item) => item?.reverse_charge === this.filterReverseCharge);
+    }
     this.filteredData = filteredData;
   }
   clearFilters() {
     this.selectedpaymentTerms = null;
+    this.filterReverseCharge=null;
     this.date = null;
     this.filterData();
   }

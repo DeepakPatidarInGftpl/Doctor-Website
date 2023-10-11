@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit {
     if (localStorage.getItem('token')) {
       this.authServ.logout().subscribe(res => {
         // console.log(res);
-        this.toastr.success('LogOut Successfull');
+        this.toastr.success(res.status);
         localStorage.clear()
         this.Router.navigate(['/auth/signin'])
         this.authServ.doLogout()
@@ -65,14 +65,14 @@ export class HeaderComponent implements OnInit {
         if (err.error.detail) {
           localStorage.removeItem('token');
           localStorage.clear()
-          this.toastr.success('LogOut Successfull');
+          this.toastr.success('Logout Successfully');
           this.Router.navigate(['/auth/signin'])
         }
       })
     } else {
       localStorage.removeItem('token');
       localStorage.clear()
-      this.toastr.success('LogOut Successfull');
+      this.toastr.success('Logout Successfully');
       this.Router.navigate(['/auth/signin'])
     }
 

@@ -226,7 +226,7 @@
                                                                     </ng-container>
                                                                     <mat-option *ngIf="filterPurchaseBill?.length === 0"
                                                                         [value]="'No data found'">
-                                                                        <a routerLink="//purchase/purchase-bill-list"
+                                                                        <a routerLink="//purchase/goodsReceivedNote-list"
                                                                             style="color:#FF9F43">+ Add Purchase
                                                                             Bill</a>
                                                                     </mat-option>
@@ -601,7 +601,7 @@
                                                                         </mat-option>
                                                                     </ng-container>
                                                                     <mat-option *ngIf="filterPurchaseBill?.length === 0" [value]="'No data found'">
-                                                                        <a routerLink="//purchase/purchase-bill-list" style="color:#FF9F43">+ Add Purchase Bill</a>
+                                                                        <a routerLink="//purchase/goodsReceivedNote-list" style="color:#FF9F43">+ Add Purchase Bill</a>
                                                                     </mat-option>
                                                                     <mat-option *ngIf="myControls.at(i)?.value?.length < 1" class="is-loading"> Please Enter 1 or more characters </mat-option>
                                                                 </mat-autocomplete>

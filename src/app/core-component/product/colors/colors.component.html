@@ -28,8 +28,8 @@
                             <a class="btn btn-searchset">
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
-                                    <input type="search" class="form-control form-control-sm" placeholder="Search..."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                    <input type="search" class="form-control form-control-sm" placeholder="Search Color..."
+                                        [(ngModel)]="titlee" (ngModelChange)="search()">
                                 </label>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                                     <i class="fa fa-sort"></i>
                                 </th>
                                 <th (click)="sort('id')" class="thone">Sr.No. <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Color<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Color Code <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
@@ -185,12 +185,12 @@
                         <div class="row">
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title" [ngClass]="{
+                                    <label>Color*</label>
+                                    <input type="text" formControlName="title" placeholder="Color Name" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
-                                        Title
+                                        Color
                                     </span>
 
                                 </div>
@@ -225,12 +225,12 @@
                         <div class="row">
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title" [ngClass]="{
+                                    <label>Color*</label>
+                                    <input type="text" formControlName="title" placeholder="Color Name" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
-                                        Title
+                                        Color
                                     </span>
 
                                 </div>
