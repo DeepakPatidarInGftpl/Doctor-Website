@@ -380,7 +380,7 @@ loaders=false;
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.alternate_unit.title.toLocaleLowerCase(); 
+        const nameLower = res?.alternate_unit?.title.toLocaleLowerCase(); 
         return nameLower.includes(searchTerm); 
       });
     }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Subscription } from 'rxjs';
 import { Auth } from 'src/app/interfaces/auth';
 import { AuthServiceService } from 'src/app/Services/auth-service.service';
@@ -28,7 +27,7 @@ export class SigninComponent implements OnInit {
   //SIDEBAR SETTINGS.SCSS -> sidebar open karne ke liye uncomment karna hoga
 
   constructor(private storage: WebstorgeService, private authService: AuthServiceService,
-    private toastr: ToastrService, private router: Router,private ngxService: NgxUiLoaderService) {
+    private toastr: ToastrService, private router: Router) {
     this.subscription = this.storage.Loginvalue.subscribe((data: any) => {
       if (data != 0) {
         this.CustomControler = data;
@@ -41,17 +40,16 @@ export class SigninComponent implements OnInit {
       username: new FormControl("", [Validators.required]),
       password: new FormControl('', [Validators.required]),
     });
+
     this.storage.Checkuser();
     this.password = 'password';
+
     if (localStorage.getItem('token')) {
       this.router.navigate(['/dashboard']);
     }
   }
 
-  closeLoader() {
-    this.ngxService.stop(); 
-  }
-  
+
   loginRes: undefined | Auth
   loginStatus: string = ''
 
@@ -59,13 +57,6 @@ export class SigninComponent implements OnInit {
     // this.storage.Login(this.form.value);
     // console.log(this.form.value);
     if (this.form.valid) {
-      this.ngxService.start(); // Start the loader
-
-      // Allow the UI to update before closing the loader
-      setTimeout(() => {
-        this.ngxService.stop(); // Close the loader after a brief delay
-      });
-
       this.authService.login(this.form.value).subscribe(res => {
         // console.log(res);
         this.loginRes = res;

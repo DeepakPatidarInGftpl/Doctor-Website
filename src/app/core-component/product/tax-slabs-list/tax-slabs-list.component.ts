@@ -221,7 +221,7 @@ export class TaxSlabsListComponent implements OnInit {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.subcategory_group?.title.toLocaleLowerCase(); 
+        const nameLower = res?.slab_title.toLocaleLowerCase(); 
         return nameLower.includes(searchTerm); 
       });
     }

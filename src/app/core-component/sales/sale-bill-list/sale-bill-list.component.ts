@@ -362,6 +362,9 @@ select=false
   clearFilter() {
     this.date = null;
     this.espireDate = null;
+    this.selectedAmount=null;
+    this.filterPaymentTerms=null;
+    this.selectEstimateNo=null;
     this.filterData();
   }
 }

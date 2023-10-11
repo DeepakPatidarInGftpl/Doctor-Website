@@ -23,7 +23,7 @@ import { environment } from '../environments/environment';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 import{NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
-import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from "ngx-ui-loader";
+
 const icons = {
   Layers
 };
@@ -53,8 +53,6 @@ const icons = {
       registrationStrategy: 'registerWhenStable:30000'
     }),
     NgMultiSelectDropDownModule,
-    NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
-    NgxUiLoaderModule
   ],
   exports: [
     FeatherModule

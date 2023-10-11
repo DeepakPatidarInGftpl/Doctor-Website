@@ -434,9 +434,9 @@
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>Supplier Type*</label>
+                        <label>Select Supplier Type*</label>
                         <select formControlName="supplier_type" class="w-100 h-100 border">
-                            <option value="" selected disabled>Supplier</option>
+                            <option value="" selected disabled>Select Supplier Type</option>
                             <option value="Manufacturer">Manufacturer</option>
                             <option value="Stockiest">Stockiest</option>
                             <option value="Trader">Trader</option>
@@ -444,7 +444,7 @@
                         </select>
                         <span class="text-danger"
                             *ngIf="supplier_type && supplier_type.invalid && supplier_type.touched ">Select
-                            supplier_type</span>
+                            supplier type</span>
                     </div>
                 </div>
 
@@ -491,7 +491,7 @@
                                 </thead>
                                 <tbody>
                                      <tr *ngFor="let data of selectData;let j=index">
-                                                <td>{{j+1}}</td>
+                                                <td>{{j+1+'.'}}</td>
                                                 <td>
                                                    <p>{{data?.product_title + ' ' + data?.variant_name}}</p>
                                                 </td>
