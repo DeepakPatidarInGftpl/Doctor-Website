@@ -1681,4 +1681,14 @@ getFeatureByFeaturegroup(id: any) {
   let url = this.apiUrl + '/pv-api/feature-group-wise-feature-dashboard/?feature_grp=';
   return this.http.get<any>(`${url}${id}`);
 }
+//product ledger
+getProductLedger() {
+  let url = this.apiUrl + '/pv-api/product_ledger/';
+  return this.http.get(url)
+}
+//product Stock
+getProductStock() {
+  let url = this.apiUrl + '/pv-api/stock/';
+  return this.http.get(url)
+}
 }

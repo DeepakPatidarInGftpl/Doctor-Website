@@ -140,29 +140,6 @@ export class ProductlistComponent implements OnInit {
   res: any;
   userDetails: any
   ngOnInit(): void {
-    // this.dtOptions = {
-    //   dom: 'Btlpif',
-    //   pagingType: 'numbers',
-    //   language: {
-    //     search: ' ',
-    //     searchPlaceholder: 'Search...',
-    //     info: '_START_ - _END_ of _TOTAL_ items',
-    //   },
-    //   initComplete: (settings, json) => {
-    //     $('.dt-buttons').appendTo('.none');
-    //     $('.dataTables_filter').appendTo('.search-input');
-    //   },
-    // };
-
-    // this.coreService.getProduct();
-    // this.coreService.productListBehaviur.subscribe( () => {
-    //   if (localStorage.getItem('productList')) {
-    //     this.tableData = Object.values(JSON.parse(localStorage.getItem("productList")!))
-    //   }
-    // })
-    // this.QueryService.productList;
-    // console.log(this.res);
-
     this.coreService.getProducts().subscribe(res => {
       this.res = res;
       this.tableData = res;
