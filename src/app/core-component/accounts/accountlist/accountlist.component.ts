@@ -277,6 +277,7 @@ export class AccountlistComponent implements OnInit {
   }
 
   // filter data
+  selectCredit:any
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.selectedAccountType) {
@@ -295,12 +296,16 @@ export class AccountlistComponent implements OnInit {
         return account_id?.includes(searchTerm);
       });
     }
+    if (this.selectCredit) {
+      filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.selectedAccountType = null;
     this.selectedAccountSubType = null;
     this.selectedAccountId = null;
+    this.selectCredit=null;
     this.filterData();
   }
 
@@ -395,20 +400,11 @@ export class AccountlistComponent implements OnInit {
     const fileName = 'accounts.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
-  //print table
-  // printTable(): void {
-  //   const printContents = document.getElementById('mytable').outerHTML;
-  //   const originalContents = document.body.innerHTML;
-  //   document.body.innerHTML = printContents;
-  //   window.print();
-  //   document.body.innerHTML = originalContents;
-  // }
 
   printTable(): void {
     // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-  
     // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;

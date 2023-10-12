@@ -40,8 +40,8 @@ export class ProductDetailsComponent implements OnInit {
               title: 'Deleted!',
               text: 'Your file has been deleted.',
             });
-         
-          }else{
+
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -53,30 +53,31 @@ export class ProductDetailsComponent implements OnInit {
       }
     });
   }
-isAdd:any
-isEdit:any
-isDelete:any
+  isAdd: any
+  isEdit: any
+  isDelete: any
+  loader = true;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
     // this.getBatch();
 
-      //permission from localstorage data
+    //permission from localstorage data
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData) {
       const permission = localStorageData;
       permission.map((res: any) => {
-        if (res.content_type.app_label === 'product' && res.content_type.model === 'batch' && res.codename=='add_batch') {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'batch' && res.codename == 'add_batch') {
           this.isAdd = res.codename;
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'batch' && res.codename=='change_batch') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'batch' && res.codename == 'change_batch') {
           this.isEdit = res.codename;
-        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'batch' && res.codename=='delete_batch') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'batch' && res.codename == 'delete_batch') {
           this.isDelete = res.codename;
         }
       });
     }
 
-   
+
   }
   batchList: any
   getBatch() {
@@ -102,13 +103,35 @@ isDelete:any
     document.body.appendChild(script);
   }
 
-  productDetail: any
+  productDetail: any;
+  totalPrice=0
+  price:any[]=[];
+  totalINqty=0;
+  iNqty:any[]=[];
+  totalOutQty=0;
+  outQty:any[]=[]
   getdata() {
-    this.coreService.getProductById(this.id).subscribe(res => {
-      if (this.id == res.id) {
-        this.productDetail = res
-        // console.log(res);
-        // console.log(res.variant_product);
+    this.coreService.getProductById(this?.id).subscribe(res => {
+      if (this?.id == res?.id) {
+        this.productDetail = res;
+        this.loader = false;
+        this?.productDetail?.product_ledger_product.map((res: any) => {
+          this.price.push(res.price == null ? 0 : res.price);
+          this.iNqty.push(res.in_qty);
+          this.outQty.push(res.out_qty)
+        })
+        this.price.forEach((price:number)=>{
+          this.totalPrice+=price;
+          console.log(this.totalPrice);
+        });
+        this.iNqty.forEach((price:number)=>{
+          this.totalINqty+=price;
+          console.log(this.totalINqty);
+        });
+        this.outQty.forEach((price:number)=>{
+          this.totalOutQty+=price;
+          console.log(this.totalOutQty);
+        });
       }
     })
   }
@@ -197,6 +220,14 @@ isDelete:any
       }
     });
   }
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
 
-
+  key = 'id'
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
 }
