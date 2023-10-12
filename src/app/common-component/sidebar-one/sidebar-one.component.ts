@@ -72,6 +72,8 @@ export class SidebarOneComponent implements OnInit {
   isHsnCode;
   isUnit;
   isUnitConversation;
+  isProductLedger:any;
+  isStock:any;
   //purchase
   isPurchase;
   isMaterialInward;
@@ -200,7 +202,12 @@ userDetails:any
           this.isUnit = res.codename
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'unitconversion' && res.codename == 'view_unitconversion') {
           this.isUnitConversation = res.codename
+        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stock' && res.codename == 'view_stock') {
+          this.isStock = res.codename
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productledger' && res.codename == 'view_productledger') {
+          this.isProductLedger = res.codename
         }
+        
         //pos
        else if (res.content_type.app_label === 'pos' && res.content_type.model === 'posorder' && res.codename == 'view_posorder') {
         this.isPosOrder = res.codename;

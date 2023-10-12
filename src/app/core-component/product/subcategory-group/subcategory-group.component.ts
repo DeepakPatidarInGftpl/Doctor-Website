@@ -591,54 +591,53 @@ this.getFeatureGroup()
       this.filterData();
     }
     // convert to pdf
-  //   generatePDF() {
-  //     // table data with pagination
-  //     const doc = new jsPDF();
-  //     const title = 'Sub Category Group list';
+    generatePDF() {
+      const doc = new jsPDF();
+      const title = 'Sub Category Group list';
+      doc.setFontSize(15);
+      doc.setTextColor(33, 43, 54);
+      doc.text(title, 10, 10);
+      // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
+      autoTable(doc,
   
-  //     doc.setFontSize(15);
-  //     doc.setTextColor(33, 43, 54);
-  //     doc.text(title, 10, 10);
-  //     // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
-  //     autoTable(doc,
-  
-  //       {
-  //         html: '#mytable',
-  //         theme: 'grid',
-  //         headStyles: {
-  //           fillColor: [255, 159, 67]
-  //         },
-  //         columns: [
-  //           //remove action filed
-  //           { header: 'Sr No.' },
-  //           { header: 'Image' },
-  //           { header: 'Title' },
-  //           { header: 'Category' },
-  //           { header: 'Subcategory' },
-  //           { header: 'Feature group' },
-  //           { header: 'Is Active' }
-  //         ],
-  //       })
-  //     doc.save('subcategorygroup.pdf');
-  // }
-
-  generatePDF() {
-    const doc = new jsPDF();
-    const title = 'Sub Category Group list';
-  
-    doc.setFontSize(15);
-    doc.setTextColor(33, 43, 54);
-    doc.text(title, 10, 10);
-  
-    const table = document.getElementById('mytable'); // Get the table element
-  
-    html2canvas(table).then((canvas) => {
-      const tableImgData = canvas.toDataURL('image/png'); // Convert table to image data URL
-      doc.addImage(tableImgData, 'PNG', 10, 20, 190, 0); // Add the table image to PDF
-  
+        {
+          html: '#mytable',
+          theme: 'grid',
+          headStyles: {
+            fillColor: [255, 159, 67]
+          },
+          columns: [
+            //remove action filed
+            { header: 'Sr No.' },
+            { header: 'Image' },
+            { header: 'Sub Category Group' },
+            { header: 'Category' },
+            { header: 'Subcategories' },
+            { header: 'Feature Group' },
+            { header: 'Is Active' }
+          ],
+        })
       doc.save('subcategorygroup.pdf');
-    });
-  }
+  
+   }
+
+  // generatePDF() {
+  //   const doc = new jsPDF();
+  //   const title = 'Sub Category Group list';
+  
+  //   doc.setFontSize(15);
+  //   doc.setTextColor(33, 43, 54);
+  //   doc.text(title, 10, 10);
+  
+  //   const table = document.getElementById('mytable'); // Get the table element
+  
+  //   html2canvas(table).then((canvas) => {
+  //     const tableImgData = canvas.toDataURL('image/png'); // Convert table to image data URL
+  //     doc.addImage(tableImgData, 'PNG', 10, 20, 190, 0); // Add the table image to PDF
+  
+  //     doc.save('subcategorygroup.pdf');
+  //   });
+  // }
   
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {
