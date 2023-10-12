@@ -52,16 +52,18 @@ export class SigninComponent implements OnInit {
 
   loginRes: undefined | Auth
   loginStatus: string = ''
-
+  loaders=false;
   submit() {
     // this.storage.Login(this.form.value);
     // console.log(this.form.value);
     if (this.form.valid) {
+      this.loaders=true;
       this.authService.login(this.form.value).subscribe(res => {
         // console.log(res);
         this.loginRes = res;
         // console.log(this.loginRes.token);
         if (this.loginRes.token) {
+          this.loaders=false;
           this.toastr.success('Login Successfull');
           // this.router.navigate(['//dashboard']).then(() => {
           //   window.location.reload();
@@ -70,8 +72,11 @@ export class SigninComponent implements OnInit {
           localStorage.setItem('token', this.loginRes.token)
           localStorage.setItem('auth', JSON.stringify(this.loginRes?.permission));
           // console.log(this.loginRes.token);
+        }else{
+          this.loaders=false;
         }
       }, err => {
+        this.loaders=false;
         // console.log(err);
         if (err.error.User == false) {
           // console.log(err.error.msg);  
@@ -83,6 +88,7 @@ export class SigninComponent implements OnInit {
 
       })
     } else {
+      this.loaders=false;
       this.form.markAllAsTouched()
       console.log('invalid form');
       

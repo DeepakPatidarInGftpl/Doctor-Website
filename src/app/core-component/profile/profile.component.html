@@ -15,24 +15,35 @@
                     <div class="profile-top">
                         <div class="profile-content">
                             <div class="profile-contentimg">
-                                <img src="assets/img/customer/customer5.jpg" alt="img" id="blah">
-                                <div class="profileupload">
+                                <img src="assets/dummy/profile.png" alt="img" id="blah">
+                                <!-- <div class="profileupload">
                                     <input type="file" id="imgInp">
                                     <a href="javascript:void(0);" ><img src="assets/img/icons/edit-set.svg"  alt="img"></a>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="profile-contentname">
-                                <h2>William Castillo</h2>
-                                <h4>Updates Your Photo and Personal Details.</h4>
+                                <h2>{{userDetails?.username}}</h2>
+                                <h4>{{userDetails?.role}}</h4>
+                            </div>
+                            <div class="profile-contentname ml-5">
+                                <h4>User Type :</h4>
+                                <h4>Phone Number :</h4>
+                                <h4>Email :</h4>
+                            </div>
+                            <div class="profile-contentname">
+                                <h4>{{userDetails?.user_type}}</h4>
+                                <h4>{{userDetails?.phone_number}}</h4>
+                                <h4>{{userDetails?.email}}</h4>
                             </div>
                         </div>
-                        <div class="ms-auto">
+                      
+                        <!-- <div class="ms-auto">
                             <a href="javascript:void(0);" class="btn btn-submit me-2">Save</a>
                             <a href="javascript:void(0);" class="btn btn-cancel">Cancel</a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-lg-6 col-sm-12">
                         <div class="form-group">
                             <label>First Name</label>
@@ -77,7 +88,7 @@
                         <a href="javascript:void(0);" class="btn btn-submit me-2">Submit</a>
                         <a href="javascript:void(0);" class="btn btn-cancel">Cancel</a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <!-- /product list -->
