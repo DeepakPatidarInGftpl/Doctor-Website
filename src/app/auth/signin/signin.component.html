@@ -63,7 +63,9 @@
                     </div>
                     <div class="form-login">
                         <!-- <a class="btn btn-login" routerLink="//dashboard">Sign In</a> -->
-                        <button class="btn btn-login" type="submit">Sign In</button>
+                        <button class="btn btn-login me-2" type="submit" *ngIf="!loaders">Sign In</button>
+                        <button class="btn btn-login me-2" type="submit" *ngIf="loaders" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Sign In</button>
                     </div>
                   </form>
                   <!-- <div class="form-login">
