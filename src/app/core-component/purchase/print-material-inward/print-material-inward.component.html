@@ -1,0 +1,412 @@
+<!-- pdf -->
+<!-- <div class="content-part">
+    <div class="container py-10">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Invoice</h3>
+            <button class="btn btn-primary" (click)="printForm()">Download Invoice</button>
+        </div>
+        <p>
+            <button class="btn" (click)="generatePdf()">Download PDF</button>
+        </p>
+
+        <div class="outer" id="debitNote">
+            <div class="pdf-div" id="doc-target">
+                <div class="top mb-4">
+                    <div class="container">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between align-items-center top-div">
+                                <div class="left-top">
+                                    <img src="../../../assets/img/app/logo_png.png" alt="">
+                                </div>
+                                <div class="right-top">
+                                    <p>GST #746653740</p>
+                                    <h1>Invoice</h1>
+                                    <p>Invoice Date: 07/19/23</p>
+                                    <p>Invoice NO: 100571</p>
+                                    <p>Invoice Date: 07/19/23</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pdf-address mb-4">
+                    <div class="container">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between align-items-center top-div">
+                                <div>
+                                    <p class="heading">Sold By</p>
+                                    <p class="heading2">
+                                        #124, 7536 130th St Surre, BC V3H 1H8
+                                        <br/>
+                                        Phone: (778) 879-2651
+                                        <br/>
+                                        pv@outlook.com
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="heading">Sold By</p>
+                                    <p class="heading2">
+                                        #124, 7536 130th St Surre, BC V3H 1H8
+                                        <br/>
+                                        Phone: (778) 879-2651
+                                        <br/>
+                                        pv@outlook.com
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="heading">Sold By</p>
+                                    <p class="heading2">
+                                        #124, 7536 130th St Surre, BC V3H 1H8
+                                        <br/>
+                                        Phone: (778) 879-2651
+                                        <br/>
+                                        pv@outlook.com
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pdf-table1 mb-4">
+                    <div class="container">
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th class="thone">Order #</th>
+                                            <th class="thone">Order Date</th>
+                                            <th class="thone">Customer #</th>
+                                            <th class="thone">Slsmn</th>
+                                            <th class="thone">Ship Via</th>
+                                            <th class="thone">Tracking Number</th>
+                                            <th class="thone">Terms</th>
+    
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1000094</td>
+                                            <td>07/19/23</td>
+                                            <td>7774443331</td>
+                                            <td>JS</td>
+                                            <td>PICK UP</td>
+                                            <td></td>
+                                            <td>NET 30 DAYS</td>
+                                        </tr> 
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="pdf-table2 mb-4">
+                    <div class="container">
+                        <div class="col-sm-12 mb-3">
+                            <div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="4" style="text-align: center;">Quantity</th>
+                                            <th rowspan="2">Item Number</th>
+                                            <th rowspan="2">Item Description</th>
+                                            <th rowspan="2">Unit Price</th>
+                                            <th rowspan="2">Amount</th>
+                                            <th rowspan="2">Tx</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Ordered</th>
+                                            <th>UM</th>
+                                            <th>Shipped</th>
+                                            <th>B/0</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>14</td>
+                                            <td>EA</td>
+                                            <td>14</td>
+                                            <td>0</td>
+                                            <td>LED4WH</td>
+                                            <td>4" LED Slim Pael 750 LM 9W 3CCT</td>
+                                            <td>7.00</td>
+                                            <td>98.00</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2"></td>
+                                            <td rowspan="2"></td>
+                                            <td rowspan="2"></td>
+                                            <td rowspan="2"></td>
+                                            <td rowspan="2">Thank You For Your Business Payment Type: Cash</td>
+                                            <td rowspan="2">Reference</td>
+                                            <td rowspan="2">Chq/Auth#</td>
+                                            <td rowspan="2">Amount</td>
+                                            <td rowspan="2"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>               
+                        </div>
+                        <div class="col-sm-12">
+                            <p>Please notify us on any disrepancies within 3 days of receipt <br/> Overdue invoices will be charged 24% interest.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="pdf-payment">
+                    <div class="container">
+                        <div class="col-sm-12">
+                            <div class="pdf-payment-div">
+                                <div class="pdf-pd">
+                                    <p>Net Sales Amout:</p>
+                                    <p class="pdf-pd-right">0.00</p>
+                                </div>
+                                <div class="pdf-pd">
+                                    <p>Environmental Fees:</p>
+                                    <p class="pdf-pd-right">0.00</p>
+                                </div>
+                                <div class="pdf-pd">
+                                    <p>GST:</p>
+                                    <p class="pdf-pd-right">0.00</p>
+                                </div>
+                                <div class="pdf-pd">
+                                    <p>HST:</p>
+                                    <p class="pdf-pd-right">0.00</p>
+                                </div>
+                                <div class="pdf-pd">
+                                    <p>PST:</p>
+                                    <p class="pdf-pd-right">0.00</p>
+                                </div>
+                                <div class="pdf-pd">
+                                    <p>Total:</p>
+                                    <p class="pdf-pd-right">0.00</p>
+                                </div>
+                                <div class="pdf-pd">
+                                    <p>Payment Received:</p>
+                                    <p class="pdf-pd-right">0.00</p>
+                                </div>
+                                <div class="pdf-pd">
+                                    <p>Balance Due:</p>
+                                    <p class="pdf-pd-right">0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="pdf-footer">
+                    <p>Please make cheques payable to <span>PV LTD.</span></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div> -->
+
+
+<!-- pdf -->
+
+<!-- <div mat-dialog-content> -->
+    <div class="content-part">
+        <div class="container py-10">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>Invoice</h3>
+                <button class="btn btn-primary" (click)="printForm()">Download Invoice</button>
+            </div>
+            <p style="margin-bottom: 0;">
+                <button class="btn" (click)="generatePdf()">Download PDF</button>
+            </p>
+    
+            <div class="outer container" id="debitNote" style="padding-left: 5%; padding-right: 5%;">
+                <div class="pdf-div" id="doc-target">
+                    <div class="top mb-4">
+                        <div class="container">
+                            <div class="col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center top-div">
+                                    <div class="left-top">
+                                        <img src="../../../assets/img/app/logo_png.png" alt="">
+                                    </div>
+                                    <div class="right-top">
+                                        <p>GST {{printDetails?.party?.gstin}}</p>
+                                        <h1>Invoice</h1>
+                                        <p>Invoice Date: {{printDetails?.material_inward_date | date: 'yyyy-MM-dd'}}</p>
+                                        <p>Invoice NO:  {{printDetails?.material_inward_no}}</p>
+                                        <p>Invoice Date: {{printDetails?.po_date | date: 'yyyy-MM-dd'}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pdf-address mb-4">
+                        <div class="container">
+                            <div class="col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center top-div container">
+                                    <!-- <div>
+                                        <p class="heading">Sold By</p>
+                                        <p class="heading2">
+                                                {{printDetails?.party?.address[0]?.address_line_1 + ' , ' + printDetails?.party?.address[0]?.address_line_2 + ' , ' +  printDetails?.party?.address[0]?.city?.city  
+                                            + ' , ' + printDetails?.party?.address[0]?.state?.state  + ' , ' + printDetails?.party?.address[0]?.country?.country_name}}
+                                            <br/>
+                                            Phone: {{printDetails?.party?.mobile_no}}
+                                            <br/>
+                                            {{printDetails?.party?.email}}
+                                        </p>
+                                    </div> -->
+                                   
+                                    <div *ngIf="selectedAddressBilling">
+                                        <p class="heading">Billing Address</p>
+                                        <p class="heading2">
+                                                {{selectedAddressBilling?.address_line_1 + ' , ' + selectedAddressBilling?.address_line_2 + ' , ' +  selectedAddressBilling?.city?.city  
+                                            + ' , ' + selectedAddressBilling?.state?.state  + ' , ' + selectedAddressBilling?.country?.country_name}}
+                                            <br/>
+                                            Phone: {{printDetails?.party?.mobile_no}}
+                                            <br/>
+                                            {{printDetails?.party?.email}}
+                                        </p>
+                                    </div>
+                                    <div *ngIf="selectedAddressShipping">
+                                        <p class="heading">Shipping Address</p>
+                                        <p class="heading2">
+                                                {{selectedAddressShipping?.address_line_1 + ' , ' + selectedAddressShipping?.address_line_2 + ' , ' +  selectedAddressShipping?.city?.city  
+                                            + ' , ' + selectedAddressShipping?.state?.state  + ' , ' + selectedAddressShipping?.country?.country_name}}
+                                            <br/>
+                                            Phone: {{printDetails?.party?.mobile_no}}
+                                            <br/>
+                                            {{printDetails?.party?.email}}
+                                        </p>
+                                    </div>
+                                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pdf-table1 mb-4">
+                        <div class="container">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table class="table datanew">
+                                        <thead>
+                                            <tr>
+                                                <th class="thone" style="white-space: normal !important;">Order No.</th>
+                                                <th class="thone" style="white-space: normal !important;">Supplier Name</th>
+                                                <th class="thone" style="white-space: normal !important;">Purchase Order</th>
+                                                <th class="thone" style="white-space: normal !important;">Date</th>
+                                                <th class="thone" style="white-space: normal !important;">PO Date</th>
+                                                <th class="thone" style="white-space: normal !important;">Recieved By</th>
+                                                <th class="thone" style="white-space: normal !important;">Shipping Note</th>
+                                                <th class="thone" style="white-space: normal !important;">Product Type</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="color:black">{{printDetails?.material_inward_no}}</td>
+                                                <td style="color:black">{{printDetails?.party?.company_name}}</td>
+                                                <td style="color:black">{{printDetails?.purchase_order?.order_no}}</td>
+                                                <td style="color:black">{{printDetails?.material_inward_date | date: 'yyyy-MM-dd'}}</td>
+                                                <td style="color:black">{{printDetails?.po_date | date: 'yyyy-MM-dd'}}</td>
+                                                <td style="color:black">{{printDetails?.recieved_by}}</td>
+                                                <td style="color:black">{{printDetails?.shipping_note}}</td>
+                                                <td style="color:black">{{printDetails?.product_type}}</td>
+                                            </tr> 
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="pdf-table2 mb-4">
+                        <div class="container">
+                            <div class="col-sm-12 mb-3">
+                                <div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Barcode/SKU</th>
+                                                <th>Product Name</th>
+                                                <th>QTY</th>
+                                                <th>PO QTY</th>
+                                                <th>Mrp</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let cart of printDetails?.cart">
+                                                <td>{{cart?.barcode?.sku}}</td>
+                                                <td>{{cart?.barcode?.product_title}}</td>
+                                                <td>{{cart?.qty}}</td>
+                                                <td>{{cart?.po_qty}}</td>
+                                                <td>{{cart?.mrp}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>               
+                            </div>
+                            <div class="col-sm-12">
+                                <p>Please notify us on any disrepancies within 3 days of receipt <br/> Overdue invoices will be charged 24% interest.</p>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- <div class="row pdf-payment">
+                        <div class="col-lg-6 my-3">
+                            <div class="form-group">
+                                <label>Note</label>
+                                <p class="border">{{printDetails?.note}}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 my-3">
+                                <div class="container">
+                                    <div class="col-sm-12">
+                                        <div class="pdf-payment-div">
+                                            <div class="pdf-pd">
+                                                <p>Total:</p>
+                                                <p class="pdf-pd-right">{{printDetails?.total}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div> -->
+                 
+                    <div class="row container">
+                        <div class="col-lg-6 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label>Note:</label>
+                                <!-- <p class="my-5">{{printDetails?.note}}</p> -->
+                                <textarea [ngModel]="printDetails?.note" disabled="true" style="border:none;height: 20%;"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-4 col-12">
+                            <div class="form-group">
+                                <div class="total-order w-50">
+                                    <ul>
+                                        <li class="total">
+                                            <h4>Total</h4>
+                                            <h5>{{ printDetails?.total.toFixed(2) | currency :'INR'}} </h5>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <div class="pdf-footer">
+                        <p>Please make cheques payable to <span>PV LTD.</span></p>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+<!-- </div> -->
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Ok</button>
+</div>
+
+
+
+
+<!-- <div>Loading...</div> -->
+

@@ -74,6 +74,13 @@ const routes: Routes = [
         (m) => m.DetailsMaterialInwardModule
       ),
   },
+  {
+    path: 'print-material-Inward/:id',
+    loadChildren: () =>
+      import('./print-material-inward/print-material-inward.module').then(
+        (m) => m.PrintMaterialInwardModule
+      ),
+  },
 
   {
     path: 'goodsReceivedNote-list',

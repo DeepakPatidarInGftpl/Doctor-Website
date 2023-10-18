@@ -7,6 +7,8 @@ import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-servi
 import { tap } from 'rxjs/operators';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { PrintMaterialInwardComponent } from '../print-material-inward/print-material-inward.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-updatematerial-inward',
   templateUrl: './updatematerial-inward.component.html',
@@ -28,7 +30,8 @@ export class UpdatematerialInwardComponent implements OnInit {
     private toastrService: ToastrService,
     private Arout: ActivatedRoute,
     private contactService: ContactService,
-    private coreService:CoreService) {
+    private coreService:CoreService,
+    public dialog: MatDialog) {
   }
 
   supplierControlName = 'party';
@@ -387,13 +390,21 @@ export class UpdatematerialInwardComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
+  formId:any;
   submit(type: any) {
-    // console.log(this.materialForm.value);
+  
     if (this.materialForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      }
+      else if(type=='print'){
+        this.loaderPrint=true;
+      } else if(type=='draft'){
+        this.loaderDraft=true;
       }
       let formdata: any = new FormData();
       formdata.append('party', this.materialForm.get('party')?.value);
@@ -449,13 +460,21 @@ export class UpdatematerialInwardComponent implements OnInit {
             this.materialForm.reset()
             this.ngOnInit()
             this.supplierControl.reset()
-          } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.materialForm.reset()
-              this.ngOnInit()
-              this.supplierControl.reset()
-            }, 3000);
+          }  else if (type == 'print') {
+            this.loaderPrint=false;
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
+            this.loaderPrint=false;
+            this.router.navigate(['//purchase/print-material-Inward/'+this.id])
+            // this.openDialog()
+
+            // setTimeout(() => {
+            //   // this.materialForm.reset()
+            //   // this.ngOnInit()
+            //   this.supplierControl.reset();
+            // }, 3000);
+          } 
+          else if(type=='draft'){
+            this.loaderDraft=false;
           }
           else {
             this.loader = false;
@@ -467,6 +486,10 @@ export class UpdatematerialInwardComponent implements OnInit {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
+      }else if(type=='print'){
+        this.loaderPrint=false;
+      } else if(type=='draft'){
+        this.loaderDraft=false;
       }
         }
       }, err => {
@@ -474,6 +497,10 @@ export class UpdatematerialInwardComponent implements OnInit {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
+      }else if(type=='print'){
+        this.loaderPrint=false;
+      } else if(type=='draft'){
+        this.loaderDraft=false;
       }
       })
     } else {
@@ -481,6 +508,15 @@ export class UpdatematerialInwardComponent implements OnInit {
     }
   }
 
+
+  openDialog() {
+    this.dialog.open(PrintMaterialInwardComponent,{   
+      height: '100%',
+      data:this.id
+    });
+  }
+
+  
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
