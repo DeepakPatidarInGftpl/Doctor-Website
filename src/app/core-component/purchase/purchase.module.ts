@@ -8,6 +8,7 @@ import { PurchaseComponent } from './purchase.component';
 @NgModule({
   declarations: [
     PurchaseComponent,
+
   
   ],
   imports: [

@@ -623,8 +623,10 @@
                                 <td class="text-start">{{calculateTotalPurchase()?.toFixed(2)}}   
                                 </td>
                                 <td class="text-start">{{calculateTotalMrp()?.toFixed(2)}}</td>
-                                <td class="text-start">{{calculateTotalDiscount()?.toFixed(2)}}
-                                <input type="text" formControlName="total_discount" class="input" [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
+                                <td class="text-start">{{calculateTotalDeduction()?.toFixed(2)}}
+                                    <input type="text" formControlName="total_deduction" class="input"
+                                        [ngModel]="calculateTotalDeduction()?.toFixed(2)"
+                                        style="display: none;">
                                 </td>
                                 <td class="text-start">{{ calculateTotalTax() + '%' + ' (' + (calculateTotalTaxIntoRupees() | number:'1.2-2' | currency:'INR') + ')' }}
                                 <input type="text" formControlName="total_tax" class="input" [ngModel]="calculateTotalTax()?.toFixed(2)" style="display: none;">
