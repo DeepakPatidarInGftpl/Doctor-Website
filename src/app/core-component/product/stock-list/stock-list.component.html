@@ -96,7 +96,9 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td>{{products?.variant?.sku}}</td>
-                        <td>{{products?.product_name}}</td>
+                        <td class="productimgname">
+                            <a routerLink="//product/product-details/{{products?.variant?.product}}" style="line-height: 3;">{{products?.product_name}}</a>
+                        </td>
                         <td>{{products?.min_qty}}</td>
                         <td>{{products?.available_qty}}</td>
                         <td>{{products?.mrp==null?0:products?.mrp}}</td>

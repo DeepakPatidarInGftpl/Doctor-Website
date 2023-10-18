@@ -71,7 +71,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       reverse_charge: new FormControl(''),
       total_qty: new FormControl(''),
       total_tax: new FormControl(''),
-      total_discount: new FormControl(''),
+      total_deduction: new FormControl(''),
       sub_total: new FormControl(''),
       round_off: new FormControl(''),
       total: new FormControl(''),
@@ -846,7 +846,7 @@ export class UpdateDebitnotesComponent implements OnInit {
 
       formdata.append('total_qty', this.debitNotesForm.get('total_qty')?.value);
       formdata.append('total_tax', this.debitNotesForm.get('total_tax')?.value);
-      formdata.append('total_discount', this.debitNotesForm.get('total_discount')?.value);
+      formdata.append('total_deduction', this.debitNotesForm.get('total_deduction')?.value);
       formdata.append('sub_total', this.debitNotesForm.get('sub_total')?.value);
       formdata.append('round_off', this.debitNotesForm.get('round_off')?.value);
       formdata.append('total', this.debitNotesForm.get('total')?.value);
@@ -1035,16 +1035,27 @@ export class UpdateDebitnotesComponent implements OnInit {
     }
     return totalMrp;
   }
-  calculateTotalDiscount(): number {
-    let totalDiscount = 0;
+  // calculateTotalDiscount(): number {
+  //   let totalDiscount = 0;
+  //   for (let i = 0; i < this.getCart().controls.length; i++) {
+  //     const discountControl = this.getCart().controls[i].get('discount');
+  //     if (discountControl) {
+  //       totalDiscount += +discountControl.value || 0;
+  //     }
+  //   }
+  //   return totalDiscount;
+  // }
+  calculateTotalDeduction(): number {
+    let totalDeduction = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const discountControl = this.getCart().controls[i].get('discount');
-      if (discountControl) {
-        totalDiscount += +discountControl.value || 0;
+      const deductionControl = this.getCart().controls[i].get('deduction');
+      if (deductionControl) {
+        totalDeduction += +deductionControl.value || 0;
       }
     }
-    return totalDiscount;
+    return totalDeduction;
   }
+
   calculateTotalAdditionDiscount(): number {
     let totalDiscount = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {

@@ -1,19 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import { MatDialog } from '@angular/material/dialog';
+import { PrintMaterialInwardComponent } from '../print-material-inward/print-material-inward.component';
 @Component({
   selector: 'app-addmaterial-inward',
   templateUrl: './addmaterial-inward.component.html',
   styleUrls: ['./addmaterial-inward.component.scss']
 })
 export class AddmaterialInwardComponent implements OnInit {
-
   searchControl = new FormControl();
   searchResults: any[] = [];
 
@@ -27,7 +30,9 @@ export class AddmaterialInwardComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private contactService: ContactService,
-    private coreService: CoreService) {
+    private coreService: CoreService,
+    private route: ActivatedRoute,
+    public dialog: MatDialog) {
   }
 
   supplierControlName = 'party';
@@ -49,7 +54,7 @@ export class AddmaterialInwardComponent implements OnInit {
   }
 
   subcategoryList;
-
+  loading: boolean = false;
   ngOnInit(): void {
     const now = new Date();
     const year = now.getFullYear();
@@ -88,7 +93,25 @@ export class AddmaterialInwardComponent implements OnInit {
     this.getPurchase();
     this.getprefix();
     this.getCategory();
+
+
+    this.loading = true;
+    this.route.params.subscribe(params => {
+      const orderType = params['type'];
+      const orderId = params['orderId'];
+      console.log(orderType); // Output: homeDelivery
+      console.log(orderId); // Output: ABC123 (if provided)
+      // this.api.company_details().subscribe({
+      //   next: (res: any) => {
+      //     this.company = res;
+      //     console.log(res, 'company');
+      //   },
+      //   error: (error) => {
+      //     console.log('error in company');
+      //   }
+    })
   }
+
   prefixNo: any;
   getprefix() {
     this.purchaseService.getMaterialInwardPrefix().subscribe((res: any) => {
@@ -182,8 +205,6 @@ export class AddmaterialInwardComponent implements OnInit {
       party: selectedItemId
     });
   }
-
-
   // address 
   openModal() {
     // Trigger Bootstrap modal using JavaScript
@@ -270,9 +291,10 @@ export class AddmaterialInwardComponent implements OnInit {
   }
 
   selectedProductName: any;
+  productDetails:any[]=[];
   oncheckVariant(event: any, index) {
     console.log(event);
-
+    this.productDetails[index]=event
     const selectedItemId = event.id;
     console.log(event);
     this.selectedProductName = event.product_title
@@ -289,7 +311,6 @@ export class AddmaterialInwardComponent implements OnInit {
         po_qty: 1,
         // unit_cost:event.batch[0]?.cost_price
       });
-
       console.log(event.batch);
     }
   }
@@ -298,13 +319,22 @@ export class AddmaterialInwardComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
+  formDetails: any;
+  formId:any;
   submit(type: any) {
-    // console.log(this.materialForm.value);
+    this.formDetails = this.materialForm.value;
+    console.log(this.formDetails);
     if (this.materialForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      } else if(type=='print'){
+        this.loaderPrint=true;
+      } else if(type=='draft'){
+        this.loaderDraft=true;
       }
       let formdata: any = new FormData();
       formdata.append('party', this.materialForm.get('party')?.value);
@@ -333,8 +363,6 @@ export class AddmaterialInwardComponent implements OnInit {
       //   cartData.push(cartObject);
       // });
       // formdata.append('material_inward_cart', JSON.stringify(cartData));
-
-
       const cartArray = this.materialForm.get('material_inward_cart') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
@@ -349,27 +377,38 @@ export class AddmaterialInwardComponent implements OnInit {
             cartObject[key] = control.value;
           }
         });
-
         cartData.push(cartObject);
       });
       formdata.append('material_inward_cart', JSON.stringify(cartData));
       this.purchaseService.addMaterial(formdata).subscribe(res => {
-        // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
           // this.router.navigate(['//purchase/material-Inward-list'])
           if (type == 'new') {
             this.loaderCreate = false;
-            this.materialForm.reset()
+            this.materialForm.reset();
             this.ngOnInit()
             this.supplierControl.reset()
-          } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.materialForm.reset()
-              this.ngOnInit()
-              this.supplierControl.reset()
-            }, 3000);
+          } 
+          else if (type == 'print') {
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
+            this.purchaseService.getMaterial().subscribe((res:any)=>{
+              if (res?.length > 0) {
+                let lastId = res[res?.length - 1].id;
+                this.formId=lastId;
+                this.loaderPrint=false;
+                 this.router.navigate(['//purchase/print-material-Inward/'+lastId])
+                // this.openDialog()
+              } 
+            })
+            // setTimeout(() => {
+            //   // this.materialForm.reset()
+            //   // this.ngOnInit()
+            //   this.supplierControl.reset();
+            // }, 3000);
+          } 
+          else if(type=='draft'){
+            this.loaderDraft=false;
           }
           else {
             this.loader = false;
@@ -381,19 +420,37 @@ export class AddmaterialInwardComponent implements OnInit {
             this.loaderCreate = false;
           } else if (type == 'save') {
             this.loader = false;
+          }else if(type=='print'){
+            this.loaderPrint=false;
+          }else if(type=='draft'){
+            this.loaderDraft=false;
           }
         }
       }, err => {
-        if (type == 'new') {
+        if(type == 'new') {
           this.loaderCreate = false;
         } else if (type == 'save') {
           this.loader = false;
+        }else if(type=='print'){
+          this.loaderPrint=false;
+        }else if(type=='draft'){
+          this.loaderDraft=false;
         }
       })
-    } else {
+    } else{
       this.materialForm.markAllAsTouched()
     }
   }
+
+  openDialog() {
+    this.loaderPrint=false;
+    this.dialog.open(PrintMaterialInwardComponent,{   
+      height: '100%',
+      data:this.formId
+    });
+  }
+
+ 
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
@@ -599,7 +656,7 @@ export class AddmaterialInwardComponent implements OnInit {
     this.supplierControl.reset()
   }
   printForm(): void {
-    const printContents = document.getElementById('purchaseForm').outerHTML;
+    const printContents = document.getElementById('debitNote').outerHTML;
     const originalContents = document.body.innerHTML;
     document.body.innerHTML = printContents;
     window.print();
@@ -743,4 +800,25 @@ export class AddmaterialInwardComponent implements OnInit {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
   }
+
+  // print and save 
+  loaderPdf=false;
+  generatePdf() {
+    this.loaderPdf=true;
+    const elementToCapture = document.getElementById('debitNote'); 
+    if (elementToCapture) {
+      html2canvas(elementToCapture).then((canvas) => {
+        this.loaderPdf=false;
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+        pdf.save('addMaterialInward.pdf');
+      });
+    }
+  }
+  
+  
+
 }

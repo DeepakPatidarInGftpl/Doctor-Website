@@ -82,7 +82,6 @@ export class HeaderComponent implements OnInit {
     this.coreService.getProfile().subscribe((res:any) => {
       this.userDetails = res;
       this.profileService.setUserDetails(this.userDetails); 
-
       const userDetails = res?.permission;
         const storedUserDetails = this.profileService.getUserDetails();
         if (!storedUserDetails || storedUserDetails.length !== userDetails.length) {
