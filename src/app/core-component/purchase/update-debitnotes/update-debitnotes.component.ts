@@ -825,6 +825,9 @@ export class UpdateDebitnotesComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
+  formId:any;
   submit(type: any) {
     // console.log(this.debitNotesForm.value);
     if (this.debitNotesForm.valid) {
@@ -832,6 +835,10 @@ export class UpdateDebitnotesComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      }else if(type=='print'){
+        this.loaderPrint=true;
+      }else if(type=='draft'){
+        this.loaderDraft=true;
       }
       let formdata: any = new FormData();
       formdata.append('party', this.debitNotesForm.get('party')?.value);
@@ -880,13 +887,19 @@ export class UpdateDebitnotesComponent implements OnInit {
             this.debitNotesForm.reset()
             this.supplierControl.reset()
             this.ngOnInit()
-          } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.debitNotesForm.reset()
-              this.supplierControl.reset()
-              this.ngOnInit()
-            }, 3000);
+          } 
+          else if (type == 'print') {
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
+            this.loaderPrint=false;
+             this.router.navigate(['//purchase/details-purchaseReturn/'+this.id])
+            // setTimeout(() => {
+            //   // this.materialForm.reset()
+            //   // this.ngOnInit()
+            //   this.supplierControl.reset();
+            // }, 3000);
+          } 
+          else if(type=='draft'){
+            this.loaderDraft=false;
           }
           else {
             this.loader = false;
@@ -898,6 +911,10 @@ export class UpdateDebitnotesComponent implements OnInit {
             this.loaderCreate = false;
           } else if (type == 'save') {
             this.loader = false;
+          }else if(type=='print'){
+            this.loaderPrint=false;
+          }else if(type=='draft'){
+            this.loaderDraft=false;
           }
         }
       }, err => {
@@ -905,6 +922,10 @@ export class UpdateDebitnotesComponent implements OnInit {
           this.loaderCreate = false;
         } else if (type == 'save') {
           this.loader = false;
+        }else if(type=='print'){
+          this.loaderPrint=false;
+        }else if(type=='draft'){
+          this.loaderDraft=false;
         }
       })
     } else {

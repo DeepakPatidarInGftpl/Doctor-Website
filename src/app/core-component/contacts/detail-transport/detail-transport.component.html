@@ -7,7 +7,7 @@
             </div>
             <div class="page-btn">
                 <a routerLink="//contacts/transportUpdate/{{transportDetail?.id}}" class="btn btn-added">
-                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Edit Transport
+                    <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Transport
                 </a>
             </div>
         </div>
@@ -79,7 +79,7 @@
                                         </li>
                                         <li>
                                             <h4>Payment Terms</h4>
-                                            <h6>{{transportDetail?.payment_terms.title}}</h6>
+                                            <h6>{{transportDetail?.payment_terms?.title}}</h6>
                                         </li>
                                         <li>
                                             <h4>Opening Balance</h4>

@@ -44,7 +44,7 @@ export class TaxSlabsListComponent implements OnInit {
     }).then((t) => {
       if (t.isConfirmed) {
         this.coreService.deleteTaxSlab(id).subscribe(res => {
-          this.delRes = res
+          this.delRes = res;
           if (this.delRes.success) {
             this.ngOnInit()
             Swal.fire({

@@ -56,7 +56,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>PO Date </label>
-                        <input type="datetime-local" formControlName="po_date" readonly>
+                        <input type="datetime-local" formControlName="po_date">
                     </div>
                 </div>
 
@@ -65,7 +65,7 @@
                         <label>Material Inward Date* </label>
                         <input type="datetime-local" formControlName="material_inward_date"
                             [ngClass]="{'is-invalid': f['material_inward_date'].touched && f['material_inward_date'].invalid}"
-                            readonly>
+                            >
                     </div>
                 </div>
                  <!-- address display -->
@@ -380,13 +380,13 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Shipping Note </label>
-                        <input type="text" formControlName="shipping_note" readonly>
+                        <input type="text" formControlName="shipping_note" >
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Recieved By </label>
-                        <input type="text" formControlName="recieved_by" readonly>
+                        <input type="text" formControlName="recieved_by" >
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">

@@ -589,7 +589,9 @@ export class AddpurchaseComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate=false;
-  
+  formId:any;
+  loaderPrint=false;
+  loaderDraft=false
   submit(type: any) {
     console.log(this.purchaseForm.value);
     if (this.purchaseForm.valid) {
@@ -597,6 +599,10 @@ export class AddpurchaseComponent implements OnInit {
         this.loaderCreate=true;
       }else if(type=='save'){
         this.loader = true;
+      }else if(type=='print'){
+        this.loaderPrint=true;
+      }else if(type=='draft'){
+        this.loaderDraft=true;
       }
      
       let formdata: any = new FormData();
@@ -656,14 +662,19 @@ export class AddpurchaseComponent implements OnInit {
             this.loaderCreate=false;
             this.ngOnInit()
             this.supplierControl.reset()
-          } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.purchaseForm.reset()
-              this.ngOnInit()
-              this.supplierControl.reset()
-            }, 3000);
+          }else if (type == 'print') {
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
+            this.loaderPrint=false;
+            this.router.navigate(['//purchase/material-InwardDetails/'+this.getRes.id])
+            // setTimeout(() => {
+            //   // this.materialForm.reset()
+            //   // this.ngOnInit()
+            //   this.supplierControl.reset();
+            // }, 3000);
           } 
+          else if(type=='draft'){
+            this.loaderDraft=false;
+          }
           else {
             this.loader = false;
             this.toastrService.success(this.getRes.msg, '', {timeOut: 1000,})
@@ -674,6 +685,10 @@ export class AddpurchaseComponent implements OnInit {
             this.loaderCreate=true;
           }else if(type=='save'){
             this.loader = true;
+          }else if(type=='print'){
+            this.loaderPrint=false;
+          }else if(type=='draft'){
+            this.loaderDraft=false;
           }
         }
       }, err => {
@@ -681,7 +696,11 @@ export class AddpurchaseComponent implements OnInit {
         this.loaderCreate=true;
       }else if(type=='save'){
         this.loader = true;
-      }      
+      }else if(type=='print'){
+        this.loaderPrint=false;
+      }else if(type=='draft'){
+        this.loaderDraft=false;
+      }     
     })
     } else {
        if (type == 'new') {

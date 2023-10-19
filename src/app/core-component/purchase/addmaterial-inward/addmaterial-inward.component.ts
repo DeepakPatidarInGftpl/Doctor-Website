@@ -392,15 +392,8 @@ export class AddmaterialInwardComponent implements OnInit {
           } 
           else if (type == 'print') {
             this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
-            this.purchaseService.getMaterial().subscribe((res:any)=>{
-              if (res?.length > 0) {
-                let lastId = res[res?.length - 1].id;
-                this.formId=lastId;
-                this.loaderPrint=false;
-                 this.router.navigate(['//purchase/print-material-Inward/'+lastId])
-                // this.openDialog()
-              } 
-            })
+            this.loaderPrint=false;
+            this.router.navigate(['//purchase/material-InwardDetails/'+this.getRes.id])
             // setTimeout(() => {
             //   // this.materialForm.reset()
             //   // this.ngOnInit()
