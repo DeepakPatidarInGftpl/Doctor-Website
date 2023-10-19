@@ -174,32 +174,42 @@
                         <div class="container py-10">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h3>Invoice</h3>
-                                <button class="btn btn-primary" (click)="generatePdf()">Download Invoice</button>
+                                <button class="btn btn-primary" (click)="generatePdf()" *ngIf="!loaderPdf">Download Invoice</button>
+                                <button class="btn btn-primary" *ngIf="loaderPdf" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Download Invoice</button>
                             </div>
                             <p style="margin-bottom: 0;">
-                                <button class="btn btn" (click)="printForm()">Print Invoice</button>
+                                <button class="btn btn" (click)="printForm()" style="border: 1px solid antiquewhite;">Print Invoice</button>
                             </p>
-
-                            <div class="outer" id="debitNote">
+                            <div class="outer container" id="debitNote">
                                 <div class="pdf-div" id="doc-target">
                                     <div class="top mb-4">
                                         <div class="container">
                                             <div class="col-sm-12">
-                                                <div class="d-flex justify-content-between align-items-center top-div">
-                                                    <div class="left-top">
-                                                        <img src="assets/dummy/pos.png" alt="">
-                                                        <p class="gst">GST {{companyDetails?.gst}}</p>
-                                                        <p>Company Name: {{companyDetails?.name}}</p>
-                                                        <p>Financial Year:
-                                                            {{companyDetails?.financial_year?.financial_year}}</p>
-                                                        <p>Phone: {{companyDetails?.phone}}</p>
+                                                <div class="row">
+                                                    <div class="col-sm-7">
+                                                        <div class="d-flex justify-content-between align-items-center top-div" style="float: inline-start;">
+                                                            <div class="left-top">
+                                                                <img src="assets/dummy/pos.png" alt="">
+                                                                <p class="gst">GST {{companyDetails?.gst}}</p>
+                                                                <p>Company Name: {{companyDetails?.name}}</p>
+                                                                <p>Financial Year:
+                                                                    {{companyDetails?.financial_year?.financial_year}}</p>
+                                                                <p>Phone: {{companyDetails?.phone}}</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="right-top"> 
-                                                        <p>GST {{purchaseBillDetail?.party?.gstin}}</p>
-                                                        <h1>Invoice</h1>
-                                                        <p>Invoice Date: {{purchaseBillDetail?.purchase_return_date | date:'yyyy-MM-dd'}}</p>
-                                                        <p>Invoice NO: {{purchaseBillDetail?.refrence_bill_no}}</p>
-                                                        <p style="font-size: 11.9px;">Shipping Date: {{purchaseBillDetail?.shipping_date | date:'yyyy-MM-dd'}}</p>
+                                                    <div class="col-sm-5">
+                                                        <div class="d-flex justify-content-between align-items-center top-div my-3"
+                                                        style=" float: inline-end;">
+                                                            <div class="right-top"> 
+                                                                <p>GST {{purchaseBillDetail?.party?.gstin}}</p>
+                                                                <h1>Invoice</h1>
+                                                                <p>Invoice Date: {{purchaseBillDetail?.purchase_return_date | date:'yyyy-MM-dd'}}</p>
+                                                                <p>Invoice NO: {{purchaseBillDetail?.refrence_bill_no}}</p>
+                                                                <p>Shipping Date: {{purchaseBillDetail?.shipping_date | date:'yyyy-MM-dd'}}</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -216,9 +226,7 @@
                                                         <p class="heading2">
                                                             {{selectedAddressBilling?.address_line_1 + ' , ' +
                                                             selectedAddressBilling?.address_line_2 + ' , ' +
-                                                            selectedAddressBilling?.city?.city}}
-                                                            <br/>
-                                                            {{selectedAddressBilling?.state?.state + ' , ' +
+                                                            selectedAddressBilling?.city?.city+ ' , ' +selectedAddressBilling?.state?.state + ' , ' +
                                                             selectedAddressBilling?.country?.country_name}}
                                                             <br />
                                                             Phone: {{purchaseBillDetail?.party?.mobile_no}}
@@ -231,9 +239,7 @@
                                                         <p class="heading2">
                                                             {{selectedAddressShipping?.address_line_1 + ' , ' +
                                                             selectedAddressShipping?.address_line_2 + ' , ' +
-                                                            selectedAddressShipping?.city?.city}}
-                                                            <br/>
-                                                            {{selectedAddressBilling?.state?.state + ' , ' +
+                                                            selectedAddressShipping?.city?.city+ ' , ' +selectedAddressBilling?.state?.state + ' , ' +
                                                             selectedAddressBilling?.country?.country_name}}
                                                             <br />
                                                             Phone: {{purchaseBillDetail?.party?.mobile_no}}
@@ -286,6 +292,9 @@
 
                                     <div class="pdf-table2 mb-4">
                                         <div class="container">
+                                            <div class="page-title">
+                                                <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                                            </div>
                                             <div class="col-sm-12 mb-3">
                                                 <div>
                                                     <table>
@@ -346,15 +355,14 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-12">
-                                                <p>Please notify us on any disrepancies within 3 days of receipt <br />
-                                                    Overdue invoices will be charged 24% interest.</p>
-                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="pdf-table2 mb-4">
                                         <div class="container">
+                                            <div class="page-title">
+                                                <p style="color:#FF9F43;font-size: 16px;">Tax Rate</p>
+                                            </div>
                                             <div class="col-sm-12 mb-3">
                                                 <div>
                                                     <table>
@@ -392,17 +400,24 @@
                                                     </table>
                                                 </div>
                                             </div>
+                                            <div class="col-sm-12">
+                                                <p>Please notify us on any disrepancies within 3 days of receipt <br />
+                                                    Overdue invoices will be charged 24% interest.</p>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row container">
-                                        <div class="col-lg-6 col-sm-4 col-12">
+                                        <div class="col-lg-6 col-sm-6 col-12">
                                             <div class="form-group">
-                                                <label>Note:</label>
-                                                <textarea [ngModel]="purchaseBillDetail?.note" disabled="true" style="border:none;height: 20%;"></textarea>
+                                                <strong>Note:</strong>
+                                                <!-- <textarea [ngModel]="purchaseBillDetail?.note" disabled="true" style="border:none;height: 20%;"></textarea> -->
+                                                <div style="white-space: break-spaces; border: 1px solid rgb(234, 232, 232); border-radius: 4%;" class="py-3 px-2">
+                                                    <p>{{purchaseBillDetail?.note}}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6 col-sm-4 col-12">
-                                            <div class="form-group">
+                                        <div class="col-lg-6 col-sm-6 col-12">
+                                            <div class="form-group" style="float: inline-end;">
                                                 <div class="total-order text-end">
                                                     <ul>
                                                         <li class="total">

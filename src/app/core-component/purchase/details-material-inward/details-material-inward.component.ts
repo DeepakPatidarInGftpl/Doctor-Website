@@ -33,7 +33,12 @@ export class DetailsMaterialInwardComponent implements OnInit {
     })
   }
 
-
+  totalPurchase:any[]=[];
+  totalPurchaseRate=0;
+  totalmrp:any[]=[];
+  totalMrp=0;
+  totallanding:any[]=[];
+  totalLandingCost=0;
   getdata() {
     this.purchaseService.getMaterialById(this.id).subscribe(res => {
       if (this.id == res.id) {
@@ -50,6 +55,29 @@ export class DetailsMaterialInwardComponent implements OnInit {
             console.log(this.selectedAddressShipping);
           }
         })
+
+            // calculation
+            this.materialDetail?.cart?.forEach((res:any)=>{
+              this.totalPurchase.push(res?.qty);
+              this.totalPurchaseRate =0
+              this?.totalPurchase?.forEach((number: any) => {
+                this.totalPurchaseRate += number;
+              })
+              // mrp
+              this.totalmrp.push(res?.mrp);
+              this.totalMrp=0;
+              this?.totalmrp?.forEach((number: any) => {
+                this.totalMrp += number;
+              })
+              //landing cost
+              this.totallanding.push(res?.po_qty);
+              this.totalLandingCost=0;
+              this?.totallanding?.forEach((number: any) => {
+                this.totalLandingCost += number;
+              })
+              // total deduction
+              
+            })
       }
     })
   }

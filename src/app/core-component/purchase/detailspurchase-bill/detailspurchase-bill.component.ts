@@ -211,15 +211,18 @@ export class DetailspurchaseBillComponent implements OnInit {
         const width = pdf.internal.pageSize.getWidth();
         const height = pdf.internal.pageSize.getHeight();
         pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-        pdf.save('purchaseOrder.pdf');
+        pdf.save('goodsRecievedNotes.pdf');
       });
     }
   }
 
+  loaderPrint=false;
   printForm(): void {
+    this.loaderPrint=true;
     const printContents = document.getElementById('debitNote').outerHTML;
     const originalContents = document.body.innerHTML;
     document.body.innerHTML = printContents;
+    this.loaderPrint=false;
     window.print();
     document.body.innerHTML = originalContents;
   }

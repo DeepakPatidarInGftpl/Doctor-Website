@@ -979,6 +979,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate=false;
+  loaderDraft=false;
+  loaderPrint=false;
+  formId:any;
   submit(type: any) {
     console.log(this.puchaseBillForm.value);
     if (this.puchaseBillForm.valid) {
@@ -986,6 +989,10 @@ export class UpdatepurchaseBillComponent implements OnInit {
         this.loaderCreate=true;
       }else if(type=='save'){
         this.loader = true;
+      }else if(type=='print'){
+        this.loaderPrint=true;
+      }else if(type=='draft'){
+        this.loaderDraft=true;
       }
       let formdata: any = new FormData();
       formdata.append('party', this.puchaseBillForm.get('party')?.value);
@@ -1073,13 +1080,19 @@ export class UpdatepurchaseBillComponent implements OnInit {
             this.puchaseBillForm.reset()
             this.supplierControl.reset()
             this.ngOnInit()
-          } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.puchaseBillForm.reset()
-              this.supplierControl.reset()
-              this.ngOnInit()
-            }, 3000);
+          } 
+          else if (type == 'print') {
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
+            this.loaderPrint=false;
+                 this.router.navigate(['//purchase/purchase-billDetails/'+this.id])
+            // setTimeout(() => {
+            //   // this.materialForm.reset()
+            //   // this.ngOnInit()
+            //   this.supplierControl.reset();
+            // }, 3000);
+          } 
+          else if(type=='draft'){
+            this.loaderDraft=false;
           }
           else {
             this.loader = false;
@@ -1092,6 +1105,10 @@ export class UpdatepurchaseBillComponent implements OnInit {
             this.loaderCreate=false;
           }else if(type=='save'){
             this.loader = false;
+          }else if(type=='print'){
+            this.loaderPrint=false;
+          }else if(type=='draft'){
+            this.loaderDraft=false;
           }
         }
       },err=>{
@@ -1099,6 +1116,10 @@ export class UpdatepurchaseBillComponent implements OnInit {
           this.loaderCreate=false;
         }else if(type=='save'){
           this.loader = false;
+        }else if(type=='print'){
+          this.loaderPrint=false;
+        }else if(type=='draft'){
+          this.loaderDraft=false;
         }
       })
     } else {

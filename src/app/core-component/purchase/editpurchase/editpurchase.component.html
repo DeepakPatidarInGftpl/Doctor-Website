@@ -10,7 +10,6 @@
     <div class="card-body">
         <form [formGroup]="purchaseForm">
             <div class="row">
-
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
                         <label>Supplier Name*</label>
@@ -35,9 +34,7 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select
-                            supplier
-                        </span>
+                        <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select supplier </span>
                     </div>
                 </div>
 
@@ -716,14 +713,17 @@
                         <a class="btn btn-cancel text-white mb-1" (click)="clearForm()">Clear</a>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')">Save & Print</button>
-                        <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')">Save as Draft</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save & Print</button>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Print</button>
+                        <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save as Draft</button>
+                        <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save as Draft</button>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save</button>
-
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create New</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save & Create New</button>
