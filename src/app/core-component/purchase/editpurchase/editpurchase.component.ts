@@ -720,6 +720,9 @@ export class EditpurchaseComponent implements OnInit {
   //
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
+  formId:any;
   getRes: any;
   submit(type: any) {
     // console.log(this.purchaseForm.value);
@@ -728,6 +731,10 @@ export class EditpurchaseComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      }else if(type=='print'){
+        this.loaderPrint=true;
+      }else if(type=='draft'){
+        this.loaderDraft=true;
       }
       let formdata: any = new FormData();
       formdata.append('party', this.purchaseForm.get('party')?.value);
@@ -792,12 +799,17 @@ export class EditpurchaseComponent implements OnInit {
             this.ngOnInit()
             this.supplierControl.reset()
           } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.purchaseForm.reset()
-              this.ngOnInit()
-              this.supplierControl.reset()
-            }, 3000);
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
+            this.loaderPrint=false;
+            this.router.navigate(['//purchase/purchaseDetails/'+this.id])
+            // setTimeout(() => {
+            //   // this.materialForm.reset()
+            //   // this.ngOnInit()
+            //   this.supplierControl.reset();
+            // }, 3000);
+          } 
+          else if(type=='draft'){
+            this.loaderDraft=false;
           }
           else {
             this.loader = false;
@@ -809,6 +821,10 @@ export class EditpurchaseComponent implements OnInit {
             this.loaderCreate = false;
           } else if (type == 'save') {
             this.loader = false;
+          }else if(type=='print'){
+            this.loaderPrint=false;
+          }else if(type=='draft'){
+            this.loaderDraft=false;
           }
         }
       }, err => {
@@ -816,6 +832,10 @@ export class EditpurchaseComponent implements OnInit {
           this.loaderCreate = false;
         } else if (type == 'save') {
           this.loader = false;
+        }else if(type=='print'){
+          this.loaderPrint=false;
+        }else if(type=='draft'){
+          this.loaderDraft=false;
         }
       })
     } else {

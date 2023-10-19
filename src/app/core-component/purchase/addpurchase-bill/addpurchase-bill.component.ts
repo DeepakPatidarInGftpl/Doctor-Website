@@ -914,6 +914,9 @@ export class AddpurchaseBillComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate=false;
+  formId:any;
+  loaderPrint=false;
+  loaderDraft=false;
   submit(type: any) {
     console.log(this.purchaseBillForm.value);
     if (this.purchaseBillForm.valid) {
@@ -921,6 +924,10 @@ export class AddpurchaseBillComponent implements OnInit {
         this.loaderCreate=true;
       }else if(type=='save'){
         this.loader = true;
+      }else if(type=='print'){
+        this.loaderPrint=true;
+      }else if(type=='draft'){
+        this.loaderDraft=true;
       }
       let formdata: any = new FormData();
       formdata.append('party', this.purchaseBillForm.get('party')?.value);
@@ -1009,12 +1016,17 @@ export class AddpurchaseBillComponent implements OnInit {
             this.supplierControl.reset()
             this.ngOnInit()
           } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.purchaseBillForm.reset()
-              this.supplierControl.reset()
-              this.ngOnInit()
-            }, 3000);
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
+            this.loaderPrint=false;
+            this.router.navigate(['//purchase/purchase-billDetails/'+this.getRes.id])
+            // setTimeout(() => {
+            //   // this.materialForm.reset()
+            //   // this.ngOnInit()
+            //   this.supplierControl.reset();
+            // }, 3000);
+          } 
+          else if(type=='draft'){
+            this.loaderDraft=false;
           }
           else {
             this.loader = false;
@@ -1026,6 +1038,10 @@ export class AddpurchaseBillComponent implements OnInit {
             this.loaderCreate=false;
           }else if(type=='save'){
             this.loader = false;
+          }else if(type=='print'){
+            this.loaderPrint=true;
+          }else if(type=='draft'){
+            this.loaderDraft=true;
           }
         }
       }, err => {
@@ -1033,6 +1049,10 @@ export class AddpurchaseBillComponent implements OnInit {
           this.loaderCreate=false;
         }else if(type=='save'){
           this.loader = false;
+        }else if(type=='print'){
+          this.loaderPrint=true;
+        }else if(type=='draft'){
+          this.loaderDraft=true;
         }
       })
     } else {
@@ -1577,8 +1597,10 @@ export class AddpurchaseBillComponent implements OnInit {
   discountValue: any[] = []
   additionalValue: any[] = []
   getgst(index) {
-    const variants = this.purchaseBillForm.get('tax_rate') as FormArray;
-    variants.clear();
+    console.log('tetsjhjhjhjhjhjh');
+    
+    // const variants = this.purchaseBillForm.get('tax_rate') as FormArray;
+    // variants.clear();
     this.addTaxRate();
     const barcode = (this.purchaseBillForm.get('purchase_bill') as FormArray).at(index) as FormGroup;
     this.gstTaxRate[index] = barcode.get('tax').value || 0;

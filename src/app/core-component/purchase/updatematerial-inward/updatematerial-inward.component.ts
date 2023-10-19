@@ -464,7 +464,7 @@ export class UpdatematerialInwardComponent implements OnInit {
             this.loaderPrint=false;
             this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
             this.loaderPrint=false;
-            this.router.navigate(['//purchase/print-material-Inward/'+this.id])
+            this.router.navigate(['//purchase/material-InwardDetails/'+this.id])
             // this.openDialog()
 
             // setTimeout(() => {
