@@ -160,7 +160,7 @@
                                                             style=" float: inline-end;">
                                                             <div class="right-top">
                                                                 <p>GST {{materialDetail?.party?.gstin}}</p>
-                                                                <h1>Invoice</h1>
+                                                                <h1 class="pb-4">Invoice</h1>
                                                                 <p>Invoice Date: {{materialDetail?.material_inward_date
                                                                     |
                                                                     date:'yyyy-MM-dd'}}</p>
@@ -175,6 +175,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="page-title">
+                                        <p class="headingg">Material Inward Details</p>
                                     </div>
                                     <div class="pdf-address mb-4">
                                         <div class="container">
@@ -198,8 +201,9 @@
                                                         <p class="heading2">
                                                             {{selectedAddressBilling?.address_line_1 + ' , ' +
                                                             selectedAddressBilling?.address_line_2 + ' , ' +
-                                                            selectedAddressBilling?.city?.city
-                                                            + ' , ' + selectedAddressBilling?.state?.state + ' , ' +
+                                                            selectedAddressBilling?.city?.city}}
+                                                            <br>
+                                                            {{selectedAddressBilling?.state?.state + ' , ' +
                                                             selectedAddressBilling?.country?.country_name}}
                                                             <br />
                                                             Phone: {{materialDetail?.party?.mobile_no}}
@@ -212,9 +216,10 @@
                                                         <p class="heading2">
                                                             {{selectedAddressShipping?.address_line_1 + ' , ' +
                                                             selectedAddressShipping?.address_line_2 + ' , ' +
-                                                            selectedAddressShipping?.city?.city
-                                                            + ' , ' + selectedAddressShipping?.state?.state + ' , ' +
-                                                            selectedAddressShipping?.country?.country_name}}
+                                                            selectedAddressShipping?.city?.city}}
+                                                            <br>
+                                                            {{selectedAddressBilling?.state?.state + ' , ' +
+                                                            selectedAddressBilling?.country?.country_name}}
                                                             <br />
                                                             Phone: {{materialDetail?.party?.mobile_no}}
                                                             <br />
@@ -374,7 +379,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>   
         </div>
     </div>
 </div>

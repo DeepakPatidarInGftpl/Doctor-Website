@@ -2,30 +2,71 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 @Component({
   selector: 'app-sales-details',
   templateUrl: './sales-details.component.html',
-  styleUrls: ['./sales-details.component.scss']
+  styleUrls: ['./sales-details.component.scss','../commonDetails.scss']
 })
 export class SalesDetailsComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private saleService: SalesService, private location: Location) { }
+  constructor(private companyService:CompanyService,private Arout: ActivatedRoute, private saleService: SalesService, private location: Location) { }
   id: any;
+  companyDetails:any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
+    this.companyService.getCompany().subscribe(res=>{
+      this.companyDetails=res[0];
+    })
   }
-  orderDetail: any
+  orderDetail: any;
+  totalmrp:any[]=[];
+  totalMrp=0;
   getdata() {
     this.saleService.getSalesOrderById(this.id).subscribe(res => {
       if (this.id == res.id) {
-        this.orderDetail = res
-        // console.log(res);
+        this.orderDetail = res;
+        this.orderDetail?.cart?.forEach((res:any)=>{
+          // mrp
+          this.totalmrp.push(res?.price);
+          this.totalMrp=0;
+          this?.totalmrp?.forEach((number: any) => {
+            this.totalMrp += number;
+          })
+        })
       }
     })
   }
   goBack() {
     this.location.back();
+  }
+
+  loaderPdf = false;
+  generatePdf() {
+    this.loaderPdf = true;
+    const elementToCapture = document.getElementById('debitNote');
+    if (elementToCapture) {
+      html2canvas(elementToCapture).then((canvas) => {
+        this.loaderPdf = false;
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+        pdf.save('salesOrder.pdf');
+      });
+    }
+  }
+ 
+  printForm(): void {
+    const printContents = document.getElementById('debitNote').outerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
   }
 }
 
