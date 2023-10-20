@@ -128,7 +128,7 @@
                 </div>
             </div> -->
 
-            <div class="company-details-card card" *ngIf="purchaseDetail">
+            <div class="company-details-card card" *ngIf="purchaseDetail" id="my-element">
                 <div class="sub-card row">
                     <div class="content-part my-3">
                         <div class="container py-10">
@@ -142,7 +142,7 @@
                                 <button class="btn btn" (click)="printForm()" style="border: 1px solid antiquewhite;">Print Invoice</button>
                             </p>
 
-                            <div class="outer container" id="debitNote">
+                            <div class="outer container" id="debitNote" >
                                 <div class="pdf-div" id="doc-target">
                                     <div class="top mb-4">
                                         <div class="container">
@@ -163,9 +163,8 @@
                                                         <div class="d-flex justify-content-between align-items-center top-div my-3" style=" float: inline-end;">          
                                                             <div class="right-top"> 
                                                                 <p>GST {{purchaseDetail?.party?.gstin}}</p>
-                                                                <h1>Invoice</h1>
-                                                                <p>Invoice Date: {{purchaseDetail?.order_date |
-                                                                    date:'yyyy-MM-dd'}}</p>
+                                                                <h1 class="pb-4">Invoice</h1>
+                                                                <p>Invoice Date: {{purchaseDetail?.order_date |date:'yyyy-MM-dd'}}</p>
                                                                 <p>Invoice NO: {{purchaseDetail?.order_no}}</p>
                                                                 <p >Shipping Date: {{purchaseDetail?.shipping_date}}</p>
                                                             </div>
@@ -176,6 +175,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="page-title">
+                                        <p class="headingg">Purchase Order Details</p>
+                                    </div>
                                     <div class="pdf-address mb-4">
                                         <div class="container">
                                             <div class="col-sm-12">
@@ -185,7 +187,9 @@
                                                         <p class="heading2">
                                                             {{selectedAddressBilling?.address_line_1 + ' , ' +
                                                             selectedAddressBilling?.address_line_2 + ' , ' +
-                                                            selectedAddressBilling?.city?.city + ' , ' +selectedAddressBilling?.state?.state + ' , ' +
+                                                            selectedAddressBilling?.city?.city}}
+                                                            <br>
+                                                            {{selectedAddressBilling?.state?.state + ' , ' +
                                                             selectedAddressBilling?.country?.country_name}}
                                                             <br />
                                                             Phone: {{purchaseDetail?.party?.mobile_no}}
@@ -198,7 +202,9 @@
                                                         <p class="heading2">
                                                             {{selectedAddressShipping?.address_line_1 + ' , ' +
                                                             selectedAddressShipping?.address_line_2 + ' , ' +
-                                                            selectedAddressShipping?.city?.city + ' , ' +selectedAddressBilling?.state?.state + ' , ' +
+                                                            selectedAddressShipping?.city?.city}}
+                                                            <br>
+                                                            {{selectedAddressBilling?.state?.state + ' , ' +
                                                             selectedAddressBilling?.country?.country_name}}
                                                             <br />
                                                             Phone: {{purchaseDetail?.party?.mobile_no}}
