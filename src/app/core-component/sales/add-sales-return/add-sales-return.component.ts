@@ -107,7 +107,7 @@ export class AddSalesReturnComponent implements OnInit {
   myControl = new FormControl('');
   variantList: any[] = [];
 
-  getVariant(search: any, index: any,barcode:any) {
+  getVariant(search: any, index: any, barcode: any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -204,7 +204,7 @@ export class AddSalesReturnComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -216,7 +216,7 @@ export class AddSalesReturnComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
 
   get customer() {
@@ -240,19 +240,19 @@ export class AddSalesReturnComponent implements OnInit {
   getCart(): FormArray {
     return this.saleReturnForm.get('sale_return_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart(i) {
     this.getCart().push(this.cart());
-    this.isCart=false;
-    if(i>0){
+    this.isCart = false;
+    if (i > 0) {
       this.isPercentage[i] = true;
-      this.isAmount[i]=false;
+      this.isAmount[i] = false;
     }
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.saleReturnForm?.value?.sale_return_cart?.length==0){
-      this.isCart=true;
+    if (this.saleReturnForm?.value?.sale_return_cart?.length == 0) {
+      this.isCart = true;
     }
   }
   getUser() {
@@ -565,11 +565,11 @@ export class AddSalesReturnComponent implements OnInit {
   isAmount: boolean[] = [];
   percentage(index) {
     this.isPercentage[index] = false;
-    this.isAmount[index]=true;
+    this.isAmount[index] = true;
   }
   amount(index) {
     this.isPercentage[index] = true;
-    this.isAmount[index]=false;
+    this.isAmount[index] = false;
   }
 
   userInputEntered: boolean[] = [];
@@ -601,7 +601,7 @@ export class AddSalesReturnComponent implements OnInit {
         const purchaseRate = +purchaseRateControl.value || 0;
         const qty = +QtyControl.value || 1;
         // landing cost
-        if(this.isPercentage[index] == true){
+        if (this.isPercentage[index] == true) {
           let getDiscountPrice = (purchaseRate * deductionPercentage) / 100;
           let getCoastPrice = purchaseRate - getDiscountPrice;
           console.log(getCoastPrice);
@@ -614,7 +614,7 @@ export class AddSalesReturnComponent implements OnInit {
           let purchasePrice = getCoastPrice + taxprice;
           console.log(purchasePrice);
           return purchasePrice;
-        }else if(this.isAmount[index] == true){
+        } else if (this.isAmount[index] == true) {
           let getCoastPrice = purchaseRate - deductionPercentage;
           console.log(getCoastPrice);
           console.log(qty);
@@ -626,14 +626,14 @@ export class AddSalesReturnComponent implements OnInit {
           let purchasePrice = getCoastPrice + taxprice;
           console.log(purchasePrice);
           return purchasePrice;
-        } 
+        }
       } else {
         const deductionPercentage = +deductionPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         const qty = +QtyControl.value || 1;
         let purchaseTax = 18;
         // cost price 
-        if(this.isPercentage[index] == true){
+        if (this.isPercentage[index] == true) {
           let getDiscountPrice = (this.coastprice[index] * deductionPercentage) / 100
           let getCoastPrice = this.coastprice[index] - getDiscountPrice;
           console.log(getCoastPrice);
@@ -644,7 +644,7 @@ export class AddSalesReturnComponent implements OnInit {
           let purchasePrice = getCoastPrice + taxprice;
           this.originalCoastPrice = purchasePrice;
           return purchasePrice;
-        }else if(this.isAmount[index] == true){
+        } else if (this.isAmount[index] == true) {
           let getCoastPrice = this.coastprice[index] - deductionPercentage;
           console.log(getCoastPrice);
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
@@ -683,7 +683,7 @@ export class AddSalesReturnComponent implements OnInit {
         const purchaseRate = +purchaseRateControl.value || 0;
         const qty = +QtyControl.value;
         if (this.costPrice > 0) {
-          if(this.isPercentage[index] == true){
+          if (this.isPercentage[index] == true) {
             console.log(this.costPrice, 'this.costPrice > 0');
             let getDiscountPrice = (this.costPrice * deductionPercentage) / 100;
             console.log(getDiscountPrice);
@@ -696,7 +696,7 @@ export class AddSalesReturnComponent implements OnInit {
             console.log(taxprice);
             let purchasePrice = getCoastPrice + taxprice;
             return purchasePrice;
-          }else if(this.isAmount[index] == true){
+          } else if (this.isAmount[index] == true) {
             let getCoastPrice = this.costPrice - deductionPercentage;
             this.TotalWithoutTax[index] = getCoastPrice * qty || 0
             // cost price 
@@ -709,7 +709,7 @@ export class AddSalesReturnComponent implements OnInit {
           }
         } else {
           console.log(this.originalPrice[index], 'this.originalPrice[index]');
-          if(this.isPercentage[index] == true){
+          if (this.isPercentage[index] == true) {
             let getDiscountPrice = (this.originalPrice[index] * deductionPercentage) / 100
             let getCoastPrice = this.originalPrice[index] - getDiscountPrice;
             this.TotalWithoutTax[index] = getCoastPrice * qty || 0
@@ -721,7 +721,7 @@ export class AddSalesReturnComponent implements OnInit {
             let purchasePrice = getCoastPrice + taxprice;
             console.log(purchasePrice, 'purchasePrice');
             return purchasePrice;
-          }else if(this.isAmount[index] == true){
+          } else if (this.isAmount[index] == true) {
             let getCoastPrice = this.originalPrice[index] - deductionPercentage;
             this.TotalWithoutTax[index] = getCoastPrice * qty || 0
             console.log(this.TotalWithoutTax[index]);
@@ -748,7 +748,7 @@ export class AddSalesReturnComponent implements OnInit {
         let purchaseTax = 18;
         const qty = +QtyControl.value;
         // cost price 
-        if(this.isPercentage[index] == true){
+        if (this.isPercentage[index] == true) {
           let getDiscountPrice = (this.costPrice * deductionPercentage) / 100
           let getCoastPrice = this.costPrice - getDiscountPrice;
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
@@ -758,7 +758,7 @@ export class AddSalesReturnComponent implements OnInit {
           let purchasePrice = getCoastPrice + taxprice;
           this.originalCoastPrice = purchasePrice;
           return purchasePrice;
-        }else if(this.isAmount[index] == true){
+        } else if (this.isAmount[index] == true) {
           let getCoastPrice = this.costPrice - deductionPercentage;
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
           console.log(this.TotalWithoutTax[index]);
@@ -793,6 +793,8 @@ export class AddSalesReturnComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
   submit(type: any) {
     console.log(this.saleReturnForm.value);
     if (this.saleReturnForm.valid) {
@@ -800,6 +802,10 @@ export class AddSalesReturnComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleReturnForm.get('customer')?.value);
@@ -843,38 +849,50 @@ export class AddSalesReturnComponent implements OnInit {
             this.ngOnInit()
             this.userControl.reset()
           } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.saleReturnForm.reset()
-              this.ngOnInit()
-              this.userControl.reset()
-            }, 3000);
-          }
-          else {
+            this.toastrService.success(this.getRes.msg);
+            this.loaderPrint = false;
+            this.router.navigate(['//sales/salesReturnedetails/'+this.getRes?.id]);
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
+            this.toastrService.success(this.getRes.msg);
+            this.router.navigate(['//sales/salesReturnlist']);
+          } else {
             this.loader = false;
             this.toastrService.success(this.getRes.msg);
-            this.router.navigate(['//sales/salesReturnlist'])
+            this.router.navigate(['//sales/salesReturnlist']);
           }
         } else {
-               if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          }else if (type == 'print') {
+            this.loaderPrint = false;
+          }else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
         }
       }, err => {
-             if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        }else if (type == 'print') {
+          this.loaderPrint = false;
+        }else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
       })
     } else {
-           if (type == 'new') {
+      if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      };
+      }else if (type == 'print') {
+        this.loaderPrint = false;
+      }else if (type == 'draft') {
+        this.loaderDraft = false;
+      }
       this.saleReturnForm.markAllAsTouched()
       console.log('invald');
     }
@@ -981,7 +999,7 @@ export class AddSalesReturnComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   searchs: any[] = [];
@@ -1042,7 +1060,7 @@ export class AddSalesReturnComponent implements OnInit {
   }
   calculateTotalTaxIntoRupees() {
     let total = 0;
-    this.taxIntoRupees.forEach((value) => { 
+    this.taxIntoRupees.forEach((value) => {
       total += value.toFixed(2);
     });
     return total;
@@ -1135,7 +1153,7 @@ export class AddSalesReturnComponent implements OnInit {
     });
     return totalForItem;
   }
- 
+
   calculateTaxintoPrice(index: number): number {
     const cartItem = this.getCart().controls[index];
     const purchaseRate = +cartItem.get('price').value || 0;

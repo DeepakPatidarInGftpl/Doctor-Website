@@ -829,6 +829,8 @@ export class AddDebitnotesComponent implements OnInit {
           } 
           else if(type=='draft'){
             this.loaderDraft=false;
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
+            this.router.navigate(['//purchase/purchaseReturn-list'])
           }
           else {
             this.loader = false;
