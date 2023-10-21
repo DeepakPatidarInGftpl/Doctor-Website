@@ -4,7 +4,6 @@ import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-servi
 import { Location } from '@angular/common';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
 @Component({
@@ -55,7 +54,6 @@ export class DetailsMaterialInwardComponent implements OnInit {
             console.log(this.selectedAddressShipping);
           }
         })
-
             // calculation
             this.materialDetail?.cart?.forEach((res:any)=>{
               this.totalPurchase.push(res?.qty);
