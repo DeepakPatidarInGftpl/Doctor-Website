@@ -83,7 +83,7 @@ export class UpdateSalesReturnComponent implements OnInit {
         this.saleReturnForm.get('sale_bill').patchValue(this.editRes?.sale_bill?.id)
         this.saleReturnForm.setControl('sale_return_cart', this.udateCart(this.editRes?.cart));
         this.saleReturnForm.get('customer')?.patchValue(this.editRes?.customer?.id);
-        this.userControl.setValue(this.editRes?.customer?.name);
+        this.userControl.setValue(this.editRes?.customer?.name+ ' '+ this.editRes?.customer?.user_type);
       })
     this.filteredusers = this.userControl.valueChanges.pipe(
       startWith(''),
@@ -851,6 +851,8 @@ export class UpdateSalesReturnComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
   submit(type: any) {
     console.log(this.saleReturnForm.value);
     if (this.saleReturnForm.valid) {
@@ -858,6 +860,10 @@ export class UpdateSalesReturnComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      }else if (type == 'print') {
+        this.loaderPrint = true;
+      }else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleReturnForm.get('customer')?.value);
@@ -901,12 +907,11 @@ export class UpdateSalesReturnComponent implements OnInit {
             this.ngOnInit()
             this.userControl.reset()
           } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.saleReturnForm.reset()
-              this.ngOnInit()
-              this.userControl.reset()
-            }, 3000);
+            this.toastrService.success(this.getRes.msg);
+            this.loaderPrint = false;
+            this.router.navigate(['//sales/salesReturnedetails/'+this.id]);
+          }else if (type == 'draft') {
+            this.loaderDraft = false;
           }
           else {
             this.loader = false;
@@ -918,13 +923,21 @@ export class UpdateSalesReturnComponent implements OnInit {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
+      }else if (type == 'print') {
+        this.loaderPrint = false;
+      }else if (type == 'draft') {
+        this.loaderDraft = false;
       }
         }
       }, err => {
-         if (type == 'new') {
+        if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
+      }else if (type == 'print') {
+        this.loaderPrint = false;
+      }else if (type == 'draft') {
+        this.loaderDraft = false;
       }
       })
     } else {
@@ -932,7 +945,11 @@ export class UpdateSalesReturnComponent implements OnInit {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      };
+      }else if (type == 'print') {
+        this.loaderPrint = false;
+      }else if (type == 'draft') {
+        this.loaderDraft = false;
+      }
       this.saleReturnForm.markAllAsTouched()
       console.log('invald');
     }

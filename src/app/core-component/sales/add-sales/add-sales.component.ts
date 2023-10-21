@@ -107,7 +107,7 @@ export class AddSalesComponent implements OnInit {
   myControl = new FormControl('');
   variantList: any[] = [];
 
-  getVariant(search: any, index: any,barcode:any) {
+  getVariant(search: any, index: any, barcode: any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -201,7 +201,7 @@ export class AddSalesComponent implements OnInit {
       this.selectData.push(variant);
     }
     console.log(this.selectData, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -212,7 +212,7 @@ export class AddSalesComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
 
   get customer() {
@@ -233,15 +233,15 @@ export class AddSalesComponent implements OnInit {
   getCart(): FormArray {
     return this.saleForm.get('sale_order_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.saleForm?.value?.sale_order_cart?.length==0){
-      this.isCart=true
+    if (this.saleForm?.value?.sale_order_cart?.length == 0) {
+      this.isCart = true
     }
   }
   getUser() {
@@ -268,12 +268,12 @@ export class AddSalesComponent implements OnInit {
   selectedAddressShipping: any;
   selectBatch: any;
   paymentTerms: any;
-  userType:any;
+  userType: any;
 
   oncheck(data: any) {
     console.log(data);
     const selectedItemId = data.id;
-    this.userType=data?.user_type;
+    this.userType = data?.user_type;
     //call detail api
     this.contactService.getCustomerById(selectedItemId).subscribe(res => {
       // console.log(res);
@@ -296,7 +296,7 @@ export class AddSalesComponent implements OnInit {
     this.addCart();
     this.saleForm.patchValue({
       customer: selectedItemId,
-      
+
     });
   }
 
@@ -412,7 +412,7 @@ export class AddSalesComponent implements OnInit {
   // }
 
   originalCoastPrice: any;
-  originalPrice:any[]=[]
+  originalPrice: any[] = []
   apiPurchaseTax: number;
   isTaxAvailable: any[] = [];
   taxIntoRupees: any[] = [];
@@ -430,9 +430,9 @@ export class AddSalesComponent implements OnInit {
     this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
     if (event?.product?.purchase_tax_including) {
-      if(this.userType=='Employee'){
+      if (this.userType == 'Employee') {
         let Employeeprice = event?.batch[0]?.selling_price_employee || 0;
-        this.originalPrice[index]=event?.batch[0]?.selling_price_employee || 0;
+        this.originalPrice[index] = event?.batch[0]?.selling_price_employee || 0;
         // landing cost
         let getDiscountPrice = (Employeeprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
@@ -442,9 +442,9 @@ export class AddSalesComponent implements OnInit {
         let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice + taxPrice;
-      }else if(this.userType=='Dealer'){
+      } else if (this.userType == 'Dealer') {
         let dealerprice = event?.batch[0]?.selling_price_dealer || 0;
-        this.originalPrice[index]=event?.batch[0]?.selling_price_dealer || 0;
+        this.originalPrice[index] = event?.batch[0]?.selling_price_dealer || 0;
         // landing cost
         let getDiscountPrice = (dealerprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
@@ -455,22 +455,22 @@ export class AddSalesComponent implements OnInit {
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice + taxPrice;
-      }else{
+      } else {
         let offlineprice = event?.batch[0]?.selling_price_offline || 0;
-        this.originalPrice[index]=event?.batch[0]?.selling_price_offline || 0;
+        this.originalPrice[index] = event?.batch[0]?.selling_price_offline || 0;
         // landing cost
         let getDiscountPrice = (offlineprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
         let getCoastPrice = offlineprice - getDiscountPrice;
-        console.log(getCoastPrice,'getCoastPrice');
+        console.log(getCoastPrice, 'getCoastPrice');
         this.TotalWithoutTax[index] = getCoastPrice * event.batch[0]?.stock || 1;
-        console.log(this.TotalWithoutTax[index],'this.TotalWithoutTax[index]');
+        console.log(this.TotalWithoutTax[index], 'this.TotalWithoutTax[index]');
         // cost price
         let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice + taxPrice;
-      }  
+      }
     } else {
       let offlineprice = event?.batch[0]?.selling_price_offline || 0;
       let purchaseTax = 18
@@ -479,7 +479,7 @@ export class AddSalesComponent implements OnInit {
       console.log(getDiscountPrice);
       let getCoastPrice = offlineprice - getDiscountPrice;
       this.TotalWithoutTax[index] = getCoastPrice * event.batch[0]?.stock || 0;
-// here adding tax into getcostprice
+      // here adding tax into getcostprice
       let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
       this.taxIntoRupees[index] = taxPrice || 0;
       this.originalCoastPrice = getCoastPrice + taxPrice;
@@ -490,16 +490,16 @@ export class AddSalesComponent implements OnInit {
       this.tax[index] = this.apiPurchaseTax
       console.log(this.originalCoastPrice, 'this.originalCoastPrice');
       if (event?.product?.purchase_tax_including == true) {
-          barcode.patchValue({
-            barcode: selectedItemId,
-            item_name: event?.product_title,
-            // amount: event.batch[0]?.mrp,
-            qty: event.batch[0]?.stock,
-            tax: this.apiPurchaseTax,
-            discount: event.batch[0]?.discount || 0,
-            price: this.originalCoastPrice.toFixed(2),
-          });
-       
+        barcode.patchValue({
+          barcode: selectedItemId,
+          item_name: event?.product_title,
+          // amount: event.batch[0]?.mrp,
+          qty: event.batch[0]?.stock,
+          tax: this.apiPurchaseTax,
+          discount: event.batch[0]?.discount || 0,
+          price: this.originalCoastPrice.toFixed(2),
+        });
+
       } else {
         this.tax[index] = 18
         barcode.patchValue({
@@ -594,16 +594,16 @@ export class AddSalesComponent implements OnInit {
         let getCoastPrice = purchaseRate - getDiscountPrice;
         console.log(getCoastPrice);
         console.log(qty);
-        
+
         this.TotalWithoutTax[index] = getCoastPrice * qty || 0
         console.log(this.TotalWithoutTax[index]);
-        
+
         // cost price 
         let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
         this.taxIntoRupees[index] = taxprice || 0;
         let purchasePrice = getCoastPrice + taxprice;
         console.log(purchasePrice);
-        
+
         return purchasePrice;
       } else {
         const discountPercentage = +discountPercentageControl.value || 0;
@@ -615,21 +615,21 @@ export class AddSalesComponent implements OnInit {
         let getCoastPrice = this.coastprice[index] - getDiscountPrice;
         console.log(getCoastPrice);
         this.TotalWithoutTax[index] = getCoastPrice * qty || 0
-           // tax price 
-      let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
-      this.taxIntoRupees[index] = taxprice || 0;
-      let purchasePrice = getCoastPrice + taxprice;
-      this.originalCoastPrice = purchasePrice;
+        // tax price 
+        let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
+        this.taxIntoRupees[index] = taxprice || 0;
+        let purchasePrice = getCoastPrice + taxprice;
+        this.originalCoastPrice = purchasePrice;
         return purchasePrice;
-      } 
+      }
     }
     return 0
   }
   purchase4(index) {
     const result = this.calculationDiscountCostPrice(index);
     this.coastprice[index] = result.toFixed(2);
-    console.log(this.coastprice[index],'this.coastprice[index]');
-    
+    console.log(this.coastprice[index], 'this.coastprice[index]');
+
     setTimeout(() => {
       this.calculateRoundoffValue()
     }, 2000);
@@ -647,32 +647,32 @@ export class AddSalesComponent implements OnInit {
         const discountPercentage = +discountPercentageControl.value || 0;
         const taxPercentage = +taxPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        const qty = +QtyControl.value ;
+        const qty = +QtyControl.value;
         if (this.costPrice > 0) {
-          console.log(this.costPrice,'this.costPrice > 0');
+          console.log(this.costPrice, 'this.costPrice > 0');
           let getDiscountPrice = (this.costPrice * discountPercentage) / 100;
           console.log(getDiscountPrice);
           let getCoastPrice = this.costPrice - getDiscountPrice;
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
           // cost price 
-          console.log(getCoastPrice,'cost price this');
+          console.log(getCoastPrice, 'cost price this');
           let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
           this.taxIntoRupees[index] = taxprice || 0;
           console.log(taxprice);
           let purchasePrice = getCoastPrice + taxprice;
           return purchasePrice;
         } else {
-          console.log(this.originalPrice[index],'this.originalPrice[index]'); 
-          let getDiscountPrice = (this.originalPrice[index]  * discountPercentage) / 100
-          let getCoastPrice = this.originalPrice[index]  - getDiscountPrice;
+          console.log(this.originalPrice[index], 'this.originalPrice[index]');
+          let getDiscountPrice = (this.originalPrice[index] * discountPercentage) / 100
+          let getCoastPrice = this.originalPrice[index] - getDiscountPrice;
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
           console.log(this.TotalWithoutTax[index]);
-          console.log(getCoastPrice,'getCoastPrice');
+          console.log(getCoastPrice, 'getCoastPrice');
           // cost price 
           let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
           this.taxIntoRupees[index] = taxprice || 0;
           let purchasePrice = getCoastPrice + taxprice;
-         console.log(purchasePrice,'purchasePrice');
+          console.log(purchasePrice, 'purchasePrice');
 
           return purchasePrice;
         }
@@ -688,7 +688,7 @@ export class AddSalesComponent implements OnInit {
         const discountPercentage = +discountPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         let purchaseTax = 18;
-        const qty = +QtyControl.value ;
+        const qty = +QtyControl.value;
         // cost price 
         let getDiscountPrice = (this.costPrice * discountPercentage) / 100
         let getCoastPrice = this.costPrice - getDiscountPrice;
@@ -723,6 +723,8 @@ export class AddSalesComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
   submit(type: any) {
     console.log(this.saleForm.value);
     if (this.saleForm.valid) {
@@ -730,16 +732,18 @@ export class AddSalesComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleForm.get('customer')?.value);
       formdata.append('sale_order_date', this.saleForm.get('sale_order_date')?.value);
       formdata.append('sale_order_no', this.saleForm.get('sale_order_no')?.value);
       formdata.append('payment_terms', this.saleForm.get('payment_terms')?.value);
-
       formdata.append('due_date', this.saleForm.get('due_date')?.value);
       formdata.append('estimate', this.saleForm.get('estimate')?.value);
-
       formdata.append('note', this.saleForm.get('note')?.value);
       formdata.append('total_qty', this.saleForm.get('total_qty')?.value);
       formdata.append('total_tax', this.saleForm.get('total_tax')?.value);
@@ -768,7 +772,6 @@ export class AddSalesComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('sale_order_cart', JSON.stringify(cartData));
-      
       this.saleService.addSalesOrder(formdata).subscribe(res => {
         // console.log(res);
         this.getRes = res;
@@ -779,38 +782,50 @@ export class AddSalesComponent implements OnInit {
             this.ngOnInit()
             this.userControl.reset()
           } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.saleForm.reset()
-              this.ngOnInit()
-              this.userControl.reset()
-            }, 3000);
-          }
-          else {
+            this.toastrService.success(this.getRes.msg);
+            this.loaderPrint=false;
+            this.router.navigate(['//sales/sales-details/'+this.getRes.id]);
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
+            this.toastrService.success(this.getRes.msg);
+            this.router.navigate(['//sales/saleslist'])
+          } else {
             this.loader = false;
             this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//sales/saleslist'])
           }
         } else {
-            if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          }else if (type == 'print') {
+            this.loaderPrint = false;
+          }else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
         }
       }, err => {
-          if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        }else if (type == 'print') {
+          this.loaderPrint = false;
+        }else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
       })
     } else {
-        if (type == 'new') {
+      if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      };
+      }else if (type == 'print') {
+        this.loaderPrint = false;
+      }else if (type == 'draft') {
+        this.loaderDraft = false;
+      }
       this.saleForm.markAllAsTouched()
       console.log('invald');
     }
@@ -917,7 +932,7 @@ export class AddSalesComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   searchs: any[] = [];
@@ -926,7 +941,7 @@ export class AddSalesComponent implements OnInit {
   open() {
     this.isProduct = false
   }
- 
+
   calculateTotalQty(): any {
     let totalQty = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
@@ -1056,9 +1071,9 @@ export class AddSalesComponent implements OnInit {
     const price = +cartItem.get('price').value || 0;
     const tax = +cartItem.get('tax').value || 0;
     const discount = +cartItem.get('discount').value || 0;
-    const subtotal=this.TotalWithoutTax[index]
+    const subtotal = this.TotalWithoutTax[index]
     const qty = +cartItem.get('qty').value || 0;
-    const totalForItem = price*qty ||0
+    const totalForItem = price * qty || 0
     return totalForItem;
   }
   calculateTotalTaxIntoRupees() {

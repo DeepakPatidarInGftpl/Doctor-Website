@@ -665,7 +665,7 @@ export class AddpurchaseComponent implements OnInit {
           }else if (type == 'print') {
             this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
             this.loaderPrint=false;
-            this.router.navigate(['//purchase/material-InwardDetails/'+this.getRes.id])
+            this.router.navigate(['//purchase/purchaseDetails/'+this.getRes.id])
             // setTimeout(() => {
             //   // this.materialForm.reset()
             //   // this.ngOnInit()
@@ -674,6 +674,8 @@ export class AddpurchaseComponent implements OnInit {
           } 
           else if(type=='draft'){
             this.loaderDraft=false;
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
+            this.router.navigate(['//purchase/purchaselist'])
           }
           else {
             this.loader = false;

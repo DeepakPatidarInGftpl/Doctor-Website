@@ -52,7 +52,7 @@ export class EditSalesComponent implements OnInit {
   id: any;
   editRes: any;
   ngOnInit(): void {
-    const defaultDate = new Date().toISOString().split('T')[0]; 
+    const defaultDate = new Date().toISOString().split('T')[0];
 
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.userControl.setValue('Loading...');
@@ -64,7 +64,7 @@ export class EditSalesComponent implements OnInit {
       sale_order_no: new FormControl('', [Validators.required]),
       payment_terms: new FormControl(''),
       sale_order_cart: this.fb.array([]),
-      due_date: new FormControl(''),
+      due_date: new FormControl('',[Validators.required]),
       estimate: new FormControl(''),
       total_qty: new FormControl(''),
       total_tax: new FormControl(''),
@@ -84,7 +84,7 @@ export class EditSalesComponent implements OnInit {
       this.saleForm.setControl('sale_order_cart', this.udateCart(this.editRes?.cart));
       this.saleForm.get('customer')?.patchValue(this.editRes?.customer?.id);
       this.saleForm.get('estimate')?.patchValue(this?.editRes?.estimate?.id)
-      this.userControl.setValue(this.editRes?.customer?.name);
+      this.userControl.setValue(this.editRes?.customer?.name+ ' '+ this.editRes?.customer?.user_type);
     })
     this.searchForm = this.fb.group({
       search: new FormControl()
@@ -123,7 +123,7 @@ export class EditSalesComponent implements OnInit {
   myControl: FormArray;
   variantList: any[] = [];
 
-  getVariant(search: any, index: any,barcode:any) {
+  getVariant(search: any, index: any, barcode: any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -218,7 +218,7 @@ export class EditSalesComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -230,7 +230,7 @@ export class EditSalesComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
 
   get customer() {
@@ -288,15 +288,15 @@ export class EditSalesComponent implements OnInit {
   getCart(): FormArray {
     return this.saleForm.get('sale_order_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.saleForm?.value?.sale_order_cart?.length==0){
-      this.isCart=true;
+    if (this.saleForm?.value?.sale_order_cart?.length == 0) {
+      this.isCart = true;
     }
   }
   getUser() {
@@ -777,6 +777,8 @@ export class EditSalesComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
   submit(type: any) {
     console.log(this.saleForm.value);
     if (this.saleForm.valid) {
@@ -784,6 +786,10 @@ export class EditSalesComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
 
@@ -805,7 +811,6 @@ export class EditSalesComponent implements OnInit {
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
-
       const cartArray = this.saleForm.get('sale_order_cart') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
@@ -823,7 +828,6 @@ export class EditSalesComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('sale_order_cart', JSON.stringify(cartData));
-
       this.saleService.updateSalesOrder(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.getRes = res;
@@ -834,12 +838,13 @@ export class EditSalesComponent implements OnInit {
             this.ngOnInit()
             this.userControl.reset()
           } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.saleForm.reset()
-              this.ngOnInit()
-              this.userControl.reset()
-            }, 3000);
+            this.toastrService.success(this.getRes?.msg);
+            this.loaderPrint=false;
+            this.router.navigate(['//sales/sales-details/'+this?.id]);
+          } else if (type == 'draft') {
+            this.toastrService.success(this.getRes.msg);
+            this.loaderDraft = false;
+            this.router.navigate(['//sales/saleslist'])
           }
           else {
             this.loader = false;
@@ -848,25 +853,38 @@ export class EditSalesComponent implements OnInit {
           }
         } else {
           this.toastrService.error(this.getRes?.error?.due_date[0])
-            if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          }else if (type == 'print') {
+            this.loaderPrint = false;
+          }else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
         }
       }, err => {
-          if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+        this.toastrService.error(err?.error?.error?.due_date[0])
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        }else if (type == 'print') {
+          this.loaderPrint = false;
+        }else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
       })
     } else {
-        if (type == 'new') {
+      if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      };
+      }else if (type == 'print') {
+        this.loaderPrint = false;
+      }else if (type == 'draft') {
+        this.loaderDraft = false;
+      }
       this.saleForm.markAllAsTouched()
       console.log('invald');
     }
@@ -973,7 +991,7 @@ export class EditSalesComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   searchs: any[] = [];

@@ -72,14 +72,14 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       search: new FormControl()
     })
 
-       //patch value
-       this.saleService.getSalesMaterialOutwardById(this.id).subscribe(res=>{
-        this.editRes=res;
-        this.saleMaterialOutwardForm.patchValue(this.editRes);
-        this.saleMaterialOutwardForm.setControl('material_outward_cart', this.udateCart(this.editRes?.cart));
-        this.saleMaterialOutwardForm.get('customer')?.patchValue(this.editRes?.customer?.id);
-        this.userControl.setValue(this.editRes?.customer?.name);
-      })
+    //patch value
+    this.saleService.getSalesMaterialOutwardById(this.id).subscribe(res => {
+      this.editRes = res;
+      this.saleMaterialOutwardForm.patchValue(this.editRes);
+      this.saleMaterialOutwardForm.setControl('material_outward_cart', this.udateCart(this.editRes?.cart));
+      this.saleMaterialOutwardForm.get('customer')?.patchValue(this.editRes?.customer?.id);
+      this.userControl.setValue(this.editRes?.customer?.name+ ' '+ this.editRes?.customer?.user_type);
+    })
 
     this.filteredusers = this.userControl.valueChanges.pipe(
       startWith(''),
@@ -115,7 +115,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
   myControl: FormArray;
   variantList: any[] = [];
 
-  getVariant(search: any, index: any,barcode:any) {
+  getVariant(search: any, index: any, barcode: any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -146,7 +146,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
           // console.log(this.productName);
           this.check = true;
           console.log(this.searchs[0]?.variant_name);
-console.log(this.searchs);
+          console.log(this.searchs);
 
           const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
           barcode.patchValue({
@@ -217,7 +217,7 @@ console.log(this.searchs);
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -229,7 +229,7 @@ console.log(this.searchs);
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
 
   get customer() {
@@ -238,7 +238,7 @@ console.log(this.searchs);
 
 
   udateCart(add: any): FormArray {
-    console.log(add); 
+    console.log(add);
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
@@ -247,7 +247,7 @@ console.log(this.searchs);
         qty: j.qty,
       }))
       this.myControl.push(new FormControl(j?.barcode?.product_title));
-      this.barcode[i]=j?.barcode?.sku
+      this.barcode[i] = j?.barcode?.sku
     })
     return formarr
   }
@@ -261,15 +261,15 @@ console.log(this.searchs);
   getCart(): FormArray {
     return this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.saleMaterialOutwardForm?.value?.material_outward_cart?.length==0){
-      this.isCart=true
+    if (this.saleMaterialOutwardForm?.value?.material_outward_cart?.length == 0) {
+      this.isCart = true
     }
   }
   getUser() {
@@ -477,6 +477,8 @@ console.log(this.searchs);
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderDraft = false;
+  loaderPrint = false;
   submit(type: any) {
     console.log(this.saleMaterialOutwardForm.value);
     if (this.saleMaterialOutwardForm.valid) {
@@ -484,6 +486,10 @@ console.log(this.searchs);
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleMaterialOutwardForm.get('customer')?.value);
@@ -492,7 +498,6 @@ console.log(this.searchs);
       formdata.append('note', this.saleMaterialOutwardForm.get('note')?.value);
       formdata.append('total_qty', this.saleMaterialOutwardForm.get('total_qty')?.value);
       formdata.append('voucher_number', this.saleMaterialOutwardForm.get('voucher_number')?.value);
- 
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -513,7 +518,7 @@ console.log(this.searchs);
         cartData.push(cartObject);
       });
       formdata.append('material_outward_cart', JSON.stringify(cartData));
-      this.saleService.updateSalesMaterialOutward(formdata,this.id).subscribe(res => {
+      this.saleService.updateSalesMaterialOutward(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
@@ -523,12 +528,13 @@ console.log(this.searchs);
             this.ngOnInit()
             this.userControl.reset()
           } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.saleMaterialOutwardForm.reset()
-              this.ngOnInit()
-              this.userControl.reset()
-            }, 3000);
+            this.toastrService.success(this.getRes.msg);
+            this.loaderPrint=false;
+            this.router.navigate(['//sales/salesMaterialOutwardDetails/'+this?.id]);
+          } else if (type == 'draft') {
+            this.toastrService.success(this.getRes.msg);
+            this.loaderDraft = false;
+            this.router.navigate(['//sales/salesMaterialOutward-list'])
           }
           else {
             this.loader = false;
@@ -536,25 +542,37 @@ console.log(this.searchs);
             this.router.navigate(['//sales/salesMaterialOutward-list'])
           }
         } else {
-           if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          } else if (type == 'print') {
+            this.loaderPrint = false;
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
         }
       }, err => {
-         if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        } else if (type == 'print') {
+          this.loaderPrint = false;
+        } else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
       })
     } else {
-       if (type == 'new') {
+      if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      };
+      } else if (type == 'print') {
+        this.loaderPrint = false;
+      } else if (type == 'draft') {
+        this.loaderDraft = false;
+      }
       this.saleMaterialOutwardForm.markAllAsTouched()
       console.log('invald');
     }
@@ -648,7 +666,7 @@ console.log(this.searchs);
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   searchs: any[] = [];
