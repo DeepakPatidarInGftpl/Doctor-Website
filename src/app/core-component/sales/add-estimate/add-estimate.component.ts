@@ -62,7 +62,7 @@ export class AddEstimateComponent implements OnInit {
       estimate_date: new FormControl(defaultDate, [Validators.required]),
       estimate_no: new FormControl('', [Validators.required]),
       estimate_expiry_date: new FormControl(defaultDateago7, [Validators.required]),
-      payment_terms: new FormControl(''),
+      payment_terms: new FormControl('',[Validators.required]),
       estimate_cart: this.fb.array([]),
       total_qty: new FormControl(''),
       total_tax: new FormControl(''),
@@ -112,7 +112,7 @@ export class AddEstimateComponent implements OnInit {
   myControl = new FormControl('');
   variantList: any[] = [];
 
-  getVariant(search: any, index: any,barcode) {
+  getVariant(search: any, index: any, barcode) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -213,7 +213,7 @@ export class AddEstimateComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -225,7 +225,7 @@ export class AddEstimateComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
 
   get customer() {
@@ -247,15 +247,15 @@ export class AddEstimateComponent implements OnInit {
   getCart(): FormArray {
     return this.saleEstimateForm.get('estimate_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.saleEstimateForm?.value?.estimate_cart?.length==0){
-      this.isCart=true;
+    if (this.saleEstimateForm?.value?.estimate_cart?.length == 0) {
+      this.isCart = true;
     }
   }
   getUser() {
@@ -730,6 +730,8 @@ export class AddEstimateComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
   submit(type: any) {
     console.log(this.saleEstimateForm.value);
     if (this.saleEstimateForm.valid) {
@@ -737,6 +739,10 @@ export class AddEstimateComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleEstimateForm.get('customer')?.value);
@@ -777,45 +783,56 @@ export class AddEstimateComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-         
           if (type == 'new') {
             this.loaderCreate = false;
             this.saleEstimateForm.reset()
             this.ngOnInit()
             this.userControl.reset()
-          } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.saleEstimateForm.reset()
-              this.ngOnInit()
-              this.userControl.reset()
-            }, 3000);
-          }
-          else {
+          } else if (type == 'print') { 
+            this.loaderPrint=false;
+            this.toastrService.success(this.getRes.msg);
+            this.router.navigate(['//sales/salesEstimatedetails/'+this.getRes?.id])
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
+            this.toastrService.success(this.getRes.msg);
+            this.router.navigate(['//sales/salesEstimatelist'])
+          } else {
             this.loader = false;
             this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//sales/salesEstimatelist'])
           }
         } else {
-           if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          }else if (type == 'print') {
+            this.loaderPrint = false;
+          }else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
         }
       }, err => {
-         if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        }else if (type == 'print') {
+          this.loaderPrint = false;
+        }else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
       })
     } else {
-       if (type == 'new') {
+      if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      };
+      }else if (type == 'print') {
+        this.loaderPrint = false;
+      }else if (type == 'draft') {
+        this.loaderDraft = false;
+      }
       this.saleEstimateForm.markAllAsTouched()
       console.log('invald');
     }
@@ -922,7 +939,7 @@ export class AddEstimateComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   searchs: any[] = [];

@@ -368,11 +368,12 @@
                                 <p>Status :  <span [ngClass]="{
     'bg-lightgreen': purchaseBillDetail?.status === 'Completed',
     'bg-lightred': purchaseBillDetail?.status === 'Overdue',
-    'bg-lightyellow': purchaseBillDetail?.status === 'Pending' || purchaseBillDetail?.status === 'New',
+    'bg-lightyellow': purchaseBillDetail?.status === 'Draft' || purchaseBillDetail?.status === 'New',
     'bg-lightblue': purchaseBillDetail?.status === 'Inprogress' || purchaseBillDetail?.status === 'Approved',
     'bg-lightorange': purchaseBillDetail?.status === 'Received' || purchaseBillDetail?.status === 'Partially Received' || purchaseBillDetail?.status === 'Exceed',
     'bg-lightgray': purchaseBillDetail?.status === 'Cancel'
-  }" class="badges">{{ purchaseBillDetail?.status }}</span></p>
+  }" class="badges">{{ purchaseBillDetail?.status }}</span>
+</p>
 
   <p class="mx-3">Export: <span [ngClass]="{'bg-lightgreen': purchaseBillDetail?.export === true, 'bg-lightred' : purchaseBillDetail?.export === false,'bg-lightyellow' : purchaseBillDetail?.is_active === 'Partial' }" class="badges">{{purchaseBillDetail?.is_active}}</span>
   </p>

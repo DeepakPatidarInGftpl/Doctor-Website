@@ -59,7 +59,7 @@ export class AddSaleBillComponent implements OnInit {
       bill_date: new FormControl(defaultDate, [Validators.required]),
       customer_bill_no: new FormControl('', [Validators.required]),
       due_date: new FormControl(''),
-      payment_terms: new FormControl(''),
+      payment_terms: new FormControl('', [Validators.required]),
       sale_order: new FormControl(''),
       sale_bill_cart: this.fb.array([]),
       total_qty: new FormControl(''),
@@ -127,7 +127,7 @@ export class AddSaleBillComponent implements OnInit {
   searc: any;
   myControl = new FormControl('');
   variantList: any[] = [];
-  getVariant(search: any, index: any,barcode:any) {
+  getVariant(search: any, index: any, barcode: any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -222,7 +222,7 @@ export class AddSaleBillComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -234,7 +234,7 @@ export class AddSaleBillComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
 
   get customer() {
@@ -257,16 +257,16 @@ export class AddSaleBillComponent implements OnInit {
   getCart(): FormArray {
     return this.saleBillForm.get('sale_bill_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
   }
 
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.saleBillForm?.value?.sale_bill_cart?.length==0){
-      this.isCart=true;
+    if (this.saleBillForm?.value?.sale_bill_cart?.length == 0) {
+      this.isCart = true;
     }
   }
 
@@ -564,7 +564,7 @@ export class AddSaleBillComponent implements OnInit {
           qty: event.batch[0]?.stock,
           tax: this.apiPurchaseTax,
           discount: event.batch[0]?.discount || 0,
-          additional_discount:event.batch[0]?.additional_discount || 0,
+          additional_discount: event.batch[0]?.additional_discount || 0,
           price: this.originalCoastPrice.toFixed(2),
         });
 
@@ -576,7 +576,7 @@ export class AddSaleBillComponent implements OnInit {
           qty: event.batch[0]?.stock,
           tax: 18,
           discount: event.batch[0]?.discount || 0,
-          additional_discount:event.batch[0]?.additional_discount || 0,
+          additional_discount: event.batch[0]?.additional_discount || 0,
           price: this.originalCoastPrice,
           // landing_cost: this.landingCost || 0
         });
@@ -800,6 +800,8 @@ export class AddSaleBillComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
   submit(type: any) {
     console.log(this.saleBillForm.value);
     if (this.saleBillForm.valid) {
@@ -807,6 +809,10 @@ export class AddSaleBillComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleBillForm.get('customer')?.value);
@@ -856,38 +862,51 @@ export class AddSaleBillComponent implements OnInit {
             this.ngOnInit()
             this.userControl.reset()
           } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.saleBillForm.reset()
-              this.ngOnInit()
-              this.userControl.reset()
-            }, 3000);
-          }
-          else {
+            this.toastrService.success(this.getRes.msg);
+            this.loaderPrint=false;
+            this.router.navigate(['//sales/salesbilldetails/'+this.getRes?.id]);
+          }else if (type == 'draft') {
+            this.loaderDraft = false;
+            this.toastrService.success(this.getRes.msg);
+            this.router.navigate(['//sales/salesbill-list'])
+          }else {
             this.loader = false;
             this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//sales/salesbill-list'])
           }
         } else {
-            if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          }else if (type == 'print') {
+            this.loaderPrint = false;
+          }else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
+          this.toastrService.error(this.getRes.error.status[0])
         }
       }, err => {
-          if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        }else if (type == 'print') {
+          this.loaderPrint = false;
+        }else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
       })
     } else {
-        if (type == 'new') {
+      if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      };
+      }else if (type == 'print') {
+        this.loaderPrint = false;
+      }else if (type == 'draft') {
+        this.loaderDraft = false;
+      }
       this.saleBillForm.markAllAsTouched()
       console.log('invald');
     }
@@ -1003,7 +1022,7 @@ export class AddSaleBillComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   searchs: any[] = [];

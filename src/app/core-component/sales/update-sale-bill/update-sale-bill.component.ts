@@ -63,7 +63,7 @@ export class UpdateSaleBillComponent implements OnInit {
       customer: new FormControl('', [Validators.required]),
       bill_date: new FormControl(defaultDate, [Validators.required]),
       customer_bill_no: new FormControl('', [Validators.required]),
-      due_date: new FormControl(''),
+      due_date: new FormControl('',[Validators.required]),
       payment_terms: new FormControl(''),
       sale_order: new FormControl(''),
       sale_bill_cart: this.fb.array([]),
@@ -87,10 +87,10 @@ export class UpdateSaleBillComponent implements OnInit {
       this.saleBillForm.get('sale_order').patchValue(this.editRes?.sale_order?.id);
       this.saleBillForm.setControl('sale_bill_cart', this.udateCart(this.editRes?.cart));
       this.saleBillForm.get('customer')?.patchValue(this.editRes?.customer?.id);
-      this.userControl.setValue(this.editRes?.customer?.name);
+      this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.user_type);
       this.totalAdditionalCharges = this.editRes.additional_charges;
       console.log(this.totalAdditionalCharges);
-      
+
     })
 
     this.searchForm = this.fb.group({
@@ -146,7 +146,7 @@ export class UpdateSaleBillComponent implements OnInit {
   searc: any;
   myControl: FormArray;
   variantList: any[] = [];
-  getVariant(search: any, index: any,barcode:any) {
+  getVariant(search: any, index: any, barcode: any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -241,7 +241,7 @@ export class UpdateSaleBillComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -253,7 +253,7 @@ export class UpdateSaleBillComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
 
   get customer() {
@@ -309,18 +309,18 @@ export class UpdateSaleBillComponent implements OnInit {
       total: (0),
     })
   }
-  isCart=false;
+  isCart = false;
   getCart(): FormArray {
     return this.saleBillForm.get('sale_bill_cart') as FormArray;
   }
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.saleBillForm?.value?.sale_bill_cart?.length==0){
-      this.isCart=true;
+    if (this.saleBillForm?.value?.sale_bill_cart?.length == 0) {
+      this.isCart = true;
     }
   }
 
@@ -854,6 +854,8 @@ export class UpdateSaleBillComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint = false;
+  loaderDraft = false;
   submit(type: any) {
     console.log(this.saleBillForm.value);
     if (this.saleBillForm.valid) {
@@ -861,6 +863,10 @@ export class UpdateSaleBillComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleBillForm.get('customer')?.value);
@@ -897,7 +903,7 @@ export class UpdateSaleBillComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('sale_bill_cart', JSON.stringify(cartData));
-      this.saleService.updateSalesBill(formdata,this.id).subscribe(res => {
+      this.saleService.updateSalesBill(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
@@ -907,12 +913,13 @@ export class UpdateSaleBillComponent implements OnInit {
             this.ngOnInit()
             this.userControl.reset()
           } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.saleBillForm.reset()
-              this.ngOnInit()
-              this.userControl.reset()
-            }, 3000);
+            this.toastrService.success(this.getRes?.msg);
+            this.loaderPrint = false;
+            this.router.navigate(['//sales/salesbilldetails/' + this.id]);
+          } else if (type == 'draft') {
+            this.toastrService.success(this.getRes.msg);
+            this.loaderDraft = false;
+            this.router.navigate(['//sales/salesbill-list'])
           }
           else {
             this.loader = false;
@@ -920,25 +927,38 @@ export class UpdateSaleBillComponent implements OnInit {
             this.router.navigate(['//sales/salesbill-list'])
           }
         } else {
-            if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          } else if (type == 'print') {
+            this.loaderPrint = false;
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
         }
       }, err => {
-          if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+        this.toastrService.error(err?.error?.error?.due_date[0])
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        } else if (type == 'print') {
+          this.loaderPrint = false;
+        } else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
       })
     } else {
-        if (type == 'new') {
+      if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      };
+      } else if (type == 'print') {
+        this.loaderPrint = false;
+      } else if (type == 'draft') {
+        this.loaderDraft = false;
+      }
       this.saleBillForm.markAllAsTouched()
       console.log('invald');
     }
@@ -1054,7 +1074,7 @@ export class UpdateSaleBillComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   searchs: any[] = [];
@@ -1277,9 +1297,9 @@ export class UpdateSaleBillComponent implements OnInit {
     const total = value + ctax;
     return total;
   }
-  isAdditionalDiscount=false;
+  isAdditionalDiscount = false;
   additionalcharg() {
-    this.isAdditionalDiscount=true;
+    this.isAdditionalDiscount = true;
     this.calculateTotalAdditionalCharge()
   }
   calculateTotalAdditionalCharge(): number {
@@ -1290,10 +1310,10 @@ export class UpdateSaleBillComponent implements OnInit {
         totaladditionalCharge += +mrpControl?.value;
         // this.saleBillForm.get('additional_charges').patchValue(totaladditionalCharge);
         console.log(totaladditionalCharge);
-        
+
         this.totalAdditionalCharges = totaladditionalCharge;
         console.log(this.totalAdditionalCharges);
-        
+
         // if(this.isAdditionalDiscount){
         //   this.saleBillForm.get('additional_charges').patchValue(totaladditionalCharge.toFixed(2))
         // }

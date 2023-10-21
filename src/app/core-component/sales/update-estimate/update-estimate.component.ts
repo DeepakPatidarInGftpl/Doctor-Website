@@ -25,8 +25,8 @@ export class UpdateEstimateComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private contactService: ContactService,
-    private Arout:ActivatedRoute
-    ) {
+    private Arout: ActivatedRoute
+  ) {
   }
 
   customerControlName = 'customer';
@@ -49,10 +49,10 @@ export class UpdateEstimateComponent implements OnInit {
   searchForm!: FormGroup;
   subcategoryList;
   myControl: FormArray;
-  id:any;
-  editRes:any;
+  id: any;
+  editRes: any;
   ngOnInit(): void {
-    this.id=this.Arout.snapshot.paramMap.get('id');
+    this.id = this.Arout.snapshot.paramMap.get('id');
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     this.userControl.setValue('Loading...');
     this.myControl = new FormArray([]);
@@ -61,7 +61,7 @@ export class UpdateEstimateComponent implements OnInit {
       estimate_date: new FormControl(defaultDate, [Validators.required]),
       estimate_no: new FormControl('', [Validators.required]),
       estimate_expiry_date: new FormControl(''),
-      payment_terms: new FormControl(''),
+      payment_terms: new FormControl('', [Validators.required]),
       estimate_cart: this.fb.array([]),
       total_qty: new FormControl(''),
       total_tax: new FormControl(''),
@@ -76,15 +76,15 @@ export class UpdateEstimateComponent implements OnInit {
     this.searchForm = this.fb.group({
       search: new FormControl()
     })
-       //patch value
-       this.saleService.getSalesEstimateById(this.id).subscribe(res=>{
-        this.editRes=res;
-        this.saleEstimateForm.patchValue(this.editRes);
-        this.saleEstimateForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
-        this.saleEstimateForm.setControl('estimate_cart', this.udateCart(this.editRes?.cart));
-        this.saleEstimateForm.get('customer')?.patchValue(this.editRes?.customer?.id);
-        this.userControl.setValue(this.editRes?.customer?.name);
-      })
+    //patch value
+    this.saleService.getSalesEstimateById(this.id).subscribe(res => {
+      this.editRes = res;
+      this.saleEstimateForm.patchValue(this.editRes);
+      this.saleEstimateForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
+      this.saleEstimateForm.setControl('estimate_cart', this.udateCart(this.editRes?.cart));
+      this.saleEstimateForm.get('customer')?.patchValue(this.editRes?.customer?.id);
+      this.userControl.setValue(this.editRes?.customer?.name + ' '+ this.editRes?.customer?.user_type);
+    })
 
     this.filteredusers = this.userControl.valueChanges.pipe(
       startWith(''),
@@ -120,7 +120,7 @@ export class UpdateEstimateComponent implements OnInit {
   searc: any;
   variantList: any[] = [];
 
-  getVariant(search: any, index: any,barcode:any) {
+  getVariant(search: any, index: any, barcode: any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -134,7 +134,7 @@ export class UpdateEstimateComponent implements OnInit {
       } else {
         this.subcategory = undefined
       }
-      this.saleService.filterVariant( this.category, this.subcategory, search).subscribe((res: any) => {
+      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
@@ -216,7 +216,7 @@ export class UpdateEstimateComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -228,7 +228,7 @@ export class UpdateEstimateComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
 
   get customer() {
@@ -236,7 +236,7 @@ export class UpdateEstimateComponent implements OnInit {
   }
 
   udateCart(add: any): FormArray {
-    console.log(add); 
+    console.log(add);
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
       const price = j.price || 0;
@@ -287,15 +287,15 @@ export class UpdateEstimateComponent implements OnInit {
   getCart(): FormArray {
     return this.saleEstimateForm.get('estimate_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.saleEstimateForm?.value?.estimate_cart?.length==0){
-      this.isCart=true;
+    if (this.saleEstimateForm?.value?.estimate_cart?.length == 0) {
+      this.isCart = true;
     }
 
   }
@@ -316,12 +316,12 @@ export class UpdateEstimateComponent implements OnInit {
   selectedAddressShipping: any;
   selectBatch: any;
   paymentTerms: any;
-  userType:any;
+  userType: any;
 
   oncheck(data: any) {
     console.log(data);
     const selectedItemId = data.id;
-    this.userType=data?.user_type;
+    this.userType = data?.user_type;
     //call detail api
     this.contactService.getCustomerById(selectedItemId).subscribe(res => {
       // console.log(res);
@@ -344,7 +344,7 @@ export class UpdateEstimateComponent implements OnInit {
     this.addCart();
     this.saleEstimateForm.patchValue({
       customer: selectedItemId,
-      
+
     });
   }
 
@@ -460,7 +460,7 @@ export class UpdateEstimateComponent implements OnInit {
   // }
 
   originalCoastPrice: any;
-  originalPrice:any[]=[]
+  originalPrice: any[] = []
   apiPurchaseTax: number;
   isTaxAvailable: any[] = [];
   taxIntoRupees: any[] = [];
@@ -478,9 +478,9 @@ export class UpdateEstimateComponent implements OnInit {
     this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
     if (event?.product?.purchase_tax_including) {
-      if(this.userType=='Employee'){
+      if (this.userType == 'Employee') {
         let Employeeprice = event?.batch[0]?.selling_price_employee || 0;
-        this.originalPrice[index]=event?.batch[0]?.selling_price_employee || 0;
+        this.originalPrice[index] = event?.batch[0]?.selling_price_employee || 0;
         // landing cost
         let getDiscountPrice = (Employeeprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
@@ -490,9 +490,9 @@ export class UpdateEstimateComponent implements OnInit {
         let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice + taxPrice;
-      }else if(this.userType=='Dealer'){
+      } else if (this.userType == 'Dealer') {
         let dealerprice = event?.batch[0]?.selling_price_dealer || 0;
-        this.originalPrice[index]=event?.batch[0]?.selling_price_dealer || 0;
+        this.originalPrice[index] = event?.batch[0]?.selling_price_dealer || 0;
         // landing cost
         let getDiscountPrice = (dealerprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
@@ -503,22 +503,22 @@ export class UpdateEstimateComponent implements OnInit {
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice + taxPrice;
-      }else{
+      } else {
         let offlineprice = event?.batch[0]?.selling_price_offline || 0;
-        this.originalPrice[index]=event?.batch[0]?.selling_price_offline || 0;
+        this.originalPrice[index] = event?.batch[0]?.selling_price_offline || 0;
         // landing cost
         let getDiscountPrice = (offlineprice * this.batchDiscount) / 100
         console.log(getDiscountPrice);
         let getCoastPrice = offlineprice - getDiscountPrice;
-        console.log(getCoastPrice,'getCoastPrice');
+        console.log(getCoastPrice, 'getCoastPrice');
         this.TotalWithoutTax[index] = getCoastPrice * event.batch[0]?.stock || 1;
-        console.log(this.TotalWithoutTax[index],'this.TotalWithoutTax[index]');
+        console.log(this.TotalWithoutTax[index], 'this.TotalWithoutTax[index]');
         // cost price
         let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + this.apiPurchaseTax)))
         console.log(taxPrice, 'taxprice');
         this.taxIntoRupees[index] = taxPrice || 0;
         this.originalCoastPrice = getCoastPrice + taxPrice;
-      }  
+      }
     } else {
       let offlineprice = event?.batch[0]?.selling_price_offline || 0;
       let purchaseTax = 18
@@ -527,7 +527,7 @@ export class UpdateEstimateComponent implements OnInit {
       console.log(getDiscountPrice);
       let getCoastPrice = offlineprice - getDiscountPrice;
       this.TotalWithoutTax[index] = getCoastPrice * event.batch[0]?.stock || 0;
-// here adding tax into getcostprice
+      // here adding tax into getcostprice
       let taxPrice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax)))
       this.taxIntoRupees[index] = taxPrice || 0;
       this.originalCoastPrice = getCoastPrice + taxPrice;
@@ -538,16 +538,16 @@ export class UpdateEstimateComponent implements OnInit {
       this.tax[index] = this.apiPurchaseTax
       console.log(this.originalCoastPrice, 'this.originalCoastPrice');
       if (event?.product?.purchase_tax_including == true) {
-          barcode.patchValue({
-            barcode: selectedItemId,
-            item_name: event?.product_title,
-            // amount: event.batch[0]?.mrp,
-            qty: event.batch[0]?.stock,
-            tax: this.apiPurchaseTax,
-            discount: event.batch[0]?.discount || 0,
-            price: this.originalCoastPrice.toFixed(2),
-          });
-       
+        barcode.patchValue({
+          barcode: selectedItemId,
+          item_name: event?.product_title,
+          // amount: event.batch[0]?.mrp,
+          qty: event.batch[0]?.stock,
+          tax: this.apiPurchaseTax,
+          discount: event.batch[0]?.discount || 0,
+          price: this.originalCoastPrice.toFixed(2),
+        });
+
       } else {
         this.tax[index] = 18
         barcode.patchValue({
@@ -644,16 +644,16 @@ export class UpdateEstimateComponent implements OnInit {
         let getCoastPrice = purchaseRate - getDiscountPrice;
         console.log(getCoastPrice);
         console.log(qty);
-        
+
         this.TotalWithoutTax[index] = getCoastPrice * qty || 0
         console.log(this.TotalWithoutTax[index]);
-        
+
         // cost price 
         let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
         this.taxIntoRupees[index] = taxprice || 0;
         let purchasePrice = getCoastPrice + taxprice;
         console.log(purchasePrice);
-        
+
         return purchasePrice;
       } else {
         const discountPercentage = +discountPercentageControl.value || 0;
@@ -665,20 +665,20 @@ export class UpdateEstimateComponent implements OnInit {
         let getCoastPrice = this.coastprice[index] - getDiscountPrice;
         console.log(getCoastPrice);
         this.TotalWithoutTax[index] = getCoastPrice * qty || 0
-           // tax price 
-      let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
-      this.taxIntoRupees[index] = taxprice || 0;
-      let purchasePrice = getCoastPrice + taxprice;
-      this.originalCoastPrice = purchasePrice;
+        // tax price 
+        let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + purchaseTax))) || 0
+        this.taxIntoRupees[index] = taxprice || 0;
+        let purchasePrice = getCoastPrice + taxprice;
+        this.originalCoastPrice = purchasePrice;
         return purchasePrice;
-      } 
+      }
     }
     return 0
   }
   purchase4(index) {
     const result = this.calculationDiscountCostPrice(index);
     this.coastprice[index] = result.toFixed(2);
-    console.log(this.coastprice[index],'this.coastprice[index]');
+    console.log(this.coastprice[index], 'this.coastprice[index]');
     this.calculateTotalEveryIndex(index)
     setTimeout(() => {
       this.calculateRoundoffValue()
@@ -697,32 +697,32 @@ export class UpdateEstimateComponent implements OnInit {
         const discountPercentage = +discountPercentageControl.value || 0;
         const taxPercentage = +taxPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        const qty = +QtyControl.value ;
+        const qty = +QtyControl.value;
         if (this.costPrice > 0) {
-          console.log(this.costPrice,'this.costPrice > 0');
+          console.log(this.costPrice, 'this.costPrice > 0');
           let getDiscountPrice = (this.costPrice * discountPercentage) / 100;
           console.log(getDiscountPrice);
           let getCoastPrice = this.costPrice - getDiscountPrice;
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
           // cost price 
-          console.log(getCoastPrice,'cost price this');
+          console.log(getCoastPrice, 'cost price this');
           let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
           this.taxIntoRupees[index] = taxprice || 0;
           console.log(taxprice);
           let purchasePrice = getCoastPrice + taxprice;
           return purchasePrice;
         } else {
-          console.log(this.originalPrice[index],'this.originalPrice[index]'); 
-          let getDiscountPrice = (this.originalPrice[index]  * discountPercentage) / 100
-          let getCoastPrice = this.originalPrice[index]  - getDiscountPrice;
+          console.log(this.originalPrice[index], 'this.originalPrice[index]');
+          let getDiscountPrice = (this.originalPrice[index] * discountPercentage) / 100
+          let getCoastPrice = this.originalPrice[index] - getDiscountPrice;
           this.TotalWithoutTax[index] = getCoastPrice * qty || 0
           console.log(this.TotalWithoutTax[index]);
-          console.log(getCoastPrice,'getCoastPrice');
+          console.log(getCoastPrice, 'getCoastPrice');
           // cost price 
           let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
           this.taxIntoRupees[index] = taxprice || 0;
           let purchasePrice = getCoastPrice + taxprice;
-         console.log(purchasePrice,'purchasePrice');
+          console.log(purchasePrice, 'purchasePrice');
 
           return purchasePrice;
         }
@@ -738,7 +738,7 @@ export class UpdateEstimateComponent implements OnInit {
         const discountPercentage = +discountPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         let purchaseTax = 18;
-        const qty = +QtyControl.value ;
+        const qty = +QtyControl.value;
         // cost price 
         let getDiscountPrice = (this.costPrice * discountPercentage) / 100
         let getCoastPrice = this.costPrice - getDiscountPrice;
@@ -773,6 +773,8 @@ export class UpdateEstimateComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint = false;
+  loaderDraft = false;
   submit(type: any) {
     console.log(this.saleEstimateForm.value);
     if (this.saleEstimateForm.valid) {
@@ -780,6 +782,10 @@ export class UpdateEstimateComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleEstimateForm.get('customer')?.value);
@@ -814,23 +820,23 @@ export class UpdateEstimateComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('estimate_cart', JSON.stringify(cartData));
-      this.saleService.updateSalesEstimate(formdata,this.id).subscribe(res => {
+      this.saleService.updateSalesEstimate(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-       
           if (type == 'new') {
             this.loaderCreate = false;
             this.saleEstimateForm.reset()
             this.ngOnInit()
             this.userControl.reset()
-          } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.saleEstimateForm.reset()
-              this.ngOnInit()
-              this.userControl.reset()
-            }, 3000);
+          } else if (type == 'print') { 
+            this.toastrService.success(this.getRes.msg);
+            this.loaderPrint = false;
+            this.router.navigate(['//sales/salesEstimatedetails/'+this.id])
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
+            this.toastrService.success(this.getRes.msg);
+            this.router.navigate(['//sales/salesEstimatelist'])
           }
           else {
             this.loader = false;
@@ -838,25 +844,37 @@ export class UpdateEstimateComponent implements OnInit {
             this.router.navigate(['//sales/salesEstimatelist'])
           }
         } else {
-           if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          } else if (type == 'print') {
+            this.loaderPrint = false;
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
         }
       }, err => {
-         if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        } else if (type == 'print') {
+          this.loaderPrint = false;
+        } else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
       })
     } else {
-       if (type == 'new') {
+      if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      };
+      } else if (type == 'print') {
+        this.loaderPrint = false;
+      } else if (type == 'draft') {
+        this.loaderDraft = false;
+      }
       this.saleEstimateForm.markAllAsTouched()
       console.log('invald');
     }
@@ -963,7 +981,7 @@ export class UpdateEstimateComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   searchs: any[] = [];
@@ -1105,9 +1123,9 @@ export class UpdateEstimateComponent implements OnInit {
     const price = +cartItem.get('price').value || 0;
     const tax = +cartItem.get('tax').value || 0;
     const discount = +cartItem.get('discount').value || 0;
-    const subtotal=this.TotalWithoutTax[index]
+    const subtotal = this.TotalWithoutTax[index]
     const qty = +cartItem.get('qty').value || 0;
-    const totalForItem = price*qty ||0;
+    const totalForItem = price * qty || 0;
     const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       total: totalForItem.toFixed(2)

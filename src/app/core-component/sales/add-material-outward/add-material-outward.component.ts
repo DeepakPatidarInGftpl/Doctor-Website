@@ -56,7 +56,7 @@ export class AddMaterialOutwardComponent implements OnInit {
       customer: new FormControl('', [Validators.required]),
       mo_date: new FormControl(defaultDate, [Validators.required]),
       refund_status: new FormControl(''),
-      voucher_number:new FormControl(''),
+      voucher_number: new FormControl(''),
       material_outward_cart: this.fb.array([]),
       total_qty: new FormControl(''),
       status: new FormControl(''),
@@ -101,7 +101,7 @@ export class AddMaterialOutwardComponent implements OnInit {
   myControl = new FormControl('');
   variantList: any[] = [];
 
-  getVariant(search: any, index: any,barcode:any) {
+  getVariant(search: any, index: any, barcode: any) {
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -115,7 +115,7 @@ export class AddMaterialOutwardComponent implements OnInit {
       } else {
         this.subcategory = undefined
       }
-      this.saleService.filterVariant( this.category, this.subcategory, search).subscribe((res: any) => {
+      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
@@ -132,7 +132,7 @@ export class AddMaterialOutwardComponent implements OnInit {
           // console.log(this.productName);
           this.check = true;
           console.log(this.searchs[0]?.variant_name);
-          
+
           const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
           barcode.patchValue({
             // barcode: this.searchs[0].id,
@@ -140,7 +140,7 @@ export class AddMaterialOutwardComponent implements OnInit {
           });
         }
         console.log(this.saleMaterialOutwardForm.value);
-        
+
 
       });
     }
@@ -202,7 +202,7 @@ export class AddMaterialOutwardComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -214,7 +214,7 @@ export class AddMaterialOutwardComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
 
   get customer() {
@@ -231,15 +231,15 @@ export class AddMaterialOutwardComponent implements OnInit {
   getCart(): FormArray {
     return this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.saleMaterialOutwardForm?.value?.material_outward_cart?.length==0){
-      this.isCart=true;
+    if (this.saleMaterialOutwardForm?.value?.material_outward_cart?.length == 0) {
+      this.isCart = true;
     }
   }
   getUser() {
@@ -259,12 +259,12 @@ export class AddMaterialOutwardComponent implements OnInit {
   selectedAddressShipping: any;
   selectBatch: any;
   paymentTerms: any;
-  userType:any;
+  userType: any;
 
   oncheck(data: any) {
     console.log(data);
     const selectedItemId = data.id;
-    this.userType=data?.user_type;
+    this.userType = data?.user_type;
     //call detail api
     this.contactService.getCustomerById(selectedItemId).subscribe(res => {
       // console.log(res);
@@ -287,7 +287,7 @@ export class AddMaterialOutwardComponent implements OnInit {
     this.addCart();
     this.saleMaterialOutwardForm.patchValue({
       customer: selectedItemId,
-      
+
     });
   }
 
@@ -396,7 +396,7 @@ export class AddMaterialOutwardComponent implements OnInit {
   // }
 
   originalCoastPrice: any;
-  originalPrice:any[]=[]
+  originalPrice: any[] = []
   apiPurchaseTax: number;
   isTaxAvailable: any[] = [];
   taxIntoRupees: any[] = [];
@@ -413,16 +413,16 @@ export class AddMaterialOutwardComponent implements OnInit {
     this.batchDiscount = event.batch[0]?.discount || 0;
     this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
-   
+
     if (event.batch.length > 0) {
       const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
       this.tax[index] = this.apiPurchaseTax;
       if (event?.product?.purchase_tax_including == true) {
-          barcode.patchValue({
-            barcode: selectedItemId,
-            item_name: event?.product_title,
-            qty: event.batch[0]?.stock,
-          }); 
+        barcode.patchValue({
+          barcode: selectedItemId,
+          item_name: event?.product_title,
+          qty: event.batch[0]?.stock,
+        });
       } else {
         this.tax[index] = 18
         barcode.patchValue({
@@ -442,11 +442,13 @@ export class AddMaterialOutwardComponent implements OnInit {
       });
     }
   }
-  
+
 
   getRes: any;
   loader = false;
   loaderCreate = false;
+  loaderPrint=false;
+  loaderDraft=false;
   submit(type: any) {
     console.log(this.saleMaterialOutwardForm.value);
     if (this.saleMaterialOutwardForm.valid) {
@@ -454,6 +456,10 @@ export class AddMaterialOutwardComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('customer', this.saleMaterialOutwardForm.get('customer')?.value);
@@ -492,39 +498,51 @@ export class AddMaterialOutwardComponent implements OnInit {
             this.saleMaterialOutwardForm.reset()
             this.ngOnInit()
             this.userControl.reset()
-          } else if (type == 'print') {
-            this.printForm()
-            setTimeout(() => {
-              this.saleMaterialOutwardForm.reset()
-              this.ngOnInit()
-              this.userControl.reset()
-            }, 3000);
-          }
-          else {
+          } else if (type == 'print') { 
+            this.toastrService.success(this.getRes.msg);
+            this.loaderPrint=false;
+            this.router.navigate(['//sales/salesMaterialOutwardDetails/'+this?.getRes?.id]);
+          } else if (type == 'draft') {
+            this.toastrService.success(this.getRes.msg);
+            this.loaderDraft = false;
+            this.router.navigate(['//sales/salesMaterialOutward-list'])
+          } else {
             this.loader = false;
             this.toastrService.success(this.getRes.msg);
             this.router.navigate(['//sales/salesMaterialOutward-list'])
           }
         } else {
-               if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          }else if (type == 'print') {
+            this.loaderPrint = false;
+          }else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
         }
       }, err => {
-             if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        }else if (type == 'print') {
+          this.loaderPrint = false;
+        }else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
       })
     } else {
-           if (type == 'new') {
+      if (type == 'new') {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      };
+      }else if (type == 'print') {
+        this.loaderPrint = false;
+      }else if (type == 'draft') {
+        this.loaderDraft = false;
+      }
       this.saleMaterialOutwardForm.markAllAsTouched()
       console.log('invald');
     }
@@ -618,7 +636,7 @@ export class AddMaterialOutwardComponent implements OnInit {
     barcode.patchValue({
       barcode: value.id
     });
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   searchs: any[] = [];
@@ -636,8 +654,8 @@ export class AddMaterialOutwardComponent implements OnInit {
       }
     }
     return totalQty;
-  } 
-  
+  }
+
   clearForm() {
     this.saleMaterialOutwardForm.reset();
     this.userControl.reset()
