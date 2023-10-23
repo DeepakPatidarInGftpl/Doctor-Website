@@ -257,8 +257,20 @@ const routes: Routes = [
   { path: 'batchUpdate/:id', loadChildren: () => import('./batch-variant-product-update/batch-variant-product-update.module').then((m) => m.BatchVariantProductUpdateModule) },
   { path: 'batchList/:id', loadChildren: () => import('./batch-variant-product-list/batch-variant-product-list.module').then((m) => m.BatchVariantProductListModule) },
   { path: 'batchDetails/:id', loadChildren: () => import('./batch-variant-product-details/batch-variant-product-details.module').then((m) => m.BatchVariantProductDetailsModule) },
-  {path:'stock',loadChildren:()=>import('./stock-list/stock-list.module').then((m)=>m.StockListModule)},
-  {path:'product-Ledger',loadChildren:()=>import('./product-ledger/product-ledger.module').then((m)=>m.ProductLedgerModule)},
+  { path: 'stock', loadChildren: () => import('./stock-list/stock-list.module').then((m) => m.StockListModule) },
+  { path: 'product-Ledger', loadChildren: () => import('./product-ledger/product-ledger.module').then((m) => m.ProductLedgerModule) },
+
+  //stock transfer
+  { path: 'add-stock-transfer', loadChildren: () => import('./add-stock-transfer/add-stock-transfer.module').then((m) => m.AddStockTransferModule) },
+  { path: 'update-stock-transfer', loadChildren: () => import('./stock-transfer-update/stock-transfer-update.module').then((m) => m.StockTransferUpdateModule) },
+  { path: 'list-stock-transfer', loadChildren: () => import('./stock-transfer-list/stock-transfer-list.module').then((m) => m.StockTransferListModule) },
+  { path: 'details-stock-transfer', loadChildren: () => import('./stock-transfer-details/stock-transfer-details.module').then((m) => m.StockTransferDetailsModule) },
+  //stock transfer
+  { path: 'add-stock-transfer-request', loadChildren: () => import('./add-stock-transfer-request/add-stock-transfer-request.module').then((m) => m.AddStockTransferRequestModule) },
+  { path: 'update-stock-transfer-request', loadChildren: () => import('./stock-transfer-request-update/stock-transfer-request-update.module').then((m) => m.StockTransferRequestUpdateModule) },
+  { path: 'list-stock-transfer-request', loadChildren: () => import('./stock-transfer-request-list/stock-transfer-request-list.module').then((m) => m.StockTransferRequestListModule) },
+  { path: 'details-stock-transfer-request', loadChildren: () => import('./stock-transfer-request-details/stock-transfer-request-details.module').then((m) => m.StockTransferRequestDetailsModule) },
+
 ];
 
 @NgModule({
