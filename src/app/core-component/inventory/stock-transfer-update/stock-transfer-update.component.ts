@@ -17,7 +17,7 @@ export class StockTransferUpdateComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private contactService: ContactService,
-    private Arout:ActivatedRoute) {
+    private Arout: ActivatedRoute) {
   }
 
   productOption: any[] = [];
@@ -42,11 +42,11 @@ export class StockTransferUpdateComponent implements OnInit {
   }
   searchForm!: FormGroup;
   subcategoryList;
-  id:any;
-  editRes:any;
+  id: any;
+  editRes: any;
   myControl: FormArray;
   ngOnInit(): void {
-    this.id=this.Arout.snapshot.paramMap.get('id');
+    this.id = this.Arout.snapshot.paramMap.get('id');
     this.myControl = new FormArray([]);
     const defaultDate = new Date().toISOString().split('T')[0];
     this.stockTransferForm = this.fb.group({
@@ -80,21 +80,26 @@ export class StockTransferUpdateComponent implements OnInit {
     )
 
     // update list
-    this.stockService.getStockTransferById(this.id).subscribe(res=>{
-     
-      this.editRes=res;
+    this.stockService.getStockTransferById(this.id).subscribe(res => {
+
+      this.editRes = res;
       this.stockTransferForm.patchValue(res);
-      this.stockTransferForm.setControl('cart', this.udateCart(this.editRes?.cart));
-      this.stockTransferForm.get('from_branch')?.patchValue(this.editRes?.from_branch);
-      this.stockTransferForm.get('to_branch')?.patchValue(this.editRes?.to_branch);
-      this.fromBranchControl.setValue(this.editRes?.from_branch);
-      this.toBranchControl.setValue(this.editRes?.to_branch);
+      if(this.editRes?.cart?.length>0){
+        this.stockTransferForm.setControl('cart', this.udateCart(this.editRes?.cart));
+      }else{
+        this.addCart();
+      }
+      this.stockTransferForm.get('from_branch')?.patchValue(this.editRes?.from_branch?.id);
+      this.stockTransferForm.get('to_branch')?.patchValue(this.editRes?.to_branch?.id);
+      this.fromBranchControl.setValue(this.editRes?.from_branch?.title);
+      this.toBranchControl.setValue(this.editRes?.to_branch?.title);
     })
 
     this.getBranch();
     this.getCategory();
     this.getprefix();
-
+    // add cart
+    this.addCart();
   }
 
   prefixNo: any;
@@ -177,12 +182,12 @@ export class StockTransferUpdateComponent implements OnInit {
           barcode.patchValue({
           });
         }
-     
+
       });
     }
   }
 
- 
+
   categoryList: any[] = [];
   filteredCategoryList: any[] = [];
   searchCategory: string = '';
@@ -308,9 +313,6 @@ export class StockTransferUpdateComponent implements OnInit {
   oncheck(data: any) {
     const selectedItemId = data.id;
     this.userType = data?.user_type;
-    const variants = this.stockTransferForm.get('cart') as FormArray;
-    variants.clear();
-    this.addCart();
     this.stockTransferForm.patchValue({
       from_branch: selectedItemId,
     });
@@ -318,9 +320,6 @@ export class StockTransferUpdateComponent implements OnInit {
   oncheck1(data: any) {
     const selectedItemId = data.id;
     this.userType = data?.user_type;
-    const variants = this.stockTransferForm.get('cart') as FormArray;
-    variants.clear();
-    this.addCart();
     this.stockTransferForm.patchValue({
       to_branch: selectedItemId,
     });
@@ -373,7 +372,7 @@ export class StockTransferUpdateComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('cart', JSON.stringify(cartData));
-      this.stockService.updateStockTransfer(formdata,this.id).subscribe(res => {
+      this.stockService.updateStockTransfer(formdata, this.id).subscribe(res => {
         console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
@@ -382,6 +381,7 @@ export class StockTransferUpdateComponent implements OnInit {
           this.router.navigate(['//inventory/list-stock-transfer'])
         } else {
           this.loader = false;
+          this.toastrService.error(this.getRes?.error)
         }
       }, err => {
         this.loader = false;
@@ -522,6 +522,6 @@ export class StockTransferUpdateComponent implements OnInit {
     event.stopPropagation();
   }
 
- 
+
 }
 

@@ -99,13 +99,14 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No. <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Transfer Request Number <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Transfer Request Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">From Branch<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">To Branch<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Transfer Request Date <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Transfer Request Number <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total Qty<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total Product<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Change Status<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
@@ -120,16 +121,39 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//inventory/details-stock-transfer-request/{{products.id}}" style="line-height: 3;">{{products?.from_branch}}</a>
+                        <a routerLink="//inventory/details-stock-transfer-request/{{products?.id}}" style="line-height: 3;">{{products?.transfer_request_number}}</a>
                         </td>
-                        <td>{{products?.to_branch}}</td>
                         <td>{{products?.request_date}}</td>
-                        <td>{{products?.transfer_request_number}}</td>
+                        <td>{{products?.from_branch?.title}}</td>
+                        <td>{{products?.to_branch?.title}}</td>
                         <td>{{products?.total_qty}}</td>
                         <td>{{products?.total_product}}</td>
                         <td>
-                            <span [ngClass]="{'bg-lightgreen': products.status === 'Dispatched' ||'Approved'|| 'Received' , 'bg-lightred' : products.status === 'Rejected','bg-lightyellow' : products.status === 'Dispatched' || 'Open'}" class="badges">{{products.status}}</span>
-
+                            <span [ngClass]="{
+                                'bg-lightgreen': products?.status === 'Dispatched' || products?.status === 'Approved',
+                                'bg-lightred': products?.status === 'Rejected',
+                                'bg-lightyellow': products?.status === 'Received' || products?.status === 'Open'
+                              }" class="badges">{{products?.status}}</span>
+                             </td>
+                        <td>
+                            <div *ngIf="products?.status=='Open'">
+                                <select class="select" (change)="changeStatusRejected($event.target.value,products?.id)" #id>
+                                    <option value="" selected disabled>Select Status</option>
+                                    <option value="Rejected">Rejected</option>
+                                    <option value="Dispatched">Dispatched</option>
+                                </select>
+                            </div>
+                            <div *ngIf="products?.status=='Dispatched'">
+                                <select class="select" (change)="changeStatusRejected($event.target.value,products?.id)" #id>
+                                    <option value="" selected disabled>Select Status</option>
+                                    <option value="Received">Received</option>
+                                </select>
+                            </div>
+                            <span *ngIf="products?.status !== 'Open' && products?.status !== 'Dispatched'" [ngClass]="{
+                                'bg-lightgreen': products?.status === 'Dispatched' || products?.status === 'Approved',
+                                'bg-lightred': products?.status === 'Rejected',
+                                'bg-lightyellow': products?.status === 'Received' || products?.status === 'Open'
+                            }" class="badges">{{products?.status}}</span>
                         </td>
                         <!-- <td>
                         <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
@@ -138,12 +162,16 @@
                             <a class="me-1" routerLink="//inventory/details-stock-transfer-request/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
+                            <ng-container *ngIf="products?.status=='Open'">
                             <a class="me-1" routerLink="//inventory/update-stock-transfer-request/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
+                            </ng-container>
+                            <ng-container *ngIf="products?.status=='Open'">
                             <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
+                            </ng-container>
                         </td>
                     </tr>
                 </tbody>

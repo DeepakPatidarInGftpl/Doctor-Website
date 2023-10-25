@@ -47,6 +47,7 @@ export class StockService {
     let url = this.apiUrl + '/pv-api/transfer_request/?id='
     return this.http.get<any>(`${url}${id}`)
   }
+  
   StockTransferRequestIsActive(id: any, data) {
     let url = this.apiUrl + '/pv-api/transfer_request/?id=';
     return this.http.patch(`${url}${id}`, data);
@@ -117,5 +118,25 @@ export class StockService {
   getBranch() {
     let url = this.apiUrl + '/pv-api/branch/';
     return this.http.get(url)
+  }
+
+
+  // stock transfer request
+  stockTransferrecieved(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/stock_transfer_recieved/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  //pv-api/stock_transfer_request_rejected/?id=
+  stockTransferRequestRejected(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/stock_transfer_request_rejected/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  stockTransferRequestDispatched(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/stock_transfer_request_dispatched/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  stockTransferRequestRecieved(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/stock_transfer_request_recieved/?id='
+    return this.http.get<any>(`${url}${id}`)
   }
 }
