@@ -122,13 +122,27 @@
                     <li><a routerLink="/product/barcode" routerLinkActive="active">Print Barcode</a></li>    -->
                 </ul>
             </li> 
+
             <li class="submenu" >
+                <a [ngClass]="{'active': activePath === 'inventory'}"><i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax" style="color: #637381;"></i><span>Inventory</span> <span class="menu-arrow"></span></a>
+                <ul>
+                    <li><a routerLink="/inventory/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
+                <li><a routerLink="/inventory/list-stock-transfer-request" routerLinkActive="active">Stock Transfer Request</a></li>
+                </ul>
+            </li> 
+
+
+            <li class="submenu">
                 <a [ngClass]="{'active': activePath === 'newpos'}"><i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax" style="color: #637381;"></i><span> POS</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isPosOrder"><a routerLink="/newpos/posOrder" routerLinkActive="active">POS Order</a></li>
                 <li><a routerLink="/newpos/pos" target="_blank" routerLinkActive="active">POS New</a></li>
                 </ul>
             </li> 
+            
+           
+
+
             <li class="submenu" *ngIf="isCompanyBank || isReciept || isExpence || isPurchasepos">
                 <a [ngClass]="{'active': activePath === 'bank'}"> <i class="fa fa-credit-card" data-bs-toggle="tooltip" title="fa fa-credit-card" style="color: #637381;"></i><span> Bank</span> <span class="menu-arrow"></span></a>
                 <ul>
