@@ -938,8 +938,8 @@ export class UpdateDebitnotesComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
-      ? this.suppliers.filter(supplier => supplier.company_name.toLowerCase().includes(filterValue))
-      : this.suppliers.filter(supplier => !supplier.company_name.toLowerCase().includes(filterValue));
+      ? this.suppliers.filter(supplier => supplier.company_name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
+      : this.suppliers.filter(supplier => !supplier.company_name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
       // console.log("No results found");
       filteredSuppliers.push({ company_name: "No data found" }); // Add a dummy entry for displaying "No data found"

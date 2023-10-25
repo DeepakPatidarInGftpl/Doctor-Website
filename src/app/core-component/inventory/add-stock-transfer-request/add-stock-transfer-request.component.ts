@@ -76,7 +76,8 @@ export class AddStockTransferRequestComponent implements OnInit {
     this.getBranch();
     this.getCategory();
     this.getprefix();
-
+    // add cart
+    this.addCart();
   }
 
   prefixNo: any;
@@ -281,9 +282,6 @@ export class AddStockTransferRequestComponent implements OnInit {
   oncheck(data: any) {
     const selectedItemId = data.id;
     this.userType = data?.user_type;
-    const variants = this.stockTransferRequestForm.get('cart') as FormArray;
-    variants.clear();
-    this.addCart();
     this.stockTransferRequestForm.patchValue({
       from_branch: selectedItemId,
     });
@@ -291,9 +289,6 @@ export class AddStockTransferRequestComponent implements OnInit {
   oncheck1(data: any) {
     const selectedItemId = data.id;
     this.userType = data?.user_type;
-    const variants = this.stockTransferRequestForm.get('cart') as FormArray;
-    variants.clear();
-    this.addCart();
     this.stockTransferRequestForm.patchValue({
       to_branch: selectedItemId,
     });

@@ -83,17 +83,22 @@ export class StockTransferRequestUpdateComponent implements OnInit {
     this.stockService.getStockTransferRequestById(this.id).subscribe(res=>{
       this.editRes=res;
       this.stockTransferRequestForm.patchValue(res);
-      this.stockTransferRequestForm.setControl('cart', this.udateCart(this.editRes?.cart));
-      this.stockTransferRequestForm.get('from_branch')?.patchValue(this.editRes?.from_branch);
-      this.stockTransferRequestForm.get('to_branch')?.patchValue(this.editRes?.to_branch);
-      this.fromBranchControl.setValue(this.editRes?.from_branch);
-      this.toBranchControl.setValue(this.editRes?.to_branch);
+      if(this.editRes?.cart?.length>0){
+        this.stockTransferRequestForm.setControl('cart', this.udateCart(this.editRes?.cart));
+      }else{
+        this.addCart();
+      }
+      this.stockTransferRequestForm.get('from_branch')?.patchValue(this.editRes?.from_branch?.id);
+      this.stockTransferRequestForm.get('to_branch')?.patchValue(this.editRes?.to_branch?.id);
+      this.fromBranchControl.setValue(this.editRes?.from_branch?.title);
+      this.toBranchControl.setValue(this.editRes?.to_branch?.title);
     })
 
     this.getBranch();
     this.getCategory();
     this.getprefix();
-
+    // add cart
+    
   }
 
   prefixNo: any;
@@ -307,9 +312,6 @@ export class StockTransferRequestUpdateComponent implements OnInit {
   oncheck(data: any) {
     const selectedItemId = data.id;
     this.userType = data?.user_type;
-    const variants = this.stockTransferRequestForm.get('cart') as FormArray;
-    variants.clear();
-    this.addCart();
     this.stockTransferRequestForm.patchValue({
       from_branch: selectedItemId,
     });
@@ -317,9 +319,6 @@ export class StockTransferRequestUpdateComponent implements OnInit {
   oncheck1(data: any) {
     const selectedItemId = data.id;
     this.userType = data?.user_type;
-    const variants = this.stockTransferRequestForm.get('cart') as FormArray;
-    variants.clear();
-    this.addCart();
     this.stockTransferRequestForm.patchValue({
       to_branch: selectedItemId,
     });
@@ -381,6 +380,7 @@ export class StockTransferRequestUpdateComponent implements OnInit {
           this.router.navigate(['//inventory/list-stock-transfer-request'])
         } else {
           this.loader = false;
+          this.toastrService.error(this.getRes?.error)
         }
       }, err => {
         this.loader = false;
