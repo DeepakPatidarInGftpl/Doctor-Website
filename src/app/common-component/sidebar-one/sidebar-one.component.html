@@ -123,14 +123,13 @@
                 </ul>
             </li> 
 
-            <li class="submenu" >
-                <a [ngClass]="{'active': activePath === 'inventory'}"><i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax" style="color: #637381;"></i><span>Inventory</span> <span class="menu-arrow"></span></a>
+            <li class="submenu" *ngIf="isStockTransport || isStockTransportRequest">
+                <a [ngClass]="{'active': activePath === 'inventory'}"><img src="assets/img/icons/product.svg" alt="img"><span>Inventory</span> <span class="menu-arrow"></span></a>
                 <ul>
-                    <li><a routerLink="/inventory/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
-                <li><a routerLink="/inventory/list-stock-transfer-request" routerLinkActive="active">Stock Transfer Request</a></li>
+                <li *ngIf="isStockTransport"><a routerLink="/inventory/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
+                <li *ngIf="isStockTransportRequest"><a routerLink="/inventory/list-stock-transfer-request" routerLinkActive="active">Stock Transfer Request</a></li>
                 </ul>
             </li> 
-
 
             <li class="submenu">
                 <a [ngClass]="{'active': activePath === 'newpos'}"><i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax" style="color: #637381;"></i><span> POS</span> <span class="menu-arrow"></span></a>

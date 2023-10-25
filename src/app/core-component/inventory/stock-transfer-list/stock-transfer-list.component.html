@@ -25,8 +25,9 @@
                     <a class="btn btn-searchset">
                         <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                            <input type="search" class="form-control form-control-sm" placeholder="Search User Name/Voucher No."
-                                [(ngModel)]="titlee" (ngModelChange)="search()">
+                            <input type="search" class="form-control form-control-sm"
+                                placeholder="Search User Name/Voucher No." [(ngModel)]="titlee"
+                                (ngModelChange)="search()">
                         </label>
                     </div>
                 </div>
@@ -57,13 +58,14 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Material Outward Date</label>
-                                    <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search" >
+                                    <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                   <label>Select Refund Status</label>
-                                    <select [(ngModel)]="selectRefundStatus" (change)="filterData()" class="form-select">
+                                    <label>Select Refund Status</label>
+                                    <select [(ngModel)]="selectRefundStatus" (change)="filterData()"
+                                        class="form-select">
                                         <option value="" selected disabled>Select Refund Status</option>
                                         <option value="Refundable">Refundable</option>
                                         <option value="Non Refundable">Non Refundable</option>
@@ -74,7 +76,8 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Enter Total Qty</label>
-                                    <input type="number" placeholder="Enter Qty" [(ngModel)]="selectedAmount" (keyup)="filterData()">
+                                    <input type="number" placeholder="Enter Qty" [(ngModel)]="selectedAmount"
+                                        (keyup)="filterData()">
                                     <span class="text-success">Qty Filter (Less than & Equal to Total qty value)</span>
                                 </div>
                             </div>
@@ -99,19 +102,21 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr. No. <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Transfer Number <i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Transfer Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">From Branch<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">To Branch<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Transfer Date <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Transfer Number <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total Qty<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total Product<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Change Status<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="filteredData?.length>=0">
-                    <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                    <tr
+                        *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -120,15 +125,34 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//inventory/details-stock-transfer/{{products.id}}" style="line-height: 3;">{{products?.from_branch}}</a>
+                            <a routerLink="//inventory/details-stock-transfer/{{products.id}}"
+                                style="line-height: 3;">{{products?.transfer_number}}</a>
                         </td>
-                        <td>{{products?.to_branch}}</td>
                         <td>{{products?.transfer_date}}</td>
-                        <td>{{products?.transfer_number}}</td>
+                        <td>{{products?.from_branch?.title}}</td>
+                        <td>{{products?.to_branch?.title}}</td>
                         <td>{{products?.total_qty}}</td>
                         <td>{{products?.total_product}}</td>
                         <td>
-                            <span [ngClass]="{'bg-lightgreen': products.status === 'Dispatched', 'bg-lightred' : products.status === 'Received','bg-lightyellow' : products.status === 'Draft'}" class="badges">{{products.status}}</span>
+                            <span
+                                [ngClass]="{'bg-lightgreen': products.status === 'Dispatched','bg-lightyellow' : products.status === 'Received'}"
+                                class="badges">{{products.status}}</span>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="products.status !== 'Received'">
+                                <select class="select" (change)="changeStatus(products?.id) ">
+                                    <option value="" selected disabled>Select Status</option>
+                                    <option value="Dispatched" *ngIf="products.status !== 'Dispatched'">Dispatched
+                                    </option>
+                                    <option value="Received">Received</option>
+                                </select>
+                            </ng-container>
+                            <ng-container *ngIf="products.status == 'Received'">
+                                <span
+                                    [ngClass]="{'bg-lightgreen': products.status === 'Dispatched','bg-lightyellow' : products.status === 'Received'}"
+                                    class="badges">{{products.status}}</span>
+                            </ng-container>
+
                         </td>
                         <!-- <td>
                         <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
@@ -137,12 +161,18 @@
                             <a class="me-1" routerLink="//inventory/details-stock-transfer/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//inventory/update-stock-transfer/{{products.id}}" *ngIf="isEdit">
+                            <ng-container *ngIf="products?.status=='Dispatched'">
+                                <a class="me-1" routerLink="//inventory/update-stock-transfer/{{products.id}}"
+                                *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
-                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
+                            </ng-container>
+                            <ng-container *ngIf="products?.status=='Dispatched'">
+                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
+                                *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
+                            </ng-container>
                         </td>
                     </tr>
                 </tbody>
@@ -161,7 +191,7 @@
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
                         <select [(ngModel)]="itemsPerPage" class="pagination">
-                            
+
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="30">30</option>
@@ -174,7 +204,8 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                            entries</div>
                     </div>
                 </div>
             </div>

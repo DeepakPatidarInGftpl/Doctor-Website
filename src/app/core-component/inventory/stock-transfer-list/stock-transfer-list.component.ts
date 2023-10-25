@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { StockService } from 'src/app/Services/stockService/stock.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-stock-transfer-list',
@@ -28,7 +29,7 @@ export class StockTransferListComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private stockService: StockService, private cs:CompanyService) {}
+  constructor(private stockService: StockService, private cs:CompanyService,private toastr:ToastrService) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -327,5 +328,17 @@ select=false
     this.selectRefundStatus=null;
     this.selectedAmount=null;
     this.filterData();
+  }
+
+  changeStatus(id:any) {
+    this.stockService.stockTransferrecieved(id).subscribe(res => {
+      console.log(res);
+      if(res.success){
+        this.toastr.success(res.msg);
+        this.ngOnInit();
+      }else{
+        this.toastr.error(res.error);
+      }
+    })
   }
 }
