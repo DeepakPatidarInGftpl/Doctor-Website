@@ -760,6 +760,9 @@ export class AddDebitnotesComponent implements OnInit {
   formId:any;
   loaderPrint=false;
   loaderDraft=false;
+
+
+  
   submit(type: any) {
     // console.log(this.debitNotesForm.value);
     if (this.debitNotesForm.valid) {

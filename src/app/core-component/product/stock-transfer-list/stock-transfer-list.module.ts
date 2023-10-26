@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { StockTransferListRoutingModule } from './stock-transfer-list-routing.module';
 import { StockTransferListComponent } from './stock-transfer-list.component';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { StockTransferListComponent } from './stock-transfer-list.component';
   ],
   imports: [
     CommonModule,
-    StockTransferListRoutingModule
+    StockTransferListRoutingModule,
+    SharedModuleModule
   ]
 })
 export class StockTransferListModule { }
