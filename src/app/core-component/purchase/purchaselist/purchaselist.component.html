@@ -60,8 +60,6 @@
                                         <div class="form-group">
                                             <label>Purchase No.</label>
                                             <input type="search" [(ngModel)]="selectedPurchaseNo" (ngModelChange)="filterData()" class="search" placeholder="Search Purchase No.">
-                                       
-                                            
                                         </div>
                                     </div>
                                    
@@ -119,7 +117,7 @@
                                     <span [ngClass]="{
                                         'bg-lightgreen': products?.status === 'Completed',
                                         'bg-lightred': products?.status === 'Overdue',
-                                        'bg-lightyellow': products?.status === 'Pending' || products?.status === 'New',
+                                        'bg-lightyellow': products?.status === 'Pending' || products?.status === 'New'|| products?.status === 'Draft',
                                         'bg-lightblue': products?.status === 'Inprogress' || products?.status === 'Approved',
                                         'bg-lightorange': products?.status === 'Received' || products?.status === 'Partially Received' || products?.status === 'Exceed',
                                         'bg-lightgray': products?.status === 'Cancel'

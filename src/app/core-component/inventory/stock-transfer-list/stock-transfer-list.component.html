@@ -26,7 +26,7 @@
                         <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
                             <input type="search" class="form-control form-control-sm"
-                                placeholder="Search User Name/Voucher No." [(ngModel)]="titlee"
+                                placeholder="Search Transfer No." [(ngModel)]="titlee"
                                 (ngModelChange)="search()">
                         </label>
                     </div>
@@ -57,28 +57,29 @@
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Material Outward Date</label>
+                                    <label>Transfer Date</label>
                                     <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Select Refund Status</label>
-                                    <select [(ngModel)]="selectRefundStatus" (change)="filterData()"
+                                    <label>Select From Branch</label>
+                                    <select [(ngModel)]="FromBranch" (change)="filterData()"
                                         class="form-select">
-                                        <option value="" selected disabled>Select Refund Status</option>
-                                        <option value="Refundable">Refundable</option>
-                                        <option value="Non Refundable">Non Refundable</option>
-                                        <option value="Scrap">Scrap</option>
+                                        <option value="" selected disabled>Select From Branch</option>
+                                        <!-- <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchFromBranch"  (ngModelChange)="filterFromBranch()" [ngModelOptions]="{standalone: true}"> -->
+                                        <option value="{{fromBranch?.title}}" *ngFor="let fromBranch of fromBranch">{{fromBranch?.title}}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Enter Total Qty</label>
-                                    <input type="number" placeholder="Enter Qty" [(ngModel)]="selectedAmount"
-                                        (keyup)="filterData()">
-                                    <span class="text-success">Qty Filter (Less than & Equal to Total qty value)</span>
+                                    <label>Select To Branch</label>
+                                    <select [(ngModel)]="toBranchFilter" (change)="filterData()" class="form-select">
+                                    <!-- <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchFromBranch"  (ngModelChange)="filterToBranch()" [ngModelOptions]="{standalone: true}"> -->
+                                    <option value="" selected disabled>Select To Branch</option>
+                                    <option value="{{toBranch?.title}}" *ngFor="let toBranch of toBranch">{{toBranch?.title}}</option>
+                                </select>
                                 </div>
                             </div>
                         </div>

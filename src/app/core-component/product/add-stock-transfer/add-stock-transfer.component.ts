@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
-import { SalesService } from 'src/app/Services/salesService/sales.service';
+import { StockService } from 'src/app/Services/stockService/stock.service';
 
 @Component({
   selector: 'app-add-stock-transfer',
@@ -13,78 +13,78 @@ import { SalesService } from 'src/app/Services/salesService/sales.service';
 })
 export class AddStockTransferComponent implements OnInit {
 
- 
-  searchControl = new FormControl();
-  searchResults: any[] = [];
-
-  totalQty: any;
-  subTotal: any;
-  discount: any;
-  totalTax: any;
-  roundOff: any;
-  mrpPurchase: number = 0;
-
-  constructor(private saleService: SalesService, private fb: FormBuilder,
+  constructor(private stockService: StockService, private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
     private contactService: ContactService) {
   }
 
-  customerControlName = 'customer';
-  userControl = new FormControl();
   productOption: any[] = [];
-  filteredOptions: Observable<any>;
-  users: any[] = [];
-  filteredusers: Observable<any[]>;
+  branch: any[] = [];
 
-  variantControlName = 'customer';
+  //branch filter
+  fromBranchControl = new FormControl();
+  filteredFromBranch: Observable<any[]>;
+
+  toBranchControl = new FormControl();
+  filteredToBranch: Observable<string[]>;
+
+
   variantControl = new FormControl();
   variants: any[] = [];
   filteredVariants: Observable<any[]>;
 
-  saleMaterialOutwardForm!: FormGroup;
+  stockTransferForm!: FormGroup;
 
   get f() {
-    return this.saleMaterialOutwardForm.controls;
+    return this.stockTransferForm.controls;
   }
   searchForm!: FormGroup;
   subcategoryList;
 
   ngOnInit(): void {
-    const defaultDate = new Date().toISOString().split('T')[0]; 
-
-    this.saleMaterialOutwardForm = this.fb.group({
+    const defaultDate = new Date().toISOString().split('T')[0];
+    this.stockTransferForm = this.fb.group({
       from_branch: new FormControl('', [Validators.required]),
       to_branch: new FormControl('', [Validators.required]),
       transfer_date: new FormControl(defaultDate, [Validators.required]),
       transfer_number: new FormControl(''),
-      total_product: new FormControl(''),
       cart: this.fb.array([]),
       total_qty: new FormControl(''),
+      total_product: new FormControl(''),
       status: new FormControl(''),
     });
 
     this.searchForm = this.fb.group({
       search: new FormControl()
     })
-    this.filteredusers = this.userControl.valueChanges.pipe(
+
+    this.filteredFromBranch = this.fromBranchControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.filteredToBranch = this.toBranchControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterr(value, true)),
+    );
+
     this.filteredVariants = this.variantControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getUser();
+    this.getBranch();
     this.getCategory();
-    this.getPaymentTerms();
     this.getprefix();
+    // add cart
+    this.addCart();
+
 
   }
 
   prefixNo: any;
   getprefix() {
-    this.saleService.getMaterialOutwardPrefix().subscribe((res: any) => {
+    this.stockService.getStockTransferPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
         this.prefixNo = res.prefix
@@ -116,7 +116,7 @@ export class AddStockTransferComponent implements OnInit {
       } else {
         this.subcategory = undefined
       }
-      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
+      this.stockService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
@@ -134,19 +134,19 @@ export class AddStockTransferComponent implements OnInit {
           this.check = true;
           console.log(this.searchs[0]?.variant_name);
 
-          const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
+          const barcode = (this.stockTransferForm.get('cart') as FormArray).at(index) as FormGroup;
           barcode.patchValue({
             // barcode: this.searchs[0].id,
             // item_name: this.searchs[0]?.variant_name
           });
         }
-        console.log(this.saleMaterialOutwardForm.value);
+        console.log(this.stockTransferForm.value);
 
 
       });
     }
     else {
-      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
+      this.stockService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.variantList = res;
         console.log(this.variantList);
@@ -162,13 +162,12 @@ export class AddStockTransferComponent implements OnInit {
           this.productName[index] = this.searchs[0]?.product_title;
           // console.log(this.productName);
           this.check = true;
-          const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray)?.at(index) as FormGroup;
+          const barcode = (this.stockTransferForm.get('cart') as FormArray)?.at(index) as FormGroup;
           barcode.patchValue({
             // barcode: this.searchs[0]?.id,
             // item_name: this.searchs[0]?.variant_name
           });
         }
-        console.log(this.saleMaterialOutwardForm.value);
 
       });
     }
@@ -178,7 +177,7 @@ export class AddStockTransferComponent implements OnInit {
   filteredCategoryList: any[] = [];
   searchCategory: string = '';
   getCategory() {
-    this.saleService.getSearchProduct().subscribe((res: any) => {
+    this.stockService.getCategory().subscribe((res: any) => {
       this.categoryList = res;
       this.filteredCategoryList = [...this.categoryList];
     })
@@ -188,7 +187,26 @@ export class AddStockTransferComponent implements OnInit {
       this.filteredCategoryList = [...this.categoryList];
     } else {
       this.filteredCategoryList = this.categoryList.filter(product =>
-        product?.product_title?.toLowerCase().includes(this.searchCategory.toLowerCase())
+        product?.title?.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  }
+
+  SubcategoryList: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchSubCategory: string = '';
+  getSubCategory(val: any) {
+    this.stockService.getSubcategoryByCategory(val).subscribe((res: any) => {
+      this.SubcategoryList = res;
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    })
+  }
+  filterSubCategory() {
+    if (this.searchSubCategory.trim() === '') {
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    } else {
+      this.filteredSubCategoryList = this.SubcategoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchSubCategory.toLowerCase())
       );
     }
   }
@@ -218,10 +236,15 @@ export class AddStockTransferComponent implements OnInit {
     this.getVariant('', '', '')
   }
 
-  get customer() {
-    return this.saleMaterialOutwardForm.get('customer') as FormControl;
+  get from_branch() {
+    return this.stockTransferForm.get('from_branch') as FormControl;
   }
-
+  get to_branch() {
+    return this.stockTransferForm.get('to_branch') as FormControl;
+  }
+  get status() {
+    return this.stockTransferForm.get('status') as FormControl;
+  }
   cart(): FormGroup {
     return this.fb.group({
       barcode: (0),
@@ -229,7 +252,7 @@ export class AddStockTransferComponent implements OnInit {
     })
   }
   getCart(): FormArray {
-    return this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray;
+    return this.stockTransferForm.get('cart') as FormArray;
   }
   isCart = false;
   addCart() {
@@ -238,22 +261,17 @@ export class AddStockTransferComponent implements OnInit {
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if (this.saleMaterialOutwardForm?.value?.material_outward_cart?.length == 0) {
+    if (this.stockTransferForm?.value?.cart?.length == 0) {
       this.isCart = true;
     }
   }
-  getUser() {
-    this.saleService.getUser().subscribe((res: any) => {
-      this.users = res;
+  toBranch: any[] = [];
+  getBranch() {
+    this.stockService.getBranch().subscribe((res: any) => {
+      this.branch = res;
+      this.toBranch = res;
     })
   }
-  paymentTermsList: any
-  getPaymentTerms() {
-    this.contactService.getPaymentTerms().subscribe(res => {
-      this.paymentTermsList = res
-    })
-  }
-
   supplierAddress: any;
   selectedAddressBilling: any;
   selectedAddressShipping: any;
@@ -262,80 +280,30 @@ export class AddStockTransferComponent implements OnInit {
   userType: any;
 
   oncheck(data: any) {
-    console.log(data);
     const selectedItemId = data.id;
     this.userType = data?.user_type;
-    //call detail api
-    this.contactService.getCustomerById(selectedItemId).subscribe(res => {
-      // console.log(res);
-      this.supplierAddress = res;
-      this.saleMaterialOutwardForm.patchValue({
-        payment_terms: res?.payment_terms?.id
-      })
-      this.supplierAddress?.address?.map((res: any) => {
-        if (res.address_type == 'Billing') {
-          this.selectedAddressBilling = res
-          console.log(this.selectedAddressBilling);
-        } else if (res.address_type == 'Shipping') {
-          this.selectedAddressShipping = res
-          console.log(this.selectedAddressShipping);
-        }
-      })
-    })
-    const variants = this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray;
-    variants.clear();
-    this.addCart();
-    this.saleMaterialOutwardForm.patchValue({
-      customer: selectedItemId,
-
+    this.stockTransferForm.patchValue({
+      from_branch: selectedItemId,
+    });
+  }
+  oncheck1(data: any) {
+    const selectedItemId = data.id;
+    this.userType = data?.user_type;
+    this.stockTransferForm.patchValue({
+      to_branch: selectedItemId,
     });
   }
 
-  selectedProductName: any;
-  originalCoastPrice: any;
-  originalPrice: any[] = []
-  apiPurchaseTax: number;
-  isTaxAvailable: any[] = [];
-  taxIntoRupees: any[] = [];
-  tax: any[] = [];
-  batchDiscount: any;
-  landingCost: any;
-  batchCostPrice: any[] = [];
+
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
-    this.selectedProductName = event.product_title;
-    this.selectBatch = event.batch;
-    this.apiPurchaseTax = event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
-    this.batchDiscount = event.batch[0]?.discount || 0;
-    this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
-    this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
-
-    if (event.batch.length > 0) {
-      const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
-      this.tax[index] = this.apiPurchaseTax;
-      if (event?.product?.purchase_tax_including == true) {
-        barcode.patchValue({
-          barcode: selectedItemId,
-          item_name: event?.product_title,
-          qty: event.batch[0]?.stock,
-        });
-      } else {
-        this.tax[index] = 18
-        barcode.patchValue({
-          barcode: selectedItemId,
-          item_name: event?.product_title,
-          qty: event.batch[0]?.stock,
-        });
-      }
-      console.log(event.batch);
-    } else {
-      this.tax[index] = 18
-      const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
+    const barcode = (this.stockTransferForm.get('cart') as FormArray).at(index) as FormGroup;
+    if (event) {
       barcode.patchValue({
         barcode: selectedItemId,
         item_name: event?.product_title,
-        tax: 18,
+        quantity: event.batch[0]?.stock,
       });
     }
   }
@@ -343,33 +311,20 @@ export class AddStockTransferComponent implements OnInit {
 
   getRes: any;
   loader = false;
-  loaderCreate = false;
-  loaderPrint=false;
-  loaderDraft=false;
-  submit(type: any) {
-    console.log(this.saleMaterialOutwardForm.value);
-    if (this.saleMaterialOutwardForm.valid) {
-      if (type == 'new') {
-        this.loaderCreate = true;
-      } else if (type == 'save') {
-        this.loader = true;
-      } else if (type == 'print') {
-        this.loaderPrint = true;
-      } else if (type == 'draft') {
-        this.loaderDraft = true;
-      }
+  submit() {
+    console.log(this.stockTransferForm.value);
+    if (this.stockTransferForm.valid) {
+      console.log('valid');
       let formdata: any = new FormData();
-      formdata.append('customer', this.saleMaterialOutwardForm.get('customer')?.value);
-      formdata.append('mo_date', this.saleMaterialOutwardForm.get('mo_date')?.value);
-      formdata.append('refund_status', this.saleMaterialOutwardForm.get('refund_status')?.value);
-      formdata.append('note', this.saleMaterialOutwardForm.get('note')?.value);
-      formdata.append('total_qty', this.saleMaterialOutwardForm.get('total_qty')?.value);
-      formdata.append('voucher_number', this.saleMaterialOutwardForm.get('voucher_number')?.value);
+      formdata.append('from_branch', this.stockTransferForm.get('from_branch')?.value);
+      formdata.append('to_branch', this.stockTransferForm.get('to_branch')?.value);
+      formdata.append('transfer_date', this.stockTransferForm.get('transfer_date')?.value);
+      formdata.append('transfer_number', this.stockTransferForm.get('transfer_number')?.value);
+      formdata.append('total_qty', this.stockTransferForm.get('total_qty')?.value);
+      formdata.append('total_product', this.stockTransferForm.get('total_product')?.value);
+      formdata.append('status', this.stockTransferForm.get('status')?.value);
 
-      if (type == 'draft') {
-        formdata.append('status', 'Draft');
-      }
-      const cartArray = this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray;
+      const cartArray = this.stockTransferForm.get('cart') as FormArray;
       const cartData = [];
       cartArray.controls.forEach((address) => {
         const cartGroup = address as FormGroup;
@@ -377,7 +332,7 @@ export class AddStockTransferComponent implements OnInit {
         Object.keys(cartGroup.controls).forEach((key) => {
           const control = cartGroup.controls[key];
           // Convert the value to an integer if it's a number, but keep item_name as a string
-          if (key !== 'item_name' && !isNaN(control.value)) {
+          if (!isNaN(control.value)) {
             cartObject[key] = parseFloat(control.value);
           } else {
             cartObject[key] = control.value;
@@ -385,91 +340,63 @@ export class AddStockTransferComponent implements OnInit {
         });
         cartData.push(cartObject);
       });
-      formdata.append('material_outward_cart', JSON.stringify(cartData));
-      this.saleService.addSalesMaterialOutward(formdata).subscribe(res => {
-        // console.log(res);
+      formdata.append('cart', JSON.stringify(cartData));
+      this.stockService.addStockTransfer(formdata).subscribe(res => {
+        console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-          if (type == 'new') {
-            this.loaderCreate = false;
-            this.saleMaterialOutwardForm.reset()
-            this.ngOnInit()
-            this.userControl.reset()
-          } else if (type == 'print') { 
-            this.toastrService.success(this.getRes.msg);
-            this.loaderPrint=false;
-            this.router.navigate(['//sales/salesMaterialOutwardDetails/'+this?.getRes?.id]);
-          } else if (type == 'draft') {
-            this.toastrService.success(this.getRes.msg);
-            this.loaderDraft = false;
-            this.router.navigate(['//sales/salesMaterialOutward-list'])
-          } else {
-            this.loader = false;
-            this.toastrService.success(this.getRes.msg);
-            this.router.navigate(['//sales/salesMaterialOutward-list'])
-          }
+          this.loader = false;
+          this.toastrService.success(this.getRes.msg);
+          this.router.navigate(['//product/list-stock-transfer'])
         } else {
-          if (type == 'new') {
-            this.loaderCreate = false;
-          } else if (type == 'save') {
-            this.loader = false;
-          }else if (type == 'print') {
-            this.loaderPrint = false;
-          }else if (type == 'draft') {
-            this.loaderDraft = false;
-          }
+          this.loader = false;
         }
       }, err => {
-        if (type == 'new') {
-          this.loaderCreate = false;
-        } else if (type == 'save') {
-          this.loader = false;
-        }else if (type == 'print') {
-          this.loaderPrint = false;
-        }else if (type == 'draft') {
-          this.loaderDraft = false;
-        }
+        this.loader = false;
       })
     } else {
-      if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }else if (type == 'print') {
-        this.loaderPrint = false;
-      }else if (type == 'draft') {
-        this.loaderDraft = false;
-      }
-      this.saleMaterialOutwardForm.markAllAsTouched()
+      this.loader = false;
+      this.stockTransferForm.markAllAsTouched()
       console.log('invald');
     }
   }
 
-  get mo_date() {
-    return this.saleMaterialOutwardForm.get('mo_date')
+  get transfer_date() {
+    return this.stockTransferForm.get('transfer_date')
   }
   get refund_status() {
-    return this.saleMaterialOutwardForm.get('refund_status')
+    return this.stockTransferForm.get('refund_status')
   }
-  get voucher_number() {
-    return this.saleMaterialOutwardForm.get('voucher_number')
+  get transfer_number() {
+    return this.stockTransferForm.get('transfer_number')
   }
   get note() {
-    return this.saleMaterialOutwardForm.get('note')
+    return this.stockTransferForm.get('note')
+  }
+  // branch
+  private _filter(value: string | number, include: boolean): any[] {
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+    const filteredFromBranch = include
+      ? this.branch.filter(branch => branch?.title?.toLowerCase().includes(filterValue))
+      : this.branch.filter(branch => !branch?.title?.toLowerCase().includes(filterValue));
+    if (!include && filteredFromBranch.length === 0) {
+      filteredFromBranch.push({ title: "No data found" });
+    }
+    return filteredFromBranch;
   }
 
-  private _filter(value: string | number, include: boolean): any[] {
-    // console.log(value);
+  private _filterr(value: string | number, include: boolean): any[] {
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
-    const filteredUsers = include
-      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue))
-      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue));
-    if (!include && filteredUsers.length === 0) {
-      // console.log("No results found");
-      filteredUsers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
+    const filteredToBranch = include
+      ? this.toBranch.filter(branch => branch?.title?.toLowerCase().includes(filterValue))
+      : this.toBranch.filter(branch => !branch?.title?.toLowerCase().includes(filterValue));
+    if (!include && filteredToBranch.length === 0) {
+      filteredToBranch.push({ title: "No data found" });
     }
-    return filteredUsers;
+    return filteredToBranch;
   }
+
+  // end
 
   private _filtr(value: string | number, include: boolean): any[] {
     // console.log(value);
@@ -529,7 +456,7 @@ export class AddStockTransferComponent implements OnInit {
     // console.log(this.barcode[index]);
     // console.log(this.barcode);
     this.v_id = value.id;
-    const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
+    const barcode = (this.stockTransferForm.get('cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: value.id
     });
@@ -545,7 +472,7 @@ export class AddStockTransferComponent implements OnInit {
   calculateTotalQty(): any {
     let totalQty = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const qtyControl = this.getCart().controls[i].get('qty') || 0;
+      const qtyControl = this.getCart().controls[i].get('quantity') || 0;
       if (qtyControl) {
         totalQty += +qtyControl.value || 0;
       }
@@ -553,13 +480,20 @@ export class AddStockTransferComponent implements OnInit {
     return totalQty;
   }
 
+  calculateTotalProduct(): any {
+    let totalQty = 0;
+    totalQty = this.getCart().controls.length;
+    return totalQty;
+  }
+
+
   onLabelClick(event: Event) {
     event.stopPropagation();
   }
 
-  clearForm(){
-    this.saleMaterialOutwardForm.reset();
-    
+  clearForm() {
+    this.stockTransferForm.reset();
+
   }
 }
 

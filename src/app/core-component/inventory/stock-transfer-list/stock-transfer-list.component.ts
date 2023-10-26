@@ -5,7 +5,6 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { StockService } from 'src/app/Services/stockService/stock.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -22,14 +21,14 @@ export class StockTransferListComponent implements OnInit {
   public tableData: any;
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
-  filteredData: any[]; 
+  itemsPerPage: number = 10;
+  filteredData: any[];
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private stockService: StockService, private cs:CompanyService,private toastr:ToastrService) {}
+  constructor(private stockService: StockService, private cs: CompanyService, private toastr: ToastrService) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -50,14 +49,14 @@ export class StockTransferListComponent implements OnInit {
         this.stockService.deleteStockTransfer(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-           this.ngOnInit();
-           Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: this.delRes.msg,
-          });
-          this.tableData.splice(index, 1);
-          }else {
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
+            this.tableData.splice(index, 1);
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -84,7 +83,7 @@ export class StockTransferListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.stockService.StockTransferIsActive(id,'').subscribe(res => {
+        this.stockService.StockTransferIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -95,7 +94,7 @@ export class StockTransferListComponent implements OnInit {
             this.ngOnInit()
           }
         })
-       
+
       }
     });
   }
@@ -114,7 +113,7 @@ export class StockTransferListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.stockService.StockTransferIsActive(id,'').subscribe(res => {
+        this.stockService.StockTransferIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -125,21 +124,21 @@ export class StockTransferListComponent implements OnInit {
             this.ngOnInit()
           }
         })
-      
+
       }
     });
   }
-loader=true;
-isAdd:any;
-isEdit:any;
-isDelete:any;
-userDetails:any;
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any;
   ngOnInit(): void {
     this.stockService.getStockTransfer().subscribe(res => {
       this.tableData = res;
-      this.loader=false;
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); 
+      this.filteredData = this.tableData.slice();
       this.filterData();
     })
 
@@ -147,24 +146,60 @@ userDetails:any;
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'inventory'  && res.content_type.model === 'stocktransfer' && res.codename=='add_stocktransfer') {
+        if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'add_stocktransfer') {
           this.isAdd = res.codename;
-        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename=='change_stocktransfer') {
+        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'change_stocktransfer') {
           this.isEdit = res.codename;
-        }else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename=='delete_stocktransfer') {
+        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'delete_stocktransfer') {
           this.isDelete = res.codename;
         }
+      });
     });
-  })
+
+    this.getBranch();
+  }
+
+  fromBranch: any[]=[];
+  filterfromBranch:any[]=[];
+  toBranch: any[]=[];
+  filtertoBranch:any[]=[];
+  getBranch() {
+    this.stockService.getBranch().subscribe((res:any) => {
+      this.fromBranch=res;
+      this.filterfromBranch = [...this.fromBranch];
+      this.toBranch=res;
+      this.filtertoBranch = [...this.toBranch];
+    })
+  }
+
+  searchFromBranch: string = '';
+  filterFromBranch() {
+    if (this.searchFromBranch.trim() === '') {
+      this.filterfromBranch = [...this.fromBranch];
+    } else {
+      this.filterfromBranch = this.fromBranch.filter(from =>
+        from?.title.toLowerCase().includes(this.searchFromBranch.toLowerCase())
+      );
+    }
+  }
+  searchToBranch: string = '';
+  filterToBranch() {
+    if (this.searchToBranch.trim() === '') {
+      this.filtertoBranch = [...this.toBranch];
+    } else {
+      this.filtertoBranch = this.toBranch.filter(from =>
+        from?.title.toLowerCase().includes(this.searchToBranch.toLowerCase())
+      );
+    }
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
 
-select=false
+  select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -176,20 +211,17 @@ select=false
       })
     }
   }
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.customer?.name.toLocaleLowerCase();
-        const companyNameLower = res?.voucher_number.toLocaleLowerCase();
+        const nameLower = res?.transfer_number.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
           return true;
-        } else if (companyNameLower.match(searchTerm)) {
-          return true;
-        }
+        } 
         return false;
       });
     }
@@ -202,8 +234,8 @@ select=false
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     const doc = new jsPDF();
     const title = 'Stock Transfer List';
     doc.setFontSize(15);
@@ -218,18 +250,18 @@ select=false
         },
         columns: [
           { header: 'Sr No.' },
-          { header: 'User Name' },
-          { header: 'Material Outward Date ' },
-          { header: 'Refund Status' },
-          { header: 'Voucher Number' },
+          { header: 'Transfer Number' },
+          { header: 'Transfer Date' },
+          { header: 'From Branch' },
+          { header: 'To Branch' },
           { header: 'Total Qty' },
-          { header: 'Note' },
+          { header: 'Total Product' },
           { header: 'Status' },
           { header: 'Is Active' }
         ],
       })
-    doc.save('materialoutward.pdf');
- }
+    doc.save('stockTransfer.pdf');
+  }
 
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -264,8 +296,8 @@ select=false
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'materialoutward.xlsx';
-    saveAs(blob, fileName); 
+    const fileName = 'stockTransfer.xlsx';
+    saveAs(blob, fileName);
   }
 
   printTable(): void {
@@ -303,40 +335,41 @@ select=false
   }
 
   date: any
-  espireDate:any;
-  selectRefundStatus:any;
-  selectedAmount:any;
+  espireDate: any;
+  FromBranch: any;
+  toBranchFilter: any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
       const selectedDate = new Date(this.date).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.mo_date).toISOString().split('T')[0];
+        const receiptDate = new Date(item?.transfer_date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
       });
     }
-    if (this.selectRefundStatus) {
-      filteredData = filteredData.filter((item) => item?.refund_status === this.selectRefundStatus);
+    if (this.FromBranch) {
+      filteredData = filteredData.filter((item) => item?.from_branch?.title === this.FromBranch);
     }
-    if (this.selectedAmount) {
-      filteredData = filteredData.filter((item) => item?.total_qty <= this.selectedAmount);
+    if (this.toBranchFilter) {
+      filteredData = filteredData.filter((item) => item?.to_branch?.title <= this.toBranchFilter);
     }
     this.filteredData = filteredData;
   }
+
   clearFilter() {
     this.date = null;
-    this.selectRefundStatus=null;
-    this.selectedAmount=null;
+    this.FromBranch = null;
+    this.toBranchFilter = null;
     this.filterData();
   }
 
-  changeStatus(id:any) {
+  changeStatus(id: any) {
     this.stockService.stockTransferrecieved(id).subscribe(res => {
       console.log(res);
-      if(res.success){
+      if (res.success) {
         this.toastr.success(res.msg);
         this.ngOnInit();
-      }else{
+      } else {
         this.toastr.error(res.error);
       }
     })

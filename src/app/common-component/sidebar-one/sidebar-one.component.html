@@ -97,13 +97,16 @@
 
                 </ul>
             </li>
-            <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isStock">
+            <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isStock ||isStockTransport || isStockTransportRequest">
                 <a  [ngClass]="{'active': activePath === 'product'}"><img src="assets/img/icons/product.svg" alt="img"><span>Product Management</span> <span
                         class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isProduct"><a routerLink="/product/productlist" routerLinkActive="active">Product</a></li>
                     <li  *ngIf="isProductLedger"><a routerLink="/product/product-Ledger" routerLinkActive="active">Product Ledger</a></li>
                     <li  *ngIf="isStock"><a routerLink="/product/stock" routerLinkActive="active">Stock</a></li>
+                    <li *ngIf="isStockTransport"><a routerLink="/product/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
+                    <li *ngIf="isStockTransportRequest"><a routerLink="/product/list-stock-transfer-request" routerLinkActive="active">Stock Transfer Request</a></li>
+                   
                     <li *ngIf="isCategory"><a routerLink="/product/categorylist" routerLinkActive="active">Category</a></li> 
                     <li *ngIf="isSubcategory"><a routerLink="/product/subcategorylist" routerLinkActive="active">Sub Category </a></li>
                     <li *ngIf="isSubcategoryGroup"><a routerLink="/product/subCategoryGroup" routerLinkActive="active">Sub Category Group</a></li>
@@ -123,13 +126,13 @@
                 </ul>
             </li> 
 
-            <li class="submenu" *ngIf="isStockTransport || isStockTransportRequest">
+            <!-- <li class="submenu" *ngIf="isStockTransport || isStockTransportRequest">
                 <a [ngClass]="{'active': activePath === 'inventory'}"><img src="assets/img/icons/product.svg" alt="img"><span>Inventory</span> <span class="menu-arrow"></span></a>
                 <ul>
                 <li *ngIf="isStockTransport"><a routerLink="/inventory/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
                 <li *ngIf="isStockTransportRequest"><a routerLink="/inventory/list-stock-transfer-request" routerLinkActive="active">Stock Transfer Request</a></li>
                 </ul>
-            </li> 
+            </li>  -->
 
             <li class="submenu">
                 <a [ngClass]="{'active': activePath === 'newpos'}"><i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax" style="color: #637381;"></i><span> POS</span> <span class="menu-arrow"></span></a>
