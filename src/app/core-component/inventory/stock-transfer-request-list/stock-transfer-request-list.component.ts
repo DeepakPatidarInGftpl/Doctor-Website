@@ -16,7 +16,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class StockTransferRequestListComponent implements OnInit {
 
-
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any;
@@ -156,6 +155,7 @@ userDetails:any;
         }
     });
   })
+  this.getBranch();
   }
 
   allSelected: boolean = false;
@@ -163,7 +163,14 @@ userDetails:any;
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
-
+  fromBranch: any[]=[];
+  toBranch: any[]=[];
+  getBranch() {
+    this.stockService.getBranch().subscribe((res:any) => {
+      this.fromBranch=res;
+      this.toBranch=res;
+    })
+  }
 select=false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
@@ -183,13 +190,10 @@ select=false
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.customer?.name.toLocaleLowerCase();
-        const companyNameLower = res?.voucher_number.toLocaleLowerCase();
+        const nameLower = res?.transfer_request_number.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
           return true;
-        } else if (companyNameLower.match(searchTerm)) {
-          return true;
-        }
+        } 
         return false;
       });
     }
@@ -202,10 +206,10 @@ select=false
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     const doc = new jsPDF();
-    const title = 'Stock Transfer List';
+    const title = 'Stock Transfer Request List';
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
@@ -218,18 +222,18 @@ select=false
         },
         columns: [
           { header: 'Sr No.' },
-          { header: 'User Name' },
-          { header: 'Material Outward Date ' },
-          { header: 'Refund Status' },
-          { header: 'Voucher Number' },
+          { header: 'Transfer Number' },
+          { header: 'Transfer Date' },
+          { header: 'From Branch' },
+          { header: 'To Branch' },
           { header: 'Total Qty' },
-          { header: 'Note' },
+          { header: 'Total Product' },
           { header: 'Status' },
           { header: 'Is Active' }
         ],
       })
-    doc.save('materialoutward.pdf');
- }
+    doc.save('stockTransferRequest.pdf');
+  }
 
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -264,8 +268,8 @@ select=false
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'materialoutward.xlsx';
-    saveAs(blob, fileName); 
+    const fileName = 'stockTransferRequest.xlsx';
+    saveAs(blob, fileName);
   }
 
   printTable(): void {
@@ -302,31 +306,33 @@ select=false
     document.body.innerHTML = originalContents;
   }
 
+
   date: any
-  espireDate:any;
-  selectRefundStatus:any;
-  selectedAmount:any;
+  espireDate: any;
+  FromBranch: any;
+  toBranchFilter: any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
       const selectedDate = new Date(this.date).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.mo_date).toISOString().split('T')[0];
+        const receiptDate = new Date(item?.request_date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
       });
     }
-    if (this.selectRefundStatus) {
-      filteredData = filteredData.filter((item) => item?.refund_status === this.selectRefundStatus);
+    if (this.FromBranch) {
+      filteredData = filteredData.filter((item) => item?.from_branch?.title === this.FromBranch);
     }
-    if (this.selectedAmount) {
-      filteredData = filteredData.filter((item) => item?.total_qty <= this.selectedAmount);
+    if (this.toBranchFilter) {
+      filteredData = filteredData.filter((item) => item?.to_branch?.title <= this.toBranchFilter);
     }
     this.filteredData = filteredData;
   }
+
   clearFilter() {
     this.date = null;
-    this.selectRefundStatus=null;
-    this.selectedAmount=null;
+    this.FromBranch = null;
+    this.toBranchFilter = null;
     this.filterData();
   }
 
