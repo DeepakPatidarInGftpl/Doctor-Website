@@ -343,6 +343,7 @@ select=false
   filterPaymentTerms:any;
   selectedAmount:any;
   selectEstimateNo:any;
+  statusFilter:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -368,7 +369,9 @@ select=false
     if (this.selectedAmount) {
       filteredData = filteredData.filter((item) => item?.total <= this.selectedAmount);
     }
-
+    if (this.statusFilter) {
+      filteredData = filteredData.filter((item) => item?.status== this.statusFilter);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
@@ -377,6 +380,7 @@ select=false
     this.selectedAmount=null;
     this.filterPaymentTerms=null;
     this.selectEstimateNo=null;
+    this.statusFilter=null;
     this.filterData();
   }
 }

@@ -24,7 +24,7 @@ export class DebitnotesComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  filteredData: any[]; 
+  filteredData: any[];
   selectedpaymentTerms: string = '';
   date: any
 
@@ -94,7 +94,7 @@ export class DebitnotesComponent implements OnInit {
               text: 'Purchase Return Is Deactivate Successfully.',
             });
             this.ngOnInit()
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not-Deactivate!',
@@ -102,7 +102,7 @@ export class DebitnotesComponent implements OnInit {
             });
           }
         })
-      
+
       }
     });
   }
@@ -130,16 +130,16 @@ export class DebitnotesComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.ngOnInit()
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not-Active!',
               text: this.delRes.error,
             });
           }
-          
+
         })
-      
+
       }
     });
   }
@@ -397,7 +397,8 @@ export class DebitnotesComponent implements OnInit {
     document.body.innerHTML = originalContents;
   }
   //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
-filterReverseCharge:any;
+  filterReverseCharge: any;
+  statusFilter: any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -413,12 +414,16 @@ filterReverseCharge:any;
     if (this.filterReverseCharge) {
       filteredData = filteredData.filter((item) => item?.reverse_charge === this.filterReverseCharge);
     }
+    if (this.statusFilter) {
+      filteredData = filteredData.filter((item) => item?.status === this.statusFilter);
+    }
     this.filteredData = filteredData;
   }
   clearFilters() {
     this.selectedpaymentTerms = null;
-    this.filterReverseCharge=null;
+    this.filterReverseCharge = null;
     this.date = null;
+    this.statusFilter = null;
     this.filterData();
   }
 }
