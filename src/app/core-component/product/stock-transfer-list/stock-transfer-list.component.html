@@ -82,6 +82,17 @@
                                 </select>
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Select Status</label>
+                                    <select [(ngModel)]="statusFilter" (change)="filterData()" class="form-select">
+                                   <option value="" selected disabled>Select Status</option>
+                                    <option value="Received" >Received</option>
+                                    <option value="Dispatched" >Dispatched</option>
+                                    <option value="Received with missing items" >Received with missing items</option>
+                                </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group" (click)="clearFilter()">
                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>

@@ -59,6 +59,12 @@
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
+                                    <label>Due Date</label>
+                                    <input type="date" [(ngModel)]="date" (change)="filterData()">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
                                     <label>Supplier Bill No.</label>
                                     <input type="search" [(ngModel)]="selectedPurchaseNo" (ngModelChange)="filterData()" class="search" placeholder="Search Supplier Bill No.">
                                 </div>
@@ -79,6 +85,28 @@
                                         <option value="" selected disabled>Select Material Inward</option>
                                         <option value="{{acc?.material_inward_no}}" *ngFor="let acc of materialList">{{acc?.material_inward_no}}</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Select Status</label>
+                                    <select [(ngModel)]="statusFilter" (change)="filterData()" class="form-select">
+                                    <option value="" selected disabled>Select Status</option>
+                                    <option value="Draft" >Draft</option>
+                                    <option value="Pending" >Pending</option>
+                                    <option value="Overdue" >Overdue</option>
+                                    <option value="Completed" >Completed</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Reverse Charge</label>
+                                    <select [(ngModel)]="reverseChargeFilter" (change)="filterData()" class="form-select">
+                                    <option value="" selected disabled>Select Reverse Charge</option>
+                                    <option value="Yes" >Yes</option>
+                                    <option value="No" >No</option>
+                                </select>
                                 </div>
                             </div>
                         </div>

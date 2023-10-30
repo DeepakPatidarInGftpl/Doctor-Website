@@ -1,83 +1,100 @@
-<div class="page-header">
-    <div class="page-title">
-        <h4>Debit Note Details</h4>
-        <h6>Full details of a Debit Note</h6>
-    </div>
-    <div class="page-btn">
-        <a routerLink="//transaction/updatedebitnote/{{debitnoteDetails?.id}}" class="btn btn-added">
-            <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Debit Note
-        </a>
-    </div>
-</div>
 
 <!-- /add -->
-<div class="row">
-    <div class="col-lg-12 col-sm-12" *ngIf="debitnoteDetails">
-        <div class="card">
-            <div class="card-body">
-                <!-- <div class="bar-code-view">
-                    <img src="assets/img/barcode1.png" alt="barcode">
-                    <a class="printimg">
-                        <img src="assets/img/icons/printer.svg" alt="print">
-                    </a>
-                </div> -->
-                <div class="productdetails">                  
-                    <ul class="product-bar">
-                       
-                        <li>
-                            <h4>Company Name</h4>
-                            <h6>{{debitnoteDetails?.party?.company_name}}</h6>
-
-                        <li>
-                            <h4>Debit Note Date</h4>
-                            <h6>
-                                {{debitnoteDetails?.date |  date: 'yyyy-MM-dd hh:mm:ss a'}}
-                             
-                            </h6>
-                        </li>
-                        <li>
-                            <h4>Purchase Bill</h4>
-                            <h6>{{debitnoteDetails?.purchase_bill?.refrence_bill_no}}</h6>
-                        </li>
-                        <li>
-                            <h4>Reason</h4>
-                            <h6>{{debitnoteDetails?.reason}}</h6>
-                        </li>
-                        <li>
-                            <h4>Debit Note No</h4>
-                            <h6>{{debitnoteDetails?.debit_note_no}}</h6>
-                        </li>
-                        <li>
-                            <h4>Amount</h4>
-                            <h6>{{debitnoteDetails?.amount | currency:'INR'}}</h6>
-                        </li>
-                        <li>
-                            <h4>Tax %</h4>
-                            <h6>{{debitnoteDetails?.tax +'%'}}</h6>
-                        </li>
-                        <li>
-                            <h4>Total</h4>
-                            <h6>{{debitnoteDetails?.total | currency:'INR'}}</h6>
-                        </li>
-                        <li>
-                            <h4>Note</h4>
-                            <h6>{{debitnoteDetails?.note}}</h6>
-                        </li>
-                        <li>
-                            <h4>Status</h4>
-                            <h6><span [ngClass]="{'bg-lightgreen': debitnoteDetails?.status === 'Complete', 'bg-lightred' : debitnoteDetails?.status === 'Pending','bg-lightyellow' : debitnoteDetails?.status === 'Ordered'}" class="badges">{{debitnoteDetails?.status}}</span>
-                            </h6>
-                        </li>
-                    </ul>
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon  style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                        Back to Debit Note</h6>
+                    <h4>Debit Note Details</h4>
                 </div>
-    
+                <div class="page-btn">
+                    <a routerLink="//transaction/updatedebitnote/{{debitnoteDetails?.id}}" class="btn btn-added">
+                        <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Debit Note
+                    </a>
+                </div>
             </div>
-            <div class="d-flex align-items-center mx-4">
-                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                <span [ngClass]="{'bg-lightgreen': debitnoteDetails?.is_active === true, 'bg-lightred' : debitnoteDetails?.is_active === false }" class="badges">{{debitnoteDetails?.is_active}}</span>
+            <div class="company-details-card card" *ngIf="debitnoteDetails">
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="General Details">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="th">Party Name</td>
+                                            <td class="td">{{debitnoteDetails?.party?.company_name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Debit Note Date</td>
+                                            <td class="td">{{debitnoteDetails?.date |  date: 'yyyy-MM-dd hh:mm:ss a'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Purchase Bill</td>
+                                            <td class="td">{{debitnoteDetails?.purchase_bill?.refrence_bill_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Reason</td>
+                                            <td class="td">{{debitnoteDetails?.reason}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Debit Note No.</td>
+                                            <td class="td">{{debitnoteDetails?.debit_note_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Amount</td>
+                                            <td class="td">{{debitnoteDetails?.amount | currency:'INR'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Tax </td>
+                                            <td class="td">{{debitnoteDetails?.tax +'%'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total</td>
+                                            <td class="td">{{debitnoteDetails?.total | currency:'INR'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Note</td>
+                                            <td class="td">{{debitnoteDetails?.note}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex align-items-center mx-4">
+                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                <span [ngClass]="{'bg-lightgreen': debitnoteDetails?.is_active === true, 'bg-lightred' : debitnoteDetails?.is_active === false }" class="badges">{{debitnoteDetails?.is_active}}</span>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Logs" *ngIf="debitnoteDetails?.logs.length>0">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="th">#</th>
+                                            <th class="th">User</th>
+                                            <th class="th">Operation Type</th>
+                                            <th class="th">Date Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let cart of debitnoteDetails?.logs; index as i">
+                                        <tr>
+                                            <td class="td">{{i+1}}</td>
+                                            <td class="td">{{cart?.userid}}</td>
+                                            <td class="td">{{cart?.operation_type}}</td>
+                                            <td class="td">{{cart?.date_time |  date:'yyyy-MM-dd hh:mm:ss a'}}</td>
+                                        </tr> 
+                                    </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
             </div>
         </div>
+      
     </div>
 </div>
-
 <!-- /add -->
