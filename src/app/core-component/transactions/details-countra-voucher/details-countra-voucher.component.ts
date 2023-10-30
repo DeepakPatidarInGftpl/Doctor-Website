@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
@@ -9,9 +10,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 })
 export class DetailsCountraVoucherComponent implements OnInit {
 
- 
-
-  constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,) { }
+  constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,private location: Location ) { }
   countraVooucherDetails: any
   id: any
   ngOnInit(): void {
@@ -21,5 +20,8 @@ export class DetailsCountraVoucherComponent implements OnInit {
     })
   }
 
+  goBack() {
+    this.location.back();
+  }
 }
 

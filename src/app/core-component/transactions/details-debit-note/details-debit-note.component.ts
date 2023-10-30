@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
@@ -10,7 +11,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 export class DetailsDebitNoteComponent implements OnInit {
 
 
-  constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,) { }
+  constructor(private transactionService: TransactionService, private Arout: ActivatedRoute,private location:Location) { }
   debitnoteDetails: any
   id: any
   ngOnInit(): void {
@@ -20,5 +21,8 @@ export class DetailsDebitNoteComponent implements OnInit {
     })
   }
 
+  goBack() {
+    this.location.back();
+  }
 }
 

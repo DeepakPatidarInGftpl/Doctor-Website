@@ -25,8 +25,8 @@
                     <a class="btn btn-searchset">
                         <img src="assets/img/icons/search-white.svg" alt="img"></a>
                     <div class="dataTables_filter"><label>
-                            <input type="search" class="form-control form-control-sm" placeholder="Search Order Name/No."
-                                [(ngModel)]="titlee" (ngModelChange)="search()" >
+                            <input type="search" class="form-control form-control-sm"
+                                placeholder="Search Order Name/No." [(ngModel)]="titlee" (ngModelChange)="search()">
                         </label>
                     </div>
                 </div>
@@ -57,41 +57,56 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Sale Order Date</label>
-                                    <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search" >
+                                    <input type="date" [(ngModel)]="date" (ngModelChange)="filterData()" class="search">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Due Date</label>
-                                    <input type="date" [(ngModel)]="espireDate" (ngModelChange)="filterData()" class="search" >
+                                    <input type="date" [(ngModel)]="espireDate" (ngModelChange)="filterData()"
+                                        class="search">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                   <label>Payment terms</label>
-                                    <select [(ngModel)]="filterPaymentTerms" (change)="filterData()" class="form-select">
+                                    <label>Payment terms</label>
+                                    <select [(ngModel)]="filterPaymentTerms" (change)="filterData()"
+                                        class="form-select">
                                         <option value="" selected disabled>Select Payment Terms</option>
-                                        <option value="{{acc?.title}}" *ngFor="let acc of paymentList">{{acc?.title}}</option>
+                                        <option value="{{acc?.title}}" *ngFor="let acc of paymentList">{{acc?.title}}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
-                          
+
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                   <label>Estimate</label>
+                                    <label>Estimate</label>
                                     <select [(ngModel)]="selectEstimateNo" (change)="filterData()" class="form-select">
                                         <option value="" selected disabled>Select Estimate</option>
-                                        <option value="{{acc?.estimate_no}}" *ngFor="let acc of estimateList">{{acc?.estimate_no}}</option>
+                                        <option value="{{acc?.estimate_no}}" *ngFor="let acc of estimateList">
+                                            {{acc?.estimate_no}}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Enter Total Amount</label>
-                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount" (keyup)="filterData()">
-                                    <span class="text-success">Amount Filter (Less than & Equal to Total amount value)</span>
+                                    <input type="number" placeholder="Enter Amount" [(ngModel)]="selectedAmount"
+                                        (keyup)="filterData()">
+                                    <span class="text-success">Amount Filter (Less than & Equal to Total amount
+                                        value)</span>
                                 </div>
                             </div>
+                            <!-- <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Select Status</label>
+                                    <select [(ngModel)]="statusFilter" (change)="filterData()" class="form-select">
+                                        <option value="" selected disabled>Select Status</option>
+                                        <option value="Draft">Draft</option>
+                                    </select>
+                                </div>
+                            </div> -->
                         </div>
                         <div class="form-group" (click)="clearFilter()">
                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
@@ -135,16 +150,19 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//sales/sales-details/{{products.id}}" style="line-height: 3;">{{products?.customer?.name}}</a>
+                            <a routerLink="//sales/sales-details/{{products.id}}"
+                                style="line-height: 3;">{{products?.customer?.name}}</a>
                         </td>
                         <td>{{products.sale_order_date}}</td>
                         <td>{{products.sale_order_no}}</td>
-                        <td>{{products.payment_terms.title}}</td>
+                        <td>{{products?.payment_terms?.title}}</td>
                         <td>{{products.due_date}}</td>
                         <td>{{products?.estimate?.estimate_no}}</td>
                         <td>{{products?.total}}</td>
                         <td>
-                            <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                            <mat-slide-toggle
+                                (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
+                                [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
                         <td>
                             <a class="me-1" routerLink="//sales/sales-details/{{products.id}}">
@@ -175,7 +193,7 @@
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
                         <select [(ngModel)]="itemsPerPage" class="pagination">
-                            
+
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="30">30</option>
@@ -188,7 +206,8 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                            entries</div>
                     </div>
                 </div>
             </div>

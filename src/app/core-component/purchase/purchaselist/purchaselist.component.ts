@@ -368,10 +368,19 @@ export class PurchaselistComponent implements OnInit {
     document.body.innerHTML = originalContents;
   }
        //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
+       statusFilter:any;
+       purchaseDateFilter:any;
        filterData() {
         let filteredData = this.tableData.slice(); 
         if (this.date) {
           const selectedDate = new Date(this.date).toISOString().split('T')[0];
+          filteredData = filteredData.filter((item) => {
+            const receiptDate = new Date(item?.shipping_date).toISOString().split('T')[0];
+            return receiptDate === selectedDate;
+          });
+        }
+        if (this.purchaseDateFilter) {
+          const selectedDate = new Date(this.purchaseDateFilter).toISOString().split('T')[0];
           filteredData = filteredData.filter((item) => {
             const receiptDate = new Date(item?.order_date).toISOString().split('T')[0];
             return receiptDate === selectedDate;
@@ -384,11 +393,17 @@ export class PurchaselistComponent implements OnInit {
             return aliasLower.includes(searchTerm);
           });
         }
+        if (this.statusFilter) {
+          filteredData = filteredData.filter((item) => item?.status == this.statusFilter);
+          console.log(this.statusFilter);
+        }
         this.filteredData = filteredData;
       }
       clearFilters() {
         this.selectedPurchaseNo = null;
         this.date=null;
+        this.statusFilter=null;
+        this.purchaseDateFilter=null
         this.filterData();
       }
 }

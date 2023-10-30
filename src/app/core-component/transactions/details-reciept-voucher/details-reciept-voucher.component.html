@@ -71,6 +71,12 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="d-flex align-items-center my-3 mx-3">
+                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                <span
+                                    [ngClass]="{'bg-lightgreen': recieptVoucherDetail?.is_active === true, 'bg-lightred' : recieptVoucherDetail?.is_active === false,'bg-lightyellow' : recieptVoucherDetail?.is_active === 'Partial' }"
+                                    class="badges">{{recieptVoucherDetail?.is_active}}</span>
+                            </div>
                         </mat-tab>
                         <mat-tab label="Cart" *ngIf="recieptVoucherDetail?.mode_type=='Against Bill'">
                             <div class="table-responsive">
@@ -88,7 +94,7 @@
                                     <tbody>
                                         <tr *ngFor="let cart of recieptVoucherDetail?.bill_cart; index as i">
                                             <td class="td">{{i+1}}</td>
-                                            <td class="td">{{cart?.sale_bill}}</td>
+                                            <td class="td">{{cart?.sale_bill?.customer_bill_no}}</td>
                                             <td class="td">{{cart?.original_amount}}</td>
                                             <td class="td">{{cart?.paid_amount}}</td>
                                             <td class="td">{{cart?.pending_amount}}</td>
@@ -98,14 +104,33 @@
                                 </table>
                             </div>
                         </mat-tab>
+                        <mat-tab label="Logs" *ngIf="recieptVoucherDetail?.logs.length>0">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="th">#</th>
+                                            <th class="th">User</th>
+                                            <th class="th">Operation Type</th>
+                                            <th class="th">Date Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let cart of recieptVoucherDetail?.logs; index as i">
+                                        <tr>
+                                            <td class="td">{{i+1}}</td>
+                                            <td class="td">{{cart?.userid}}</td>
+                                            <td class="td">{{cart?.operation_type}}</td>
+                                            <td class="td">{{cart?.date_time |  date:'yyyy-MM-dd hh:mm:ss a'}}</td>
+                                        </tr> 
+                                    </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-tab>
                     </mat-tab-group>
                 </div>
-                <div class="d-flex align-items-center my-3 mx-3">
-                    <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                    <span
-                        [ngClass]="{'bg-lightgreen': recieptVoucherDetail?.is_active === true, 'bg-lightred' : recieptVoucherDetail?.is_active === false,'bg-lightyellow' : recieptVoucherDetail?.is_active === 'Partial' }"
-                        class="badges">{{recieptVoucherDetail?.is_active}}</span>
-                </div>
+            
             </div>
         </div>
     </div>

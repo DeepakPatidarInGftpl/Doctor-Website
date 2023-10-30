@@ -337,6 +337,7 @@ export class StockTransferListComponent implements OnInit {
   espireDate: any;
   FromBranch: any;
   toBranchFilter: any;
+  statusFilter:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -350,7 +351,10 @@ export class StockTransferListComponent implements OnInit {
       filteredData = filteredData.filter((item) => item?.from_branch?.title === this.FromBranch);
     }
     if (this.toBranchFilter) {
-      filteredData = filteredData.filter((item) => item?.to_branch?.title <= this.toBranchFilter);
+      filteredData = filteredData.filter((item) => item?.to_branch?.title === this.toBranchFilter);
+    }
+    if (this.statusFilter) {
+      filteredData = filteredData.filter((item) => item?.status === this.statusFilter);
     }
     this.filteredData = filteredData;
   }
@@ -359,6 +363,7 @@ export class StockTransferListComponent implements OnInit {
     this.date = null;
     this.FromBranch = null;
     this.toBranchFilter = null;
+    this.statusFilter=null;
     this.filterData();
   }
 

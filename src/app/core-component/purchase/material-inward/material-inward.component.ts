@@ -362,12 +362,21 @@ export class MaterialInwardComponent implements OnInit {
     document.body.innerHTML = originalContents;
   }
        //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
+       statusFilter:any;
+       poDate:any;
        filterData() {
         let filteredData = this.tableData.slice(); 
         if (this.date) {
           const selectedDate = new Date(this.date).toISOString().split('T')[0];
           filteredData = filteredData.filter((item) => {
             const receiptDate = new Date(item?.material_inward_date).toISOString().split('T')[0];
+            return receiptDate === selectedDate;
+          });
+        }
+        if (this.poDate) {
+          const selectedDate = new Date(this.poDate).toISOString().split('T')[0];
+          filteredData = filteredData.filter((item) => {
+            const receiptDate = new Date(item?.po_date).toISOString().split('T')[0];
             return receiptDate === selectedDate;
           });
         }
@@ -378,11 +387,17 @@ export class MaterialInwardComponent implements OnInit {
             return aliasLower.includes(searchTerm);
           });
         }
+        if (this.statusFilter) {
+          filteredData = filteredData.filter((item) => item?.status === this.statusFilter);
+          console.log(this.statusFilter);
+        }
         this.filteredData = filteredData;
       }
       clearFilters() {
         this.selectedPurchaseNo = null;
         this.date=null;
+        this.statusFilter=null;
+        this.poDate=null;
         this.filterData();
       }
 }

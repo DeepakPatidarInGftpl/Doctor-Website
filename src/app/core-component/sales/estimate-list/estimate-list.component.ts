@@ -238,6 +238,7 @@ select=false
           { header: 'Expire Date' },
           { header: 'Sub Total' },
           { header: 'Total' },
+          { header: 'Status' },
           { header: 'Is Active' }
         ],
       })
@@ -289,7 +290,7 @@ select=false
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(10)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(11)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
@@ -301,7 +302,7 @@ select=false
 
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
-      const isActiveTd = row.querySelector('td:nth-child(10)');
+      const isActiveTd = row.querySelector('td:nth-child(11)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
@@ -325,6 +326,7 @@ select=false
   espireDate:any;
   filterPaymentTerms:any
   selectedAmount:any
+  statusFilter:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -347,6 +349,9 @@ select=false
     if (this.selectedAmount) {
       filteredData = filteredData.filter((item) => item?.total <= this.selectedAmount);
     }
+    if (this.statusFilter) {
+      filteredData = filteredData.filter((item) => item?.status=== this.statusFilter);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
@@ -354,6 +359,7 @@ select=false
     this.espireDate = null;
     this.filterPaymentTerms=null
     this.selectedAmount=null;
+    this.statusFilter=null;
     this.filterData();
   }
 }

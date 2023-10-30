@@ -53,7 +53,7 @@
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Debit Note Date</label>
+                                    <label>Purchase Return Date</label>
                                     <input type="date" [(ngModel)]="date" (change)="filterData()">
                                 </div>
                             </div>
@@ -76,7 +76,18 @@
                                     </select>
                                 </div>
                             </div>
-                           
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Select Status</label>
+                                    <select [(ngModel)]="statusFilter" (change)="filterData()" class="form-select">
+                                   <option value="" selected disabled>Select Status</option>
+                                    <option value="Draft">Draft</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Sent">Sent</option>
+                                    <option value="Approved">Approved</option>
+                                </select>
+                                </div>
+                            </div>
                         </div>
                          <div class="form-group" (click)="clearFilters()">
                                     <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
@@ -120,12 +131,12 @@
                         <td class="productimgname">
                             <a routerLink="//purchase/details-purchaseReturn/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
-                        <td>{{products?.purchase_return_date |  date:'yyyy-MM-dd hh:mm:ss a'}}</td>
+                        <td>{{products?.purchase_return_date | date: 'yyyy-MM-dd'}}</td>
                         <td>{{products?.purchase_return_no}}</td>
                         <td>{{products?.reverse_charge}}</td>
                         <td>{{products?.purchase_bill?.refrence_bill_no}}</td>
                         <td>
-                            <span [ngClass]="{'bg-lightgreen': products.status === 'Approved', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Sent'}" class="badges">{{products.status}}</span>
+                            <span [ngClass]="{'bg-lightgreen': products.status === 'Approved', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Sent','bg-lightyellow' : products.status === 'Draft'}" class="badges">{{products.status}}</span>
                         </td>
                         <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>

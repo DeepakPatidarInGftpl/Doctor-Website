@@ -386,12 +386,22 @@ materialList: any;
          //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
        filterMaterial:any;
        filterPaymentTerms:any;
+       statusFilter:any;
+       dueDate:any;
+       reverseChargeFilter:any;
          filterData() {
           let filteredData = this.tableData.slice(); 
           if (this.date) {
             const selectedDate = new Date(this.date).toISOString().split('T')[0];
             filteredData = filteredData.filter((item) => {
               const receiptDate = new Date(item?.supplier_bill_date).toISOString().split('T')[0];
+              return receiptDate === selectedDate;
+            });
+          }
+          if (this.dueDate) {
+            const selectedDate = new Date(this.dueDate).toISOString().split('T')[0];
+            filteredData = filteredData.filter((item) => {
+              const receiptDate = new Date(item?.due_date).toISOString().split('T')[0];
               return receiptDate === selectedDate;
             });
           }
@@ -408,6 +418,12 @@ materialList: any;
           if (this.filterPaymentTerms) {
             filteredData = filteredData.filter((item) => item?.payment_term?.title === this.filterPaymentTerms);
           }
+          if (this.statusFilter) {
+            filteredData = filteredData.filter((item) => item?.status === this.statusFilter);
+          }
+          if (this.reverseChargeFilter) {
+            filteredData = filteredData.filter((item) => item?.reverse_charge === this.reverseChargeFilter);
+          }
           this.filteredData = filteredData;
         }
         clearFilters() {
@@ -415,6 +431,9 @@ materialList: any;
           this.date=null;
           this.filterPaymentTerms=null;
           this.filterMaterial=null
+          this.statusFilter=null;
+          this.dueDate=null;
+          this.reverseChargeFilter=null;
           this.filterData();
         }
 

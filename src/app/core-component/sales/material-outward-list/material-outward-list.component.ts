@@ -315,6 +315,7 @@ select=false
   espireDate:any;
   selectRefundStatus:any;
   selectedAmount:any;
+  statusFilter:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -330,12 +331,16 @@ select=false
     if (this.selectedAmount) {
       filteredData = filteredData.filter((item) => item?.total_qty <= this.selectedAmount);
     }
+    if (this.statusFilter) {
+      filteredData = filteredData.filter((item) => item?.status== this.statusFilter);
+    }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.date = null;
     this.selectRefundStatus=null;
     this.selectedAmount=null;
+    this.statusFilter=null;
     this.filterData();
   }
 }
