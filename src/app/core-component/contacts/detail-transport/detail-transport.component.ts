@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
@@ -11,7 +12,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 export class DetailTransportComponent implements OnInit {
 
  
-  constructor(private Arout: ActivatedRoute, private contactService: ContactService) { }
+  constructor(private Arout: ActivatedRoute, private contactService: ContactService,private location:Location) { }
 
   id: any
   ngOnInit(): void {
@@ -57,6 +58,9 @@ export class DetailTransportComponent implements OnInit {
     this.sho = true;
     this.sho1 = false;
     this.sho2 = !this.sho2;
+  }
+  goBack(){
+    this.location.back()
   }
 }
 

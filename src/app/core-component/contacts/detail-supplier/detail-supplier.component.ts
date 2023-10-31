@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
@@ -10,7 +11,7 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
 })
 export class DetailSupplierComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private contactService: ContactService) { }
+  constructor(private Arout: ActivatedRoute, private contactService: ContactService,private location:Location) { }
 
   id: any
   ngOnInit(): void {
@@ -64,6 +65,10 @@ export class DetailSupplierComponent implements OnInit {
   }
   hideBatch() {
     this.isBatch = true;
+  }
+
+  goBack(){
+    this.location.back();
   }
 }
 

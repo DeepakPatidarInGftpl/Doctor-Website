@@ -113,7 +113,7 @@
                             <td colspan="2" class="f-500">Product Feature</td>
                             <td colspan="6" class="f-400">
                                 <div class="table-responsive">
-                                    <table datatable class="table datanew">
+                                    <table class="table datanew">
                                         <thead>
                                             <tr>
                                                 <th>Feature Group</th>
@@ -135,7 +135,7 @@
                     <div class="container my-2">
                         <h2 colspan="2" class="f-500">Variants</h2>
                         <div class="table-responsive">
-                            <table datatable class="table datanew">
+                            <table class="table datanew">
                               <thead>
                                 <tr>
                                   <th>Product</th>
@@ -161,7 +161,7 @@
                                   <button *ngIf="!addbatch[i]" (click)="openBatch(i)" class="btn btn-submit mx-3" style="padding: 1px 2px;">Batch</button>
                                   <tr *ngIf="addbatch[i]">
                                     <td colspan="6">
-                                      <table datatable class="table datanew">
+                                      <table class="table datanew">
                                         <thead>
                                           <tr>
                                             <th>MRP</th>
@@ -331,8 +331,7 @@
                                         </div>
                                         <div class="second-part" *ngIf="sho1">
                                             <p [innerHTML]="productDetail?.description | readLess"></p>
-                                            <span *ngIf="sho1" (click)="hide1()" class="spandes " style="color:red">Read
-                                                less...</span>
+                                            <span *ngIf="sho1" (click)="hide1()" class="spandes " style="color:red">Read less...</span>
                                         </div>
                                     </div>
                                 </div>
@@ -348,20 +347,20 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="th">Category</td>
-                                                    <td class="td">{{productDetail?.category.title}}</td>
+                                                    <td class="td">{{productDetail?.category?.title}}</td>
                                                 </tr>
 
                                                 <tr>
                                                     <td class="th">Sub Category</td>
-                                                    <td class="td">{{productDetail?.subcategory.title}}</td>
+                                                    <td class="td">{{productDetail?.subcategory?.title}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="th">Subcategory Group</td>
-                                                    <td class="td">{{productDetail?.subcategory_group.title}}</td>
+                                                    <td class="td">{{productDetail?.subcategory_group?.title}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="th">Brand</td>
-                                                    <td class="td">{{productDetail?.brand.title}}</td>
+                                                    <td class="td">{{productDetail?.brand?.title}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="th">Return Time</td>
@@ -446,7 +445,7 @@
                                                     <td class="th">Sizes</td>
                                                     <td class="td">
                                                         <div class="table-responsive">
-                                                            <table datatable class="table datanew">
+                                                            <table class="table datanew">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Name</th>
@@ -469,7 +468,7 @@
                                                     <td class="th">Colors</td>
                                                     <td class="td">
                                                         <div class="table-responsive">
-                                                            <table datatable class="table datanew">
+                                                            <table class="table datanew">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Name</th>
@@ -491,7 +490,7 @@
                                                     <td class="th">Features</td>
                                                     <td class="td">
                                                         <div class="table-responsive">
-                                                            <table datatable class="table datanew">
+                                                            <table class="table datanew">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Feature Group</th>
@@ -521,7 +520,7 @@
                                                     <td class="th">Features</td>
                                                     <td class="td">
                                                         <div class="table-responsive">
-                                                            <table datatable class="table datanew">
+                                                            <table class="table datanew">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Feature Group</th>
@@ -543,6 +542,12 @@
                                           </table>
                                         </div>
                                 </div> -->
+                            </div>
+                            <div class="d-flex align-items-center my-3 mx-3">
+                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                <span
+                                    [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }"
+                                    class="badges">{{productDetail?.is_active}}</span>
                             </div>
                         </mat-tab>
                         <mat-tab label="Product Ledger">
@@ -625,7 +630,7 @@
                         <mat-tab label="Pricing Details">
                             <div class="table-responsive ">
                                 <div class="container">
-                                    <table datatable class="table datanew">
+                                    <table class="table datanew mb-5" >
                                         <thead>
                                             <tr class="bg">
                                                 <th class="border">#</th>
@@ -658,7 +663,6 @@
                                                     <td colspan="7" style="border: 1px solid #FF9F43;">
                                                         <table>
                                                             <!-- <thead> -->
-
                                                             <tr class="bg">
                                                                 <th class="boder space-text">#</th>
                                                                 <th class="boder space-text">MRP</th>
@@ -732,13 +736,62 @@
                                 </div>
                             </div>
                         </mat-tab>
+                        <mat-tab label="Logs" *ngIf="productDetail?.logs.length>0">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th class="th"># <i class="fa fa-sort"></i></th>
+                                            <th class="th">User <i class="fa fa-sort"></i></th>
+                                            <th class="th">Operation Type <i class="fa fa-sort"></i></th>
+                                            <th class="th">Date Time <i class="fa fa-sort"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let logs of productDetail?.logs | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                                        <tr>
+                                            <td class="td">{{i+1}}</td>
+                                            <td class="td">{{logs?.userid}}</td>
+                                            <td class="td">{{logs?.operation_type}}</td>
+                                            <td class="td">{{logs?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                        </tr> 
+                                    </ng-container>
+                                    </tbody>
+                                </table>
+                                <div class="progressbar">
+                                    <mat-progress-bar mode="indeterminate" class="progressbar"
+                                        *ngIf="loader"></mat-progress-bar>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                        <div class="entries"> Show per page
+                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="-1">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                        <div class="f-right">
+                                            <pagination-controls
+                                                (pageChange)="p = $event"></pagination-controls>
+                                            <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </mat-tab>
                     </mat-tab-group>
-                </div>
-                <div class="d-flex align-items-center my-3 mx-3">
-                    <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                    <span
-                        [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }"
-                        class="badges">{{productDetail?.is_active}}</span>
                 </div>
             </div>
         </div>

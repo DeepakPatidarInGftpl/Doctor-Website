@@ -75,12 +75,13 @@ export class CouponComponent implements OnInit {
             this.ngOnInit();
           }
         })
+     
+      }else{
         Swal.fire({
           icon: 'error',
           title: 'Not Deleted!',
           text: this.delRes.error,
         });
-        this.tableData.splice(index, 1);
       }
     });
   }

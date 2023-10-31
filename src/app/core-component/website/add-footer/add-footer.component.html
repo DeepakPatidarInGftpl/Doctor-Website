@@ -32,34 +32,37 @@
                     <div class="form-group">
                         <label>Facebook Url*</label>
                         <input type="text" formControlName="facebook" id="facebook"
-                            [ngClass]="{ 'is-invalid': f['facebook'].touched && f['facebook'].invalid }">
+                            [ngClass]="{ 'is-invalid': f['facebook'].touched && f['facebook'].invalid }" [ngStyle]="{'border': facebookError ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="facebook && facebook.invalid && facebook.touched">Enter
                             Facebook url</span>
+                            <span class="text-danger" *ngIf="facebookError">{{facebookError}}</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Instagram Url*</label>
                         <input type="text" formControlName="instagram" id="instagram"
-                            [ngClass]="{'is-invalid': f['instagram'].touched && f['instagram'].invalid}">
+                            [ngClass]="{'is-invalid': f['instagram'].touched && f['instagram'].invalid}" [ngStyle]="{'border': instagramError ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="instagram && instagram.invalid && instagram.touched">Enter
                             Instagram url</span>
+                            <span class="text-danger" *ngIf="instagramError">{{instagramError}}</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Twitter Url*</label>
                         <input type="text" formControlName="twitter" id="twitter"
-                            [ngClass]="{'is-invalid': f['twitter'].touched && f['twitter'].invalid}">
+                            [ngClass]="{'is-invalid': f['twitter'].touched && f['twitter'].invalid}" [ngStyle]="{'border': twitterError ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="twitter && twitter.invalid && twitter.touched">Enter Twitter
                             url</span>
+                            <span class="text-danger" *ngIf="twitterError">{{twitterError}}</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Whatsapp Url*</label>
                         <input type="text" formControlName="whatsapp" id="whatsapp"
-                            [ngClass]="{'is-invalid': f['whatsapp'].touched && f['whatsapp'].invalid}">
+                            [ngClass]="{'is-invalid': f['whatsapp'].touched && f['whatsapp'].invalid}" [ngStyle]="{'border': whatsError ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="whatsapp && whatsapp.invalid && whatsapp.touched">Enter
                             Whatsapp url</span>
                             <span class="text-danger" *ngIf="whatsError">{{whatsError}}</span>
@@ -130,7 +133,7 @@
                     <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                         <span class="spinner-border spinner-border-sm me-2" role="status"
-                            aria-hidden="true"></span>Submit</button>
+                            aria-hidden="true"></span>&nbsp; Submit</button>
                     <a routerLink="//website/footerList" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>

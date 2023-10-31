@@ -112,7 +112,7 @@
                         <th (click)="sort('id')" class="thone">Mobile Number <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Opening Balance <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">GSTIN <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">PanCard <i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">PanCard <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Supplier Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
@@ -135,7 +135,7 @@
                         <td>{{products?.mobile_no}}</td>
                         <td>{{ products?.opening_balance_type + (products?.opening_balance != null ? ' : ' + products?.opening_balance : '') }}</td>
                         <td>{{products?.gstin}}</td>
-                        <td>{{products?.pan_no}}</td>
+                        <!-- <td>{{products?.pan_no}}</td> -->
                         <td>{{products?.supplier_type}}</td>
                         <td>
                             <mat-slide-toggle
@@ -171,7 +171,6 @@
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
                         <select [(ngModel)]="itemsPerPage" class="pagination">
-                            
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="30">30</option>

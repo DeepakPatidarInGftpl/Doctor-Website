@@ -100,7 +100,7 @@
                         <th (click)="sort('id')" class="thone">Opening Balance <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Gstin <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">PanCard <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Membership <i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Membership <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
@@ -122,7 +122,7 @@
                         <td>{{ products?.opening_balance_type + (products?.opening_balance != null ? ' : ' + products?.opening_balance : '') }}</td>
                         <td>{{products.gstin}}</td>
                         <td>{{products.pan_no}}</td>
-                        <td>{{products.membership}}</td>
+                        <!-- <td>{{products.membership}}</td> -->
                         <td>
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>

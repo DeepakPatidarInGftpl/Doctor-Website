@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -10,7 +11,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 export class TaxSlabDetailComponent implements OnInit {
 
  
-  constructor(private Arout: ActivatedRoute, private coreService: CoreService) { }
+  constructor(private Arout: ActivatedRoute, private coreService: CoreService,private location:Location) { }
   id: any
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -39,6 +40,10 @@ export class TaxSlabDetailComponent implements OnInit {
           this.productDetail = res
           // console.log(res);
     })
+  }
+
+  goBack() {
+    this.location.back();
   }
 }
 

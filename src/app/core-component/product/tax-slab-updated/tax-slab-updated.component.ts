@@ -236,7 +236,7 @@ export class TaxSlabUpdatedComponent implements OnInit {
       this.coreService.updateTaxSlab(form, this.id).subscribe(res => {
         // console.log(res);
         this.updateRes = res;
-        if (this.updateRes.success) {
+        if (this.updateRes) {
           this.loaders = false;
           this.toastrService.success(this.updateRes.msg)
           this.router.navigate(['product/taxSlabList']);

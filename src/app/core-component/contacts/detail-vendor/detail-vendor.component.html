@@ -2,8 +2,10 @@
     <div class="card-body">
         <div class="page-header">
             <div class="page-title">
-                <h4>Vendor Details</h4>
-                <h6>Full details of a Vendor</h6>
+                <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                    style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                Back to Vendor</h6>
+                <h4>Full details of a Vendor</h4>
             </div>
             <div class="page-btn">
                 <a routerLink="//contacts/updateVendor/{{vendorDetail?.id}}" class="btn btn-added">
@@ -89,10 +91,10 @@
                                             <h4>Invite Code</h4>
                                             <h6>{{vendorDetail?.invite_code}}</h6>
                                         </li>
-                                        <li>
+                                        <!-- <li>
                                             <h4>Membership</h4>
                                             <h6>{{vendorDetail?.membership}}</h6>
-                                        </li>
+                                        </li> -->
                                     </ul>
                                 </div>
                             </div>
