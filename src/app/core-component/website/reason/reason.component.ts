@@ -57,15 +57,14 @@ export class ReasonComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.ngOnInit();
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
-
         })
-        Swal.fire({
-          icon: 'error',
-          title: 'Not Deleted!',
-          text: this.delRes.error,
-        });
-        this.tableData.splice(index, 1);
       }
     });
   }

@@ -73,7 +73,10 @@ export class AddFooterComponent implements OnInit {
   dateError = null;
   addRes: any;
   loaders = false;
-  whatsError = ''
+  whatsError = '';
+  twitterError='';
+  facebookError='';
+  instagramError='';
   submit() {
     // console.log(this.footerForm.value);
     var formdata: any = new FormData()
@@ -99,12 +102,34 @@ export class AddFooterComponent implements OnInit {
           this.router.navigate(['//website/footerList'])
         } else {
           this.loaders = false;
-          if (this.addRes.whatsapp) {
+          if (this.addRes.error?.whatsapp) {
             this.loaders = false;
-            this.whatsError = this.addRes.whatsapp[0];
+            this.whatsError = this.addRes?.error?.whatsapp[0];
+            this.toastr.error('Whatsapp',this.addRes?.error?.whatsapp[0])
             setTimeout(() => {
               this.whatsError = ''
-            }, 300);
+            }, 8000);
+          }else if (this.addRes.error?.twitter) {
+            this.loaders = false;
+            this.twitterError = this.addRes?.error?.twitter[0];
+            this.toastr.error('Twitter',this.addRes?.error?.twitter[0])
+            setTimeout(() => {
+              this.twitterError = ''
+            }, 8000);
+          } if (this.addRes.error?.facebook) {
+            this.loaders = false;
+            this.facebookError = this.addRes?.error?.facebook[0];
+            this.toastr.error('Facebook',this.addRes?.error?.facebook[0])
+            setTimeout(() => {
+              this.facebookError = ''
+            }, 8000);
+          } if (this.addRes.error?.instagram) {
+            this.loaders = false;
+            this.instagramError = this.addRes?.error?.instagram[0];
+            this.toastr.error('Instagram',this.addRes?.error?.instagram[0])
+            setTimeout(() => {
+              this.instagramError = ''
+            }, 8000);
           }
         }
       }, err => {

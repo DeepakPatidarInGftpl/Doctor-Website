@@ -99,8 +99,8 @@ export class CompanylistComponent implements OnInit {
     // this.companyService.companyBehaviour.subscribe( () => {
     //   this.tableData = JSON.parse(localStorage.getItem('companyList')!);
     // })
-    this.companyService.getCompany().subscribe(res => {
-      this.tableData = res;
+    this.companyService.getCompany().subscribe((res:any) => {
+      this.tableData = res.reverse();
     })
 
   }

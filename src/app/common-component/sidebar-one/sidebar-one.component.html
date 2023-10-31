@@ -64,7 +64,7 @@
                 <a [ngClass]="{'active': activePath === 'account'}"><i class="fa fa-users" data-bs-toggle="tooltip" title="fa fa-users" style="color: #637381;"></i><span> Accounts</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isAccount"><a routerLink="/account/accountlist" routerLinkActive="active">Account</a></li>
-                    <li *ngIf="isAccountSubType"><a routerLink="/account/account_subtype" routerLinkActive="active">Account Sub Type</a></li>         
+                    <li *ngIf="isAccountSubType"><a routerLink="/account/account_subtype" routerLinkActive="active">Account SubType</a></li>         
                 </ul>
             </li> 
             <li class="submenu" *ngIf="isSupplier || isVendor || isEmployee ||isCustomer || isTransport || isDealer">

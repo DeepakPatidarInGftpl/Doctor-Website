@@ -147,9 +147,9 @@
                         <td>{{products?.total_product}}</td>
                         <td>
                             <span [ngClass]="{
-                                'bg-lightgreen': products?.status === 'Dispatched' || products?.status === 'Approved',
+                                'bg-lightgreen': products?.status === 'Received' || products?.status === 'Approved',
                                 'bg-lightred': products?.status === 'Rejected',
-                                'bg-lightyellow': products?.status === 'Received' || products?.status === 'Open'
+                                'bg-lightyellow': products?.status === 'Dispatched' || products?.status === 'Open'
                               }" class="badges">{{products?.status}}</span>
                              </td>
                         <td>
@@ -167,9 +167,9 @@
                                 </select>
                             </div>
                             <span *ngIf="products?.status !== 'Open' && products?.status !== 'Dispatched'" [ngClass]="{
-                                'bg-lightgreen': products?.status === 'Dispatched' || products?.status === 'Approved',
+                                'bg-lightgreen': products?.status === 'Received' || products?.status === 'Approved',
                                 'bg-lightred': products?.status === 'Rejected',
-                                'bg-lightyellow': products?.status === 'Received' || products?.status === 'Open'
+                                'bg-lightyellow': products?.status === 'Dispatched' || products?.status === 'Open'
                             }" class="badges">{{products?.status}}</span>
                         </td>
                         <!-- <td>

@@ -5,13 +5,25 @@ import { TaxSlabDetailRoutingModule } from './tax-slab-detail-routing.module';
 import { TaxSlabDetailComponent } from './tax-slab-detail.component';
 import { FormsModule } from '@angular/forms';
 
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatIconModule} from '@angular/material/icon';
+
+import {MatSelectModule} from '@angular/material/select';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [TaxSlabDetailComponent],
   imports: [
     CommonModule,
     TaxSlabDetailRoutingModule,
-    FormsModule
+    FormsModule,
+    MatTabsModule,
+    MatIconModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatSlideToggleModule,
+    FormsModule,
   ]
 })
 export class TaxSlabDetailModule { }

@@ -259,7 +259,7 @@ export class VendorComponent implements OnInit {
           { header: 'Opening Balance' },
           { header: 'GSTIN' },
           { header: 'PanCard' },
-          { header: 'Membership' },
+          // { header: 'Membership' },
           { header: 'Is Active' }
         ],
       })
@@ -319,7 +319,7 @@ export class VendorComponent implements OnInit {
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
 
     // Remove the "Is Active" column header from the cloned table
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(10)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(9)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
@@ -334,7 +334,7 @@ export class VendorComponent implements OnInit {
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
       // Remove the "Is Active" column data cell
-      const isActiveTd = row.querySelector('td:nth-child(10)');
+      const isActiveTd = row.querySelector('td:nth-child(9)');
       if (isActiveTd) {
         isActiveTd.remove();
       }

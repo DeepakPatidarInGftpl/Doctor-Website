@@ -230,15 +230,9 @@
                                                                 <th class="thone"
                                                                     style="white-space: normal !important;">Supplier
                                                                     Name</th>
-                                                                <th class="thone"
-                                                                    style="white-space: normal !important;">Purchase
-                                                                    Date</th>
-                                                                <th class="thone"
-                                                                    style="white-space: normal !important;">Shipping
-                                                                    Date</th>
-                                                                <th class="thone"
-                                                                    style="white-space: normal !important;">Shipping
-                                                                    Note</th>
+                                                                <th class="thone" style="white-space: normal !important;">Purchase Date</th>
+                                                                <th class="thone" style="white-space: normal !important;">Shipping Date</th>
+                                                                <th class="thone" style="white-space: normal !important;">Shipping Note</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -300,8 +294,8 @@
                                                                     <strong>Total</strong></td>
                                                                 <td class="text-center">{{ purchaseDetail?.total_qty}}
                                                                 </td>
-                                                                <td class="text-center">{{ totalPurchaseRate}}</td>
-                                                                <td class="text-center">{{ totalMrp}}</td>
+                                                                <td class="text-center">{{ totalPurchaseRate.toFixed(2)}}</td>
+                                                                <td class="text-center">{{ totalMrp.toFixed(2)}}</td>
                                                                 <td class="text-center">{{
                                                                     purchaseDetail?.total_discount+'%'}}</td>
                                                                 <td class="text-center">{{ purchaseDetail?.total_tax
