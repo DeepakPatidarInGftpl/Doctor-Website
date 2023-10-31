@@ -262,7 +262,7 @@ export class AddPermissionGroupComponent implements OnInit {
   ]
   ngOnInit(): void {
     this.permissionForm = this.fb.group({
-      group_name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+      group_name: new FormControl('', [Validators.required]),
       permissions: new FormArray([], [Validators.required]),
     })
     this.getPermissionGroup();
@@ -410,10 +410,10 @@ export class AddPermissionGroupComponent implements OnInit {
   submit() {
     // console.log(this.modelName);
     // console.log(this.permissionForm.value.group_name);
-    // console.log(this.permissionForm.value);
+    console.log(this.permissionForm.value);
     if (this.permissionForm.valid) {
       this.loaders = true
-      // console.log('valid');
+      console.log('valid');
       var formdata: any = new FormData();
       formdata.append('group_name', this.permissionForm.get('group_name')?.value);
       // Filter out null values from the variant array
@@ -421,7 +421,7 @@ export class AddPermissionGroupComponent implements OnInit {
       formdata.append('permissions', JSON.stringify(permissionsArray));
       // formdata.append('datetime',this.permissionForm.get('datetime')?.value);
       this.contactService.addPermissionGroup(formdata).subscribe(res => {
-        // console.log(res);
+        console.log(res);
         this.loaders = false;
         this.addRes = res;
         if (this.addRes.IsSuccess == 'True') {
@@ -440,7 +440,7 @@ export class AddPermissionGroupComponent implements OnInit {
       });
     } else {
       this.permissionForm.markAllAsTouched();
-      // console.log('forms invalid');
+      console.log('forms invalid');
     }
   }
 

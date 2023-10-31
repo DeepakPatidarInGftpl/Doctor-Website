@@ -263,13 +263,13 @@ export class AddSupplierComponent implements OnInit {
             this.mobileErr=this.addRes?.error?.mobile_no[0];
             setTimeout(() => {
               this.mobileErr=''
-            }, 5000);
+            }, 8000);
           }else if(this.addRes?.error?.gstin){
             this.toastr.error(this.addRes?.error?.gstin[0]);
             this.gstinErr=this.addRes?.error?.gstin[0];
             setTimeout(() => {
               this.gstinErr=''
-            }, 5000);
+            }, 8000);
           }else if(this.addRes?.opening_balance){
             this.toastr.error(this.addRes?.opening_balance[0]);
           }else if(this.addRes?.error?.email){

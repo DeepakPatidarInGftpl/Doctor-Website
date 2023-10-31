@@ -1,34 +1,27 @@
 
 <div class="card bg">
     <div class="card-body">
-        <!-- <div class="page-header">
-            <div class="page-title">
-                <h4>Tax Slab Details</h4>
-                <h6>Full details of a Tax Slab</h6>
-            </div>
-        </div> -->
-
         <div class="page-header">
            <div class="page-title">
-                <h4>Tax Slab Details</h4>
-                <h6>Full details of a Tax Slab</h6>
+                <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                    style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                Back to Tax Slab</h6>
+                <h4>Full details of a Tax Slab</h4>
             </div>
             <div class="page-btn">
-                <a routerLink="//product/taxSlabUpdate/{{productDetail.id}}" class="btn btn-added">
+                <a routerLink="//product/taxSlabUpdate/{{productDetail?.id}}" class="btn btn-added">
                     <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Tax Slab
                 </a>
             </div>
         </div>
+
 
         <div class="company-details-card card">
             <table>
                 <tr class="ro-border">
                     <td colspan="2" class="f-500">Slab Title</td>
                     <td colspan="6" class="f-400">
-                        <h6>
-                            <!-- {{productDetail.subcategory_group.title}} -->
-                            {{productDetail?.slab_title}}
-                        </h6>
+                        <h6>{{productDetail?.slab_title}}</h6>
                     </td>
                 </tr>
                 <tr class="ro-border">
@@ -73,15 +66,15 @@
                             <table datatable class="table datanew">
                                 <thead>
                                     <tr>   
-                                        <th>From Amount </th>
-                                        <th>To Amount </th>   
+                                        <th *ngIf="productDetail?.amount_tax_slabs[0]?.from_amount>=0">From Amount </th>
+                                        <th *ngIf="productDetail?.amount_tax_slabs[0]?.to_amount>=0">To Amount </th>   
                                         <th>Tax %</th>      
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let amount of productDetail?.amount_tax_slabs let i = index">   
-                                        <td>{{amount.from_amount}}</td>
-                                        <td>{{amount.to_amount}}</td>
+                                    <tr *ngFor="let amount of productDetail?.amount_tax_slabs; let i = index">   
+                                        <td *ngIf="amount?.from_amount>=0">{{amount?.from_amount}}</td>
+                                        <td *ngIf="amount?.to_amount>=0">{{amount?.to_amount}}</td>
                                       <td>{{amount?.tax?.tax_percentage}}</td>   
                                     </tr>
                                 </tbody>
@@ -94,7 +87,7 @@
             
         <div class="d-flex align-items-center">
             <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-            <span [ngClass]="{'bg-lightgreen': productDetail.is_active === true, 'bg-lightred' : productDetail.is_active === false,'bg-lightyellow' : productDetail.is_active === 'Partial' }" class="badges">{{productDetail.is_active}}</span>
+            <span [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }" class="badges">{{productDetail?.is_active}}</span>
         </div>
    </div>
 </div>

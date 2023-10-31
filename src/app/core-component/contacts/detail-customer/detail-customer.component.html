@@ -2,8 +2,10 @@
     <div class="card-body">
         <div class="page-header">
             <div class="page-title">
-                <h4>Customer Details</h4>
-                <h6>Full details of a Customer</h6>
+                <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                    style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                Back to Customer</h6>
+                <h4>Full details of a Customer</h4>
             </div>
             <div class="page-btn">
                 <a routerLink="//contacts/updateCustomer/{{productDetail?.id}}" class="btn btn-added">

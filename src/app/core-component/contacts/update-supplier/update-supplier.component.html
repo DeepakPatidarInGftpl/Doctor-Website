@@ -1,7 +1,7 @@
 <div class="page-header">
     <div class="page-title">
         <h4> Update Supplier</h4>
-        <h6>Create edit Supplier </h6>
+        <h6>Edit Supplier </h6>
     </div>
 </div>
 <!-- /add -->
@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label> Name</label>
+                        <label>Name*</label>
                         <input type="text" formControlName="name" id="name" [ngClass]="{
                       'is-invalid': f['name'].touched && f['name'].invalid}">
                         <span class="text-danger" *ngIf="name && name.invalid && name.touched">Enter your name </span>
@@ -422,7 +422,7 @@
 
                 <div class="col-lg-8 col-sm-6 col-12">
                     <div class="form-group my-1">
-                        <label>Product Details</label>
+                        <label>Product</label>
                         <input type="text" placeholder="search product" class="form-control"
                             (keyup)="searchProduct($event.target)" formArrayName="variant" [(ngModel)]="searchVariant" [ngModelOptions]="{standalone: true}"> 
                         <div *ngIf="isproduct">
@@ -462,7 +462,7 @@
                 <div class="col-lg-12">
                     <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
                         <a routerLink="//contacts/supplier" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>

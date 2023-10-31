@@ -50,20 +50,21 @@ export class AddressStoreComponent implements OnInit {
         this.websiteService.deleteAddressStore(slug).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.tableData
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
               text: this.delRes.msg,
             });
           this.ngOnInit();
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Deleted!',
+              text: this.delRes.error,
+            });
           }
         })
-        Swal.fire({
-          icon: 'error',
-          title: 'Not Deleted!',
-          text: this.delRes.error,
-        });
+       
         // this.tableData.splice(index, 1);
       }
     });

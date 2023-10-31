@@ -147,7 +147,7 @@
                         <td>{{products?.total_product}}</td>
                         <td>
                             <span
-                                [ngClass]="{'bg-lightgreen': products.status === 'Dispatched','bg-lightyellow' : products.status === 'Received'}"
+                                [ngClass]="{'bg-lightgreen': products.status === 'Received','bg-lightyellow' : products.status === 'Dispatched'}"
                                 class="badges">{{products.status}}</span>
                         </td>
                         <td>
@@ -160,8 +160,7 @@
                                 </select>
                             </ng-container>
                             <ng-container *ngIf="products.status == 'Received'">
-                                <span
-                                    [ngClass]="{'bg-lightgreen': products.status === 'Dispatched','bg-lightyellow' : products.status === 'Received'}"
+                                <span [ngClass]="{'bg-lightgreen': products.status === 'Received','bg-lightyellow' : products.status === 'Dispatched'}"
                                     class="badges">{{products.status}}</span>
                             </ng-container>
 

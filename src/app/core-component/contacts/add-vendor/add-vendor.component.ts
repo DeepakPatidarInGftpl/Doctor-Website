@@ -41,7 +41,7 @@ export class AddVendorComponent implements OnInit {
       payment_terms: new FormControl(''),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       invite_code: new FormControl(''),
-      membership: new FormControl('',),
+      // membership: new FormControl('',),
       opening_balance_type: new FormControl('', [Validators.required])
     })
     this.addAddress();
@@ -173,7 +173,7 @@ export class AddVendorComponent implements OnInit {
     formdata.append('payment_terms', this.vendorForm.get('payment_terms')?.value);
     formdata.append('opening_balance', this.vendorForm.get('opening_balance')?.value);
     formdata.append('invite_code', this.vendorForm.get('invite_code')?.value);
-    formdata.append('membership', this.vendorForm.get('membership')?.value);
+    // formdata.append('membership', this.vendorForm.get('membership')?.value);
     formdata.append('opening_balance_type', this.vendorForm.get('opening_balance_type')?.value)
     // nested addrs data 
     const addressArray = this.vendorForm.get('address') as FormArray;
@@ -323,9 +323,9 @@ export class AddVendorComponent implements OnInit {
   get apply_tds() {
     return this.vendorForm.get('apply_tds')
   }
-  get membership() {
-    return this.vendorForm.get('membership')
-  }
+  // get membership() {
+  //   return this.vendorForm.get('membership')
+  // }
   get invite_code() {
     return this.vendorForm.get('invite_code')
   }

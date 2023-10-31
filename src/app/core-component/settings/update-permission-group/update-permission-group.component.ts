@@ -115,8 +115,6 @@ export class UpdatePermissionGroupComponent implements OnInit {
   }
 
   permmisionList: any;
-
-
   selectedSubcat = 0;
   onCheckChange(event: any) {
     const formArray: any = this.permissionForm.get('permissions') as FormArray;
@@ -152,7 +150,6 @@ export class UpdatePermissionGroupComponent implements OnInit {
       // console.log('valid');
       var formdata: any = new FormData();
       // formdata.append('group_name', this.permissionForm.get('group_name')?.value);
-
       // Filter out null values from the variant array
       const permissionsArray = this.permissionForm.get('permissions')?.value.filter((value: any) => value !== null);
       formdata.append('permissions', JSON.stringify(permissionsArray));

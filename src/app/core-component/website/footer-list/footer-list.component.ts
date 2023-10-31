@@ -67,7 +67,6 @@ export class FooterListComponent implements OnInit {
               title: 'Not Deleted!',
               text: this.delRes.error,
             });
-            this.tableData.splice(index, 1);
           }
         })
       
