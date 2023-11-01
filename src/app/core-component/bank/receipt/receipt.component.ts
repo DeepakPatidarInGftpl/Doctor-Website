@@ -12,7 +12,7 @@ import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
 })
 export class ReceiptComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private posService: PosDashboardService, private toastr: ToastrService,private router:Router) { }
+  constructor(private fb: FormBuilder, private posService: PosDashboardService, private toastr: ToastrService, private router: Router) { }
   recieptAdvanceForm!: FormGroup
   get f() {
     return this.recieptAdvanceForm.controls;
@@ -34,7 +34,7 @@ export class ReceiptComponent implements OnInit {
       receipt_method: new FormControl('Advance', [Validators.required]),
       payment_mode: new FormControl('', [Validators.required]),
       amount: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
+      description: new FormControl('',),
       bill_no: new FormControl(''),
       card_detail: new FormGroup({
         payment_account: new FormControl("",),
@@ -58,7 +58,7 @@ export class ReceiptComponent implements OnInit {
       receipt_method: new FormControl('Against Bill', [Validators.required]),
       payment_mode: new FormControl('', [Validators.required]),
       amount: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
+      description: new FormControl('',),
       bill_no: new FormControl('',),
       card_detail: new FormGroup({
         payment_account: new FormControl("",),
@@ -69,7 +69,7 @@ export class ReceiptComponent implements OnInit {
       }),
       bank_detail: new FormGroup({
         payment_account: new FormControl(''),
-        account_no: new FormControl('')
+        account_no: new FormControl('',)
       }),
       upi_detail: new FormGroup({
         upi_no: new FormControl(''),
@@ -114,7 +114,12 @@ export class ReceiptComponent implements OnInit {
   get customer() {
     return this.recieptAdvanceForm.get('customer') as FormControl;
   }
-
+  get account() {
+    return this.recieptAdvanceForm.get('account_no')
+  }
+  get accountAgainst() {
+    return this.recieptAgainstForm.get('account_no')
+  }
   oncheck(event: any) {
     // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
@@ -125,9 +130,9 @@ export class ReceiptComponent implements OnInit {
     });
   }
   salesList: any;
-  getSles(id:any){
-    this.posService.getReceiptOrder(id).subscribe(res=>{
-      this.salesList=res;
+  getSles(id: any) {
+    this.posService.getReceiptOrder(id).subscribe(res => {
+      this.salesList = res;
     })
   }
   loaders = false
@@ -165,17 +170,18 @@ export class ReceiptComponent implements OnInit {
           if (res.isSuccess) {
             this.toastr.success(res.msg);
             // this.recieptAdvanceForm.reset();
-           this.router.navigate(['//bank/reciept'])
+            this.router.navigate(['//bank/reciept'])
           } else {
             this.loaders = false
             this.toastr.error(res.msg);
-            this.customers=[];
-            
+            this.customers = [];
+
           }
         },
         (err) => {
           this.loaders = false;
-          this.toastr.error(err.error.payment_account[0], 'Payment Account')
+          this.toastr.error(err?.error?.payment_account[0], 'Payment Account');
+          this.toastr.error(err?.error?.account_no[0], 'Account No.');
         }
       );
     } else {
@@ -217,7 +223,7 @@ export class ReceiptComponent implements OnInit {
           if (res.isSuccess) {
             this.toastr.success(res.msg);
             // this.recieptAdvanceForm.reset();
-            this.customers=[];
+            this.customers = [];
             this.router.navigate(['//bank/reciept'])
             // this.ngOnInit();
           } else {

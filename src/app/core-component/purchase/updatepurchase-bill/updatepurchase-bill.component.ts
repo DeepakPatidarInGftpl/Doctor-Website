@@ -94,7 +94,12 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.puchaseBillForm.get('party')?.patchValue(res?.party?.id);
       this.puchaseBillForm.get('payment_term')?.patchValue(res?.payment_term?.id);
       this.puchaseBillForm.get('material_inward_no')?.patchValue(res?.material_inward_no?.id);
-      this.puchaseBillForm.setControl('purchase_bill', this.udateCart(res?.cart));
+      
+      if(res?.cart.length>0){
+        this.puchaseBillForm.setControl('purchase_bill', this.udateCart(res?.cart));
+      }else{
+        this.isCart=true;
+      }
       this.puchaseBillForm.setControl('tax_rate', this.udateTaxRate(res?.tax_rate));   
       this.displaySupplierName(res?.party?.id);
       this.supplierId = res?.party?.id;
@@ -1229,14 +1234,16 @@ export class UpdatepurchaseBillComponent implements OnInit {
   searchs: any[] = [];
   productName: any[] = [];
   isProduct = true;
-
+  isSearch=false;
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
+    this.isSearch=true;
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
+        this.isSearch=false;
         // this.productOption = res;
         // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
@@ -1617,6 +1624,7 @@ isAdditionalDiscount=false;
   myControls: FormArray;
   variantList: any[] = [];
   getVariant(search: any, index: any,barcode:any) {
+    this.isSearch=true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -1632,6 +1640,7 @@ isAdditionalDiscount=false;
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1656,6 +1665,7 @@ isAdditionalDiscount=false;
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {

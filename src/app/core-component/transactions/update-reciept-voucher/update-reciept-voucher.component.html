@@ -95,7 +95,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <span class="text-danger" *ngIf="mode_type && mode_type.invalid && mode_type.touched">Enter Mode Type</span>
+                            <span class="text-danger" *ngIf="modeError">Select Mode Type</span>
+                            <span class="text-danger" *ngIf="mode_type && mode_type.invalid && mode_type.touched">Select Mode Type</span>
                         </div>
                     </div>
                 </div>
@@ -150,7 +151,7 @@
 
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Description*</label>
+                        <label>Description</label>
                         <textarea formControlName="note"
                             [ngClass]="{'is-invalid': h['note'].touched && h['note'].invalid}"></textarea>
                         <span class="text-danger"
@@ -285,8 +286,8 @@
                     <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Submit</button>
-                    <button routerLink="//bank/reciept" class="btn btn-cancel">Cancel</button>
+                       &nbsp; Submit</button>
+                    <button routerLink="//transaction/recieptVoucherList" type="button"  class="btn btn-cancel">Cancel</button>
                 </div>
             </div>
         </form>
@@ -399,6 +400,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <span class="text-danger" *ngIf="modeError">Select Mode Type</span>
                             <span class="text-danger" *ngIf="mode_type1 && mode_type1.invalid && mode_type1.touched">Enter Mode Type</span>
                         </div>
                     </div>
@@ -425,7 +427,7 @@
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Payer</label>
+                        <label>Payer*</label>
                         <mat-form-field class="w-100"
                             style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
                             <input type="text" placeholder="Search Payer" aria-label="Payer" matInput
@@ -453,7 +455,7 @@
 
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Description*</label>
+                        <label>Description</label>
                         <textarea formControlName="note"
                             [ngClass]="{'is-invalid': g['note'].touched && g['note'].invalid}"></textarea>
                         <span class="text-danger"
@@ -587,8 +589,8 @@
                     <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Submit</button>
-                    <button routerLink="//bank/reciept" class="btn btn-cancel">Cancel</button>
+                       &nbsp; Submit</button>
+                    <button routerLink="//transaction/recieptVoucherList" type="button" class="btn btn-cancel">Cancel</button>
                 </div>
             </div>
         </form>

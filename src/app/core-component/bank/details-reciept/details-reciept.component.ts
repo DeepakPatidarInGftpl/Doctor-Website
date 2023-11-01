@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
@@ -10,7 +11,7 @@ import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
 
 export class DetailsRecieptComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private posService: PosDashboardService) { }
+  constructor(private Arout: ActivatedRoute, private posService: PosDashboardService,private location:Location) { }
   id: any
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -57,6 +58,9 @@ export class DetailsRecieptComponent implements OnInit {
     this.sho = true;
     this.sho1 = false;
     this.sho2 = !this.sho2;
+  }
+  goBack(){
+    this.location.back();
   }
 }
 

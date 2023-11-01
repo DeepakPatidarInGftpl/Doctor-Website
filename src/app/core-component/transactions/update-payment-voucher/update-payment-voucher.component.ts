@@ -52,7 +52,7 @@ editRes:any;
       date: new FormControl(defaultDate, [Validators.required]),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
-      amount: new FormControl(''),
+      amount: new FormControl(0),
       note: new FormControl(''),
       payment_voucher_cart: this.fb.array([]),
     });
@@ -64,7 +64,7 @@ editRes:any;
       date: new FormControl(defaultDate, [Validators.required]),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
-      amount: new FormControl(''),
+      amount: new FormControl(0),
       note: new FormControl(''),
       // against bill
       bank_payment: new FormControl(''),
@@ -96,16 +96,26 @@ editRes:any;
         this.isBank = true;
         this.isCash = false;
         this.paymentVoucherBankForm.patchValue(this.editRes)
-        this.paymentVoucherBankForm.get('supplier').patchValue(this.editRes?.supplier);
-        this.paymentVoucherBankForm.get('payment_account').patchValue(this.editRes?.payment_account);
-        this.paymentVoucherBankForm.setControl('payment_voucher_cart', this.udateCartBank(this.editRes?.payment_cart));
+        this.paymentVoucherBankForm.get('supplier').patchValue(this.editRes?.supplier?.id);
+        this.paymentVoucherBankForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
+        if(this.editRes?.payment_cart.length>0){
+          this.paymentVoucherBankForm.setControl('payment_voucher_cart', this.udateCartBank(this.editRes?.payment_cart));
+        }else{
+          this.isCartBank=true;
+          this.isAgainstBillBank=true;
+        }
         this.supplierControl.setValue(this.editRes?.supplier?.company_name);
         this.payerControl.setValue(this.editRes?.payment_account?.account_id);
       } else {
         this.paymentVoucherForm.patchValue(this.editRes);
         this.paymentVoucherForm.get('supplier').patchValue(this.editRes?.supplier?.id);
         this.paymentVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
-        this.paymentVoucherForm.setControl('payment_voucher_cart', this.udateCart(this.editRes?.payment_cart));
+        if(this.editRes?.payment_cart.length>0){
+          this.paymentVoucherForm.setControl('payment_voucher_cart', this.udateCart(this.editRes?.payment_cart));
+        }else{
+          this.isCart=true;
+          this.isAgainstBill=true;
+        }
         this.supplierControl.setValue(this.editRes?.supplier?.company_name);
         this.payerControl.setValue(this.editRes?.payment_account?.account_id);
       }
@@ -484,10 +494,14 @@ editRes:any;
   toggleBank() {
     this.isBank = true;
     this.isCash = false;
+    this.supplierControl.reset();
+    this.payerControl.reset();
   }
   toggleCash() {
     this.isBank = false;
     this.isCash = true;
+    this.supplierControl.reset();
+    this.payerControl.reset();
   }
 
   loaders = false
@@ -496,7 +510,6 @@ editRes:any;
     console.log(this.paymentVoucherForm.value);
     if (this.paymentVoucherForm.valid) {
       const formdata = new FormData();
-
       formdata.append('receipt_type', this.paymentVoucherForm.get('receipt_type')?.value);
       formdata.append('supplier', this.paymentVoucherForm.get('supplier')?.value);
       formdata.append('date', this.paymentVoucherForm.get('date')?.value);
@@ -568,8 +581,10 @@ editRes:any;
     } else {
       // console.log('error');
       this.paymentVoucherForm.markAllAsTouched();
+      this.toastr.error('Enter All Required Field')
     }
   }
+  modeError:any;
   onBankSubmit() {
     console.log(this.paymentVoucherBankForm.value);
     if (this.paymentVoucherBankForm.valid) {
@@ -637,11 +652,16 @@ editRes:any;
         },
         (err) => {
           this.loaders = false;
+          this.toastr.error('Select Mode Type',err.error.error?.mode_type[0])
+          this.modeError=err.error.error?.mode_type[0]
+          setTimeout(() => {
+            this.modeError=''
+          }, 3000);
         }
       );
     } else {
       console.log('invalid');
-
+      this.toastr.error('Enter All Required Field')
       this.paymentVoucherBankForm.markAllAsTouched();
     }
   }

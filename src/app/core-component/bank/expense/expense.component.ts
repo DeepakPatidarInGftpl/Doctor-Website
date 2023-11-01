@@ -30,7 +30,7 @@ export class ExpenseComponent implements OnInit {
     this.expenceForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
       amount: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      remarks: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      remarks: new FormControl('', [Validators.required]),
       non_gst: new FormControl('', [Validators.required,]),
       payment_account: new FormControl('', [Validators.required]),
     })
