@@ -563,7 +563,8 @@
                                                                         </mat-option>
                                                                     </ng-container>
                                                                 </ng-container>
-                                                                <mat-option *ngIf="variantList?.length === 0"
+                                                                <mat-option *ngIf="isSearch" style="color:#FF9F43">Loading...</mat-option>
+                                                                <mat-option *ngIf="variantList?.length === 0 && !isSearch"
                                                                     [value]="'No data found'">
                                                                     <a routerLink="//product/addproduct"
                                                                         style="color:#FF9F43">+add Product</a>

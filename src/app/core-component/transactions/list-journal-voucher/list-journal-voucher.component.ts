@@ -47,13 +47,13 @@ export class ListJournalVoucherComponent implements OnInit {
         this.transactionService.deleteJournalVoucher(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit();
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
               text: this.delRes.msg,
             });
-            this.tableData.splice(index, 1);
+            this.filteredData.splice(index, 1);
+            this.ngOnInit();
           } else {
             Swal.fire({
               icon: 'error',

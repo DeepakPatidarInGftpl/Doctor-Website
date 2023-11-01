@@ -79,7 +79,12 @@ export class EditpurchaseComponent implements OnInit {
       this.getresbyId = res;
       this.purchaseForm.patchValue(res);
       this.purchaseForm.get('party')?.patchValue(res.party.id)
-      this.purchaseForm.setControl('purchase_cart', this.udateCart(res?.cart));
+      
+      if(res?.cart.length>0){
+        this.purchaseForm.setControl('purchase_cart', this.udateCart(res?.cart));
+      }else{
+        this.isCart=true;
+      }
       this.displaySupplierName(res.party.id);
       this.totalAmount = res?.total;
       this.subTotal = res?.sub_total;
@@ -946,14 +951,16 @@ export class EditpurchaseComponent implements OnInit {
   productName: any[] = [];
   isProduct = true;
   staticValue: string = 'Static Value';
-
+  isSearch=false;
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
+    this.isSearch=true;
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
+        this.isSearch=false;
         // this.productOption = res;
         // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
@@ -1230,6 +1237,7 @@ export class EditpurchaseComponent implements OnInit {
   variantList: any[] = [];
 
   getVariant(search: any, index: any,barcode:any) {
+    this.isSearch=true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -1245,6 +1253,7 @@ export class EditpurchaseComponent implements OnInit {
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1268,6 +1277,7 @@ export class EditpurchaseComponent implements OnInit {
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {

@@ -48,9 +48,9 @@ export class UpdateRecieptVoucherComponent implements OnInit {
       receipt_type: new FormControl('Cash'),
       customer: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
-      receipt_voucher_no: new FormControl(''),
+      receipt_voucher_no: new FormControl('',[Validators.required]),
       mode_type: new FormControl(''),
-      amount: new FormControl(''),
+      amount: new FormControl(0),
       note: new FormControl(''),
       payer: new FormControl(''), // account foreign key
       // against bill
@@ -62,8 +62,8 @@ export class UpdateRecieptVoucherComponent implements OnInit {
       customer: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       receipt_voucher_no: new FormControl(''),
-      mode_type: new FormControl(''),
-      amount: new FormControl(''),
+      mode_type: new FormControl('',[Validators.required]),
+      amount: new FormControl(0),
       note: new FormControl(''),
       payer: new FormControl(''), // account foreign key
       // against bill
@@ -96,14 +96,25 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.recieptVoucherBankForm.patchValue(this.editRes)
         this.recieptVoucherBankForm.get('customer').patchValue(this.editRes?.customer?.id);
         this.recieptVoucherBankForm.get('payer').patchValue(this.editRes?.payer?.id);
-        this.recieptVoucherBankForm.setControl('receipt_voucher_cart', this.udateCartBank(this.editRes?.bill_cart));
+        if(this.editRes?.bill_cart.length>0){
+          this.recieptVoucherBankForm.setControl('receipt_voucher_cart', this.udateCartBank(this.editRes?.bill_cart));
+        }else{
+          this.isCartBank=true;
+          this.isAgainstBillBank=true;
+        }
+  
         this.customerControl.setValue(this.editRes?.customer?.account_id);
         this.payerControl.setValue(this.editRes?.payer?.account_id);
       } else {
         this.recieptVoucherForm.patchValue(this.editRes);
         this.recieptVoucherForm.get('customer').patchValue(this.editRes?.customer?.id);
         this.recieptVoucherForm.get('payer').patchValue(this.editRes?.payer?.id);
-        this.recieptVoucherForm.setControl('receipt_voucher_cart', this.udateCart(this.editRes?.bill_cart));
+        if(this.editRes?.bill_cart.length>0){
+          this.recieptVoucherForm.setControl('receipt_voucher_cart', this.udateCart(this.editRes?.bill_cart));
+        }else{
+          this.isCart=true;
+          this.isAgainstBill=true;
+        }
         this.customerControl.setValue(this.editRes?.customer?.account_id);
         this.payerControl.setValue(this.editRes?.payer?.account_id);
       }
@@ -326,14 +337,19 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   toggleBank() {
     this.isBank = true;
     this.isCash = false;
+    this.customerControl.reset();
+    this.payerControl.reset();
   }
   toggleCash() {
     this.isBank = false;
     this.isCash = true;
+    this.customerControl.reset();
+    this.payerControl.reset();
   }
 
   loaders = false
   addRes: any;
+  modeError:any
   onSubmit() {
     console.log(this.recieptVoucherForm.value);
     if (this.recieptVoucherForm.valid) {
@@ -372,16 +388,24 @@ export class UpdateRecieptVoucherComponent implements OnInit {
             this.router.navigate(['//transaction/recieptVoucherList'])
           } else {
             this.loaders = false
-            this.toastr.error(res.msg);
+            // this.toastr.error(res.msg);
           }
         },
         (err) => {
           this.loaders = false;
+          if(err.error.error?.mode_type){
+            this.toastr.error('Select Mode Type',err.error.error?.mode_type[0])
+            this.modeError=err.error.error?.mode_type[0]
+            setTimeout(() => {
+              this.modeError=''
+            }, 5000);
+          }
         }
       );
     } else {
       // console.log('error');
       this.recieptVoucherForm.markAllAsTouched();
+      this.toastr.error('Enter All Required Field')
     }
   }
   onBankSubmit() {
@@ -429,15 +453,29 @@ export class UpdateRecieptVoucherComponent implements OnInit {
           } else {
             this.loaders = false
             this.toastr.error(res.msg);
+            if(res.error?.mode_type){
+              this.toastr.error('Select Mode Type',res.error?.mode_type[0])
+              this.modeError=res.error?.mode_type[0]
+              setTimeout(() => {
+                this.modeError=''
+              }, 5000);
+            }
           }
         },
         (err) => {
           this.loaders = false;
+          if(err.error.error?.mode_type){
+            this.toastr.error('Select Mode Type',err.error.error?.mode_type[0])
+            this.modeError=err.error.error?.mode_type[0]
+            setTimeout(() => {
+              this.modeError=''
+            }, 5000);
+          }
         }
       );
     } else {
       console.log('invalid');
-
+      this.toastr.error('Enter All Required Field')
       this.recieptVoucherBankForm.markAllAsTouched();
     }
   }

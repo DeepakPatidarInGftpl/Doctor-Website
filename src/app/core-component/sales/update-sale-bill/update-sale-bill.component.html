@@ -520,7 +520,8 @@
                                                                </mat-option>
                                                                <!-- </ng-container> -->
                                                            </ng-container>
-                                                           <mat-option *ngIf="variantList?.length === 0"
+                                                           <mat-option *ngIf="isSearch" style="color:#FF9F43">Loading...</mat-option>
+                                                           <mat-option *ngIf="variantList?.length === 0 && !isSearch"
                                                                [value]="'No data found'">
                                                                <a routerLink="//product/addproduct"
                                                                    style="color:#FF9F43">+add Product</a>
@@ -806,10 +807,10 @@
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save</button>              
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save</button>              
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loaderCreate" (click)="submit('new')">Save & Create New</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderCreate" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Save & Create New</button>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Create New</button>
                     </div>
                 </div>
             </div>

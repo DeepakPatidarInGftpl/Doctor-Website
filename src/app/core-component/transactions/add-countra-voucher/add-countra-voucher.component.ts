@@ -33,8 +33,8 @@ export class AddCountraVoucherComponent implements OnInit {
       countra_voucher_no: new FormControl('',),
       from_account: new FormControl('',[Validators.required]),
       to_account: new FormControl('',[Validators.required]),
-      amount: new FormControl('',[Validators.required]),
-      note: new FormControl('',[Validators.required])
+      amount: new FormControl(0,[Validators.required]),
+      note: new FormControl('',)
     })
     this.getAccount();
     this.getprefix();

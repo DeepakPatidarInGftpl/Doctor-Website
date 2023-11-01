@@ -111,8 +111,9 @@ export class AddEstimateComponent implements OnInit {
   searc: any;
   myControl = new FormControl('');
   variantList: any[] = [];
-
+  isSearch=false;
   getVariant(search: any, index: any, barcode) {
+    this.isSearch=true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -128,6 +129,7 @@ export class AddEstimateComponent implements OnInit {
       }
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -158,6 +160,7 @@ export class AddEstimateComponent implements OnInit {
     else {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {

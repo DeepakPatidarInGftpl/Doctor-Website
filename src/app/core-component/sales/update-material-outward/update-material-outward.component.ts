@@ -76,7 +76,11 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     this.saleService.getSalesMaterialOutwardById(this.id).subscribe(res => {
       this.editRes = res;
       this.saleMaterialOutwardForm.patchValue(this.editRes);
-      this.saleMaterialOutwardForm.setControl('material_outward_cart', this.udateCart(this.editRes?.cart));
+      if(this.editRes?.cart.length>0){
+        this.saleMaterialOutwardForm.setControl('material_outward_cart', this.udateCart(this.editRes?.cart));
+      }else{
+        this.isCart=true;
+      }
       this.saleMaterialOutwardForm.get('customer')?.patchValue(this.editRes?.customer?.id);
       this.userControl.setValue(this.editRes?.customer?.name+ ' '+ this.editRes?.customer?.user_type);
     })
@@ -114,8 +118,9 @@ export class UpdateMaterialOutwardComponent implements OnInit {
   searc: any;
   myControl: FormArray;
   variantList: any[] = [];
-
+  isSearch=false;
   getVariant(search: any, index: any, barcode: any) {
+    this.isSearch=true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -131,6 +136,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       }
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -162,6 +168,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     else {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {

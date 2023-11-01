@@ -35,7 +35,7 @@ export class PurchaseComponent implements OnInit {
       party: new FormControl('', [Validators.required]),
       receipt_method: new FormControl('Advance'),
       payment_mode: new FormControl('', [Validators.required]),
-      amount: new FormControl('', [Validators.required]),
+      amount: new FormControl(0, [Validators.required]),
       description: new FormControl('', [Validators.required]),
       bill_no: new FormControl(''),
       card_detail: new FormGroup({
@@ -59,7 +59,7 @@ export class PurchaseComponent implements OnInit {
       customer: new FormControl('', [Validators.required]),
       receipt_method: new FormControl('Against Bill', [Validators.required]),
       payment_mode: new FormControl('', [Validators.required]),
-      amount: new FormControl('', [Validators.required]),
+      amount: new FormControl(0, [Validators.required]),
       description: new FormControl('', [Validators.required]),
       bill_no: new FormControl('',),
       card_detail: new FormGroup({
@@ -177,7 +177,8 @@ export class PurchaseComponent implements OnInit {
         },
         (err) => {
           this.loaders = false;
-          this.toastr.error(err.error.payment_account[0], 'Payment Account')
+          this.toastr.error(err?.error?.payment_account[0], 'Payment Account');
+          this.toastr.error(err?.error?.account_no[0], 'Account No.');
         }
       );
     } else {
@@ -228,12 +229,12 @@ export class PurchaseComponent implements OnInit {
         },
         (err) => {
           this.loaders = false;
-          this.toastr.error(err.error.payment_account[0], 'Payment Account')
+          this.toastr.error(err?.error?.payment_account[0], 'Payment Account');
+          this.toastr.error(err?.error?.account_no[0], 'Account No.');
         }
       );
     } else {
       // console.log('error');
-
       this.recieptAdvanceForm.markAllAsTouched();
     }
   }
@@ -252,5 +253,10 @@ export class PurchaseComponent implements OnInit {
   get bill_no() {
     return this.recieptAdvanceForm.get('bill_no')
   }
-
+  get account(){
+    return this.recieptAdvanceForm.get('account_no')
+  }
+  get accountAgainst(){
+    return this.recieptAgainstForm.get('account_no')
+  }
 }
