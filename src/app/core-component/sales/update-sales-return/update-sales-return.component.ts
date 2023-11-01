@@ -81,7 +81,12 @@ export class UpdateSalesReturnComponent implements OnInit {
         this.editRes=res;
         this.saleReturnForm.patchValue(this.editRes);
         this.saleReturnForm.get('sale_bill').patchValue(this.editRes?.sale_bill?.id)
-        this.saleReturnForm.setControl('sale_return_cart', this.udateCart(this.editRes?.cart));
+       
+        if(this.editRes?.cart.length>0){
+          this.saleReturnForm.setControl('sale_return_cart', this.udateCart(this.editRes?.cart));
+        }else{
+          this.isCart=true;
+        }
         this.saleReturnForm.get('customer')?.patchValue(this.editRes?.customer?.id);
         this.userControl.setValue(this.editRes?.customer?.name+ ' '+ this.editRes?.customer?.user_type);
       })
@@ -119,9 +124,11 @@ export class UpdateSalesReturnComponent implements OnInit {
   searc: any;
   myControl: FormArray;
   variantList: any[] = [];
-
+  isSearch=false;
   getVariant(search: any, index: any,barcode:any) {
+    this.isSearch=true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
+     
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
         console.log(this.category);
@@ -136,6 +143,7 @@ export class UpdateSalesReturnComponent implements OnInit {
       }
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -163,6 +171,7 @@ export class UpdateSalesReturnComponent implements OnInit {
     else {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         this.variantList = res;
+        this.isSearch=false;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);

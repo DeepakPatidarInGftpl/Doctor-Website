@@ -1161,14 +1161,15 @@ export class AddpurchaseBillComponent implements OnInit {
   searchs: any[] = [];
   productName: any[] = [];
   isProduct = true;
-
+  isSearch=false;
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
-
+    this.isSearch=true;
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
+        this.isSearch=false;
         this.productOption = res;
         // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
@@ -1530,6 +1531,7 @@ export class AddpurchaseBillComponent implements OnInit {
   myControl = new FormControl('');
   variantList: any[] = [];
   getVariant(search: any, index: any,barcode:any) {
+    this.isSearch=true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -1545,6 +1547,7 @@ export class AddpurchaseBillComponent implements OnInit {
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1569,6 +1572,7 @@ export class AddpurchaseBillComponent implements OnInit {
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {

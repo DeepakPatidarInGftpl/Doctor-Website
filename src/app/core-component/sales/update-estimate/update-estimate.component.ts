@@ -81,7 +81,11 @@ export class UpdateEstimateComponent implements OnInit {
       this.editRes = res;
       this.saleEstimateForm.patchValue(this.editRes);
       this.saleEstimateForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
-      this.saleEstimateForm.setControl('estimate_cart', this.udateCart(this.editRes?.cart));
+      if(this.editRes?.cart.length>0){
+        this.saleEstimateForm.setControl('estimate_cart', this.udateCart(this.editRes?.cart));
+      }else{
+        this.isCart=true;
+      }
       this.saleEstimateForm.get('customer')?.patchValue(this.editRes?.customer?.id);
       this.userControl.setValue(this.editRes?.customer?.name + ' '+ this.editRes?.customer?.user_type);
     })
@@ -119,8 +123,9 @@ export class UpdateEstimateComponent implements OnInit {
   subcategory: any;
   searc: any;
   variantList: any[] = [];
-
+  isSearch=false;
   getVariant(search: any, index: any, barcode: any) {
+    this.isSearch=true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -136,6 +141,7 @@ export class UpdateEstimateComponent implements OnInit {
       }
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -162,6 +168,7 @@ export class UpdateEstimateComponent implements OnInit {
     else {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {

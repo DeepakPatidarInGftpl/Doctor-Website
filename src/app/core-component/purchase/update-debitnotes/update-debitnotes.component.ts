@@ -90,7 +90,12 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.debitNotesForm.get('reverse_charge')?.patchValue(res?.reverse_charge);
       // this.debitNotesForm.get('payment_term')?.patchValue(res?.payment_term.id);
       this.debitNotesForm.get('purchase_bill')?.patchValue(res?.purchase_bill?.id);
-      this.debitNotesForm.setControl('cart', this.udateCart(res?.cart));
+   
+      if(res?.cart.length>0){
+        this.debitNotesForm.setControl('cart', this.udateCart(res?.cart));
+      }else{
+        this.isCart=true;
+      }
       this.displaySupplierName(res?.party?.id);
       this.supplierId = res.party.id
       this.getVariant('', '','')
@@ -1007,15 +1012,16 @@ export class UpdateDebitnotesComponent implements OnInit {
   staticValue: string = 'Static Value';
   searchs: any[] = []; productName: any[] = [];
   isProduct = true;
-
+  isSearch=false;
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
-
+    this.isSearch=true;
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
+        this.isSearch=false;
         this.productOption = res;
         // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
@@ -1312,6 +1318,7 @@ export class UpdateDebitnotesComponent implements OnInit {
   myControls: FormArray;
   variantList: any[] = [];
   getVariant(search: any, index: any,barcode:any) {
+    this.isSearch=true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -1327,6 +1334,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1351,6 +1359,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {

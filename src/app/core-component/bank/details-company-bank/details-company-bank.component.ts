@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -10,7 +11,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 export class DetailsCompanyBankComponent implements OnInit {
 
  
-  constructor(private coreService: CoreService, private Arout: ActivatedRoute,) { }
+  constructor(private coreService: CoreService, private Arout: ActivatedRoute,private location:Location) { }
   bankDetails: any
   id: any
   ngOnInit(): void {
@@ -20,5 +21,8 @@ export class DetailsCompanyBankComponent implements OnInit {
     })
   }
 
+  goBack(){
+    this.location.back();
+  }
 }
 

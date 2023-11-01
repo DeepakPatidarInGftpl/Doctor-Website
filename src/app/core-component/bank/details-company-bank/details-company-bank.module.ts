@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DetailsCompanyBankRoutingModule } from './details-company-bank-routing.module';
 import { DetailsCompanyBankComponent } from './details-company-bank.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
-
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -13,7 +13,8 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
   imports: [
     CommonModule,
     DetailsCompanyBankRoutingModule,
-    SharedModuleModule
+    SharedModuleModule,
+    MatIconModule
   ]
 })
 export class DetailsCompanyBankModule { }

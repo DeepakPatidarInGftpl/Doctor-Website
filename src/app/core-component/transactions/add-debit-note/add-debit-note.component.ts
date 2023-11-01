@@ -40,7 +40,7 @@ export class AddDebitNoteComponent implements OnInit {
       debit_note_no: new FormControl('',),
       purchase_bill: new FormControl('', [Validators.required]),
       reason: new FormControl(''),
-      amount: new FormControl(''),
+      amount: new FormControl(0),
       tax: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       note: new FormControl('',),
       total: new FormControl(''),

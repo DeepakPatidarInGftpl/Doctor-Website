@@ -85,7 +85,11 @@ export class UpdateSaleBillComponent implements OnInit {
       this.saleBillForm.patchValue(this.editRes);
       this.saleBillForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id);
       this.saleBillForm.get('sale_order').patchValue(this.editRes?.sale_order?.id);
-      this.saleBillForm.setControl('sale_bill_cart', this.udateCart(this.editRes?.cart));
+      if(this.editRes?.cart.length>0){
+        this.saleBillForm.setControl('sale_bill_cart', this.udateCart(this.editRes?.cart));
+      }else{
+        this.isCart=true;
+      }
       this.saleBillForm.get('customer')?.patchValue(this.editRes?.customer?.id);
       this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.user_type);
       this.totalAdditionalCharges = this.editRes.additional_charges;
@@ -146,7 +150,9 @@ export class UpdateSaleBillComponent implements OnInit {
   searc: any;
   myControl: FormArray;
   variantList: any[] = [];
+  isSearch=false;
   getVariant(search: any, index: any, barcode: any) {
+    this.isSearch=true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -162,6 +168,7 @@ export class UpdateSaleBillComponent implements OnInit {
       }
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -187,6 +194,7 @@ export class UpdateSaleBillComponent implements OnInit {
     else {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
+        this.isSearch=false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
