@@ -12,6 +12,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { DetailVendorComponent } from './detail-vendor.component';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { DetailVendorComponent } from './detail-vendor.component';
     MatTabsModule,
     MatIconModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    SharedModuleModule
   ]
 })
 export class DetailVendorModule { }

@@ -107,9 +107,9 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
-                                    <a href="javascript:void(0);" style="line-height: 3;">{{products.title}}</a>
+                                    <a routerLink="//account/account-sub-type-details/{{products.id}}" style="line-height: 3;">{{products?.title}}</a>
                                 </td>
-                                <td>{{products.accounts_type}}</td>
+                                <td>{{products?.accounts_type}}</td>
                                 <td>{{products?.alias}}</td>
                                 <td>
                                     <mat-slide-toggle
@@ -117,8 +117,10 @@
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
-
-                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
+                                    <a class="me-1" routerLink="//account/account-sub-type-details/{{products.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
@@ -225,7 +227,7 @@
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>Submit</button>
+                                        aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
@@ -274,7 +276,7 @@
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>Submit</button>
+                                        aria-hidden="true"></span>&nbsp Submit</button>
                             </div>
                         </div>
                     </form>

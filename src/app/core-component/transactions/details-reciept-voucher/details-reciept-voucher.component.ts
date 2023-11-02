@@ -21,10 +21,35 @@ export class DetailsRecieptVoucherComponent implements OnInit {
     this.transactionService.getRecieptVoucherById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.recieptVoucherDetail = res;
+        this.filteredData = this.recieptVoucherDetail?.logs.slice(); // Initialize filteredData with the original data
+        this.filterData(); 
       }
     })
   }
   goBack() {
     this.location.back();
   }
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
+  key = 'id';
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
+    // filter data
+    filteredData: any[]; 
+    filterOpertion:any;
+    filterData() {
+      let filteredData = this.recieptVoucherDetail?.logs.slice();
+      if (this.filterOpertion) {
+        filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
+      }
+      this.filteredData = filteredData;
+    }
+    clearFilter() {
+      this.filterOpertion=null;
+      this.filterData();
+    }
 }

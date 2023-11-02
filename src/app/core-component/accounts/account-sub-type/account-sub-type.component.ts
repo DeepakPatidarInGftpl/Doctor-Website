@@ -6,11 +6,11 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2';
-
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'app-account-sub-type',
   templateUrl: './account-sub-type.component.html',

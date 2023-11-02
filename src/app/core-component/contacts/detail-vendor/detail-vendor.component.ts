@@ -39,7 +39,8 @@ export class DetailVendorComponent implements OnInit {
     this.contactService.getVendorById(this.id).subscribe(res => {
         if(this.id==res.id){
           this.vendorDetail = res
-          // console.log(res); 
+          this.filteredData = this.vendorDetail?.logs.slice(); // Initialize filteredData with the original data
+          this.filterData();
         }
     })
   }
@@ -60,6 +61,36 @@ export class DetailVendorComponent implements OnInit {
 
   goBack(){
     this.location.back()
+  }
+
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
+  key = 'id';
+  reverse: boolean = false;
+
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
+  // filter data
+  filteredData: any[]; 
+  
+  filterOpertion:any;
+  filterData() {
+    let filteredData = this.vendorDetail?.logs.slice();
+    // if (this.supplierType) {
+    //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
+    // }
+ 
+    if (this.filterOpertion) {
+      filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
+    }
+    this.filteredData = filteredData;
+  }
+  clearFilter() {
+    this.filterOpertion=null;
+    this.filterData();
   }
 }
 

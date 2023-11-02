@@ -16,12 +16,38 @@ export class DetailsCountraVoucherComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.transactionService.getCountraVoucherById(this.id).subscribe(res=>{
-      this.countraVooucherDetails=res
+      this.countraVooucherDetails=res;
+      this.filteredData = this.countraVooucherDetails?.logs.slice(); // Initialize filteredData with the original data
+      this.filterData(); 
     })
   }
 
   goBack() {
     this.location.back();
   }
+
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
+  key = 'id';
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
+    // filter data
+    filteredData: any[]; 
+    filterOpertion:any;
+    filterData() {
+      let filteredData = this.countraVooucherDetails?.logs.slice();
+      if (this.filterOpertion) {
+        filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
+      }
+      this.filteredData = filteredData;
+    }
+    clearFilter() {
+      this.filterOpertion=null;
+      this.filterData();
+    }
 }
 
