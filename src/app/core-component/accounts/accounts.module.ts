@@ -7,7 +7,8 @@ import { AccountsComponent } from './accounts.component';
 
 @NgModule({
   declarations: [
-    AccountsComponent
+    AccountsComponent,
+    
   ],
   imports: [
     CommonModule,

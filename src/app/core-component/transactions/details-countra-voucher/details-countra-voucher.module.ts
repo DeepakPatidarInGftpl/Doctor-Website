@@ -25,7 +25,7 @@ import { FormsModule } from '@angular/forms';
     MatSelectModule,
     MatCheckboxModule,
     MatSlideToggleModule,
-    FormsModule
+    FormsModule,
   ]
 })
 export class DetailsCountraVoucherModule { }

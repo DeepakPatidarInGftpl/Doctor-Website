@@ -114,6 +114,8 @@ export class ProductDetailsComponent implements OnInit {
     this.coreService.getProductById(this?.id).subscribe(res => {
       if (this?.id == res?.id) {
         this.productDetail = res;
+        this.filteredData = this.productDetail?.logs.slice(); // Initialize filteredData with the original data
+        this.filterData(); 
         this.loader = false;
         this?.productDetail?.product_ledger_product.map((res: any) => {
           this.price.push(res.price == null ? 0 : res.price);
@@ -223,11 +225,34 @@ export class ProductDetailsComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage = 10;
-
   key = 'id'
   reverse: boolean = false;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
   }
+
+  pp: number = 1
+  pagesize: number = 3;
+  itemsperPage = 3;
+  keyy = 'id'
+  reversee: boolean = false;
+  sortt(key) {
+    this.keyy = key;
+    this.reversee = !this.reversee
+  }
+    // filter data
+    filteredData: any[]; 
+    filterOpertion:any;
+    filterData() {
+      let filteredData = this.productDetail?.logs.slice();
+      if (this.filterOpertion) {
+        filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
+      }
+      this.filteredData = filteredData;
+    }
+    clearFilter() {
+      this.filterOpertion=null;
+      this.filterData();
+    }
 }
