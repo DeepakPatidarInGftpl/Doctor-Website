@@ -61,10 +61,17 @@ export class AddSupplierComponent implements OnInit {
   }
 
   search;
-  isproduct = false
+  isproduct = false;
+  isProductLoading=false;
   searchProduct(product: any) {
+    console.log(product);
+    
+    this.isProductLoading=true;
+    console.log(this.isProductLoading,'bhbhbhbhbhhb');
+    
     if (product.value) {
       this.contactService.searchProduct(product.value).subscribe(res => {
+        this.isProductLoading=false;
         this.search = res;
         console.log(this.search);
         this.isproduct = true

@@ -135,7 +135,6 @@
                                 <td>{{ products?.opening_balance_type + (products?.opening_balance != null ? ' : ' + products?.opening_balance : '') }}</td>
                                 <td>
                                     <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
-                                
                                 </td>
                                 <td>
                                     <a class="me-1" routerLink="//account/account-details/{{products.id}}">

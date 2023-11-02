@@ -17,12 +17,39 @@ export class DetailsDebitNoteComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.transactionService.getDebitNoteById(this.id).subscribe(res=>{
-      this.debitnoteDetails=res
+      this.debitnoteDetails=res;
+      this.filteredData = this.debitnoteDetails?.logs.slice(); // Initialize filteredData with the original data
+      this.filterData(); 
     })
   }
 
   goBack() {
     this.location.back();
   }
+
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
+  key = 'id';
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
+  
+    // filter data
+    filteredData: any[]; 
+    filterOpertion:any;
+    filterData() {
+      let filteredData = this.debitnoteDetails?.logs.slice();
+      if (this.filterOpertion) {
+        filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
+      }
+      this.filteredData = filteredData;
+    }
+    clearFilter() {
+      this.filterOpertion=null;
+      this.filterData();
+    }
 }
 

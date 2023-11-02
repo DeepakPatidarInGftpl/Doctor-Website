@@ -452,14 +452,20 @@ export class UpdateSupplierComponent implements OnInit {
     return this.getBanks().controls[index].get('bank_name');
   }
 
-  search;
-  isproduct = false
+  search:any[]=[];
+  isproduct = false;
+  isProductLoading=false;
   searchProduct(product: any) {
+    this.isProductLoading=true;
     if (product.value) {
-      this.contactService.searchProduct(product.value).subscribe(res => {
-        this.search = res;
+      this.isProductLoading=true;
+      this.contactService.searchProduct(product.value).subscribe((res:any) => {
+        this.search = res; 
         console.log(this.search);
-        this.isproduct = true
+        if(this.search.length>0){
+          this.isProductLoading=false;
+        }
+        this.isproduct = true;
       });
     } else {
       // this.search = [];

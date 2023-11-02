@@ -15,11 +15,38 @@ export class DetailsCreditNoteComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.transactionService.getCreditNoteById(this.id).subscribe(res=>{
-      this.creditnoteDetails=res
+      this.creditnoteDetails=res;
+      this.filteredData = this.creditnoteDetails?.logs.slice(); // Initialize filteredData with the original data
+      this.filterData(); 
     })
   }
 
   goBack() {
     this.location.back();
   }
+
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
+  key = 'id';
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
+  
+    // filter data
+    filteredData: any[]; 
+    filterOpertion:any;
+    filterData() {
+      let filteredData = this.creditnoteDetails?.logs.slice();
+      if (this.filterOpertion) {
+        filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
+      }
+      this.filteredData = filteredData;
+    }
+    clearFilter() {
+      this.filterOpertion=null;
+      this.filterData();
+    }
 }

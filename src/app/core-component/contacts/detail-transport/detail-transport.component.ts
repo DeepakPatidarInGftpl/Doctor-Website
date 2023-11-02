@@ -11,7 +11,6 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class DetailTransportComponent implements OnInit {
 
- 
   constructor(private Arout: ActivatedRoute, private contactService: ContactService,private location:Location) { }
 
   id: any
@@ -41,7 +40,8 @@ export class DetailTransportComponent implements OnInit {
     this.contactService.getTransportById(this.id).subscribe(res => {
         if(this.id==res.id){
           this.transportDetail = res
-          // console.log(res); 
+          this.filteredData = this.transportDetail?.logs.slice(); // Initialize filteredData with the original data
+          this.filterData();
         }
     })
   }
@@ -62,5 +62,36 @@ export class DetailTransportComponent implements OnInit {
   goBack(){
     this.location.back()
   }
+
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
+  key = 'id';
+  reverse: boolean = false;
+  
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
+
+   // filter data
+   filteredData: any[]; 
+  
+   filterOpertion:any;
+   filterData() {
+     let filteredData = this.transportDetail?.logs.slice();
+     // if (this.supplierType) {
+     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
+     // }
+  
+     if (this.filterOpertion) {
+       filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
+     }
+     this.filteredData = filteredData;
+   }
+   clearFilter() {
+     this.filterOpertion=null;
+     this.filterData();
+   }
 }
 

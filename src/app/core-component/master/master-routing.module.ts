@@ -42,6 +42,7 @@ const routes: Routes = [
   { path: 'branch', loadChildren: () => import('./branch/branch.module').then((m) => m.BranchModule) },
   { path: 'addBranch', loadChildren: () => import('./add-branch/add-branch.module').then((m) => m.AddBranchModule) },
   { path: 'updateBranch/:id', loadChildren: () => import('./update-branch/update-branch.module').then((m) => m.UpdateBranchModule) },
+  { path: 'branchDetails/:id', loadChildren: () => import('./branch-details/branch-details.module').then((m) => m.BranchDetailsModule) },
   
   // { path: 'account_subtype', loadChildren: () => import('./account-sub-type/account-sub-type.module').then((m) => m.AccountSubTypeModule) },
   // { path: 'addCompanyBank', loadChildren: () => import('./add-company-bank/add-company-bank.module').then((m) => m.AddCompanyBankModule) },

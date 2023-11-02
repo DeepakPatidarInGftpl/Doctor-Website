@@ -139,7 +139,6 @@ export class BranchComponent implements OnInit {
   gst: string = '';
   filteredData = [];
   ngOnInit(): void {
-
     this.coreService.getBranch().subscribe(res => {
       this.tableData = res;
       this.loader = false;
