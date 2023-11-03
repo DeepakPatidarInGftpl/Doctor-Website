@@ -127,6 +127,10 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/product-category/';
     return this.http.get(url)
   }
+  getCategoryById(id: any,) {
+    let url = this.apiUrl + '/pv-api/product-category/?id=';
+    return this.http.get(`${url}${id}`)
+  }
   categoryIsActive(id: any, data) {
     let url = this.apiUrl + '/pv-api/product-category/?id=';
     return this.http.patch(`${url}${id}`, data);
@@ -1024,6 +1028,10 @@ export class CoreService {
     let url = this.apiUrl + '/city/';
     return this.http.get(url)
   }
+  getCityDashbord(page:number){
+    let url = this.apiUrl + '/pv-api/city_get_dashboard/?page=';
+    return this.http.get(`${url}${page}`)
+  }
   getcityById(id: number): Observable<any> {
     let url = this.apiUrl + '/city/?id='
     return this.http.get<any>(`${url}${id}`, {
@@ -1239,6 +1247,10 @@ export class CoreService {
         'Authorization': 'Token ' + `${localStorage.getItem('token')}`
       })
     })
+  }
+  getFeatureGroupById(id: any) {
+    let url = this.apiUrl + '/pv-api/fuature_group/?id=';
+    return this.http.get(`${url}${id}`);
   }
   featureGroupIsActive(id: any, data) {
     let url = this.apiUrl + '/pv-api/fuature_group/?id=';

@@ -1,93 +1,172 @@
 
-<div class="card bg">
-    <div class="card-body">
-        <div class="page-header">
-           <div class="page-title">
-                <h6 class="subhead-color" (click)="goBack()"><mat-icon
-                    style="vertical-align: middle;">keyboard_backspace</mat-icon>
-                Back to Tax Slab</h6>
-                <h4>Full details of a Tax Slab</h4>
-            </div>
-            <div class="page-btn">
-                <a routerLink="//product/taxSlabUpdate/{{productDetail?.id}}" class="btn btn-added">
-                    <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Tax Slab
-                </a>
-            </div>
-        </div>
 
-
-        <div class="company-details-card card">
-            <table>
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Slab Title</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail?.slab_title}}</h6>
-                    </td>
-                </tr>
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Is Variable Tax</td>
-                    <td colspan="6" class="f-400 p-0">
-                        <h6>
-                            <span [ngClass]="{'bg-lightgreen': productDetail?.variable_tax === true, 'bg-lightred' : productDetail?.variable_tax === false }"
-                            class="badges">{{productDetail?.variable_tax}}</span>
-                        </h6>
-                        <!-- <div class="row ro-6" *ngFor="let subcategory of productDetail.subcategory">
-                            <div class="col-sm-12">
-                                <h6>{{subcategory.title+','}}</h6>                              
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                     <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                         style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                     Back to Tax Slab</h6>
+                     <h4>Full details of a Tax Slab</h4>
+                 </div>
+                 <div class="page-btn">
+                     <a routerLink="//product/taxSlabUpdate/{{productDetail?.id}}" class="btn btn-added">
+                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Tax Slab
+                     </a>
+                 </div>
+             </div>
+            <div class="company-details-card card" *ngIf="productDetail">
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="General Details">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="th">Slab Title</td>
+                                            <td class="td">{{productDetail?.slab_title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Is Variable Tax</td>
+                                            <td class="td"><span [ngClass]="{'bg-lightgreen': productDetail?.variable_tax === true, 'bg-lightred' : productDetail?.variable_tax === false }"
+                                                class="badges">{{productDetail?.variable_tax}}</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </div> -->
-                    </td>
-                </tr>   
-              
-                <!-- <tr class="ro-border">
-                    <td colspan="2" class="f-500">Is Active</td>
-                    <td colspan="6" class="f-400">
-                        <h6>{{productDetail.is_active}}</h6>
-                    </td>
-                </tr> -->
-             
-                <tr class="ro-border">
-                    <td colspan="2" class="f-500">Amount Tax Slabs</td>
-                    <td colspan="6" class="f-400 p-0">
-                        <!-- <div class="row ro-6" *ngFor="let amount of productDetail.amount_tax_slabs">
-                            <div class="col-sm-6">
-                                <h6 class="f-500">From Amount</h6>
-                                <h6 class="f-500">To Amount</h6>
-                                <h6 class="f-500">Tax</h6>                 
+                            <div class="d-flex align-items-center mx-4">
+                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                <span [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }"
+                                class="badges">{{productDetail?.is_active}}</span>
                             </div>
-                            <div class="col-sm-6">
-                                <h6>{{amount.from_amount}}</h6>
-                                <h6>{{amount.to_amount}}</h6>
-                                <h6>{{amount.tax}}</h6>
+                        </mat-tab>
+                        <mat-tab label="Amount Tax Slabs">
+                            <div class="card">
+                                 <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')"  *ngIf="productDetail?.amount_tax_slabs[0]?.from_amount>=0">From Amount <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')"  *ngIf="productDetail?.amount_tax_slabs[0]?.to_amount>=0">To Amount <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Tax<i class="fa fa-sort"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let log of productDetail?.amount_tax_slabs | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                        <tr>
+                                            <td class="td">{{i+1}}</td>
+                                            <td class="td" *ngIf="log?.from_amount>=0">{{log?.from_amount}}</td>
+                                            <td class="td"  *ngIf="log?.to_amount>=0">{{log?.to_amount}}</td>
+                                            <td class="td">{{log?.tax?.tax_percentage + '%'}}</td>
+                                        </tr> 
+                                    </ng-container>
+                                    </tbody>
+                                    <tbody *ngIf="filteredData?.length==0">
+                                        <tr>
+                                            <td colspan="10">
+                                                <p class="center-textt">Data not available</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="progressbar">
+                                    <mat-progress-bar mode="indeterminate" class="progressbar"
+                                        *ngIf="loader"></mat-progress-bar>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                        <div class="entries"> Show per page
+                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="-1">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                        <div class="f-right">
+                                            <pagination-controls
+                                                (pageChange)="p = $event"></pagination-controls>
+                                            <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div> -->
-                       
-                        <div class="table-responsive">
-                            <table datatable class="table datanew">
-                                <thead>
-                                    <tr>   
-                                        <th *ngIf="productDetail?.amount_tax_slabs[0]?.from_amount>=0">From Amount </th>
-                                        <th *ngIf="productDetail?.amount_tax_slabs[0]?.to_amount>=0">To Amount </th>   
-                                        <th>Tax %</th>      
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let amount of productDetail?.amount_tax_slabs; let i = index">   
-                                        <td *ngIf="amount?.from_amount>=0">{{amount?.from_amount}}</td>
-                                        <td *ngIf="amount?.to_amount>=0">{{amount?.to_amount}}</td>
-                                      <td>{{amount?.tax?.tax_percentage}}</td>   
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </td>
-                </tr>     
-            </table>
+                            </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Logs" *ngIf="productDetail?.logs?.length>0">
+                            <div class="card">
+                                 <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                        <tr>
+                                            <td class="td" (click)="sort('id')">{{i+1}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.userid}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                        </tr> 
+                                    </ng-container>
+                                    </tbody>
+                                    <tbody *ngIf="filteredData?.length==0">
+                                        <tr>
+                                            <td colspan="10">
+                                                <p class="center-textt">Data not available</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="progressbar">
+                                    <mat-progress-bar mode="indeterminate" class="progressbar"
+                                        *ngIf="loader"></mat-progress-bar>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                        <div class="entries"> Show per page
+                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="-1">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                        <div class="f-right">
+                                            <pagination-controls
+                                                (pageChange)="p = $event"></pagination-controls>
+                                            <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
         </div>
-            
-        <div class="d-flex align-items-center">
-            <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-            <span [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }" class="badges">{{productDetail?.is_active}}</span>
-        </div>
-   </div>
+      
+    </div>
 </div>

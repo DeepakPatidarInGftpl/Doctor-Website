@@ -31,9 +31,12 @@ export class UnitComponent implements OnInit {
   pageSize: number = 10;
  
   itemsPerPage = 10;
-
+  navigateData:any
   constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private cs:CompanyService) {
-    this.QueryService.filterToggle();
+    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData){
+      this.editForm(this.navigateData)
+    }
   }
 
   delRes: any
@@ -315,6 +318,7 @@ loaders=false;
         this.addRes = res
         if (this.addRes.success) {
           this.loaders=false;
+          this.addForm=true
           this.toastr.success(this.addRes.msg)
           this.unitsForm.reset()
         //  window.location.reload()

@@ -130,6 +130,36 @@
                                         </div>
                                     </div>
 
+                                    <div class="pdf-table2 mb-4" *ngIf="stockTransferDetail?.logs?.length>0">
+                                        <div class="container">
+                                            <div class="page-title">
+                                                <p style="color:#FF9F43;font-size: 16px;">Logs Details</p>
+                                            </div>
+                                            <div class="col-sm-12 mb-3">
+                                                <div>
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>User</th>
+                                                                <th>Operation Type</th>
+                                                                <th>Date Time</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr
+                                                                *ngFor="let log of stockTransferDetail?.logs; let i =index">
+                                                                <td>{{i+1}}</td>
+                                                                <td>{{log?.userid}}</td>
+                                                                <td>{{log?.operation_type}}</td>
+                                                                <td>{{log?.date_time | date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row container">
                                         <div class="col-lg-6 col-sm-6 col-12">
                                             <!-- <div class="form-group">

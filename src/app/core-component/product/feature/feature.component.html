@@ -78,7 +78,7 @@
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
 
-                                    <a href="javascript:void(0);" style="line-height: 3;">{{products.title}}</a>
+                                    <a routerLink="//product/feature-details/{{products?.id}}" style="line-height: 3;">{{products.title}}</a>
                                 </td>
                                 <!-- <td>{{products.feature_group}}</td> -->
                                 <td>
@@ -88,8 +88,10 @@
                                    
                                     </td>
                                 <td>
-
-                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
+                                    <a class="me-1" routerLink="//product/feature-details/{{products?.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
 

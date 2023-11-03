@@ -55,36 +55,7 @@
                         </mat-tab>
                         <mat-tab label="Logs" *ngIf="employeeDetails?.logs?.length>0">
                             <div class="card">
-                                <div class="search-set mx-3 mt-3">
-                                    <div class="search-path">
-                                        <a class="btn btn-filter" id="filter_search">
-                                            <img src="assets/img/icons/filter.svg" alt="img">
-                                            <span><img src="assets/img/icons/closes.svg" alt="img"></span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="card" id="filter_inputs">
-                                        <div class="card-body border">
-                                            <div class="row my-2">
-                                                <div class="col-lg-12 col-sm-12">
-                                                    <div class="col-lg-4 col-sm-6 col-12">
-                                                        <div class="form-group mb-0 mx-3">
-                                                           <label>Select Operation Type</label>
-                                                            <select [(ngModel)]="filterOpertion" (change)="filterData()" class="form-select">
-                                                                <option value="" selected disabled>Select Operation Type</option>
-                                                                <option value="Add">Add</option>
-                                                                <option value="Update">Update</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group mb-0" (click)="clearFilter()">
-                                                        <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table datanew">
                                     <thead>

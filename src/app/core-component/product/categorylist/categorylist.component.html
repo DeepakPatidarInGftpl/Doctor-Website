@@ -85,19 +85,22 @@
                   </td>
                   <td>{{i+1}}</td>
                   <td class="productimgname">
-                    <a href="javascript:void(0);" class="product-img">
+                    <a routerLink="//product/category-details/{{products?.id}}" class="product-img">
                       <img [src]="apiUrl+products.image" alt="product">
                     </a>
 
                   </td>
-                  <td> <a href="javascript:void(0);">{{products.title}}</a></td>
+                  <td> <a routerLink="//product/category-details/{{products?.id}}">{{products.title}}</a></td>
                   <!-- <td>{{products.discount}}</td> -->
                   <td>
                     <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
                       [(ngModel)]="products.is_active"></mat-slide-toggle>
                   </td>
                   <td>
-                    <a class="me-3" (click)="editThis(products, i)" *ngIf="isEdit">
+                    <a class="me-1" routerLink="//product/category-details/{{products?.id}}">
+                      <img src="assets/img/icons/eye.svg" alt="img">
+                  </a>
+                    <a class="me-1" (click)="editThis(products, i)" *ngIf="isEdit">
                       <img src="assets/img/icons/edit.svg" alt="img">
                     </a>
                     <a (click)="confirmText(i, products.id)" class="me-3 confirm-text" href="javascript:void(0);"
