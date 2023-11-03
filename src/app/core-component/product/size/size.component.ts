@@ -29,8 +29,12 @@ export class SizeComponent implements OnInit {
   p:number=1
   pageSize: number = 10;
   itemsPerPage = 10;
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private cs:CompanyService) {
-    this.QueryService.filterToggle();
+  navigateData:any;
+  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private cs:CompanyService) {
+    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData){
+      this.editForm(this.navigateData)
+    }
   }
 
   delRes: any

@@ -79,13 +79,10 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    {{products.title}}
+                                    <a routerLink="//product/feature-group-details/{{products?.id}}"  style="line-height: 3;">{{products.title}}</a>
+                                    
                                 </td>
-                                <td>
-                            <tr *ngFor="let dat of products.feature">
-                                <td> {{dat.title}}</td>
-                            </tr>
-                            </td>
+                                <td> {{products.feature[0].title}}</td>
                             <td>
                                 <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span> -->
@@ -94,7 +91,10 @@
                                     [(ngModel)]="products.is_active"></mat-slide-toggle>
                             </td>
                             <td>
-                                <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
+                                <a class="me-1" routerLink="//product/feature-group-details/{{products?.id}}">
+                                    <img src="assets/img/icons/eye.svg" alt="img">
+                                </a>
+                                <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
                                     <img src="assets/img/icons/edit.svg" alt="img">
                                 </a>
 

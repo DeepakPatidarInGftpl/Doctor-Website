@@ -11,6 +11,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [TaxSlabDetailComponent],
@@ -24,6 +25,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatCheckboxModule,
     MatSlideToggleModule,
     FormsModule,
+    SharedModuleModule
   ]
 })
 export class TaxSlabDetailModule { }

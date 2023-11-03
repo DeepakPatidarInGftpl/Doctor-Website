@@ -9,6 +9,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-tax',
   templateUrl: './tax.component.html',
@@ -29,10 +30,13 @@ export class TaxComponent implements OnInit {
   titlee: any;
   p: number = 1
   pageSize: number = 10;
-
   itemsPerPage = 10;
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private cs:CompanyService) {
-    this.QueryService.filterToggle();
+  navigateData:any;
+  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private cs:CompanyService,private router:Router) {
+    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData){
+      this.editForm(this.navigateData)
+    }
   }
 
   delRes: any

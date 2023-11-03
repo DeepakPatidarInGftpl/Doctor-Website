@@ -7,7 +7,6 @@ import { PlacesComponent } from './places.component';
 @NgModule({
   declarations: [
     PlacesComponent,
-    
   ],
   imports: [
     CommonModule,

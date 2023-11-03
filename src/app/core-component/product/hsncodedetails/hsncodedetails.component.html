@@ -1,93 +1,155 @@
-<div class="page-header">
-    <div class="page-title">
-        <h4>HSN Code Details</h4>
-        <h6>Full details of a HSN Code</h6>
-    </div>
-    <div class="page-btn" >
-        <a class="btn btn-added" routerLink="//product/hsncode">
-            <img src="assets/img/icons/edit.svg"  class="me-1" alt="img">Edit HSN Code
-        </a>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-12 col-sm-12" >
-        <div class="card">
-            <div class="card-body">
-                <!-- <div class="bar-code-view">
-                    <img src="assets/img/barcode1.png" alt="barcode">
-                    <a class="printimg">
-                        <img src="assets/img/icons/printer.svg" alt="print">
+
+
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>Back to HSN Code</h6>
+                    <h4>Full details of a HSN Code</h4>
+                </div>
+                <div class="page-btn">
+                    <a (click)="navigate()" class="btn btn-added">
+                        <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit HSN Code
                     </a>
-                </div> -->
-                <div class="productdetails">
-                    <ul class="product-bar" *ngIf="hsnDetails">
-
-                        <!-- <li>
-                            <h4>Title</h4>
-                            <h6>{{hsnDetails.title}}</h6>
-                        </li> -->
-                        <li>
-                            <h4>HSN Code</h4>
-                            <h6>{{hsnDetails.hsn_code}}</h6>
-                        </li>
-                        <!-- <li>
-                            <h4>Tax</h4>
-                            <h6>{{hsnDetails.tax}}</h6>
-                          </li> -->
-                        <li>
-                            <h4>Sub Category</h4>
-                            <!-- <h6>{{hsnDetails.subcategory}}</h6> -->
+                </div>
+            </div>
+            <div class="company-details-card card" *ngIf="hsnDetails">
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="General Details">
                             <div class="table-responsive">
-                                <table datatable class="table datanew">
-                                    <thead>
-                                        <tr>   
-                                            <th>Title</th>
-                                                
-                                        </tr>
-                                    </thead>
+                                <table class="table">
                                     <tbody>
-                                        <tr *ngFor="let subcat of hsnDetails.subcategory let i = index">
-                                           
-                                            <td>{{subcat.title}}</td>
-                                           
+                                        <tr>
+                                            <td class="th">HSN Code</td>
+                                            <td class="td">{{hsnDetails?.hsn_code}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                      </li>
-                      <!-- <li>
-                        <h4>Is Active</h4>
-                        <h6>{{hsnDetails.is_active}}</h6>
-                      </li> -->
-                    </ul>
+                            <div class="d-flex align-items-center mx-4">
+                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                <span [ngClass]="{'bg-lightgreen': hsnDetails?.is_active === true, 'bg-lightred' : hsnDetails?.is_active === false,'bg-lightyellow' : hsnDetails?.is_active === 'Partial' }"
+                                class="badges">{{hsnDetails?.is_active}}</span>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Sub Category">
+                            <div class="card">
+                                 <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Sub Category Name<i class="fa fa-sort"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let log of hsnDetails.subcategory | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                        <tr>
+                                            <td class="td">{{i+1}}</td>
+                                            <td class="td">{{log?.title}}</td>
+                                        </tr> 
+                                    </ng-container>
+                                    </tbody>
+                                </table>
+                                <div class="progressbar">
+                                    <mat-progress-bar mode="indeterminate" class="progressbar"
+                                        *ngIf="loader"></mat-progress-bar>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                        <div class="entries"> Show per page
+                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="-1">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                        <div class="f-right">
+                                            <pagination-controls
+                                                (pageChange)="p = $event"></pagination-controls>
+                                            <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Logs" *ngIf="hsnDetails?.logs?.length>0">
+                            <div class="card">
+                                 <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                        <tr>
+                                            <td class="td">{{i+1}}</td>
+                                            <td class="td">{{log?.userid}}</td>
+                                            <td class="td">{{log?.operation_type}}</td>
+                                            <td class="td">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                        </tr> 
+                                    </ng-container>
+                                    </tbody>
+                                    <tbody *ngIf="filteredData?.length==0">
+                                        <tr>
+                                            <td colspan="10">
+                                                <p class="center-textt">Data not available</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="progressbar">
+                                    <mat-progress-bar mode="indeterminate" class="progressbar"
+                                        *ngIf="loader"></mat-progress-bar>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                        <div class="entries"> Show per page
+                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="-1">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                        <div class="f-right">
+                                            <pagination-controls
+                                                (pageChange)="p = $event"></pagination-controls>
+                                            <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
                 </div>
             </div>
-            <div class="d-flex align-items-center mx-3">
-                <p class="mb-0 d-inline f-500 me-2 mb-2">Is Active : </p>
-                <span [ngClass]="{'bg-lightgreen': hsnDetails.is_active === true, 'bg-lightred' : hsnDetails.is_active === false,'bg-lightyellow' : hsnDetails.is_active === 'Partial' }"
-                                    class="badges">{{hsnDetails.is_active}}</span>
-            </div>
         </div>
+      
     </div>
-    <!-- <div class="col-lg-4 col-sm-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="slider-product-details">
-                    <div class="owl-carousel owl-theme product-slide">
-                        <div class="slider-product">
-                            <img [src]="imgUrl+hsnDetails.image" alt="img">
-                            <h4>{{hsnDetails.title}}</h4>
-                            <h6>581kb</h6>
-                        </div>
-                        <div class="slider-product">
-                            <img [src]="imgUrl+hsnDetails.image" alt="img">
-                            <h4>{{hsnDetails.title}}</h4>
-                            <h6>581kb</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
 </div>

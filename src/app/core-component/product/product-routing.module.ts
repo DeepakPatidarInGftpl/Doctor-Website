@@ -271,6 +271,15 @@ const routes: Routes = [
   { path: 'list-stock-transfer-request', loadChildren: () => import('./stock-transfer-request-list/stock-transfer-request-list.module').then((m) => m.StockTransferRequestListModule) },
   { path: 'details-stock-transfer-request/:id', loadChildren: () => import('./stock-transfer-request-details/stock-transfer-request-details.module').then((m) => m.StockTransferRequestDetailsModule) },
 
+  { path: 'category-details/:id', loadChildren: () => import('./category-details/category-details.module').then((m) => m.CategoryDetailsModule) },
+  { path: 'color-details/:id', loadChildren: () => import('./color-details/color-details.module').then((m) => m.ColorDetailsModule) },
+  { path: 'feature-details/:id', loadChildren: () => import('./feature-details/feature-details.module').then((m) => m.FeatureDetailsModule) },
+  { path: 'feature-group-details/:id', loadChildren: () => import('./feature-group-details/feature-group-details.module').then((m) => m.FeatureGroupDetailsModule) },
+  { path: 'size-details/:id', loadChildren: () => import('./size-details/size-details.module').then((m) => m.SizeDetailsModule) },
+  { path: 'tax-details/:id', loadChildren: () => import('./tax-details/tax-details.module').then((m) => m.TaxDetailsModule) },
+  { path: 'unit-conversion-details/:id', loadChildren: () => import('./unit-conversion-details/unit-conversion-details.module').then((m) => m.UnitConversionDetailsModule) },
+  { path: 'unit-details/:id', loadChildren: () => import('./unit-details/unit-details.module').then((m) => m.UnitDetailsModule) },
+
 ];
 
 @NgModule({

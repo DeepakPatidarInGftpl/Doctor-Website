@@ -31,9 +31,13 @@ export class SubcategorylistComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  constructor(private coreService: CoreService, private QueryService: QueryService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,
-    private cs :CompanyService) {
-    this.QueryService.filterToggle();
+  navigateData: any;
+  constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,
+    private cs: CompanyService) {
+    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData){
+      this.editForm(this.navigateData)
+    }
   }
 
   delRes: any
@@ -136,10 +140,10 @@ export class SubcategorylistComponent implements OnInit {
     });
   }
   loaders = true;
-  isAdd:any;
-  isEdit:any;
-  isDelete:any;
-  userDetails:any
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any
   ngOnInit(): void {
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -178,7 +182,7 @@ export class SubcategorylistComponent implements OnInit {
 
     this.productCategory();
     this.getbrand()
-// localstorege used permission
+    // localstorege used permission
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
     //   const permission = localStorageData.permission;
@@ -195,23 +199,23 @@ export class SubcategorylistComponent implements OnInit {
     //     }
     //   });
     // }
-      // permission from profile api
-      this.cs.userDetails$.subscribe((userDetails) => {
-        this.userDetails = userDetails;
-        const permission = this.userDetails?.permission;
-        permission?.map((res: any) => {
-          if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='add_productsubcategory') {
-            this.isAdd = res.codename;
-            // console.log(this.isAdd);
-          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='change_productsubcategory') {
-            this.isEdit = res.codename;
-            // console.log(this.isEdit);
-          }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename=='delete_productsubcategory') {
-            this.isDelete = res.codename;
-            // console.log(this.isDelete);
-          }
-        });
+    // permission from profile api
+    this.cs.userDetails$.subscribe((userDetails) => {
+      this.userDetails = userDetails;
+      const permission = this.userDetails?.permission;
+      permission?.map((res: any) => {
+        if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename == 'add_productsubcategory') {
+          this.isAdd = res.codename;
+          // console.log(this.isAdd);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename == 'change_productsubcategory') {
+          this.isEdit = res.codename;
+          // console.log(this.isEdit);
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productsubcategory' && res.codename == 'delete_productsubcategory') {
+          this.isDelete = res.codename;
+          // console.log(this.isDelete);
+        }
       });
+    });
   }
   // selected table roww
   allSelected: boolean = false;
@@ -298,7 +302,7 @@ export class SubcategorylistComponent implements OnInit {
       });
     }
   }
-  url:any;
+  url: any;
   selectImg(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     // console.log(file);
@@ -317,7 +321,7 @@ export class SubcategorylistComponent implements OnInit {
 
   // selectimg(event: Event, index: number) {
   //   const file = (event.target as HTMLInputElement).files![0];
-    // console.log(file);
+  // console.log(file);
   //   const control = this.subcategoryForm.get('subcategories')?.at(index)?.get('image');
   //   control?.patchValue(file);
   //   control?.updateValueAndValidity();
@@ -430,7 +434,7 @@ export class SubcategorylistComponent implements OnInit {
           this.loader = false;
           if (this.addRes.success) {
             this.toastr.success(this.addRes.msg);
-            this.updateData='';
+            this.updateData = '';
             this.subcategoryForm.reset();
             this.addForm = true
             this.loader = false
@@ -446,7 +450,7 @@ export class SubcategorylistComponent implements OnInit {
             // }, 3000);
           }
         })
-      }else{
+      } else {
         this.coreService.updateProductSubcategory(formdata, this.id).subscribe(res => {
           // console.log(res);
           this.addRes = res
@@ -454,7 +458,7 @@ export class SubcategorylistComponent implements OnInit {
           if (this.addRes.success) {
             this.toastr.success(this.addRes.msg);
             this.subcategoryForm.reset();
-            this.updateData=''
+            this.updateData = ''
             this.addForm = true
             this.loader = false
             // window.location.reload()
@@ -471,8 +475,8 @@ export class SubcategorylistComponent implements OnInit {
         })
       }
 
-      
-    
+
+
 
     } else {
       this.subcategoryForm.markAllAsTouched()
@@ -547,10 +551,10 @@ export class SubcategorylistComponent implements OnInit {
     if (this.titlee === "") {
       this.ngOnInit();
     } else {
-      const searchTerm = this.titlee.toLocaleLowerCase(); 
+      const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res.title.toLocaleLowerCase(); 
-        return nameLower.includes(searchTerm); 
+        const nameLower = res.title.toLocaleLowerCase();
+        return nameLower.includes(searchTerm);
       });
     }
   }
@@ -561,8 +565,8 @@ export class SubcategorylistComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Sub Category List';
@@ -588,7 +592,7 @@ export class SubcategorylistComponent implements OnInit {
       })
     doc.save('subcategory.pdf');
 
- }
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
