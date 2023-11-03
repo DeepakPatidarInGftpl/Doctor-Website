@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -9,7 +10,7 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class DetailsBrandComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private CoreService: CoreService) { }
+  constructor(private Arout: ActivatedRoute, private CoreService: CoreService,private location:Location) { }
   imgUrl = 'https://pv.greatfuturetechno.com';
   id: any
   ngOnInit(): void {
@@ -39,6 +40,8 @@ export class DetailsBrandComponent implements OnInit {
         if(this.id==res.id){
           this.brandDetail = res
           // console.log(res); 
+          this.filteredData = this.brandDetail?.logs.slice(); // Initialize filteredData with the original data
+          this.filterData(); 
         }
     })
   }
@@ -56,6 +59,37 @@ export class DetailsBrandComponent implements OnInit {
     this.sho1 = false;
     this.sho2 = !this.sho2;
   }
+
+
+  goBack() {
+    this.location.back();
+  }
+
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
+  key = 'id';
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
+  // filter data
+  filteredData: any[]; 
+  filterOpertion:any;
+  filterData() {
+    let filteredData = this.brandDetail?.logs.slice();
+    if (this.filterOpertion) {
+      filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
+    }
+    this.filteredData = filteredData;
+  }
+  clearFilter() {
+    this.filterOpertion=null;
+    this.filterData();
+  }
 }
+
+
 
 

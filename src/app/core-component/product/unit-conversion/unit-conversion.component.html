@@ -80,7 +80,7 @@
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
 
-                                    <a href="javascript:void(0);" style="line-height: 3;">{{products?.alternate_unit.title}}</a>
+                                    <a  routerLink="//product/unit-conversion-details/{{products?.id}}" style="line-height: 3;">{{products?.alternate_unit.title}}</a>
                                 </td>
                                 <td>{{products?.unit.title}}</td>
                                 <td>{{products?.quantity}}</td>
@@ -92,8 +92,10 @@
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
-
-                                    <a class="me-3" (click)="editForm(products?.id)" *ngIf="isEdit">
+                                    <a class="me-1" routerLink="//product/unit-conversion-details/{{products?.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-1" (click)="editForm(products?.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products?.id)" class="me-3 confirm-text"

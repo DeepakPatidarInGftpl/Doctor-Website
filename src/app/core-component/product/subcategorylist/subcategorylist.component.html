@@ -108,7 +108,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a class="product-img">
+                                    <a class="product-img" routerLink="/product/subcategory-details/{{products.id}}">
                                         <img [src]="imgUrl+products.image" alt="product">
                                     </a>
                                 </td>
@@ -333,7 +333,7 @@
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>
-                                    Submit</button>
+                                  &nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
@@ -452,7 +452,7 @@
                                 <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>Submit</button>
+                                        aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
 
                         </div>

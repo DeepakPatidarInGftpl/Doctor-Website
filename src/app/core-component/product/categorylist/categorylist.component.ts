@@ -27,9 +27,8 @@ export class CategorylistComponent implements OnInit, OnDestroy {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  constructor(private QueryService: QueryService, private coreServ: CoreService, private router: Router, private toastr: ToastrService,
+  constructor( private coreServ: CoreService, private router: Router, private toastr: ToastrService,
     private cs:CompanyService) {
-    this.QueryService.filterToggle()
   }
 
   delRes: any
