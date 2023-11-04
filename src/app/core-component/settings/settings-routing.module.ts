@@ -105,6 +105,21 @@ const routes: Routes = [
     path: 'terms',
     loadChildren: () => import('./terms/terms.module').then((m) => m.TermsModule)
   },
+  {
+    path: 'user-details/:id', loadChildren: () => import('./user-details/user-details.module').then((m) => m.UserDetailsModule)
+  },
+  {
+    path: 'additional-charges-details/:id', loadChildren: () => import('./additional-charge-details/additional-charge-details.module').then((m) => m.AdditionalChargeDetailsModule)
+  },
+  {
+    path: 'payment-terms-details/:id', loadChildren: () => import('./payment-terms-details/payment-terms-details.module').then((m) => m.PaymentTermsDetailsModule)
+  },
+  {
+    path: 'terms-details/:id', loadChildren: () => import('./terms-details/terms-details.module').then((m) => m.TermsDetailsModule)
+  },
+  {
+    path: 'financial-year-details/:id', loadChildren: () => import('./financial-year-details/financial-year-details.module').then((m) => m.FinancialYearDetailsModule)
+  },
 ];
 
 @NgModule({

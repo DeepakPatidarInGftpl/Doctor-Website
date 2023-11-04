@@ -72,8 +72,9 @@
                             </tr>
                         </thead>
                         <tbody *ngIf="tableData?.length>=0 ">
-                            <!-- <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index"> -->
-                            <tr *ngFor="let products of tableData | orderBy: key: reverse | paginate: { itemsPerPage: pageSize, currentPage: p };let i = index">
+                            <tr
+                                *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -81,7 +82,10 @@
                                     </label>
                                 </td>
                                 <td>{{i+1}}</td>
-                                <td class="productimgname"><a routerLink="//places/city-details/{{products?.id}}" style="line-height: 3;">{{products?.city}}</a> </td>
+                                <td class="productimgname">
+
+                                    <a routerLink="//places/city-details/{{products?.id}}" style="line-height: 3;">{{products?.city}}</a>
+                                </td>
                                 <td>{{products?.city_code}}</td>
                                 <td>{{products?.state?.state}}</td>
                                 <td>
@@ -117,7 +121,7 @@
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
-                                <select [(ngModel)]="pageSize" class="pagination">
+                                <select [(ngModel)]="itemsPerPage" class="pagination">
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="30">30</option>
@@ -130,10 +134,8 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}} entries</div>
-                                <!-- <pagination-controls (pageChange)="nextPage($event)"></pagination-controls>
-                                <div class="entries f-right">  Showing {{ (p - 1) * pageSize + 1 }} to {{ (p * pageSize < tableData.length) ? (p * pageSize) : tableData.length }} of {{ tableData.length }} entries </div> -->
-                                  
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                                    entries</div>
                             </div>
                         </div>
                     </div>
@@ -215,7 +217,7 @@
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>
-                                    Submit</button>
+                                  &nbsp;  Submit</button>
                             </div>
 
                         </div>
@@ -278,7 +280,7 @@
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>
-                                    Submit</button>
+                                  &nbsp;  Submit</button>
                             </div>
                         </div>
                     </form>

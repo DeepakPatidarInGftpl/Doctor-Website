@@ -101,4 +101,25 @@ export class DetailsPurchaseComponent implements OnInit {
     window.print();
     document.body.innerHTML = originalContents;
   }
+
+   
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
+  key = 'id';
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
+
+  pp: number = 1
+  pageSizee: number = 10;
+  itemsPerPagee = 10;
+  keyy = 'id';
+  reversee: boolean = false;
+  sortt(key) {
+    this.keyy = key;
+    this.reversee = !this.reversee
+  }
 }
