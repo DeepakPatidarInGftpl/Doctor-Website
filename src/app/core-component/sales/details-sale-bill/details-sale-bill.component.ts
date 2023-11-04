@@ -86,4 +86,14 @@ export class DetailsSaleBillComponent implements OnInit {
     window.print();
     document.body.innerHTML = originalContents;
   }
+
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage = 10;
+  key = 'id';
+  reverse: boolean = false;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
 }

@@ -163,9 +163,9 @@ export class UpdatematerialInwardComponent implements OnInit {
     return this.fb.group({
       barcode: (''),
       qty: (1),
-      po_qty: (''),
+      po_qty: (1),
       // unit_cost: (''),
-      mrp: (''),
+      mrp: (0),
       // discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       // tax: (''),
       // landing_cost: (''),

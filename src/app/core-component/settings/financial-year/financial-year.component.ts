@@ -36,9 +36,12 @@ export class FinancialYearComponent implements OnInit {
   startDate: string = '';
   endDate: string = '';
   selectedBranch:string=''
-
+  navigateData:any
   constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router,private profileService:CompanyService) {
-   
+    this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
+    if (this.navigateData){
+      this.editForm(this.navigateData)
+    }
   }
 
   delRes: any
