@@ -11,6 +11,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { FormsModule } from '@angular/forms';
     MatSelectModule,
     MatCheckboxModule,
     MatSlideToggleModule,
-    FormsModule
+    FormsModule,
+    SharedModuleModule
   ]
 })
 export class DetailsTrendingProductsModule { }

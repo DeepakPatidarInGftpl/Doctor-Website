@@ -60,7 +60,8 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                   {{products?.discount + '%'}}
+                                    <a routerLink="//website/details-trendingProducts/{{products.id}}" style="line-height: 3;">{{products?.discount + '%'}}</a>
+                                   
                                 </td>
                                 <td>
                                     <ng-container *ngFor="let variant of products?.variant; let last = last">
