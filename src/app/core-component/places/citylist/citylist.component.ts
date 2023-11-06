@@ -19,13 +19,16 @@ export class CitylistComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  tableData: any[]=[];
+  public tableData: any
 
   cityForm!: FormGroup;
   get f() {
     return this.cityForm.controls;
   }
   titlee: any;
+  p: number = 1
+  pageSize: number = 10;
+  itemsPerPage: number = 10;
   navigateData:any
   constructor(private coreService: CoreService, private router: Router, private fb: FormBuilder, private toastr: ToastrService,
     private cs :CompanyService) {
@@ -130,20 +133,60 @@ export class CitylistComponent implements OnInit {
   isAdd:any;
   isEdit:any;
   isDelete:any;
-  userDetails:any;
-
-  p: number = 1;
-  pageSize: number = 10;
+  userDetails:any
   ngOnInit(): void {
     this.cityForm = this.fb.group({
       city: new FormControl('', [Validators.required]),
       city_code: new FormControl('', [Validators.required]),
       state: new FormControl('', [Validators.required]),
     })
-  this.nextPage(1)
+    // this.dtOptions = {
+    //   dom: 'Btlpif',
+    //   pagingType: 'numbers',
+    //   language: {
+    //     search: ' ',
+    //     searchPlaceholder: "Search...",
+    //     info: "_START_ - _END_ of _TOTAL_ items",
+    //   },
+    //   initComplete: (settings, json) => {
+    //     $('.dt-buttons').appendTo('.wordset');
+    //     $('.dataTables_filter').appendTo('.search-input');
+    //   },
+
+    // };
+    // this.coreService.getcity();
+    // this.coreService.cityBehavior.subscribe( () => {
+    //   this.tableData = JSON.parse(localStorage.getItem('cityList')!);
+    // })
+
+    this.coreService.getcity().subscribe(res => {
+      this.loader=false;
+      this.tableData = res;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
+    })
+    // console.log(this.tableData);
     this.getstate();
 
-   this.cs.userDetails$.subscribe((userDetails) => {
+    //permission from localstorage
+    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
+    // if (localStorageData && localStorageData.permission) {
+    //   const permission = localStorageData.permission;
+    //   permission.map((res: any) => {
+    //     if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='add_city') {
+    //       this.isAdd = res.codename;
+    //       console.log(this.isAdd);
+    //     } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='change_city') {
+    //       this.isEdit = res.codename;
+    //       console.log(this.isEdit);
+    //     } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='delete_city') {
+    //       this.isDelete = res.codename;
+    //       console.log(this.isDelete);
+    //     }
+    //   });
+    // }
+
+     // permission from profile api
+     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
@@ -193,8 +236,6 @@ export class CitylistComponent implements OnInit {
       this.stateList = res
     })
   }
-
-
   addRes: any;
   loaders=false;
   submit() {
@@ -274,6 +315,7 @@ export class CitylistComponent implements OnInit {
         if (id == data.id) {
           this.addForm = false
           this.cityForm.patchValue(data);
+          this.cityForm.get('state').patchValue(data.state?.id)
           this.editFormdata = data
         }
       })
@@ -302,14 +344,7 @@ export class CitylistComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-  nextPage(pageNumber:any){
-    this.coreService.getCityDashbord(pageNumber).subscribe((res:any) => {
-      this.loader=false;
-      this.tableData = res?.data;
-     this.p = pageNumber;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-    })
-  }
+
      // convert to pdf
      generatePDF() {
       // table data with pagination

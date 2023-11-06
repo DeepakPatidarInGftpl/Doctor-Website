@@ -108,8 +108,7 @@
                     </tr>
                 </thead>
                 <tbody *ngIf="filteredData?.length>=0">
-                    <tr
-                        *ngFor="let products of filteredData | orderBy:key:isAscending | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index"
+                    <tr *ngFor="let products of filteredData | orderBy:key:isAscending | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index"
                         [ngClass]="{'orange-row': userDetails?.username === products?.username}">
                         <td>
                             <label class="checkboxs">
@@ -119,7 +118,7 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a style="line-height: 3;">{{products.name}}</a>
+                            <a routerLink="//settings/user-details/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
                         </td>
                         <td>{{products.username}}</td>
                         <td>{{products.phone_number}}</td>
@@ -138,9 +137,9 @@
                             <strong class="center-text" style="color:#FF9F43;padding-left: 30px;">SUPERUSER</strong>
                         </td>
                         <td *ngIf="products?.is_superuser!==true">
-                            <!-- <a class="me-1" routerLink="//settings/employee-details/{{products.id}}">
+                            <a class="me-1" routerLink="//settings/user-details/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
-                            </a> -->
+                            </a>
                             <a class="me-1" routerLink="//settings/updateUser/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>

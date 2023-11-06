@@ -57,10 +57,10 @@
                                     <tbody>
                                         <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
                                         <tr>
-                                            <td class="td" (click)="sort('id')">{{i+1}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.userid}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
-                                            <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                            <td class="td">{{i+1}}</td>
+                                            <td class="td">{{log?.userid}}</td>
+                                            <td class="td">{{log?.operation_type}}</td>
+                                            <td class="td">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
                                         </tr> 
                                     </ng-container>
                                     </tbody>
