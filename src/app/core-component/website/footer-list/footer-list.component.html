@@ -67,8 +67,6 @@
                         <th (click)="sort('id')" class="thone">Instagram<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Twitter <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Whatsapp <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Address <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Description <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                     </tr>
@@ -83,30 +81,27 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a style="line-height: 3;"><img [src]="imgUrl+products.logo" alt="product"></a>
+                            <a style="line-height: 3;" routerLink="//website/footerDetails/{{products.id}}"><img [src]="imgUrl+products?.logo" alt="logo"></a>
                         </td>
-                        <td>{{products.phone}}</td>
+                        <td> {{products.phone}}</td>
                         <td>{{products.email}}</td>
-                        <td>{{products.facebook}}</td>
-                        <td>{{products.instagram}}</td>
-                        <td>{{products.twitter}}</td>
-                        <td>{{products.whatsapp}}</td>
-                        <td>{{products.address}}</td>
-                        <td [innerHTML]="products.description"></td>
+                        <td><a [href]="products.facebook" target="_blank">{{products.facebook}}</a></td>
+                        <td><a [href]="products.instagram" target="_blank">{{products.instagram}}</a></td>
+                        <td><a [href]="products.twitter" target="_blank">{{products.twitter}}</a></td>
+                        <td><a [href]="products.whatsapp" target="_blank">{{products.whatsapp}}</a></td>
                         <td>
                             <mat-slide-toggle
                                 (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
                                 [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
                         <td>
-                            <!-- <a class="me-3" routerLink="//website/detailsfooter/{{products.id}}">
+                            <a class="me-1" routerLink="//website/footerDetails/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
-                            </a> -->
-                            <a class="me-3" routerLink="/website/updatefooter/{{products.id}}" *ngIf="isEdit">
+                            </a>
+                            <a class="me-1" routerLink="/website/updatefooter/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
-                            <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
-                                href="javascript:void(0);" *ngIf="isDelete">
+                            <a (click)="confirmText(i,products.id)" class="confirm-text" *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
                         </td>
