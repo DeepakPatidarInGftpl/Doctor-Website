@@ -84,7 +84,8 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td>
-                            {{products.name}}
+                            <a routerLink="//website/addressStoreDetails/{{products.id}}" style="line-height: 3;">{{products.name}}</a>
+                      
                         </td>
                         <td>{{products.email}}</td>
                         <td >{{products.mobile_no}}</td>
@@ -102,13 +103,13 @@
                                 [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
                         <td>
-                            <!-- <a class="me-3" routerLink="//website/staticPage/details/{{products.slug}}">
+                            <a class="me-1" routerLink="//website/addressStoreDetails/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
-                            </a> -->
-                            <a class="me-3" routerLink="/website/update-addressStore/{{products.id}}" *ngIf="isEdit">
+                            </a>
+                            <a class="me-1" routerLink="/website/update-addressStore/{{products.id}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
-                            <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
+                            <a (click)="confirmText(i,products.id)" class=" confirm-text"
                                 href="javascript:void(0);" *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>

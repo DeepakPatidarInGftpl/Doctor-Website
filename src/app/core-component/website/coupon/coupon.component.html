@@ -70,8 +70,9 @@
                                     </label>
                                 </td>
                                 <td>{{i+1}}</td>
-                                <td >
+                                <td> <a routerLink="//website/couponDetails/{{products.id}}">
                                     {{products.title}}
+                                    </a>
                                 </td>
                                 <td>{{products.code}}</td>
                                 <td>{{products.expiry_date}}</td>
@@ -80,7 +81,10 @@
                                     <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>                         
                                 </td>
                                 <td>
-                                    <a class="me-3" (click)="editForm(products.id)" *ngIf="isEdit">
+                                    <a class="me-1" routerLink="//website/couponDetails/{{products.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a>
+                                    <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
