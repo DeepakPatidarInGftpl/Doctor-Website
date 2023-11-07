@@ -31,30 +31,7 @@ export class EditcompanyComponent implements OnInit {
   ngOnInit(): void {
     this.companyId = this.Arout.snapshot.paramMap.get('id');
     this.getCountry();
-    this.getState();
-    this.getCity();
     this.getYear();
-    this.copmpanyService.getCompanyById(this.companyId).subscribe(res => {
-      this.data = res
-      // console.log(this.data);
-
-      // this.companyForm.patchValue(this.data)
-
-      this.companyForm.get('country')?.patchValue(this.data.country.id)
-      this.selectState(this.data.country.id)
-      this.companyForm.get('state')?.patchValue(this.data.state.id)
-      this.selectCity(this.data.state.id)
-      this.companyForm.get('city')?.patchValue(this.data.city.id)
-      this.companyForm.get('financial_year')?.patchValue(this.data?.financial_year?.id)
-      // this.companyForm.controls['state'].setValue(this.data.state)
-      // this.companyForm.patchValue({
-      //   state:this.data.state
-      // })
-      this.selectS = this.data.state
-      // console.log(this.state);
-
-    })
-
     this.companyForm = this.fb.group({
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -69,8 +46,27 @@ export class EditcompanyComponent implements OnInit {
       city: new FormControl('', [Validators.required])
     })
 
+    this.copmpanyService.getCompanyById(this.companyId).subscribe(res => {
+      this.data = res;
+      this.companyForm.patchValue(this?.data);
+      this.getCurrency();
+      this.companyForm.get('currency')?.patchValue(this.data?.currency);
+      this.companyForm.get('country')?.patchValue(this.data?.country?.id);
+      this.selectState(this.data?.country?.id);
+      this.companyForm.get('state')?.patchValue(this.data?.state?.id);
+      this.selectCity(this.data?.state?.id);
+      this.companyForm.get('city')?.patchValue(this.data?.city?.id);
+      this.companyForm.get('financial_year')?.patchValue(this.data?.financial_year?.id);
+      this.selectS = this?.data?.state;
+    })
   }
 
+  currencyDetails:any
+  getCurrency(){
+    this.coreService.getCurrency().subscribe(res=>{
+      this.currencyDetails=res;
+    })
+  }
 
   country: any
   getCountry() {
@@ -80,13 +76,6 @@ export class EditcompanyComponent implements OnInit {
   }
 
   state: any
-  getState() {
-    this.copmpanyService.stateList().subscribe(res => {
-      // this.state = res;
-      // console.log(this.state);
-    })
-  }
-
   selectState(val: any) {
     // console.log(val);
     this.coreService.getStateByCountryId(val).subscribe(res => {
@@ -94,18 +83,10 @@ export class EditcompanyComponent implements OnInit {
       // console.log(this.state);
     })
   }
-  city: any
-  getCity() {
-    this.coreService.getCity().subscribe(res => {
-      // this.city=res;
-    })
-  }
-
+  city: any;
   selectCity(val: any) {
-    // console.log(val);
     this.coreService.getCityByStateId(val).subscribe(res => {
       this.city = res;
-
     })
   }
 
@@ -119,6 +100,8 @@ export class EditcompanyComponent implements OnInit {
   dateError = null;
   loaders=false;
   submit() {
+    console.log(this.companyForm.value);
+    
     if (this.companyForm.valid) {
       this.loaders=true;
       this.copmpanyService.updateCompany(this.companyForm.value, this.companyId).subscribe(res => {

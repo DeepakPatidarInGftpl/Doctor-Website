@@ -251,7 +251,7 @@ export class AccountSubTypeComponent implements OnInit {
           this.ngOnInit()
         } else {
           this.loaders = false
-          this.toastr.error(this.addRes.alias[0])
+          this.toastr.error(this.addRes?.error?.alias[0])
           this.accountSubTypeForm.get('alias').reset()
         }
       }, err => {
@@ -282,13 +282,13 @@ export class AccountSubTypeComponent implements OnInit {
           this.ngOnInit()
         } else {
           this.loaders = false
-          this.toastr.error(this.addRes.alias[0])
+          this.toastr.error(this.addRes?.error?.alias[0])
           this.accountSubTypeForm.get('alias').reset()
         }
       }, err => {
         this.loaders = false;
         // console.log(err.error.gst);
-        this.toastr.error(err.error.alias[0])
+        this.toastr.error(err.error?.error?.alias[0])
       })
     } else {
       this.accountSubTypeForm.markAllAsTouched()
@@ -350,7 +350,7 @@ export class AccountSubTypeComponent implements OnInit {
   }
 
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
