@@ -19,7 +19,6 @@ export class CompanylistComponent implements OnInit {
   constructor(private QueryService: QueryService, private companyService: CompanyService, private router: Router) {
     this.QueryService.filterToggle()
   }
-
   confirmText(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
@@ -59,6 +58,7 @@ export class CompanylistComponent implements OnInit {
   isAdd: any;
   isEdit: any;
   isDelete:any;
+  isDetails:any;
   userDetails:any
   ngOnInit(): void {
     //from localstorage
@@ -79,19 +79,19 @@ export class CompanylistComponent implements OnInit {
     //   });
     // }
 //from profile api
-    this.companyService.userDetails$.subscribe((userDetails) => {
+   
+  this.companyService.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
         if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'add_company') {
           this.isAdd = res.codename;
-          // console.log(this.isAdd);
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'change_company') {
           this.isEdit = res.codename;
-          // console.log(this.isEdit);
         }else if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'delete_company') {
           this.isDelete = res.codename;
-          // console.log(this.isDelete);
+        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'company' && res.codename == 'view_company') {
+          this.isDetails = res.codename;
         }
       });
     });

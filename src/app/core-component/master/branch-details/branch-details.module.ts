@@ -5,7 +5,6 @@ import { BranchDetailsRoutingModule } from './branch-details-routing.module';
 import { BranchDetailsComponent } from './branch-details.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
-
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';

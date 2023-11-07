@@ -2,7 +2,9 @@
     border: 1px solid red;
 }
 
-
+.ng-pristine.ng-invalid.is-invalid.ng-touched{
+    border: 1px solid red;
+}
 select,
 input[type="date"],
 input[type="button"]

@@ -1,7 +1,7 @@
 <div class="page-header">
     <div class="page-title">
         <h4> Update Account</h4>
-        <!-- <h6>Edit new Account </h6> -->
+        <h6>Edit Account </h6>
     </div>
 </div>
 <!-- /add -->
@@ -24,7 +24,7 @@
                 <select formControlName="accounts_type" class="w-100 h-100 border" required id="accounts_type"
                 [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}"
                 #accountValue (change)="getAccountSubType(accountValue.value)">
-                <option value="" selected disabled>Accounts type</option>
+                <option value="" selected disabled>Accounts Type</option>
                 <option *ngFor="let account of accountType" [value]="account.title" [attr.data-id]="account.id">{{ account.title }}</option>
               </select>
                 <span class="text-danger" *ngIf="accounts_type && accounts_type.invalid && accounts_type.touched">Select
@@ -36,12 +36,12 @@
                 <label>Account Sub Type*</label>
                 <select formControlName="account_subtype" class="w-100 h-100 border" required id="account_subtype"
                   [ngClass]="{'is-invalid': f['account_subtype'].touched && f['account_subtype'].invalid}">
-                  <option value="" selected disabled>Select Account Sub type</option>
+                  <option value="" selected disabled>Select Account Sub Type</option>
                   <option value="{{subType?.id}}" *ngFor="let subType of accountSubTypeLsit">{{subType?.title}}</option>
                 </select>
-                <span class="text-danger"
-                  *ngIf="account_subtype && account_subtype.invalid && account_subtype.touched">Select Account Sub Type
-                </span>
+                <span class="text-danger" *ngIf="account_subtype && account_subtype.invalid && account_subtype.touched">Select Account Sub Type</span>
+                <span class="text-danger" *ngIf="accountSubTypeLsit?.length==0">,Data Not Available please (Select Another Account Type)</span>
+         
               </div>
             </div>
             <div class="col-lg-6 col-sm-6 col-12">
@@ -52,7 +52,7 @@
                     <div>
                       <select formControlName="opening_balance_type" class=" border hov" required id="opening_balance_type"
                         [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">
-                        <option class="unhov" value="" selected disabled>Balance type</option>
+                        <option class="unhov" value="" selected disabled>Balance Type</option>
                         <option class="unhov" value="Cr">Cr</option>
                         <option class="unhov" value="Dr">Dr</option>
                       </select>

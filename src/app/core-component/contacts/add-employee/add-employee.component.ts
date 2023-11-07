@@ -174,6 +174,7 @@ export class AddEmployeeComponent implements OnInit {
 
   loader = false;
   userError:any;
+  mobileError:any;
   submit() {
     // console.log(this.employeeForm.value);
     let formdata: any = new FormData();
@@ -242,11 +243,16 @@ export class AddEmployeeComponent implements OnInit {
           this.router.navigate(['//contacts/employee'])
         } else {
           this.loader = false;
-          this.toastr.error(this.addRes.msg)
+          this.toastr.error(this.addRes.msg);
           if(this.addRes.msg.includes('Username')){
             this.userError=this.addRes.msg;
             setTimeout(() => {
               this.userError=''
+            }, 5000);
+          }else if(this.addRes?.msg.includes('Mobile Number')){
+            this.mobileError=this.addRes.msg;
+            setTimeout(() => {
+              this.mobileError=''
             }, 5000);
           }
         }

@@ -13,44 +13,45 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label> Name*</label>
-                        <input type="text" formControlName="name" id="name" [ngClass]="{'is-invalid': f['name'].touched && f['name'].invalid}">
+                        <input type="text" formControlName="name" placeholder="Enter Name" id="name" [ngClass]="{'is-invalid': f['name'].touched && f['name'].invalid}">
                         <span class="text-danger" *ngIf="name && name.invalid && name.touched">Enter your name </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Mobile No*</label>
-                        <input type="text" formControlName="mobile_no" maxlength="10" minlength="10" id="mobile_no"
-                            [ngClass]="{'is-invalid': f['mobile_no'].touched && f['mobile_no'].invalid}">
+                        <input type="text" formControlName="mobile_no" placeholder="Enter Mobile No." maxlength="10" minlength="10" id="mobile_no"
+                            [ngClass]="{'is-invalid': f['mobile_no'].touched && f['mobile_no'].invalid}" [ngStyle]="{'border': mobileError ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="mobile && mobile.invalid && mobile.touched">Enter your 10
-                            digits mobile phone number</span>
+                            Digits Mobile Number</span>
+                            <span class="text-danger" *ngIf="mobileError">{{mobileError}}</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>Whatsapp No</label>
-                        <input type="text" formControlName="whatsapp_no" maxlength="10" minlength="10" id="whatsapp_no"
+                        <label>Whatsapp No.</label>
+                        <input type="text" formControlName="whatsapp_no" placeholder="Enter Whatsapp No." maxlength="10" minlength="10" id="whatsapp_no"
                             [ngClass]="{'is-invalid': f['whatsapp_no'].touched && f['whatsapp_no'].invalid}">
-                        <span class="text-danger" *ngIf="whatsapp_no && whatsapp_no.invalid && whatsapp_no.touched">Enter your 10 digits whatsapp phone number</span>
+                        <span class="text-danger" *ngIf="whatsapp_no && whatsapp_no.invalid && whatsapp_no.touched">Enter your 10 Digits Whatsapp Number</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" formControlName="email" id="email" [ngClass]="{'is-invalid': f['email'].touched && f['email'].invalid}">
+                        <input type="email" formControlName="email" id="email" placeholder="Enter Email" [ngClass]="{'is-invalid': f['email'].touched && f['email'].invalid}">
                         <span class="text-danger" *ngIf="email && email.invalid && email.touched">Enter Valid Email</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Remark</label>
-                        <input type="text" formControlName="remark" id="remark" [ngClass]="{'is-invalid': f['remark'].touched && f['remark'].invalid}">
+                        <input type="text" formControlName="remark" placeholder="Enter Remark" id="remark" [ngClass]="{'is-invalid': f['remark'].touched && f['remark'].invalid}">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Date of Birth</label>
-                        <input type="date" formControlName="dob" id="dob" [ngClass]="{'is-invalid': f['dob'].touched && f['dob'].invalid}">
+                        <input type="date" formControlName="dob" placeholder="Select Date Of Birth" id="dob" [ngClass]="{'is-invalid': f['dob'].touched && f['dob'].invalid}">
                         <span class="text-danger" *ngIf="dateError">{{dateError}}</span>
                         <span class="text-danger" *ngIf="dob && dob.invalid && dob.touched">Date (format:dd/mm/yyyy)</span>
                     </div>
@@ -58,7 +59,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Anniversary</label>
-                        <input type="date" formControlName="anniversary" id="anniversary" [ngClass]="{'is-invalid': f['anniversary'].touched && f['anniversary'].invalid}">
+                        <input type="date" formControlName="anniversary" placeholder="Select Anniversary" id="anniversary" [ngClass]="{'is-invalid': f['anniversary'].touched && f['anniversary'].invalid}">
                         <span class="text-danger" *ngIf="dateError">{{dateError}}</span>
                         <span class="text-danger" *ngIf="anniversary && anniversary.invalid && anniversary.touched">Date (format:dd/mm/yyyy)</span>
                     </div>
@@ -67,14 +68,14 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Pan Number</label>
-                        <input type="text" formControlName="pan_no" id="pan_no" [ngClass]="{'is-invalid': f['pan_no'].touched && f['pan_no'].invalid}">
-                        <span class="text-danger" *ngIf="pan_no && pan_no.invalid && pan_no.touched">Enter your pan Number</span>
+                        <input type="text" formControlName="pan_no" placeholder="Enter Pan No." id="pan_no" [ngClass]="{'is-invalid': f['pan_no'].touched && f['pan_no'].invalid}">
+                        <span class="text-danger" *ngIf="pan_no && pan_no.invalid && pan_no.touched">Enter your Pan Number</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Credit Limit</label>
-                        <input type="text" formControlName="credit_limit" id="credit_limit" [ngClass]="{'is-invalid': f['credit_limit'].touched && f['credit_limit'].invalid}">
+                        <input type="text" formControlName="credit_limit" placeholder="Credit Limit" id="credit_limit" [ngClass]="{'is-invalid': f['credit_limit'].touched && f['credit_limit'].invalid}">
                     </div>
                 </div>
 
@@ -84,71 +85,70 @@
                             <div class="col-lg-3 col-sm-3">
                                 <div class="form-group">
                                     <label>Address Line 1</label>
-                                    <input type="text" formControlName="address_line_1">
+                                    <input type="text" formControlName="address_line_1" placeholder="Enter Address Line 1">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Address Line 2</label>
-                                    <input type="text" formControlName="address_line_2">
+                                    <input type="text" formControlName="address_line_2" placeholder="Enter Address Line 2">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label>Country*</label>
+                                    <label>Select Country*</label>
                                     <select formControlName="country" class="w-100 h-100 border" #countryValue
                                         (change)="selectState(countryValue.value,i)" id="country">
-                                        <option value="" selected disabled>Country</option>
+                                        <option value="" selected disabled>Select Country</option>
                                         <option value="{{country.id}}" *ngFor="let country of country">
                                             {{country.country_name}}
                                         </option>
                                     </select>
                                     <span class="text-danger" *ngIf="countryy(i).invalid && countryy(i).touched">Select
-                                        country</span>
+                                        Country</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label> State*</label>
+                                    <label>Select State*</label>
                                     <select formControlName="state" class="w-100 h-100 border" #stateValue
                                         (change)="selectCity(stateValue.value,i)">
-                                        <option value="" selected disabled>State</option>
+                                        <option value="" selected disabled>Select State</option>
                                         <option value="{{state.id}}" *ngFor="let state of state[i]">{{state.state}}
                                         </option>
                                     </select>
                                     <span class="text-danger"
                                         *ngIf="statee(i).invalid && statee(i).touched && state[i]?.length>0">Select
-                                        state</span>
+                                        State</span>
                                     <span class="text-danger"
-                                        *ngIf="statee(i).invalid && statee(i).touched && state[i]?.length<=0">Data
-                                        not available</span>
+                                        *ngIf="statee(i).invalid && statee(i).touched && state[i]?.length<=0">Please Select Country</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label> City*</label>
+                                    <label>Select City*</label>
                                     <select formControlName="city" class="w-100 h-100 border" id="city">
-                                        <option value="" selected disabled>City</option>
+                                        <option value="" selected disabled>Select City</option>
                                         <option value="{{city.id}}" *ngFor="let city of city[i]">{{city.city}}</option>
                                     </select>
                                     <span class="text-danger"
                                         *ngIf="cityy(i).invalid && cityy(i).touched && city[i]?.length>0">Select
-                                        city</span>
-                                    <span class="text-danger" *ngIf="cityy(i).invalid && cityy(i).touched && city[i]?.length<=0">data not available</span>
+                                        City</span>
+                                    <span class="text-danger" *ngIf="cityy(i).invalid && cityy(i).touched && city[i]?.length<=0">Please Select State</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Pincode</label>
-                                    <input type="text" formControlName="pincode" maxlength="6" minlength="6" id="pincode">
+                                    <input type="text" formControlName="pincode" placeholder="Enter Pincode" maxlength="6" minlength="6" id="pincode">
                                     <span class="text-danger" *ngIf="pincode(i).invalid && pincode(i).touched">Enter your 6 digits pincode number</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label>Address Type</label>
+                                    <label>Select Address Type</label>
                                     <select formControlName="address_type" class="inp">
-                                        <option value="" selected disabled>Address Type</option>
+                                        <option value="" selected disabled>Select Address Type</option>
                                         <option value="Shipping">Shipping</option>
                                         <option value="Billing">Billing</option>
                                     </select>
@@ -177,16 +177,16 @@
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Bank Holder Name*</label>
-                                    <input type="text" formControlName="account_holder_name">
+                                    <input type="text" formControlName="account_holder_name" placeholder="Enter Bank Holder Name">
                                     <span class="text-danger"
                                         *ngIf="getBankHolderName(i)?.invalid && getBankHolderName(i)?.touched">Enter
-                                        Bank holder name</span>
+                                        Bank Holder name</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Bank Name*</label>
-                                    <input type="text" formControlName="bank_name">
+                                    <input type="text" formControlName="bank_name" placeholder="Enter Bank Name">
                                     <span class="text-danger"
                                         *ngIf="getBankName(i)?.invalid && getBankName(i)?.touched">Enter your Bank
                                         Name</span>
@@ -195,25 +195,25 @@
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Branch</label>
-                                    <input type="text" formControlName="branch_name">
+                                    <input type="text" formControlName="branch_name" placeholder="Enter Branch Name">
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label>Account No*</label>
-                                    <input type="text" formControlName="account_no">
+                                    <label>Account No.*</label>
+                                    <input type="text" formControlName="account_no" placeholder="Enter Account No.">
                                     <span class="text-danger"
-                                        *ngIf="getAccountNo(i)?.invalid && getAccountNo(i)?.touched">Enter valid account
-                                        no</span>
+                                        *ngIf="getAccountNo(i)?.invalid && getAccountNo(i)?.touched">Enter valid Account
+                                        No.</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3">
                                 <div class="form-group">
                                     <label>IFSC Code*</label>
-                                    <input type="text" formControlName="bank_ifsc_code">
+                                    <input type="text" formControlName="bank_ifsc_code" placeholder="Enter IFSC Code">
                                     <span class="text-danger"
-                                        *ngIf="getIfscCode(i)?.invalid && getIfscCode(i)?.touched">Enter your Ifsc
-                                        code</span>
+                                        *ngIf="getIfscCode(i)?.invalid && getIfscCode(i)?.touched">Enter your IFSC
+                                        Code</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
@@ -242,7 +242,7 @@
                           <div>
                             <select formControlName="opening_balance_type" class=" border hov" required id="opening_balance_type"
                               [ngClass]="{'is-invalid': f['opening_balance_type'].touched && f['opening_balance_type'].invalid}">
-                              <option class="unhov" value="" selected disabled>Balance type</option>
+                              <option class="unhov" value="" selected disabled>Select Balance type</option>
                               <option class="unhov" value="Cr">Cr</option>
                               <option class="unhov" value="Dr">Dr</option>
                             </select>
@@ -265,7 +265,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Commision</label>
-                        <input type="text" formControlName="commision" id="commision"
+                        <input type="text" formControlName="commision" id="commision" placeholder="Enter Commision"
                             [ngClass]="{'is-invalid': f['commision'].touched && f['commision'].invalid}">
                         <span class="text-danger" *ngIf="commision && commision.invalid && commision.touched">Enter your
                             Commision value (ex-123)</span>
@@ -274,16 +274,16 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Wages</label>
-                        <input type="text" formControlName="wages" id="wages"
+                        <input type="text" formControlName="wages" id="wages" placeholder="Enter Wages"
                             [ngClass]="{'is-invalid': f['wages'].touched && f['wages'].invalid}">
-                        <span class="text-danger" *ngIf="wages && wages.invalid && wages.touched">Enter Valid wages
+                        <span class="text-danger" *ngIf="wages && wages.invalid && wages.touched">Enter Valid Wages
                             value (ex-123)</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Extra Wages</label>
-                        <input type="text" formControlName="extra_wages" id="extra_wages"
+                        <input type="text" formControlName="extra_wages" id="extra_wages" placeholder="Enter Extra Wages"
                             [ngClass]="{'is-invalid': f['extra_wages'].touched && f['extra_wages'].invalid}">
                         <span class="text-danger"
                             *ngIf="extra_wages && extra_wages.invalid && extra_wages.touched">Enter Valid Extra Wages
@@ -293,7 +293,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Target</label>
-                        <input type="text" formControlName="target" id="target"
+                        <input type="text" formControlName="target" id="target" placeholder="Enter Target"
                             [ngClass]="{'is-invalid': f['target'].touched && f['target'].invalid}">
                         <span class="text-danger" *ngIf="target && target.invalid && target.touched">Enter Valid Target
                             value (ex-123)</span>
@@ -302,7 +302,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>UserName*</label>
-                        <input type="text" formControlName="username" id="username"
+                        <input type="text" formControlName="username" id="username" placeholder="Enter UserName"
                             [ngClass]="{'is-invalid': f['username'].touched && f['username'].invalid}" [ngStyle]="{'border': userError ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="username && username.invalid && username.touched">Enter your
                             UserName</span>
@@ -312,7 +312,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Password*</label>
-                        <input type="text" formControlName="password" id="password"
+                        <input type="text" formControlName="password" id="password" placeholder="Enter Password"
                             [ngClass]="{'is-invalid': f['password'].touched && f['password'].invalid}">
                         <span class="text-danger" *ngIf="password && password.invalid && password.touched">Enter your
                             password</span>
@@ -320,14 +320,13 @@
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>User Role</label>
+                        <label>Select User Role</label>
                         <select formControlName="role" id="role" [ngClass]="{
                         'is-invalid': f['role'].touched && f['role'].invalid}">
                             <option value="" selected disabled>Select User Role</option>
                             <option value="{{userRole.id}}" *ngFor="let userRole of groupList">{{userRole.name}}</option>
                         </select>
-                        <span class="text-danger" *ngIf="role && role.invalid && role.touched">Select
-                            User role</span>
+                        <span class="text-danger" *ngIf="role && role.invalid && role.touched">Select User role</span>
                     </div>
                 </div>
                 <!-- <div class="col-lg-3 col-sm-3 col-12">
