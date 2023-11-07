@@ -239,6 +239,7 @@ export class UpdateEmployeeComponent implements OnInit {
   }
 loader=false;
 userError:any;
+mobileError:any;
   submit() {
     let formdata: any = new FormData();
     formdata.append('login_access', this.employeeForm.get('login_access')?.value);
@@ -310,6 +311,11 @@ userError:any;
             setTimeout(() => {
               this.userError=''
             }, 5000);
+          }else if(this.addRes?.msg.includes('Mobile Number')){
+            this.mobileError=this.addRes.msg;
+            setTimeout(() => {
+              this.mobileError=''
+            }, 5000);
           }
         }
       }, err => {
@@ -328,6 +334,11 @@ userError:any;
           setTimeout(() => {
             this.dateError = ''
           }, 2000);
+        }else if(err.error.msg.includes('Mobile Number')){
+          this.mobileError=this.addRes.msg;
+          setTimeout(() => {
+            this.mobileError=''
+          }, 5000);
         }
       })
     } else {

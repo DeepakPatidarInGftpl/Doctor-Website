@@ -191,7 +191,7 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title"
+                                    <input type="text" formControlName="title" placeholder="Enter Title" id="title"
                                         [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
                                         Title
@@ -200,7 +200,7 @@
                             </div>
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label>Accounts Type*</label>
+                                    <label>Select Accounts Type*</label>
                                     <select formControlName="accounts_type" required
                                         [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}">
                                         <option value="" selected disabled> Select Aaccounts Type</option>
@@ -215,7 +215,7 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Alias*</label>
-                                    <input type="text" formControlName="alias" id="alias" required
+                                    <input type="text" formControlName="alias" placeholder="Enter Alias" id="alias" required
                                         [ngClass]="{'is-invalid': f['alias'].touched && f['alias'].invalid}">
                                     <span class="text-danger" *ngIf="alias && alias.invalid && alias.touched">Enter
                                         Valid alias

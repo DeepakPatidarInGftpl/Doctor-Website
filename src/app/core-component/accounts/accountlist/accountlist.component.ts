@@ -28,7 +28,7 @@ export class AccountlistComponent implements OnInit {
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
-  filteredData: any[]; // The filtered data
+  filteredData: any[]; 
   selectedAccountType: string = '';
   selectedAccountSubType: string = '';
   selectedAccountId: string = '';
@@ -270,7 +270,7 @@ export class AccountlistComponent implements OnInit {
   }
 
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

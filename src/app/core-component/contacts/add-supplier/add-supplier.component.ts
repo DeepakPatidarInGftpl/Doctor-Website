@@ -22,7 +22,7 @@ export class AddSupplierComponent implements OnInit {
   ngOnInit(): void {
     this.supplierForm = this.fb.group({
       login_access: new FormControl('',),
-      name: new FormControl('',),
+      name: new FormControl('',[Validators.required]),
       company_name: new FormControl('', [Validators.required]),
       mobile_no: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
       telephone_no: new FormControl('',),

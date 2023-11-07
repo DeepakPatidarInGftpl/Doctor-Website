@@ -59,10 +59,8 @@ export class AddcompanyComponent implements OnInit {
     })
 
     this.getCountry();
-    this.getState();
     this.getYear();
     this.getCurrency();
-    this.getCity();
   }
   delete(index: any) {
     this.tableData.splice(index, 1);
