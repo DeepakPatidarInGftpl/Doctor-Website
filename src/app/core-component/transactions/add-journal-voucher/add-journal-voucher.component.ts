@@ -26,8 +26,8 @@ export class AddJournalVoucherComponent implements OnInit {
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     this.journalvoucherForm = this.fb.group({
-      date: new FormControl(defaultDate, [Validators.required]),
-      journal_voucher_no: new FormControl('', [Validators.required]),
+      date: new FormControl(defaultDate,),
+      journal_voucher_no: new FormControl('',),
       journal_voucher_cart: this.fb.array([]),
       total_credit: new FormControl(0),
       total_debit: new FormControl(0),
@@ -167,6 +167,7 @@ export class AddJournalVoucherComponent implements OnInit {
         })
       } else {
         this.journalvoucherForm.markAllAsTouched()
+        this.toastrService.error('Please Fill All The Required Fields')
       }
     } else {
       console.log(debit, credit);

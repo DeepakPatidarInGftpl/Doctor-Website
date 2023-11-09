@@ -1,6 +1,9 @@
 .ng-dirty.ng-invalid.is-invalid.ng-touched {
   border: 1px solid red;
 }
+.ng-untouched.ng-pristine.ng-valid.cdk-text-field-autofill-monitored.is-invalid{
+  border: 1px solid red;
+}
 
 select,textarea,
 input[type="number"],

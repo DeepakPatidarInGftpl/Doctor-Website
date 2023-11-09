@@ -240,9 +240,9 @@ export class UpdateDealerComponent implements OnInit {
   }
 
   loader = false;
+  mobError:any;
   submit() {
     // console.log(this.dealerForm.value);
-
     let formdata: any = new FormData();
     formdata.append('login_access', this.dealerForm.get('login_access')?.value);
     formdata.append('name', this.dealerForm.get('name')?.value);
@@ -323,8 +323,13 @@ export class UpdateDealerComponent implements OnInit {
       }, err => {
         this.loader = false
         // console.log(err.error);
+    
         if (err.error.msg) {
-          this.toastr.error(err.error.msg)
+          this.toastr.error(err.error.msg);
+          this.mobError=err.error.msg;
+          setTimeout(() => {
+            this.mobError='';
+          }, 5000);
         }
         else if (err.error) {
           this.toastr.error(err.error?.opening_balance[0]);
@@ -345,6 +350,7 @@ export class UpdateDealerComponent implements OnInit {
     } else {
       this.dealerForm.markAllAsTouched()
       // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

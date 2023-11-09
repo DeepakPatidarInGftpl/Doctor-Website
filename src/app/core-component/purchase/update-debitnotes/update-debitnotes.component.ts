@@ -6,7 +6,7 @@ import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
-import { tap } from 'rxjs/operators';
+
 @Component({
   selector: 'app-update-debitnotes',
   templateUrl: './update-debitnotes.component.html',
@@ -63,7 +63,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       party: new FormControl('', [Validators.required]),
       // related_name: new FormControl(''),
       purchase_return_no: new FormControl(''),
-      purchase_return_date: new FormControl(''),
+      purchase_return_date: new FormControl('',[Validators.required]),
       refrence_bill_no: new FormControl(''),
       purchase_bill: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       reason: new FormControl('',),
@@ -97,7 +97,7 @@ export class UpdateDebitnotesComponent implements OnInit {
         this.isCart=true;
       }
       this.displaySupplierName(res?.party?.id);
-      this.supplierId = res.party.id
+      this.supplierId = res?.party?.id
       this.getVariant('', '','')
       const formattedOrderDate = new Date(this.getresbyId?.purchase_return_date).toISOString().slice(0, 16);
       this.debitNotesForm.get('purchase_return_date')?.patchValue(formattedOrderDate);
@@ -105,7 +105,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.contactService.getSupplierById(res?.party?.id).subscribe(res => {
         // console.log(res);
         this.supplierAddress = res;
-        this.supplierControl.setValue(res.company_name);
+        this.supplierControl.setValue(res?.company_name);
         this.getprefix()
         this.supplierAddress.address.map((res: any) => {
           if (res.address_type == 'Billing') {
@@ -936,7 +936,8 @@ export class UpdateDebitnotesComponent implements OnInit {
         }
       })
     } else {
-      this.debitNotesForm.markAllAsTouched()
+      this.debitNotesForm.markAllAsTouched();
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
   private _filter(value: string | number, include: boolean): any[] {

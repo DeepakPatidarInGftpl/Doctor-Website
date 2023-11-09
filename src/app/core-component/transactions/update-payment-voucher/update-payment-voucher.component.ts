@@ -581,7 +581,7 @@ editRes:any;
     } else {
       // console.log('error');
       this.paymentVoucherForm.markAllAsTouched();
-      this.toastr.error('Enter All Required Field')
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   modeError:any;
@@ -660,9 +660,8 @@ editRes:any;
         }
       );
     } else {
-      console.log('invalid');
-      this.toastr.error('Enter All Required Field')
       this.paymentVoucherBankForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   //bank

@@ -68,7 +68,7 @@
                         <th (click)="sort('id')" class="thone">Amount<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Remarks<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Non GST <i class="fa fa-sort"></i></th>
-                        <!-- <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th> -->
+                        <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="tableData?.length>=0">
@@ -89,8 +89,11 @@
                         <td>{{products?.remarks}}</td>
                         <td> <span [ngClass]="{'bg-lightgreen': products?.non_gst === true, 'bg-lightred' : products?.non_gst === false,'bg-lightyellow' : products?.non_gst === 'Partial' }" class="badges">{{products?.non_gst}}</span>
                         </td>
+                        <a class="me-1" routerLink="//bank/detailsExpence/{{products.id}}">
+                            <img src="assets/img/icons/eye.svg" alt="img">
+                        </a>
                        <!-- <td>
-                            <a class="me-1" routerLink="//bank/detailsCompanyBank/{{products.id}}">
+                            <a class="me-1" routerLink="//bank/detailsExpence/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
                             <a class="me-1" routerLink="//bank/updateCompanyBank/{{products.id}}" *ngIf="isEdit">

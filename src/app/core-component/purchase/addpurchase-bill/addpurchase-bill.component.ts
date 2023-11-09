@@ -66,7 +66,7 @@ export class AddpurchaseBillComponent implements OnInit {
       supplier_bill_date: new FormControl(defaultDateTime, [Validators.required]),
       refrence_bill_no: new FormControl('',),
       supplier_bill_no: new FormControl('', [Validators.required,]),
-      material_inward_no: new FormControl('', [Validators.required,]),
+      material_inward_no: new FormControl('',),
       payment_term: new FormControl(''),
       due_date: new FormControl(defaultDateTime, [Validators.required]),
       reverse_charge: new FormControl('',),
@@ -138,11 +138,10 @@ export class AddpurchaseBillComponent implements OnInit {
   getAdditional(data: any, j) {
     console.log(data);
     this.purchaseService.getAdditionalCharge().subscribe((res: any) => {
-      res.map((res: any) => {
+      res?.map((res: any) => {
         if (data == res.additional_charge) {
           this.value[j] = res.value
           console.log(this.value[j]);
-
         }
       })
     })
@@ -935,7 +934,7 @@ export class AddpurchaseBillComponent implements OnInit {
       formdata.append('refrence_bill_no', this.purchaseBillForm.get('refrence_bill_no')?.value);
       formdata.append('supplier_bill_no', this.purchaseBillForm.get('supplier_bill_no')?.value);
       formdata.append('material_inward_no', this.purchaseBillForm.get('material_inward_no')?.value);
-      formdata.append('payment_term', this.purchaseBillForm.get('payment_term')?.value);
+      formdata.append('payment_term', this.purchaseBillForm.get('payment_term')?.value==undefined?'':this.purchaseBillForm.get('payment_term')?.value);
       formdata.append('due_date', this.purchaseBillForm.get('due_date')?.value);
       formdata.append('reverse_charge', this.purchaseBillForm.get('reverse_charge')?.value);
       formdata.append('shipping_date', this.purchaseBillForm.get('shipping_date')?.value);
@@ -986,7 +985,7 @@ export class AddpurchaseBillComponent implements OnInit {
       });
       formdata.append('purchase_bill', JSON.stringify(cartData));
       //taxrate
-      const textArray = this.purchaseBillForm.get('tax_rate') as FormArray;
+      const textArray = this.purchaseBillForm?.get('tax_rate') as FormArray;
       const textData = [];
       textArray.controls.forEach((tax) => {
         const taxGroup = tax as FormGroup;
@@ -1058,7 +1057,8 @@ export class AddpurchaseBillComponent implements OnInit {
         }
       })
     } else {
-      this.purchaseBillForm.markAllAsTouched()
+      this.purchaseBillForm.markAllAsTouched();
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
   //search with name only

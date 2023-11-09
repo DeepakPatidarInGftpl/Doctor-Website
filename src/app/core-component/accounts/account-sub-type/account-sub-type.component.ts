@@ -262,6 +262,7 @@ export class AccountSubTypeComponent implements OnInit {
     } else {
       this.accountSubTypeForm.markAllAsTouched()
       // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 
@@ -293,6 +294,7 @@ export class AccountSubTypeComponent implements OnInit {
     } else {
       this.accountSubTypeForm.markAllAsTouched()
       // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

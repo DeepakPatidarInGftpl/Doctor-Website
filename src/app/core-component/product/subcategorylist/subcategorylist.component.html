@@ -109,11 +109,11 @@
                                 <td>{{i+1}}</td>
                                 <td>
                                     <a class="product-img" routerLink="/product/subcategory-details/{{products.id}}">
-                                        <img [src]="imgUrl+products.image" alt="product">
+                                        <img [src]="imgUrl+products?.image" alt="product">
                                     </a>
                                 </td>
-                                <td routerLink="/product/subcategory-details/{{products.id}}">{{products.title}}</td>
-                                <td>{{products.category_id.title}}</td>
+                                <td routerLink="/product/subcategory-details/{{products.id}}">{{products?.title}}</td>
+                                <td>{{products?.category_id?.title}}</td>
                                 <!-- <td>{{products.discount}}</td> -->
                                 <td>
                                     <mat-slide-toggle
@@ -242,13 +242,13 @@
                             </div> -->
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
-                                    <label>Category*</label>
-                                    <select formControlName="category_id" class="w-100 h-100 border" required
+                                    <label>Select Category*</label>
+                                    <select formControlName="category_id"  required
                                         #category_idValue id="category_id" [ngClass]="{
                               'is-invalid': f['category_id'].touched && f['category_id'].invalid}">
                                         <option value="" selected disabled>Select category</option>
                                         <option value="{{category.id}}" *ngFor="let category of categoryList">
-                                            {{category.title}}
+                                            {{category?.title}}
                                         </option>
                                     </select>
                                     <span class="text-danger"
@@ -370,7 +370,7 @@
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Category*</label>
-                                    <select formControlName="category_id" class="w-100 h-100 border" required
+                                    <select formControlName="category_id"  required
                                         #category_idValue id="category_id" [ngClass]="{
                               'is-invalid': f['category_id'].touched && f['category_id'].invalid
                             }">

@@ -64,12 +64,12 @@ export class AddEstimateComponent implements OnInit {
       estimate_expiry_date: new FormControl(defaultDateago7, [Validators.required]),
       payment_terms: new FormControl('',[Validators.required]),
       estimate_cart: this.fb.array([]),
-      total_qty: new FormControl(''),
-      total_tax: new FormControl(''),
-      total_discount: new FormControl(''),
-      subtotal: new FormControl(''),
-      roundoff: new FormControl(''),
-      total: new FormControl(''),
+      total_qty: new FormControl(0),
+      total_tax: new FormControl(0),
+      total_discount: new FormControl(0),
+      subtotal: new FormControl(0),
+      roundoff: new FormControl(0),
+      total: new FormControl(0),
       status: new FormControl(''),
       note: new FormControl(''),
     });
@@ -837,7 +837,7 @@ export class AddEstimateComponent implements OnInit {
         this.loaderDraft = false;
       }
       this.saleEstimateForm.markAllAsTouched()
-      console.log('invald');
+            this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

@@ -1,7 +1,7 @@
 <div class="page-header">
     <div class="page-title">
-        <h4>Reciept Voucher Add</h4>
-        <h6>New Reciept Voucher</h6>
+        <h4>Payment Voucher Add</h4>
+        <h6>New Payment Voucher</h6>
     </div>
 </div>
 
@@ -52,7 +52,7 @@
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Date*</label>
+                        <label>Date</label>
                         <input type="date" formControlName="date" id="date"
                             [ngClass]="{'is-invalid': h['date'].touched && h['date'].invalid}">
                         <span class="text-danger" *ngIf="date && date.invalid && date.touched">Enter Date</span>
@@ -100,22 +100,21 @@
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Receipt Voucher No.*</label>
-                        <input type="text" formControlName="payment_voucher_no" id="payment_voucher_no"
+                        <label>Payment Voucher No.</label>
+                        <input type="text" formControlName="payment_voucher_no" placeholder="Enter Payment Voucher No." id="payment_voucher_no"
                             [ngModel]="prefixNo" readonly
                             [ngClass]="{'is-invalid': h['payment_voucher_no'].touched && h['payment_voucher_no'].invalid}">
                         <span class="text-danger"
                             *ngIf="payment_voucher_no && payment_voucher_no.invalid && payment_voucher_no.touched">Enter
-                            Receipt Voucher no.</span>
+                            Payment Voucher No.</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Amount*</label>
-                        <input type="number" formControlName="amount" id="amount"
+                        <label>Amount</label>
+                        <input type="number" formControlName="amount" id="amount" placeholder="Enter Amount"
                             [ngClass]="{'is-invalid': h['amount'].touched && h['amount'].invalid}">
-                        <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter
-                            Amount</span>
+                        <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span>
                     </div>
                 </div>
 
@@ -142,16 +141,15 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="payer && payer.invalid && payer.touched">Select
-                            Payment Account</span>
+                        <span class="text-danger" *ngIf="payer && payer.invalid && payer.touched">Select Payment Account</span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea formControlName="note" [ngClass]="{'is-invalid': h['note'].touched && h['note'].invalid}"></textarea>
-                        <span class="text-danger" *ngIf="description && description.invalid && description.touched">Enter description</span>
+                        <textarea formControlName="note" placeholder="Enter Description" [ngClass]="{'is-invalid': h['note'].touched && h['note'].invalid}"></textarea>
+                        <span class="text-danger" *ngIf="description && description.invalid && description.touched">Enter Description</span>
                     </div>
                 </div>
 
@@ -405,7 +403,7 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="Supplier && Supplier.invalid && Supplier.touched">Select supplier </span>
+                        <span class="text-danger" *ngIf="Supplier && Supplier.invalid && Supplier.touched">Select Supplier </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
@@ -425,8 +423,8 @@
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Transaction Id</label>
-                        <input type="text" formControlName="transaction_id" id="transaction_id" [ngClass]="{'is-invalid': g['transaction_id'].touched && g['transaction_id'].invalid}">
-                        <span class="text-danger" *ngIf="transaction_id && transaction_id.invalid && transaction_id.touched">Enter Receipt Voucher no.</span>
+                        <input type="text" formControlName="transaction_id" placeholder="Enter Transaction Id" id="transaction_id" [ngClass]="{'is-invalid': g['transaction_id'].touched && g['transaction_id'].invalid}">
+                        <span class="text-danger" *ngIf="transaction_id && transaction_id.invalid && transaction_id.touched">Enter Transaction Id</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
@@ -479,19 +477,19 @@
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Receipt Voucher No.</label>
-                        <input type="text" formControlName="payment_voucher_no" id="payment_voucher_no"
+                        <label>Payment Voucher No.</label>
+                        <input type="text" formControlName="payment_voucher_no" placeholder="Enter Payment Voucher No." id="payment_voucher_no"
                             [ngModel]="prefixNo" readonly
                             [ngClass]="{'is-invalid': g['payment_voucher_no'].touched && g['payment_voucher_no'].invalid}">
                         <span class="text-danger"
                             *ngIf="payment_voucher_no1 && payment_voucher_no1.invalid && payment_voucher_no1.touched">Enter
-                            Receipt Voucher no.</span>
+                            Payment Voucher No.</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Amount</label>
-                        <input type="number" formControlName="amount" id="amount" [ngClass]="{'is-invalid': g['amount'].touched && g['amount'].invalid}">
+                        <input type="number" formControlName="amount" placeholder="Enter Amount" id="amount" [ngClass]="{'is-invalid': g['amount'].touched && g['amount'].invalid}">
                         <span class="text-danger" *ngIf="amount1 && amount1.invalid && amount1.touched">Enter Amount</span>
                     </div>
                 </div>
@@ -524,11 +522,9 @@
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea formControlName="note"
+                        <textarea formControlName="note" placeholder="Enter Description"
                             [ngClass]="{'is-invalid': g['note'].touched && g['note'].invalid}"></textarea>
-                        <span class="text-danger"
-                            *ngIf="description1 && description1.invalid && description1.touched">Enter
-                            description</span>
+                        <span class="text-danger" *ngIf="description1 && description1.invalid && description1.touched">Enter Description</span>
                     </div>
                 </div>
 

@@ -1,7 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
 
 @Component({

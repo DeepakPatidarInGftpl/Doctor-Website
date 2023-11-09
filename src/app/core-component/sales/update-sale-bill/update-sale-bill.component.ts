@@ -67,15 +67,15 @@ export class UpdateSaleBillComponent implements OnInit {
       payment_terms: new FormControl(''),
       sale_order: new FormControl(''),
       sale_bill_cart: this.fb.array([]),
-      total_qty: new FormControl(''),
-      total_tax: new FormControl(''),
-      total_discount: new FormControl(''),
-      subtotal: new FormControl(''),
-      roundoff: new FormControl(''),
-      total: new FormControl(''),
+      total_qty: new FormControl(1),
+      total_tax: new FormControl(0),
+      total_discount: new FormControl(0),
+      subtotal: new FormControl(0),
+      roundoff: new FormControl(0),
+      total: new FormControl(0),
       status: new FormControl(''),
       note: new FormControl(''),
-      additional_charges: new FormControl(''),
+      additional_charges: new FormControl(0),
       additional_charge: this.fb.array([]),
     });
 
@@ -387,6 +387,17 @@ export class UpdateSaleBillComponent implements OnInit {
     })
   }
 
+  selectDueDate(val) {
+    this.paymentTermsList.map((res: any) => {
+      if (res.id == val) {
+        const today = new Date();
+        const sevenDaysFromToday = new Date(today);
+        sevenDaysFromToday.setDate(today.getDate() + res?.days);
+        const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
+        this.saleBillForm.get('due_date')?.patchValue(defaultDateago7)
+      }
+    })
+  }
   supplierAddress: any;
   selectedAddressBilling: any;
   selectedAddressShipping: any;
@@ -402,9 +413,9 @@ export class UpdateSaleBillComponent implements OnInit {
     this.contactService.getCustomerById(selectedItemId).subscribe(res => {
       // console.log(res);
       this.supplierAddress = res;
-      this.saleBillForm.patchValue({
-        payment_terms: res?.payment_terms?.id
-      })
+      // this.saleBillForm.patchValue({
+      //   payment_terms: res?.payment_terms?.id
+      // })
       this.supplierAddress?.address?.map((res: any) => {
         if (res.address_type == 'Billing') {
           this.selectedAddressBilling = res
@@ -968,7 +979,7 @@ export class UpdateSaleBillComponent implements OnInit {
         this.loaderDraft = false;
       }
       this.saleBillForm.markAllAsTouched()
-      console.log('invald');
+            this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

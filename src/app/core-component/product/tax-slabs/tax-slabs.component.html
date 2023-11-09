@@ -15,7 +15,7 @@
                     <!-- <div class="col-lg-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label>Subcategory Group*</label>
-                            <select formControlName="subcategory_group" class="w-100 h-100 border" required
+                            <select formControlName="subcategory_group"  required
                                 #category_idValue id="subcategory_group" [ngClass]="{
                       'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid}" #categoryValue
                                 (change)="getSubcategoryBySubcatGroup(categoryValue.value)">
@@ -69,7 +69,7 @@
                     <div class="col-lg-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label>Title*</label>
-                            <input type="text" placeholder="Title" formControlName="slab_title" [ngClass]="{'is-invalid': f['slab_title'].touched && f['slab_title'].invalid}">
+                            <input type="text" placeholder="Slab Title" formControlName="slab_title" [ngClass]="{'is-invalid': f['slab_title'].touched && f['slab_title'].invalid}">
                             <span class="text-danger" *ngIf="slab_title && slab_title.invalid && slab_title.touched">Enter Tax Slab Title </span>
                         </div>
                     </div>
@@ -110,9 +110,7 @@
                                             <td>
                                                 <select formControlName="tax" class="inp">
                                                     <option value="" selected disabled>Select tax</option>
-                                                    <option value="{{tax.id}}" *ngFor="let tax of taxList">
-                                                        {{tax.tax_percentage + '%'}}
-                                                    </option>
+                                                    <option value="{{tax.id}}" *ngFor="let tax of taxList">{{tax.tax_percentage + '%'}} </option>
                                                 </select>
                                             </td>
                                             <td>

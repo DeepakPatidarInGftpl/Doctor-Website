@@ -182,9 +182,8 @@ export class PurchaseComponent implements OnInit {
         }
       );
     } else {
-      // console.log('error');
-
       this.recieptAdvanceForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   onAgainstSubmit() {
@@ -234,8 +233,8 @@ export class PurchaseComponent implements OnInit {
         }
       );
     } else {
-      // console.log('error');
       this.recieptAdvanceForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   get receipt_method() {

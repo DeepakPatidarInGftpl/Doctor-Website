@@ -12,7 +12,7 @@
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="form-group">
                         <label>Account Name*</label>
-                        <!-- <select formControlName="account" class="w-100 h-100 border" required id="account" [ngClass]="{'is-invalid': f['account'].touched && f['account'].invalid}">
+                        <!-- <select formControlName="account"  required id="account" [ngClass]="{'is-invalid': f['account'].touched && f['account'].invalid}">
                             <option value="" selected disabled>Select Account</option>
                             <option value="{{account?.id}}" *ngFor="let account of accountList"> {{account?.accounts_type}}</option>
                         </select> -->
@@ -40,22 +40,22 @@
                         <label>Credit Note Date*</label>
                         <input type="date" formControlName="date" id="date"
                             [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
-                        <span class="text-danger" *ngIf="date && date.invalid && date.touched">Enter date name </span>
+                        <span class="text-danger" *ngIf="date && date.invalid && date.touched">Enter Date Name </span>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Credit Note No.</label>
-                        <input type="text" formControlName="credit_note_no" id="credit_note_no" [ngModel]="prefixNo"[ngClass]="{ 'is-invalid': f['credit_note_no'].touched && f['credit_note_no'].invalid}">
-                        <span class="text-danger" *ngIf="credit_note_no && credit_note_no.invalid && credit_note_no.touched">Enter Credit Note no.</span>
+                        <input type="text" formControlName="credit_note_no" placeholder="Enter Credit Note No." id="credit_note_no" [ngModel]="prefixNo"[ngClass]="{ 'is-invalid': f['credit_note_no'].touched && f['credit_note_no'].invalid}">
+                        <span class="text-danger" *ngIf="credit_note_no && credit_note_no.invalid && credit_note_no.touched">Enter Credit Note No.</span>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Select Sale Bill*</label>
-                        <!-- <select formControlName="sale_bill_no" class="w-100 h-100 border" id="sale_bill_no" [ngClass]="{'is-invalid': f['sale_bill_no'].touched && f['sale_bill_no'].invalid}">
+                        <!-- <select formControlName="sale_bill_no"  id="sale_bill_no" [ngClass]="{'is-invalid': f['sale_bill_no'].touched && f['sale_bill_no'].invalid}">
                             <option value="" selected disabled>Select Sale Bill</option>
                             <option value="{{purchasebill?.id}}" *ngFor="let purchasebill of accountList"> {{purchasebill?.refrence_bill_no}}</option>
                         </select> -->
@@ -82,7 +82,7 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Reason</label>
-                        <input type="text" formControlName="reason" [ngClass]="{ 'is-invalid': f['reason'].touched && f['reason'].invalid}">
+                        <input type="text" formControlName="reason" placeholder="Enter Reason" [ngClass]="{ 'is-invalid': f['reason'].touched && f['reason'].invalid}">
                         <span class="text-danger" *ngIf="reason && reason.invalid && reason.touched">Enter Reason</span>
                     </div>
                 </div>
@@ -90,15 +90,15 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Round off</label>
-                        <input type="number" formControlName="roundoff" [ngClass]="{ 'is-invalid': f['roundoff'].touched && f['roundoff'].invalid}">
-                        <span class="text-danger" *ngIf="roundoff && roundoff.invalid && roundoff.touched">Enter round off</span>
+                        <input type="number" formControlName="roundoff" placeholder="Enter Round Off" [ngClass]="{ 'is-invalid': f['roundoff'].touched && f['roundoff'].invalid}">
+                        <span class="text-danger" *ngIf="roundoff && roundoff.invalid && roundoff.touched">Enter Round Off</span>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Tax %</label>
-                        <input type="number" formControlName="tax" [ngClass]="{ 'is-invalid': f['tax'].touched && f['tax'].invalid}">
+                        <input type="number" formControlName="tax" placeholder="Enter Tax" [ngClass]="{ 'is-invalid': f['tax'].touched && f['tax'].invalid}">
                         <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax ex: (1-100)</span>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Total</label>
-                        <input type="number" formControlName="total" id="total" [ngClass]="{ 'is-invalid': f['total'].touched && f['total'].invalid}">
+                        <input type="number" formControlName="total" id="total" placeholder="Enter Total" [ngClass]="{ 'is-invalid': f['total'].touched && f['total'].invalid}">
                         <span class="text-danger" *ngIf="total && total.invalid && total.touched">Enter total</span>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea formControlName="note"></textarea>
+                        <textarea formControlName="note" placeholder="Enter Note" [ngClass]="{ 'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                         <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax</span>
                     </div>
                 </div>

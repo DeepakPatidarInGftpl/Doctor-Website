@@ -34,14 +34,14 @@
                             </mat-autocomplete>
                         </mat-form-field>
                         <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
-                            user
+                            User
                         </span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Sale Bill Date</label>
+                        <label>Sale Bill Date*</label>
                         <input type="date" formControlName="bill_date" [ngClass]="{
                             'is-invalid': f['bill_date'].touched && f['bill_date'].invalid}">
                         <span class="text-danger" *ngIf="bill_date && bill_date.invalid && bill_date.touched">Select
@@ -313,10 +313,10 @@
                 <div class="col-lg-6 my-3">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea formControlName="note"
+                        <textarea formControlName="note" placeholder="Enter Note"
                             [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                         <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter
-                            note
+                            Note
                         </span>
                     </div>
                 </div>

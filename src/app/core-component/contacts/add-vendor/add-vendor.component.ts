@@ -266,6 +266,7 @@ export class AddVendorComponent implements OnInit {
     } else {
       this.vendorForm.markAllAsTouched()
       // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

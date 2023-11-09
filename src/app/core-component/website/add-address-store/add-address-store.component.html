@@ -68,7 +68,7 @@
                             <input type="text" formControlName="country" id="country"
                             [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid}">   
 
-                            <!-- <select formControlName="country" class="w-100 h-100 border" required 
+                            <!-- <select formControlName="country"  required 
                             #countryValue (change)="selectState(countryValue.value)" id="country"
                             [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid}">
                           <option value="" selected disabled>Country</option>
@@ -85,7 +85,7 @@
                             <input type="text" formControlName="state" id="state"
                             [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}"> 
 
-                              <!-- <select formControlName="state" class="w-100 h-100 border" required id="state"
+                              <!-- <select formControlName="state"  required id="state"
                               [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}" #stateValue (change)="selectCity(stateValue.value)">
                                 <option value="" selected disabled>State</option>
                                 <option value="{{state.id}}" *ngFor="let state of state">{{state.state}}</option>
@@ -100,7 +100,7 @@
                           <label> City</label>
                           <input type="text" formControlName="city" id="city" [ngClass]="{'is-invalid': f['city'].touched && f['city'].invalid}"> 
 
-                            <!-- <select formControlName="city" class="w-100 h-100 border" required id="city"
+                            <!-- <select formControlName="city"  required id="city"
                             [ngClass]="{
                               'is-invalid': f['city'].touched && f['city'].invalid}">
                               <option value="" selected disabled>City</option>

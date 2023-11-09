@@ -55,8 +55,8 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Refrence Bill No</label>
-                        <input type="text" formControlName="refrence_bill_no"
+                        <label>Refrence Bill No.</label>
+                        <input type="text" formControlName="refrence_bill_no" placeholder="Refrence Bill No."
                             [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}"
                             readonly>
                     </div>
@@ -379,7 +379,7 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Payment Term</label>
+                        <label>Select Payment Term</label>
                         <select formControlName="payment_term"
                             [ngClass]="{'is-invalid': f['payment_term'].touched && f['payment_term'].invalid}" readonly>
                             <option value="" selected disabled>Select Payment Term</option>
@@ -400,7 +400,7 @@
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Reverse Charge</label>
+                        <label>Select Reverse Charge</label>
                         <!-- <input type="text" formControlName="reverse_charge" [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}"> -->
                         <select formControlName="reverse_charge"
                             [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}">
@@ -413,7 +413,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Shipping Date* </label>
-                        <input type="date" formControlName="shipping_date"
+                        <input type="date" formControlName="shipping_date" placeholder="Enter Shipping Date"
                             [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}"
                             readonly>
                     </div>
@@ -1025,7 +1025,7 @@
                 <div class="col-lg-6 my-1">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea class="form-control" formControlName="note"></textarea>
+                        <textarea class="form-control" formControlName="note" placeholder="Enter Note"></textarea>
                     </div>
                 </div>
                 <div class="card my-2">

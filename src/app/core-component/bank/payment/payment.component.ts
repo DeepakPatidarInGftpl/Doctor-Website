@@ -135,10 +135,7 @@ export class PaymentComponent implements OnInit {
       this.receiptPaymentForm.get('customer_receipt').updateValueAndValidity();
       this.receiptPaymentForm.get('receipt_remark').updateValueAndValidity();
       this.receiptPaymentForm.get('amount_receipt').updateValueAndValidity();
-
     });
-
-
     this.receiptPaymentForm.get('payment_type').valueChanges.subscribe((value) => {
       this.receiptPaymentForm.get('payment_mode').setValue(this.paymentMode[0].value)
       if (value === 'Against Bill') {
@@ -148,7 +145,6 @@ export class PaymentComponent implements OnInit {
       }
       this.receiptPaymentForm.get('receipt_sales').updateValueAndValidity();
     });
-
     this.receiptPaymentForm.get('payment_mode').valueChanges.subscribe((value) => {
       if (value === 'UPI') { // Show the conditional field only if Option 1 is selected
         this.receiptPaymentForm.get('upi_id').setValidators(Validators.required);
@@ -178,7 +174,6 @@ export class PaymentComponent implements OnInit {
       this.receiptPaymentForm.get('cart_transactions_no').updateValueAndValidity();
       this.receiptPaymentForm.get('account_no').updateValueAndValidity();
     });
-
     this.receiptPaymentForm.get('customer_receipt').valueChanges
       .pipe(
         filter(res => {
@@ -219,8 +214,6 @@ export class PaymentComponent implements OnInit {
         }
 
       });
-
-
     this.receiptPaymentForm.get('party_receipt').valueChanges
       .pipe(
         filter(res => {
@@ -465,7 +458,6 @@ export class PaymentComponent implements OnInit {
         formData.append('upi_detail', '');
       }
     } else {
-
       if (this.payment_type.value == 'Advance') {
         formData.append('party', this.party_receipt?.value?.id);
         formData.append('receipt_method', this.payment_type.value);

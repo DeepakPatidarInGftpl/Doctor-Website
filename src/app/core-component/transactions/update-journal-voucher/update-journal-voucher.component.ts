@@ -203,6 +203,7 @@ export class UpdateJournalVoucherComponent implements OnInit {
         })
       } else {
         this.journalvoucherForm.markAllAsTouched()
+        this.toastrService.error('Please Fill All The Required Fields')
       }
     } else {
       console.log(debit, credit);

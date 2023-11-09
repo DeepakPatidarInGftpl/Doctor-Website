@@ -96,7 +96,7 @@
                 <div class="form-group">
                     <label>Country</label>
                     <!-- <input type="text" formControlName="country"> -->
-                    <select formControlName="country" class="w-100 h-100 border" 
+                    <select formControlName="country"  
                     #countryValue (change)="selectState(countryValue.value)" id="country"
                     [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid
                     }">
@@ -114,11 +114,11 @@
                     <label> State</label>
                     <!-- <input type="text" formControlName="state"> -->
                     
-                    <!-- <select formControlName="state" class="w-100 h-100 border" required >
+                    <!-- <select formControlName="state"  required >
                         <option value="" selected disabled>State</option>
                         <option value="{{state.id}}" *ngFor="let state of state"  [style]="state.country==countryValue.value?state.state:'display:none'">{{state.state}}</option>
                       </select> -->
-                      <select formControlName="state" class="w-100 h-100 border" id="state"
+                      <select formControlName="state"  id="state"
                       [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}"
                       #stateValue (change)="selectCity(stateValue.value)">
                         <option value="" selected disabled>State</option>
@@ -132,7 +132,7 @@
             <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label> City</label>
-                      <select formControlName="city" class="w-100 h-100 border" id="city"
+                      <select formControlName="city"  id="city"
                       [ngClass]="{
                         'is-invalid': f['city'].touched && f['city'].invalid
                       }">

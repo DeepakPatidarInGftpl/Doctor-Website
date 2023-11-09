@@ -274,7 +274,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
     } else {
       this.loaders = false
       this.subCategoryGroupForm.markAllAsTouched()
-      // console.log('invalid form');
+      this.toastr.error('Please Fill All The Required Fields')
 
     }
 

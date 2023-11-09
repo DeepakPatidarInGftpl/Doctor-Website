@@ -897,7 +897,7 @@ export class AddSalesReturnComponent implements OnInit {
         this.loaderDraft = false;
       }
       this.saleReturnForm.markAllAsTouched()
-      console.log('invald');
+            this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

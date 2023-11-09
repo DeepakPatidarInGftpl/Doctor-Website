@@ -149,8 +149,8 @@ export class ColorsComponent implements OnInit {
       img: new FormControl('')
     })
     this.colorForm = this.fb.group({
-      title: new FormControl('', [Validators.required]),
-      color_code: new FormControl('', [Validators.required]),
+      title: new FormControl('', ),
+      color_code: new FormControl('', ),
     })
     // this.dtOptions = {
     //   dom: 'Btlpif',
@@ -311,7 +311,7 @@ loaders=false;
       })
     } else {
       this.colorForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 
@@ -335,6 +335,7 @@ loaders=false;
     } else {
       this.colorForm.markAllAsTouched()
       // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

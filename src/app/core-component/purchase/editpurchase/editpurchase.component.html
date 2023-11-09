@@ -47,14 +47,14 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Purchase No. </label>
-                        <input type="text" formControlName="order_no" readonly>
+                        <input type="text" formControlName="order_no" readonly >
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Shipping Date </label>
-                        <input type="date" formControlName="shipping_date" readonly>
+                        <input type="date" formControlName="shipping_date" placeholder="Shipping Date" readonly>
                     </div>
                 </div>
 
@@ -363,7 +363,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Shipping Note </label>
-                        <input type="text" formControlName="shipping_note" readonly>
+                        <input type="text" formControlName="shipping_note" placeholder="Enter Shipping Note" readonly>
                     </div>
                 </div>
             </div>
@@ -615,7 +615,7 @@
                 <div class="col-lg-6 my-3">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea formControlName="note"
+                        <textarea formControlName="note" placeholder="Enter Note"
                             [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                         <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter note</span>
                     </div>

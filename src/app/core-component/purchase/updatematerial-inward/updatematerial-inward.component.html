@@ -40,7 +40,7 @@
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Purchase Order*</label>
+                        <label>Purchase Order</label>
                         <select formControlName="purchase_order"
                             [ngClass]="{'is-invalid': f['purchase_order'].touched && f['purchase_order'].invalid}"
                             [disabled]="true">
@@ -380,19 +380,20 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Shipping Note </label>
-                        <input type="text" formControlName="shipping_note" >
+                        <input type="text" formControlName="shipping_note" placeholder="Enter Shipping Note ">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Recieved By </label>
-                        <input type="text" formControlName="recieved_by" >
+                        <input type="text" formControlName="recieved_by" placeholder=" Enter Recieved By">
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Product Type</label>
+                        <label>Select Product Type</label>
                         <select formControlName="product_type" [ngClass]="{'is-invalid': f['product_type'].touched && f['product_type'].invalid}">
+                            <option value="" disabled selected>Select Product Type</option>
                             <option value="Demo Product">Demo Product</option>
                             <option value="Gift">Gift</option>
                             <option value="Saleable">Saleable</option>

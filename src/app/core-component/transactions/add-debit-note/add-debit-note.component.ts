@@ -41,9 +41,9 @@ export class AddDebitNoteComponent implements OnInit {
       purchase_bill: new FormControl('', [Validators.required]),
       reason: new FormControl(''),
       amount: new FormControl(0),
-      tax: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       note: new FormControl('',),
-      total: new FormControl(''),
+      total: new FormControl(0),
     })
 
     this.getSupplier();
@@ -70,9 +70,9 @@ export class AddDebitNoteComponent implements OnInit {
       this.toastr.error(err.error.msg)
     })
   }
-  amounts: any;
-  taxs: number;
-  totals: number;
+  amounts:any=0;
+  taxs: any=0;
+  totals: any=0;
   calculateTax() {
     if (this.taxs) {
       // let taxAmount = (this.amounts * this.taxs) / 100;
@@ -171,7 +171,7 @@ export class AddDebitNoteComponent implements OnInit {
       })
     } else {
       this.debitNoteForm.markAllAsTouched()
-      // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 
