@@ -5,7 +5,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
-import { tap } from 'rxjs/operators';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 @Component({
   selector: 'app-updatepurchase-bill',
@@ -63,7 +62,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       supplier_bill_date: new FormControl('', [Validators.required]),
       refrence_bill_no: new FormControl(''),
       supplier_bill_no: new FormControl('', [Validators.required,]),
-      material_inward_no: new FormControl('', [Validators.required]),
+      material_inward_no: new FormControl('',),
       payment_term: new FormControl(''),
       due_date: new FormControl('', [Validators.required]),
       reverse_charge: new FormControl('',),
@@ -1130,7 +1129,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
         }
       })
     } else {
-      this.puchaseBillForm.markAllAsTouched()
+      this.puchaseBillForm.markAllAsTouched();
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

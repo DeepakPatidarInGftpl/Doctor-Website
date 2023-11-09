@@ -315,6 +315,7 @@ export class AddSupplierComponent implements OnInit {
     } else {
       this.supplierForm.markAllAsTouched()
       // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

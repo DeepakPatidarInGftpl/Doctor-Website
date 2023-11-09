@@ -71,7 +71,7 @@ export class ListRecieptVoucherComponent implements OnInit {
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this Debit Note!",
+      text: "Do you want to Deactivate this Reciept Voucher!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -83,7 +83,7 @@ export class ListRecieptVoucherComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.DebitNoteIsActive(id, '').subscribe(res => {
+        this.transactionService.RecieptVoucherIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -107,7 +107,7 @@ export class ListRecieptVoucherComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this Debit Note!",
+      text: "Do you want to Active this Reciept Voucher!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -119,7 +119,7 @@ export class ListRecieptVoucherComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.DebitNoteIsActive(id, '').subscribe(res => {
+        this.transactionService.RecieptVoucherIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -212,10 +212,10 @@ export class ListRecieptVoucherComponent implements OnInit {
   }
 
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
-    this.reverse = !this.reverse
+    this.reverse = !this.reverse;
   }
 
 

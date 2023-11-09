@@ -97,7 +97,7 @@
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Select Country*</label>
-                                    <select formControlName="country" class="w-100 h-100 border" #countryValue
+                                    <select formControlName="country"  #countryValue
                                         (change)="selectState(countryValue.value,i)" id="country">
                                         <option value="" selected disabled>Select Country</option>
                                         <option value="{{country.id}}" *ngFor="let country of country">
@@ -111,7 +111,7 @@
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Select State*</label>
-                                    <select formControlName="state" class="w-100 h-100 border" #stateValue
+                                    <select formControlName="state"  #stateValue
                                         (change)="selectCity(stateValue.value,i)">
                                         <option value="" selected disabled>Select State</option>
                                         <option value="{{state.id}}" *ngFor="let state of state[i]">{{state.state}}
@@ -127,7 +127,7 @@
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Select City*</label>
-                                    <select formControlName="city" class="w-100 h-100 border" id="city">
+                                    <select formControlName="city"  id="city">
                                         <option value="" selected disabled>Select City</option>
                                         <option value="{{city.id}}" *ngFor="let city of city[i]">{{city.city}}</option>
                                     </select>

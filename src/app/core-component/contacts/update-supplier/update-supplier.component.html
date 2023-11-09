@@ -167,7 +167,7 @@
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Select Country*</label>
-                                    <select formControlName="country" class="w-100 h-100 border" #countryValue
+                                    <select formControlName="country"  #countryValue
                                         (change)="selectState(countryValue.value,i)" id="country">
                                         <option value="" selected disabled>Country</option>
                                         <option [value]="country.id" *ngFor="let country of country">
@@ -182,7 +182,7 @@
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Select State*</label>
-                                    <select formControlName="state" class="w-100 h-100 border" #stateValue
+                                    <select formControlName="state"  #stateValue
                                         (change)="selectCity(stateValue.value,i)">
                                         <option value="" selected disabled>State</option>
                                         <option [value]="state.id" *ngFor="let state of state[i]">{{state.state}}
@@ -196,7 +196,7 @@
                             <div class="col-lg-3 col-sm-3 col-12">
                                 <div class="form-group">
                                     <label>Select City*</label>
-                                    <select formControlName="city" class="w-100 h-100 border" id="city">
+                                    <select formControlName="city"  id="city">
                                         <option value="" selected disabled>City</option>
                                         <option [value]="city.id" *ngFor="let city of city[i]">{{city.city}}</option>
                                     </select>
@@ -330,7 +330,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Select Payment Terms</label>
-                        <select formControlName="payment_terms" class="w-100 h-100 border" id="payment_terms" [ngClass]="{
+                        <select formControlName="payment_terms"  id="payment_terms" [ngClass]="{
                             'is-invalid': f['payment_terms'].touched && f['payment_terms'].invalid}">
                             <option value="" selected disabled>Select Payment Terms</option>
                             <option value="{{payment.id}}" *ngFor="let payment of paymentTerms">{{payment.title}}
@@ -383,7 +383,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Select Supplier Type*</label>
-                        <select formControlName="supplier_type" class="w-100 h-100 border">
+                        <select formControlName="supplier_type" >
                             <option value="" selected disabled>Select Supplier Type</option>
                             <option value="Manufacturer">Manufacturer</option>
                             <option value="Stockiest">Stockiest</option>

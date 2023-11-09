@@ -30,7 +30,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     private toastrService: ToastrService,
     private Arout: ActivatedRoute,
     private contactService: ContactService,
-    private coreService:CoreService,
+    private coreService: CoreService,
     public dialog: MatDialog) {
   }
 
@@ -61,10 +61,10 @@ export class UpdatematerialInwardComponent implements OnInit {
     this.myControls = new FormArray([]);
     this.materialForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
-      purchase_order: new FormControl('', [Validators.required]),
+      purchase_order: new FormControl(''),
       po_date: new FormControl(''),
       material_inward_date: new FormControl('', [Validators.required]),
-      material_inward_no: new FormControl('', [Validators.required]),
+      material_inward_no: new FormControl(''),
       shipping_note: new FormControl(''),
       recieved_by: new FormControl('', [Validators.required,]),
       material_inward_cart: this.fb.array([]),
@@ -80,18 +80,17 @@ export class UpdatematerialInwardComponent implements OnInit {
       // console.log(res);
       this.getresbyId = res;
       this.materialForm.patchValue(res);
-      this.materialForm.get('party')?.patchValue(res.party.id);
-      this.materialForm.get('purchase_order')?.patchValue(res.purchase_order.id);
-      
-
-      if(res?.cart.length>0){
-        this.materialForm.setControl('material_inward_cart', this.udateCart(res.cart));
-      }else{
-        this.isCart=true;
+      this.materialForm.get('party')?.patchValue(res?.party?.id);
+      this.materialForm.get('purchase_order')?.patchValue(res?.purchase_order?.id === undefined ? '' : res?.purchase_order?.id);
+      this.materialForm.get('product_type')?.patchValue(res?.product_type==null?'':res?.product_type)
+      if (res?.cart?.length > 0) {
+        this.materialForm.setControl('material_inward_cart', this.udateCart(res?.cart));
+      } else {
+        this.isCart = true;
       }
-      this.displaySupplierName(res.party.id);
-      this.supplierId = res.party.id
-      this.getVariant('', '','')
+      this.displaySupplierName(res?.party?.id);
+      this.supplierId = res?.party?.id
+      this.getVariant('', '', '')
 
       //patch local-date
       //patch local-date
@@ -101,16 +100,16 @@ export class UpdatematerialInwardComponent implements OnInit {
       const formattedmaterial_inward_date = new Date(this.getresbyId?.material_inward_date).toISOString().slice(0, 16);
       this.materialForm.get('material_inward_date')?.patchValue(formattedmaterial_inward_date);
       //call detail api
-      this.contactService.getSupplierById(res.party.id).subscribe(res => {
+      this.contactService.getSupplierById(res?.party?.id).subscribe(res => {
         // console.log(res);
         this.supplierAddress = res;
-        this.supplierControl.setValue(res.company_name);
+        this.supplierControl.setValue(res?.company_name);
         this.getprefix()
         this.supplierAddress.address.map((res: any) => {
-          if (res.address_type == 'Billing') {
+          if (res?.address_type == 'Billing') {
             this.selectedAddressBilling = res
             console.log(this.selectedAddressBilling);
-          } else if (res.address_type == 'Shipping') {
+          } else if (res?.address_type == 'Shipping') {
             this.selectedAddressShipping = res
             console.log(this.selectedAddressShipping);
           }
@@ -199,10 +198,10 @@ export class UpdatematerialInwardComponent implements OnInit {
   getCart(): FormArray {
     return this.materialForm.get('material_inward_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.material_inward_cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
@@ -237,7 +236,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
-      this.getVariant('', '','')
+      this.getVariant('', '', '')
       this.supplierAddress = res;
       console.log(this.selectedAddressBilling);
       this.supplierAddress.address.map((res: any) => {
@@ -396,21 +395,21 @@ export class UpdatematerialInwardComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
-  loaderPrint=false;
-  loaderDraft=false;
-  formId:any;
+  loaderPrint = false;
+  loaderDraft = false;
+  formId: any;
   submit(type: any) {
-  
+
     if (this.materialForm.valid) {
       if (type == 'new') {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
       }
-      else if(type=='print'){
-        this.loaderPrint=true;
-      } else if(type=='draft'){
-        this.loaderDraft=true;
+      else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('party', this.materialForm.get('party')?.value);
@@ -466,11 +465,11 @@ export class UpdatematerialInwardComponent implements OnInit {
             this.materialForm.reset()
             this.ngOnInit()
             this.supplierControl.reset()
-          }  else if (type == 'print') {
-            this.loaderPrint=false;
+          } else if (type == 'print') {
+            this.loaderPrint = false;
             this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
-            this.loaderPrint=false;
-            this.router.navigate(['//purchase/material-InwardDetails/'+this.id])
+            this.loaderPrint = false;
+            this.router.navigate(['//purchase/material-InwardDetails/' + this.id])
             // this.openDialog()
 
             // setTimeout(() => {
@@ -478,53 +477,54 @@ export class UpdatematerialInwardComponent implements OnInit {
             //   // this.ngOnInit()
             //   this.supplierControl.reset();
             // }, 3000);
-          } 
-          else if(type=='draft'){
-            this.loaderDraft=false;
+          }
+          else if (type == 'draft') {
+            this.loaderDraft = false;
             this.toastrService.success(this.getRes.msg, '', { timeOut: 1000, });
             this.router.navigate(['//purchase/material-Inward-list'])
           }
           else {
             this.loader = false;
-          this.toastrService.success(this.getRes.msg);
-          this.router.navigate(['//purchase/material-Inward-list']);
+            this.toastrService.success(this.getRes.msg);
+            this.router.navigate(['//purchase/material-Inward-list']);
           }
         } else {
-            if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }else if(type=='print'){
-        this.loaderPrint=false;
-      } else if(type=='draft'){
-        this.loaderDraft=false;
-      }
+          if (type == 'new') {
+            this.loaderCreate = false;
+          } else if (type == 'save') {
+            this.loader = false;
+          } else if (type == 'print') {
+            this.loaderPrint = false;
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
+          }
         }
       }, err => {
-          if (type == 'new') {
-        this.loaderCreate = false;
-      } else if (type == 'save') {
-        this.loader = false;
-      }else if(type=='print'){
-        this.loaderPrint=false;
-      } else if(type=='draft'){
-        this.loaderDraft=false;
-      }
+        if (type == 'new') {
+          this.loaderCreate = false;
+        } else if (type == 'save') {
+          this.loader = false;
+        } else if (type == 'print') {
+          this.loaderPrint = false;
+        } else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
       })
     } else {
-      this.materialForm.markAllAsTouched()
+      this.materialForm.markAllAsTouched();
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 
 
   openDialog() {
-    this.dialog.open(PrintMaterialInwardComponent,{   
+    this.dialog.open(PrintMaterialInwardComponent, {
       height: '100%',
-      data:this.id
+      data: this.id
     });
   }
 
-  
+
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
@@ -550,8 +550,8 @@ export class UpdatematerialInwardComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
-      ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue)||supplier.company_name.toLowerCase().includes(filterValue))
-      : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue)||supplier.company_name.toLowerCase().includes(filterValue));
+      ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
+      : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
       // console.log("No results found");
       filteredSuppliers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
@@ -616,22 +616,22 @@ export class UpdatematerialInwardComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
   productName: any[] = [];
   isProduct = true;
-  isSearch=false;
+  isSearch = false;
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
-    this.isSearch=true;
+    this.isSearch = true;
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
-        this.isSearch=false;
+        this.isSearch = false;
         // this.productOption = res;
         // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
@@ -682,7 +682,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   calculateTotalUnitCost(): number {
     let totalunitCost = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
-      const unitCostControl = this.getCart().controls[i].get('unit_cost')||0;
+      const unitCostControl = this.getCart().controls[i].get('unit_cost') || 0;
       if (unitCostControl) {
         totalunitCost += +unitCostControl.value;
       }
@@ -750,7 +750,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     let total = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const qtyControl = this.getCart().controls[i].get('qty');
-      const mrpControl = this.getCart().controls[i].get('mrp')||0;
+      const mrpControl = this.getCart().controls[i].get('mrp') || 0;
       if (qtyControl && mrpControl) {
         const qty = +qtyControl.value;
         const mrp = +mrpControl.value;
@@ -763,7 +763,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   calculateTotalEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const qty = +cartItem.get('qty').value;
-    const unit_cost = +cartItem.get('unit_cost').value||0;
+    const unit_cost = +cartItem.get('unit_cost').value || 0;
     const subtotal = unit_cost * qty;
     return subtotal;
   }
@@ -785,8 +785,8 @@ export class UpdatematerialInwardComponent implements OnInit {
   searc: any;
   myControls: FormArray;
   variantList: any[] = [];
-  getVariant(search: any, index: any,barcode: any) {
-    this.isSearch=true;
+  getVariant(search: any, index: any, barcode: any) {
+    this.isSearch = true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -802,7 +802,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -827,7 +827,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -851,7 +851,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     }
   }
 
-  
+
   categoryList: any[] = [];
   filteredCategoryList: any[] = [];
   searchCategory: string = '';
@@ -874,7 +874,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -900,7 +900,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -912,7 +912,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   //dropdown auto close stop
   onLabelClick(event: Event) {

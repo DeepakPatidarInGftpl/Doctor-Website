@@ -156,14 +156,14 @@
                         <td class="productimgname">
                             <a routerLink="//purchase/purchase-billDetails/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
-                        <td>{{products.supplier_bill_date |  date: 'yyyy-MM-dd'}}</td>
-                        <td>{{products.supplier_bill_no}}</td>
-                        <td>{{products.refrence_bill_no}}</td>
-                        <td>{{products.material_inward_no.material_inward_no}}</td>
-                        <td>{{products.payment_term?.title}}</td>
-                        <td>{{products.due_date |  date: 'yyyy-MM-dd'}}</td>
+                        <td>{{products?.supplier_bill_date |  date: 'yyyy-MM-dd'}}</td>
+                        <td>{{products?.supplier_bill_no}}</td>
+                        <td>{{products?.refrence_bill_no}}</td>
+                        <td>{{products?.material_inward_no?.material_inward_no}}</td>
+                        <td>{{products?.payment_term?.title}}</td>
+                        <td>{{products?.due_date |  date: 'yyyy-MM-dd'}}</td>
                         <td>{{products.reverse_charge}}</td>
-                        <td>{{products.shipping_date}}</td>
+                        <td>{{products?.shipping_date}}</td>
                         
                         
                         <td>

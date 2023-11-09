@@ -318,6 +318,21 @@ export class EditSalesComponent implements OnInit {
     })
   }
 
+  selectDueDate(val) {
+    console.log(val);
+    
+    this.paymentTermsList.map((res: any) => {
+      if (res.id == val) {
+        const today = new Date();
+        const sevenDaysFromToday = new Date(today);
+        sevenDaysFromToday.setDate(today.getDate() + res?.days);
+        const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
+        this.saleForm.get('due_date')?.patchValue(defaultDateago7)
+
+      }
+    })
+  }
+
   estimateList: any
   getEstimate() {
     this.saleService.getSalesEstimate().subscribe(res => {
@@ -893,7 +908,7 @@ export class EditSalesComponent implements OnInit {
         this.loaderDraft = false;
       }
       this.saleForm.markAllAsTouched()
-      console.log('invald');
+            this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

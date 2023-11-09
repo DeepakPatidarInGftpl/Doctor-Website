@@ -126,6 +126,7 @@ export class EditcompanyComponent implements OnInit {
     } else {
       this.companyForm.markAllAsTouched()
       // console.log('error');
+      this.toastr.error('Please Fill All The Required Fields')
     }
 
   }

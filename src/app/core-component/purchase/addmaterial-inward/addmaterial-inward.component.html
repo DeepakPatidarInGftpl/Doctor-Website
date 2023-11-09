@@ -33,14 +33,14 @@
                             </mat-autocomplete>
                         </mat-form-field>
                         <span class="text-danger" *ngIf="supplier && supplier.invalid && supplier.touched">Select
-                            supplier
+                            Supplier
                         </span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Purchase Order*</label>
+                        <label>Select Purchase Order</label>
                         <select formControlName="purchase_order"
                             [ngClass]="{'is-invalid': f['purchase_order'].touched && f['purchase_order'].invalid}">
                             <option value="" selected disabled>Select Purchase Order</option>
@@ -51,7 +51,7 @@
                         </select>
                         <span class="text-danger"
                             *ngIf="purchase_order && purchase_order.invalid && purchase_order.touched">Select Purchase
-                            order
+                            Order
                         </span>
                     </div>
                 </div>
@@ -59,18 +59,18 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>PO Date </label>
-                        <input type="datetime-local" formControlName="po_date">
+                        <input type="datetime-local" formControlName="po_date" placeholder="Select PO Date">
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Material Inward Date* </label>
-                        <input type="datetime-local" formControlName="material_inward_date"
+                        <input type="datetime-local" formControlName="material_inward_date" placeholder="Select Material Inward Date"
                             [ngClass]="{'is-invalid': f['material_inward_date'].touched && f['material_inward_date'].invalid}">
                         <span class="text-danger"
                             *ngIf="material_inward_date && material_inward_date.invalid && material_inward_date.touched">Select
-                            Material-inward date
+                            Material Inward Date
                         </span>
                     </div>
                 </div>
@@ -379,40 +379,37 @@
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>Material Inward No*</label>
-                        <input type="text" formControlName="material_inward_no" [ngModel]="prefixNo"
+                        <label>Material Inward No</label>
+                        <input type="text" formControlName="material_inward_no" placeholder="Enter Material Inward No. " [ngModel]="prefixNo"
                             [ngClass]="{'is-invalid': f['material_inward_no'].touched && f['material_inward_no'].invalid}">
                         <span class="text-danger"
-                            *ngIf="material_inward_no && material_inward_no.invalid && material_inward_no.touched">Enter
-                            Material-inward No.
+                            *ngIf="material_inward_no && material_inward_no.invalid && material_inward_no.touched">Enter Material Inward No.
                         </span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Shipping Note* </label>
-                        <input type="text" formControlName="shipping_note"
+                        <label>Shipping Note </label>
+                        <input type="text" formControlName="shipping_note" placeholder="Enter Shipping Note"
                             [ngClass]="{'is-invalid': f['shipping_note'].touched && f['shipping_note'].invalid}">
                         <span class="text-danger"
-                            *ngIf="shipping_note && shipping_note.invalid && shipping_note.touched">Enter
-                            Shipping note
+                            *ngIf="shipping_note && shipping_note.invalid && shipping_note.touched">Enter Shipping Note
                         </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Recieved By* </label>
-                        <input type="text" formControlName="recieved_by">
+                        <input type="text" formControlName="recieved_by" placeholder="Enter Recieved By">
                         <span class="text-danger"
-                            *ngIf="recieved_by && recieved_by.invalid && recieved_by.touched">Enter
-                            Recieved by
+                            *ngIf="recieved_by && recieved_by.invalid && recieved_by.touched">Enter Recieved by
                         </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Product Type</label>
+                        <label>Select Product Type</label>
                         <select formControlName="product_type"
                             [ngClass]="{'is-invalid': f['product_type'].touched && f['product_type'].invalid}">
                             <option value="" selected disabled>Select Product Type</option>
@@ -577,10 +574,10 @@
                                                         </mat-form-field>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" formControlName="qty" class="input"></td>
-                                                <td><input type="text" formControlName="po_qty" class="input"></td>
+                                                <td><input type="text" formControlName="qty" placeholder="QTY" class="input"></td>
+                                                <td><input type="text" formControlName="po_qty" placeholder="PO QTY" class="input"></td>
                                                 <!-- <td><input type="text" formControlName="unit_cost" class="input"></td> -->
-                                                <td><input type="text" formControlName="mrp" class="input">
+                                                <td><input type="text" formControlName="mrp" placeholder="MRP" class="input">
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
                                                         title="ion-information" (click)="openModalBatch()"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
@@ -708,7 +705,7 @@
                 <div class="col-lg-6 my-3">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea formControlName="note"
+                        <textarea formControlName="note" placeholder="Enter Note"
                             [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                     </div>
                 </div>

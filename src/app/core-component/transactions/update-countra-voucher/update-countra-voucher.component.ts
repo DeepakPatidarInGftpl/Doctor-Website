@@ -32,11 +32,11 @@ export class UpdateCountraVoucherComponent implements OnInit {
     this.toAccountControl.setValue('Loading...');
     const defaultDate = new Date().toISOString().split('T')[0];
     this.countraVoucherForm = this.fb.group({
-      date: new FormControl(defaultDate, [Validators.required]),
+      date: new FormControl(defaultDate, ),
       countra_voucher_no: new FormControl('',),
-      from_account: new FormControl(''),
-      to_account: new FormControl(''),
-      amount: new FormControl(''),
+      from_account: new FormControl('',[Validators.required]),
+      to_account: new FormControl('',[Validators.required]),
+      amount: new FormControl(0),
       note: new FormControl('',)
     })
     this.getAccount();
@@ -150,7 +150,7 @@ export class UpdateCountraVoucherComponent implements OnInit {
       })
     } else {
       this.countraVoucherForm.markAllAsTouched()
-      // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

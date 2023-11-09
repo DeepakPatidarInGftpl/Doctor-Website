@@ -390,7 +390,7 @@ export class StockTransferUpdateComponent implements OnInit {
     } else {
       this.loader = false;
       this.stockTransferForm.markAllAsTouched()
-      console.log('invald');
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

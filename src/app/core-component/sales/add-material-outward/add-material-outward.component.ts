@@ -547,7 +547,7 @@ export class AddMaterialOutwardComponent implements OnInit {
         this.loaderDraft = false;
       }
       this.saleMaterialOutwardForm.markAllAsTouched()
-      console.log('invald');
+            this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

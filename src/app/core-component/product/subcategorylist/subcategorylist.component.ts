@@ -409,7 +409,7 @@ export class SubcategorylistComponent implements OnInit {
 
     } else {
       this.subcategoryForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   imgError = false;

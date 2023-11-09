@@ -58,14 +58,14 @@ export class AddSalesComponent implements OnInit {
       sale_order_no: new FormControl('', [Validators.required]),
       payment_terms: new FormControl(''),
       sale_order_cart: this.fb.array([]),
-      due_date: new FormControl(''),
+      due_date: new FormControl('', [Validators.required]),
       estimate: new FormControl(''),
-      total_qty: new FormControl(''),
-      total_tax: new FormControl(''),
-      total_discount: new FormControl(''),
-      subtotal: new FormControl(''),
-      roundoff: new FormControl(''),
-      total: new FormControl(''),
+      total_qty: new FormControl(0),
+      total_tax: new FormControl(0),
+      total_discount: new FormControl(0),
+      subtotal: new FormControl(0),
+      roundoff: new FormControl(0),
+      total: new FormControl(0),
       status: new FormControl(''),
       note: new FormControl(''),
     });
@@ -106,9 +106,9 @@ export class AddSalesComponent implements OnInit {
   searc: any;
   myControl = new FormControl('');
   variantList: any[] = [];
-  isSearch=false;
+  isSearch = false;
   getVariant(search: any, index: any, barcode: any) {
-    this.isSearch=true;
+    this.isSearch = true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -124,7 +124,7 @@ export class AddSalesComponent implements OnInit {
       }
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -151,7 +151,7 @@ export class AddSalesComponent implements OnInit {
     else {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -256,6 +256,20 @@ export class AddSalesComponent implements OnInit {
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
       this.paymentTermsList = res;
+    })
+  }
+  selectDueDate(val) {
+    console.log(val);
+    
+    this.paymentTermsList.map((res: any) => {
+      if (res.id == val) {
+        const today = new Date();
+        const sevenDaysFromToday = new Date(today);
+        sevenDaysFromToday.setDate(today.getDate() + res?.days);
+        const defaultDateago7 = sevenDaysFromToday.toISOString().split('T')[0];
+        this.saleForm.get('due_date')?.patchValue(defaultDateago7)
+
+      }
     })
   }
 
@@ -726,8 +740,8 @@ export class AddSalesComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
-  loaderPrint=false;
-  loaderDraft=false;
+  loaderPrint = false;
+  loaderDraft = false;
   submit(type: any) {
     console.log(this.saleForm.value);
     if (this.saleForm.valid) {
@@ -786,8 +800,8 @@ export class AddSalesComponent implements OnInit {
             this.userControl.reset()
           } else if (type == 'print') {
             this.toastrService.success(this.getRes.msg);
-            this.loaderPrint=false;
-            this.router.navigate(['//sales/sales-details/'+this.getRes.id]);
+            this.loaderPrint = false;
+            this.router.navigate(['//sales/sales-details/' + this.getRes.id]);
           } else if (type == 'draft') {
             this.loaderDraft = false;
             this.toastrService.success(this.getRes.msg);
@@ -802,9 +816,9 @@ export class AddSalesComponent implements OnInit {
             this.loaderCreate = false;
           } else if (type == 'save') {
             this.loader = false;
-          }else if (type == 'print') {
+          } else if (type == 'print') {
             this.loaderPrint = false;
-          }else if (type == 'draft') {
+          } else if (type == 'draft') {
             this.loaderDraft = false;
           }
         }
@@ -813,9 +827,9 @@ export class AddSalesComponent implements OnInit {
           this.loaderCreate = false;
         } else if (type == 'save') {
           this.loader = false;
-        }else if (type == 'print') {
+        } else if (type == 'print') {
           this.loaderPrint = false;
-        }else if (type == 'draft') {
+        } else if (type == 'draft') {
           this.loaderDraft = false;
         }
       })
@@ -824,13 +838,13 @@ export class AddSalesComponent implements OnInit {
         this.loaderCreate = false;
       } else if (type == 'save') {
         this.loader = false;
-      }else if (type == 'print') {
+      } else if (type == 'print') {
         this.loaderPrint = false;
-      }else if (type == 'draft') {
+      } else if (type == 'draft') {
         this.loaderDraft = false;
       }
       this.saleForm.markAllAsTouched()
-      console.log('invald');
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

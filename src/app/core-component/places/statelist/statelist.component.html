@@ -204,7 +204,7 @@
                                     <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
                                     'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
                                   }"> -->
-                                    <select formControlName="country" class="w-100 h-100 border" required #countryValue
+                                    <select formControlName="country"  required #countryValue
                                         id="country"
                                         [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid}">
                                         <option value="" selected disabled>Country</option>
@@ -257,7 +257,7 @@
                                     <!-- <input type="text" formControlName="feature_group" id="feature_group" [ngClass]="{
                                     'is-invalid': f['feature_group'].touched && f['feature_group'].invalid
                                   }"> -->
-                                    <select formControlName="country" class="w-100 h-100 border" required #countryValue
+                                    <select formControlName="country"  required #countryValue
                                         id="country" [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid}">
                                         <option value="" selected disabled>Country</option>
                                         <option value="{{country.id}}" *ngFor="let country of countryList">

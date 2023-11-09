@@ -44,8 +44,8 @@ export class AddRecieptVoucherComponent implements OnInit {
     this.recieptVoucherForm = this.fb.group({
       receipt_type: new FormControl('Cash'),
       customer: new FormControl('', [Validators.required]),
-      date: new FormControl(defaultDate, [Validators.required]),
-      receipt_voucher_no: new FormControl('',[Validators.required]),
+      date: new FormControl(defaultDate, ),
+      receipt_voucher_no: new FormControl('',),
       mode_type: new FormControl(''),
       amount: new FormControl(0),
       note: new FormControl(''),
@@ -57,9 +57,9 @@ export class AddRecieptVoucherComponent implements OnInit {
     this.recieptVoucherBankForm = this.fb.group({
       receipt_type: new FormControl('Bank'),
       customer: new FormControl('', [Validators.required]),
-      date: new FormControl(defaultDate, [Validators.required]),
+      date: new FormControl(defaultDate, ),
       receipt_voucher_no: new FormControl(''),
-      mode_type: new FormControl('',[Validators.required]),
+      mode_type: new FormControl('',),
       amount: new FormControl(0),
       note: new FormControl(''),
       payer: new FormControl('',[Validators.required]), // account foreign key
@@ -339,7 +339,7 @@ export class AddRecieptVoucherComponent implements OnInit {
     } else {
       // console.log('error');
       this.recieptVoucherForm.markAllAsTouched();
-      this.toastr.error('Enter All Required Field')
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   modeError:any;
@@ -403,8 +403,8 @@ export class AddRecieptVoucherComponent implements OnInit {
       );
     } else {
       console.log('invalid');
-      this.toastr.error('Enter All Required Field')
       this.recieptVoucherBankForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   //bank

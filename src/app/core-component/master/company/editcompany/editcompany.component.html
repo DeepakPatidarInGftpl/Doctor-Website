@@ -39,7 +39,7 @@
                             <div class="form-group">
                                 <label>Select Currency*</label>
                                 <!-- <input type="text" formControlName="currency" id="currency" [ngClass]="{'is-invalid': f['currency'].touched && f['currency'].invalid }" [(ngModel)]="data.currency"> -->  
-                                <select formControlName="currency" class="w-100 h-100 border" required id="currency" [ngClass]="{'is-invalid': f['currency'].touched && f['currency'].invalid }">
+                                <select formControlName="currency"  required id="currency" [ngClass]="{'is-invalid': f['currency'].touched && f['currency'].invalid }">
                                   <option value="" selected disabled>Select Currency Year</option>
                                   <option value="{{currency?.currency_name}}" *ngFor="let currency of currencyDetails">{{(currency?.currency_name ) + '-' +(currency?.currency_symbol)}}</option>
                                 </select>
@@ -57,7 +57,7 @@
                         <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                               <label>Select Financial Year*</label>                           
-                              <select formControlName="financial_year" class="w-100 h-100 border" required id="financial_year" [ngClass]="{'is-invalid': f['financial_year'].touched && f['financial_year'].invalid }">
+                              <select formControlName="financial_year"  required id="financial_year" [ngClass]="{'is-invalid': f['financial_year'].touched && f['financial_year'].invalid }">
                               <option value="" selected disabled>Financial Year</option>
                               <option value="{{year.id}}" *ngFor="let year of yearDetails">{{(year.start_year |slice :0:4) + '-' +(year.close_year |slice :0:4)}}</option>
                             </select>
@@ -68,7 +68,7 @@
                         <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label>Select Country*</label>
-                                <select formControlName="country" class="w-100 h-100 border" required 
+                                <select formControlName="country"  required 
                                 #countryValue (change)="selectState(countryValue.value)" id="country"
                                 [ngClass]="{'is-invalid': f['country'].touched && f['country'].invalid}" >
                               <option value="" selected disabled>Country</option>
@@ -82,12 +82,12 @@
                         <div class="col-lg-3 col-sm-3 col-12">
                             <div class="form-group">
                                 <label>Select State*</label>
-                                <!-- <select formControlName="state" class="w-100 h-100 border" required >
+                                <!-- <select formControlName="state"  required >
                                     <option value="" selected disabled>State</option>
                                     <option value="{{state.id}}" *ngFor="let state of state"  [style]="state.country==countryValue.value?state.state:'display:none'">{{state.state}}</option>
                                   </select> -->
     <!-- <input type="text" name="" formControlName="state"> -->
-                                  <select formControlName="state" class="w-100 h-100 border" required id="state"
+                                  <select formControlName="state"  required id="state"
                                   [ngClass]="{'is-invalid': f['state'].touched && f['state'].invalid}" #stateValue (change)="selectCity(stateValue.value)">
                                     <option value="" selected disabled>State</option>
                                     <option [value]="state.id" *ngFor="let state of state">{{state.state}}</option>
@@ -100,7 +100,7 @@
                         <div class="col-lg-3 col-sm-3 col-12">
                           <div class="form-group">
                               <label>Select City*</label>
-                                <select formControlName="city" class="w-100 h-100 border" required id="city" [ngClass]="{'is-invalid': f['city'].touched && f['city'].invalid}">
+                                <select formControlName="city"  required id="city" [ngClass]="{'is-invalid': f['city'].touched && f['city'].invalid}">
                                   <option value="" selected disabled>City</option>
                                   <option value="{{city.id}}" *ngFor="let city of city">{{city.city}}</option>
                                 </select>

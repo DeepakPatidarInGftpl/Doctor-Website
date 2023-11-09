@@ -8,6 +8,7 @@ import { BankComponent } from './bank.component';
   declarations: [
     BankComponent,
     
+    
   ],
   imports: [
     CommonModule,

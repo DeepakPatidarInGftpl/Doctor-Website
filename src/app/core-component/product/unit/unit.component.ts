@@ -306,7 +306,7 @@ loaders=false;
       })
     } else {
       this.unitsForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 
@@ -329,7 +329,7 @@ loaders=false;
       })
     } else {
       this.unitsForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   get title() {

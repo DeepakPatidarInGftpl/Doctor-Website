@@ -151,6 +151,7 @@ export class AddaccountComponent implements OnInit {
     } else {
       this.accountForm.markAllAsTouched()
       // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

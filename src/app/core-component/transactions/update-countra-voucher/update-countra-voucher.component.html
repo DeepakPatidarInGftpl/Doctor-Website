@@ -1,7 +1,7 @@
 <div class="page-header">
     <div class="page-title">
-        <h4>Add Countra Voucher</h4>
-        <h6>Create new Countra Voucher </h6>
+        <h4>Update Countra Voucher</h4>
+        <h6>Edit Countra Voucher </h6>
     </div>
 </div>
 <!-- /add -->
@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Date*</label>
+                        <label>Date</label>
                         <input type="date" formControlName="date" id="date"
                             [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
                         <span class="text-danger" *ngIf="date && date.invalid && date.touched">Select Date </span>
@@ -21,7 +21,7 @@
                
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Contra Voucher No.<span style="color:red">*</span></label>
+                        <label>Contra Voucher No.</label>
                         <input type="text" formControlName="countra_voucher_no" [ngModel]="prefixNo" readonly
                             [ngClass]="{'is-invalid': f['countra_voucher_no'].touched && f['countra_voucher_no'].invalid}">
                         <span class="text-danger"
@@ -102,8 +102,8 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Amount</label>
-                        <input type="number" formControlName="amount" [ngClass]="{ 'is-invalid': f['amount'].touched && f['amount'].invalid}">
-                        <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter round off</span>
+                        <input type="number" formControlName="amount" placeholder="Enter Amount" [ngClass]="{ 'is-invalid': f['amount'].touched && f['amount'].invalid}">
+                        <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span>
                     </div>
                 </div>
 
@@ -111,8 +111,8 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea formControlName="note" style="height: 45px;"></textarea>
-                        <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter note</span>
+                        <textarea formControlName="note" style="height: 45px;" placeholder="Enter Note" [ngClass]="{ 'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
+                        <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter Note</span>
                     </div>
                 </div>
 

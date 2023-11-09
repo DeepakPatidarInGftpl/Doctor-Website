@@ -43,10 +43,9 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Purchase No.* </label>
-                        <input type="text" formControlName="order_no" [ngModel]="prefixNo" [ngClass]="{
+                        <input type="text" formControlName="order_no" placeholder="Enter Order No." [ngModel]="prefixNo" [ngClass]="{
                             'is-invalid': f['order_no'].touched && f['order_no'].invalid}">
-                        <span class="text-danger" *ngIf="order_no && order_no.invalid && order_no.touched">Enter
-                            Order no.
+                        <span class="text-danger" *ngIf="order_no && order_no.invalid && order_no.touched">Enter Order No.
                         </span>
                     </div>
                 </div>
@@ -54,7 +53,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Shipping Date* </label>
-                        <input type="date" formControlName="shipping_date" [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}">
+                        <input type="date" formControlName="shipping_date" placeholder="Select Shipping Date" [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}">
                         <span class="text-danger" *ngIf="shipping_date && shipping_date.invalid && shipping_date.touched">Select Shipping date </span>
                     </div>
                 </div>
@@ -357,11 +356,11 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Shipping Note </label>
-                        <input type="text" formControlName="shipping_note"
+                        <input type="text" formControlName="shipping_note" placeholder="Enter Shipping Note "
                             [ngClass]="{'is-invalid': f['shipping_note'].touched && f['shipping_note'].invalid}">
                         <span class="text-danger"
                             *ngIf="shipping_note && shipping_note.invalid && shipping_note.touched">Enter
-                            Shipping note
+                            Shipping Note
                         </span>
                     </div>
                 </div>
@@ -551,7 +550,7 @@
                                                 </div>
                                             </td>
                                             <td><input type="text" formControlName="mrp" class="input"></td>
-                                            <td><input type="text" formControlName="discount" class="input" (blur)="purchase(i)">
+                                            <td><input type="text" formControlName="discount" placeholder="Discount" class="input" (blur)="purchase(i)">
                                             <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span>
                                             </td>
                                              <td>
@@ -560,12 +559,12 @@
                                                 <br>
                                             <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
                                         </td>
-                                            <td class="text-end"><input type="text" formControlName="landing_cost" readonly (change)="priceValidation()" [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"></td>
+                                            <td class="text-end"><input type="text" formControlName="landing_cost" placeholder="Landing Cost" readonly (change)="priceValidation()" [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"></td>
                                            <td class="text-end">
-                                                <input type="text" class="input" readonly [value]="TotalWithoutTax[i] | number:'1.2-2'" >
+                                                <input type="text" class="input" readonly [value]="TotalWithoutTax[i] | number:'1.2-2'" placeholder="Total Without Tax" >
                                             </td>
                                             <td class="text-end">
-                                            <input type="text" formControlName="total" class="input" readonly [value]="calculateTotalEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
+                                            <input type="text" formControlName="total" class="input" placeholder="Total" readonly [value]="calculateTotalEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
                                             <!-- <input type="text" class="input" readonly [value]="TotalWithTax[i] | number:'1.2-2'"> -->
                                             </td>
                                         </tr>
@@ -602,7 +601,7 @@
                 <div class="col-lg-6 my-3">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea formControlName="note"
+                        <textarea formControlName="note" placeholder="Enter Note"
                             [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                         <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter
                             note

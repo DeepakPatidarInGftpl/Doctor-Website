@@ -90,6 +90,7 @@ id:any;
     } else {
       this.branchForm.markAllAsTouched()
       // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   

@@ -714,7 +714,7 @@ export class AddpurchaseComponent implements OnInit {
         this.loader = false;
       }
       this.purchaseForm.markAllAsTouched()
-      console.log('invald');
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

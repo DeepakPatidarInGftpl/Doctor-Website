@@ -300,7 +300,7 @@ export class TaxComponent implements OnInit {
 
     } else {
       this.taxForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 
@@ -325,7 +325,7 @@ export class TaxComponent implements OnInit {
 
     } else {
       this.taxForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

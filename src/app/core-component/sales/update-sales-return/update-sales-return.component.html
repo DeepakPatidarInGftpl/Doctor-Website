@@ -41,7 +41,7 @@
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Sale Bill Date</label>
+                        <label>Sale Bill Date*</label>
                         <input type="date" formControlName="bill_date" [ngClass]="{
                             'is-invalid': f['bill_date'].touched && f['bill_date'].invalid}">
                         <span class="text-danger" *ngIf="bill_date && bill_date.invalid && bill_date.touched">Select
