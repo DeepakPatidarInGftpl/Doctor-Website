@@ -340,6 +340,7 @@ export class UpdateTransportComponent implements OnInit {
       this.loader=false;
       this.transportForm.markAllAsTouched()
       // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

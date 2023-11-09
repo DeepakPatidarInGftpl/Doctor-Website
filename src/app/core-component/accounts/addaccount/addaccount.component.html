@@ -19,7 +19,7 @@
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
             <label>Select Account Type*</label>
-            <select formControlName="accounts_type" class="w-100 h-100 border" required id="accounts_type"
+            <select formControlName="accounts_type"  required id="accounts_type"
             [ngClass]="{'is-invalid': f['accounts_type'].touched && f['accounts_type'].invalid}"
             #accountValue (change)="getAccountSubType(accountValue.value)">
             <option value="" selected disabled>Accounts Type</option>
@@ -32,7 +32,7 @@
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
             <label>Select Account Sub Type*</label>
-            <select formControlName="account_subtype" class="w-100 h-100 border" required id="account_subtype"
+            <select formControlName="account_subtype"  required id="account_subtype"
               [ngClass]="{'is-invalid': f['account_subtype'].touched && f['account_subtype'].invalid}">
               <option value="" selected disabled>Select Account Sub Type</option>
               <option value="{{subType?.id}}" *ngFor="let subType of accountSubTypeLsit">{{subType?.title}}</option>

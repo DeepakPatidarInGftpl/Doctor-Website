@@ -262,7 +262,7 @@ export class SizeComponent implements OnInit {
     })
   } else {
     this.sizeForm.markAllAsTouched()
-    // console.log('forms invalid');
+    this.toastr.error('Please Fill All The Required Fields')
   }
 }
 

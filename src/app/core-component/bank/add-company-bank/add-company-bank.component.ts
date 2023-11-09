@@ -26,14 +26,14 @@ export class AddCompanyBankComponent implements OnInit {
       account_number: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/),]),
       account_holder_name: new FormControl('', [Validators.required]),
       IFSC_code: new FormControl('', [Validators.required]),
-      Swift_code: new FormControl('', [Validators.required,]),
-      credit_balance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/),]),
-      debit_balance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/),]),
-      counntry: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city:new FormControl('',[Validators.required]),
-      pincode:new FormControl('',[Validators.maxLength(6),Validators.minLength(6),Validators.required,Validators.pattern(/^[0-9]*$/),]),
-      address:new FormControl('',[Validators.required]),
+      Swift_code: new FormControl('',[Validators.required]),
+      credit_balance: new FormControl(0, [,Validators.pattern(/^[0-9]*$/),]),
+      debit_balance: new FormControl(0, [,Validators.pattern(/^[0-9]*$/),]),
+      counntry: new FormControl('', ),
+      state: new FormControl('', ),
+      city:new FormControl('',),
+      pincode:new FormControl('',[Validators.maxLength(6),Validators.minLength(6),Validators.pattern(/^[0-9]*$/),]),
+      address:new FormControl(''),
       is_upi_available:new FormControl('')
     })
 
@@ -101,7 +101,7 @@ yearDetails:any
       })
     } else {
       this.companyBankForm.markAllAsTouched()
-      // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
 
     }
   }

@@ -253,6 +253,10 @@ export class PosDashboardService {
     let url = this.apiUrl+'/pv-api/pos/expance/';
     return this.http.get(url)
   }
+  getExpenseById(id:any){
+    let url = this.apiUrl+'/pv-api/pos/expance/?id=';
+    return this.http.get(`${url}${id}`)
+  }
   deleteExpence(id: number){
     let url = this.apiUrl + '/pv-api/pos/expance/?id=';
     return this.http.delete(`${url}${id}`)

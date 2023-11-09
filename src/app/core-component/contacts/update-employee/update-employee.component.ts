@@ -345,6 +345,7 @@ mobileError:any;
       this.loader=false;
       this.employeeForm.markAllAsTouched()
       // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

@@ -405,7 +405,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     } else {
       // console.log('error');
       this.recieptVoucherForm.markAllAsTouched();
-      this.toastr.error('Enter All Required Field')
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   onBankSubmit() {
@@ -474,9 +474,8 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         }
       );
     } else {
-      console.log('invalid');
-      this.toastr.error('Enter All Required Field')
       this.recieptVoucherBankForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields')   
     }
   }
   //bank

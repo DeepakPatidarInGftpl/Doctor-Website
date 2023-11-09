@@ -43,7 +43,7 @@ export class AddPaymentVoucherComponent implements OnInit {
       receipt_type: new FormControl('Cash'),
       supplier: new FormControl('', [Validators.required]),
       payment_account: new FormControl('', [Validators.required]),
-      date: new FormControl(defaultDate, [Validators.required]),
+      date: new FormControl(defaultDate,),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
       amount: new FormControl(0),
@@ -55,7 +55,7 @@ export class AddPaymentVoucherComponent implements OnInit {
       receipt_type: new FormControl('Bank'),
       supplier: new FormControl('', [Validators.required]),
       payment_account: new FormControl('', [Validators.required]),
-      date: new FormControl(defaultDate, [Validators.required]),
+      date: new FormControl(defaultDate),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
       amount: new FormControl(0),
@@ -293,7 +293,7 @@ export class AddPaymentVoucherComponent implements OnInit {
   // }
 
   private _filter(value: string | number, include: boolean): any[] {
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+    const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
     const filteredSuppliers = include
       ? this.supplierList.filter(supplier =>
         supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue)
@@ -482,7 +482,7 @@ export class AddPaymentVoucherComponent implements OnInit {
     } else {
       // console.log('error');
       this.paymentVoucherForm.markAllAsTouched();
-      this.toastr.error('Enter All Required Field')
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   onBankSubmit() {
@@ -561,8 +561,8 @@ export class AddPaymentVoucherComponent implements OnInit {
       );
     } else {
       console.log('invalid');
-      this.toastr.error('Enter All Required Field')
       this.paymentVoucherBankForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   //bank

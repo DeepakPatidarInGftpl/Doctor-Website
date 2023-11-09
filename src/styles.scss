@@ -204,3 +204,9 @@ mat-form-field {
   padding: 5px 10px;
   transition: all 0.2s ease;
 }
+.ng-pristine.ng-invalid.is-invalid.ng-touched{
+  border: 1px solid red;
+}
+.ng-untouched.ng-pristine.ng-valid.cdk-text-field-autofill-monitored.is-invalid{
+  border: 1px solid red;
+}

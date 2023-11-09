@@ -32,26 +32,23 @@ export class UpdateCompanyBankComponent implements OnInit {
       account_holder_name: new FormControl('', [Validators.required]),
       IFSC_code: new FormControl('', [Validators.required]),
       Swift_code: new FormControl('', [Validators.required,]),
-      credit_balance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/),]),
-      debit_balance: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/),]),
-      counntry: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
-      city:new FormControl('',[Validators.required]),
-      pincode:new FormControl('',[Validators.maxLength(6),Validators.minLength(6),Validators.required,Validators.pattern(/^[0-9]*$/),]),
-      address:new FormControl('',[Validators.required]),
+      credit_balance: new FormControl('', [Validators.pattern(/^[0-9]*$/),]),
+      debit_balance: new FormControl('', [Validators.pattern(/^[0-9]*$/),]),
+      counntry: new FormControl('',),
+      state: new FormControl('',),
+      city:new FormControl(''),
+      pincode:new FormControl('',[Validators.maxLength(6),Validators.minLength(6),Validators.pattern(/^[0-9]*$/),]),
+      address:new FormControl(''),
       is_upi_available:new FormControl('')
     })
 
     this.coreService.getCompanyBankById(this.id).subscribe(res=>{
-      // console.log(res); 
-      // console.log(res.counntry);
-      
       this.companyBankForm.patchValue(res)
-      this.companyBankForm.get('counntry')?.patchValue(res.counntry?.id)
-      this.selectState(res?.counntry?.id)
-      this.companyBankForm.get('state')?.patchValue(res.state?.id)
-      this.selectCity(res?.state?.id)
-      this.companyBankForm.get('city')?.patchValue(res.city?.id)
+      this.companyBankForm.get('counntry')?.patchValue(res?.counntry?.id==null?'':res?.counntry?.id);
+      this.selectState(res?.counntry?.id==null?'':res?.counntry?.id)
+      this.companyBankForm.get('state')?.patchValue(res?.state?.id==null?'':res?.state?.id)
+      this.selectCity(res?.state?.id==null?'':res?.state?.id)
+      this.companyBankForm.get('city')?.patchValue(res?.city?.id==null?'':res?.city?.id)
     })
     this.getCountry();
   }
@@ -101,7 +98,7 @@ export class UpdateCompanyBankComponent implements OnInit {
       })
     } else {
       this.companyBankForm.markAllAsTouched()
-      // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
 
     }
   }

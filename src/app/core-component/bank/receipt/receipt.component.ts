@@ -185,9 +185,8 @@ export class ReceiptComponent implements OnInit {
         }
       );
     } else {
-      // console.log('error');
-
       this.recieptAdvanceForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   onAgainstSubmit() {
@@ -237,9 +236,8 @@ export class ReceiptComponent implements OnInit {
         }
       );
     } else {
-      // console.log('error');
-
-      this.recieptAdvanceForm.markAllAsTouched();
+        this.recieptAdvanceForm.markAllAsTouched();
+        this.toastr.error('Please Fill All The Required Fields')
     }
   }
   get receipt_method() {

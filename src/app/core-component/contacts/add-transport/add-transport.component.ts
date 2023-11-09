@@ -239,6 +239,7 @@ export class AddTransportComponent implements OnInit {
     } else {
       this.transportForm.markAllAsTouched()
       // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
 
     }
   }

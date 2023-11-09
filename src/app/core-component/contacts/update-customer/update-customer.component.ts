@@ -245,7 +245,6 @@ export class UpdateCustomerComponent implements OnInit {
     });
     formdata.append('address', JSON.stringify(addressData));
 
-
     if (this.customerForm.valid) {
       this.loader=true;
       this.contactService.updateCustomer(formdata,this.id).subscribe(res => {
@@ -291,6 +290,7 @@ export class UpdateCustomerComponent implements OnInit {
     } else {
       this.customerForm.markAllAsTouched()
       // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
 
     }
   }

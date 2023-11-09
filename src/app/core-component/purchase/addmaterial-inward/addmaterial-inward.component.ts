@@ -67,12 +67,12 @@ export class AddmaterialInwardComponent implements OnInit {
 
     this.materialForm = this.fb.group({
       party: new FormControl('', [Validators.required]),
-      purchase_order: new FormControl('', [Validators.required]),
+      purchase_order: new FormControl('',),
       po_date: new FormControl(defaultDateTime),
       material_inward_date: new FormControl(defaultDateTime, [Validators.required]),
       material_inward_no: new FormControl('', [Validators.required]),
       shipping_note: new FormControl(''),
-      recieved_by: new FormControl('', [Validators.required,]),
+      recieved_by: new FormControl('',[Validators.required]),
       material_inward_cart: this.fb.array([]),
       total: new FormControl('',),
       export: new FormControl(''),
@@ -434,6 +434,7 @@ export class AddmaterialInwardComponent implements OnInit {
       })
     } else{
       this.materialForm.markAllAsTouched()
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

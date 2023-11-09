@@ -149,7 +149,7 @@ yearDetails:any
     } else {
       this.companyForm.markAllAsTouched()
       // console.log('hhhhhh');
-
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

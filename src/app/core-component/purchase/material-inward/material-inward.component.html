@@ -128,17 +128,18 @@
                             <a routerLink="//purchase/material-InwardDetails/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
                        
-                        <td>{{products.purchase_order.order_no}}</td>
-                        <td>{{products.po_date |  date: 'yyyy-MM-dd'}}</td>
-                        <td>{{products.material_inward_date |  date: 'yyyy-MM-dd'}}</td>
-                        <td>{{products.material_inward_no}}</td>
-                        <td>{{products.shipping_note}}</td>
-                        <td>{{products.recieved_by}}</td>
+                        <td>{{products?.purchase_order?.order_no}}</td>
+                        <td>{{products?.po_date |  date: 'yyyy-MM-dd'}}</td>
+                        <td>{{products?.material_inward_date |  date: 'yyyy-MM-dd'}}</td>
+                        <td>{{products?.material_inward_no}}</td>
+                        <td>{{products?.shipping_note}}</td>
+                        <td>{{products?.recieved_by}}</td>
                         <td>
-                            <span [ngClass]="{'bg-lightgreen': products.status === 'Completed', 'bg-lightred' : products.status === 'Inprogress','bg-lightyellow' : products.status === 'Draft'}" class="badges">{{products.status}}</span>
+                            <span [ngClass]="{'bg-lightgreen': products?.status === 'Completed', 'bg-lightred' : products?.status === 'Inprogress','bg-lightyellow' : products?.status === 'Draft'}" class="badges">{{products?.status}}</span>
                         </td>
                         <td>
-                            <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                            <mat-slide-toggle (click)="products?.is_active ? isActive(i,products?.id):Active(i,products?.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                               
                         </td>
                         <td>
                             <a class="me-1" routerLink="//purchase/material-InwardDetails/{{products.id}}">
@@ -180,7 +181,7 @@
                <div class="col-lg-8 col-sm-8 col-12 mt-2">
                 <div class="f-right">
                     <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                    <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>  
+                    <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}} entries</div>  
                 </div>
                </div>
              </div>

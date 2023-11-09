@@ -34,7 +34,7 @@
                             </mat-autocomplete>
                         </mat-form-field>
                         <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
-                            user
+                            User
                         </span>
                     </div>
                 </div>
@@ -49,17 +49,7 @@
                         </span>      
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Due date* </label>
-                        <input type="date" formControlName="due_date"
-                            [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}">
-                        <span class="text-danger"
-                            *ngIf="due_date && due_date.invalid && due_date.touched">Enter
-                            Due date
-                        </span>
-                    </div>
-                </div>
+               
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Sale Bill No.* </label>
@@ -69,8 +59,20 @@
                         </span>
                     </div>
                 </div>
-             
                 <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Select Payment Terms*</label>
+                        <select formControlName="payment_terms" #termValue (change)="selectDueDate(termValue.value)">
+                            <option value="" selected disabled>Select Payment Terms</option>
+                            <option value="{{payment.id}}" *ngFor="let payment of paymentTermsList">{{payment.title}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select
+                            Payment Terms
+                        </span>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-3 col-sm-3 col-12">
                     <div class="modal fade" id="addressModal" tabindex="-1" role="dialog"
                         aria-labelledby="addressModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -370,21 +372,19 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-lg-3 col-sm-3 col-12">
+                </div> -->
+                <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Payment Terms*</label>
-                        <select formControlName="payment_terms">
-                            <option value="" selected disabled>Select Payment Terms</option>
-                            <option value="{{payment.id}}" *ngFor="let payment of paymentTermsList">{{payment.title}}</option>
-                        </select>
+                        <label>Due date* </label>
+                        <input type="date" formControlName="due_date"
+                            [ngClass]="{'is-invalid': f['due_date'].touched && f['due_date'].invalid}">
                         <span class="text-danger"
-                            *ngIf="payment_terms && payment_terms.invalid && payment_terms.touched">Select
-                            Payment Terms
+                            *ngIf="due_date && due_date.invalid && due_date.touched">Enter
+                            Due date
                         </span>
                     </div>
                 </div>
+               
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Sales Order</label>
@@ -738,10 +738,10 @@
                 <div class="col-lg-6 my-3">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea formControlName="note"
+                        <textarea formControlName="note" placeholder="Enter Note"
                             [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                         <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter
-                            note
+                            Note
                         </span>
                     </div>
                 </div>

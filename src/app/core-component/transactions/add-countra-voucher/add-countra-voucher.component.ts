@@ -29,12 +29,12 @@ export class AddCountraVoucherComponent implements OnInit {
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
     this.countraVoucherForm = this.fb.group({
-      date: new FormControl(defaultDate, [Validators.required]),
+      date: new FormControl(defaultDate,),
       countra_voucher_no: new FormControl('',),
       from_account: new FormControl('',[Validators.required]),
       to_account: new FormControl('',[Validators.required]),
-      amount: new FormControl(0,[Validators.required]),
-      note: new FormControl('',)
+      amount: new FormControl(0,),
+      note: new FormControl('',[Validators.required])
     })
     this.getAccount();
     this.getprefix();
@@ -131,7 +131,7 @@ export class AddCountraVoucherComponent implements OnInit {
       })
     } else {
       this.countraVoucherForm.markAllAsTouched()
-      // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

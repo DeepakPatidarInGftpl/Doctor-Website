@@ -67,9 +67,9 @@ export class AddDebitnotesComponent implements OnInit {
       party: new FormControl('', [Validators.required]),
       // related_name: new FormControl(''),
       purchase_return_no: new FormControl(''),
-      purchase_return_date: new FormControl(defaultDateTime),
+      purchase_return_date: new FormControl(defaultDateTime,[Validators.required]),
       refrence_bill_no: new FormControl(''),
-      purchase_bill: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      purchase_bill: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]*$/)]),
       reason: new FormControl('',),
       export: new FormControl(''),
       reverse_charge: new FormControl(''),
@@ -865,6 +865,7 @@ export class AddDebitnotesComponent implements OnInit {
       })
     } else {
       this.debitNotesForm.markAllAsTouched()
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
   get purchase_return_date() {

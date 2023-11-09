@@ -127,7 +127,6 @@ export class AddCustomerComponent implements OnInit {
   loaders = false;
   submit() {
     // console.log(this.customerForm.value);
-
     let formdata: any = new FormData();
     formdata.append('login_access', this.customerForm.get('login_access')?.value);
     formdata.append('name', this.customerForm.get('name')?.value);
@@ -163,7 +162,7 @@ export class AddCustomerComponent implements OnInit {
     });
     formdata.append('address', JSON.stringify(addressData));
     this.loaders = true
-    // if (this.customerForm.valid) {
+    if (this.customerForm.valid) {
     this.contactService.addCustomer(formdata).subscribe(res => {
       // console.log(res);
       this.addRes = res
@@ -191,11 +190,11 @@ export class AddCustomerComponent implements OnInit {
         }, 2000);
       }
     })
-    // } else {
+    } else {
     this.customerForm.markAllAsTouched()
-    // console.log('hhhhhh');
+    this.toastr.error('Please Fill All The Required Fields')
 
-    // }
+    }
   }
 
   get login_access() {

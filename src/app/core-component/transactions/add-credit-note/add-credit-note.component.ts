@@ -28,7 +28,7 @@ export class AddCreditNoteComponent implements OnInit {
       account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       credit_note_no: new FormControl('',),
-      sale_bill_no: new FormControl(''),
+      sale_bill_no: new FormControl('',[Validators.required]),
       reason: new FormControl(''),
       roundoff: new FormControl(''),
       tax: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -156,7 +156,7 @@ export class AddCreditNoteComponent implements OnInit {
       })
     } else {
       this.debitNoteForm.markAllAsTouched()
-      // console.log('hhhhhh');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

@@ -79,7 +79,7 @@ export class BatchVariantProductComponent implements OnInit {
       })
     } else {
       this.batchForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

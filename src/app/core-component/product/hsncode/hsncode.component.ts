@@ -389,7 +389,7 @@ export class HsncodeComponent implements OnInit {
       })
     } else {
       this.hsncodeForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 

@@ -1,6 +1,6 @@
 <div class="page-header">
     <div class="page-title">
-        <h4>Reciept</h4>
+        <h4>Create New Reciept</h4>
     </div>
 </div>
 <!-- /add -->
@@ -50,14 +50,14 @@
                                     </mat-autocomplete>
                                 </mat-form-field>
                                 <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
-                                    customer
+                                    Customer
                                 </span>
                             </div>
                         </div>
                         <div class="col-lg-4 col-sm-4 col-12">
                             <div class="form-group">
                                 <label>Amount*</label>
-                                <input type="number" formControlName="amount" id="amount"
+                                <input type="number" formControlName="amount" placeholder="Enter Amount" id="amount"
                                     [ngClass]="{'is-invalid': f['amount'].touched && f['amount'].invalid}">
                                 <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span>
                             </div>
@@ -66,36 +66,35 @@
                             <div formGroupName="card_detail" class="row">
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label>Payment Account*</label>
+                                        <label>Select Payment Account*</label>
                                         <select class="form-select" formControlName="payment_account">
                                             <option value="" selected disabled>Select Payment Account</option>
-                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank?.name}}</option>
                                         </select>
                                   </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label>Bank Name*</label>
-                                        <input type="text" formControlName="customer_bank_name">
+                                        <input type="text" formControlName="customer_bank_name" placeholder="Enter Bank Name">
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label>Card Holder Name*</label>
-                                        <input type="text" formControlName="card_holder_name">
+                                        <input type="text" formControlName="card_holder_name" placeholder="Enter Card Holder Name">
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label>Payment Amount*</label>
-                                        <input type="number" formControlName="card_payment_amount">
+                                        <input type="number" formControlName="card_payment_amount" placeholder="Enter Payment Amount">
                                     </div>
                                 </div>
-        
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label>Card Transactions no*</label>
-                                        <input type="text" formControlName="cart_transactions_no">
+                                        <label>Card Transactions No.*</label>
+                                        <input type="text" formControlName="cart_transactions_no" placeholder="Enter Card Transactions No.">
                                     </div>
                                 </div>
                             </div>
@@ -104,18 +103,18 @@
                             <div formGroupName="bank_detail" class="row">
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label>Payment Account*</label>
+                                        <label>Select Payment Account*</label>
                                         <select class="form-select" formControlName="payment_account">
                                             <option value="" selected disabled>Select Payment Account</option>
-                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank?.name}}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label>Account No*</label>
-                                        <input type="text" formControlName="account_no">
-                                        <span class="text-danger" *ngIf="account && account.invalid && account.touched">Enter  Account No </span>
+                                        <label>Account No.*</label>
+                                        <input type="text" formControlName="account_no" placeholder="Enter Account No.">
+                                        <span class="text-danger" *ngIf="account && account.invalid && account.touched">Enter Account No. </span>
                                     </div>
                                 </div>
                             </div>
@@ -125,15 +124,15 @@
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label>UPI Id</label>
-                                        <input type="text" formControlName="upi_no">
+                                        <input type="text" formControlName="upi_no" placeholder="Enter UPI Id">
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label>Payment Account*</label>
+                                        <label>Select Payment Account*</label>
                                         <select class="form-select" formControlName="payment_account">
                                             <option value="" selected disabled>Select Payment Account</option>
-                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank?.name}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -142,10 +141,8 @@
                         <div class="col-lg-4 col-sm-4 col-12">
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea formControlName="description"
-                                    [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}"></textarea>
-                                <span class="text-danger"
-                                    *ngIf="description && description.invalid && description.touched">Enter description</span>
+                                <textarea formControlName="description" placeholder="Enter Description" [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}"></textarea>
+                                <span class="text-danger" *ngIf="description && description.invalid && description.touched">Enter description</span>
                             </div>
                         </div>
                         <div class="col-lg-12">
@@ -166,7 +163,7 @@
                     <div class="row">  
                         <div class="col-lg-4 col-sm-4 col-12">
                             <div class="form-group">
-                                <label>Payment Mode*</label>
+                                <label>Select Payment Mode*</label>
                                 <select class="form-select" formControlName="payment_mode"
                                     [ngClass]="{'is-invalid': f['payment_mode'].touched && f['payment_mode'].invalid}">
                                     <option value="" selected disabled>Select Payment Mode</option>
@@ -175,17 +172,13 @@
                                     <option value="Bank">Bank</option>
                                     <option value="UPI">UPI</option>
                                 </select>
-                                <span class="text-danger"
-                                    *ngIf="payment_mode && payment_mode.invalid && payment_mode.touched">Select Payment
-                                    Mode</span>
+                                <span class="text-danger" *ngIf="payment_mode && payment_mode.invalid && payment_mode.touched">Select Payment Mode</span>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6 col-12">
                             <div class="form-group">
-                                <label>Customer*</label>
-                                <mat-form-field class="w-100" style="padding: 0;
-                                    width: 100%;
-                                    min-width: 100%;border-top: none;">
+                                <label>Select Customer*</label>
+                                <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
                                     <input type="text" placeholder="Search Customer" aria-label="Customer" matInput
                                         [formControl]="customerControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                         [ngClass]="{'is-invalid': f['customer'].touched && f['customer'].invalid}">
@@ -194,14 +187,11 @@
                                             [value]="customer.mobile_no" (onSelectionChange)="oncheck(customer.id)"
                                             style="color:#FF9F43">{{ customer.mobile_no }}</mat-option>
                                         <ng-container *ngIf="(filteredCustomer | async) as customers">
-                                            <mat-option *ngIf="customerControl.value?.length < 3" class="is-loading">Please
-                                                Enter 3 or more characters</mat-option>
+                                        <mat-option *ngIf="customerControl.value?.length < 3" class="is-loading">Please Enter 3 or more characters</mat-option>
                                         </ng-container>
                                     </mat-autocomplete>
                                 </mat-form-field>
-                                <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
-                                    customer
-                                </span>
+                                <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select Customer</span>
                             </div>
                         </div>
                         <div class="col-lg-4 col-sm-4 col-12">
@@ -211,17 +201,14 @@
                                         <option value="" selected disabled>Select sales</option>
                                         <option value="{{sales.id}}" *ngFor="let sales of salesList">{{sales.dueAmount}}</option>
                                     </select>
-                                    <span class="text-danger" *ngIf="bill_no && bill_no.invalid && bill_no.touched && salesList?.length>=0"> Select Sales
-                                    </span>
-                                <span class="text-danger" *ngIf=" salesList?.length<0">Sales not Available
-                                    </span>
+                                    <span class="text-danger" *ngIf="bill_no && bill_no.invalid && bill_no.touched && salesList?.length>=0"> Select Sales </span>
+                                <span class="text-danger" *ngIf="salesList?.length<0">Sales not Available</span>
                             </div>
                         </div>
                         <div class="col-lg-4 col-sm-4 col-12">
                             <div class="form-group">
                                 <label>Amount*</label>
-                                <input type="number" formControlName="amount" id="amount"
-                                    [ngClass]="{'is-invalid': f['amount'].touched && f['amount'].invalid}">
+                                <input type="number" formControlName="amount" id="amount" placeholder="Enter Amount" [ngClass]="{'is-invalid': f['amount'].touched && f['amount'].invalid}">
                                 <span class="text-danger" *ngIf="amount && amount.invalid && amount.touched">Enter Amount</span>
                             </div>
                         </div>
@@ -229,36 +216,36 @@
                             <div formGroupName="card_detail" class="row">
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label>Payment Account*</label>
+                                        <label>Select Payment Account*</label>
                                         <select class="form-select" formControlName="payment_account">
                                             <option value="" selected disabled>Select Payment Account</option>
-                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank?.name}}</option>
                                         </select>
                                    </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label>Bank Name*</label>
-                                        <input type="text" formControlName="customer_bank_name">
+                                        <input type="text" formControlName="customer_bank_name" placeholder="Enter Bank Name">
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label>Card Holder Name*</label>
-                                        <input type="text" formControlName="card_holder_name">
+                                        <input type="text" formControlName="card_holder_name" placeholder="Enter Card Holder Name">
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label>Payment Amount*</label>
-                                        <input type="number" formControlName="card_payment_amount">
+                                        <input type="number" formControlName="card_payment_amount" placeholder="Enter Payment Amount">
                                     </div>
                                 </div>
         
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label>Card Transactions no*</label>
-                                        <input type="text" formControlName="cart_transactions_no">
+                                        <label>Card Transactions No.*</label>
+                                        <input type="text" formControlName="cart_transactions_no" placeholder="Card Transactions No.">
                                     </div>
                                 </div>
                             </div>
@@ -267,20 +254,18 @@
                             <div formGroupName="bank_detail" class="row">
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label>Payment Account*</label>
+                                        <label>Select Payment Account*</label>
                                         <select class="form-select" formControlName="payment_account">
                                             <option value="" selected disabled>Select Payment Account</option>
-                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                            <option value="{{bank?.id}}" *ngFor="let bank of bankList">{{bank?.name}}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label>Account no</label>
-                                        <input type="text" formControlName="account_no">
-                                        <span class="text-danger" *ngIf="accountAgainst && accountAgainst.invalid && accountAgainst.touched">Enter
-                                            Account No
-                                        </span>
+                                        <label>Account No.</label>
+                                        <input type="text" formControlName="account_no" placeholder="Enter Account No.">
+                                        <span class="text-danger" *ngIf="accountAgainst && accountAgainst.invalid && accountAgainst.touched">Enter Account No </span>
                                     </div>
                                 </div>
                             </div>
@@ -290,15 +275,15 @@
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label>UPI Id</label>
-                                        <input type="text" formControlName="upi_no">
+                                        <input type="text" formControlName="upi_no" placeholder="Enter UPI Id">
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label>Payment Account*</label>
+                                        <label>Select Payment Account*</label>
                                         <select class="form-select" formControlName="payment_account">
                                             <option value="" selected disabled>Select Payment Account</option>
-                                            <option value="{{bank.id}}" *ngFor="let bank of bankList">{{bank.name}}</option>
+                                            <option value="{{bank?.id}}" *ngFor="let bank of bankList">{{bank?.name}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -307,17 +292,14 @@
                         <div class="col-lg-4 col-sm-4 col-12">
                             <div class="form-group">
                                 <label>Description*</label>
-                                <textarea formControlName="description"
-                                    [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}"></textarea>
-                                <span class="text-danger"
-                                    *ngIf="description && description.invalid && description.touched">Enter description</span>
+                                <textarea formControlName="description" placeholder="Enter Description" [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}"></textarea>
+                                <span class="text-danger" *ngIf="description && description.invalid && description.touched">Enter description</span>
                             </div>
                         </div>
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                             <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                               &nbsp; Submit</button>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>
                             <a routerLink="//bank/reciept" class="btn btn-cancel">Cancel</a>
                         </div>
                     </div>

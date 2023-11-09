@@ -368,7 +368,7 @@ export class FeatureGroupComponent implements OnInit {
       })
     } else {
       this.featureForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
 
@@ -398,7 +398,7 @@ export class FeatureGroupComponent implements OnInit {
       })
     } else {
       this.featureForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields')
     }
   }
   get title() {

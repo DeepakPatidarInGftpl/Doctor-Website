@@ -119,7 +119,7 @@ export class ListJournalVoucherComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.DebitNoteIsActive(id, '').subscribe(res => {
+        this.transactionService.JournalVoucherIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -209,7 +209,7 @@ export class ListJournalVoucherComponent implements OnInit {
   }
 
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

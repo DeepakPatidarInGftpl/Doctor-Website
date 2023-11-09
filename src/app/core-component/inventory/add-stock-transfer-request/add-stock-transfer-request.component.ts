@@ -357,7 +357,7 @@ export class AddStockTransferRequestComponent implements OnInit {
     } else {
       this.loader = false;
       this.stockTransferRequestForm.markAllAsTouched()
-      console.log('invald');
+            this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 

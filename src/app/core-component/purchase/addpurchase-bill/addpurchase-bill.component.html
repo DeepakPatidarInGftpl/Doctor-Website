@@ -52,18 +52,18 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Supplier Bill No*</label>
-                        <input type="text" formControlName="supplier_bill_no" [ngModel]="prefixNo"
+                        <input type="text" formControlName="supplier_bill_no" placeholder="Enter Supplier Bill No" [ngModel]="prefixNo"
                             [ngClass]="{'is-invalid': f['supplier_bill_no'].touched && f['supplier_bill_no'].invalid}">
                         <span class="text-danger"
                             *ngIf="supplier_bill_no && supplier_bill_no.invalid && supplier_bill_no.touched">Enter
-                            Supplier-bill no
+                            Supplier Bill No.
                         </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Refrence Bill No</label>
-                        <input type="text" formControlName="refrence_bill_no" [ngModel]="prefixNo"
+                        <label>Refrence Bill No.</label>
+                        <input type="text" formControlName="refrence_bill_no" placeholder="Enter Refrence Bill No." [ngModel]="prefixNo"
                             [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}">
                     </div>
                 </div>
@@ -371,7 +371,7 @@
                 <!-- end -->
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Material Inward No*</label>
+                        <label>Select Material Inward</label>
                         <select formControlName="material_inward_no"
                             [ngClass]="{'is-invalid': f['material_inward_no'].touched && f['material_inward_no'].invalid}">
                             <option value="" selected disabled>Select Material Inward</option>
@@ -381,13 +381,13 @@
                         </select>
                         <span class="text-danger"
                             *ngIf="material_inward_no && material_inward_no.invalid && material_inward_no.touched">Enter
-                            Material-inward no
+                            Material Inward No.
                         </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Payment Term</label>
+                        <label>Select Payment Term</label>
                         <select formControlName="payment_term"
                             [ngClass]="{'is-invalid': f['payment_term'].touched && f['payment_term'].invalid}">
                             <option value="" selected disabled>Select Payment Term</option>
@@ -410,7 +410,7 @@
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Reverse Charge</label>
+                        <label>Select Reverse Charge</label>
                         <!-- <input type="text" formControlName="reverse_charge" [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}"> -->
                         <select formControlName="reverse_charge"
                             [ngClass]="{'is-invalid': f['reverse_charge'].touched && f['reverse_charge'].invalid}">
@@ -447,7 +447,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Shipping Date* </label>
-                        <input type="date" formControlName="shipping_date"
+                        <input type="date" formControlName="shipping_date" placeholder="Select Shipping Date"
                             [ngClass]="{'is-invalid': f['shipping_date'].touched && f['shipping_date'].invalid}">
                         <span class="text-danger"
                             *ngIf="shipping_date && shipping_date.invalid && shipping_date.touched">Select
@@ -607,9 +607,9 @@
                                               </mat-form-field>
                                         </div>
                                         </td>
-                                        <td><input type="text" formControlName="qty" class="input"></td>
-                                        <td><input type="text" formControlName="unit_cost" class="input" [(ngModel)]="coastprice[i]" (blur)="purchasee(i)" #price (blur)="purchase2(price.value,i)"></td>
-                                        <td><input type="text" formControlName="mrp" class="input">
+                                        <td><input type="text" formControlName="qty" placeholder="QTY" class="input"></td>
+                                        <td><input type="text" formControlName="unit_cost" placeholder="Unit Cost" class="input" [(ngModel)]="coastprice[i]" (blur)="purchasee(i)" #price (blur)="purchase2(price.value,i)"></td>
+                                        <td><input type="text" formControlName="mrp" class="input" placeholder="MRP">
                                             <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch()"></i>
                                             <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
                                                 aria-labelledby="addressModalLabel" aria-hidden="true">
@@ -679,37 +679,37 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><input type="text" formControlName="discount" class="input" (blur)="purchase4(i)">
+                                        <td><input type="text" formControlName="discount" placeholder="Discount" class="input" (blur)="purchase4(i)">
                                             <span class="text-danger" style="display: block;"
                                                 *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">
                                                 Enter Discount ex: 1-100
                                             </span>
                                         </td>
-                                        <td><input type="text" formControlName="additional_discount" class="input" (blur)="purchase3(i)">
+                                        <td><input type="text" formControlName="additional_discount" placeholder="Additional Discount" class="input" (blur)="purchase3(i)">
                                             <span class="text-danger" style="display: block;"
                                             *ngIf="additional_discount(i) && additional_discount(i).invalid && additional_discount(i).touched">
                                             Enter Discount ex: 1-100
                                         </span>
                                         </td>
-                                        <td> <input type="text" formControlName="selling_price_online" class="input">
+                                        <td> <input type="text" formControlName="selling_price_online" placeholder="Selling Price Online" class="input">
                                         </td>
-                                        <td><input type="text" formControlName="selling_price_offline" class="input">
+                                        <td><input type="text" formControlName="selling_price_offline" class="input" placeholder="Selling Price Offline">
                                         </td>
-                                        <td><input type="text" formControlName="dealer_price" class="input"></td>
-                                        <td><input type="text" formControlName="employee_price" class="input"></td>
+                                        <td><input type="text" formControlName="dealer_price" class="input" placeholder="Dealer Price"></td>
+                                        <td><input type="text" formControlName="employee_price" class="input" placeholder="Employee Price"></td>
                                         <td>
                                             <!-- <input type="text" formControlName="tax" class="input"> -->
                                             <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' + tax[i] + ' (' + tax[i] + '%)' }}</span>
                                             <br>
                                         <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
                                         </td>
-                                        <td class="text-end"><input type="text" formControlName="landing_cost" class="input" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)"></td>
+                                        <td class="text-end"><input type="text" formControlName="landing_cost" placeholder="Landing Cost" class="input" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)"></td>
                                         <!-- <td class="text-end"><input type="text" class="input" formControlName="total" [value]="calculateTotalEveryIndex(i).toString()" [ngModel]="calculateTotalEveryIndex(i).toString()"></td> -->
                                         <td class="text-end">
-                                            <input type="text" class="input" readonly [value]="TotalWithoutTax[i] | number:'1.2-2'" >
+                                            <input type="text" class="input" readonly [value]="TotalWithoutTax[i] | number:'1.2-2'" placeholder="Total Without Tax" >
                                         </td>
                                         <td class="text-end">
-                                        <input type="text" formControlName="total" class="input" readonly [value]="calculateTotalEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
+                                        <input type="text" formControlName="total" class="input" placeholder="Total" readonly [value]="calculateTotalEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
                                         </td>
                                     </tr>
                                 </ng-container>

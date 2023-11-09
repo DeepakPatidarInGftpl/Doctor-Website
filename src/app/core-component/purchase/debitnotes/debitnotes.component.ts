@@ -266,7 +266,7 @@ export class DebitnotesComponent implements OnInit {
     }
   }
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
