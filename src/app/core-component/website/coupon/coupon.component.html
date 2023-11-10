@@ -121,7 +121,7 @@
                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
                         <div class="f-right">
                             <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>  
+                            <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}} entries</div>  
                         </div>
                        </div>
                      </div>
@@ -133,13 +133,14 @@
         <div class="page-header">
             <div *ngIf="isAdd">
             <div class="page-title" *ngIf="addForm">
-                <h4> Coupon </h4>
+                <h4>Add Coupon </h4>
                 <h6>Create new Coupon </h6>
                 </div>
             </div>
             <div *ngIf="isEdit">
             <div class="page-title" *ngIf="!addForm">
                 <h4> Update Coupon </h4>
+                <h6>Edit Coupon </h6>
                 </div>
             </div>
         </div>
@@ -151,7 +152,7 @@
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
+                                <input type="text" formControlName="title" placeholder="Enter Title" id="title" [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
                                 <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
                                 </span>
                             </div>
@@ -159,7 +160,7 @@
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Code*</label>
-                                <input type="text" formControlName="code" id="code" [ngClass]="{'is-invalid': f['code'].touched && f['code'].invalid}">
+                                <input type="text" formControlName="code" placeholder="Enter Code" id="code" [ngClass]="{'is-invalid': f['code'].touched && f['code'].invalid}">
                                 <span class="text-danger" *ngIf="code && code.invalid && code.touched">Enter Code
                                 </span>
                             </div>

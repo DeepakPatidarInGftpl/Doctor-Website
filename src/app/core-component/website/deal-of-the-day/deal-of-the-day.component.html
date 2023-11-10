@@ -73,11 +73,12 @@
                                 <td> <a routerLink="//website/details-dealoftheDay/{{products.id}}">  {{products?.discount +'%'}}</a>
                                   
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <ng-container *ngFor="let variant of products?.variant; let last = last">
                                         {{ variant?.product_title }}{{ last ? '' : ', ' }}
                                     </ng-container>
-                                </td>
+                                </td> -->
+                                <td>{{products?.variant[0]?.product_title}}</td>
                                 <td>
                                     {{products?.datetime | date:'dd-MM-yyyy'}}
                                 </td>
@@ -126,7 +127,7 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}}
                                     entries</div>
                             </div>
                         </div>
@@ -139,13 +140,14 @@
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
                 <div *ngIf="isAdd">
-                <h4> Deal of The Day </h4>
+                <h4>Add Deal of The Day </h4>
                 <h6>Create new Deal of The Day </h6>
                 </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
                 <div *ngIf="isEdit">
                 <h4> Update Deal of The Day </h4>
+                <h6>Edit Deal of The Day </h6>
                 </div>
             </div>
         </div>

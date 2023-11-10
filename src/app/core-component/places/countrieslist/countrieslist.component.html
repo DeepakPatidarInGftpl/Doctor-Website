@@ -81,9 +81,9 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
-                                    <a routerLink="//places/country-details/{{products?.id}}" style="line-height: 3;">{{products.country_name}}</a>
+                                    <a routerLink="//places/country-details/{{products?.id}}" style="line-height: 3;">{{products?.country_name}}</a>
                                 </td>
-                                <td>{{products.country_code}}</td>
+                                <td>{{products?.country_code}}</td>
                                 <td>
                                     <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                             class="badges">{{products.is_active}}</span> -->
@@ -132,7 +132,7 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}}
                                     entries</div>
                             </div>
                         </div>
@@ -143,16 +143,16 @@
     </div>
     <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
         <div class="page-header">
-            <div *ngIf="isAdd">
-                <div class="page-title" *ngIf="addForm">
-                    <h4> Country </h4>
-                    <h6>Create new Country </h6>
+            <div class="page-title" *ngIf="addForm">
+                <div *ngIf="isAdd">
+                    <h4>Add Country </h4>
+                    <h6>Create New Country </h6>
                 </div>
             </div>
-            <div *ngIf="isEdit">
-                <div class="page-title" *ngIf="!addForm">
-                    <h4> Country Edit</h4>
-                    <h6> Update Country </h6>
+            <div class="page-title" *ngIf="!addForm">
+                <div *ngIf="isEdit">
+                    <h4>Edit Country</h4>
+                    <h6>Update Country </h6>
                 </div>
             </div>
         </div>
@@ -164,12 +164,9 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Country Name*</label>
-                                    <input type="text" formControlName="country_name" id="country_name" [ngClass]="{
-                                    'is-invalid': f['country_name'].touched && f['country_name'].invalid
-                                  }">
-                                    <span class="text-danger"
-                                        *ngIf="country_name && country_name.invalid && country_name.touched">Enter
-                                        Country Name
+                                    <input type="text" formControlName="country_name" placeholder="Enter Country Name" id="country_name" [ngClass]="{
+                                    'is-invalid': f['country_name'].touched && f['country_name'].invalid}">
+                                    <span class="text-danger" *ngIf="country_name && country_name.invalid && country_name.touched">Enter Country Name
                                     </span>
 
                                 </div>
@@ -177,22 +174,15 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Country Code*</label>
-                                    <input type="text" formControlName="country_code" id="country_code" [ngClass]="{
-                                    'is-invalid': f['country_code'].touched && f['country_code'].invalid
-                                  }">
-
-                                    <span class="text-danger"
-                                        *ngIf="country_code && country_code.invalid && country_code.touched">Enter
-                                        Country Code
-                                    </span>
+                                    <input type="text" formControlName="country_code" placeholder="Enter Country Code" id="country_code" [ngClass]="{
+                                    'is-invalid': f['country_code'].touched && f['country_code'].invalid }">
+                                    <span class="text-danger" *ngIf="country_code && country_code.invalid && country_code.touched">Enter Country Code</span>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>
-                                    Submit</button>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
@@ -205,12 +195,10 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Country Name*</label>
-                                    <input type="text" formControlName="country_name" id="country_name" [ngClass]="{
+                                    <input type="text" formControlName="country_name" placeholder="Enter Country Name" id="country_name" [ngClass]="{
                                     'is-invalid': f['country_name'].touched && f['country_name'].invalid
                                   }">
-                                    <span class="text-danger"
-                                        *ngIf="country_name && country_name.invalid && country_name.touched">Enter
-                                        Country Name
+                                    <span class="text-danger" *ngIf="country_name && country_name.invalid && country_name.touched">Enter Country Name
                                     </span>
 
                                 </div>
@@ -218,22 +206,15 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Country Code*</label>
-                                    <input type="text" formControlName="country_code" id="country_code" [ngClass]="{
-                                    'is-invalid': f['country_code'].touched && f['country_code'].invalid
-                                  }">
-
-                                    <span class="text-danger"
-                                        *ngIf="country_code && country_code.invalid && country_code.touched">Enter
-                                        Country Code
-                                    </span>
+                                    <input type="text" formControlName="country_code" placeholder="Enter Country Code" id="country_code" [ngClass]="{
+                                    'is-invalid': f['country_code'].touched && f['country_code'].invalid }">
+                                    <span class="text-danger" *ngIf="country_code && country_code.invalid && country_code.touched">Enter Country Code </span>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>
-                                    Submit</button>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>
                             </div>
                         </div>
                     </form>

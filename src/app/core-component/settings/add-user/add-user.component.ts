@@ -84,10 +84,12 @@ branchList:any;
           }
         }
       }, err => {
+        this.loader = false;
         // console.log(err.error.gst);    
       })
     } else {
-      this.userForm.markAllAsTouched()
+      this.userForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 

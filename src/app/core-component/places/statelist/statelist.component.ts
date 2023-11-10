@@ -272,7 +272,7 @@ export class StatelistComponent implements OnInit {
 
     } else {
       this.stateForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
   countryError = null;
@@ -288,9 +288,11 @@ export class StatelistComponent implements OnInit {
           this.stateForm.reset();
           this.addForm = true;
           this.ngOnInit()
+        }else{
+          this.loaders = false;
         }
       }, err => {
-        // console.log(err.error);
+        this.loaders = false;
         if (err.error.country) {
           this.countryError = 'Select Country';
           setTimeout(() => {
@@ -300,8 +302,9 @@ export class StatelistComponent implements OnInit {
       })
 
     } else {
-      this.stateForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.loaders = false;
+      this.stateForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
   countryy: any
@@ -370,7 +373,7 @@ export class StatelistComponent implements OnInit {
     }
   }
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

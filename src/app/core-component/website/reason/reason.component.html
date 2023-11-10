@@ -115,7 +115,7 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}}
                                     entries</div>
                             </div>
                         </div>
@@ -125,16 +125,18 @@
         </div>
     </div>
     <div class="col-lg-5 col-sm-5 col-12" *ngIf="isAdd || isEdit">
+    
         <div class="page-header">
-            <div *ngIf="isAdd">
             <div class="page-title" *ngIf="addForm">
-                    <h4>Reason</h4>
+                <div *ngIf="isAdd">
+                    <h4>Add Reason</h4>
                     <h6>Create new Reason</h6>
                 </div>
             </div>
-            <div *ngIf="isEdit">
-            <div class="page-title" *ngIf="!addForm">   
+            <div class="page-title" *ngIf="!addForm">
+                <div *ngIf="isEdit">
                     <h4>Update Reason</h4>
+                    <h6>Edit Reason</h6>
                 </div>
             </div>
         </div>
@@ -146,7 +148,7 @@
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title" [ngClass]="{
+                                    <input type="text" formControlName="title" placeholder="Enter Title" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid}">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
                                         Title
@@ -155,7 +157,7 @@
                             </div>
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
-                                    <label>Type*</label>
+                                    <label>Select Type*</label>
                                     <select form formControlName="type" id="type" [ngClass]="{
                                         'is-invalid': f['type'].touched && f['type'].invalid}">
                                         <option value="" selected disabled>Select Type</option>
@@ -172,7 +174,7 @@
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>
-                                    Submit</button>
+                                   &nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
@@ -185,7 +187,7 @@
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title" [ngClass]="{
+                                    <input type="text" formControlName="title" placeholder="Enter Title" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid}">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
                                         Title
@@ -194,7 +196,7 @@
                             </div>
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
-                                    <label>Type*</label>
+                                    <label>Select Type*</label>
                                     <select form formControlName="type" id="type" [ngClass]="{
                                         'is-invalid': f['type'].touched && f['type'].invalid}">
                                         <option value="" selected disabled>Select Type</option>
@@ -211,7 +213,7 @@
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
                                         aria-hidden="true"></span>
-                                    Submit</button>
+                                   &nbsp; Submit</button>
                             </div>
 
                         </div>

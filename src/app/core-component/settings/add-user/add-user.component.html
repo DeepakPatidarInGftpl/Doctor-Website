@@ -12,25 +12,24 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Name*</label>
-                        <input type="text" formControlName="name" id="name" [ngClass]="{
+                        <input type="text" formControlName="name" placeholder="Enter Name" id="name" [ngClass]="{
                       'is-invalid': f['name'].touched && f['name'].invalid}">
-                        <span class="text-danger" *ngIf="name && name.invalid && name.touched">Enter your name </span>
+                        <span class="text-danger" *ngIf="name && name.invalid && name.touched">Enter your Name </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>User Name*</label>
-                        <input type="text" formControlName="username" id="username" [ngClass]="{
+                        <input type="text" formControlName="username" placeholder="Enter UserName" id="username" [ngClass]="{
                       'is-invalid': f['username'].touched && f['username'].invalid}" [ngStyle]="{'border':errUser?'1px solid red':''}">
-                        <span class="text-danger" *ngIf="username && username.invalid && username.touched">Enter your
-                            username </span>
+                        <span class="text-danger" *ngIf="username && username.invalid && username.touched">Enter your Username </span>
                         <span class="text-danger" *ngIf="errUser">{{errUser}}</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Mobile Number*</label>
-                        <input type="text" formControlName="phone_number" id="phone_number" [ngClass]="{
+                        <input type="text" formControlName="phone_number" placeholder="Enter Mobile No." id="phone_number" [ngClass]="{
                       'is-invalid': f['phone_number'].touched && f['phone_number'].invalid}" minlength="10"
                             maxlength="10" [ngStyle]="{'border':errPhone?'1px solid red':''}">
                         <span class="text-danger" *ngIf="mobile_no&& mobile_no.invalid && mobile_no.touched">Enter your
@@ -42,15 +41,15 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" formControlName="email" id="email" [ngClass]="{
+                        <input type="text" formControlName="email" placeholder="Enter Valid Email" id="email" [ngClass]="{
                       'is-invalid': f['email'].touched && f['email'].invalid}">
-                        <span class="text-danger" *ngIf="email && email.invalid && email.touched">Enter Remark</span>
+                        <span class="text-danger" *ngIf="email && email.invalid && email.touched">Enter Valid Email</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Password*</label>
-                        <input type="text" formControlName="password" id="password" [ngClass]="{
+                        <input type="text" formControlName="password" placeholder="Enter Password" id="password" [ngClass]="{
                       'is-invalid': f['password'].touched && f['password'].invalid}">
                         <span class="text-danger" *ngIf="password && password.invalid && password.touched">Enter your
                             Password
@@ -70,7 +69,7 @@
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>User Type</label>
+                        <label>Select User Type</label>
                         <select formControlName="user_type" id="user_type" [ngClass]="{
                         'is-invalid': f['user_type'].touched && f['user_type'].invalid}">
                             <option value="" selected disabled>Select User Type</option>
@@ -81,31 +80,29 @@
                             <option value="Customer">Customer</option>
                             <option value="Transport">Transport</option>
                         </select>
-                        <span class="text-danger" *ngIf="user_type && user_type.invalid && user_type.touched">Select
-                            User Type</span>
+                        <span class="text-danger" *ngIf="user_type && user_type.invalid && user_type.touched">Select User Type</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>User Role</label>
+                        <label>Select User Role</label>
                         <select formControlName="role" id="role" [ngClass]="{
                         'is-invalid': f['role'].touched && f['role'].invalid}">
                             <option value="" selected disabled>Select User Role</option>
                             <option value="{{userRole.id}}" *ngFor="let userRole of groupList">{{userRole.name}}</option>
                         </select>
-                        <span class="text-danger" *ngIf="role && role.invalid && role.touched">Select
-                            User role</span>
+                        <span class="text-danger" *ngIf="role && role.invalid && role.touched">Select User role</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>Branch</label>
+                        <label>Select Branch</label>
                         <select formControlName="branch" id="branch" [ngClass]="{
                         'is-invalid': f['branch'].touched && f['branch'].invalid}">
                             <option value="" selected disabled>Select Branch</option>
                             <option value="{{branch?.id}}" *ngFor="let branch of branchList">{{branch?.title}}</option>
                         </select>
-                        <span class="text-danger" *ngIf="branch && branch.invalid && branch.touched">Select branch</span>
+                        <span class="text-danger" *ngIf="branch && branch.invalid && branch.touched">Select Branch</span>
                     </div>
                 </div>
                 <!-- <div class="col-lg-3 col-sm-3 col-12">
@@ -141,8 +138,7 @@
                 <div class="col-lg-12">
                     <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Submit</button>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
                     <a routerLink="//settings/user" class="btn btn-cancel">Cancel</a>
                 </div>
 

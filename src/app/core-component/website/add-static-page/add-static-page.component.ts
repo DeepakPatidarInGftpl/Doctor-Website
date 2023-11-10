@@ -14,11 +14,8 @@ import jsonDoc from './../../../doc';
 })
 export class AddStaticPageComponent implements OnInit, OnDestroy {
 
-
   // staticPgForm!: FormGroup;
   renderer: any;
-
-
   editordoc = jsonDoc;
   editor: Editor | any;
   toolbar: Toolbar = [
@@ -43,12 +40,11 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
   //   editorContent:new FormControl('')
   // });
 
-
   staticPgForm = this.fb.group({
-    title: new FormControl('', [Validators.required]),
-    slug: new FormControl('', [Validators.required]),
-    choice_type:new FormControl(''),
-    description: new FormControl('', [Validators.required])
+    title: new FormControl('',[Validators.required]),
+    slug: new FormControl('',[Validators.required]),
+    choice_type:new FormControl('',[Validators.required]),
+    description: new FormControl('',[Validators.required])
   })
 
   get doc(): any {
@@ -70,9 +66,6 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.editor = new Editor();
     this.staticPgForm
-    const javaScriptForQuillEditor = this.renderer.createElement('script');
-    javaScriptForQuillEditor.src = `../../../assets/js/quill.js`;
-    this.renderer.appendChild(document.head, javaScriptForQuillEditor);
   }
 
   addRes: any;
@@ -102,7 +95,7 @@ export class AddStaticPageComponent implements OnInit, OnDestroy {
     } else {
       this.loaders=false;
       this.staticPgForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 

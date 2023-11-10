@@ -76,7 +76,7 @@ export class TrendingProductsComponent implements OnInit {
         this.websiteService.deleteTrendingProducts(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.tableData
+           
             Swal.fire({
               icon: 'success',
               title: 'Deleted!',
@@ -162,7 +162,7 @@ export class TrendingProductsComponent implements OnInit {
   ngOnInit(): void {
     this.trendingProductsForm = this.fb.group({
       variant: new FormArray([], [Validators.required]),
-      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
+      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
       // datetime: new FormControl('', [Validators.required, futureDateValidator()])
     })
     //dropdown list
@@ -311,11 +311,10 @@ export class TrendingProductsComponent implements OnInit {
       });
     } else {
       this.trendingProductsForm.markAllAsTouched();
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
   
-
   update() {
     // console.log(this.id);
     // console.log(this.trendingProductsForm.value);
@@ -348,7 +347,7 @@ export class TrendingProductsComponent implements OnInit {
       })
     } else {
       this.trendingProductsForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -418,7 +417,7 @@ export class TrendingProductsComponent implements OnInit {
   }
  
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

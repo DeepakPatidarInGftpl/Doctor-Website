@@ -2,7 +2,7 @@
     <div class="col-lg-7 col-sm-7 col-12">
         <div class="page-header">
             <div class="page-title">
-                <h4 class="titl">Banner list</h4>
+                <h4 class="titl">Banner List</h4>
                 <h6>Manage your Banner</h6>
             </div>
             <div class="page-btn" *ngIf="!addForm">
@@ -89,19 +89,19 @@
                                 <td>
                                     {{products?.title}}
                                 </td>
-                                <td><a [href]="products.url" target="_blank"> {{products?.url}}</a></td>
+                                <td><a [href]="products?.url" target="_blank"> {{products?.url}}</a></td>
                                 <td>
                                     <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span> -->
                                     <mat-slide-toggle
-                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                        (click)="products.is_active ? deActivate(i,products?.id):Active(i,products?.id)"
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
-                                    <a class="me-1" routerLink="//website/bannerDetails/{{products.id}}">
+                                    <a class="me-1" routerLink="//website/bannerDetails/{{products?.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a>
-                                    <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
+                                    <a class="me-1" (click)="editForm(products?.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>
                                     <a (click)="confirmText(i,products.id)" class="me-3 confirm-text"
@@ -149,7 +149,6 @@
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                                 <select [(ngModel)]="itemsPerPage" class="pagination">
-                                    
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="30">30</option>
@@ -162,7 +161,7 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}}
                                     entries</div>
                             </div>
                         </div>
@@ -175,13 +174,14 @@
         <div class="page-header">
             <div class="page-title" *ngIf="addForm">
                 <div *ngIf="isAdd">
-                    <h4> Banner </h4>
+                    <h4>Add Banner </h4>
                     <h6>Create new Banner </h6>
                 </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
                 <div *ngIf="isEdit">
-                    <h4> Update Banner </h4>
+                    <h4>Update Banner </h4>
+                    <h6>Edit Banner </h6>
                 </div>
             </div>
         </div>
@@ -193,34 +193,28 @@
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title" [ngClass]="{
-                                    'is-invalid': f['title'].touched && f['title'].invalid
-                                  }">
-                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
-                                        Title
-                                    </span>
+                                    <input type="text" formControlName="title" placeholder="Enter Title" id="title" [ngClass]="{
+                                    'is-invalid': f['title'].touched && f['title'].invalid }">
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title </span>
 
                                 </div>
                             </div>
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Url*</label>
-                                    <input type="text" formControlName="url" id="url" [ngClass]="{
+                                    <input type="text" formControlName="url" placeholder="Enter Url" id="url" [ngClass]="{
                                     'is-invalid': f['url'].touched && f['url'].invalid
                                   }">
-                                    <span class="text-danger" *ngIf="url && url.invalid && url.touched">Enter url
-                                    </span>
-
+                                    <span class="text-danger" *ngIf="url && url.invalid && url.touched">Enter Url</span>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label> Banner Image*</label>
+                                    <label>Banner Image*</label>
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="image-upload">
-                                                <input type="file" formControlName="image" (change)="selectImg($event)"
-                                                    required>
+                                                <input type="file" formControlName="image" (change)="selectImg($event)">
                                                 <div class="image-uploads">
                                                     <img src="assets/img/icons/upload.svg" alt="img">
                                                     <h4>Drag and drop a file to upload</h4>
@@ -248,9 +242,7 @@
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>
-                                    Submit</button>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
 
                         </div>
@@ -264,23 +256,17 @@
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title" [ngClass]="{
-                                    'is-invalid': f['title'].touched && f['title'].invalid
-                                  }">
-                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
-                                        Title
-                                    </span>
-
+                                    <input type="text" formControlName="title" placeholder="Enter Title" id="title" [ngClass]="{
+                                    'is-invalid': f['title'].touched && f['title'].invalid }">
+                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title </span>
                                 </div>
                             </div>
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Url*</label>
-                                    <input type="text" formControlName="url" id="url" [ngClass]="{
-                                    'is-invalid': f['url'].touched && f['url'].invalid
-                                  }">
-                                    <span class="text-danger" *ngIf="url && url.invalid && url.touched">Enter url
-                                    </span>
+                                    <input type="text" formControlName="url" placeholder="Enter Url" id="url" [ngClass]="{
+                                    'is-invalid': f['url'].touched && f['url'].invalid}">
+                                    <span class="text-danger" *ngIf="url && url.invalid && url.touched">Enter Url </span>
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -308,9 +294,7 @@
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>
-                                    Submit</button>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
                         </div>
                     </form>

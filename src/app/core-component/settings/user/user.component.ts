@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
-import { employee } from 'src/app/interfaces/employee';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
@@ -262,7 +261,7 @@ select=false
   }
 
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

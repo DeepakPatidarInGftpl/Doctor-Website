@@ -30,7 +30,7 @@ export class UpdateStaticPageComponent implements OnInit, OnDestroy {
   staticPgForm = this.fb.group({
     title: new FormControl('', [Validators.required]),
     slug: new FormControl('', [Validators.required]),
-    choice_type:new FormControl(''),
+    choice_type:new FormControl('',[Validators.required]),
     description: new FormControl('', [Validators.required])
   })
 
@@ -60,11 +60,7 @@ export class UpdateStaticPageComponent implements OnInit, OnDestroy {
       this.staticPgForm.patchValue(res)
     })
 
-    const javaScriptForQuillEditor = this.renderer.createElement('script');
-    javaScriptForQuillEditor.src = `../../../assets/js/quill.js`;
-    this.renderer.appendChild(document.head, javaScriptForQuillEditor);
-
-
+ 
   }
 
   addRes: any;
@@ -95,8 +91,8 @@ export class UpdateStaticPageComponent implements OnInit, OnDestroy {
       })
     } else {
       this.loaders=false;
-      this.staticPgForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.staticPgForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 

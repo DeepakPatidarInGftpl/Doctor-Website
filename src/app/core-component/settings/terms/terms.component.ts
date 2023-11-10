@@ -226,7 +226,7 @@ export class TermsComponent implements OnInit {
     })
   } else {
     this.sizeForm.markAllAsTouched()
-    // console.log('forms invalid');
+    this.toastr.error('Please Fill All The Required Fields');
   }
 }
 
@@ -253,7 +253,7 @@ update(){
     })
   } else {
     this.sizeForm.markAllAsTouched()
-    // console.log('forms invalid');
+    this.toastr.error('Please Fill All The Required Fields');
   }
 }
 
@@ -310,7 +310,7 @@ update(){
   }
   
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
