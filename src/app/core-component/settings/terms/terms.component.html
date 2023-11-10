@@ -26,7 +26,7 @@
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
                                     <input type="search" class="form-control form-control-sm" placeholder="Search..."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                        [(ngModel)]="titlee" (ngModelChange)="search()">
                                 </label>
                             </div>
                         </div>
@@ -79,9 +79,9 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
-                                    <a routerLink="//settings/terms-details/{{products?.id}}" style="line-height: 3;">{{products.voucher_type}}</a>
+                                    <a routerLink="//settings/terms-details/{{products?.id}}" style="line-height: 3;">{{products?.voucher_type}}</a>
                                 </td>
-                                <td>{{products.description}}</td>
+                                <td>{{products?.description}}</td>
                                 <td>
                                     <!-- <span [ngClass]="{'bg-lightgreen': products.is_active === true, 'bg-lightred' : products.is_active === false,'bg-lightyellow' : products.is_active === 'Partial' }"
                                         class="badges">{{products.is_active}}</span> -->
@@ -135,7 +135,7 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{pageSize}}
+                                <div class="entries f-right">Showing {{pageSize}} to {{pageSize}} of {{p}}
                                     entries</div>
                             </div>
 
@@ -156,6 +156,7 @@
             <div class="page-title" *ngIf="!addForm">
                 <div *ngIf="isEdit">
                     <h4> Update Terms </h4>
+                    <h6>Edit Terms </h6>
                 </div>
             </div>
         </div>
@@ -166,7 +167,7 @@
                         <div class="row">
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Voucher Type*</label>
+                                    <label>Select Voucher Type*</label>
                                     <select formControlName="voucher_type" [ngClass]="{'is-invalid': f['voucher_type'].touched && f['voucher_type'].invalid}">
                                     <option value="" selected disabled>Select Voucher Type</option>
                                     <option value="{{voucher?.title}}" *ngFor="let voucher of voucherList">{{voucher?.title}}</option>
@@ -177,7 +178,7 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Description*</label>
-                                    <input type="text" formControlName="description" id="description" [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}">
+                                    <input type="text" formControlName="description" placeholder="Enter Description" id="description" [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}">
                                     <span class="text-danger" *ngIf="description && description.invalid && description.touched">Enter Size
                                         Description
                                     </span>
@@ -200,8 +201,8 @@
                         <div class="row">
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label>Voucher Type*</label>
-                                    <select formControlName="voucher_type" [ngClass]="{'is-invalid': f['voucher_type'].touched && f['voucher_type'].invalid}">
+                                    <label>Select Voucher Type*</label>
+                                    <select formControlName="voucher_type"  [ngClass]="{'is-invalid': f['voucher_type'].touched && f['voucher_type'].invalid}">
                                     <option value="" selected disabled>Select Voucher Type</option>
                                     <option value="{{voucher?.title}}" *ngFor="let voucher of voucherList">{{voucher?.title}}</option>
                                     </select>
@@ -211,7 +212,7 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Description*</label>
-                                    <input type="text" formControlName="description" id="description" [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}">
+                                    <input type="text" formControlName="description" placeholder="Enter Description" id="description" [ngClass]="{'is-invalid': f['description'].touched && f['description'].invalid}">
                                     <span class="text-danger" *ngIf="description && description.invalid && description.touched">Enter Size description</span>
                                 </div>
                             </div>

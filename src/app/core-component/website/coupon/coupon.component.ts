@@ -160,7 +160,7 @@ export class CouponComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       code: new FormControl('', [Validators.required]),
       expiry_date: new FormControl('', [Validators.required, futureDateValidator()]),
-      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
+      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
     })
     this.websiteService.getCoupon().subscribe(res => {
       this.loader = false;
@@ -271,7 +271,7 @@ export class CouponComponent implements OnInit {
       })
     } else {
       this.couponForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -303,7 +303,7 @@ export class CouponComponent implements OnInit {
       })
     } else {
       this.couponForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -356,7 +356,7 @@ export class CouponComponent implements OnInit {
     }
   }
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

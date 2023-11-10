@@ -253,13 +253,16 @@ export class CitylistComponent implements OnInit {
           this.cityForm.reset()
           // window.location.reload();
           this.ngOnInit()
+        }else{
+          this.loaders = false;
         }
       }, err => {
-        // console.log(err.error.gst);
+        this.loaders = false;
       })
     } else {
-      this.cityForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.loaders = false;
+      this.cityForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -277,9 +280,11 @@ export class CitylistComponent implements OnInit {
           this.addForm = true;
           // window.location.reload()
           this.ngOnInit();
+        }else{
+          this.loaders = false;
         }
       }, err => {
-        // console.log(err.error.state);
+        this.loaders = false;
         if (err.error.state) {
           this.stateError = 'Select State';
           setTimeout(() => {
@@ -289,8 +294,9 @@ export class CitylistComponent implements OnInit {
       })
 
     } else {
+      this.loaders = false;
       this.cityForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -338,7 +344,7 @@ export class CitylistComponent implements OnInit {
     }
   }
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

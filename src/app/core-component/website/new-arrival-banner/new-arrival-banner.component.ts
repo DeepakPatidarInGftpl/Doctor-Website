@@ -276,8 +276,8 @@ url:any;
         }, 5000);
       })
     } else {
-      this.bannerForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.bannerForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -343,8 +343,8 @@ url:any;
   
 
     } else {
-      this.bannerForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.bannerForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -439,7 +439,7 @@ url:any;
     }
   }
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

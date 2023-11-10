@@ -78,7 +78,7 @@
                                 <td>{{i+1}}</td>
                                 <td><a routerLink="//settings/payment-terms-details/{{products?.id}}" style="line-height: 3;">{{products.title}} </a> 
                                     </td>
-                                <td> {{products.days}} </td>
+                                <td> {{products?.days}} </td>
                                 <td>
                                     <mat-slide-toggle
                                     (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
@@ -114,7 +114,6 @@
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                             <select [(ngModel)]="itemsPerPage" class="pagination" >
-                    
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                                 <option value="30">30</option>
@@ -127,7 +126,7 @@
                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
                         <div class="f-right">
                             <pagination-controls (pageChange)="p = $event"></pagination-controls>  
-                            <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>  
+                            <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}} entries</div>  
                         </div>
              
                        </div>
@@ -150,6 +149,7 @@
             <div class="page-title" *ngIf="!addForm">
                 <div *ngIf="isEdit">
                 <h4> Update Payment Terms </h4>
+                <h6>Edit Payment Terms </h6>
                 </div>
             </div>
         </div>
@@ -161,7 +161,7 @@
                         <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
+                                <input type="text" formControlName="title" placeholder="Enter Title" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid }">
                                 <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
                                 </span>
@@ -171,7 +171,7 @@
                         <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Days*</label>
-                                <input type="number" formControlName="days" id="days" [ngClass]="{
+                                <input type="number" formControlName="days" placeholder="Enter Days" id="days" [ngClass]="{
                                     'is-invalid': f['days'].touched && f['days'].invalid
                                   }">
                                 <span class="text-danger" *ngIf="days && days.invalid && days.touched">Enter Days
@@ -183,7 +183,7 @@
                             <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                             <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
+                               &nbsp; Submit</button>
                         </div>
                     </div>
                 </form>
@@ -196,7 +196,7 @@
                         <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
-                                <input type="text" formControlName="title" id="title" [ngClass]="{
+                                <input type="text" formControlName="title" placeholder="Enter Title" id="title" [ngClass]="{
                                     'is-invalid': f['title'].touched && f['title'].invalid
                                   }">
                                 <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
@@ -207,7 +207,7 @@
                         <div class="col-lg-12 col-sm-12 col-12">
                             <div class="form-group">
                                 <label>Days*</label>
-                                <input type="text" formControlName="days" id="days" [ngClass]="{
+                                <input type="text" formControlName="days" placeholder="Enter Days" id="days" [ngClass]="{
                                     'is-invalid': f['days'].touched && f['days'].invalid
                                   }">
                                 <span class="text-danger" *ngIf="days && days.invalid && days.touched">Enter Days
@@ -220,7 +220,7 @@
                             <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                             <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Submit</button>
+                              &nbsp;  Submit</button>
                         </div>
 
                     </div>

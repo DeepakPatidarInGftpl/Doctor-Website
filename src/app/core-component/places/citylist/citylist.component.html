@@ -29,7 +29,7 @@
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
                                     <input type="search" class="form-control form-control-sm" placeholder="Search..."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                        [(ngModel)]="titlee" (ngModelChange)="search()" >
                                 </label>
                             </div>
                         </div>
@@ -37,8 +37,7 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img
-                                        src="assets/img/icons/pdf.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                             </li>
                             <li>
                                 <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
@@ -64,7 +63,7 @@
                                     <i class="fa fa-sort"></i>
                                 </th>
                                 <th (click)="sort('id')" class="thone">Sr. No. <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">City <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">City<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">City Code <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">State <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
@@ -134,7 +133,7 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}}
                                     entries</div>
                             </div>
                         </div>
@@ -149,13 +148,13 @@
 
             <div class="page-title" *ngIf="addForm">
                 <div *ngIf="isAdd">
-                    <h4>City </h4>
-                    <h6>Create new City </h6>
+                    <h4>Add City </h4>
+                    <h6>Create New City </h6>
                 </div>
             </div>
             <div class="page-title" *ngIf="!addForm">
                 <div *ngIf="isEdit">
-                    <h4> City Edit</h4>
+                    <h4> Edit City</h4>
                     <h6> Update City </h6>
                 </div>
             </div>
@@ -169,24 +168,19 @@
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>City*</label>
-                                    <input type="text" formControlName="city" id="city" [ngClass]="{
+                                    <input type="text" formControlName="city" placeholder="Enter City Name" id="city" [ngClass]="{
                                     'is-invalid': f['city'].touched && f['city'].invalid
                                   }">
-                                    <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter city
-                                    </span>
-
+                                    <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter City Name</span>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>City Code*</label>
-                                    <input type="text" formControlName="city_code" id="city_code" [ngClass]="{
-                                    'is-invalid': f['city_code'].touched && f['city_code'].invalid
-                                  }">
-                                    <span class="text-danger"
-                                        *ngIf="city_code && city_code.invalid && city_code.touched">Enter City Code
-                                    </span>
+                                    <input type="text" formControlName="city_code" placeholder="Enter City Code" id="city_code" [ngClass]="{
+                                    'is-invalid': f['city_code'].touched && f['city_code'].invalid }">
+                                    <span class="text-danger" *ngIf="city_code && city_code.invalid && city_code.touched">Enter City Code </span>
                                 </div>
                             </div>
 
@@ -200,24 +194,18 @@
                                         id="state" [ngClass]="{
                             'is-invalid': f['state'].touched && f['state'].invalid
                           }">
-                                        <option value="" selected disabled>State</option>
+                                        <option value="" selected disabled>Select State</option>
                                         <option value="{{state.id}}" *ngFor="let state of stateList">
-                                            {{state.state}}
+                                            {{state?.state}}
                                         </option>
                                     </select>
-
-                                    <span class="text-danger" *ngIf="state && state.invalid && state.touched">Select
-                                        state
-                                    </span>
-
+                                    <span class="text-danger" *ngIf="state && state.invalid && state.touched">Select State </span>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>
-                                  &nbsp;  Submit</button>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
 
                         </div>
@@ -228,23 +216,19 @@
                 <div class="card-body" *ngIf="!addForm">
                     <form [formGroup]="cityForm" (ngSubmit)="update()">
                         <div class="row">
-
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>City*</label>
-                                    <input type="text" formControlName="city" id="city" [ngClass]="{
-                                    'is-invalid': f['city'].touched && f['city'].invalid
-                                  }">
-                                    <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter city
-                                    </span>
-
+                                    <input type="text" formControlName="city" placeholder="Enter City Name" id="city" [ngClass]="{
+                                    'is-invalid': f['city'].touched && f['city'].invalid}">
+                                    <span class="text-danger" *ngIf="city && city.invalid && city.touched">Enter City Name </span>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>City Code*</label>
-                                    <input type="text" formControlName="city_code" id="city_code" [ngClass]="{
+                                    <input type="text" formControlName="city_code" placeholder="Enter City Code" id="city_code" [ngClass]="{
                                     'is-invalid': f['city_code'].touched && f['city_code'].invalid
                                   }">
                                     <span class="text-danger"
@@ -263,14 +247,14 @@
                                         id="state" [ngClass]="{
                             'is-invalid': f['state'].touched && f['state'].invalid
                           }">
-                                        <option value="" selected disabled>State</option>
+                                        <option value="" selected disabled>Select State</option>
                                         <option value="{{state.id}}" *ngFor="let state of stateList">
                                             {{state.state}}
                                         </option>
                                     </select>
                                     <span *ngIf="stateError" class="text-danger">{{stateError}}</span>
                                     <span class="text-danger" *ngIf="state && state.invalid && state.touched">Select
-                                        state
+                                        State
                                     </span>
 
                                 </div>
@@ -278,9 +262,7 @@
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>
-                                  &nbsp;  Submit</button>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>
                             </div>
                         </div>
                     </form>

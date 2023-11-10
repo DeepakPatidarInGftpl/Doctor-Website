@@ -262,14 +262,17 @@ export class CountrieslistComponent implements OnInit {
           this.toastr.success(this.addRes.msg)
           this.countryForm.reset()
           this.ngOnInit()
+        }else{
+          this.loaders = false;
         }
       }, err => {
-        // console.log(err.error.gst);
+        this.loaders = false;
       })
 
     } else {
-      this.countryForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.loaders = false;
+      this.countryForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -285,15 +288,18 @@ export class CountrieslistComponent implements OnInit {
           this.countryForm.reset();
           this.addForm = true;
           this.ngOnInit()
+        }else{
+          this.loaders = false;
         }
       }, err => {
         // console.log(err.error);
-
+        this.loaders = false;
       })
 
     } else {
-      this.countryForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.loaders = false;
+      this.countryForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
   get country_name() {
@@ -349,7 +355,7 @@ export class CountrieslistComponent implements OnInit {
     }
   }
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

@@ -130,7 +130,7 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}}
                                     entries</div>
                             </div>
                         </div>
@@ -150,6 +150,7 @@
             <div class="page-title" *ngIf="!addForm">
                 <div *ngIf="isEdit">
                     <h4> Update Additional Charge </h4>
+                    <h6>Edit Additional Charge </h6>
                 </div>
             </div>
         </div>
@@ -161,17 +162,17 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Additional Charge*</label>
-                                    <input type="text" formControlName="additional_charge" id="additional_charge"
+                                    <input type="text" formControlName="additional_charge" placeholder="Enter Additional Charge" id="additional_charge"
                                         [ngClass]="{'is-invalid': f['additional_charge'].touched && f['additional_charge'].invalid}">
                                     <span class="text-danger"
                                         *ngIf="additional_charge && additional_charge.invalid && additional_charge.touched">Enter
-                                        additional charge
+                                        Additional Charge
                                     </span>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label>Value Type*</label>
+                                    <label>Select Value Type*</label>
                                     
                                         <select formControlName="value_type" [ngClass]="{'is-invalid': f['value_type'].touched && f['value_type'].invalid}">
                                             <option value="" selected disabled> Select Tax</option>
@@ -180,35 +181,35 @@
                                         </select>
                                     <span class="text-danger"
                                         *ngIf="value_type && value_type.invalid && value_type.touched">Select
-                                        Valid value type
+                                        Valid Value Type
                                     </span>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Value</label>
-                                    <input type="text" formControlName="value" id="value"
+                                    <input type="text" formControlName="value" placeholder="Enter Value" id="value"
                                         [ngClass]="{'is-invalid': f['value'].touched && f['value'].invalid}">
                                     <span class="text-danger" *ngIf="value && value.invalid && value.touched">Enter
-                                        value</span>
+                                        Value</span>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label>Tax</label>
+                                    <label>Select Tax</label>
                                     <!-- <input type="text" formControlName="tax" maxlength="6" minlength="6" id="tax"
                                         [ngClass]="{'is-invalid': f['tax'].touched && f['tax'].invalid}"> -->
                                         <select formControlName="tax" [ngClass]="{'is-invalid': f['tax'].touched && f['tax'].invalid}">
                                             <option value="" selected disabled> Select Tax</option>
                                             <option [value]="tax.id" *ngFor="let tax of taxList">{{tax.title}}</option>
                                         </select>
-                                    <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Select tax</span>
+                                    <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Select Tax</span>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>HSN SAC</label>
-                                    <input type="text" formControlName="HSN_SAC"
+                                    <input type="text" formControlName="HSN_SAC" placeholder="Enter HSN SAC"
                                         id="HSN_SAC"
                                         [ngClass]="{'is-invalid': f['HSN_SAC'].touched && f['HSN_SAC'].invalid}">
                                     <span class="text-danger"
@@ -219,7 +220,7 @@
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>Submit</button>
+                                        aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
@@ -232,17 +233,16 @@
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Additional Charge*</label>
-                                    <input type="text" formControlName="additional_charge" id="additional_charge"
+                                    <input type="text" formControlName="additional_charge" placeholder="Enter Additional Charge" id="additional_charge"
                                         [ngClass]="{'is-invalid': f['additional_charge'].touched && f['additional_charge'].invalid}">
                                     <span class="text-danger"
-                                        *ngIf="additional_charge && additional_charge.invalid && additional_charge.touched">Enter
-                                        additional charge
+                                        *ngIf="additional_charge && additional_charge.invalid && additional_charge.touched">Enter Additional Charge
                                     </span>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label>Value Type*</label>
+                                    <label>Select Value Type*</label>
                                     <select formControlName="value_type" [ngClass]="{'is-invalid': f['value_type'].touched && f['value_type'].invalid}">
                                         <option value="" selected disabled> Select Tax</option>
                                         <option value="Amount">Amount</option>
@@ -250,33 +250,33 @@
                                     </select>
                                     <span class="text-danger"
                                         *ngIf="value_type && value_type.invalid && value_type.touched">Select
-                                        Valid value type
+                                        Valid Value Type
                                     </span>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Value</label>
-                                    <input type="text" formControlName="value" id="value"
+                                    <input type="text" formControlName="value" placeholder="Enter Value" id="value"
                                         [ngClass]="{'is-invalid': f['value'].touched && f['value'].invalid}">
                                     <span class="text-danger" *ngIf="value && value.invalid && value.touched">Enter
-                                        value</span>
+                                        Value</span>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label>Tax</label>
+                                    <label>Select Tax</label>
                                     <select formControlName="tax" [ngClass]="{'is-invalid': f['tax'].touched && f['tax'].invalid}">
                                         <option value="" selected disabled> Select Tax</option>
                                         <option [value]="tax.id" *ngFor="let tax of taxList">{{tax.title}}</option>
                                     </select>
-                                    <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter tax</span>
+                                    <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax</span>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>HSN SAC</label>
-                                    <input type="text" formControlName="HSN_SAC"
+                                    <input type="text" formControlName="HSN_SAC" placeholder="Enter HSN SAC"
                                         id="HSN_SAC"
                                         [ngClass]="{'is-invalid': f['HSN_SAC'].touched && f['HSN_SAC'].invalid}">
                                     <span class="text-danger"
@@ -287,7 +287,7 @@
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>Submit</button>
+                                        aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
                         </div>
                     </form>

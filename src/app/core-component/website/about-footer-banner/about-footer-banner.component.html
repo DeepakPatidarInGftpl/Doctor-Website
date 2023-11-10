@@ -21,7 +21,7 @@
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
                                     <input type="search" class="form-control form-control-sm" placeholder="Search..."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                        [(ngModel)]="titlee" (ngModelChange)="search()">
                                 </label>
                             </div>
                         </div>
@@ -127,7 +127,7 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}}
                                     entries</div>
                             </div>
                         </div>
@@ -147,6 +147,7 @@
             <div *ngIf="isEdit">
             <div class="page-title" *ngIf="!addForm">
                     <h4> Update About Footer Banner </h4>
+                    <h6>Edit About Footer Banner </h6>
                 </div>
             </div>
         </div>
@@ -158,7 +159,7 @@
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Title*</label>
-                                    <input type="text" formControlName="title" id="title"
+                                    <input type="text" formControlName="title" placeholder="Enter Title" id="title"
                                         [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
                                     <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter
                                         Title
@@ -175,7 +176,7 @@
                                     </ngx-editor>
                                     <span class="text-danger"
                                         *ngIf="description && description.invalid && description.touched">Enter
-                                        description
+                                        Description
                                     </span>
                                 </div>
                             </div>
@@ -225,7 +226,7 @@
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Title*</label>
-                                <input type="text" formControlName="title" id="title"
+                                <input type="text" formControlName="title" id="title" placeholder="Enter Title"
                                     [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}">
                                 <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Title
                                 </span>
