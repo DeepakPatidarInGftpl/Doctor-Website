@@ -48,7 +48,7 @@
                                             <td class="td">{{orderDetail?.total_qty}}</td>
                                         </tr>
                                         <tr>
-                                            <td class="th">Total Discount</td>
+                                            <td class="th">Total Discount %</td>
                                             <td class="td">{{orderDetail?.total_discount}}</td>
                                         </tr>
                                         <tr>
@@ -93,7 +93,7 @@
                                             <td class="th">Barcode</td>
                                             <td class="th">Qty</td>
                                             <td class="th">Price</td>
-                                            <td class="th">Discount</td>
+                                            <td class="th">Discount %</td>
                                             <td class="th">Tax</td>
                                             <td class="th">Total</td>
                                         </tr>
@@ -121,7 +121,8 @@
                         class="badges">{{orderDetail?.is_active}}</span>
                 </div>
             </div> -->
-
+            <mat-tab-group animationDuration="0ms" #tabGroup>
+                <mat-tab label="Sales Order">
             <div class="company-details-card card" *ngIf="orderDetail">
                 <div class="sub-card row">
                     <div class="content-part my-3">
@@ -159,9 +160,9 @@
                                                             <div class="right-top">
                                                                 <!-- <p>GST {{orderDetail?.party?.gstin}}</p> -->
                                                                 <h1 class="pb-4">Invoice</h1>
-                                                                <p><span>Invoice Date</span> : {{orderDetail?.sale_order_date| date:'yyyy-MM-dd'}}</p>
+                                                                <p><span>Invoice Date</span> : {{orderDetail?.sale_order_date| date: 'dd-MMMM-yyyy'}}</p>
                                                                 <p><span>Invoice NO</span> : {{orderDetail?.sale_order_no}} </p>
-                                                                <p><span>Due Date</span> : {{orderDetail?.due_date | date:'yyyy-MM-dd'}}</p>
+                                                                <p><span>Due Date</span> : {{orderDetail?.due_date | date: 'dd-MMMM-yyyy'}}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -218,7 +219,7 @@
                                                     <table class="table datanew">
                                                         <thead>
                                                             <tr>
-                                                                <th class="thone" style="white-space: normal !important;">Sr.No.</th>
+                                                                <!-- <th class="thone" style="white-space: normal !important;">Sr.No.</th> -->
                                                                 <th class="thone" style="white-space: normal !important;">Order No.</th>
                                                                 <th class="thone" style="white-space: normal !important;">Name / User Name</th>
                                                                 <th class="thone" style="white-space: normal !important;">Estimate No.</th>
@@ -229,13 +230,13 @@
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td>{{1}}</td>
+                                                                <!-- <td>{{1}}</td> -->
                                                                 <td style="color:black">{{orderDetail?.sale_order_no}}</td>
                                                                 <td style="color:black">{{orderDetail?.customer?.name+' / '+orderDetail?.customer?.username}}</td>
                                                                 <td style="color:black">{{orderDetail?.estimate?.estimate_no}}</td>
                                                                 <td style="color:black">{{orderDetail?.payment_terms?.title}}</td>
-                                                                <td style="color:black"> {{orderDetail?.sale_order_date |date:'yyyy-MM-dd'}}</td>
-                                                                <td style="color:black" class="text-center"> {{orderDetail?.due_date |date:'yyyy-MM-dd'}}</td>
+                                                                <td style="color:black"> {{orderDetail?.sale_order_date |date: 'dd-MMMM-yyyy'}}</td>
+                                                                <td style="color:black" class="text-center"> {{orderDetail?.due_date |date: 'dd-MMMM-yyyy'}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -259,7 +260,7 @@
                                                                 <th>Product Name</th>
                                                                 <th>Price</th>
                                                                 <th>QTY</th>
-                                                                <th>Discount</th>
+                                                                <th>Discount %</th>
                                                                 <th>Tax</th>
                                                                 <th>Total</th>
                                                             </tr>
@@ -399,6 +400,65 @@
                     </div>
                 </div>
             </div>
+                </mat-tab>
+                <mat-tab label="Logs">
+                    <div class="pdf-table2 mb-4" *ngIf="orderDetail?.logs?.length>0">
+                        <div class="container">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Logs Details</p>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th (click)="sort('id')">#</th>
+                                                <th (click)="sort('id')">User</th>
+                                                <th (click)="sort('id')">Operation Type</th>
+                                                <th (click)="sort('id')">Date Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                *ngFor="let log of orderDetail?.logs | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                <td>{{i+1}}</td>
+                                                <td>{{log?.userid}}</td>
+                                                <td>{{log?.operation_type}}</td>
+                                                <td>{{log?.date_time | date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                            <div class="entries"> Show per page
+                                                <select [(ngModel)]="itemsPerPage" class="pagination">
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="30">30</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                    <option value="-1">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                            <div class="f-right">
+                                                <pagination-controls
+                                                    (pageChange)="p = $event"></pagination-controls>
+                                                <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                    {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" *ngIf="orderDetail?.logs?.length==0">
+                        <span class="text-danger">Logs Not Available</span>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
         </div>
     </div>
 </div>

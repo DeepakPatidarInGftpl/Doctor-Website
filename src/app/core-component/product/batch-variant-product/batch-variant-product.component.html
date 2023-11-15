@@ -103,7 +103,7 @@
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>Discount</label>
+                        <label>Discount %</label>
                         <input type="text" formControlName="discount" id="discount" [ngClass]="{'is-invalid': f['discount'].touched && f['discount'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="discount && discount.invalid && discount.touched">Enter discount (ex:0-100)</span>
                     </div>
@@ -111,7 +111,7 @@
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>Additional discount</label>
+                        <label>Additional Discount %</label>
                         <input type="text" formControlName="additional_discount" id="additional_discount" [ngClass]="{'is-invalid': f['additional_discount'].touched && f['additional_discount'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="additional_discount && additional_discount.invalid && additional_discount.touched">Enter Enter discount (ex:0-100)</span>
                     </div>

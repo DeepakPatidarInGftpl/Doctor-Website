@@ -25,7 +25,7 @@ export class WebstorgeService {
       } else {
         Pdata.push(uservalue);
         const jsonData = JSON.stringify(Pdata);
-        localStorage.setItem('Loginusers', jsonData);
+        // localStorage.setItem('Loginusers', jsonData);
         this.Login(uservalue);
       }
     });
@@ -88,7 +88,7 @@ export class WebstorgeService {
         },
       ];
       const jsonData = JSON.stringify(password);
-      localStorage.setItem('Loginusers', jsonData);
+      // localStorage.setItem('Loginusers', jsonData);
     }
   }
 

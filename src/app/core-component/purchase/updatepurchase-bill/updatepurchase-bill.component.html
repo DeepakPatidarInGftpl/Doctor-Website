@@ -441,9 +441,9 @@
                                 <th>QTY <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
                                 <th>Unit Cost</th>
                                 <th>Mrp <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
-                                <th>Discount</th>
+                                <th>Discount %</th>
                                 <th>Discount Type</th>
-                                <th>Additional Discount</th>
+                                <th>Additional Discount %</th>
                                 <th>Tax % <span style="visibility: hidden;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
                                 <th>Landing Cost</th>
                                 <th class="text-end">Total Cost</th>
@@ -605,8 +605,8 @@
                                 <th class="space" style="width: 10%;">QTY  </th>
                                 <th class="space" style="width: 10%;">Unit Cost</th>
                                 <th class="space" style="width: 10%;" >Mrp </th>
-                                <th class="space" style="width: 10%;">Discount</th>
-                                <th class="space" style="width: 10%;">Additional Discount</th>
+                                <th class="space" style="width: 10%;">Discount %</th>
+                                <th class="space" style="width: 10%;">Additional Discount %</th>
                                 <th class="space" style="width: 10%;">Selling Price Online</th>
                                 <th class="space" style="width: 10%;">Selling Price Offline</th>
                                 <th class="space" style="width: 10%;">Dealer Price</th>
@@ -750,9 +750,9 @@
                                                                                     <th class="boder space-text">Sale
                                                                                         Tax</th>
                                                                                     <th class="boder space-text">
-                                                                                        Discount</th>
+                                                                                        Discount %</th>
                                                                                     <th class="boder space-text">
-                                                                                        Additional Discount</th>
+                                                                                        Additional Discount %</th>
                                                                                     <th class="boder space-text">Selling
                                                                                         Price Dealer</th>
                                                                                     <th class="boder space-text">
@@ -1104,7 +1104,7 @@
                                     </h5>
                                 </li>
                                 <li>
-                                    <h4>Total Discount</h4>
+                                    <h4>Total Discount %</h4>
                                     <h5>{{calculateTotalAdditionalDiscount() + calculateTotalDiscount() | currency:'INR'}}</h5>
                                 </li>
                                 <li>
