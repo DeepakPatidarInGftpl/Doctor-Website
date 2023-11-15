@@ -273,7 +273,7 @@ export class FooterFeaturesComponent implements OnInit {
       })
     } else {
       this.FooterFeaturesForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -325,7 +325,7 @@ export class FooterFeaturesComponent implements OnInit {
       }
     } else {
       this.FooterFeaturesForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -390,7 +390,7 @@ export class FooterFeaturesComponent implements OnInit {
     }
   }
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

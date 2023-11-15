@@ -34,7 +34,7 @@
                             </mat-autocomplete>
                         </mat-form-field>
                         <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
-                            user
+                            User
                         </span>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
           
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Refund Status</label>
+                        <label>Select Refund Status</label>
                             <select formControlName="refund_status" [ngClass]="{'is-invalid': f['refund_status'].touched && f['refund_status'].invalid}">
                                 <option value="" selected disabled>Select Refund Status</option>
                                 <option value="Refundable">Refundable</option>
@@ -68,7 +68,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Voucher Number</label>
-                        <input type="text" formControlName="voucher_number" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['voucher_number'].touched && f['voucher_number'].invalid}">
+                        <input type="text" formControlName="voucher_number" placeholder="Enter Voucher Number " [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['voucher_number'].touched && f['voucher_number'].invalid}">
                         <span class="text-danger" *ngIf="voucher_number && voucher_number.invalid && voucher_number.touched">Enter Voucher Number </span>
                     </div>
                 </div>
@@ -224,7 +224,7 @@
                 <div class="col-lg-6 my-3">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea formControlName="note"
+                        <textarea formControlName="note" placeholder="Enter Note"
                             [ngClass]="{'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                         <span class="text-danger" *ngIf="note && note.invalid && note.touched">Enter
                             note

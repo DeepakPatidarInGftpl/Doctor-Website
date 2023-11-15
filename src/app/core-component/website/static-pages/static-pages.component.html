@@ -91,13 +91,13 @@
                                 [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td>
                         <td>
-                            <a class="me-3" routerLink="//website/staticPage/details/{{products.slug}}">
+                            <a class="me-1" routerLink="//website/staticPage/details/{{products.slug}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-3" href="/website/updateStaticPage/{{products.slug}}" *ngIf="isEdit">
+                            <a class="me-1" href="/website/updateStaticPage/{{products.slug}}" *ngIf="isEdit">
                                 <img src="assets/img/icons/edit.svg" alt="img">
                             </a>
-                            <a (click)="confirmText(i,products.slug)" class="me-3 confirm-text"
+                            <a (click)="confirmText(i,products.slug)" class="me-1 confirm-text"
                                 href="javascript:void(0);" *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
@@ -132,7 +132,7 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}} entries</div>
                     </div>
 
                 </div>

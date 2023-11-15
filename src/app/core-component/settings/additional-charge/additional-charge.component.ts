@@ -226,7 +226,6 @@ export class AdditionalChargeComponent implements OnInit {
   submit() {
     // console.log(this.additionForm.value);
     // console.log(this.id);
-
     if (this.additionForm.valid) {
       this.loaders = true;
       this.coreService.addAdditionalCharges(this.additionForm.value).subscribe(res => {
@@ -247,7 +246,7 @@ export class AdditionalChargeComponent implements OnInit {
       })
     } else {
       this.additionForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -272,8 +271,8 @@ export class AdditionalChargeComponent implements OnInit {
         // console.log(err.error.gst);
       })
     } else {
-      this.additionForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.additionForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -327,7 +326,7 @@ export class AdditionalChargeComponent implements OnInit {
   }
 
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

@@ -164,7 +164,7 @@ export class DealOfTheDayComponent implements OnInit {
   ngOnInit(): void {
     this.dealOfTheDayForm = this.fb.group({
       variant: new FormArray([], [Validators.required]),
-      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
+      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
       datetime: new FormControl('', [Validators.required, futureDateValidator()])
     })
     //dropdown list
@@ -313,7 +313,7 @@ export class DealOfTheDayComponent implements OnInit {
       })
     } else {
       this.dealOfTheDayForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -350,7 +350,7 @@ export class DealOfTheDayComponent implements OnInit {
       })
     } else {
       this.dealOfTheDayForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -422,7 +422,7 @@ export class DealOfTheDayComponent implements OnInit {
   }
 
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

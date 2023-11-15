@@ -254,7 +254,7 @@ export class FinancialYearComponent implements OnInit {
     })
   } else {
     this.FinancialYearForm.markAllAsTouched()
-    // console.log('forms invalid');
+    this.toastr.error('Please Fill All The Required Fields');
   }
 }
 
@@ -339,7 +339,7 @@ update(){
     }
   }
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse

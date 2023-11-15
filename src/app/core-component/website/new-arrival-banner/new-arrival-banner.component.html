@@ -20,7 +20,7 @@
                                 <img src="assets/img/icons/search-white.svg" alt="img"></a>
                             <div class="dataTables_filter"><label>
                                     <input type="search" class="form-control form-control-sm" placeholder="Search..."
-                                        [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                        [(ngModel)]="titlee" (ngModelChange)="search()">
                                 </label>
                             </div>
                         </div>
@@ -111,7 +111,6 @@
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                                 <select [(ngModel)]="itemsPerPage" class="pagination">
-                                    
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="30">30</option>
@@ -124,7 +123,7 @@
                         <div class="col-lg-8 col-sm-8 col-12 mt-2">
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}} entries</div>
                             </div>
                         </div>
                     </div>
@@ -143,6 +142,7 @@
             <div class="page-title" *ngIf="!addForm">
                 <div *ngIf="isEdit">
                     <h4> Update New Arrival Banner </h4>
+                    <h6>Edit Arrival Banner </h6>
                 </div>
             </div>
         </div>
@@ -154,22 +154,22 @@
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Title-1*</label>
-                                    <input type="text" formControlName="title1" id="title1" [ngClass]="{'is-invalid': f['title1'].touched && f['title1'].invalid}">
+                                    <input type="text" formControlName="title1" placeholder="Enter Title-1" id="title1" [ngClass]="{'is-invalid': f['title1'].touched && f['title1'].invalid}">
                                     <span class="text-danger" *ngIf="title1 && title1.invalid && title1.touched">Enter Title-1 </span>
                                 </div>
                             </div>
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Title-2*</label>
-                                    <input type="text" formControlName="title2" id="title2" [ngClass]="{'is-invalid': f['title2'].touched && f['title2'].invalid}">
+                                    <input type="text" formControlName="title2" placeholder="Enter Title-2" id="title2" [ngClass]="{'is-invalid': f['title2'].touched && f['title2'].invalid}">
                                     <span class="text-danger" *ngIf="title2 && title2.invalid && title2.touched">Enter Title-2</span>
                                 </div>
                             </div>
                             <div class="col-lg-10 col-sm-10 col-12">
                                 <div class="form-group">
                                     <label>Design*</label>
-                                    <input type="text" formControlName="design" id="design" [ngClass]="{'is-invalid': f['design'].touched && f['design'].invalid}">
-                                    <span class="text-danger" *ngIf="design && design.invalid && design.touched">Enter Design </span>
+                                    <input type="text" formControlName="design" placeholder="Enter Design" id="design" [ngClass]="{'is-invalid': f['design'].touched && f['design'].invalid}">
+                                    <span class="text-danger" *ngIf="design && design.invalid && design.touched">Enter Design (ex-123)</span>
                                 </div>
                             </div>
                             <div class="col-lg-10 col-sm-10 col-12">
@@ -214,7 +214,7 @@
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Submit</button>
+                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
                             </div>
                         </div>
                     </form>
@@ -227,22 +227,22 @@
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Title-1*</label>
-                                <input type="text" formControlName="title1" id="title1" [ngClass]="{'is-invalid': f['title1'].touched && f['title1'].invalid}">
+                                <input type="text" formControlName="title1" id="title1" placeholder="Enter Title-1" [ngClass]="{'is-invalid': f['title1'].touched && f['title1'].invalid}">
                                 <span class="text-danger" *ngIf="title1 && title1.invalid && title1.touched">Enter Title-1 </span>
                             </div>
                         </div>
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Title-2*</label>
-                                <input type="text" formControlName="title2" id="title2" [ngClass]="{'is-invalid': f['title2'].touched && f['title2'].invalid}">
+                                <input type="text" formControlName="title2" placeholder="Enter Title-2 " id="title2" [ngClass]="{'is-invalid': f['title2'].touched && f['title2'].invalid}">
                                 <span class="text-danger" *ngIf="title2 && title2.invalid && title2.touched">Enter Title-2 </span>
                             </div>
                         </div>
                         <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Design*</label>
-                                <input type="text" formControlName="design" id="design" [ngClass]="{'is-invalid': f['design'].touched && f['design'].invalid}">
-                                <span class="text-danger" *ngIf="design && design.invalid && design.touched">Enter Design </span>
+                                <input type="text" formControlName="design" placeholder="Enter Design" id="design" [ngClass]="{'is-invalid': f['design'].touched && f['design'].invalid}">
+                                <span class="text-danger" *ngIf="design && design.invalid && design.touched">Enter Design (ex-123)</span>
                             </div>
                         </div>
                         <div class="col-lg-10 col-sm-10 col-12">
@@ -280,7 +280,7 @@
                         <div class="col-lg-12">
                             <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                             <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submit</button>
+                             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
                         </div>
                     </div>
                 </form>

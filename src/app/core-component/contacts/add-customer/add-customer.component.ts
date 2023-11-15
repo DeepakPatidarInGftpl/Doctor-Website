@@ -192,7 +192,7 @@ export class AddCustomerComponent implements OnInit {
     })
     } else {
     this.customerForm.markAllAsTouched()
-    this.toastr.error('Please Fill All The Required Fields')
+    this.toastr.error('Please Fill All The Required Fields');
 
     }
   }

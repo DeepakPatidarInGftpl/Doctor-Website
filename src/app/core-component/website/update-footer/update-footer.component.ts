@@ -171,8 +171,8 @@ url:any;
       }
     
     } else {
-      this.footerForm.markAllAsTouched()
-      // console.log('hhhhhh');
+      this.footerForm.markAllAsTouched();
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 

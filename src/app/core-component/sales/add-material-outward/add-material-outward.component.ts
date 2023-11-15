@@ -58,7 +58,7 @@ export class AddMaterialOutwardComponent implements OnInit {
       refund_status: new FormControl(''),
       voucher_number: new FormControl(''),
       material_outward_cart: this.fb.array([]),
-      total_qty: new FormControl(''),
+      total_qty: new FormControl(1),
       status: new FormControl(''),
       note: new FormControl(''),
     });

@@ -144,8 +144,7 @@ const routes: Routes = [
       {path:'bank',loadChildren:()=>import('./bank/bank.module').then((m)=>m.BankModule)},
       {path:'account',loadChildren:()=>import('./accounts/accounts.module').then((m)=>m.AccountsModule)},
       {path:'transaction',loadChildren:()=>import('./transactions/transactions.module').then((m)=>m.TransactionsModule)},
-      {path: 'inventory',loadChildren: () =>import('./inventory/inventory.module').then((m) => m.InventoryModule),},
-  ],
+ ],
   },
 ];
 

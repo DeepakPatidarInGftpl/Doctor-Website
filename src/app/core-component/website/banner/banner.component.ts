@@ -282,7 +282,7 @@ export class BannerComponent implements OnInit {
     } else {
       this.loaders=false
       this.bannerForm.markAllAsTouched()
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
 
@@ -341,7 +341,7 @@ export class BannerComponent implements OnInit {
       }
     } else {
       this.bannerForm.markAllAsTouched();
-      // console.log('forms invalid');
+      this.toastr.error('Please Fill All The Required Fields');
     }
   }
   
@@ -412,7 +412,7 @@ export class BannerComponent implements OnInit {
     }
   }
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
