@@ -15,14 +15,15 @@
                         <mat-form-field class="w-100" style="padding: 0;
                         width: 100%;
                         min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Company" aria-label="customer" matInput
+                            <input type="text" placeholder="Search Name/Username" aria-label="customer" matInput
                                 [formControl]="userControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': f['customer'].touched && f['customer'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let user of filteredusers | async">
-                                    <mat-option *ngIf="user.is_active==true"
-                                    [value]="user?.name + ' '+ user?.user_type" (onSelectionChange)="oncheck(user)"
-                                    style="color:#FF9F43">{{user?.name + ' '+ user?.user_type }}</mat-option>
+                                    <mat-option *ngIf="user.is_active === true" [value]="user?.name + ' ' + user?.username" (onSelectionChange)="oncheck(user)" style="color:#FF9F43">
+                                        {{user?.name + ' (' + user?.username + ')'}}
+                                      </mat-option>
+                                      
                                 </ng-container>
                                 <ng-container *ngIf="(filteredusers | async) as users">
                                     <mat-option *ngIf="users.length === 0" [value]="'No data found'">
@@ -438,7 +439,7 @@
                                     <th class="qty space-text" style="width: 7%;">QTY</th>
                                     <th class="space-text" style="width: 12%;">Price</th>
                                     <!-- <th class="mrp space-text" style="width: 10%;">Mrp</th> -->
-                                    <th class="space-text">Discount</th>
+                                    <th class="space-text">Discount %</th>
                                    <th class="space-text" style="width: 7%;">Tax %</th>
                                     <!-- <th class="space-text" style="width: 10%;">Total Cost</th> -->
                                     <!-- <th class="mrp space-text" style="width: 10%;">Amount</th> -->
@@ -540,8 +541,8 @@
                                                                                         <th class="boder space-text">Sr.No.</th>
                                                                                         <th class="boder space-text">MRP</th>
                                                                                         <th class="boder space-text">Purchase Price</th>
-                                                                                        <th class="boder space-text">Discount</th>
-                                                                                        <th class="boder space-text">Additional Discount</th>
+                                                                                        <th class="boder space-text">Discount %</th>
+                                                                                        <th class="boder space-text">Additional Discount %</th>
                                                                                         <th class="boder space-text">Action</th>
                                                                                     </tr>
                                                                                 </thead>

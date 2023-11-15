@@ -40,7 +40,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Purchase Date</label>
-                        <input type="datetime-local" formControlName="order_date" [readonly]="true">
+                        <input type="datetime-local" formControlName="order_date">
                     </div>
                 </div>
 
@@ -54,7 +54,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Shipping Date </label>
-                        <input type="date" formControlName="shipping_date" placeholder="Shipping Date" readonly>
+                        <input type="date" formControlName="shipping_date" placeholder="Shipping Date">
                     </div>
                 </div>
 
@@ -363,7 +363,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Shipping Note </label>
-                        <input type="text" formControlName="shipping_note" placeholder="Enter Shipping Note" readonly>
+                        <input type="text" formControlName="shipping_note" placeholder="Enter Shipping Note">
                     </div>
                 </div>
             </div>
@@ -431,7 +431,7 @@
                                     <th class="qty space-text" style="width: 7%;">QTY</th>
                                     <th class="space-text" style="width: 12%;">Cost Price</th>
                                     <th class="mrp space-text" style="width: 10%;">Mrp</th>
-                                    <th class="space-text">Discount</th>
+                                    <th class="space-text">Discount %</th>
                                     <th class="space-text" style="width: 7%;">Tax %</th>
                                     <th class="space-text" style="width: 10%;">Landing Cost</th>
                                     <!-- <th class="space-text" style="width: 10%;">Total Cost</th> -->
@@ -534,8 +534,8 @@
                                                                                         <th class="boder space-text">Sr.No.</th>
                                                                                         <th class="boder space-text">MRP</th>
                                                                                         <th class="boder space-text">Purchase Price</th>
-                                                                                        <th class="boder space-text">Discount</th>
-                                                                                        <th class="boder space-text">Additional Discount</th>
+                                                                                        <th class="boder space-text">Discount %</th>
+                                                                                        <th class="boder space-text">Additional Discount %</th>
                                                                                         <th class="boder space-text">Action</th>
                                                                                     </tr>
                                                                                 </thead>
@@ -570,7 +570,6 @@
                                             <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span>
                                             </td>
                                              <td>
-                                                <!-- <input type="text" formControlName="tax" class="input" readonly> -->
                                              <span *ngIf="tax[i] !== undefined && tax[i] !== ''">{{ 'GST' + tax[i] + ' (' + tax[i] + '%)' }}</span>
                                                 <br>
                                             <span>{{taxIntoRupees[i] | currency :'INR'}}</span>
@@ -581,7 +580,6 @@
                                             </td>
                                             <td class="text-end">
                                             <input type="text" formControlName="total" class="input" readonly >
-                                            <!-- <input type="text" class="input" readonly [value]="TotalWithTax[i] | number:'1.2-2'"> -->
                                             </td>
                                         </tr>
                                     </ng-container>

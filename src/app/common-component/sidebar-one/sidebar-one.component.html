@@ -81,22 +81,6 @@
                     <li *ngIf="isDealer"><a routerLink="/contacts/dealerList" routerLinkActive="active">Dealer</a></li>
                 </ul>
             </li> 
-            <li class="submenu" *ngIf="isPurchase || isMaterialInward || isPurchaseBill || isDebitNotes">
-                <a  [ngClass]="{'active': activePath === 'purchase'}">
-                        <!-- <img src="assets/img/icons/purchase1.svg" alt="img"> -->
-                        <i class="fa fa-book" data-bs-toggle="tooltip" title="fa fa-book"></i>
-                        <span> Purchase</span> <span
-                        class="menu-arrow"></span></a>
-                <ul>
-                    <li *ngIf="isPurchase"><a routerLink="/purchase/purchaselist" routerLinkActive="active">Purchase Order List</a></li>
-                    <!-- <li><a routerLink="/purchase/addpurchase" routerLinkActive="active">Add Purchase</a></li> -->
-                    <!-- <li><a routerLink="/purchase/importpurchase" routerLinkActive="active">Import Purchase</a></li> -->
-                    <li *ngIf="isMaterialInward"><a routerLink="/purchase/material-Inward-list" routerLinkActive="active">Material Inward List</a></li>
-                    <li *ngIf="isPurchaseBill"><a routerLink="/purchase/goodsReceivedNote-list" routerLinkActive="active">GRN List</a></li>
-                    <li *ngIf="isDebitNotes"><a routerLink="/purchase/purchaseReturn-list" routerLinkActive="active">Purchase Return List</a></li>
-
-                </ul>
-            </li>
             <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isStock ||isStockTransport || isStockTransportRequest">
                 <a  [ngClass]="{'active': activePath === 'product'}"><img src="assets/img/icons/product.svg" alt="img"><span>Product Management</span> <span
                         class="menu-arrow"></span></a>
@@ -125,47 +109,21 @@
                     <li><a routerLink="/product/barcode" routerLinkActive="active">Print Barcode</a></li>    -->
                 </ul>
             </li> 
-
-            <!-- <li class="submenu" *ngIf="isStockTransport || isStockTransportRequest">
-                <a [ngClass]="{'active': activePath === 'inventory'}"><img src="assets/img/icons/product.svg" alt="img"><span>Inventory</span> <span class="menu-arrow"></span></a>
+            <li class="submenu" *ngIf="isPurchase || isMaterialInward || isPurchaseBill || isDebitNotes">
+                <a  [ngClass]="{'active': activePath === 'purchase'}">
+                        <!-- <img src="assets/img/icons/purchase1.svg" alt="img"> -->
+                        <i class="fa fa-book" data-bs-toggle="tooltip" title="fa fa-book"></i>
+                        <span> Purchase</span> <span
+                        class="menu-arrow"></span></a>
                 <ul>
-                <li *ngIf="isStockTransport"><a routerLink="/inventory/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
-                <li *ngIf="isStockTransportRequest"><a routerLink="/inventory/list-stock-transfer-request" routerLinkActive="active">Stock Transfer Request</a></li>
+                    <li *ngIf="isPurchase"><a routerLink="/purchase/purchaselist" routerLinkActive="active">Purchase Order List</a></li>
+                    <!-- <li><a routerLink="/purchase/addpurchase" routerLinkActive="active">Add Purchase</a></li> -->
+                    <!-- <li><a routerLink="/purchase/importpurchase" routerLinkActive="active">Import Purchase</a></li> -->
+                    <li *ngIf="isMaterialInward"><a routerLink="/purchase/material-Inward-list" routerLinkActive="active">Material Inward List</a></li>
+                    <li *ngIf="isPurchaseBill"><a routerLink="/purchase/goodsReceivedNote-list" routerLinkActive="active">GRN List</a></li>
+                    <li *ngIf="isDebitNotes"><a routerLink="/purchase/purchaseReturn-list" routerLinkActive="active">Purchase Return List</a></li>
+
                 </ul>
-            </li>  -->
-
-            <li class="submenu">
-                <a [ngClass]="{'active': activePath === 'newpos'}"><i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax" style="color: #637381;"></i><span> POS</span> <span class="menu-arrow"></span></a>
-                <ul>
-                    <li *ngIf="isPosOrder"><a routerLink="/newpos/posOrder" routerLinkActive="active">POS Order</a></li>
-                <li><a routerLink="/newpos/pos" target="_blank" routerLinkActive="active">POS New</a></li>
-                </ul>
-            </li> 
-            
-           
-
-
-            <li class="submenu" *ngIf="isCompanyBank || isReciept || isExpence || isPurchasepos">
-                <a [ngClass]="{'active': activePath === 'bank'}"> <i class="fa fa-credit-card" data-bs-toggle="tooltip" title="fa fa-credit-card" style="color: #637381;"></i><span> Bank</span> <span class="menu-arrow"></span></a>
-                <ul>
-                <li *ngIf="isCompanyBank"><a routerLink="/bank/companyBank" routerLinkActive="active">Company Bank</a></li>
-                <!-- <li><a routerLink="/bank/payment" routerLinkActive="active">Payment</a></li> -->
-                <li *ngIf="isReciept"><a routerLink="/bank/reciept" routerLinkActive="active">Reciept</a></li>
-                <li *ngIf="isExpence"><a routerLink="/bank/expense" routerLinkActive="active">Expence</a></li>
-                <li *ngIf="isPurchasepos"><a routerLink="/bank/purchase" routerLinkActive="active">Purchase</a></li>
-                </ul>
-            </li> 
-
-            <li class="submenu" *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher">
-                <a  [ngClass]="{'active': activePath === 'transaction'}"><i data-bs-toggle="tooltip" title="fa fa-university" class="fa fa-university"></i><span>Transaction</span> <span class="menu-arrow"></span></a>
-                <ul>
-                    <li *ngIf="isPaymentVoucher"><a routerLink="/transaction/paymentVoucherList" routerLinkActive="active">Payment Voucher</a></li>
-                    <li *ngIf="isRecieptVoucher"><a routerLink="/transaction/recieptVoucherList" routerLinkActive="active">Reciept Voucher</a></li>
-                    <li *ngIf="isJournalVoucher"><a routerLink="/transaction/journalvoucherList" routerLinkActive="active">Journal Voucher</a></li>
-                    <li *ngIf="isCountraVoucher"><a routerLink="/transaction/countravoucherList" routerLinkActive="active">Countra Voucher</a></li>
-                    <li *ngIf="isDebit"><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
-                    <li *ngIf="isCredit"><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
-               </ul>
             </li>
             <li class="submenu" *ngIf="isSalesEstimate || isSalesOrder || isSalesBill || isSalesOutward || isSalesReturn">
                 <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span class="menu-arrow"></span></a>
@@ -186,7 +144,34 @@
                     <li><a routerLink="/sales/createsalesreturns" routerLinkActive="active">New Sales Return</a></li> -->
                 </ul>
             </li> 
-
+            <li class="submenu" *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher">
+                <a  [ngClass]="{'active': activePath === 'transaction'}"><i data-bs-toggle="tooltip" title="fa fa-university" class="fa fa-university"></i><span>Transaction</span> <span class="menu-arrow"></span></a>
+                <ul>
+                    <li *ngIf="isPaymentVoucher"><a routerLink="/transaction/paymentVoucherList" routerLinkActive="active">Payment Voucher</a></li>
+                    <li *ngIf="isRecieptVoucher"><a routerLink="/transaction/recieptVoucherList" routerLinkActive="active">Reciept Voucher</a></li>
+                    <li *ngIf="isJournalVoucher"><a routerLink="/transaction/journalvoucherList" routerLinkActive="active">Journal Voucher</a></li>
+                    <li *ngIf="isCountraVoucher"><a routerLink="/transaction/countravoucherList" routerLinkActive="active">Countra Voucher</a></li>
+                    <li *ngIf="isDebit"><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
+                    <li *ngIf="isCredit"><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
+               </ul>
+            </li>
+            <li class="submenu">
+                <a [ngClass]="{'active': activePath === 'newpos'}"><i class="fa fa-fax" data-bs-toggle="tooltip" title="fa fa-fax" style="color: #637381;"></i><span> POS</span> <span class="menu-arrow"></span></a>
+                <ul>
+                    <li *ngIf="isPosOrder"><a routerLink="/newpos/posOrder" routerLinkActive="active">POS Order</a></li>
+                <li><a routerLink="/newpos/pos" target="_blank" routerLinkActive="active">POS New</a></li>
+                </ul>
+            </li> 
+            <li class="submenu" *ngIf="isCompanyBank || isReciept || isExpence || isPurchasepos">
+                <a [ngClass]="{'active': activePath === 'bank'}"> <i class="fa fa-credit-card" data-bs-toggle="tooltip" title="fa fa-credit-card" style="color: #637381;"></i><span> Bank</span> <span class="menu-arrow"></span></a>
+                <ul>
+                <li *ngIf="isCompanyBank"><a routerLink="/bank/companyBank" routerLinkActive="active">Company Bank</a></li>
+                <!-- <li><a routerLink="/bank/payment" routerLinkActive="active">Payment</a></li> -->
+                <li *ngIf="isReciept"><a routerLink="/bank/reciept" routerLinkActive="active">Reciept</a></li>
+                <li *ngIf="isExpence"><a routerLink="/bank/expense" routerLinkActive="active">Expence</a></li>
+                <li *ngIf="isPurchasepos"><a routerLink="/bank/purchase" routerLinkActive="active">Purchase</a></li>
+                </ul>
+            </li> 
             <li class="submenu" *ngIf="isCountry || isState || isCity">
                 <a  [ngClass]="{'active': activePath === 'places'}"><img src="assets/img/icons/places.svg" alt="img"><span> Places</span> <span class="menu-arrow"></span></a>
                 <ul >
@@ -197,7 +182,16 @@
                     <li *ngIf="isCity"><a routerLink="/places/citylist" routerLinkActive="active">City list</a></li>
                 </ul>
             </li>
-            
+            <!-- <li class="submenu" *ngIf="isStockTransport || isStockTransportRequest">
+                <a [ngClass]="{'active': activePath === 'inventory'}"><img src="assets/img/icons/product.svg" alt="img"><span>Inventory</span> <span class="menu-arrow"></span></a>
+                <ul>
+                <li *ngIf="isStockTransport"><a routerLink="/inventory/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
+                <li *ngIf="isStockTransportRequest"><a routerLink="/inventory/list-stock-transfer-request" routerLinkActive="active">Stock Transfer Request</a></li>
+                </ul>
+            </li>  -->
+
+          
+ 
             <li class="submenu" *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview || isOrder">
                 <a  [ngClass]="{'active': activePath === 'website'}"><i class="fa fa-sitemap" data-bs-toggle="tooltip" title="fa fa-sitemap" style="color: #637381;"></i><span> Website</span> <span class="menu-arrow"></span></a>
                 <ul>

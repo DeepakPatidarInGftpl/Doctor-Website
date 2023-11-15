@@ -636,8 +636,8 @@
                                                                                     <th class="border space-text">Stock</th>
                                                                                     <th class="border space-text">Opening Stock</th>
                                                                                     <th class="boder space-text">Sale Tax</th>
-                                                                                    <th class="boder space-text">Discount</th>
-                                                                                    <th class="boder space-text">Additional Discount</th>
+                                                                                    <th class="boder space-text">Discount %</th>
+                                                                                    <th class="boder space-text">Additional Discount %</th>
                                                                                     <th class="boder space-text">Selling Price Dealer</th>
                                                                                     <th class="boder space-text">selling_price_employee</th>
                                                                                     <th class="boder space-text">Selling Price Offline</th>
@@ -934,7 +934,7 @@
                                     <h5>{{ calculateTotalAdditionalCharge().toFixed(2) | currency:'INR' }}</h5>
                                 </li>
                                 <li>
-                                    <h4>Total Discount</h4>
+                                    <h4>Total Discount %</h4>
                                     <h5>{{calculateTotalAdditionalDiscount() + calculateTotalDiscount() | currency:'INR'}}</h5>
                                 </li>
                                 <li>

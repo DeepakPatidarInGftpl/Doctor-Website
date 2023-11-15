@@ -131,7 +131,7 @@
                         <td class="productimgname">
                             <a routerLink="//purchase/details-purchaseReturn/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a>
                         </td>
-                        <td>{{products?.purchase_return_date | date: 'yyyy-MM-dd'}}</td>
+                        <td>{{products?.purchase_return_date |  date: 'dd-MMMM-yyyy'}}</td>
                         <td>{{products?.purchase_return_no}}</td>
                         <td>{{products?.reverse_charge}}</td>
                         <td>{{products?.purchase_bill?.refrence_bill_no}}</td>
