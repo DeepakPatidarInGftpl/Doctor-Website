@@ -110,7 +110,7 @@
                         <td class="productimgname">
                             <a routerLink="//transaction/detailsdebitnote/{{products.id}}" style="line-height: 3;">{{products?.party?.company_name}}</a>
                         </td>
-                        <td>{{products?.date |  date: 'yyyy-MM-dd'}}</td>
+                        <td>{{products?.date |   date: 'dd-MMMM-yyyy'}}</td>
                         <td>{{products.debit_note_no}}</td>
                         <td>{{products.purchase_bill?.refrence_bill_no}}</td>
                         <td>{{products.reason}}</td>

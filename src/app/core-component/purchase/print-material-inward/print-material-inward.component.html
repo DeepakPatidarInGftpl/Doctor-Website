@@ -230,9 +230,9 @@
                                     <div class="right-top">
                                         <p>GST {{printDetails?.party?.gstin}}</p>
                                         <h1>Invoice</h1>
-                                        <p>Invoice Date: {{printDetails?.material_inward_date | date: 'yyyy-MM-dd'}}</p>
+                                        <p>Invoice Date: {{printDetails?.material_inward_date |  date: 'dd-MMMM-yyyy'}}</p>
                                         <p>Invoice NO:  {{printDetails?.material_inward_no}}</p>
-                                        <p>Invoice Date: {{printDetails?.po_date | date: 'yyyy-MM-dd'}}</p>
+                                        <p>Invoice Date: {{printDetails?.po_date |  date: 'dd-MMMM-yyyy'}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -303,8 +303,8 @@
                                                 <td style="color:black">{{printDetails?.material_inward_no}}</td>
                                                 <td style="color:black">{{printDetails?.party?.company_name}}</td>
                                                 <td style="color:black">{{printDetails?.purchase_order?.order_no}}</td>
-                                                <td style="color:black">{{printDetails?.material_inward_date | date: 'yyyy-MM-dd'}}</td>
-                                                <td style="color:black">{{printDetails?.po_date | date: 'yyyy-MM-dd'}}</td>
+                                                <td style="color:black">{{printDetails?.material_inward_date |  date: 'dd-MMMM-yyyy'}}</td>
+                                                <td style="color:black">{{printDetails?.po_date |  date: 'dd-MMMM-yyyy'}}</td>
                                                 <td style="color:black">{{printDetails?.recieved_by}}</td>
                                                 <td style="color:black">{{printDetails?.shipping_note}}</td>
                                                 <td style="color:black">{{printDetails?.product_type}}</td>
