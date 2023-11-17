@@ -16,6 +16,9 @@ export class DetailsSalesReturnComponent implements OnInit {
   constructor(private companyService:CompanyService,private Arout: ActivatedRoute, private saleService: SalesService, private location: Location) { }
   id: any;
   companyDetails:any;
+  supplierAddress:any;
+  selectedAddressBilling:any;
+  selectedAddressShipping:any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -26,14 +29,29 @@ export class DetailsSalesReturnComponent implements OnInit {
   returnBillDetail: any
   totalmrp:any[]=[];
   totalMrp=0;
+
+  totalDiscount:any[]=[];
+  discount=0;
+  totaldiscount=0
   getdata() {
     this.saleService.getSaleReturnById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.returnBillDetail = res
-        // console.log(res);
-        this.returnBillDetail?.cart?.forEach((res:any)=>{
+        //calculation
+        this.returnBillDetail?.cart?.forEach((item:any)=>{
+           // discount
+           let d:any = (item.price.toFixed(2) * item.deduction) / 100;
+           console.log(item.price.toFixed(2)-d.toFixed(2));
+           this.discount=item.price.toFixed(2)-d.toFixed(2);
+           this.totaldiscount=0;
+           this.totalDiscount.push(this.discount);
+           console.log(this.totalDiscount);
+           this.totalDiscount?.forEach((number:any)=>{
+             this.totaldiscount +=number;
+           });
+           console.log(this.totaldiscount.toFixed(2));  
           // mrp
-          this.totalmrp.push(res?.price);
+          this.totalmrp.push(item?.price);
           this.totalMrp=0;
           this?.totalmrp?.forEach((number: any) => {
             this.totalMrp += number;

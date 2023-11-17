@@ -165,7 +165,7 @@ export class AddEstimateComponent implements OnInit {
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
-          this.myControl.setValue(res[0].product_title)
+          this.myControl.setValue(res[0]?.product_title)
         }
         if (search) {
           //barcode patch
@@ -182,7 +182,6 @@ export class AddEstimateComponent implements OnInit {
           });
         }
         console.log(this.saleEstimateForm.value);
-
       });
     }
   }
@@ -285,21 +284,33 @@ export class AddEstimateComponent implements OnInit {
     const selectedItemId = data.id;
     this.userType = data?.user_type;
     //call detail api
-    this.contactService.getCustomerById(selectedItemId).subscribe(res => {
-      // console.log(res);
-      this.supplierAddress = res;
-      this.saleEstimateForm.patchValue({
-        payment_terms: res?.payment_terms?.id
-      })
-      this.supplierAddress?.address?.map((res: any) => {
-        if (res.address_type == 'Billing') {
-          this.selectedAddressBilling = res
-          console.log(this.selectedAddressBilling);
-        } else if (res.address_type == 'Shipping') {
-          this.selectedAddressShipping = res
-          console.log(this.selectedAddressShipping);
-        }
-      })
+    // this.contactService.getCustomerById(selectedItemId).subscribe(res => {
+    //   // console.log(res);
+    //   this.supplierAddress = res;
+    //   this.saleEstimateForm.patchValue({
+    //     payment_terms: res?.payment_terms?.id
+    //   })
+    //   this.supplierAddress?.address?.map((res: any) => {
+    //     if (res?.address_type == 'Billing') {
+    //       this.selectedAddressBilling = res
+    //       console.log(this.selectedAddressBilling);
+    //     } else if (res?.address_type == 'Shipping') {
+    //       this.selectedAddressShipping = res
+    //       console.log(this.selectedAddressShipping);
+    //     }
+    //   })
+    // })
+
+    // data available in data argument
+    this.supplierAddress=data;
+    this.supplierAddress?.address?.map((res: any) => {
+      if (res?.address_type == 'Billing') {
+        this.selectedAddressBilling = res
+        console.log(this.selectedAddressBilling);
+      } else if (res?.address_type == 'Shipping') {
+        this.selectedAddressShipping = res
+        console.log(this.selectedAddressShipping);
+      }
     })
     const variants = this.saleEstimateForm.get('estimate_cart') as FormArray;
     variants.clear();

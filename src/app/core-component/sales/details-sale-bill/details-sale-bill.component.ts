@@ -15,6 +15,9 @@ export class DetailsSaleBillComponent implements OnInit {
   constructor(private companyService:CompanyService,private Arout: ActivatedRoute, private saleService: SalesService, private location: Location) { }
   id: any;
   companyDetails:any;
+  supplierAddress:any;
+  selectedAddressBilling:any;
+  selectedAddressShipping:any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -30,26 +33,41 @@ export class DetailsSaleBillComponent implements OnInit {
 
   discount:any[]=[];
   totalDiscount=0;
+
+  totalDiscountRupees:any[]=[];
+  discountRupees=0;
+  totaldiscountRupees=0;
   getdata() {
     this.saleService.getSalesBillById(this.id).subscribe(res => {
       if (this.id == res.id) {
         this.BillDetail = res
         // console.log(res);
-        this.BillDetail?.cart?.forEach((res:any)=>{
+        this.BillDetail?.cart?.forEach((item:any)=>{
+           // discount
+           let d:any = (item.price.toFixed(2) * item.discount) / 100;
+           console.log(item.price.toFixed(2)-d.toFixed(2));
+           this.discountRupees=item.price.toFixed(2)-d.toFixed(2);
+           this.totaldiscountRupees=0;
+           this.totalDiscountRupees.push(this.discount);
+           console.log(this.totalDiscount);
+           this.totalDiscountRupees?.forEach((number:any)=>{
+             this.totaldiscountRupees +=number;
+           });
+           console.log(this.totaldiscountRupees.toFixed(2));
           // mrp
-          this.totalmrp.push(res?.price);
+          this.totalmrp.push(item?.price);
           this.totalMrp=0;
           this?.totalmrp?.forEach((number: any) => {
             this.totalMrp += number;
           });
            //total discount
-           this.discount.push(res?.discount);
+           this.discount.push(item?.discount);
            this.totalDiscount=0;
           this?.discount?.forEach((number: any) => {
             this.totalDiscount += number;
           });
           //total additional discount
-          this.additional_discount.push(res?.additional_discount);
+          this.additional_discount.push(item?.additional_discount);
            this.totalAdditionalDiscount=0;
           this?.additional_discount?.forEach((number: any) => {
             this.totalAdditionalDiscount += number;
