@@ -147,6 +147,9 @@
                                                                 <p><span>Financial Year</span> :
                                                                     {{companyDetails?.financial_year?.financial_year}}
                                                                 </p>
+                                                                <p><span>Address</span> :
+                                                                    {{companyDetails?.address+' , '+companyDetails?.city?.city+' , '+companyDetails?.state?.state+' , '+companyDetails?.country?.country_name+' , '+companyDetails?.pincode}}
+                                                                </p>
                                                                 <p><span>Phone</span> : {{companyDetails?.phone}}</p>
                                                             </div>
                                                         </div>
@@ -220,7 +223,7 @@
                                                             <tr>
                                                                 <!-- <th class="thone" style="white-space: normal !important;">Sr.No.</th> -->
                                                                 <th class="thone" style="white-space: normal !important;">Return Bill No.</th>
-                                                                <th class="thone" style="white-space: normal !important;">User Name</th>
+                                                                <th class="thone" style="white-space: normal !important;">Party Name</th>
                                                                 <th class="thone" style="white-space: normal !important;">Sales Bill</th>
                                                                 <th class="thone" style="white-space: normal !important;">Sale Bill Date</th>   
                                                             </tr>
@@ -229,7 +232,7 @@
                                                             <tr>
                                                                 <!-- <td>{{1}}</td> -->
                                                                 <td style="color:black">{{returnBillDetail?.sale_return_bill_no}}</td>
-                                                                <td style="color:black">{{returnBillDetail?.customer?.name+' , '+returnBillDetail?.customer?.username}}</td>
+                                                                <td style="color:black">{{returnBillDetail?.customer?.name+ ' (' + returnBillDetail?.customer?.user_type + ')'}}</td>
                                                                 <td style="color:black">{{returnBillDetail?.sale_bill?.customer_bill_no}}</td>
                                                                 <td style="color:black"> {{returnBillDetail?.bill_date |date: 'dd-MMMM-yyyy'}}</td>
                                                             </tr>
@@ -255,8 +258,8 @@
                                                                 <th>Product Name</th>
                                                                 <th>Price</th>
                                                                 <th>QTY</th>
-                                                                <th>Deduction</th>
-                                                                <th>Tax</th>
+                                                                <th>Deduction %</th>
+                                                                <th>Tax %</th>
                                                                 <th>Total</th>
                                                             </tr>
                                                         </thead>
@@ -277,7 +280,7 @@
                                                                 </td>
                                                                 <td class="text-center">{{totalMrp.toFixed(2)}}</td>
                                                                 <td class="text-center">{{returnBillDetail?.total_qty}}</td>
-                                                                <td class="text-center">{{returnBillDetail?.total_discount}}</td>
+                                                                <td class="text-center">{{returnBillDetail?.total_discount+'%'+  ' (' + '₹'+totaldiscount?.toFixed(2)+ ')'}}</td>
                                                                 <td class="text-center">{{returnBillDetail?.total_tax}}</td>
                                                                 <td class="text-center">{{returnBillDetail?.total}}</td>
                                                             </tr>

@@ -157,6 +157,9 @@
                                                                 <p class="gst">GST {{companyDetails?.gst}}</p>
                                                                 <p>Company Name: {{companyDetails?.name}}</p>
                                                                 <p>Financial Year: {{companyDetails?.financial_year?.financial_year}}</p>
+                                                                <p><span>Address</span> :
+                                                                    {{companyDetails?.address+' , '+companyDetails?.city?.city+' , '+companyDetails?.state?.state+' , '+companyDetails?.country?.country_name+' , '+companyDetails?.pincode}}
+                                                                </p>
                                                                 <p>Phone: {{companyDetails?.phone}}</p>
                                                             </div>
                                                         </div>

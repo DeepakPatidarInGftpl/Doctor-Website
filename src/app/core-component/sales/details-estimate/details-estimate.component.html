@@ -154,6 +154,9 @@
                                                                 <p><span>Financial Year</span> :
                                                                     {{companyDetails?.financial_year?.financial_year}}
                                                                 </p>
+                                                                <p><span>Address</span> :
+                                                                    {{companyDetails?.address+' , '+companyDetails?.city?.city+' , '+companyDetails?.state?.state+' , '+companyDetails?.country?.country_name+' , '+companyDetails?.pincode}}
+                                                                </p>
                                                                 <p><span>Phone</span> : {{companyDetails?.phone}}</p>
                                                             </div>
                                                         </div>
@@ -227,7 +230,7 @@
                                                             <tr>
                                                                 <!-- <th class="thone" style="white-space: normal !important;">Sr.No.</th> -->
                                                                 <th class="thone" style="white-space: normal !important;">Estimate No.</th>
-                                                                <th class="thone" style="white-space: normal !important;">Name / User Name</th>
+                                                                <th class="thone" style="white-space: normal !important;">Party Name</th>
                                                                 <th class="thone" style="white-space: normal !important;">Payment Terms</th>
                                                                 <th class="thone" style="white-space: normal !important;">Sale Estimate Date</th>   
                                                                 <th class="thone" style="white-space: normal !important;">Estimate Expiry date</th>  
@@ -237,7 +240,7 @@
                                                             <tr>
                                                                 <!-- <td>{{1}}</td> -->
                                                                 <td style="color:black">{{estimateDetail?.estimate_no}}</td>
-                                                                <td style="color:black">{{estimateDetail?.customer?.name+' / '+estimateDetail?.customer?.username}}</td>
+                                                                <td style="color:black">{{estimateDetail?.customer?.name+ ' (' + estimateDetail?.customer?.user_type + ')'}}</td>
                                                                 <td style="color:black">{{estimateDetail?.payment_terms?.title}}</td>
                                                                 <td style="color:black"> {{estimateDetail?.estimate_date |date: 'dd-MMMM-yyyy'}}</td>
                                                                 <td style="color:black" class="text-center"> {{estimateDetail?.estimate_expiry_date |date: 'dd-MMMM-yyyy'}}</td>
@@ -265,7 +268,7 @@
                                                                 <th>Price</th>
                                                                 <th>QTY</th>
                                                                 <th>Discount %</th>
-                                                                <th>Tax</th>
+                                                                <th>Tax %</th>
                                                                 <th>Total</th>
                                                             </tr>
                                                         </thead>
@@ -284,9 +287,9 @@
                                                                 <td class="text-center" colspan="3">
                                                                     <strong>Total</strong>
                                                                 </td>
-                                                                <td class="text-center">{{totalMrp.toFixed(2)}}</td>
+                                                                <td class="text-center">{{totalMrp?.toFixed(2)}}</td>
                                                                 <td class="text-center">{{estimateDetail?.total_qty}}</td>
-                                                                <td class="text-center">{{estimateDetail?.total_discount}}</td>
+                                                                <td class="text-center">{{estimateDetail?.total_discount+'%' + ' (' + '₹'+totaldiscount?.toFixed(2)+ ')'}}</td>
                                                                 <td class="text-center">{{estimateDetail?.total_tax}}</td>
                                                                 <td class="text-center">{{estimateDetail?.total.toFixed(2)}}</td>
                                                             </tr>

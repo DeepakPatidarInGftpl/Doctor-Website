@@ -154,9 +154,7 @@
                                 Provided</small></h5>
                         <div class="form-group row mt-3">
                             <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
-                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
-                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">Place of Supply <span
-                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>    
                         </div>
                     </div>
                     <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'">
@@ -209,9 +207,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row mt-3">
-                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place
-                                            of Supply : </span> <span class="font-weight-normal"
-                                            id="lblContactGSTIN">{{selectedAddressBilling?.state?.state}}</span></label>
+                                
                                     <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
                                         </span><span class="font-weight-normal"
                                             id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
@@ -305,8 +301,6 @@
                         <div class="form-group row mt-3">
                             <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
                                     class="font-weight-normal" id="lblContactGSTIN">-</span></label>
-                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">Place of Supply <span
-                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
                         </div>
                     </div>
                     <div *ngIf="selectedAddressShipping && selectedAddressShipping.address_type=='Shipping'">
@@ -360,9 +354,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row mt-3">
-                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">Place
-                                            of Supply : </span> <span class="font-weight-normal"
-                                            id="lblContactGSTIN">{{selectedAddressShipping?.state?.state}}</span></label>
+                                    
                                     <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
                                         </span><span class="font-weight-normal"
                                             id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
