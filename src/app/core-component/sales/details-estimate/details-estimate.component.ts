@@ -8,53 +8,65 @@ import { CompanyService } from 'src/app/Services/Companyservice/company.service'
 @Component({
   selector: 'app-details-estimate',
   templateUrl: './details-estimate.component.html',
-  styleUrls: ['./details-estimate.component.scss','../commonDetails.scss']
+  styleUrls: ['./details-estimate.component.scss', '../commonDetails.scss']
 })
 export class DetailsEstimateComponent implements OnInit {
 
-  constructor(private companyService:CompanyService,private Arout: ActivatedRoute, private saleService: SalesService, private location: Location) { }
+  constructor(private companyService: CompanyService, private Arout: ActivatedRoute, private saleService: SalesService, private location: Location) { }
   id: any;
-  companyDetails:any;
-  supplierAddress:any;
-  selectedAddressBilling:any;
-  selectedAddressShipping:any;
+  companyDetails: any;
+  supplierAddress: any;
+  selectedAddressBilling: any;
+  selectedAddressShipping: any;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
-    this.companyService.getCompany().subscribe(res=>{
-      this.companyDetails=res[0];
+    this.companyService.getCompany().subscribe(res => {
+      this.companyDetails = res[0];
     })
   }
   estimateDetail: any;
-  totalmrp:any[]=[];
-  totalMrp=0;
-  totalDiscount:any[]=[];
-  discount=0;
-  totaldiscount=0
+  totalmrp: any[] = [];
+  totalMrp = 0;
+  totalDiscount: any[] = [];
+  discount = 0;
+  totaldiscount = 0
   getdata() {
     this.saleService.getSalesEstimateById(this.id).subscribe(res => {
       if (this.id == res.id) {
-        this.estimateDetail = res
-          // calculation
-          this.estimateDetail?.cart?.forEach((item:any)=>{
-            // discount
-            let d:any = (item?.price?.toFixed(2) * item?.discount) / 100;
-            console.log(item?.price?.toFixed(2)-d.toFixed(2));
-            this.discount=item?.price?.toFixed(2)-d.toFixed(2);
-            this.totaldiscount=0;
-            this.totalDiscount.push(this.discount);
-            console.log(this.totalDiscount);
-            this.totalDiscount?.forEach((number:any)=>{
-              this.totaldiscount +=number;
-            });
-            console.log(this.totaldiscount?.toFixed(2));   
-            // mrp
-            this.totalmrp.push(item?.price);
-            this.totalMrp=0;
-            this?.totalmrp?.forEach((number: any) => {
-              this.totalMrp += number;
-            })
+        this.estimateDetail = res;
+        // calculation
+        this.estimateDetail?.cart?.forEach((item: any) => {
+          // discount
+          let d: any = (item?.price?.toFixed(2) * item?.discount) / 100;
+          console.log(item?.price?.toFixed(2) - d.toFixed(2));
+          this.discount = item?.price?.toFixed(2) - d.toFixed(2);
+          this.totaldiscount = 0;
+          this.totalDiscount.push(this.discount);
+          console.log(this.totalDiscount);
+          this.totalDiscount?.forEach((number: any) => {
+            this.totaldiscount += number;
+          });
+          console.log(this.totaldiscount?.toFixed(2));
+          // mrp
+          this.totalmrp.push(item?.price);
+          this.totalMrp = 0;
+          this?.totalmrp?.forEach((number: any) => {
+            this.totalMrp += number;
           })
+        });
+        // address selected
+        this.supplierAddress = res;
+
+        this.supplierAddress?.customer?.detail?.address.map((res: any) => {
+          if (res?.address_type == 'Billing') {
+            this.selectedAddressBilling = res;
+            console.log(this.selectedAddressBilling);
+          } else if (res.address_type == 'Shipping') {
+            this.selectedAddressShipping = res;
+            console.log(this.selectedAddressShipping);
+          }
+        })
       }
     })
   }
@@ -62,7 +74,7 @@ export class DetailsEstimateComponent implements OnInit {
     this.location.back();
   }
 
-  
+
   loaderPdf = false;
   generatePdf() {
     this.loaderPdf = true;
@@ -79,7 +91,7 @@ export class DetailsEstimateComponent implements OnInit {
       });
     }
   }
- 
+
   printForm(): void {
     const printContents = document.getElementById('debitNote').outerHTML;
     const originalContents = document.body.innerHTML;

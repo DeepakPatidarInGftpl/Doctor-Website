@@ -185,37 +185,36 @@
                                             <div class="col-sm-12">
                                                 <div
                                                     class="d-flex justify-content-between align-items-center top-div container">
-                                              
-                                                    <!-- <div *ngIf="selectedAddressBilling">
+                                              <div *ngIf="selectedAddressBilling">
                                                         <p class="heading">Billing Address</p>
                                                         <p class="heading2">
-                                                            {{selectedAddressBilling?.address_line_1 + ' , ' +
-                                                            selectedAddressBilling?.address_line_2 + ' , ' +
+                                                            {{selectedAddressBilling?.address_line_1==null?'':selectedAddressBilling?.address_line_1 + ' , ' +
+                                                            selectedAddressBilling?.address_line_2==null?'':selectedAddressBilling?.address_line_2 +' , ' +
                                                             selectedAddressBilling?.city?.city}}
                                                             <br>
                                                             {{selectedAddressBilling?.state?.state + ' , ' +
                                                             selectedAddressBilling?.country?.country_name}}
                                                             <br />
-                                                            Phone: {{estimateDetail?.party?.mobile_no}}
+                                                            Phone: {{estimateDetail?.customer?.phone_number}}
                                                             <br />
-                                                            {{estimateDetail?.party?.email}}
+                                                            {{estimateDetail?.customer?.email}}
                                                         </p>
                                                     </div>
                                                     <div *ngIf="selectedAddressShipping">
                                                         <p class="heading">Shipping Address</p>
                                                         <p class="heading2">
-                                                            {{selectedAddressShipping?.address_line_1 + ' , ' +
-                                                            selectedAddressShipping?.address_line_2 + ' , ' +
+                                                            {{selectedAddressShipping?.address_line_1==null?'':selectedAddressShipping?.address_line_1 + ' , ' +
+                                                            selectedAddressShipping?.address_line_2==null?'':selectedAddressShipping?.address_line_2 +' , ' +
                                                             selectedAddressShipping?.city?.city}}
                                                             <br>
                                                             {{selectedAddressBilling?.state?.state + ' , ' +
                                                             selectedAddressBilling?.country?.country_name}}
                                                             <br />
-                                                            Phone: {{estimateDetail?.party?.mobile_no}}
+                                                            Phone: {{estimateDetail?.customer?.phone_number}}
                                                             <br />
-                                                            {{estimateDetail?.party?.email}}
+                                                            {{estimateDetail?.customer?.email}}
                                                         </p>
-                                                    </div> -->
+                                                    </div> 
 
                                                 </div>
                                             </div>

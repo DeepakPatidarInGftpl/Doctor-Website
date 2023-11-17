@@ -36,8 +36,19 @@ export class DetailsMaterialOutwardComponent implements OnInit {
   getdata() {
     this.saleService.getSalesMaterialOutwardById(this.id).subscribe(res => {
       if (this.id == res.id) {
-        this.returnBillDetail = res
-      
+        this.returnBillDetail = res;
+           // address selected
+           this.supplierAddress = res;
+
+           this.supplierAddress?.customer?.detail?.address.map((res: any) => {
+             if (res?.address_type == 'Billing') {
+               this.selectedAddressBilling = res;
+               console.log(this.selectedAddressBilling);
+             } else if (res.address_type == 'Shipping') {
+               this.selectedAddressShipping = res;
+               console.log(this.selectedAddressShipping);
+             }
+           })
       }
     })
   }
