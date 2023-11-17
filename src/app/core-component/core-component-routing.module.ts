@@ -85,11 +85,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./element/element.module').then((m) => m.ElementModule),
       },
-      {
-        path: 'charts',
-        loadChildren: () =>
-          import('./charts/charts.module').then((m) => m.ChartsModule),
-      },
+      // {
+      //   path: 'charts',
+      //   loadChildren: () =>
+      //     import('./charts/charts.module').then((m) => m.ChartsModule),
+      // },
       {
         path: 'icons',
         loadChildren: () =>

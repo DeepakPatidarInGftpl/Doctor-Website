@@ -73,7 +73,298 @@
                         </span>
                     </div>
                 </div>
-             
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="modal fade" id="addressModal" tabindex="-1" role="dialog"
+                        aria-labelledby="addressModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Billing Address</h1>
+                                    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group" *ngIf="supplierAddress">
+                                        <h5 class=""><small class="text-muted"></small></h5>
+                                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                            <input type="hidden" class="form-control" name="billingcompanyname"
+                                                id="billingcompanyname" value="{{supplierAddress?.name}}">
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-sm-12 col-12"
+                                                *ngFor="let add of supplierAddress?.address">
+                                                <div *ngIf="add.address_type=='Billing'">
+                                                    <button type="button" (click)="selectAddressBilling(add)"
+                                                        class="btn btn-primary btn-sm"
+                                                        style="float: right;">Select</button>
+
+                                                    <p class="d-inline mb-0">
+                                                        <span id="billing-address-line-1">
+                                                            {{add?.address_line_1}}, {{add?.address_line_2}}
+                                                        </span>
+                                                    </p>
+                                                    <br>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-pincode="">{{add?.pincode}}</span>
+                                                        <span data-address-city="22691">{{add?.city?.city}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                    </p>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-state="1722">{{add?.state?.state}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                        <span
+                                                            data-address-country="IR">{{add?.country?.country_name}}</span>
+                                                    </p>
+                                                    <p class="mb-2">
+                                                        <span class="">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11"
+                                                                height="11" fill="currentColor"
+                                                                class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                                            </svg>
+                                                            <a
+                                                                href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                                            <input type="hidden" class="form-control"
+                                                                name="billingphone" id="billingphone"
+                                                                value="{{supplierAddress?.mobile_no}}">
+                                                        </span>
+                                                    </p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Billing Address</strong></label>
+                    <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type!=='Billing'">
+                        <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
+                                Available</small></h5>
+                        <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                            Address
+                        </a>
+                    </div>
+
+                    <div class="form-group" *ngIf="!supplierAddress">
+                        <div class="m-divider"><span></span></div>
+                        <h5 style="font-size: 13px;"><small class="text-muted">Billing Address is Not
+                                Provided</small></h5>
+                        <div class="form-group row mt-3">
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'">
+                        <div class="form-group" *ngIf="supplierAddress">
+
+                            <h5 class=""><small class="text-muted"></small></h5>
+                            <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                <input type="hidden" class="form-control" name="billingcompanyname"
+                                    id="billingcompanyname" value="{{supplierAddress?.name}}">
+                            </h5>
+                            <div *ngIf="selectedAddressBilling && selectedAddressBilling.address_type=='Billing'">
+                                <div *ngIf="selectedAddressBilling">
+                                    <p class="d-inline mb-0">
+                                        <span id="billing-address-line-1">
+                                            {{selectedAddressBilling?.address_line_1}},
+                                            {{selectedAddressBilling?.address_line_2}},
+                                        </span>
+                                    </p>
+                                    <br>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-pincode="">{{selectedAddressBilling?.pincode}}, </span>
+                                        <span data-address-city="22691">{{selectedAddressBilling?.city?.city}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                    </p>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-state="1722">{{selectedAddressBilling?.state?.state}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                        <span
+                                            data-address-country="IR">{{selectedAddressBilling?.country?.country_name}}</span>
+                                    </p>
+                                    <p class="mb-2">
+                                        <span class="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
+                                                fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                <path fill-rule="evenodd"
+                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                            </svg>
+                                            <a href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                            <input type="hidden" class="form-control" name="billingphone"
+                                                id="billingphone" value="{{supplierAddress?.mobile_no}}">
+                                        </span>
+                                    </p>
+                                    <div class="d-grid">
+                                        <a type="button" class=" btn-link" (click)="openModal()">Change Address</a>
+                                        <a class=" btn-link"
+                                            routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                                            Billing Address
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="form-group row mt-3">
+                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
+                                        </span><span class="font-weight-normal"
+                                            id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="modal fade" id="addressModalShipping" tabindex="-1" role="dialog"
+                        aria-labelledby="addressModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Shipping Address</h1>
+                                    <button type="button" class="close" (click)="closeModalShipping()"
+                                        aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group" *ngIf="supplierAddress">
+                                        <h5 class=""><small class="text-muted"></small></h5>
+                                        <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                            <input type="hidden" class="form-control" name="billingcompanyname"
+                                                id="billingcompanyname" value="{{supplierAddress?.name}}">
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-lg-12 col-sm-12 col-12"
+                                                *ngFor="let add of supplierAddress?.address">
+                                                <div *ngIf="add.address_type=='Shipping'">
+                                                    <button type="button" (click)="selectAddressShipping(add)"
+                                                        class="btn btn-primary btn-sm"
+                                                        style="float: right;">Select</button>
+
+                                                    <p class="d-inline mb-0">
+                                                        <span id="billing-address-line-1">
+                                                            {{add?.address_line_1}}, {{add?.address_line_2}}
+                                                        </span>
+                                                    </p>
+                                                    <br>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-pincode="">{{add?.pincode}}</span>
+                                                        <span data-address-city="22691">{{add?.city?.city}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                    </p>
+                                                    <p class="d-inline mb-0">
+                                                        <span data-address-state="1722">{{add?.state?.state}}</span>
+                                                        <span class="m--font-boldest">,&nbsp;</span>
+                                                        <span
+                                                            data-address-country="IR">{{add?.country?.country_name}}</span>
+                                                    </p>
+                                                    <p class="mb-2">
+                                                        <span class="">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11"
+                                                                height="11" fill="currentColor"
+                                                                class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                                            </svg>
+                                                            <a
+                                                                href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                                            <input type="hidden" class="form-control"
+                                                                name="billingphone" id="billingphone"
+                                                                value="{{supplierAddress?.mobile_no}}">
+                                                        </span>
+                                                    </p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="col-lg-12 col-md-12 col-sm-12 p-0"><strong>Shipping Address</strong></label>
+                    <div *ngIf="selectedAddressShipping && selectedAddressShipping.address_type!=='Shipping'">
+                        <h5 style="font-size: 13px;"><small class="text-muted">Shipping Address is Not
+                                Available</small></h5>
+                        <a class=" btn-link" routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                            Address
+                        </a>
+                    </div>
+                    <div class="form-group" *ngIf="!supplierAddress">
+                        <div class="m-divider"><span></span></div>
+                        <h5 style="font-size: 13px;"><small class="text-muted">Shipping Address is Not
+                                Provided</small></h5>
+                        <div class="form-group row mt-3">
+                            <label class="col-lg-12 col-md-12 col-sm-12" style="font-weight: 600;">GSTIN <span
+                                    class="font-weight-normal" id="lblContactGSTIN">-</span></label>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedAddressShipping && selectedAddressShipping.address_type=='Shipping'">
+                        <div class="form-group" *ngIf="supplierAddress">
+
+                            <h5 class=""><small class="text-muted"></small></h5>
+                            <h5 class=""><small class="text-muted">{{supplierAddress?.name}}</small>
+                                <input type="hidden" class="form-control" name="billingcompanyname"
+                                    id="billingcompanyname" value="{{supplierAddress?.name}}">
+                            </h5>
+                            <div *ngIf="selectedAddressShipping && selectedAddressShipping.address_type=='Shipping'">
+                                <div *ngIf="selectedAddressShipping">
+                                    <p class="d-inline mb-0">
+                                        <span id="billing-address-line-1">
+                                            {{selectedAddressShipping?.address_line_1}},
+                                            {{selectedAddressShipping?.address_line_2}},
+                                        </span>
+                                    </p>
+                                    <br>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-pincode="">{{selectedAddressShipping?.pincode}}, </span>
+                                        <span data-address-city="22691">{{selectedAddressShipping?.city?.city}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                    </p>
+                                    <p class="d-inline mb-0">
+                                        <span data-address-state="1722">{{selectedAddressShipping?.state?.state}}</span>
+                                        <span class="m--font-boldest">,&nbsp;</span>
+                                        <span
+                                            data-address-country="IR">{{selectedAddressShipping?.country?.country_name}}</span>
+                                    </p>
+                                    <p class="mb-2">
+                                        <span class="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
+                                                fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"
+                                                style="    height: 11px; width: 11px; color: #FF9F43;">
+                                                <path fill-rule="evenodd"
+                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                            </svg>
+                                            <a href="tel:{{supplierAddress?.phone}}">{{supplierAddress?.mobile_no}}</a>
+                                            <input type="hidden" class="form-control" name="billingphone"
+                                                id="billingphone" value="{{supplierAddress?.mobile_no}}">
+                                        </span>
+                                    </p>
+                                    <div class="d-grid">
+                                        <a type="button" class=" btn-link" (click)="openModalShipping()">Change
+                                            Address</a>
+                                        <a class=" btn-link"
+                                            routerLink="//contacts/updateSupplier/{{supplierAddress?.id}}">Edit
+                                            Shipping Address
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="form-group row mt-3">
+                                    <label class="col-lg-12 col-md-12 col-sm-12"><span style="font-weight: 600;">GSTIN :
+                                        </span><span class="font-weight-normal"
+                                            id="lblContactGSTIN">{{supplierAddress?.gstin}}</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
             </div>
             <div class="card">
              <div class="card-body">

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import{NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 import {
   PerfectScrollbarConfigInterface,
   PerfectScrollbarModule,
@@ -22,7 +23,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
-import{NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
+
 
 const icons = {
   Layers
@@ -52,7 +53,7 @@ const icons = {
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    NgMultiSelectDropDownModule,
+    NgMultiSelectDropDownModule.forRoot(),
   ],
   exports: [
     FeatherModule

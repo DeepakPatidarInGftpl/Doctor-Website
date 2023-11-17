@@ -76,7 +76,7 @@
                             </div>
                         </mat-tab>
                         <mat-tab label="Cart" *ngIf="paymentVoucherDetail?.mode_type=='Against Bill'">
-                            <div class="table-responsive">
+                            <div class="table-responsive" *ngIf="paymentVoucherDetail?.payment_cart?.length>0">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -132,6 +132,9 @@
                                     </ng-container>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="text-center" *ngIf="paymentVoucherDetail?.payment_cart?.length==0">
+                                <span class="text-danger">Data Not Available</span>
                             </div>
                         </mat-tab>
                         <mat-tab label="Logs" *ngIf="paymentVoucherDetail?.logs?.length>0">

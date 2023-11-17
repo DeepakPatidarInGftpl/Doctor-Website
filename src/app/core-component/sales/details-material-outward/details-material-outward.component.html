@@ -119,6 +119,9 @@
                                                                 <p><span>Financial Year</span> :
                                                                     {{companyDetails?.financial_year?.financial_year}}
                                                                 </p>
+                                                                <p><span>Address</span> :
+                                                                    {{companyDetails?.address+' , '+companyDetails?.city?.city+' , '+companyDetails?.state?.state+' , '+companyDetails?.country?.country_name+' , '+companyDetails?.pincode}}
+                                                                </p>
                                                                 <p><span>Phone</span> : {{companyDetails?.phone}}</p>
                                                             </div>
                                                         </div>
@@ -192,7 +195,7 @@
                                                             <tr>
                                                                 <!-- <th class="thone" style="white-space: normal !important;">Sr.No.</th> -->
                                                                 <th class="thone" style="white-space: normal !important;">Voucher No.</th>
-                                                                <th class="thone" style="white-space: normal !important;">User Name</th>
+                                                                <th class="thone" style="white-space: normal !important;">Party Name</th>
                                                                 <th class="thone" style="white-space: normal !important;">Refund Status</th>
                                                                 <th class="thone" style="white-space: normal !important;">Sale Material Outward Date</th>   
                                                             </tr>
@@ -201,7 +204,7 @@
                                                             <tr>
                                                                 <!-- <td>{{1}}</td> -->
                                                                 <td style="color:black">{{returnBillDetail?.voucher_number}}</td>
-                                                                <td style="color:black">{{returnBillDetail?.customer?.name+' , '+returnBillDetail?.customer?.username}}</td>
+                                                                <td style="color:black">{{returnBillDetail?.customer?.name+ ' (' + returnBillDetail?.customer?.user_type + ')'}}</td>
                                                                 <td style="color:black">{{returnBillDetail?.refund_status}}</td>
                                                                 <td style="color:black" class="text-center"> {{returnBillDetail?.mo_date |date: 'dd-MMMM-yyyy'}}</td>
                                                             </tr>

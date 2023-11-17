@@ -292,21 +292,32 @@ export class AddSalesComponent implements OnInit {
     const selectedItemId = data.id;
     this.userType = data?.user_type;
     //call detail api
-    this.contactService.getCustomerById(selectedItemId).subscribe(res => {
-      // console.log(res);
-      this.supplierAddress = res;
-      this.saleForm.patchValue({
-        // payment_terms: res?.payment_terms?.id
-      })
-      this.supplierAddress?.address?.map((res: any) => {
-        if (res.address_type == 'Billing') {
-          this.selectedAddressBilling = res
-          console.log(this.selectedAddressBilling);
-        } else if (res.address_type == 'Shipping') {
-          this.selectedAddressShipping = res
-          console.log(this.selectedAddressShipping);
-        }
-      })
+    // this.contactService.getCustomerById(selectedItemId).subscribe(res => {
+    //   // console.log(res);
+    //   this.supplierAddress = res;
+    //   this.saleForm.patchValue({
+    //     // payment_terms: res?.payment_terms?.id
+    //   })
+    //   this.supplierAddress?.address?.map((res: any) => {
+    //     if (res.address_type == 'Billing') {
+    //       this.selectedAddressBilling = res
+    //       console.log(this.selectedAddressBilling);
+    //     } else if (res.address_type == 'Shipping') {
+    //       this.selectedAddressShipping = res
+    //       console.log(this.selectedAddressShipping);
+    //     }
+    //   })
+    // })
+
+    this.supplierAddress=data;
+    this.supplierAddress?.address?.map((res: any) => {
+      if (res?.address_type == 'Billing') {
+        this.selectedAddressBilling = res
+        console.log(this.selectedAddressBilling);
+      } else if (res?.address_type == 'Shipping') {
+        this.selectedAddressShipping = res
+        console.log(this.selectedAddressShipping);
+      }
     })
     const variants = this.saleForm.get('sale_order_cart') as FormArray;
     variants.clear();

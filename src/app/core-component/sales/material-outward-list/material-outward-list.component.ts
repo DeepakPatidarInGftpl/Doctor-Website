@@ -185,8 +185,9 @@ select=false
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
         const nameLower = res?.customer?.name.toLocaleLowerCase();
+        const usernameLower = res?.customer?.username.toLocaleLowerCase() || "";
         const companyNameLower = res?.voucher_number.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)) {
+        if (nameLower.match(searchTerm)|| usernameLower.includes(searchTerm)) {
           return true;
         } else if (companyNameLower.match(searchTerm)) {
           return true;
