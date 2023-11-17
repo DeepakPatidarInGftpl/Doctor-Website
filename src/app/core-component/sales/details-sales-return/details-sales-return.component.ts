@@ -56,7 +56,20 @@ export class DetailsSalesReturnComponent implements OnInit {
           this?.totalmrp?.forEach((number: any) => {
             this.totalMrp += number;
           })
-        })
+        });
+
+            // address selected
+            this.supplierAddress = res;
+
+            this.supplierAddress?.customer?.detail?.address.map((res: any) => {
+              if (res?.address_type == 'Billing') {
+                this.selectedAddressBilling = res;
+                console.log(this.selectedAddressBilling);
+              } else if (res.address_type == 'Shipping') {
+                this.selectedAddressShipping = res;
+                console.log(this.selectedAddressShipping);
+              }
+            })
       }
     })
   }

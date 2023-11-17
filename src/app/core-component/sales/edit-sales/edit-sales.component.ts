@@ -308,7 +308,7 @@ export class EditSalesComponent implements OnInit {
   }
   getUser() {
     this.saleService.getUser().subscribe((res: any) => {
-      this.users = res;
+      this.users = res?.data;
     })
   }
   paymentTermsList: any

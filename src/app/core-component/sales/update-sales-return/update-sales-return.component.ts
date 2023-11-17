@@ -320,7 +320,7 @@ export class UpdateSalesReturnComponent implements OnInit {
   }
   getUser() {
     this.saleService.getUser().subscribe((res: any) => {
-      this.users = res;
+      this.users = res?.data;
     })
   }
   salesBillList: any
@@ -359,7 +359,7 @@ export class UpdateSalesReturnComponent implements OnInit {
     //   })
     // });
 
-    this.supplierAddress=data;
+    this.supplierAddress=data?.detail;
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {
         this.selectedAddressBilling = res

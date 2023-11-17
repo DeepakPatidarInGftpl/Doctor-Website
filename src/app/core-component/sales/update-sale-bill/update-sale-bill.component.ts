@@ -377,7 +377,7 @@ export class UpdateSaleBillComponent implements OnInit {
   }
   getUser() {
     this.saleService.getUser().subscribe((res: any) => {
-      this.users = res;
+      this.users = res?.data;
     })
   }
   paymentTermsList: any
@@ -427,7 +427,7 @@ export class UpdateSaleBillComponent implements OnInit {
     //   })
     // });
 
-    this.supplierAddress=data;
+    this.supplierAddress=data?.detail;
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {
         this.selectedAddressBilling = res

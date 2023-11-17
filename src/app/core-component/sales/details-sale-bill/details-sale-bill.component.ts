@@ -53,7 +53,6 @@ export class DetailsSaleBillComponent implements OnInit {
            this.totalDiscountRupees?.forEach((number:any)=>{
              this.totaldiscountRupees +=number;
            });
-           console.log(this.totaldiscountRupees.toFixed(2));
           // mrp
           this.totalmrp.push(item?.price);
           this.totalMrp=0;
@@ -72,7 +71,19 @@ export class DetailsSaleBillComponent implements OnInit {
           this?.additional_discount?.forEach((number: any) => {
             this.totalAdditionalDiscount += number;
           });
-        })
+        });
+
+         // address selected
+         this.supplierAddress = res;
+         this.supplierAddress?.customer?.detail?.address.map((res: any) => {
+           if (res?.address_type == 'Billing') {
+             this.selectedAddressBilling = res;
+             console.log(this.selectedAddressBilling);
+           } else if (res.address_type == 'Shipping') {
+             this.selectedAddressShipping = res;
+             console.log(this.selectedAddressShipping);
+           }
+         })
       }
     })
   }
