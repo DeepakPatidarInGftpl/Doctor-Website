@@ -125,7 +125,7 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//sales/salesReturnedetails/{{products.id}}" style="line-height: 3;">{{products?.customer?.name}}</a>
+                            <a routerLink="//sales/salesReturnedetails/{{products.id}}" style="line-height: 3;">{{products?.customer?.name + ' (' + products?.customer?.username + ')'}}</a>
                         </td>
                         <td>{{products?.bill_date}}</td>
                         <td>{{products?.sale_return_bill_no}}</td>
