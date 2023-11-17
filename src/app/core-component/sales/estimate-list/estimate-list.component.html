@@ -137,7 +137,7 @@
                         <td>{{i+1}}</td>
                         <td class="productimgname">
                             <a routerLink="//sales/salesEstimatedetails/{{products.id}}"
-                                style="line-height: 3;">{{products?.customer?.name}}</a>
+                                style="line-height: 3;">{{products?.customer?.name + ' (' + products?.customer?.username + ')'}}</a>
                         </td>
                         <td>{{products?.estimate_date}}</td>
                         <td>{{products.estimate_no}}</td>
