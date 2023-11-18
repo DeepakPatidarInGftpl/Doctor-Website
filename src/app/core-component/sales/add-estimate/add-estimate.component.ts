@@ -262,7 +262,7 @@ export class AddEstimateComponent implements OnInit {
   }
   getUser() {
     this.saleService.getUser().subscribe((res: any) => {
-      this.users = res;
+      this.users = res?.data;
     })
   }
   paymentTermsList: any
@@ -302,7 +302,7 @@ export class AddEstimateComponent implements OnInit {
     // })
 
     // data available in data argument
-    this.supplierAddress=data;
+    this.supplierAddress=data?.detail;
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {
         this.selectedAddressBilling = res
@@ -317,7 +317,6 @@ export class AddEstimateComponent implements OnInit {
     this.addCart();
     this.saleEstimateForm.patchValue({
       customer: selectedItemId,
-
     });
   }
 

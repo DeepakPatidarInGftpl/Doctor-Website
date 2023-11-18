@@ -197,7 +197,7 @@ export class SalesService {
   } 
 
   getUser() {
-    let url = this.apiUrl + '/pv-api/user/';
+    let url = this.apiUrl + '/pv-api/contact-user/';
     return this.http.get(url)
   }
 }
