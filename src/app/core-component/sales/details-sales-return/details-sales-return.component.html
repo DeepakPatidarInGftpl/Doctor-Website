@@ -280,7 +280,7 @@
                                                                 <td class="text-center">{{totalMrp.toFixed(2)}}</td>
                                                                 <td class="text-center">{{returnBillDetail?.total_qty}}</td>
                                                                 <td class="text-center">{{returnBillDetail?.total_discount+'%'+  ' (' + '₹'+totaldiscount?.toFixed(2)+ ')'}}</td>
-                                                                <td class="text-center">{{returnBillDetail?.total_tax}}</td>
+                                                                <td class="text-center">{{returnBillDetail?.total_tax+'%' + ' (' + '₹'+calculateTax?.toFixed(2)+ ')'}}</td>
                                                                 <td class="text-center">{{returnBillDetail?.total}}</td>
                                                             </tr>
                                                         </tbody>

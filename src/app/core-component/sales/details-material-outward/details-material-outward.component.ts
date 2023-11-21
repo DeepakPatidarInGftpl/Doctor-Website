@@ -33,6 +33,11 @@ export class DetailsMaterialOutwardComponent implements OnInit {
   totalMrp=0;
   totallanding:any[]=[];
   totalLandingCost=0;
+
+  // tax
+  calculateTax = 0;
+  discount = 0;
+  totalTax: any[] = [];
   getdata() {
     this.saleService.getSalesMaterialOutwardById(this.id).subscribe(res => {
       if (this.id == res.id) {
