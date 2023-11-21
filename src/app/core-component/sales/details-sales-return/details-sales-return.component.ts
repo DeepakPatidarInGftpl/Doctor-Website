@@ -32,7 +32,11 @@ export class DetailsSalesReturnComponent implements OnInit {
 
   totalDiscount:any[]=[];
   discount=0;
-  totaldiscount=0
+  totaldiscount=0;
+
+  // tax
+  calculateTax = 0;
+  totalTax: any[] = [];
   getdata() {
     this.saleService.getSaleReturnById(this.id).subscribe(res => {
       if (this.id == res.id) {
@@ -50,6 +54,19 @@ export class DetailsSalesReturnComponent implements OnInit {
              this.totaldiscount +=number;
            });
            console.log(this.totaldiscount.toFixed(2));  
+
+                // calulating tax
+          let dis: any = (item?.price?.toFixed(2) * item?.deduction) / 100;
+          console.log(item?.price?.toFixed(2) - dis.toFixed(2));
+          this.discount = item?.price?.toFixed(2) - dis.toFixed(2);
+          
+          let taxPrice: any = this.discount - (this.discount * (100 / (100 + item?.tax)));
+          console.log(taxPrice, 'taxprice');
+          this.totalTax.push(taxPrice || 0);
+          console.log(this.totalTax);  
+          this.calculateTax = this.totaldiscount - taxPrice;
+          console.log(this.calculateTax);
+
           // mrp
           this.totalmrp.push(item?.price);
           this.totalMrp=0;
