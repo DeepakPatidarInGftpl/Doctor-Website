@@ -302,9 +302,9 @@
                                                                 </td>
                                                                 <td class="text-center">{{totalMrp.toFixed(2)}}</td>
                                                                 <td class="text-center">{{BillDetail?.total_qty}}</td>
-                                                                <td class="text-center">{{totalDiscount+'%'  + ' (' + '₹'+totaldiscount?.toFixed(2)+ ')'}}</td>
-                                                                <td class="text-center">{{totalAdditionalDiscount+'%'}}</td>
-                                                                <td class="text-center">{{BillDetail?.total_tax+'%'}}</td>
+                                                                <td class="text-center">{{totalDiscount+'%'  + ' (' + '₹'+discountRupees+ ')'}}</td>
+                                                                <td class="text-center">{{totalAdditionalDiscou+'%'+ ' (' + '₹'+totalAdditionalDiscount+ ')'}}</td>
+                                                                <td class="text-center">{{BillDetail?.total_tax+'%'+ ' (' + '₹'+calculateTax.toFixed(2)+ ')'}}</td>
                                                                 <td class="text-center">{{BillDetail?.total.toFixed(2)}}</td>
                                                             </tr>
                                                         </tbody>

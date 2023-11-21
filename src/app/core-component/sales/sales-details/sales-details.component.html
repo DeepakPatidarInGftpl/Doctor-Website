@@ -286,7 +286,7 @@
                                                                 <td class="text-center">{{totalMrp.toFixed(2)}}</td>
                                                                 <td class="text-center">{{orderDetail?.total_qty}}</td>
                                                                 <td class="text-center">{{orderDetail?.total_discount+'%' + ' (' + '₹'+totaldiscount?.toFixed(2)+ ')'}}</td>
-                                                                <td class="text-center">{{orderDetail?.total_tax}}</td>
+                                                                <td class="text-center">{{orderDetail?.total_tax+'%' + ' (' + '₹'+calculateTax?.toFixed(2)+ ')'}}</td>
                                                                 <td class="text-center">{{orderDetail?.total.toFixed(2)}}</td>
                                                             </tr>
                                                         </tbody>
