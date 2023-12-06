@@ -115,7 +115,30 @@
                         <span class="text-danger"*ngIf="additional_discount && additional_discount.invalid && additional_discount.touched">Enter Enter discount (ex:0-100)</span>
                     </div>
                 </div>
-
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group row">
+                        <div class="col-lg-12">
+                            <label>Employee Incentive*</label>
+                            <div class="input-group">
+                                <div>
+                                    <select formControlName="employee_incentive_type" class=" border hov" required
+                                        id="employee_incentive_type"
+                                        [ngClass]="{'is-invalid': f['employee_incentive_type'].touched && f['employee_incentive_type'].invalid}">
+                                        <option class="unhov" value="" selected disabled>Employee Incentive Type</option>
+                                        <option class="unhov" value="%">%</option>
+                                        <option class="unhov" value="Rs">Rs</option>
+                                    </select>
+                                    <span class="text-danger d-block" *ngIf="employee_incentive_type && employee_incentive_type.invalid && employee_incentive_type.touched">Select Employee Incentive Type</span>
+                                </div>
+                                <div>
+                                    <input type="text" formControlName="employee_incentive" id="em-ployee_incentive"
+                                        [ngClass]="{'is-invalid': f['employee_incentive'].touched && f['employee_incentive'].invalid}">
+                                    <span class="text-danger ml-5 pl-5" *ngIf="employee_incentive && employee_incentive.invalid && employee_incentive.touched">Employee Incentive</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-lg-12">    
                     <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>

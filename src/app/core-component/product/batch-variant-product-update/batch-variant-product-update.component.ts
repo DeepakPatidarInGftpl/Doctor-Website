@@ -44,7 +44,9 @@ batchRes:any;
       minimum_stock_threshold: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       max_order_quantity: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      additional_discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)])
+      additional_discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      employee_incentive:new FormControl(0,[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      employee_incentive_type:('%')
     })
     this.id = +this.Arout.snapshot.paramMap.get('id');
 
@@ -121,6 +123,12 @@ batchRes:any;
   }
   get additional_discount(){
     return this.batchForm.get('additional_discount')
+  }
+  get employee_incentive(){
+    return this.batchForm.get('employee_incentive')
+  }
+  get employee_incentive_type(){
+    return this.batchForm.get('employee_incentive_type')
   }
 }
 
