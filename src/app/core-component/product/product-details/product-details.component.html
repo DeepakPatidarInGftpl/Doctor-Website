@@ -672,13 +672,13 @@
                                                                 <th class="boder space-text">Selling Price Dealer</th>
                                                                 <th class="boder space-text">Selling Price Employee</th>
                                                                 <th class="boder space-text">Stock</th>
-                                                                <th class="boder space-text">Minimum Stock Threshold
-                                                                </th>
+                                                                <th class="boder space-text">Minimum Stock Threshold</th>
                                                                 <th class="boder space-text">Max Order Quantity</th>
                                                                 <!-- <th class="boder space-text">Purchase Tax</th>
                                                 <th class="boder space-text">Sale Tax</th> -->
                                                                 <th class="boder space-text">Discount %</th>
                                                                 <th class="boder space-text">Additional Discount %</th>
+                                                                <th class="boder space-text">Employee_Incentive</th>
                                                                 <th class="boder space-text">Enable</th>
                                                                 <th class="boder space-text">Action</th>
                                                             </tr>
@@ -706,8 +706,8 @@
                                                                     <!-- <td class="boder">{{ batch?.purchase_tax + '%'}}</td>
                                                 <td class="boder">{{ batch?.sale_tax + '%'}}</td> -->
                                                                     <td class="boder">{{ batch?.discount + '%'}}</td>
-                                                                    <td class="boder">{{ batch?.additional_discount +
-                                                                        '%'}}</td>
+                                                                    <td class="boder">{{ batch?.additional_discount +'%'}}</td>
+                                                                    <td class="boder">{{ batch?.employee_incentive_type +' '+ batch?.employee_incentive}}</td>
                                                                     <td class="boder"><mat-slide-toggle
                                                                             (click)="batch?.is_active ? isActive(i,batch.id):Active(i,batch?.id)"
                                                                             [(ngModel)]="batch.is_active"></mat-slide-toggle>
