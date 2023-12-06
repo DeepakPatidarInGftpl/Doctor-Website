@@ -49,16 +49,16 @@ const routes: Routes = [
         loadChildren: () =>
           import('./purchase/purchase.module').then((m) => m.PurchaseModule),
       },
-      {
-        path: 'expense',
-        loadChildren: () =>
-          import('./expense/expense.module').then((m) => m.ExpenseModule),
-      },
-      {
-        path: 'quotation',
-        loadChildren: () =>
-          import('./quotation/quotation.module').then((m) => m.QuotationModule),
-      },
+      // {
+      //   path: 'expense',
+      //   loadChildren: () =>
+      //     import('./expense/expense.module').then((m) => m.ExpenseModule),
+      // },
+      // {
+      //   path: 'quotation',
+      //   loadChildren: () =>
+      //     import('./quotation/quotation.module').then((m) => m.QuotationModule),
+      // },
       {
         path: 'transfer',
         loadChildren: () =>
@@ -95,11 +95,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./icons/icons.module').then((m) => m.IconsModule),
       },
-      {
-        path: 'forms',
-        loadChildren: () =>
-          import('./forms/forms.module').then((m) => m.FormsModule),
-      },
+      // {
+      //   path: 'forms',
+      //   loadChildren: () =>
+      //     import('./forms/forms.module').then((m) => m.FormsModule),
+      // },
       {
         path: 'table',
         loadChildren: () =>
