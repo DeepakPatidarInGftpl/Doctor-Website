@@ -1028,7 +1028,7 @@ export class CoreService {
     let url = this.apiUrl + '/city/';
     return this.http.get(url)
   }
-  getCityDashbord(page:number){
+  getCityDashbord(page: number) {
     let url = this.apiUrl + '/pv-api/city_get_dashboard/?page=';
     return this.http.get(`${url}${page}`)
   }
@@ -1487,8 +1487,17 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/subcategory_group_wise_feature_group/?subcategory_group_id=';
     return this.http.get(`${url}${id}`);
   }
+  // subcategory wise feature group
+  getFeaturegroupBySubcategory(id: number) {
+    let url = this.apiUrl + '/pv-api/subcategory_wise_feature_group/?subcategory=';
+    return this.http.get(`${url}${id}`);
+  }
 
-
+  // subcategory wise feature group
+  getHsnCodeBySubcategory(id: number) {
+    let url = this.apiUrl + '/pv-api/hsn-code-based-upon-subcategory/?subcategory=';
+    return this.http.get(`${url}${id}`);
+  }
   // batch Variant Product 
 
   getBatch() {
@@ -1602,7 +1611,7 @@ export class CoreService {
   }
 
   // additional charges
-  
+
   getAdditionalCharges() {
     let url = this.apiUrl + '/pv-api/additional_charge_dashboard/';
     return this.http.get(url)
@@ -1660,7 +1669,7 @@ export class CoreService {
   }
   getPosOrderById(id: number): Observable<any> {
     // let url = this.apiUrl + '/pv-api/pos/pos_orders/?id=';
-    let url = this.apiUrl+'/pv-api/pos/pos_order_detail/?order_id='
+    let url = this.apiUrl + '/pv-api/pos/pos_order_detail/?order_id='
     return this.http.get<any>(`${url}${id}`)
   }
   PosOrderIsActive(id: any, data) {
@@ -1688,19 +1697,19 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/category_wise_sub_category_group_dashboard/?category_id=';
     return this.http.get<any>(`${url}${id}`);
   }
-//feature by featuregroup
-getFeatureByFeaturegroup(id: any) {
-  let url = this.apiUrl + '/pv-api/feature-group-wise-feature-dashboard/?feature_grp=';
-  return this.http.get<any>(`${url}${id}`);
-}
-//product ledger
-getProductLedger() {
-  let url = this.apiUrl + '/pv-api/product_ledger/';
-  return this.http.get(url)
-}
-//product Stock
-getProductStock() {
-  let url = this.apiUrl + '/pv-api/stock/';
-  return this.http.get(url)
-}
+  //feature by featuregroup
+  getFeatureByFeaturegroup(id: any) {
+    let url = this.apiUrl + '/pv-api/feature-group-wise-feature-dashboard/?feature_grp=';
+    return this.http.get<any>(`${url}${id}`);
+  }
+  //product ledger
+  getProductLedger() {
+    let url = this.apiUrl + '/pv-api/product_ledger/';
+    return this.http.get(url)
+  }
+  //product Stock
+  getProductStock() {
+    let url = this.apiUrl + '/pv-api/stock/';
+    return this.http.get(url)
+  }
 }

@@ -100,7 +100,8 @@ export class EditproductComponent implements OnInit {
       //end
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
-      product_images: this.fb.array([])
+      product_images: this.fb.array([]),
+      hsncode:new FormControl('',),
     })
 
     this.coreService.getProductById(this.id).subscribe(res => {
@@ -134,6 +135,7 @@ export class EditproductComponent implements OnInit {
           subcategory_group: res?.subcategory_group?.id,
           subcategory: res?.subcategory?.id,
           brand: res.brand?.id,
+          hsncode:res.id,
           unit: res.unit.id,
           // sale_tax_including: res.sale_tax_including,
           return_time:res?.return_time,
@@ -177,7 +179,7 @@ export class EditproductComponent implements OnInit {
 
         this.getSubcategoryGroupByCategory(res.category.id);
         this.oncheck(res.subcategory_group.id);
-        this.getFeaturegroupBySubcategory(res?.subcategory_group.id,'')
+        this.getFeaturegroupBySubcategory(res?.subcategory.id,'')
         this.checkSubact(res.subcategory.id);
         // console.log(this.editRes.variant_product);
         // console.log(this.colorTitle, 'colorarray ');
@@ -497,7 +499,7 @@ export class EditproductComponent implements OnInit {
   // subcategory wise hsn code
   hsncodeBysubcatList: any;
   getHsncodeBySubcategory(val: any) {
-    this.coreService.getHsncodeBySubcategory(val).subscribe(res => {
+    this.coreService.getHsnCodeBySubcategory(val).subscribe(res => {
       // console.log(res);
       this.hsncodeBysubcatList = res;
     })
@@ -518,7 +520,7 @@ export class EditproductComponent implements OnInit {
   getFeaturegroupBySubcategory(val: any,event:any) {
     console.log(event);
     
-    this.coreService.getFeaturegroupBySubcategoryGroup(val).subscribe(res => {
+    this.coreService.getFeaturegroupBySubcategory(val).subscribe(res => {
       console.log(res);
       this.featureGrpBysubcatGroupList = res;
       if(event){
@@ -551,6 +553,7 @@ export class EditproductComponent implements OnInit {
       this.subcatbySubCategoryGroup = res.subcategories;
     })
   }
+   
   // open feature or subact after select subcatGroup 
   oncheck(val: any) {
     // console.log(val);
@@ -563,7 +566,7 @@ export class EditproductComponent implements OnInit {
     // console.log(val);
     this.selectBrand(val);
     // this.getTaxslabBySubcategory(val);
-    // this.getHsncodeBySubcategory(val);
+    this.getHsncodeBySubcategory(val);
   }
 
   check: any;
@@ -989,6 +992,9 @@ export class EditproductComponent implements OnInit {
   }
   get sale_tax(){
     return this.productForm.get('sale_tax')
+  }
+  get hsncode(){
+    return this.productForm.get('hsncode');
   }
   getvariant_name(index: number) {
     return this.getVarinatsForm().controls[index].get('variant_name');

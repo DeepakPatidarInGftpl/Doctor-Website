@@ -324,7 +324,7 @@
                                         <div class="first-part">
                                             <h1>{{productDetail?.title}}</h1>
                                         </div>
-                                        <div class="second-part" *ngIf="sho">
+                                        <!-- <div class="second-part" *ngIf="sho">
                                             <p [innerHTML]="productDetail?.description | readMore"></p>
                                             <span *ngIf="sho && productDetail?.description?.length>100 "
                                                 (click)="hide()" class="spandes " style="color:red">Read more...</span>
@@ -332,7 +332,7 @@
                                         <div class="second-part" *ngIf="sho1">
                                             <p [innerHTML]="productDetail?.description | readLess"></p>
                                             <span *ngIf="sho1" (click)="hide1()" class="spandes " style="color:red">Read less...</span>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -361,6 +361,10 @@
                                                 <tr>
                                                     <td class="th">Brand</td>
                                                     <td class="td">{{productDetail?.brand?.title}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="th">HSN Code</td>
+                                                    <td class="td">{{productDetail?.hsncode?.hsn_code}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="th">Return Time</td>
