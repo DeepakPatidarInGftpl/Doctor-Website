@@ -379,6 +379,22 @@
 									</div>
 									<div class="col-lg-6 col-sm-6 col-12">
 										<div class="form-group">
+											<label>HSN Code</label>
+											<select class="form-select" formControlName="hsncode"
+												[ngClass]="{'is-invalid': f['hsncode'].touched && f['hsncode'].invalid}">
+												<option value="" selected disabled>Select HSN Code</option>
+												<option value="{{hsn.id}}" *ngFor="let hsn of hsnCodeBysubcatList">
+													{{hsn.hsn_code}}
+												</option>
+											</select>
+											<span class="text-danger" *ngIf="hsncode && hsncode.invalid && hsncode.touched && hsnCodeBysubcatList?.length>0">Select HSN Code
+											</span>
+											<span class="text-danger" *ngIf="subcategory && subcategory.touched && hsnCodeBysubcatList?.length<=0">HSN Code not available
+											</span>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-6 col-12">
+										<div class="form-group">
 											<label>Colors</label>
 											<div class="dropdown">
 												<button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown" aria-expanded="false">Select Color</button>
