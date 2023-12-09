@@ -83,6 +83,7 @@ export class AddproductComponent implements OnInit {
       //new field add 4-9
       sale_tax:new FormControl('',[Validators.required]),
       purchase_tax:new FormControl('',[Validators.required]),
+      hsncode:new FormControl('',),
       //end
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
@@ -326,7 +327,8 @@ export class AddproductComponent implements OnInit {
   featureGrpBysubcatGroupList: any;
   featureData: any;
   getFeaturegroupBySubcategory(val: any) {
-    this.coreService.getFeaturegroupBySubcategoryGroup(val).subscribe(res => {
+    // this.coreService.getFeaturegroupBySubcategoryGroup(val).subscribe(res => {
+      this.coreService.getFeaturegroupBySubcategory(val).subscribe(res => {
       // console.log(res);
       this.featureGrpBysubcatGroupList = res;
       // open feature form 
@@ -348,16 +350,27 @@ export class AddproductComponent implements OnInit {
     })
 
   }
+
+  hsnCodeBysubcatList: any;
+  getHsnCodeBySubcategory(val: any) {
+    this.coreService.getHsnCodeBySubcategory(val).subscribe(res => {
+      // console.log(res);
+      this.hsnCodeBysubcatList = res;
+    })
+  }
+
   // open feature or subact after select subcatGroup 
   oncheck(val: any) {
     this.getSubcategoryBySubcategoryGroup(val)
-    this.getFeaturegroupBySubcategory(val);
+    // this.getFeaturegroupBySubcategory(val); // this is based upon suncat -ankur(9-12)
     // this.getHsncodeBySubcategory(val)
   }
 
   // open hsn or taxslab or brand after select subcat
   checkSubact(val: any) {
     this.getBrandBySubcategory(val);
+    this.getFeaturegroupBySubcategory(val); 
+    this.getHsnCodeBySubcategory(val);
     // this.getTaxslabBySubcategory(val);
     // this.getHsncodeBySubcategory(val);
   }
@@ -480,6 +493,7 @@ export class AddproductComponent implements OnInit {
     formdata.append('product_or_service', this.productForm.get('product_or_service')?.value);
     formdata.append('sale_tax', this.productForm.get('sale_tax')?.value);
     formdata.append('purchase_tax', this.productForm.get('purchase_tax')?.value);
+    formdata.append('hsncode', this.productForm.get('hsncode')?.value);
     // end
 
     // nested formdata 
@@ -664,6 +678,9 @@ export class AddproductComponent implements OnInit {
     return this.productForm.get('sale_tax')
   }
 
+  get hsncode(){
+    return this.productForm.get('hsncode');
+  }
   getvariant_name(index: number) {
     return this.getVarinatsForm().controls[index].get('variant_name');
   }
