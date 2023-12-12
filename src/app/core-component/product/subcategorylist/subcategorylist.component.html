@@ -257,6 +257,38 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="col-lg-10 col-sm-10 col-12">
+      
+                                <div class="form-group">
+                                  <label>Select Feature Group*</label>
+                                  <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                      aria-expanded="false">Select Feature Group</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                    
+                                      <li><input type="text" placeholder="search feature group"
+                                        class="form-control" [(ngModel)]="searchFeatureGroup"
+                                        (ngModelChange)="filterFeatureGroupData()"
+                                        [ngModelOptions]="{standalone: true}"></li>
+                    
+                                      <li><a class="dropdown-item" *ngFor="let fGroup of filteredFeatureGroupData; let i=index">
+                                          <input type="checkbox" [value]="fGroup.id" formArrayName="feature_group" [checked]="selectedFeatureIds.includes(fGroup.id)"
+                                            (change)="onCheckFeature($event)" style="margin-right: 5px;"
+                                            [id]="'checkboxFeat-' + i">
+                    
+                                          <label [for]="'checkboxFeat-' + i" style="margin-bottom: 0;"
+                                            (click)="onLabelClick($event)">{{fGroup.title}}</label>
+                    
+                                        </a></li>
+                                    </ul>
+                                    <p *ngIf="selectedFeatureGrp>0">{{selectedFeatureGrp + ' Feature group selected'}}</p>
+                                  </div>
+                                  <span class="text-danger" *ngIf="subcategories && subcategories.invalid && subcategories.touched">Select Feature Group  </span>
+                                  <span class="text-danger" *ngIf="errormessFFG">Select Feature Group </span>
+                                </div>
+                    
+                              </div>
+                    
                             <!-- <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Brands</label>
@@ -385,6 +417,38 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="col-lg-10 col-sm-10 col-12">
+      
+                                <div class="form-group">
+                                  <label>Select Feature Group*</label>
+                                  <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown"
+                                      aria-expanded="false">Select Feature Group</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                    
+                                      <li><input type="text" placeholder="search feature group"
+                                        class="form-control" [(ngModel)]="searchFeatureGroup"
+                                        (ngModelChange)="filterFeatureGroupData()"
+                                        [ngModelOptions]="{standalone: true}"></li>
+                    
+                                      <li><a class="dropdown-item" *ngFor="let fGroup of filteredFeatureGroupData; let i=index">
+                                          <input type="checkbox" [value]="fGroup.id" formArrayName="feature_group" [checked]="selectedFeature.includes(fGroup.id)||selectedFeatureIds.includes(fGroup.id)"
+                                            (change)="onCheckFeature($event)" style="margin-right: 5px;"
+                                            [id]="'checkboxFeat-' + i">
+                    
+                                          <label [for]="'checkboxFeat-' + i" style="margin-bottom: 0;"
+                                            (click)="onLabelClick($event)">{{fGroup.title}}</label>
+                    
+                                        </a></li>
+                                    </ul>
+                                    <p *ngIf="selectedFeatureGrp>0">{{selectedFeatureGrp + ' Feature group selected'}}</p>
+                                  </div>
+                                  <span class="text-danger" *ngIf="subcategories && subcategories.invalid && subcategories.touched">Select Feature Group  </span>
+                                  <span class="text-danger" *ngIf="errormessFFG">Select Feature Group </span>
+                                </div>
+                    
+                              </div>
+                    
                             <!-- <div class="col-lg-10 col-sm-10 col-12">
                             <div class="form-group">
                                 <label>Brand</label>
