@@ -165,6 +165,7 @@ export class SubcategorylistComponent implements OnInit {
       category_id: new FormControl('', [Validators.required]),
       // discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/), Validators.required]),
       // brand_id: new FormArray([],)
+      feature_group: new FormArray([]),
     })
 
     // this.coreService.getProductSubcategory();
@@ -181,7 +182,8 @@ export class SubcategorylistComponent implements OnInit {
     })
 
     this.productCategory();
-    this.getbrand()
+    this.getbrand();
+    this.getFeatureGroup();
     // localstorege used permission
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
@@ -375,9 +377,79 @@ export class SubcategorylistComponent implements OnInit {
   //   }
   // }
 
+  filteredFeatureGroupData: any[];
+  searchFeatureGroup: string = '';
+  featureGroup: any[] = []
+  getFeatureGroup() { 
+    this.coreService.getFeatureGroup().subscribe((res: any) => {
+      this.featureGroup = res
+      this.filteredFeatureGroupData = this.featureGroup.slice();
+      // console.log(this.filteredFeatureGroupData);
+      this.filterFeatureGroupData();
+      if(this.id){
+        this.featureGroup = res
+        this.filteredFeatureGroupData = this.featureGroup.slice();
+        // console.log(this.filteredFeatureGroupData);
+        this.filterFeatureGroupData();
+  
+        // update then display
+  
+        this.featureGroup.map((map: any) => {
+          // console.log(this.selectedFeature);
+  
+          this.selectedFeatureGrp = this.selectedFeature.length
+          // console.log(this.selectedFeatureGrp);
+          if (this.selectedFeature.includes(map.id)) {
+            // console.log(map.id);
+            const formArray = this.subcategoryForm.get('feature_group') as FormArray;
+            formArray.push(new FormControl(map.id));
+          }
+        })
+      }
+    })
+  }
+  filterFeatureGroupData() {
+    let filteredData = this.featureGroup.slice();
+    if (this.searchFeatureGroup) {
+      const searchTerm = this.searchFeatureGroup.toLowerCase();
+      filteredData = filteredData.filter((item) => {
+        const aliasLower = item?.title.toLowerCase();
+        return aliasLower.includes(searchTerm);
+      });
+    }
+    this.filteredFeatureGroupData = filteredData;
+  }
+
+  arrayFeatutreGroup = [];
+  selectedFeatureGrp = 0;
+  selectedFeatureIds: any[] = []
+  onCheckFeature(event: any) {
+    const formArray: any = this.subcategoryForm.get('feature_group') as FormArray;
+    /* Selected */
+    if (event.target.checked) {
+      formArray.push(new FormControl(parseInt(event.target.value)));
+      this.selectedFeatureGrp++;
+      this.selectedFeatureIds = formArray.value
+    }
+    /* unselected */
+    else {
+      // find the unselected element
+      let i: number = 0;
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          this.selectedFeatureGrp--;
+          return;
+        }
+        i++;
+      });
+    }
+  }
+
   loader = false
   submit() {
-    // console.log(this.subcategoryForm.value);
+    console.log(this.subcategoryForm.value);
     // console.log(this.id);
     // console.log(this.check);
     // console.log(this.subcategoryForm.get('brand_id')?.value);
@@ -388,6 +460,7 @@ export class SubcategorylistComponent implements OnInit {
     formdata.append('image', this.subcategoryForm.get('image')?.value);
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
     // formdata.append('discount', this.subcategoryForm.get('discount')?.value);
+    formdata.append('feature_group', JSON.stringify(this.subcategoryForm.get('feature_group')?.value));
 
 
     if (this.subcategoryForm.valid) {
@@ -414,7 +487,7 @@ export class SubcategorylistComponent implements OnInit {
   }
   imgError = false;
   update() {
-    // console.log(this.subcategoryForm.value);
+    console.log(this.subcategoryForm.value);
 
     var formdata: any = new FormData()
 
@@ -422,6 +495,7 @@ export class SubcategorylistComponent implements OnInit {
     // formdata.append('image', this.subcategoryForm.get('image')?.value);
     formdata.append('category_id', this.subcategoryForm.get('category_id')?.value);
     // formdata.append('discount', this.subcategoryForm.get('discount')?.value);
+    formdata.append('feature_group', JSON.stringify(this.subcategoryForm.get('feature_group')?.value));
 
     if (this.subcategoryForm.valid) {
       this.loader = true;
@@ -504,6 +578,7 @@ export class SubcategorylistComponent implements OnInit {
   brandEdit: any;
   brands: any = [];
   updateData: any;
+  selectedFeature = [];
   editForm(id: number) {
     this.id = id
     this.coreService.getProductSubcategoryById(id).subscribe(res => {
@@ -525,6 +600,7 @@ export class SubcategorylistComponent implements OnInit {
           // discount: res?.discount,
           // image: res.image,
         });
+        this.selectedFeature = res?.feature_group?.map(res => res.id);
       }
     })
 
@@ -689,5 +765,10 @@ export class SubcategorylistComponent implements OnInit {
 
     // Restore the original content of the body
     document.body.innerHTML = originalContents;
+  }
+
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
   }
 }

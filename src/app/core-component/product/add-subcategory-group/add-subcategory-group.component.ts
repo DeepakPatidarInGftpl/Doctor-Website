@@ -22,7 +22,7 @@ export class AddSubcategoryGroupComponent implements OnInit {
       title: new FormControl('', Validators.required),
       category: new FormControl('', Validators.required),
       subcategories: new FormArray([]),
-      feature_group: new FormArray([]),
+      // feature_group: new FormArray([]),
       image: new FormControl('')
     })
     this.getCategory()
@@ -97,9 +97,6 @@ export class AddSubcategoryGroupComponent implements OnInit {
     this.subCategoryGroupForm.get('image')?.updateValueAndValidity();
   }
 
-
-
-
   selectedSubcat = 0;
   selectedSubCategoryIds: any[] = []
   onCheckChange(event: any) {
@@ -166,7 +163,7 @@ export class AddSubcategoryGroupComponent implements OnInit {
       formdata.append("category", this.subCategoryGroupForm.controls['category'].value);
       formdata.append("image", this.subCategoryGroupForm.controls['image'].value);
       formdata.append('subcategories', JSON.stringify(this.subCategoryGroupForm.get('subcategories')?.value));
-      formdata.append('feature_group', JSON.stringify(this.subCategoryGroupForm.get('feature_group')?.value));
+      // formdata.append('feature_group', JSON.stringify(this.subCategoryGroupForm.get('feature_group')?.value));
 
       this.coreService.postCategoriesGroup(formdata).subscribe((res: any) => {
         if (res.success) {

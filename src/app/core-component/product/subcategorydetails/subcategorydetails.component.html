@@ -41,6 +41,25 @@
                                 class="badges">{{subcatDetails?.is_active}}</span>
                             </div>
                         </mat-tab>
+                        <mat-tab label="Feature Group">
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12" >
+                                    <div class="card" >
+                                        <div class="card-body" >
+                                            <div class="productdetails">                  
+                                                <ul class="product-bar" *ngFor="let featureG of subcatDetails?.feature_group">
+                                                    <li>
+                                                        <h4 class="h4">Title</h4>
+                                                        <h6>{{featureG?.title}}</h6>
+                                                    </li>
+                                                   
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                              </div>
+                        </mat-tab>
                         <mat-tab label="Logs" *ngIf="subcatDetails?.logs?.length>0">
                             <div class="card">
                                  <div class="card-body">

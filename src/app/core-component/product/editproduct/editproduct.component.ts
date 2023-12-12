@@ -135,7 +135,7 @@ export class EditproductComponent implements OnInit {
           subcategory_group: res?.subcategory_group?.id,
           subcategory: res?.subcategory?.id,
           brand: res.brand?.id,
-          hsncode:res.id,
+          hsncode:res.hsncode?.id,
           unit: res.unit.id,
           // sale_tax_including: res.sale_tax_including,
           return_time:res?.return_time,

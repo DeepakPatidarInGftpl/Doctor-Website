@@ -556,7 +556,7 @@ this.getFeatureGroup()
     }
   }
   key = 'title'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
