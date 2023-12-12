@@ -30,7 +30,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
       title: new FormControl('', Validators.required),
       category: new FormControl('', Validators.required),
       subcategories: new FormArray([]),
-      feature_group: new FormArray([]),
+      // feature_group: new FormArray([]),
       image: new FormControl('')
     })
     this.getCategory()
@@ -45,9 +45,9 @@ export class EditSubcategoryGroupComponent implements OnInit {
       this.subCategoryGroupForm.get('category').patchValue(res?.category?.id);
       this.getSubcategoryByCategory(res?.category?.id);
       this.selectedSubCats = res?.subcategories?.map(res => res.id);
-      this.selectedFeature = res?.feature_group?.map(res => res.id);
+      // this.selectedFeature = res?.feature_group?.map(res => res.id);
       // console.log(this.selectedFeature);
-      this.getFeatureGroup()
+      // this.getFeatureGroup()
     })
   }
   categories: any;
@@ -215,7 +215,7 @@ export class EditSubcategoryGroupComponent implements OnInit {
       formdata.append("category", this.subCategoryGroupForm.controls['category'].value);
       // formdata.append("image", this.subCategoryGroupForm.controls['image'].value);
       formdata.append('subcategories', JSON.stringify(this.subCategoryGroupForm.get('subcategories')?.value));
-      formdata.append('feature_group', JSON.stringify(this.subCategoryGroupForm.get('feature_group')?.value));
+      // formdata.append('feature_group', JSON.stringify(this.subCategoryGroupForm.get('feature_group')?.value));
 
 
       const imageFile = this.subCategoryGroupForm.get('image')?.value;
