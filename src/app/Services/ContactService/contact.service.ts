@@ -303,4 +303,30 @@ export class ContactService {
     let url = this.apiUrl + '/pv-api/voucher-type/';
     return this.http.get(url)
   }
+
+// department
+  getDepartment() {
+    let url = this.apiUrl + '/pv-api/department/';
+    return this.http.get(url)
+  }
+  getDepartmentById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/department/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  DepartmentIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/department/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addDepartment(data:any) {
+    let url = this.apiUrl + '/pv-api/department/';
+    return this.http.post(url, data)
+  }
+  updateDepartment(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/department/?id=';
+    return this.http.put(`${url}${id}`,data)
+  }
+  deleteDepartment(id: number) {
+    let url = this.apiUrl + '/pv-api/department/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
 }

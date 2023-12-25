@@ -33,22 +33,27 @@ export class AddEmployeeComponent implements OnInit {
       credit_limit: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
-      commision: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      // commision: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       wages: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      extra_wages: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      target: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      // extra_wages: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      // target: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       username: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
       role: new FormControl(''),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type: new FormControl('', [Validators.required]),
       // permissions:new FormArray([],),
+      branch:new FormControl(''),
+      date_of_joining:new FormControl(''),
+      department:new FormControl('')
     })
     this.addAddress();
     this.addBank();
     this.getCountry();
     this.getPermission();
     this.getGroup();
+    this.getBranch();
+    this.getDepartment();
   }
 
   groupList: any
@@ -58,6 +63,19 @@ export class AddEmployeeComponent implements OnInit {
       this.groupList = res
     })
   }
+  branchList:any;
+  getBranch(){
+    this.contactService.getBranch().subscribe((res:any)=>{
+      this.branchList=res;
+    })
+  }
+  departmentList:any;
+  getDepartment(){
+    this.contactService.getDepartment().subscribe((res:any)=>{
+      this.departmentList=res;
+    })
+  }
+  
   addressAdd(): FormGroup {
     return this.fb.group({
       address_line_1: (''),
@@ -176,7 +194,7 @@ export class AddEmployeeComponent implements OnInit {
   userError:any;
   mobileError:any;
   submit() {
-    // console.log(this.employeeForm.value);
+    console.log(this.employeeForm.value);
     let formdata: any = new FormData();
     formdata.append('login_access', this.employeeForm.get('login_access')?.value);
     formdata.append('name', this.employeeForm.get('name')?.value);
@@ -190,11 +208,11 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('pan_no', this.employeeForm.get('pan_no')?.value);
     formdata.append('credit_limit', this.employeeForm.get('credit_limit')?.value);
 
-    formdata.append('commision', this.employeeForm.get('commision')?.value);
+    // formdata.append('commision', this.employeeForm.get('commision')?.value);
     formdata.append('wages', this.employeeForm.get('wages')?.value);
-    formdata.append('extra_wages', this.employeeForm.get('extra_wages')?.value);
+    // formdata.append('extra_wages', this.employeeForm.get('extra_wages')?.value);
 
-    formdata.append('target', this.employeeForm.get('target')?.value);
+    // formdata.append('target', this.employeeForm.get('target')?.value);
     formdata.append('username', this.employeeForm.get('username')?.value);
     formdata.append('password', this.employeeForm.get('password')?.value);
     formdata.append('role', this.employeeForm.get('role')?.value);
@@ -202,6 +220,9 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('opening_balance', this.employeeForm.get('opening_balance')?.value);
     formdata.append('opening_balance_type', this.employeeForm.get('opening_balance_type')?.value);
     // formdata.append('permissions', JSON.stringify(this.employeeForm.get('permissions')?.value));
+    formdata.append('branch', this.employeeForm.get('branch')?.value);
+    formdata.append('date_of_joining', this.employeeForm.get('date_of_joining')?.value);
+    formdata.append('department', this.employeeForm.get('department')?.value);
 
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
@@ -279,7 +300,7 @@ export class AddEmployeeComponent implements OnInit {
     }
     else {
       this.loader = false;
-      this.employeeForm.markAllAsTouched()
+      this.employeeForm.markAllAsTouched();
       // console.log('hhhhhh');
       this.toastr.error('Please Fill All The Required Fields')
     }
@@ -328,6 +349,15 @@ export class AddEmployeeComponent implements OnInit {
   get payment_terms() {
     return this.employeeForm.get('payment_terms')
   }
+  get date_of_joining(){
+    return this.employeeForm.get('date_of_joining')
+  }
+  get branch(){
+    return this.employeeForm.get('branch')
+  }
+  get department(){
+    return this.employeeForm.get('department')
+  }
   get apply_tds() {
     return this.employeeForm.get('apply_tds')
   }
@@ -355,8 +385,7 @@ export class AddEmployeeComponent implements OnInit {
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
   }
-
-
+ 
   // nested bank error
 
   getBankHolderName(index: number) {
