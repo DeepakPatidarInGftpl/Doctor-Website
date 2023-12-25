@@ -64,7 +64,14 @@
                         <span class="text-danger" *ngIf="anniversary && anniversary.invalid && anniversary.touched">Date (format:dd/mm/yyyy)</span>
                     </div>
                 </div>
-
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Date of Joining</label>
+                        <input type="date" formControlName="date_of_joining" id="date_of_joining" [ngClass]="{'is-invalid': f['date_of_joining'].touched && f['date_of_joining'].invalid}">
+                        <span class="text-danger" *ngIf="dateError">{{dateError}}</span>
+                        <span class="text-danger" *ngIf="date_of_joining && date_of_joining.invalid && date_of_joining.touched">Date (format:dd/mm/yyyy)</span>
+                    </div>
+                </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Pan Number</label>
@@ -261,8 +268,29 @@
                       </div>
                     </div>
                   </div>
-                  
+                  <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Select branch</label>
+                        <select formControlName="branch" id="branch" [ngClass]="{
+                        'is-invalid': f['branch'].touched && f['branch'].invalid}">
+                            <option value="" selected disabled>Select Branch</option>
+                            <option value="{{branch.id}}" *ngFor="let branch of branchList">{{branch.gstin}}</option>
+                        </select>
+                        <span class="text-danger" *ngIf="branch && branch.invalid && branch.touched">Select Branch</span>
+                    </div>
+                </div>
                 <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Select Department</label>
+                        <select formControlName="department" id="department" [ngClass]="{
+                        'is-invalid': f['department'].touched && f['department'].invalid}">
+                            <option value="" selected disabled>Select Department</option>
+                            <option value="{{department.id}}" *ngFor="let department of departmentList">{{department.title}}</option>
+                        </select>
+                        <span class="text-danger" *ngIf="department && department.invalid && department.touched">Select department</span>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Commision</label>
                         <input type="text" formControlName="commision" id="commision" placeholder="Enter Commision"
@@ -270,7 +298,7 @@
                         <span class="text-danger" *ngIf="commision && commision.invalid && commision.touched">Enter your
                             Commision value (ex-123)</span>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Wages</label>
@@ -280,7 +308,7 @@
                             value (ex-123)</span>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-3 col-12">
+                <!-- <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Extra Wages</label>
                         <input type="text" formControlName="extra_wages" id="extra_wages" placeholder="Enter Extra Wages"
@@ -298,7 +326,7 @@
                         <span class="text-danger" *ngIf="target && target.invalid && target.touched">Enter Valid Target
                             value (ex-123)</span>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>UserName*</label>

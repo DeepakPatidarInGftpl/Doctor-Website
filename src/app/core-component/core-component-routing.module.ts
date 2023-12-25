@@ -59,16 +59,16 @@ const routes: Routes = [
       //   loadChildren: () =>
       //     import('./quotation/quotation.module').then((m) => m.QuotationModule),
       // },
-      {
-        path: 'transfer',
-        loadChildren: () =>
-          import('./transfer/transfer.module').then((m) => m.TransferModule),
-      },
-      {
-        path: 'return',
-        loadChildren: () =>
-          import('./return/return.module').then((m) => m.ReturnModule),
-      },
+      // {
+      //   path: 'transfer',
+      //   loadChildren: () =>
+      //     import('./transfer/transfer.module').then((m) => m.TransferModule),
+      // },
+      // {
+      //   path: 'return',
+      //   loadChildren: () =>
+      //     import('./return/return.module').then((m) => m.ReturnModule),
+      // },
       {
         path: 'people',
         loadChildren: () =>
@@ -112,16 +112,16 @@ const routes: Routes = [
             (m) => m.ApplicationModule
           ),
       },
-      {
-        path: 'report',
-        loadChildren: () =>
-          import('./report/report.module').then((m) => m.ReportModule),
-      },
-      {
-        path: 'users',
-        loadChildren: () =>
-          import('./users/users.module').then((m) => m.UsersModule),
-      },
+      // {
+      //   path: 'report',
+      //   loadChildren: () =>
+      //     import('./report/report.module').then((m) => m.ReportModule),
+      // },
+      // {
+      //   path: 'users',
+      //   loadChildren: () =>
+      //     import('./users/users.module').then((m) => m.UsersModule),
+      // },
       {
         path: 'settings',
         loadChildren: () =>
@@ -132,11 +132,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('./profile/profile.module').then((m) => m.ProfileModule),
       },
-
-      {path: 'activities',loadChildren: () =>import('./activities/activities.module').then((m) => m.ActivitiesModule),},
-
-
-      
+      // {path: 'activities',loadChildren: () =>import('./activities/activities.module').then((m) => m.ActivitiesModule),}, 
       {path:'website',loadChildren:()=>import('./website/website.module').then((m)=>m.WebsiteModule)},
       {path:'contacts',loadChildren:()=>import('./contacts/contacts.module').then((m)=>m.ContactsModule)},
       {path:'masters',loadChildren:()=>import('./master/master.module').then((m)=>m.MasterModule)},
