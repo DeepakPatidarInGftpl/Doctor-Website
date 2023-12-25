@@ -43,35 +43,42 @@ export class UpdateEmployeeComponent implements OnInit {
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
 
-      commision: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      // commision: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
-      extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
-      target: new FormControl('',Validators.pattern(/^[0-9]*$/)),
+      // extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      // target: new FormControl('',Validators.pattern(/^[0-9]*$/)),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type: new FormControl('', [Validators.required]),
       // username: new FormControl(''),
       // password: new FormControl(''),
       // permission_group: new FormControl('')
+      branch:new FormControl(''),
+      date_of_joining:new FormControl(''),
+      department:new FormControl('')
     });
 
     this.contactService.getEmployeeById(this.id).subscribe(res => {
       this.getRes = res;
       this.employeeForm.patchValue(this.getRes);
-      this.employeeForm.get('commision')?.patchValue(this.getRes?.commision == undefined ? '' : this.getRes?.commision)
+      // this.employeeForm.get('commision')?.patchValue(this.getRes?.commision == undefined ? '' : this.getRes?.commision)
       this.employeeForm.get('dob')?.patchValue(this.getRes?.dob == null ? '' : this.getRes?.dob)
       this.employeeForm.get('anniversary')?.patchValue(this.getRes?.anniversary == null ? '' : this.getRes?.anniversary)
       this.employeeForm.get('credit_limit')?.patchValue(this.getRes?.credit_limit == null ? '' : this.getRes?.credit_limit)
-      this.employeeForm.get('extra_wages')?.patchValue(this.getRes?.extra_wages == null ? '' : this.getRes?.extra_wages)
-      this.employeeForm.get('target')?.patchValue(this.getRes?.target == null ? '' : this.getRes?.target)
+      // this.employeeForm.get('extra_wages')?.patchValue(this.getRes?.extra_wages == null ? '' : this.getRes?.extra_wages)
+      // this.employeeForm.get('target')?.patchValue(this.getRes?.target == null ? '' : this.getRes?.target)
       this.employeeForm.get('wages')?.patchValue(this.getRes?.wages == null ? '' : this.getRes?.wages)
-     
       this.employeeForm.setControl('address', this.updateAddress(this.getRes.address));
       this.employeeForm.setControl('bank_id', this.udateBank(this.getRes.bank_id));
+
+      this.employeeForm.setControl('branch', this.udateBank(this.getRes.branch?.id));
+      this.employeeForm.setControl('department', this.udateBank(this.getRes.department?.id));
     })
 
     this.addAddress()
     this.addBank()
     this.getCountry();
+    this.getBranch();
+    this.getDepartment();
   }
 
    // updated data
@@ -177,6 +184,18 @@ export class UpdateEmployeeComponent implements OnInit {
     this.getBanks().removeAt(i)
   }
 
+  branchList:any;
+  getBranch(){
+    this.contactService.getBranch().subscribe((res:any)=>{
+      this.branchList=res;
+    })
+  }
+  departmentList:any;
+  getDepartment(){
+    this.contactService.getDepartment().subscribe((res:any)=>{
+      this.departmentList=res;
+    })
+  }
   dateError = null
   addRes: any;
   country: any[] = [];
@@ -254,17 +273,19 @@ mobileError:any;
     formdata.append('pan_no', this.employeeForm.get('pan_no')?.value);
     formdata.append('credit_limit', this.employeeForm.get('credit_limit')?.value);
 
-    formdata.append('commision', this.employeeForm.get('commision')?.value);
+    // formdata.append('commision', this.employeeForm.get('commision')?.value);
     formdata.append('wages', this.employeeForm.get('wages')?.value);
-    formdata.append('extra_wages', this.employeeForm.get('extra_wages')?.value);
+    // formdata.append('extra_wages', this.employeeForm.get('extra_wages')?.value);
 
-    formdata.append('target', this.employeeForm.get('target')?.value);
+    // formdata.append('target', this.employeeForm.get('target')?.value);
     formdata.append('opening_balance', this.employeeForm.get('opening_balance')?.value);
     formdata.append('opening_balance_type', this.employeeForm.get('opening_balance_type')?.value);
     // formdata.append('username', this.employeeForm.get('username')?.value);
     // formdata.append('password', this.employeeForm.get('password')?.value);
     // formdata.append('role', this.employeeForm.get('role')?.value);
-
+    formdata.append('branch', this.employeeForm.get('branch')?.value);
+    formdata.append('date_of_joining', this.employeeForm.get('date_of_joining')?.value);
+    formdata.append('department', this.employeeForm.get('department')?.value);
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];
@@ -355,18 +376,18 @@ mobileError:any;
   get name() {
     return this.employeeForm.get('name')
   }
-  get target() {
-    return this.employeeForm.get('target')
-  }
+  // get target() {
+  //   return this.employeeForm.get('target')
+  // }
   get dob() {
     return this.employeeForm.get('date_of_birth');
   }
   get mobile() {
     return this.employeeForm.get('mobile_no');
   }
-  get extra_wages() {
-    return this.employeeForm.get('extra_wages');
-  }
+  // get extra_wages() {
+  //   return this.employeeForm.get('extra_wages');
+  // }
   get whatsapp_no() {
     return this.employeeForm.get('whatsapp_no')
   }
@@ -376,10 +397,18 @@ mobileError:any;
   get wages() {
     return this.employeeForm.get('wages');
   }
-  get commision() {
-    return this.employeeForm.get('commision')
+  // get commision() {
+  //   return this.employeeForm.get('commision')
+  // }
+  get date_of_joining(){
+    return this.employeeForm.get('date_of_joining')
   }
-
+  get branch(){
+    return this.employeeForm.get('branch')
+  }
+  get department(){
+    return this.employeeForm.get('department')
+  }
   get address() {
     return this.employeeForm.get('address')
   }
