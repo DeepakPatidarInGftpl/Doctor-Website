@@ -40,7 +40,8 @@ export class AddPaymentVoucherComponent implements OnInit {
     this.debitNoteControl = new FormArray([]);
 
     this.paymentVoucherForm = this.fb.group({
-      receipt_type: new FormControl('Cash'),
+      // receipt_type: new FormControl('Cash'),
+      payment_type: new FormControl('Cash'),
       supplier: new FormControl('', [Validators.required]),
       payment_account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate,),
@@ -52,7 +53,8 @@ export class AddPaymentVoucherComponent implements OnInit {
     })
 
     this.paymentVoucherBankForm = this.fb.group({
-      receipt_type: new FormControl('Bank'),
+      // receipt_type: new FormControl('Bank'),
+      payment_type: new FormControl('Bank'),
       supplier: new FormControl('', [Validators.required]),
       payment_account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate),
@@ -408,7 +410,7 @@ export class AddPaymentVoucherComponent implements OnInit {
     console.log(this.paymentVoucherForm.value);
     if (this.paymentVoucherForm.valid) {
       const formdata = new FormData();
-      formdata.append('receipt_type', this.paymentVoucherForm.get('receipt_type')?.value);
+      formdata.append('payment_type', this.paymentVoucherForm.get('payment_type')?.value);
       formdata.append('supplier', this.paymentVoucherForm.get('supplier')?.value);
       formdata.append('date', this.paymentVoucherForm.get('date')?.value);
       formdata.append('payment_voucher_no', this.paymentVoucherForm.get('payment_voucher_no')?.value);
@@ -490,7 +492,7 @@ export class AddPaymentVoucherComponent implements OnInit {
     if (this.paymentVoucherBankForm.valid) {
       const formdata = new FormData();
 
-      formdata.append('receipt_type', this.paymentVoucherBankForm.get('receipt_type')?.value);
+      formdata.append('payment_type', this.paymentVoucherBankForm.get('payment_type')?.value);
       formdata.append('supplier', this.paymentVoucherBankForm.get('supplier')?.value);
       formdata.append('date', this.paymentVoucherBankForm.get('date')?.value);
       formdata.append('payment_voucher_no', this.paymentVoucherBankForm.get('payment_voucher_no')?.value);

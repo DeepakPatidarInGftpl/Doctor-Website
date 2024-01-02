@@ -72,6 +72,8 @@ export class AddSaleBillComponent implements OnInit {
       note: new FormControl(''),
       additional_charges: new FormControl(0),
       additional_charge: this.fb.array([]),
+      // 2-1
+      sales_man:new FormControl('',[Validators.required])
     });
 
     this.searchForm = this.fb.group({
@@ -89,6 +91,7 @@ export class AddSaleBillComponent implements OnInit {
     this.getCategory();
     this.getPaymentTerms();
     this.getSaleOrder();
+    this.getEmployee();
     this.getprefix();
     this.addAdditionalCharge();
     this.getAdditionalDiscount();
@@ -114,7 +117,12 @@ export class AddSaleBillComponent implements OnInit {
       this.saleOderList = res;
     })
   }
-
+  employeeList: any;
+  getEmployee() {
+    this.contactService.getEmployee().subscribe((res: any) => {
+      this.employeeList = res;
+    })
+  }
   saleEstimateList: any
   getSaleEstimate() {
     this.saleService.getSalesEstimate().subscribe(res => {
@@ -858,6 +866,8 @@ export class AddSaleBillComponent implements OnInit {
       formdata.append('subtotal', this.saleBillForm.get('subtotal')?.value);
       formdata.append('total', this.saleBillForm.get('total')?.value);
       formdata.append('additional_charges', this.saleBillForm.get('additional_charges')?.value);
+      //2-1
+      formdata.append('sales_man',this.saleBillForm.get('sales_man')?.value);
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -878,8 +888,6 @@ export class AddSaleBillComponent implements OnInit {
         cartData.push(cartObject);
       });
       formdata.append('sale_bill_cart', JSON.stringify(cartData));
-
-
       this.saleService.addSalesBill(formdata).subscribe(res => {
         // console.log(res);
         this.getRes = res;
@@ -961,6 +969,9 @@ export class AddSaleBillComponent implements OnInit {
   }
   get sale_order() {
     return this.saleBillForm.get('sale_order')
+  }
+  get sales_man(){
+    return this.saleBillForm.get('sales_man')
   }
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');

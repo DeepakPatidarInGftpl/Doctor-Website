@@ -54,7 +54,10 @@ export class UpdateEmployeeComponent implements OnInit {
       // permission_group: new FormControl('')
       branch:new FormControl(''),
       date_of_joining:new FormControl(''),
-      department:new FormControl('')
+      department:new FormControl('',[Validators.required]),
+      //2-1 
+      incentive:new FormControl(''),
+      is_sales_head:new FormControl('',[Validators.required]),
     });
 
     this.contactService.getEmployeeById(this.id).subscribe(res => {
@@ -69,9 +72,9 @@ export class UpdateEmployeeComponent implements OnInit {
       this.employeeForm.get('wages')?.patchValue(this.getRes?.wages == null ? '' : this.getRes?.wages)
       this.employeeForm.setControl('address', this.updateAddress(this.getRes.address));
       this.employeeForm.setControl('bank_id', this.udateBank(this.getRes.bank_id));
-
-      this.employeeForm.setControl('branch', this.udateBank(this.getRes.branch?.id));
-      this.employeeForm.setControl('department', this.udateBank(this.getRes.department?.id));
+//2-1
+      this.employeeForm.get('branch')?.patchValue(res?.branch?.id);
+      this.employeeForm.get('department')?.patchValue(res?.department?.id);
     })
 
     this.addAddress()
@@ -286,6 +289,9 @@ mobileError:any;
     formdata.append('branch', this.employeeForm.get('branch')?.value);
     formdata.append('date_of_joining', this.employeeForm.get('date_of_joining')?.value);
     formdata.append('department', this.employeeForm.get('department')?.value);
+    //2-1
+      formdata.append('is_sales_head', this.employeeForm.get('is_sales_head')?.value);
+      formdata.append('incentive', this.employeeForm.get('incentive')?.value);
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];

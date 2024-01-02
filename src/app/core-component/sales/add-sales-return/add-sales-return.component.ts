@@ -66,6 +66,8 @@ export class AddSalesReturnComponent implements OnInit {
       total: new FormControl(''),
       status: new FormControl(''),
       note: new FormControl(''),
+      //2-1
+      return_date:new FormControl('',[Validators.required])
     });
 
     this.searchForm = this.fb.group({
@@ -833,6 +835,8 @@ export class AddSalesReturnComponent implements OnInit {
       formdata.append('roundoff', this.saleReturnForm.get('roundoff')?.value);
       formdata.append('subtotal', this.saleReturnForm.get('subtotal')?.value);
       formdata.append('total', this.saleReturnForm.get('total')?.value);
+        // 22-1
+        formdata.append('return_date', this.saleReturnForm.get('return_date')?.value)
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -929,6 +933,10 @@ export class AddSalesReturnComponent implements OnInit {
   }
   get sale_bill() {
     return this.saleReturnForm.get('sale_bill')
+  }
+  //2-1
+  get return_date(){
+    return this.saleReturnForm.get('return_date')
   }
   deductiont(index: number) {
     return this.getCart().controls[index].get('deduction');
