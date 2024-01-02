@@ -1,6 +1,291 @@
+<!-- <mat-form-field class="example-form-field">
+    <mat-date-range-input
+      [formGroup]="campaignOne"
+      [rangePicker]="campaignOnePicker"
+      [comparisonStart]="campaignOne.value.start"
+      [comparisonEnd]="campaignOne.value.end">
+      <input matStartDate placeholder="Start date" formControlName="start">
+      <input matEndDate placeholder="End date" formControlName="end">
+    </mat-date-range-input>
+    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+    <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+  </mat-form-field> -->
+
+<div class="border" style="width: 20%;">
+    <mat-form-field class="example-form-field">
+        <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                (dateChange)="getSelectedDates()">
+            <span class="mat-input-placeholder-wrapper">
+                <span class="mat-input-placeholder">to</span>
+            </span>
+            <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                (dateChange)="getSelectedDates()">
+        </mat-date-range-input>
+
+        <mat-select class="mt-2" placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value,'sale')">
+            <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+        </mat-select>
+        <mat-datepicker-toggle matSuffix [for]="campaignOnePicker" style=" font-size: x-large;"></mat-datepicker-toggle>
+        <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+    </mat-form-field>
+</div>
 
 
+<div class="card">
+    <div class="card-body">
+        <div class="row" *ngIf="saleTotalList">
+            <ng-container>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_sale_order}}</h4>
+                            <h5>Total Sales</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_sale_bill}}</h4>
+                            <h5>Total Invoice</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_sale_bill_sold_quantity}}</h4>
+                            <h5>Sold QTY</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_customers}}</h4>
+                            <h5>Total Customers</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.to_receive}}</h4>
+                            <h5>To Receive</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_sale_return}}</h4>
+                            <h5>Total Sale Return</h5>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das1">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_purchase_order}}</h4>
+                            <h5>Total Purchase</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das1">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_purchase_bill}}</h4>
+                            <h5>Total Bills</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das1">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_purchase_bill_quantity}}</h4>
+                            <h5>Purchase QTY</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das1">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_party}}</h4>
+                            <h5>Total Party</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das1">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.to_pay}}</h4>
+                            <h5>To Pay</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das1">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_purchase_return}}</h4>
+                            <h5>Total Purchase Return</h5>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das2">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_paid}}</h4>
+                            <h5>Total Paid</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das2">
+                        <div class="dash-counts">
+                            <h4>100</h4>
+                            <h5>Total Expence(static data)</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das2">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_products}}</h4>
+                            <h5>Total Products</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das2">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_stock_quantity}}</h4>
+                            <h5>Stock QTY</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das2">
+                        <div class="dash-counts">
+                            <h4>{{saleTotalList?.total_stock_value}}</h4>
+                            <h5>Stock Value</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das2">
+                        <div class="dash-counts">
+                            <h4>100</h4>
+                            <h5>Cash in hand(static)</h5>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- <ng-container>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das3">
+                        <div class="dash-counts">
+                            <h4>105</h4>
+                            <h5>Sales Invoice</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das3">
+                        <div class="dash-counts">
+                            <h4>105</h4>
+                            <h5>Sales Invoice</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das3">
+                        <div class="dash-counts">
+                            <h4>105</h4>
+                            <h5>Sales Invoice</h5>
+                        </div>
+                    </div>
+                </div>
+            </ng-container> -->
+        </div>
         <div class="row">
+            <div class="col-lg-6 col-sm-12 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Purchase & Sales</h5>
+                        <!-- <div class="graph-sets">
+                            <ul>
+                                <li>
+                                    <span>Sales</span>
+                                </li>
+                                <li>
+                                    <span>Purchase</span>
+                                </li>
+                            </ul>
+                        </div> -->
+                        <div class="border" style="width: 40%;">
+                            <mat-form-field class="example-form-field">
+                                <mat-date-range-input [formGroup]="salevsPurchaseForm" [rangePicker]="salevsPurchasePicker">
+                                    <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                                        (dateChange)="getSelectedSalePurchaseDates()">
+                                    <span class="mat-input-placeholder-wrapper">
+                                        <span class="mat-input-placeholder">to</span>
+                                    </span>
+                                    <input matEndDate placeholder="End date" formControlName="end" class="mat-input" (dateChange)="getSelectedSalePurchaseDates()">
+                                </mat-date-range-input>
+                                <mat-select class="mt-2" placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value,'salevspurchase')">
+                                    <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                                </mat-select>
+                                <mat-datepicker-toggle matSuffix [for]="salevsPurchasePicker" style=" font-size: x-large;"></mat-datepicker-toggle>
+                                <mat-date-range-picker #salevsPurchasePicker></mat-date-range-picker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas class="barchart" baseChart [datasets]="barChartData" [labels]="barChartLabels"
+                            [options]="barChartOptions" [legend]="barChartLegend">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-lg-6 col-sm-12 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Transaction</h5>
+                       <div class="border" style="width: 40%;">
+                            <mat-form-field class="example-form-field">
+                                <mat-date-range-input [formGroup]="transactionForm" [rangePicker]="transactionPicker">
+                                    <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                                        (dateChange)="getSelectedTransactionDates()">
+                                    <span class="mat-input-placeholder-wrapper">
+                                        <span class="mat-input-placeholder">to</span>
+                                    </span>
+                                    <input matEndDate placeholder="End date" formControlName="end" class="mat-input" (dateChange)="getSelectedTransactionDates()">
+                                </mat-date-range-input>
+                                <mat-select class="mt-2" placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value,'transaction')">
+                                    <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                                </mat-select>
+                                <mat-datepicker-toggle matSuffix [for]="transactionPicker" style=" font-size: x-large;"></mat-datepicker-toggle>
+                                <mat-date-range-picker #transactionPicker></mat-date-range-picker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas class="barchart" baseChart [datasets]="transactionBarChartData" [labels]="transactionBarChartLabels"
+                            [options]="transactionBarChartOptions" [legend]="transactionBarChartLegend">
+                        </canvas>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <!-- <div class="row">
             <div class="col-lg-3 col-sm-6 col-12">
                 <div class="dash-widget">
                     <div class="dash-widgetimg">
@@ -90,8 +375,6 @@
                 </div>
             </div>
         </div>
-        <!-- Button trigger modal -->
-
         <div class="row">
             <div class="col-lg-7 col-sm-12 col-12 d-flex">
                 <div class="card flex-fill">
@@ -209,5 +492,4 @@
             </table>
         </div>
     </div>
-</div>
-
+</div>  -->

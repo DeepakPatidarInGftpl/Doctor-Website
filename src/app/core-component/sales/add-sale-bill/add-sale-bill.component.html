@@ -389,7 +389,20 @@
                         </span>
                     </div>
                 </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Select Sales Man*</label>
+                        <select formControlName="sales_man" [ngClass]="{'is-invalid': f['sales_man'].touched && f['sales_man'].invalid}">
+                            <option value="" selected disabled>Select Sales Man</option>
+                            <ng-container *ngFor="let employee of employeeList">
+                            <option value="{{employee.id}}" *ngIf="employee?.is_active==true">{{employee.name}}</option>
+                            </ng-container>
+                        </select>
+                        <span class="text-danger" *ngIf="sales_man && sales_man.invalid && sales_man.touched">Select Sales Man</span>
+                    </div>
+                </div>
             </div>
+
             <div class="card">
              <div class="card-body">
                 <div class="row">

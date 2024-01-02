@@ -77,6 +77,8 @@ export class UpdateSaleBillComponent implements OnInit {
       note: new FormControl(''),
       additional_charges: new FormControl(0),
       additional_charge: this.fb.array([]),
+        // 2-1
+      sales_man:new FormControl('',[Validators.required])
     });
 
     //patch value
@@ -85,6 +87,7 @@ export class UpdateSaleBillComponent implements OnInit {
       this.saleBillForm.patchValue(this.editRes);
       this.saleBillForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id);
       this.saleBillForm.get('sale_order').patchValue(this.editRes?.sale_order?.id);
+      this.saleBillForm.get('sales_man').patchValue(this.editRes?.sales_man?.id);
       if(this.editRes?.cart.length>0){
         this.saleBillForm.setControl('sale_bill_cart', this.udateCart(this.editRes?.cart));
       }else{
@@ -112,6 +115,7 @@ export class UpdateSaleBillComponent implements OnInit {
     this.getCategory();
     this.getPaymentTerms();
     this.getSaleOrder();
+    this.getEmployee();
     this.getprefix();
     this.addAdditionalCharge();
     this.getAdditionalDiscount();
@@ -137,7 +141,12 @@ export class UpdateSaleBillComponent implements OnInit {
       this.saleOderList = res;
     })
   }
-
+  employeeList: any;
+  getEmployee() {
+    this.contactService.getEmployee().subscribe((res: any) => {
+      this.employeeList = res;
+    })
+  }
   saleEstimateList: any
   getSaleEstimate() {
     this.saleService.getSalesEstimate().subscribe(res => {
@@ -914,6 +923,8 @@ export class UpdateSaleBillComponent implements OnInit {
       formdata.append('subtotal', this.saleBillForm.get('subtotal')?.value);
       formdata.append('total', this.saleBillForm.get('total')?.value);
       formdata.append('additional_charges', this.saleBillForm.get('additional_charges')?.value);
+          //2-1
+      formdata.append('sales_man',this.saleBillForm.get('sales_man')?.value);
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -1015,6 +1026,9 @@ export class UpdateSaleBillComponent implements OnInit {
   }
   get sale_order() {
     return this.saleBillForm.get('sale_order')
+  }
+  get sales_man(){
+    return this.saleBillForm.get('sales_man')
   }
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');

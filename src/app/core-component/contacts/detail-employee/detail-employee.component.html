@@ -81,12 +81,22 @@
                                         </li>
                                         <li>
                                             <h4>Branch</h4>
-                                            <h6>{{employeeDetail?.branch?.gstin}}</h6>
+                                            <h6>{{employeeDetail?.branch?.title}}</h6>
                                         </li>
                                         <li>
+                                            <h4>Incentive</h4>
+                                            <h6>{{employeeDetail?.incentive}}</h6>
+                                        </li>
+                                        <li>
+                                            <h4>Is Sales Head</h4>
+                                            <h6><span
+                                                [ngClass]="{'bg-lightgreen': employeeDetail?.is_sales_head === true, 'bg-lightred' : employeeDetail?.is_sales_head === false}"
+                                                class="badges">{{employeeDetail?.is_sales_head}}</span></h6>
+                                        </li>
+                                        <!-- <li>
                                             <h4>Permission Group</h4>
                                             <h6>{{employeeDetail?.permission_group?.name}}</h6>
-                                        </li>
+                                        </li> -->
                                     </ul>
                                 </div>
                             </div>

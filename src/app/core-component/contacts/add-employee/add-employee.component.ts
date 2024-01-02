@@ -45,7 +45,10 @@ export class AddEmployeeComponent implements OnInit {
       // permissions:new FormArray([],),
       branch:new FormControl(''),
       date_of_joining:new FormControl(''),
-      department:new FormControl('')
+      department:new FormControl('',[Validators.required]),
+      // added 0-1
+      is_sales_head:new FormControl('',[Validators.required]),
+      incentive:new FormControl(0)
     })
     this.addAddress();
     this.addBank();
@@ -223,7 +226,9 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('branch', this.employeeForm.get('branch')?.value);
     formdata.append('date_of_joining', this.employeeForm.get('date_of_joining')?.value);
     formdata.append('department', this.employeeForm.get('department')?.value);
-
+//2-1
+formdata.append('is_sales_head', this.employeeForm.get('is_sales_head')?.value);
+formdata.append('incentive', this.employeeForm.get('incentive')?.value);
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];

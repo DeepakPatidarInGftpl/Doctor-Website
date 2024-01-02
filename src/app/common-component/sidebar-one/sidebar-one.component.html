@@ -172,6 +172,13 @@
                 <li *ngIf="isPurchasepos"><a routerLink="/bank/purchase" routerLinkActive="active">Purchase</a></li>
                 </ul>
             </li> 
+            <li class="submenu">
+                <a  [ngClass]="{'active': activePath === 'hrm'}"><img src="assets/img/icons/places.svg" alt="img"><span> HRM</span> <span class="menu-arrow"></span></a>
+                <ul >
+                    <li><a routerLink="/hrm/department" routerLinkActive="active">Department list </a></li>
+                    <li><a routerLink="/hrm/list-target" routerLinkActive="active">Target list</a></li>
+                </ul>
+            </li>
             <li class="submenu" *ngIf="isCountry || isState || isCity">
                 <a  [ngClass]="{'active': activePath === 'places'}"><img src="assets/img/icons/places.svg" alt="img"><span> Places</span> <span class="menu-arrow"></span></a>
                 <ul >
@@ -182,6 +189,7 @@
                     <li *ngIf="isCity"><a routerLink="/places/citylist" routerLinkActive="active">City list</a></li>
                 </ul>
             </li>
+          
             <!-- <li class="submenu" *ngIf="isStockTransport || isStockTransportRequest">
                 <a [ngClass]="{'active': activePath === 'inventory'}"><img src="assets/img/icons/product.svg" alt="img"><span>Inventory</span> <span class="menu-arrow"></span></a>
                 <ul>

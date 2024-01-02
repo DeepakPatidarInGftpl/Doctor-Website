@@ -162,7 +162,7 @@
                                                                 <h1 class="pb-4">Invoice</h1>
                                                                 <p><span>Invoice Date</span> : {{returnBillDetail?.bill_date| date: 'dd-MMMM-yyyy'}}</p>
                                                                 <p><span>Invoice NO</span> : {{returnBillDetail?.sale_return_bill_no}} </p>
-                                                                <p><span>Bill Date</span> : {{returnBillDetail?.bill_date | date: 'dd-MMMM-yyyy'}}</p>
+                                                                <p><span>Return Date</span> : {{returnBillDetail?.return_date | date: 'dd-MMMM-yyyy'}}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -225,6 +225,7 @@
                                                                 <th class="thone" style="white-space: normal !important;">Party Name</th>
                                                                 <th class="thone" style="white-space: normal !important;">Sales Bill</th>
                                                                 <th class="thone" style="white-space: normal !important;">Sale Bill Date</th>   
+                                                                <th class="thone" style="white-space: normal !important;">Sale Return Date</th>   
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -234,6 +235,7 @@
                                                                 <td style="color:black">{{returnBillDetail?.customer?.name+ ' (' + returnBillDetail?.customer?.user_type + ')'}}</td>
                                                                 <td style="color:black">{{returnBillDetail?.sale_bill?.customer_bill_no}}</td>
                                                                 <td style="color:black"> {{returnBillDetail?.bill_date |date: 'dd-MMMM-yyyy'}}</td>
+                                                                <td style="color:black"> {{returnBillDetail?.return_date |date: 'dd-MMMM-yyyy'}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
