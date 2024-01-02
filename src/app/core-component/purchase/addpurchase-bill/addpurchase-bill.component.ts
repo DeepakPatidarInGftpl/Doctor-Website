@@ -88,6 +88,8 @@ export class AddpurchaseBillComponent implements OnInit {
       total: new FormControl(''),
       additional_charge: new FormControl(''),
       // additional_discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)])
+      //2-1
+      total_qty:new FormControl('',[Validators.required])
     });
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
@@ -949,6 +951,8 @@ export class AddpurchaseBillComponent implements OnInit {
       formdata.append('total', this.purchaseBillForm.get('total')?.value);
       formdata.append('round_off', this.purchaseBillForm.get('round_off')?.value);
       formdata.append('additional_charge', this.purchaseBillForm.get('additional_charge')?.value);
+      //2-1
+      formdata.append('total_qty',this.purchaseBillForm.get('total_qty')?.value)
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }

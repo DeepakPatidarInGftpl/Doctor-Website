@@ -25,8 +25,8 @@
                                             <td class="td">{{paymentVoucherDetail?.supplier?.company_name}}</td>
                                         </tr>
                                         <tr>
-                                            <td class="th">Receipt Type</td>
-                                            <td class="td">{{paymentVoucherDetail?.receipt_type}}</td>
+                                            <td class="th">Payment Type</td>
+                                            <td class="td">{{paymentVoucherDetail?.payment_type}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Mode Type</td>
@@ -48,7 +48,7 @@
                                             <td class="th">Date</td>
                                             <td class="td">{{paymentVoucherDetail?.date}}</td>
                                         </tr>
-                                      <ng-container *ngIf="paymentVoucherDetail?.receipt_type=='Bank'">
+                                      <ng-container *ngIf="paymentVoucherDetail?.payment_type=='Bank'">
                                         <tr>
                                             <td class="th">Transaction Date</td>
                                             <td class="td">{{paymentVoucherDetail?.transaction_date}}</td>

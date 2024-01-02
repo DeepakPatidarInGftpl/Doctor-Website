@@ -1,0 +1,179 @@
+
+
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                     <h6 class="subhead-color" (click)="goBack()"><mat-icon
+                         style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                     Back to Target</h6>
+                     <h4>Full details of a Target</h4>
+                 </div>
+                 <div class="page-btn">
+                     <a routerLink="//hrm/update-target/{{productDetail?.id}}" class="btn btn-added">
+                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Target
+                     </a>
+                 </div>
+             </div>
+            <div class="company-details-card card" *ngIf="productDetail">
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="General Details">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="th">Department</td>
+                                            <td class="td">{{productDetail?.department?.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Start Date</td>
+                                            <td class="td">{{productDetail?.start_date}}</td>
+                                        </tr>  
+                                        <tr>
+                                            <td class="th">End Date</td>
+                                            <td class="td">{{productDetail?.end_date}}</td>
+                                        </tr> 
+                                         <tr>
+                                            <td class="th">Target Value</td>
+                                            <td class="td">{{productDetail?.target_value}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex align-items-center mx-4">
+                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                <span [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }"
+                                class="badges">{{productDetail?.is_active}}</span>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Cart">
+                            <div class="card">
+                                 <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Months<i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Percentage (%)<i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Sale Value<i class="fa fa-sort"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let log of productDetail?.cart | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                        <tr>
+                                            <td class="td">{{i+1}}</td>
+                                            <td class="td" >{{log?.month_and_year}}</td>
+                                            <td class="td">{{log?.percent_of_total_target}}</td>
+                                            <td class="td">{{log?.estimated_sale_value}}</td>
+                                        </tr> 
+                                    </ng-container>
+                                    </tbody>
+                                    <tbody *ngIf="filteredData?.length==0">
+                                        <tr>
+                                            <td colspan="10">
+                                                <p class="center-textt">Data not available</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="progressbar">
+                                    <mat-progress-bar mode="indeterminate" class="progressbar"
+                                        *ngIf="loader"></mat-progress-bar>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                        <div class="entries"> Show per page
+                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="-1">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                        <div class="f-right">
+                                            <pagination-controls
+                                                (pageChange)="p = $event"></pagination-controls>
+                                            <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Logs" *ngIf="productDetail?.logs?.length>0">
+                            <div class="card">
+                                 <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                        <tr>
+                                            <td class="td" (click)="sort('id')">{{i+1}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.userid}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                        </tr> 
+                                    </ng-container>
+                                    </tbody>
+                                    <tbody *ngIf="filteredData?.length==0">
+                                        <tr>
+                                            <td colspan="10">
+                                                <p class="center-textt">Data not available</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="progressbar">
+                                    <mat-progress-bar mode="indeterminate" class="progressbar"
+                                        *ngIf="loader"></mat-progress-bar>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                        <div class="entries"> Show per page
+                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="-1">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                        <div class="f-right">
+                                            <pagination-controls
+                                                (pageChange)="p = $event"></pagination-controls>
+                                            <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+</div>

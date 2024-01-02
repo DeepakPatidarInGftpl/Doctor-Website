@@ -242,6 +242,7 @@
                                                                 <th class="thone" style="white-space: normal !important;">Party Name</th>
                                                                 <th class="thone" style="white-space: normal !important;">Payment Terms</th>
                                                                 <th class="thone" style="white-space: normal !important;">Sales Order</th>
+                                                                <th class="thone" style="white-space: normal !important;">Sales Man</th>
                                                                 <th class="thone" style="white-space: normal !important;">Sale Bill Date</th>
                                                                 <th class="thone" style="white-space: normal !important;">Due date</th>   
                                                             </tr>
@@ -253,6 +254,7 @@
                                                                 <td style="color:black">{{BillDetail?.customer?.name+ ' (' + BillDetail?.customer?.user_type + ')'}}</td>
                                                                 <td style="color:black">{{BillDetail?.payment_terms?.title}}</td>
                                                                 <td style="color:black">{{BillDetail?.sale_order?.sale_order_no}}</td>
+                                                                <td style="color:black">{{BillDetail?.sales_man?.name}}</td>
                                                                 <td style="color:black"> {{BillDetail?.bill_date |date: 'dd-MMMM-yyyy'}}</td>
                                                                 <td style="color:black"> {{BillDetail?.due_date |date: 'dd-MMMM-yyyy'}}</td>
                                                             </tr>

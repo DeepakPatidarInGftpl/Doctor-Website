@@ -13,7 +13,7 @@
         <form [formGroup]="paymentVoucherForm" (ngSubmit)="onSubmit()">
             <div class="d-flex mb-5">
                 <div class="d-flex mx-3">
-                    <input type="radio" formControlName="receipt_type" [id]="'checkboxCash'" (click)="toggleCash()" [value]="'Cash'">
+                    <input type="radio" formControlName="payment_type" [id]="'checkboxCash'" (click)="toggleCash()" [value]="'Cash'">
                     <label [for]="'checkboxCash'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Cash</label>
                 </div>
                 <div class="d-flex mx-3">
@@ -377,7 +377,7 @@
                     <label [for]="'checkboxCash'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Cash</label>
                 </div>
                 <div class="d-flex mx-3">
-                    <input type="radio" formControlName="receipt_type" [id]="'checkbox-Bnak'" (click)="toggleBank()" [value]="'Bank'">
+                    <input type="radio" formControlName="payment_type" [id]="'checkbox-Bnak'" (click)="toggleBank()" [value]="'Bank'">
                     <label [for]="'checkbox-Bnak'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Bank</label>
                 </div>
             </div>
