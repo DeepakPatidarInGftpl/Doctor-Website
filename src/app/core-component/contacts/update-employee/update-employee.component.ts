@@ -42,9 +42,8 @@ export class UpdateEmployeeComponent implements OnInit {
       credit_limit: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
-
       // commision: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
-      wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
+      wages: new FormControl(0,[Validators.required,Validators.pattern(/^[0-9]*$/)]),
       // extra_wages: new FormControl('',[Validators.pattern(/^[0-9]*$/)]),
       // target: new FormControl('',Validators.pattern(/^[0-9]*$/)),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),

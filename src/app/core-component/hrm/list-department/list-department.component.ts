@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
-import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
@@ -153,13 +151,13 @@ export class ListDepartmentComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='add_city') {
+        if (res.content_type.app_label === 'contacts' && res.content_type.model === 'department' && res.codename=='add_department') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='change_city') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'department' && res.codename=='change_department') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'places' && res.content_type.model === 'city' && res.codename=='delete_city') {
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'department' && res.codename=='delete_department') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -259,14 +257,11 @@ export class ListDepartmentComponent implements OnInit {
   editForm(id: number) {
     this.id = id
     this.hrmService.getDepartmentById(id).subscribe(res => {
-      // console.log(res);
-      res.map((data: any) => {
-        if (id == data.id) {
-          this.addForm = false
-          this.departmentForm.patchValue(data);
-          this.editFormdata = data
-        }
-      })
+      if (id == res.id) {
+        this.addForm = false
+        this.departmentForm.patchValue(res);
+        this.editFormdata = res
+      }
     })
   }
   openaddForm() {

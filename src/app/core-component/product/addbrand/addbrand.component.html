@@ -1,127 +1,183 @@
-
-        <div class="page-header">
-            <div class="page-title">
-                <h4>Brand ADD</h4>
-                <h6>Create new Brand</h6>
-            </div>
-        </div>
-        <!-- /add -->
-        <div class="card">
-            <div class="card-body">
+<div class="page-header">
+    <div class="page-title">
+        <h4>Brand ADD</h4>
+        <h6>Create new Brand</h6>
+    </div>
+</div>
+<!-- /add -->
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <form [formGroup]="brandForm" (ngSubmit)="submit()">
                 <div class="row">
-                    <form [formGroup]="brandForm" (ngSubmit)="submit()">
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Brand*</label>
-                                    <input type="text" formControlName="title" id="title" placeholder="Enter Brand" [ngClass]="{
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Brand*</label>
+                            <input type="text" formControlName="title" id="title" placeholder="Enter Brand" [ngClass]="{
                                         'is-invalid': f['title'].touched && f['title'].invalid}">
-                                    <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Brand
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Code</label>
-                                    <input type="text" formControlName="code" id="code" placeholder="Enter Code" [ngClass]="{
-                                        'is-invalid': f['code'].touched && f['code'].invalid }">
-                                    <span class="text-danger" *ngIf="code && code.invalid && code.touched">Enter code
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Discount %</label>
-                                    <input type="text" formControlName="discount" placeholder="Enter Discount" id="discount" [ngClass]="{'is-invalid': f['discount'].touched && f['discount'].invalid}">
-                                    <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter discount (ex-1-100) </span>
-    
-                                </div>
-                            </div>
-                           
-                        <div class="col-lg-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label>Select Category</label>
-                                <div class="dropdown">
-                                    <button type="button" class="dropdown-toggle button" type="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
-                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                        <li>    <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory"  (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}">
-                                        </li>
-                                        <li><a class="dropdown-item"
-                                                *ngFor="let category of filteredCategoryList let i=index;">
-                                                <input type="checkbox" [value]="category.id" [checked]="selectedCategoryIds.includes(category.id)" (change)="onCheckCategory($event)" formArrayName="category"
-                                                    style="margin-right: 5px;" [ngClass]="{'is-invalid': f['category'].touched && f['category'].invalid}" #categoryValue
-                                                    [id]="'checkboxCat-' + i">
-                                                <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category.title}}</label>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                                <p *ngIf="selectedCat>0">{{selectedCat + ' Category Selected'}}</p>
-                                <span class="text-danger" *ngIf="category && category.invalid && category.touched">Select Category
-                                </span>
-                            </div>
+                            <span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Brand
+                            </span>
                         </div>
-
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Select Subcategory group</label>
-                                    <div class="dropdown">
-                                        <button type="button" class="dropdown-toggle button" type="button"
-                                            data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory
-                                            group</button>
-                                        <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                            <li><input type="text" placeholder="search subcategory group" class="form-control" [(ngModel)]="searchSubCategoryGroup" (ngModelChange)="filterSubCategoryGroup()" [ngModelOptions]="{standalone: true}"></li>
-                                            <li><a class="dropdown-item"
-                                                    *ngFor="let subcatgroup of filteredSubCategoryGroupList let i=index;">
-                                                    <input type="checkbox" [value]="subcatgroup.id" [checked]="selectedSubCategoryGroupIds.includes(subcatgroup.id)"
-                                                        (change)="onCheckSize($event)" formArrayName="subcategory_group"
-                                                        style="margin-right: 5px;" [ngClass]="{
-                                                            'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
-                                                          }" #categoryValue
-                                                        [id]="'checkbox-' + i">
-                                                    <label [for]="'checkbox-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcatgroup.title}}</label>
-                                                </a></li>
-                                        </ul>
-                                    </div>
-                                    <p *ngIf="selectedSubCatGrp>0">{{selectedSubCatGrp + ' Subcategory group Selected'}}</p>
-                                    <span class="text-danger"
-                                        *ngIf="subcategory_group && subcategory_group.invalid && subcategory_group.touched">Select
-                                        subcategory group
-                                    </span>
-                                </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Code</label>
+                            <input type="text" formControlName="code" id="code" placeholder="Enter Code" [ngClass]="{
+                                        'is-invalid': f['code'].touched && f['code'].invalid }">
+                            <span class="text-danger" *ngIf="code && code.invalid && code.touched">Enter code
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Discount %</label>
+                            <input type="text" formControlName="discount" placeholder="Enter Discount" id="discount"
+                                [ngClass]="{'is-invalid': f['discount'].touched && f['discount'].invalid}">
+                            <span class="text-danger" *ngIf="discount && discount.invalid && discount.touched">Enter
+                                discount (ex-1-100) </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Markup Percentage Customer*</label>
+                            <input type="text" formControlName="markup_percentage_customer" placeholder="Enter Discount"
+                                id="markup_percentage_customer"
+                                [ngClass]="{'is-invalid': f['markup_percentage_customer'].touched && f['markup_percentage_customer'].invalid}">
+                            <span class="text-danger"
+                                *ngIf="markup_percentage_customer && markup_percentage_customer.invalid && markup_percentage_customer.touched">Enter
+                                discount (ex-1-100) </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Markup Percentage Wholesale*</label>
+                            <input type="text" formControlName="markup_percentage_wholesale"
+                                placeholder="Enter Discount" id="markup_percentage_wholesale"
+                                [ngClass]="{'is-invalid': f['markup_percentage_wholesale'].touched && f['markup_percentage_wholesale'].invalid}">
+                            <span class="text-danger"
+                                *ngIf="markup_percentage_wholesale && markup_percentage_wholesale.invalid && markup_percentage_wholesale.touched">Enter
+                                Markup Percentage Wholesale (ex-1-100) </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Markup Percentage Online*</label>
+                            <input type="text" formControlName="markup_percentage_online" placeholder="Enter Discount"
+                                id="markup_percentage_online"
+                                [ngClass]="{'is-invalid': f['markup_percentage_online'].touched && f['markup_percentage_online'].invalid}">
+                            <span class="text-danger"
+                                *ngIf="markup_percentage_online && markup_percentage_online.invalid && markup_percentage_online.touched">Enter
+                                Markup Percentage Online  (ex-1-100)</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Markup Percentage Employee*</label>
+                            <input type="text" formControlName="markup_percentage_employee" placeholder="Enter Discount"
+                                id="markup_percentage_employee"
+                                [ngClass]="{'is-invalid': f['markup_percentage_employee'].touched && f['markup_percentage_employee'].invalid}">
+                            <span class="text-danger"
+                                *ngIf="markup_percentage_employee && markup_percentage_employee.invalid && markup_percentage_employee.touched">Enter
+                                Markup Percentage Employee (ex-1-100) </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Select Category</label>
+                            <div class="dropdown">
+                                <button type="button" class="dropdown-toggle button" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
+                                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                    <li> <input type="text" placeholder="search category" class="form-control"
+                                            [(ngModel)]="searchCategory" (ngModelChange)="filterCategory()"
+                                            [ngModelOptions]="{standalone: true}">
+                                    </li>
+                                    <li><a class="dropdown-item"
+                                            *ngFor="let category of filteredCategoryList let i=index;">
+                                            <input type="checkbox" [value]="category.id"
+                                                [checked]="selectedCategoryIds.includes(category.id)"
+                                                (change)="onCheckCategory($event)" formArrayName="category"
+                                                style="margin-right: 5px;"
+                                                [ngClass]="{'is-invalid': f['category'].touched && f['category'].invalid}"
+                                                #categoryValue [id]="'checkboxCat-' + i">
+                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                                (click)="onLabelClick($event)">{{category.title}}</label>
+                                        </a></li>
+                                </ul>
                             </div>
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Select SubCategory</label>
-                                    <div class="dropdown">
-                                        <button type="button" class="dropdown-toggle button" type="button"
-                                            data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
-                                        <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                            <li><input type="text" placeholder="search subcategory" class="form-control" [(ngModel)]="searchSubCategory" (ngModelChange)="filterSubCategory()" [ngModelOptions]="{standalone: true}"></li>
-                                           
-                                            <li><a class="dropdown-item"
-                                                    *ngFor="let subcategory of filteredSubCategoryList; let i=index">
-                                                    <input type="checkbox" [value]="subcategory.id" [checked]="selectedSubCategoryIds.includes(subcategory?.id)"
-                                                        (change)="onCheckChange($event)" formArrayName="subcategory"
-                                                        style="margin-right: 5px;" [ngClass]="{
+                            <p *ngIf="selectedCat>0">{{selectedCat + ' Category Selected'}}</p>
+                            <span class="text-danger" *ngIf="category && category.invalid && category.touched">Select
+                                Category
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Select Subcategory group</label>
+                            <div class="dropdown">
+                                <button type="button" class="dropdown-toggle button" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory
+                                    group</button>
+                                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                    <li><input type="text" placeholder="search subcategory group" class="form-control"
+                                            [(ngModel)]="searchSubCategoryGroup"
+                                            (ngModelChange)="filterSubCategoryGroup()"
+                                            [ngModelOptions]="{standalone: true}"></li>
+                                    <li><a class="dropdown-item"
+                                            *ngFor="let subcatgroup of filteredSubCategoryGroupList let i=index;">
+                                            <input type="checkbox" [value]="subcatgroup.id"
+                                                [checked]="selectedSubCategoryGroupIds.includes(subcatgroup.id)"
+                                                (change)="onCheckSize($event)" formArrayName="subcategory_group"
+                                                style="margin-right: 5px;" [ngClass]="{
+                                                            'is-invalid': f['subcategory_group'].touched && f['subcategory_group'].invalid
+                                                          }" #categoryValue [id]="'checkbox-' + i">
+                                            <label [for]="'checkbox-' + i" style="margin-bottom: 0;"
+                                                (click)="onLabelClick($event)">{{subcatgroup.title}}</label>
+                                        </a></li>
+                                </ul>
+                            </div>
+                            <p *ngIf="selectedSubCatGrp>0">{{selectedSubCatGrp + ' Subcategory group Selected'}}</p>
+                            <span class="text-danger"
+                                *ngIf="subcategory_group && subcategory_group.invalid && subcategory_group.touched">Select
+                                subcategory group
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Select SubCategory</label>
+                            <div class="dropdown">
+                                <button type="button" class="dropdown-toggle button" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Select Subcategory</button>
+                                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                    <li><input type="text" placeholder="search subcategory" class="form-control"
+                                            [(ngModel)]="searchSubCategory" (ngModelChange)="filterSubCategory()"
+                                            [ngModelOptions]="{standalone: true}"></li>
+
+                                    <li><a class="dropdown-item"
+                                            *ngFor="let subcategory of filteredSubCategoryList; let i=index">
+                                            <input type="checkbox" [value]="subcategory.id"
+                                                [checked]="selectedSubCategoryIds.includes(subcategory?.id)"
+                                                (change)="onCheckChange($event)" formArrayName="subcategory"
+                                                style="margin-right: 5px;" [ngClass]="{
                                                             'is-invalid': f['subcategory'].touched && f['subcategory'].invalid
                                                           }" [id]="'checkboxSub-' + i">
-                                                    <label [for]="'checkboxSub-' + i" style="margin-bottom: 0;"
-                                                        (click)="onLabelClick($event)">{{subcategory.title}}</label>
-                                                </a></li>
-                                        </ul>
-                                    </div>
-    
-                                    <p *ngIf="selectedSubcat>0">{{selectedSubcat + ' Subcategory Selected'}}</p>
-                                    <span class="text-danger"
-                                        *ngIf="subcategory && subcategory.invalid && subcategory.touched">Select subcategory
-                                    </span>
-                                </div>
+                                            <label [for]="'checkboxSub-' + i" style="margin-bottom: 0;"
+                                                (click)="onLabelClick($event)">{{subcategory.title}}</label>
+                                        </a></li>
+                                </ul>
                             </div>
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Brand Image*</label>
-                                    <!-- <div class="image-upload">
+
+                            <p *ngIf="selectedSubcat>0">{{selectedSubcat + ' Subcategory Selected'}}</p>
+                            <span class="text-danger"
+                                *ngIf="subcategory && subcategory.invalid && subcategory.touched">Select subcategory
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Brand Image*</label>
+                            <!-- <div class="image-upload">
                                         <input type="file" formControlName="image" (change)="onSelect($event)">
                                         <div class="image-uploads">
                                             <img src="assets/img/icons/upload.svg" alt="img">
@@ -131,43 +187,43 @@
                                             image
                                         </span>
                                     </div> -->
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="image-upload">
-                                                <input type="file" formControlName="image" (change)="onSelect($event)" required>
-                                                <div class="image-uploads">
-                                                    <img src="assets/img/icons/upload.svg" alt="img">
-                                                    <h4>Drag and drop a file to upload</h4>
-                                                </div>
-                                                <span class="text-danger"
-                                                    *ngIf="image && image.invalid && image.touched">Select image</span>
-                                                <!-- <span class="text-danger" *ngIf="imgError">Select image</span> -->
-                                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="image-upload">
+                                        <input type="file" formControlName="image" (change)="onSelect($event)" required>
+                                        <div class="image-uploads">
+                                            <img src="assets/img/icons/upload.svg" alt="img">
+                                            <h4>Drag and drop a file to upload</h4>
                                         </div>
-                                        <div class="col-lg-6">
-                                                <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                                class="bi bi-image mx-5 svg" viewBox="0 0 16 16" style="height: 100px; width: 100px;">
-                                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                                                <path
-                                                    d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
-                                            </svg>
-                                            <img [src]="url" *ngIf="url" alt="" class="p_img">
-                                        </div>
+                                        <span class="text-danger" *ngIf="image && image.invalid && image.touched">Select
+                                            image</span>
+                                        <!-- <span class="text-danger" *ngIf="imgError">Select image</span> -->
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        fill="currentColor" class="bi bi-image mx-5 svg" viewBox="0 0 16 16"
+                                        style="height: 100px; width: 100px;">
+                                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                        <path
+                                            d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
+                                    </svg>
+                                    <img [src]="url" *ngIf="url" alt="" class="p_img">
+                                </div>
                             </div>
-    
-    
-                            <div class="col-lg-12">
-                                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
-                                <a routerLink="//product/brandlist" class="btn btn-cancel">Cancel</a>
-                            </div>
-    
                         </div>
-                    </form>
+                    </div>
+                    <div class="col-lg-12">
+                        <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Submit</button>
+                        <a routerLink="//product/brandlist" class="btn btn-cancel">Cancel</a>
+                    </div>
+
                 </div>
-            </div>
+            </form>
         </div>
-        <!-- /add -->
+    </div>
+</div>
+<!-- /add -->
