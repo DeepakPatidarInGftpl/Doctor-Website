@@ -34,7 +34,7 @@ export class AddEmployeeComponent implements OnInit {
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
       // commision: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      wages: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
+      wages: new FormControl(0, [Validators.required,Validators.pattern(/^[0-9]*$/)]),
       // extra_wages: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       // target: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       username: new FormControl('', [Validators.required]),

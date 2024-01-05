@@ -46,6 +46,12 @@ export class EditbrandComponent implements OnInit {
       category: new FormArray([]),
       subcategory_group: new FormArray<any>([], [Validators.required]),
       subcategory: new FormArray([], [Validators.required]),
+            // 3-1
+            markup_percentage_customer: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+            markup_percentage_wholesale: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+            markup_percentage_online: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+            markup_percentage_employee: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+         
     })
 
     //dropdown list
@@ -73,9 +79,13 @@ export class EditbrandComponent implements OnInit {
         this.selectCat = res?.category.map((res: any) => res?.id)
         // this.brandForm.patchValue(res);
         this.brandForm.patchValue({
-          title: res.title,
-          code: res.code,
-          discount: res.discount
+          title: res?.title,
+          code: res?.code,
+          discount: res?.discount,
+          markup_percentage_customer:res?.markup_percentage_customer,
+          markup_percentage_wholesale:res?.markup_percentage_wholesale,
+          markup_percentage_online:res?.markup_percentage_online,
+          markup_percentage_employee:res?.markup_percentage_employee
         })
         if (res?.category.length > 0) {
           // console.log('categry');
@@ -378,6 +388,13 @@ export class EditbrandComponent implements OnInit {
     formData.append("category", JSON.stringify(uniqueCategoryArray));
     formData.append('subcategory_group', JSON.stringify(uniqueSubcategoryGroupArray));
     formData.append('subcategory', JSON.stringify(uniqueSubcategoryArray));
+
+      //3-1
+      formData.append("markup_percentage_customer", this.brandForm.get('markup_percentage_customer')?.value);
+      formData.append("markup_percentage_wholesale", this.brandForm.get('markup_percentage_wholesale')?.value);
+      formData.append("markup_percentage_online", this.brandForm.get('markup_percentage_online')?.value);
+      formData.append("markup_percentage_employee", this.brandForm.get('markup_percentage_employee')?.value);
+  
     if (this.brandForm.valid) {
       this.loaders = true;
 
@@ -449,7 +466,19 @@ export class EditbrandComponent implements OnInit {
   get category() {
     return this.brandForm.get('category')
   }
-
+//3-1
+get markup_percentage_customer() {
+  return this.brandForm.get('markup_percentage_customer')
+}
+get markup_percentage_wholesale() {
+  return this.brandForm.get('markup_percentage_wholesale')
+}
+get markup_percentage_online() {
+  return this.brandForm.get('markup_percentage_online')
+}
+get markup_percentage_employee() {
+  return this.brandForm.get('markup_percentage_employee')
+}
   //dropdown auto close stop
   onLabelClick(event: Event) {
     event.stopPropagation();

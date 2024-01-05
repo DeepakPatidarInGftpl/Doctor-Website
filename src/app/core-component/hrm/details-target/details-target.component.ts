@@ -10,8 +10,6 @@ import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
 })
 export class DetailsTargetComponent implements OnInit {
 
-  
- 
   constructor(private Arout: ActivatedRoute, private hrmService: HrmServiceService,private location:Location) { }
   id: any
   ngOnInit(): void {

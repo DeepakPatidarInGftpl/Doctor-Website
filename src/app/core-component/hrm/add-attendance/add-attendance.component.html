@@ -1,1 +1,87 @@
-<p>add-attendance works!</p>
+<div class="page-header justify-content-center">
+    <div class="page-title">
+        <h4>Attendance Add</h4>
+        <h6>Create new Attendance</h6>
+    </div>
+</div>
+
+
+<!-- /add -->
+<form [formGroup]="attendanceForm" (ngSubmit)="submit()">
+    <div class="row">
+        <div class="card ">
+            <div class="card-body">
+                <div class="row form-card">
+                    <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>Date*</label>
+                            <input type="date" formControlName="date" id="date" (change)="onCheck()"
+                                [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
+                            <span class="text-danger" *ngIf="date && date.invalid && date.touched">Select Date</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>Total Day Of Month*</label>
+                            <input type="number" formControlName="total_day_of_month" placeholder="ex-25" id="total_day_of_month"
+                                [ngClass]="{'is-invalid': f['total_day_of_month'].touched && f['total_day_of_month'].invalid}">
+                            <span class="text-danger" *ngIf="total_day_of_month && total_day_of_month.invalid && total_day_of_month.touched">Enter
+                                Total Day Of Month</span>
+                        </div>
+                    </div>
+                  
+                    <div class="col-lg-12 col-sm-12 col-12">
+                        <table class="table amt-table">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No.</th>
+                                    <th>Employee*</th>
+                                    <th>Total Present Day*</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container formArrayName="attendance">
+                                    <ng-container *ngFor="let d of getattendance().controls; let i=index">
+                                        <tr [formGroupName]="i">
+                                            <td>{{i+1}}</td>
+                                            <td>
+                                                <select class="form-select" formControlName="employee">
+                                                    <option value="" selected disabled>Select Employee</option>
+                                                    <option value="{{employee.id}}" *ngFor="let employee of employeeList"> {{employee.name}} </option>
+                                                </select>
+                                                <span class="text-danger" *ngIf="employee(i) && employee(i).invalid && employee(i).touched">Select Employee </span>
+                                            </td>
+                                            <td>
+                                                <input type="text" formControlName="total_present_day" maxlength="31"
+                                                    class="form-control" placeholder="Total Present Day">
+                                                <span class="text-danger" style="display: block;"
+                                                    *ngIf="total_present_day(i) && total_present_day(i).invalid && total_present_day(i).touched">Enter
+                                                    Total Present Day (ex:1-31)</span>
+                                            </td>
+                                            <td>
+                                                <button (click)="removeAttendance(i)" class="btn"
+                                                    style="background: #FF9F43;">&#8722;</button>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                        <div class="w-100 text-right">
+                            <span (click)="addAttendance()" class="addMore">+ Add more</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 text-end mt-5">
+                        <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>&nbsp; Submit</button>
+                        <a routerLink="//hrm/list-attendance" class="btn btn-cancel">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- /add -->

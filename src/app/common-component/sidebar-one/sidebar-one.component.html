@@ -172,11 +172,14 @@
                 <li *ngIf="isPurchasepos"><a routerLink="/bank/purchase" routerLinkActive="active">Purchase</a></li>
                 </ul>
             </li> 
-            <li class="submenu">
+            <li class="submenu" *ngIf="isAttendnace || isTarget || isDepartment || isIncentive">
                 <a  [ngClass]="{'active': activePath === 'hrm'}"><img src="assets/img/icons/places.svg" alt="img"><span> HRM</span> <span class="menu-arrow"></span></a>
                 <ul >
-                    <li><a routerLink="/hrm/department" routerLinkActive="active">Department list </a></li>
-                    <li><a routerLink="/hrm/list-target" routerLinkActive="active">Target list</a></li>
+                    <li *ngIf="isAttendnace"><a routerLink="/hrm/list-attendance" routerLinkActive="active">Attendance</a></li>
+                    <li *ngIf="isDepartment"><a routerLink="/hrm/department" routerLinkActive="active">Department </a></li>
+                    <li *ngIf="isTarget"><a routerLink="/hrm/list-target" routerLinkActive="active">Target</a></li>
+                    <li *ngIf="isIncentive"><a routerLink="/hrm/incentive-ledger" routerLinkActive="active">Incentive Ledger</a></li>
+                    <li *ngIf="isIncentive"><a routerLink="/hrm/incentive" routerLinkActive="active">Incentive Employee</a></li>
                 </ul>
             </li>
             <li class="submenu" *ngIf="isCountry || isState || isCity">

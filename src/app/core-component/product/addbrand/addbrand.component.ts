@@ -16,7 +16,6 @@ export class AddbrandComponent implements OnInit {
     return this.brandForm.controls;
   }
 
-
   imgUrl = 'https://pv.greatfuturetechno.com';
 
   constructor(private coreService: CoreService, private fb: FormBuilder, private toastr: ToastrService, private router: Router, private cs: CompanyService) { }
@@ -31,11 +30,15 @@ export class AddbrandComponent implements OnInit {
       title: new FormControl('', [Validators.required]),
       code: new FormControl(''),
       image: new FormControl('', [Validators.required]),
-      discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       category: new FormArray([]),
-      subcategory_group: new FormArray<any>([],),
+      subcategory_group: new FormArray<any>([]),
       subcategory: new FormArray([]),
-
+      // 3-1
+      markup_percentage_customer: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      markup_percentage_wholesale: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      markup_percentage_online: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      markup_percentage_employee: new FormControl(0, [Validators.required,Validators.pattern(/^(100|[0-9]{1,2})$/)]),
     })
     this.getSubcatGroup();
     this.getCategory();
@@ -45,7 +48,6 @@ export class AddbrandComponent implements OnInit {
   url: any;
   onSelect(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
-    // console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -60,7 +62,7 @@ export class AddbrandComponent implements OnInit {
     this.brandForm.get('image')?.updateValueAndValidity()
   }
 
- 
+
   getSubcatGroup() {
     this.coreService.getSubcategoryGroup().subscribe(res => {
       // this.subcatGroupList = res;
@@ -88,7 +90,7 @@ export class AddbrandComponent implements OnInit {
 
   //check Category
   selectedCat = 0
-  selectedCategoryIds:any[]=[]
+  selectedCategoryIds: any[] = []
   onCheckCategory(event: any) {
     const formArray: any = this.brandForm.get('category') as FormArray;
     /* Selected */
@@ -99,7 +101,7 @@ export class AddbrandComponent implements OnInit {
       this.check = formArray
       this.selectedCat++;
       this.getSubcatGroupByCategory(formArray.value);
-      this.selectedCategoryIds=formArray.value
+      this.selectedCategoryIds = formArray.value
       // console.log( this.selectedCategoryIds);
     }
     /* unselected */
@@ -121,7 +123,7 @@ export class AddbrandComponent implements OnInit {
 
   subcatGroupList: any[] = [];
   filteredSubCategoryGroupList: any[] = [];
-  searchSubCategoryGroup:string=''
+  searchSubCategoryGroup: string = ''
   getSubcatGroupByCategory(val: number[]) {
     // console.log(val);
     const idString = JSON.stringify(val);
@@ -156,9 +158,9 @@ export class AddbrandComponent implements OnInit {
       this.check = formArray
       this.selectedSubCatGrp++;
       this.getSubcategoryBySubcatGroup(formArray.value);
-      this.selectedSubCategoryGroupIds=formArray.value
+      this.selectedSubCategoryGroupIds = formArray.value
       // console.log( this.selectedSubCategoryIds);
-      
+
     }
     /* unselected */
     else {
@@ -220,7 +222,7 @@ export class AddbrandComponent implements OnInit {
   }
   check: any
   selectedSubcat = 0;
-  selectedSubCategoryIds:any[]=[]
+  selectedSubCategoryIds: any[] = []
   onCheckChange(event: any) {
     const formArray: any = this.brandForm.get('subcategory') as FormArray;
     /* Selected */
@@ -230,7 +232,7 @@ export class AddbrandComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray
       this.selectedSubcat++;
-      this.selectedSubCategoryIds=formArray.value
+      this.selectedSubCategoryIds = formArray.value
     }
     /* unselected */
     else {
@@ -261,6 +263,12 @@ export class AddbrandComponent implements OnInit {
     formData.append('category', JSON.stringify(this.brandForm.get('category')?.value));
     formData.append('subcategory_group', JSON.stringify(this.brandForm.get('subcategory_group')?.value));
     formData.append('subcategory', JSON.stringify(this.brandForm.get('subcategory')?.value));
+    //3-1
+    formData.append("markup_percentage_customer", this.brandForm.get('markup_percentage_customer')?.value);
+    formData.append("markup_percentage_wholesale", this.brandForm.get('markup_percentage_wholesale')?.value);
+    formData.append("markup_percentage_online", this.brandForm.get('markup_percentage_online')?.value);
+    formData.append("markup_percentage_employee", this.brandForm.get('markup_percentage_employee')?.value);
+
     if (this.brandForm.valid) {
       this.loaders = true;
       this.coreService.addbrand(formData).subscribe(res => {
@@ -306,7 +314,18 @@ export class AddbrandComponent implements OnInit {
   get category() {
     return this.brandForm.get('category')
   }
-
+  get markup_percentage_customer() {
+    return this.brandForm.get('markup_percentage_customer')
+  }
+  get markup_percentage_wholesale() {
+    return this.brandForm.get('markup_percentage_wholesale')
+  }
+  get markup_percentage_online() {
+    return this.brandForm.get('markup_percentage_online')
+  }
+  get markup_percentage_employee() {
+    return this.brandForm.get('markup_percentage_employee')
+  }
   //dropdown auto close stop
   onLabelClick(event: Event) {
     // Prevent the event from propagating to the dropdown menu

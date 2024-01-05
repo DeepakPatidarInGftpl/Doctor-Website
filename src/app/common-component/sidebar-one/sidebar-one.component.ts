@@ -129,7 +129,12 @@ export class SidebarOneComponent implements OnInit {
   // inventory
   isStockTransport;
   isStockTransportRequest;
-  userDetails: any
+  //hrm
+  isAttendnace:any;
+  isTarget:any;
+  isDepartment:any;
+  userDetails: any;
+  isIncentive:any;
   ngOnInit(): void {
     this.LoadScript("assets/js/sidebar.js")
 
@@ -317,13 +322,31 @@ export class SidebarOneComponent implements OnInit {
           this.isPaymentVoucher = res.codename;
         }
         // inventory
-
         else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'view_stocktransfer') {
           this.isStockTransport = res.codename;
         }
         else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'transferrequest' && res.codename == 'view_transferrequest') {
           this.isStockTransportRequest = res.codename;
+          console.log(res.codename ); 
         }
+        //3-1
+          // hrm
+          else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'attendance' && res.codename == 'view_attendance') {
+            this.isAttendnace = res.codename;
+            console.log(res.codename ); 
+          }
+          else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'target' && res.codename == 'view_target') {
+            this.isTarget = res.codename;
+            console.log(res.codename ); 
+          }
+          else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'department' && res.codename == 'view_department') {
+            this.isDepartment = res.codename;
+            console.log(res.codename ); 
+          }
+          else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'incentiveledger' && res.codename == 'view_incentiveledger') {
+            this.isIncentive = res.codename;
+            console.log(res.codename ); 
+          }
       });
     }
 
