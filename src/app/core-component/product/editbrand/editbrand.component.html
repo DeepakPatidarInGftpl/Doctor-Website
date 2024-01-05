@@ -91,6 +91,50 @@
 
                         </div>
                     </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Markup Percentage Customer*</label>
+                            <input type="text" formControlName="markup_percentage_customer" placeholder="Enter Discount"
+                                id="markup_percentage_customer"
+                                [ngClass]="{'is-invalid': f['markup_percentage_customer'].touched && f['markup_percentage_customer'].invalid}">
+                            <span class="text-danger"
+                                *ngIf="markup_percentage_customer && markup_percentage_customer.invalid && markup_percentage_customer.touched">Enter
+                                discount (ex-1-100) </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Markup Percentage Wholesale*</label>
+                            <input type="text" formControlName="markup_percentage_wholesale"
+                                placeholder="Enter Discount" id="markup_percentage_wholesale"
+                                [ngClass]="{'is-invalid': f['markup_percentage_wholesale'].touched && f['markup_percentage_wholesale'].invalid}">
+                            <span class="text-danger"
+                                *ngIf="markup_percentage_wholesale && markup_percentage_wholesale.invalid && markup_percentage_wholesale.touched">Enter
+                                Markup Percentage Wholesale (ex-1-100) </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Markup Percentage Online*</label>
+                            <input type="text" formControlName="markup_percentage_online" placeholder="Enter Discount"
+                                id="markup_percentage_online"
+                                [ngClass]="{'is-invalid': f['markup_percentage_online'].touched && f['markup_percentage_online'].invalid}">
+                            <span class="text-danger"
+                                *ngIf="markup_percentage_online && markup_percentage_online.invalid && markup_percentage_online.touched">Enter
+                                Markup Percentage Online  (ex-1-100)</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Markup Percentage Employee*</label>
+                            <input type="text" formControlName="markup_percentage_employee" placeholder="Enter Discount"
+                                id="markup_percentage_employee"
+                                [ngClass]="{'is-invalid': f['markup_percentage_employee'].touched && f['markup_percentage_employee'].invalid}">
+                            <span class="text-danger"
+                                *ngIf="markup_percentage_employee && markup_percentage_employee.invalid && markup_percentage_employee.touched">Enter
+                                Markup Percentage Employee (ex-1-100) </span>
+                        </div>
+                    </div>
                     <!-- <ng-multiselect-dropdown [placeholder]="'Select Variants'"
                     [settings]="dropdownSettings" [data]="variantList" [(ngModel)]="selectedItems"
                     (onSelect)="onItemSelect($event)" (onDeSelect)="onItemDeselect($event)"  (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeselectAll($event)">

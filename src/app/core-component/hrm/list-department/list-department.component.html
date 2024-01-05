@@ -77,7 +77,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
-                                    <a style="line-height: 3;">{{products?.title}}</a>
+                                    <a style="line-height: 3;" routerLink="//hrm/detail-department/{{products?.id}}">{{products?.title}}</a>
                                 </td>
                                 <td>
                                     <mat-slide-toggle
@@ -85,9 +85,9 @@
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
-                                    <!-- <a class="me-1" routerLink="//places/city-details/{{products?.id}}">
+                                    <a class="me-1" routerLink="//hrm/detail-department/{{products?.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
-                                    </a> -->
+                                    </a>
                                     <a class="me-1" (click)="editForm(products.id)" *ngIf="isEdit">
                                         <img src="assets/img/icons/edit.svg" alt="img">
                                     </a>

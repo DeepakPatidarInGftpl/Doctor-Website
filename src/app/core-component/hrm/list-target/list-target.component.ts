@@ -133,18 +133,17 @@ export class ListTargetComponent implements OnInit {
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     })
-
     this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
         permission?.map((res: any) => {
-          if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'add_taxslabs') {
+          if (res.content_type.app_label === 'hrm' && res.content_type.model === 'target' && res.codename == 'add_target') {
             this.isAdd = res.codename;
             // console.log(this.isAdd);
-          } else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'change_taxslabs') {
+          } else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'target' && res.codename == 'change_target') {
             this.isEdit = res.codename;
             // console.log(this.isEdit);
-          }else if (res.content_type.app_label === 'product' && res.content_type.model === 'taxslabs' && res.codename == 'delete_taxslabs') {
+          }else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'target' && res.codename == 'delete_target') {
             this.isDelete = res.codename;
             // console.log(this.isDelete);
           }
@@ -177,7 +176,7 @@ export class ListTargetComponent implements OnInit {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase(); 
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res?.slab_title.toLocaleLowerCase(); 
+        const nameLower = res?.department?.title.toLocaleLowerCase(); 
         return nameLower.includes(searchTerm); 
       });
     }
@@ -209,8 +208,10 @@ export class ListTargetComponent implements OnInit {
         columns: [
           //remove action filed
           { header: 'Sr No.' },
-          { header: 'Subcategory Group' },
-          { header: 'SubCategory' },
+          { header: 'Department' },
+          { header: 'Start Date' },
+          { header: 'End Date' },
+          { header: 'Target Value' },
           { header: 'Is Active' }
         ],
       })
@@ -261,7 +262,7 @@ export class ListTargetComponent implements OnInit {
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(5)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(7)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
@@ -271,7 +272,7 @@ export class ListTargetComponent implements OnInit {
     }
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
-      const isActiveTd = row.querySelector('td:nth-child(5)');
+      const isActiveTd = row.querySelector('td:nth-child(7)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
