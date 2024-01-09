@@ -8,6 +8,7 @@ import { SettingsComponent } from './settings.component';
 @NgModule({
   declarations: [
     SettingsComponent,
+    
      ],
   imports: [
     CommonModule,

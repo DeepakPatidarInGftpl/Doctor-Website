@@ -178,8 +178,8 @@
                     <li *ngIf="isAttendnace"><a routerLink="/hrm/list-attendance" routerLinkActive="active">Attendance</a></li>
                     <li *ngIf="isDepartment"><a routerLink="/hrm/department" routerLinkActive="active">Department </a></li>
                     <li *ngIf="isTarget"><a routerLink="/hrm/list-target" routerLinkActive="active">Target</a></li>
-                    <li *ngIf="isIncentive"><a routerLink="/hrm/incentive-ledger" routerLinkActive="active">Incentive Ledger</a></li>
-                    <li *ngIf="isIncentive"><a routerLink="/hrm/incentive" routerLinkActive="active">Incentive Employee</a></li>
+                    <!-- <li *ngIf="isIncentive"><a routerLink="/hrm/incentive-ledger" routerLinkActive="active">Incentive Ledger</a></li> -->
+                    <li *ngIf="isIncentive"><a routerLink="/hrm/incentive" routerLinkActive="active">Incentive Ledger</a></li>
                 </ul>
             </li>
             <li class="submenu" *ngIf="isCountry || isState || isCity">
@@ -201,8 +201,6 @@
                 </ul>
             </li>  -->
 
-          
- 
             <li class="submenu" *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview || isOrder">
                 <a  [ngClass]="{'active': activePath === 'website'}"><i class="fa fa-sitemap" data-bs-toggle="tooltip" title="fa fa-sitemap" style="color: #637381;"></i><span> Website</span> <span class="menu-arrow"></span></a>
                 <ul>
@@ -218,13 +216,12 @@
                     <li *ngIf="isAboutBanner"><a routerLink="/website/aboutBanner" routerLinkActive="active">About Banner</a></li>  
                     <li *ngIf="isAboutFooterBanner"><a routerLink="/website/aboutFooterBanner" routerLinkActive="active">About Footer Banner</a></li>  
                     <li *ngIf="isNewarrivalBanner"><a routerLink="/website/newArrivalBanner" routerLinkActive="active">New Arrival Banner</a></li>  
-                    <li *ngIf="isRatingReview"><a routerLink="/website/ratingAndReview" routerLinkActive="active">Rating And Review</a></li>  
-                    
+                    <li *ngIf="isRatingReview"><a routerLink="/website/ratingAndReview" routerLinkActive="active">Rating And Review</a></li>   
                     <li *ngIf="isOrder"><a routerLink="/website/productOrder" routerLinkActive="active">Product Order</a></li>  
                 </ul>
             </li>  
             
-              <li class="submenu" *ngIf="isUser || isFinancialYear || isPaymentTerms || isGroup || isAdditional">
+              <li class="submenu" *ngIf="isUser || isFinancialYear || isPaymentTerms || isGroup || isAdditional || isMembership">
                   <a [ngClass]="{'active': activePath === 'settings'}"><img src="assets/img/icons/settings.svg" alt="img"><span> Settings</span> <span
                           class="menu-arrow"></span></a>
                   <ul [ngClass]="{'block': sideBarControls[18].value === true}">
@@ -234,8 +231,9 @@
                         <li *ngIf="isGroup"><a routerLink="/settings/permissionGroup" routerLinkActive="active">Permission Group</a></li>
                         <li *ngIf="isAdditional"><a routerLink="/settings/additionalCharge" routerLinkActive="active">Additional Charges</a></li>            
                         <li *ngIf="isAdditional"><a routerLink="/settings/terms" routerLinkActive="active">Terms</a></li>  
-
-                        <!-- <li><a routerLink="/settings/generalsettings" routerLinkActive="active">General Settings</a></li>
+                        <li *ngIf="isMembership"><a routerLink="/settings/membership" routerLinkActive="active">Membership</a></li>  
+             
+                 <!-- <li><a routerLink="/settings/generalsettings" routerLinkActive="active">General Settings</a></li>
                       <li><a routerLink="/settings/emailsettings" routerLinkActive="active">Email Settings</a></li>
                       <li><a routerLink="/settings/paymentsettings" routerLinkActive="active">Payment Settings</a></li>
                       <li><a routerLink="/settings/currencysettings" routerLinkActive="active">Currency Settings</a></li>
@@ -461,8 +459,7 @@
                         </div>
                 </div>
               </li> -->
-           
-            
+                 
               <!-- <li class="submenu">
         <h6 class="sub-head mb-2">Sales</h6>
         <div class="sub-ul">

@@ -111,5 +111,38 @@ export class HrmServiceService {
     }
     return this.http.get<any>(url);
   }
+
+  getLoyalPoints(customerId:any) {
+    let url = this.apiUrl + '/pv-api/loyalty-points/?customer_id=';
+    return this.http.get(`${url}${customerId}`)
+  }
+
+  //membership
+  
+  getMembership() {
+    let url = this.apiUrl + '/pv-api/membership/';
+    return this.http.get(url);
+  }
+  addMembership(data: any) {
+    let url = this.apiUrl + '/pv-api/membership/';
+    return this.http.post(url, data);
+  }
+  getMembershipById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/membership/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  MembershipIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/membership/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  updateMembership(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/membership/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deleteMembership(id: number) {
+    let url = this.apiUrl + '/pv-api/membership/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
+
 }
 
