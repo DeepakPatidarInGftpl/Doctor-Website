@@ -151,6 +151,48 @@
                     </div>
                 </div>
             </mat-tab>
+            <mat-tab label="Loyalty" *ngIf="LoyaltyList">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row container">
+                            <ng-container>
+                                <div class="col-lg-5 col-sm-5 col-12 d-flex">
+                                    <div class="dash-count">
+                                        <div class="dash-counts">
+                                            <h4>{{LoyaltyList?.['current financial year']}}</h4>
+                                            <h5>Financial Year</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-4 col-12 d-flex">
+                                    <div class="dash-count das1">
+                                        <div class="dash-counts">
+                                            <h4>{{LoyaltyList?.['loyalty points']}}</h4>
+                                            <h5>Loyalty Point</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-4 col-12 d-flex">
+                                    <div class="dash-count das2">
+                                        <div class="dash-counts">
+                                            <h4>{{LoyaltyList?.sale_bill_credit_points}}</h4>
+                                            <h5>Sale Bill Credit Point</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-4 col-12 d-flex">
+                                    <div class="dash-count das3">
+                                        <div class="dash-counts">
+                                            <h4>{{LoyaltyList?.sale_return_points}}</h4>
+                                            <h5>Sael Return Points</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
             <mat-tab label="Logs" *ngIf="productDetail?.logs?.length>0">
                 <div class="card">
                     <div class="search-set mx-3 mt-3">

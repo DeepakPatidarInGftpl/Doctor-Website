@@ -120,6 +120,11 @@ const routes: Routes = [
   {
     path: 'financial-year-details/:id', loadChildren: () => import('./financial-year-details/financial-year-details.module').then((m) => m.FinancialYearDetailsModule)
   },
+  {path: 'membership', loadChildren: () => import('./membership/membership.module').then((m) => m.MembershipModule)},
+  {path: 'add-membership', loadChildren: () => import('./add-membership/add-membership.module').then((m) => m.AddMembershipModule)},
+  {path: 'update-membership/:id', loadChildren: () => import('./update-membership/update-membership.module').then((m) => m.UpdateMembershipModule)},
+  {path: 'detail-membership/:id', loadChildren: () => import('./detail-membership/detail-membership.module').then((m) => m.DetailMembershipModule)},
+
 ];
 
 @NgModule({

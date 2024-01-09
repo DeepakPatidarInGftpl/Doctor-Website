@@ -1,7 +1,7 @@
-import { Location } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
@@ -15,7 +15,7 @@ export class IncentiveLedgerEmployeeComponent implements OnInit {
 
   filteredemployee: Observable<any[]>;
   employeeControl = new FormControl();
-  constructor(private hrmService: HrmServiceService, private fb: FormBuilder, private contactService: ContactService) { }
+  constructor(private router:Router,private hrmService: HrmServiceService, private fb: FormBuilder, private contactService: ContactService) { }
 
   id: any
   filterForm: FormGroup
@@ -33,6 +33,9 @@ export class IncentiveLedgerEmployeeComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    //incentive
+    // this.getIncentiveLedger('','','')
   }
   private _filter(value: string | number, include: boolean): any[] {
     // console.log(value);
@@ -52,7 +55,6 @@ export class IncentiveLedgerEmployeeComponent implements OnInit {
       this.incentiveList = res;
       console.warn(this.incentiveList);
       console.log(this.incentiveList?.SaleBills);
-
     })
   }
 
@@ -63,7 +65,7 @@ export class IncentiveLedgerEmployeeComponent implements OnInit {
       // this.variants=res;
     })
   }
-
+  isFilterData=false;
   onCheck(employeeId: any) {
     console.log(employeeId, 'employeeId');
     this.filterForm.get('employee_id').patchValue(employeeId);
@@ -75,9 +77,41 @@ export class IncentiveLedgerEmployeeComponent implements OnInit {
       let id = data?.employee_id;
       let to_date = data?.to_date;
       let from_date = data?.from_date;
+      this.isFilterData=true;
       this.getIncentiveLedger(id, to_date, from_date);
     }else{
       this.filterForm.markAllAsTouched();
+    }
+  }
+
+  redirectTo(type: any,vId:any) {
+    console.log(type);
+    
+    if (type === 'Receipt') {
+      this.router.navigate(['//transaction/detailsrecieptVoucher' +vId]);
+    } else if (type === 'POSOrder') {
+      this.router.navigate(['//newpos/posOrderDetails' +vId]); //
+    } else if (type === 'MaterialInward') {
+      this.router.navigate(['//purchase/material-InwardDetails/' +vId]);
+    }else if (type === 'DebitNote') {
+      this.router.navigate(['//transaction/detailsdebitnote/' +vId]);
+    } else if (type === 'PurchaseBill') {
+      this.router.navigate(['//purchase/purchase-billDetails/' +vId]);
+    } else if (type === 'PurchaseOrder') {
+      this.router.navigate(['//purchase/purchaseDetails/' +vId]);
+    }else if (type === 'PurchaseReturn') {
+      this.router.navigate(['//purchase/details-purchaseReturn/' +vId]);
+    } else if (type === 'SaleBill') {
+      this.router.navigate(['//sales/salesbilldetails/' +vId]);
+    } else if (type === 'SaleReturn') {
+      this.router.navigate(['//sales/salesReturnedetails/' +vId]);
+    }  else if (type === 'PurchaseReturn') {
+      this.router.navigate(['//purchase/details-purchaseReturn/' +vId]);
+    } else if (type === 'MaterialOutward ') {
+      this.router.navigate(['//sales/salesMaterialOutwardDetails/' +vId]);
+    } else{
+      console.log('no voucher type matching');
+      
     }
   }
   p: number = 1
