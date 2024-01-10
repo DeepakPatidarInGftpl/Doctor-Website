@@ -144,5 +144,27 @@ export class HrmServiceService {
     return this.http.delete(`${url}${id}`)
   }
 
+
+  //target graph 
+   getTargetGraph(employee_id: any,department_id:any, from_date: any,to_date: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/target-graph/';
+    const queryParams: any[] = [];
+    if (employee_id) {
+      queryParams.push(`employee_id=${employee_id}`);
+    }
+    if(department_id){
+      queryParams.push(`department_id=${department_id}`);
+    }
+    if (from_date) {
+      queryParams.push(`from_date=${from_date}`);
+    }
+    if (to_date) {
+      queryParams.push(`to_date=${to_date}`);
+    }
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
 }
 
