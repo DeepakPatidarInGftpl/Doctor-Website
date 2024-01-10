@@ -13,8 +13,10 @@ const routes: Routes = [
   { path: 'list-target', loadChildren: () => import('./list-target/list-target.module').then((m) => m.ListTargetModule) },
   { path: 'detail-target/:id', loadChildren: () => import('./details-target/details-target.module').then((m) => m.DetailsTargetModule) },
 
-  {path:'incentive-ledger',loadChildren:()=>import('./incentive-ledger/incentive-ledger.module').then((m)=>m.IncentiveLedgerModule)},
-{path:'incentive',loadChildren:()=>import('./incentive-ledger-employee/incentive-ledger-employee.module').then((m)=>m.IncentiveLedgerEmployeeModule)}
+  { path: 'incentive-ledger', loadChildren: () => import('./incentive-ledger/incentive-ledger.module').then((m) => m.IncentiveLedgerModule) },
+  { path: 'incentive', loadChildren: () => import('./incentive-ledger-employee/incentive-ledger-employee.module').then((m) => m.IncentiveLedgerEmployeeModule) },
+  { path: 'target-graph', loadChildren: () => import('./target-graph/target-graph.module').then((m) => m.TargetGraphModule) }
+
 ];
 
 @NgModule({
