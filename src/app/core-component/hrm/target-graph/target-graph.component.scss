@@ -1,0 +1,57 @@
+.th {
+    background: #EEF0F8;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 140%;
+    color: #3B3B3B;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.td {
+    background-color: #F2F4F3;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 140%;
+    color: #3B3B3B;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.ng-dirty.ng-invalid.is-invalid.ng-touched {
+    border: 1px solid red;
+}
+
+.mat-autocomplete-trigger.mat-input-element.mat-form-field-autofill-control.ng-tns-c114-0.ng-untouched.ng-pristine.ng-valid.cdk-text-field-autofill-monitored.is-invalid {
+    border: 1px solid red;
+}
+
+select,
+input[type="date"],
+input[type="number"],
+input[type="button"] {
+    border: 1px solid rgba(145, 158, 171, 0.32);
+    height: 40px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    color: #637381;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.headingg {
+    color: #FF9F43;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* bar-chart */
+.barchart {
+    height: 350px;
+}

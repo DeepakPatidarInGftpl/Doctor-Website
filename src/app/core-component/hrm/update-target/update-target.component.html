@@ -77,9 +77,9 @@
                                             <td>
                                                 <input type="text" formControlName="estimated_sale_value" (blur)="calculatePercentage(i)" class="form-control" placeholder="ex-100">
                                             </td>
-                                            <td>
+                                            <!-- <td>
                                                 <button (click)="removeCart(i)" class="btn" style="background: #FF9F43;">&#8722;</button>
-                                            </td>
+                                            </td> -->
                                         </tr>
                                     </ng-container>
                                 </ng-container>
@@ -91,9 +91,9 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="w-100 text-right">
+                        <!-- <div class="w-100 text-right">
                             <span (click)="addCart()" class="addMore">+ Add more</span>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-lg-8 text-end mt-5">
                         <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>

@@ -19,19 +19,16 @@
                         'is-invalid': f['department'].touched && f['department'].invalid}" >
                             <option value="" selected disabled>Select department</option>
                             <option value="{{department.id}}" *ngFor="let department of departmentList">
-                                {{department.title}}
+                                {{department?.title}}
                             </option>
                         </select>
-                        <span class="text-danger"
-                            *ngIf="department && department.invalid && department.touched">Select Department
-                        </span>
+                        <span class="text-danger" *ngIf="department && department.invalid && department.touched">Select Department </span>
                     </div>
                     </div>
                     <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Start Date</label>
-                        <input type="date" formControlName="start_date" id="start_date" (change)="onCheck()"
-                            [ngClass]="{'is-invalid': f['start_date'].touched && f['start_date'].invalid}">
+                        <input type="date" formControlName="start_date" id="start_date" (change)="onCheck()" [ngClass]="{'is-invalid': f['start_date'].touched && f['start_date'].invalid}">
                         <span class="text-danger" *ngIf="start_date && start_date.invalid && start_date.touched">Select Start Date</span>
                     </div>
                     </div>
@@ -77,9 +74,9 @@
                                             <td>
                                                 <input type="text" formControlName="estimated_sale_value" (blur)="calculatePercentage(i)" class="form-control" placeholder="ex-100">
                                             </td>
-                                            <td>
+                                            <!-- <td>
                                                 <button (click)="removeCart(i)" class="btn" style="background: #FF9F43;">&#8722;</button>
-                                            </td>
+                                            </td> -->
                                         </tr>
                                     </ng-container>
                                 </ng-container>
@@ -91,9 +88,9 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="w-100 text-right">
+                        <!-- <div class="w-100 text-right">
                             <span (click)="addCart()" class="addMore">+ Add more</span>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-lg-8 text-end mt-5">
                         <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>

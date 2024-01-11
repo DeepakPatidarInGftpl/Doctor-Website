@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Start Date</label>
+                        <label>From Date</label>
                         <input type="date" formControlName="from_date" id="from_date"
                         [ngClass]="{'is-invalid': f['from_date'].touched && f['from_date'].invalid}">
                         <span class="text-danger" *ngIf="from_date && from_date.invalid && from_date.touched">Select From Date</span>
@@ -25,6 +25,8 @@
                         <span class="text-danger" *ngIf="to_date && to_date.invalid && to_date.touched">Select To Date</span>
                     </div>
                 </div>
+              
+             
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label style="padding-left: 12px;">Select Employee</label>
@@ -58,32 +60,270 @@
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
                         <mat-tab label="General Details">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td class="th">Incentive</td>
-                                            <td class="td">{{incentiveList?.incentive}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Credit Amount</td>
-                                            <td class="td">{{incentiveList?.credit_amount}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Debit Amount</td>
-                                            <td class="td">{{incentiveList?.debit_amount}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="th">Wages</td>
-                                            <td class="td">{{incentiveList?.wages}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="table-responsive" *ngIf="!isFilterData">
+                                <div class="card" *ngFor="let incentiveList of incentiveList; let i =index;">
+                                    <div class="page-title">
+                                        <p class="headingg text-start ">{{i+1+'.'}}</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row container">
+                                            <ng-container>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.incentive}}</h4>
+                                                            <h5>Incentive</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.credit_amount}}</h4>
+                                                            <h5>Credit Amount</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.debit_amount}}</h4>
+                                                            <h5>Debit Amount</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.wages}}</h4>
+                                                            <h5>Wages</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <!-- bills -->
+                                            <div class="page-title">
+                                                <p class="headingg text-start">Sale Bills</p>
+                                            </div>
+                                            <ng-container >
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count das1">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.bills?.created_date}}</h4>
+                                                            <h5>Created Date</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count das1">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.bills?.voucher_type}}</h4>
+                                                            <h5>Voucher Type</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count das1">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.bills?.voucher_number}}</h4>
+                                                            <h5>Voucher Number</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count das1">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.bills?.transaction_type}}</h4>
+                                                            <h5>Transaction Type</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count das1">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.bills?.points}}</h4>
+                                                            <h5>Points</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count das1">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.bills?.amount}}</h4>
+                                                            <h5>Amount</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count das1">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.bills?.total_amount}}</h4>
+                                                            <h5>Total Amount</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                              
+                                            </ng-container>
+                                           
+                                            <!-- after filter data -->
+                                            <ng-container *ngIf="isFilterData">
+                                                <ng-container>
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.incentive}}</h4>
+                                                                <h5>Incentive</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.credit_amount}}</h4>
+                                                                <h5>Credit Amount</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.debit_amount}}</h4>
+                                                                <h5>Debit Amount</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.wages}}</h4>
+                                                                <h5>Wages</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                                <!-- bills -->
+                                                <div class="page-title" *ngIf="!isFilterData">
+                                                    <p class="headingg text-start">Sale Bills</p>
+                                                </div>
+                                                <ng-container *ngIf="!isFilterData">
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.bills?.created_date}}</h4>
+                                                                <h5>Created Date</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.bills?.voucher_type}}</h4>
+                                                                <h5>Voucher Type</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.bills?.voucher_number}}</h4>
+                                                                <h5>Voucher Number</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.bills?.transaction_type}}</h4>
+                                                                <h5>Transaction Type</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.bills?.points}}</h4>
+                                                                <h5>Points</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.bills?.amount}}</h4>
+                                                                <h5>Amount</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                        <div class="dash-count">
+                                                            <div class="dash-counts">
+                                                                <h4>{{incentiveList?.bills?.total_amount}}</h4>
+                                                                <h5>Total Amount</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                  
+                                                </ng-container>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </mat-tab>
-                        <mat-tab label="Sale Bills" *ngIf="productDetail?.SaleBills?.length>0">
-                            <div class="card">
-                                <div class="card-body">
+                            <!-- after filter -->
+
+                            <div class="table-responsive" *ngIf="isFilterData">
+                                <div class="card" >
+                                    <div class="card-body">
+                                        <div class="row container">
+                                            <ng-container>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.incentive}}</h4>
+                                                            <h5>Incentive</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count das1">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.credit_amount}}</h4>
+                                                            <h5>Bill Amount</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count das2">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.debit_amount}}</h4>
+                                                            <h5>Return Amount</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                                                    <div class="dash-count das3">
+                                                        <div class="dash-counts">
+                                                            <h4>{{incentiveList?.wages}}</h4>
+                                                            <h5>Wages</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- end after filter -->
+
+
+
+                            <div class="page-title" *ngIf="isFilterData">
+                                <p class="headingg text-start">Sale Bills</p>
+                            </div>
+                            <div class="card" *ngIf="isFilterData">
+                                <div class="card-body" *ngIf="incentiveList?.bills.length>0">
                                     <div class="table-responsive">
                                         <table class="table datanew">
                                             <thead>
@@ -91,28 +331,33 @@
                                                     <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
                                                     <th class="th" (click)="sort('id')">Created Date<i class="fa fa-sort"></i></th>
                                                     <th class="th" (click)="sort('id')">Voucher Number<i class="fa fa-sort"></i></th>
-                                                    <th class="th" (click)="sort('id')">Transaction Type<i class="fa fa-sort"></i></th>
-                                                    <th class="th" (click)="sort('id')">Points<i class="fa fa-sort"></i></th>
-                                                    <th class="th" (click)="sort('id')">Amount<i class="fa fa-sort"></i></th>
-                                                    <th class="th" (click)="sort('id')">Total Amount<i class="fa fa-sort"></i></th>
+                                                    <!-- <th class="th" (click)="sort('id')">Transaction Type<i class="fa fa-sort"></i></th> -->
+                                                    <th class="th" (click)="sort('id')">Credit Amount<i class="fa fa-sort"></i></th>
+                                                    <th class="th" (click)="sort('id')">Debit Amount<i class="fa fa-sort"></i></th>
+                                                    <!-- <th class="th" (click)="sort('id')">Points<i class="fa fa-sort"></i></th> -->
+                                                    <th class="th" (click)="sort('id')">Voucher Amount<i class="fa fa-sort"></i></th>
+                                                    <!-- <th class="th" (click)="sort('id')">Incentive Amount<i class="fa fa-sort"></i></th> -->
+                                                 
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <ng-container
-                                                    *ngFor="let salebill of productDetail?.SaleBills | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                    *ngFor="let salebill of incentiveList?.bills | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
                                                     <tr>
-                                                        <td class="td" (click)="sort('id')">{{i+1}}</td>
-                                                        <td class="td" (click)="sort('id')">{{salebill?.created_date}}</td>
-                                                        <td class="td" (click)="sort('id')">{{salebill?.voucher_number}}</td>
-                                                        <td class="td" (click)="sort('id')">{{salebill?.transaction_type}}</td>
-                                                        <td class="td" (click)="sort('id')">{{salebill?.voucher_number}}</td>
-                                                        <td class="td" (click)="sort('id')">{{salebill?.points}}</td>
-                                                        <td class="td" (click)="sort('id')">{{salebill?.amount}}</td>
-                                                        <td class="td" (click)="sort('id')">{{salebill?.total_amount}}</td>
+                                                        <td class="td">{{i+1}}</td>
+                                                        <td class="td">{{salebill?.created_date}}</td>
+                                                        <td class="td" (click)="redirectTo(salebill?.voucher_type,salebill?.bill_id)">{{salebill?.voucher_number}}</td>
+                                                        <!-- <td class="td">{{salebill?.transaction_type}}</td>
+                                                        <td class="td">{{salebill?.points}}</td> -->
+                                                        <td class="td">{{salebill?.transaction_type==='Credit'?salebill?.amount:0.00}}</td>
+                                                        <td class="td">{{salebill?.transaction_type==='Debit'?salebill?.amount:0.00}}</td>
+                                                        <td class="td">{{salebill?.total_amount}}</td>
+                                                        <!-- <td class="td">{{salebill?.amount}}</td> -->
+                                                      
                                                     </tr>
                                                 </ng-container>
                                             </tbody>
-                                            <tbody *ngIf="productDetail?.SaleBills==0">
+                                            <tbody *ngIf="incentiveList?.bills==0">
                                                 <tr>
                                                     <td colspan="10">
                                                         <p class="center-textt">Data not available</p>
@@ -148,10 +393,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </mat-tab>
-                        <mat-tab label="Sale Return" *ngIf="productDetail?.SaleReturn?.length>0">
-                            <div class="card">
-                                <div class="card-body">
+                            <!-- <div class="page-title" *ngIf="isFilterData">
+                                <p class="headingg text-start">Sale Return</p>
+                            </div>
+                            <div class="card" *ngIf="isFilterData" >
+                                <div class="card-body" *ngIf="incentiveList?.SaleReturn.length>0">
                                     <div class="table-responsive">
                                         <table class="table datanew">
                                             <thead>
@@ -167,20 +413,19 @@
                                             </thead>
                                             <tbody>
                                                 <ng-container
-                                                    *ngFor="let salereturn of productDetail?.SaleReturn | orderBy:key:reversee | paginate:{itemsPerPage:itemsPerPage2,currentPage:pp}; index as i">
+                                                    *ngFor="let salereturn of incentiveList?.SaleReturn | orderBy:key:reversee | paginate:{itemsPerPage:itemsPerPage2,currentPage:pp}; index as i">
                                                     <tr>
                                                         <td class="td">{{i+1}}</td>
                                                         <td class="td">{{salebill?.created_date}}</td>
                                                         <td class="td">{{salebill?.voucher_number}}</td>
                                                         <td class="td">{{salebill?.transaction_type}}</td>
-                                                        <td class="td">{{salebill?.voucher_number}}</td>
                                                         <td class="td">{{salebill?.points}}</td>
                                                         <td class="td">{{salebill?.amount}}</td>
                                                         <td class="td">{{salebill?.total_amount}}</td>
                                                     </tr>
                                                 </ng-container>
                                             </tbody>
-                                            <tbody *ngIf="productDetail?.SaleReturn==0">
+                                            <tbody *ngIf="incentiveList?.SaleReturn==0">
                                                 <tr>
                                                     <td colspan="10">
                                                         <p class="center-textt">Data not available</p>
@@ -216,8 +461,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </mat-tab>
+                       
                     </mat-tab-group>
                 </div>
             </div>

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
 
 @Component({
   selector: 'app-detail-customer',
@@ -11,11 +12,12 @@ import { CoreService } from 'src/app/Services/CoreService/core.service';
 })
 export class DetailCustomerComponent implements OnInit {
 
-  constructor(private Arout: ActivatedRoute, private coreService: ContactService,private location:Location) { }
+  constructor(private Arout: ActivatedRoute, private hrmService: HrmServiceService, private coreService: ContactService, private location: Location) { }
   id: any
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
+    this.getLoyaltyPoints()
   }
 
   ngAfterViewInit() {
@@ -37,14 +39,20 @@ export class DetailCustomerComponent implements OnInit {
   productDetail: any
   getdata() {
     this.coreService.getCustomerById(this.id).subscribe(res => {
-        if(this.id==res.id){
-          this.productDetail = res
-          this.filteredData = this.productDetail?.logs.slice(); // Initialize filteredData with the original data
-          this.filterData(); 
-        }
+      if (this.id == res.id) {
+        this.productDetail = res
+        this.filteredData = this.productDetail?.logs.slice(); // Initialize filteredData with the original data
+        this.filterData();
+      }
     })
   }
-
+  LoyaltyList: any;
+  getLoyaltyPoints() {
+    this.hrmService.getLoyalPoints(this.id).subscribe((res: any) => {
+      console.log(res);
+      this.LoyaltyList = res;
+    })
+  }
   sho = true;
   sho1 = false;
   sho2 = false;
@@ -59,7 +67,7 @@ export class DetailCustomerComponent implements OnInit {
     this.sho2 = !this.sho2;
   }
 
-  goBack(){
+  goBack() {
     this.location.back()
   }
 
@@ -68,30 +76,30 @@ export class DetailCustomerComponent implements OnInit {
   itemsPerPage = 10;
   key = 'id';
   reverse: boolean = false;
-  
+
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
   }
 
-   // filter data
-   filteredData: any[]; 
-  
-   filterOpertion:any;
-   filterData() {
-     let filteredData = this.productDetail?.logs.slice();
-     // if (this.supplierType) {
-     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
-     // }
-  
-     if (this.filterOpertion) {
-       filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
-     }
-     this.filteredData = filteredData;
-   }
-   clearFilter() {
-     this.filterOpertion=null;
-     this.filterData();
-   }
+  // filter data
+  filteredData: any[];
+
+  filterOpertion: any;
+  filterData() {
+    let filteredData = this.productDetail?.logs.slice();
+    // if (this.supplierType) {
+    //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
+    // }
+
+    if (this.filterOpertion) {
+      filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
+    }
+    this.filteredData = filteredData;
+  }
+  clearFilter() {
+    this.filterOpertion = null;
+    this.filterData();
+  }
 }
 

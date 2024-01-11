@@ -5,8 +5,6 @@
     </div>
 </div>
 
-
-<!-- /add -->
 <form [formGroup]="attendanceForm" (ngSubmit)="submit()">
     <div class="row">
         <div class="card ">
@@ -15,8 +13,7 @@
                     <div class="col-lg-3 col-sm-4 col-12">
                         <div class="form-group">
                             <label>Date*</label>
-                            <input type="date" formControlName="date" id="date" (change)="onCheck()"
-                                [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
+                            <input type="date" formControlName="date" id="date" (change)="onCheck()" [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
                             <span class="text-danger" *ngIf="date && date.invalid && date.touched">Select Date</span>
                         </div>
                     </div>
@@ -59,24 +56,18 @@
                                                     *ngIf="total_present_day(i) && total_present_day(i).invalid && total_present_day(i).touched">Enter
                                                     Total Present Day (ex:1-31)</span>
                                             </td>
-                                            <td>
-                                                <button (click)="removeAttendance(i)" class="btn"
-                                                    style="background: #FF9F43;">&#8722;</button>
-                                            </td>
+                                            <!-- <td> <button (click)="removeAttendance(i)" class="btn" style="background: #FF9F43;">&#8722;</button></td> -->
                                         </tr>
                                     </ng-container>
                                 </ng-container>
                             </tbody>
                         </table>
-                        <div class="w-100 text-right">
-                            <span (click)="addAttendance()" class="addMore">+ Add more</span>
-                        </div>
+                        <!-- <div class="w-100 text-right"> <span (click)="addAttendance()" class="addMore">+ Add more</span> </div> -->
                     </div>
                     <div class="col-lg-8 text-end mt-5">
                         <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                         <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                            <span class="spinner-border spinner-border-sm" role="status"
-                                aria-hidden="true"></span>&nbsp; Submit</button>
+                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
                         <a routerLink="//hrm/list-attendance" class="btn btn-cancel">Cancel</a>
                     </div>
                 </div>
@@ -84,4 +75,3 @@
         </div>
     </div>
 </form>
-<!-- /add -->

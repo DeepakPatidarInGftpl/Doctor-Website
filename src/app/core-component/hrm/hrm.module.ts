@@ -7,10 +7,7 @@ import { HrmComponent } from './hrm.component';
 @NgModule({
   declarations: [
     HrmComponent,
-    
-    
-    
-      ],
+ ],
   imports: [
     CommonModule,
     HrmRoutingModule

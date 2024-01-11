@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
     },
     responsive: true,
     maintainAspectRatio: false,
-  };
+  }; 
 
   //transaction
   public transactionBarChartOptions: any = {

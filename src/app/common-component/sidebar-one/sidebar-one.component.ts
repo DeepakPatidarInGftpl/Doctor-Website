@@ -104,7 +104,8 @@ export class SidebarOneComponent implements OnInit {
   isPaymentTerms: any;
   isGroup: any;
   isAdditional: any
-  isUser;
+  isUser:any;
+  isMembership:any;
   //pos
   isPosOrder: any;
   // bank
@@ -293,6 +294,8 @@ export class SidebarOneComponent implements OnInit {
           this.isUser = res.codename
         } else if (res.content_type.app_label === 'account' && res.content_type.model === 'additionalcharge' && res.codename == 'view_additionalcharge') {
           this.isAdditional = res.codename;
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'membership' && res.codename == 'view_membership') {
+          this.isMembership = res.codename;
         }
         // sales
         else if (res.content_type.app_label === 'sale' && res.content_type.model === 'saleorder' && res.codename == 'view_saleorder') {
@@ -338,12 +341,10 @@ export class SidebarOneComponent implements OnInit {
           else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'target' && res.codename == 'view_target') {
             this.isTarget = res.codename;
             console.log(res.codename ); 
-          }
-          else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'department' && res.codename == 'view_department') {
+          } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'department' && res.codename == 'view_department') {
             this.isDepartment = res.codename;
             console.log(res.codename ); 
-          }
-          else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'incentiveledger' && res.codename == 'view_incentiveledger') {
+          } else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'incentiveledger' && res.codename == 'view_incentiveledger') {
             this.isIncentive = res.codename;
             console.log(res.codename ); 
           }
