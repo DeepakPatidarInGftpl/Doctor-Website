@@ -29,6 +29,7 @@ export class BatchVariantProductUpdateComponent implements OnInit {
      private location:Location) {
   }
   id: number;
+  variantId:number;
 batchRes:any;
   ngOnInit(): void {
     this.batchForm = this.fb.group({
@@ -45,11 +46,11 @@ batchRes:any;
       max_order_quantity: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       additional_discount:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      employee_incentive:new FormControl(0,[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      employee_incentive_type:('%')
+      // employee_incentive:new FormControl(0,[Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      // employee_incentive_type:('%')
     })
     this.id = +this.Arout.snapshot.paramMap.get('id');
-
+    this.variantId = +this.Arout.snapshot.paramMap.get('v_id');
     this.coreService.getBatchById(this?.id).subscribe(res=>{
       this.batchRes=res;
       this.batchForm.patchValue(res)
@@ -57,12 +58,129 @@ batchRes:any;
     })
   }
 
+  brandList: any;
+  getBrand() {
+    this.coreService.getVariantBrandById(this.variantId).subscribe((res: any) => {
+      console.log(res);
+      this.brandList = res?.product?.brand;
+      console.log(this.brandList);
+      if (this.brandList?.markup_percentage_employee > 0) {
+        let cost_price = this.batchForm.value?.cost_price;
+        let percentage = cost_price * this.brandList?.markup_percentage_employee / 100;
+        let price = cost_price + percentage;
+        this.batchForm.get('selling_price_employee')?.patchValue(price);
+        this.checkMrpSelling()
+      }
+      if (this.brandList?.markup_percentage_online > 0) {
+        let cost_price = this.batchForm.value?.cost_price;
+        let percentage = cost_price * this.brandList?.markup_percentage_online / 100;
+        let price = cost_price + percentage;
+        this.batchForm.get('selling_price_online')?.patchValue(price);
+        this.checkMrpSelling()
+      }
+      if (this.brandList?.markup_percentage_customer > 0) {
+        let cost_price = this.batchForm.value?.cost_price;
+        let percentage = cost_price * this.brandList?.markup_percentage_customer / 100;
+        let price = cost_price + percentage;
+        this.batchForm.get('selling_price_offline')?.patchValue(price);
+        this.checkMrpSelling()
+      }
+      if (this.brandList?.markup_percentage_wholesale > 0) {
+        let cost_price = this.batchForm.value?.cost_price;
+        let percentage = cost_price * this.brandList?.markup_percentage_wholesale / 100;
+        let price = cost_price + percentage;
+        this.batchForm.get('selling_price_dealer')?.patchValue(price);
+        this.checkMrpSelling()
+      }
+      // this.batchForm.get('selling_price_online')?.patchValue(this.brandList?.markup_percentage_online);
+      // this.batchForm.get('selling_price_offline')?.patchValue(this.brandList?.markup_percentage_customer);
+      // this.batchForm.get('selling_price_dealer')?.patchValue(this.brandList?.markup_percentage_wholesale);
+    })
+  }
+  errorCost: any;
+  checkCost() {
+    let mrp = this.batchForm.value?.mrp;
+    let cost_price = this.batchForm.value?.cost_price;
+    console.log(this.batchForm.value);
+    if (cost_price < mrp) {
+      this.errorCost = '';
+      this.getBrand();
+      this.batchForm.get('selling_price_employee')?.patchValue(cost_price);
+      this.batchForm.get('selling_price_online')?.patchValue(cost_price);
+      this.batchForm.get('selling_price_offline')?.patchValue(cost_price);
+      this.batchForm.get('selling_price_dealer')?.patchValue(cost_price);
+   
+    } else {
+      // this.toastr.error('Cost Price Should Be Less Than MRP')
+      this.errorCost = 'Cost Price Should Be Less Than MRP';
+    }
+  }
+  errorMrp: any;
+  checkMrpSelling() {
+    let selling_price_offline = this.batchForm.value?.selling_price_offline;
+    let selling_price_online = this.batchForm.value?.selling_price_online;
+    let selling_price_dealer = this.batchForm.value?.selling_price_dealer;
+    let selling_price_employee = this.batchForm.value?.selling_price_employee;
+    let mrp = this.batchForm.value?.mrp;
+    let cost_price = this.batchForm.value?.cost_price;
+    console.log(this.batchForm.value);
+    console.log(selling_price_offline > cost_price &&
+      selling_price_online > cost_price &&
+      selling_price_dealer > cost_price &&
+      selling_price_employee > cost_price &&
+      selling_price_offline <= mrp &&
+      selling_price_online <= mrp &&
+      selling_price_dealer <= mrp &&
+      selling_price_employee <= mrp);
+    if (
+      selling_price_offline > cost_price &&
+      selling_price_online > cost_price &&
+      selling_price_dealer > cost_price &&
+      selling_price_employee > cost_price &&
+      selling_price_offline <= mrp &&
+      selling_price_online <= mrp &&
+      selling_price_dealer <= mrp &&
+      selling_price_employee <= mrp
+    ) {
+      this.errorMrp = '';
+      console.log(selling_price_offline > cost_price &&
+        selling_price_online > cost_price &&
+        selling_price_dealer > cost_price &&
+        selling_price_employee > cost_price &&
+        selling_price_offline <= mrp &&
+        selling_price_online <= mrp &&
+        selling_price_dealer <= mrp &&
+        selling_price_employee <= mrp);
+      
+    } else {
+      this.errorMrp = 'Selling Price Should Be Grater Than Cost Price And Less Than Equal To MRP'
+    }
+  }
   // form submit
   addRes: any;
   loader=false;
   submit() {
     // console.log(this.batchForm.value);
     if (this.batchForm.valid) {
+      let selling_price_offline = this.batchForm.value?.selling_price_offline;
+      let selling_price_online = this.batchForm.value?.selling_price_online;
+      let selling_price_dealer = this.batchForm.value?.selling_price_dealer;
+      let selling_price_employee = this.batchForm.value?.selling_price_employee;
+      let mrp = this.batchForm.value?.mrp;
+      let cost_price = this.batchForm.value?.cost_price;
+      if (cost_price < mrp) {
+        this.errorCost = '';
+        if (
+          selling_price_offline > cost_price &&
+          selling_price_online > cost_price &&
+          selling_price_dealer > cost_price &&
+          selling_price_employee > cost_price &&
+          selling_price_offline <= mrp &&
+          selling_price_online <= mrp &&
+          selling_price_dealer <= mrp &&
+          selling_price_employee <= mrp
+        ) {
+          this.errorMrp='';
       this.loader=true;
       this.coreService.updateBatch(this.batchForm.value,this.id).subscribe(res => {
         this.addRes = res
@@ -78,8 +196,14 @@ batchRes:any;
       }, err => {
         this.loader=false;
         // console.log(err.error);
-      })
+      })} else {
+        this.toastr.error('Selling Price Should Be Grater Than Cost Price And Less Than Equal To MRP')
+      }
     } else {
+      // this.toastr.error('Cost Price Should Be Less Than MRP')
+      this.errorCost = 'Cost Price Should Be Less Than MRP';
+    }
+  }else {
       this.batchForm.markAllAsTouched()
       this.toastr.error('Please Fill All The Required Fields')
     }

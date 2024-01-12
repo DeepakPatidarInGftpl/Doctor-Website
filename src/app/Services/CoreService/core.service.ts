@@ -1759,4 +1759,14 @@ export class CoreService {
     }
     return this.http.get<any>(url);
   }
+
+  //product brand
+  getVariantBrandById(id: any) {
+    let url = this.apiUrl + '/pv-api/variant_brand/?variant_id=';
+    return this.http.get<any>(`${url}${id}`);
+  }
+  getProductBrandById(id: any) {
+    let url = this.apiUrl + '/pv-api/product_brand/?product_id=';
+    return this.http.get<any>(`${url}${id}`);
+  }
 }

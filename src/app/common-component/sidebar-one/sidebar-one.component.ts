@@ -125,8 +125,8 @@ export class SidebarOneComponent implements OnInit {
   isCountraVoucher;
   isJournalVoucher;
   isRecieptVoucher;
-  isPaymentVoucher
-
+  isPaymentVoucher:any
+isExpenseVoucher:any //12-1
   // inventory
   isStockTransport;
   isStockTransportRequest;
@@ -323,6 +323,8 @@ export class SidebarOneComponent implements OnInit {
           this.isRecieptVoucher = res.codename;
         } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'paymentvoucher' && res.codename == 'view_paymentvoucher') {
           this.isPaymentVoucher = res.codename;
+        }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'expensesvoucher' && res.codename == 'view_expensesvoucher') {
+          this.isExpenseVoucher = res.codename; //12-1
         }
         // inventory
         else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'view_stocktransfer') {

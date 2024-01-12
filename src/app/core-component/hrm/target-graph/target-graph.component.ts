@@ -138,25 +138,27 @@ export class TargetGraphComponent implements OnInit {
   targetGraphList: any[] = [];
   graphList: any[] = [];
   getTargetGraph(employeeId: any, departmentId: any, from_date: any, to_date: any) {
-    if (this.isEmployee) {
+    if (this.isEmployeeAvailable) {
       this.hrmService.getTargetGraph(employeeId, departmentId, from_date, to_date).subscribe((res: any) => {
         this.targetGraphList = res;
         console.warn(this.targetGraphList);
         this.loader=false;
       })
-    }else if(this.isDepartment){
+    }else if(this.isDepartmentAvailable){
       this.hrmService.getTargetGraph(employeeId, departmentId, from_date, to_date).subscribe((res: any) => {
         this.targetGraphList = res?.employees;
         console.warn(this.targetGraphList);
         this.graphList = this.targetGraphList;
        this.loader=false;
-        this.barChartLabels = this.targetGraphList.map(item => item?.department);
+        this.barChartLabels = this.targetGraphList.map(item => item?.employee_name);
         this.barChartData = this.targetGraphList.map(item => ({
           data: [Math.min(item['%_achieved'], 100)], 
           label: item.employee_name
         }));
       })
-    }else if(this.isEmployee && this.isDepartment){
+    }else if(this.isEmployeeAvailable && this.isDepartmentAvailable){
+      console.log('test');
+      
       this.hrmService.getTargetGraph(employeeId, departmentId, from_date, to_date).subscribe((res: any) => {
         this.targetGraphList = res;
         console.warn(this.targetGraphList);
@@ -172,7 +174,7 @@ export class TargetGraphComponent implements OnInit {
           this.loader = false;
         });
 
-        this.barChartLabels = this.graphList.map(item => item?.department);
+        this.barChartLabels = this.graphList.map(item => item?.employee_name);
         this.barChartData = this.graphList.map(item => ({
           data: [Math.min(item['%_achieved'], 100)], // Limit to a maximum of 100
           label: item.employee_name
@@ -207,6 +209,7 @@ export class TargetGraphComponent implements OnInit {
   isDepartment: any;
   isEmployee:any;
   isEmployeeAvailable=false;
+  isDepartmentAvailable=false;
   submit() {
     console.log(this.filterForm.value);
     if (this.filterForm.valid) {
@@ -216,8 +219,14 @@ export class TargetGraphComponent implements OnInit {
       let to_date = data?.to_date;
       let from_date = data?.from_date;
       this.isFilterData = true;
-      if (d_id) {
+      if (empid && d_id) {
+        this.isEmployee = empid;
         this.isDepartment = d_id;
+        this.isEmployeeAvailable = true;
+        this.isDepartmentAvailable = true;
+      } else if (d_id) {
+        this.isDepartment = d_id;
+        this.isDepartmentAvailable=true;
       }else if(empid){
         this.isEmployee=empid;
         this.isEmployeeAvailable=true;

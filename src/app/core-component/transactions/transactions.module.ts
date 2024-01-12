@@ -7,6 +7,10 @@ import { TransactionsComponent } from './transactions.component';
 @NgModule({
   declarations: [
     TransactionsComponent,
+    
+    
+    
+    
   ],
   imports: [
     CommonModule,

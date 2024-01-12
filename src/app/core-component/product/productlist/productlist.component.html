@@ -159,7 +159,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td class="productimgname">
-                                    <a routerLink="//product/product-details/{{products.id}}" style="line-height: 3;">{{products.title}}</a>
+                                    <a routerLink="//product/product-details/{{products.id}}" style="line-height: 3;white-space: pre-wrap;">{{products.title}}</a>
                                 </td>
                                 <td>{{products?.category?.title}}</td>
                                 <td>{{products?.subcategory?.title}}</td>
@@ -233,7 +233,6 @@
                             <pagination-controls (pageChange)="p = $event"></pagination-controls>  
                             <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}} entries</div>  
                         </div>
-             
                        </div>
                      </div>
                 </div>
