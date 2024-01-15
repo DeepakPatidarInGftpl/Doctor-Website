@@ -68,7 +68,6 @@
                         <th (click)="sort('id')" class="thone">Incentive<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Base Salary<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total Salary<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Status Change <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Status<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action<i class="fa fa-sort"></i></th>
                     </tr>
@@ -92,26 +91,23 @@
                         <td>{{products?.incentive}}</td>
                         <td>{{products?.base_salary}}</td>
                         <td>{{products?.total_salary}}</td>
-                        <td>
-                            <mat-slide-toggle
-                            [disabled]="products.status === 'Reviewed'"
-                            (click)="products.status === 'Draft' ? deActivate(i, products.id) : Active(i, products.id)"
-                            [(ngModel)]="products.status">
-                          </mat-slide-toggle>
-                          
-                        </td>
-                        <span [ngClass]="{'bg-lightgreen': products?.status === 'Draft', 'bg-lightyellow' : products?.status === 'Reviewed' }" class="badges">{{products?.status}}</span>
+                        <td (click)="deActivate(i, products.id)">
+                        <!-- <span [ngClass]="{'bg-lightgreen': products?.status === 'Draft', 'bg-lightyellow' : products?.status === 'Reviewed' }" class="badges">{{products?.status}}</span> -->
+                    {{products?.status}}
                         <td>
                             <a class="me-2" routerLink="//hrm/detail-attendance/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
-                            <a class="me-1" routerLink="//hrm/update-attendance/{{products.id}}" *ngIf="isEdit">
-                                <img src="assets/img/icons/edit.svg" alt="img">
-                            </a>
-                            <a (click)="confirmText(i,products.id)" class="me-2 confirm-text"
-                                href="javascript:void(0);" *ngIf="isDelete">
+                            <ng-container *ngIf="products?.status === 'Draft'">
+                                <a class="me-1" routerLink="//hrm/update-attendance/{{products.id}}" *ngIf="isEdit">
+                                    <img src="assets/img/icons/edit.svg" alt="img">
+                                </a>
+                            </ng-container>
+                            <ng-container *ngIf="products?.status === 'Draft'">
+                                <a (click)="confirmText(i,products.id)" class="me-2 confirm-text" href="javascript:void(0);" *ngIf="isDelete">
                                 <img src="assets/img/icons/delete.svg" alt="img">
                             </a>
+                            </ng-container>
                         </td>
                     </tr>
                 </tbody>
@@ -130,7 +126,6 @@
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
                         <select [(ngModel)]="itemsPerPage" class="pagination">
-                            
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="30">30</option>

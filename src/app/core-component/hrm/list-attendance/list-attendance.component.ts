@@ -70,7 +70,7 @@ export class ListAttendanceComponent implements OnInit {
   deActivate(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Change Status to Draft!",
+      text: "Do you want to Change Status to Reviewed!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -106,7 +106,7 @@ export class ListAttendanceComponent implements OnInit {
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Change Status!",
+      text: "Do you want to Change Status to Reviewed!!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',

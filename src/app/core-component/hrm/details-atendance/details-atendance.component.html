@@ -58,7 +58,6 @@
                                         <tr>
                                             <td class="th">Status</td>
                                             <td class="td"> <div class="d-flex align-items-center mx-4">
-                                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
                                                 <span [ngClass]="{'bg-lightgreen': productDetail?.status === 'Draft', 'bg-lightred' : productDetail?.status === 'Reviewed'}"
                                                 class="badges">{{productDetail?.status}}</span>
                                             </div></td>
