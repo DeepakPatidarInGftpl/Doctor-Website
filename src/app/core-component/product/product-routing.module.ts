@@ -280,6 +280,9 @@ const routes: Routes = [
   { path: 'unit-conversion-details/:id', loadChildren: () => import('./unit-conversion-details/unit-conversion-details.module').then((m) => m.UnitConversionDetailsModule) },
   { path: 'unit-details/:id', loadChildren: () => import('./unit-details/unit-details.module').then((m) => m.UnitDetailsModule) },
 
+  // prouct label
+{ path: 'product-label', loadChildren: () => import('./product-label-list/product-label-list.module').then((m) => m.ProductLabelListModule) },
+ { path: 'detail-product-label/:id', loadChildren: () => import('./details-product-label/details-product-label.module').then((m) => m.DetailsProductLabelModule) },
 ];
 
 @NgModule({

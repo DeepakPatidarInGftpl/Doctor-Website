@@ -1769,4 +1769,30 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/product_brand/?product_id=';
     return this.http.get<any>(`${url}${id}`);
   }
+
+  //product label
+  getProductLabel() {
+    let url = this.apiUrl + '/pv-api/product_label/';
+    return this.http.get(url)
+  }
+  getProductLabelById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/product_label/?id=';
+    return this.http.get<any>(`${url}${id}`)
+  }
+  productLabelIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/product_label/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addProductLabel(data: any) {
+    let url = this.apiUrl + '/pv-api/product_label/';
+    return this.http.post(url, data)
+  }
+  updateProductLabel(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/product_label/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deleteProductLabel(id: number) {
+    let url = this.apiUrl + '/pv-api/product_label/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
 }

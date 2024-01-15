@@ -1,1 +1,40 @@
-<p>update-attendance works!</p>
+<div class="page-header justify-content-center">
+    <div class="page-title">
+        <h4>Update Attendance</h4>
+        <h6>Edit Attendance</h6>
+    </div>
+</div>
+
+<form [formGroup]="attendanceForm" (ngSubmit)="submit()">
+    <div class="row">
+        <div class="card ">
+            <div class="card-body">
+                <div class="row form-card">    
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Total Day Of Month*</label>
+                            <input type="number" formControlName="total_day_of_month" placeholder="ex-25" id="total_day_of_month"
+                                [ngClass]="{'is-invalid': f['total_day_of_month'].touched && f['total_day_of_month'].invalid}">
+                            <span class="text-danger" *ngIf="total_day_of_month && total_day_of_month.invalid && total_day_of_month.touched">Enter
+                                Total Day Of Month</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label>Total Peresent Day*</label>
+                            <input type="number" formControlName="total_persent_day" placeholder="ex-25" id="total_persent_day"
+                                [ngClass]="{'is-invalid': f['total_persent_day'].touched && f['total_persent_day'].invalid}">
+                            <span class="text-danger" *ngIf="total_persent_day && total_persent_day.invalid && total_persent_day.touched">Enter Total Peresent Day</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 text-end mt-5">
+                        <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
+                        <a routerLink="//hrm/list-attendance" class="btn btn-cancel">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

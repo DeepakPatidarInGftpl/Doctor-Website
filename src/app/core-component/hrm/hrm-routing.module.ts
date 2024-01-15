@@ -7,6 +7,7 @@ const routes: Routes = [
   { path: 'list-attendance', loadChildren: () => import('./list-attendance/list-attendance.module').then((m) => m.ListAttendanceModule) },
   { path: 'add-attendance', loadChildren: () => import('./add-attendance/add-attendance.module').then((m) => m.AddAttendanceModule) },
   { path: 'detail-attendance/:id', loadChildren: () => import('./details-atendance/details-atendance.module').then((m) => m.DetailsAtendanceModule) },
+  { path: 'update-attendance/:id', loadChildren: () => import('./update-attendance/update-attendance.module').then((m) => m.UpdateAttendanceModule) },
 
   { path: 'add-target', loadChildren: () => import('./add-target/add-target.module').then((m) => m.AddTargetModule) },
   { path: 'update-target/:id', loadChildren: () => import('./update-target/update-target.module').then((m) => m.UpdateTargetModule) },

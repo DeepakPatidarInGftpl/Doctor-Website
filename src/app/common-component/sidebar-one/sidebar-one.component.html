@@ -81,7 +81,7 @@
                     <li *ngIf="isDealer"><a routerLink="/contacts/dealerList" routerLinkActive="active">Dealer</a></li>
                 </ul>
             </li> 
-            <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isStock ||isStockTransport || isStockTransportRequest">
+            <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isStock ||isStockTransport || isStockTransportRequest ||isProductLabel">
                 <a  [ngClass]="{'active': activePath === 'product'}"><img src="assets/img/icons/product.svg" alt="img"><span>Product Management</span> <span
                         class="menu-arrow"></span></a>
                 <ul>
@@ -104,6 +104,7 @@
                     <li *ngIf="isHsnCode"><a routerLink="product/hsncode" routerLinkActive="active">HSN Code</a></li>
                     <li *ngIf="isUnit"><a routerLink="product/units" routerLinkActive="active">Units</a></li>
                     <li *ngIf="isUnitConversation"><a routerLink="product/unitconversion" routerLinkActive="active">Unit Conversion</a></li>
+                    <li *ngIf="isProductLabel"><a routerLink="product/product-label" routerLinkActive="active">Product Label</a></li>  
                     <!-- <li><a routerLink="/product/variant" routerLinkActive="active">Variant </a></li>
                     <li><a routerLink="/product/importproduct" routerLinkActive="active">Import Products</a></li>
                     <li><a routerLink="/product/barcode" routerLinkActive="active">Print Barcode</a></li>    -->
