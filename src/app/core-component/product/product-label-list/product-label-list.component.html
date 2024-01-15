@@ -55,7 +55,6 @@
                                 <th (click)="sort('id')" class="thone">Sr.No. <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Title<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Incentive <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Incentive Type <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone" *ngIf="isEdit || isDelete">Action <i class="fa fa-sort"></i></th>
                             </tr>
@@ -71,11 +70,12 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td><a class="product-img" routerLink="//product/detail-product-label/{{products?.id}}">{{products.title}}</a></td>
-                                <td>{{products.incentive}}</td>
-                                <td>{{products.incentive_type}}</td>
                                 <td>
-                                    <mat-slide-toggle
-                                        (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
+                                    {{ products.incentive_type === '%' ? products.incentive + products.incentive_type : products.incentive_type+ ' ' + products.incentive }}
+                                  </td>
+                                  
+                                <td>
+                                    <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)"
                                         [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>
                                 <td>
@@ -148,7 +148,7 @@
                 <div class="card-body" *ngIf="addForm">
                     <form [formGroup]="addProductForm" (ngSubmit)="submit()">
                         <div class="row">
-                            <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="col-lg-8 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Title*</label>
                                     <input type="text" formControlName="title" id="title" placeholder="Enter Title" [ngClass]="{
@@ -157,30 +157,31 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Incentive</label>
-                                    <input type="number" formControlName="incentive" id="incentive"
-                                        placeholder="Enter incentive" [ngClass]="{
-                                                'is-invalid': f['incentive'].touched && f['incentive'].invalid }">
+                           
+                            <div class="col-lg-8 col-sm-12 col-12">
+                                <div class="form-group row">
+                                  <div class="col-lg-12">
+                                    <label>Incentive*</label>
+                                    <div class="input-group">
+                                      <div>
+                                        <select formControlName="incentive_type" class=" border hov" required id="incentive_type"
+                                          [ngClass]="{'is-invalid': f['incentive_type'].touched && f['incentive_type'].invalid}">
+                                          <option class="unhov" value="%" selected>%</option>
+                                          <option class="unhov"  value="Rs">Rs</option>
+                                        </select>
+                                        <span class="text-danger d-block" *ngIf="incentive_type && incentive_type.invalid && incentive_type.touched">Select Incentive Type</span>
+                                      </div>
+                                      <div>
+                                        <input type="number" formControlName="incentive" id="incentive" placeholder="Enter incentive" [ngClass]="{ 'is-invalid': f['incentive'].touched && f['incentive'].invalid }">
                                     <span class="text-danger" *ngIf="incentive && incentive.invalid && incentive.touched">Enter
                                         Incentive
                                     </span>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Incentive Type</label>
-                                    <select formControlName="incentive_type" id="incentive_type"
-                                        [ngClass]="{'is-invalid': f['incentive_type'].touched && f['incentive_type'].invalid }">
-                                        <option value="%" selected>%</option>
-                                        <option value="Rs">Rs</option>
-                                    </select>
-                                    <span class="text-danger" *ngIf="incentive_type && incentive_type.invalid && incentive_type.touched">Enter
-                                        Incentive Type
-                                    </span>
-                                </div>
-                            </div>
+                              </div>
+
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
@@ -197,7 +198,7 @@
                 <div class="card-body" *ngIf="!addForm">
                     <form [formGroup]="addProductForm" (ngSubmit)="update()">
                         <div class="row">
-                            <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="col-lg-8 col-sm-12 col-12">
                                 <div class="form-group">
                                     <label>Title*</label>
                                     <input type="text" formControlName="title" id="title" placeholder="Enter Title" [ngClass]="{
@@ -206,30 +207,29 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Incentive</label>
-                                    <input type="number" formControlName="incentive" id="incentive"
-                                        placeholder="Enter incentive" [ngClass]="{
-                                                'is-invalid': f['incentive'].touched && f['incentive'].invalid }">
+                            <div class="col-lg-8 col-sm-12 col-12">
+                                <div class="form-group row">
+                                  <div class="col-lg-12">
+                                    <label>Incentive*</label>
+                                    <div class="input-group">
+                                      <div>
+                                        <select formControlName="incentive_type" class=" border hov" required id="incentive_type"
+                                          [ngClass]="{'is-invalid': f['incentive_type'].touched && f['incentive_type'].invalid}">
+                                          <option class="unhov" value="%">%</option>
+                                          <option class="unhov"  value="Rs">Rs</option>
+                                        </select>
+                                        <span class="text-danger d-block" *ngIf="incentive_type && incentive_type.invalid && incentive_type.touched">Select Incentive Type</span>
+                                      </div>
+                                      <div>
+                                        <input type="number" formControlName="incentive" id="incentive" placeholder="Enter incentive" [ngClass]="{ 'is-invalid': f['incentive'].touched && f['incentive'].invalid }">
                                     <span class="text-danger" *ngIf="incentive && incentive.invalid && incentive.touched">Enter
                                         Incentive
                                     </span>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Incentive Type</label>
-                                    <select formControlName="incentive_type" id="incentive_type"
-                                        [ngClass]="{'is-invalid': f['incentive_type'].touched && f['incentive_type'].invalid }">
-                                        <option value="%" selected>%</option>
-                                        <option value="Rs">Rs</option>
-                                    </select>
-                                    <span class="text-danger" *ngIf="incentive_type && incentive_type.invalid && incentive_type.touched">Enter
-                                        Incentive Type
-                                    </span>
-                                </div>
-                            </div>
+                              </div>
                             <div class="col-lg-12">
                                 <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                                 <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
