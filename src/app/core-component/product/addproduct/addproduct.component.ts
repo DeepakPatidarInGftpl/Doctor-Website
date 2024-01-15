@@ -302,6 +302,11 @@ export class AddproductComponent implements OnInit {
   getProductLabel() {
     this.coreService.getProductLabel().subscribe((res: any) => {
       this.labelList = res;
+      this.labelList.forEach((res:any)=>{
+        if(res?.title=='New'){
+          this.productForm?.patchValue(res?.id)
+        }
+      })
     })
   }
   // getFeatureByFeaturegroup(featureGroupid: any) {
