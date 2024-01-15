@@ -11,8 +11,8 @@
                      <h4>Full details of a Attendance</h4>
                  </div>
                  <div class="page-btn">
-                     <a routerLink="//hrm/add-attendance" class="btn btn-added">
-                         <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Attendnace
+                     <a routerLink="//hrm/update-attendance" class="btn btn-added">
+                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Attendnace
                      </a>
                  </div>
              </div>
@@ -39,14 +39,34 @@
                                             <td class="th">Total Persent Day</td>
                                             <td class="td">{{productDetail?.total_persent_day}}</td>
                                         </tr>
+                                        <tr>
+                                            <td class="th">Base Salary</td>
+                                            <td class="td">{{productDetail?.base_salary}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Wages</td>
+                                            <td class="td">{{productDetail?.wages}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Incentive</td>
+                                            <td class="td">{{productDetail?.incentive}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Total Salary</td>
+                                            <td class="td">{{productDetail?.total_salary}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Status</td>
+                                            <td class="td"> <div class="d-flex align-items-center mx-4">
+                                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                                                <span [ngClass]="{'bg-lightgreen': productDetail?.status === 'Draft', 'bg-lightred' : productDetail?.status === 'Reviewed'}"
+                                                class="badges">{{productDetail?.status}}</span>
+                                            </div></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- <div class="d-flex align-items-center mx-4">
-                                <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
-                                <span [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }"
-                                class="badges">{{productDetail?.is_active}}</span>
-                            </div> -->
+                           
                         </mat-tab>
                         <!-- <mat-tab label="Attendace">
                             <div class="card">

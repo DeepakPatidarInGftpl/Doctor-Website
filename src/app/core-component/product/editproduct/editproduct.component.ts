@@ -83,25 +83,27 @@ export class EditproductComponent implements OnInit {
       product_store: new FormControl('', [Validators.required]),
       unit: new FormControl('', [Validators.required]),
       purchase_tax_including: new FormControl(''),
-      sale_tax_including:new FormControl(''),
+      sale_tax_including: new FormControl(''),
       is_measurable: new FormControl(''),
       sales_tax_including: new FormControl(''),
       is_active: new FormControl(''),
       // tax_slab: new FormControl(''),
       description: new FormControl(''),
-       // new field add 5-7
-       return_time: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-       cod_available: new FormControl('', [Validators.required]),
-       product_or_service: new FormControl('', [Validators.required]),
-       //end
-         //new field add 4-9
-      sale_tax:new FormControl('',[Validators.required]),
-      purchase_tax:new FormControl('',[Validators.required]),
+      // new field add 5-7
+      return_time: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      cod_available: new FormControl('', [Validators.required]),
+      product_or_service: new FormControl('', [Validators.required]),
+      //end
+      //new field add 4-9
+      sale_tax: new FormControl('', [Validators.required]),
+      purchase_tax: new FormControl('', [Validators.required]),
       //end
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
       product_images: this.fb.array([]),
-      hsncode:new FormControl('',),
+      hsncode: new FormControl('',),
+      //15-1
+      product_label: new FormControl('', [Validators.required])
     })
 
     this.coreService.getProductById(this.id).subscribe(res => {
@@ -135,14 +137,16 @@ export class EditproductComponent implements OnInit {
           subcategory_group: res?.subcategory_group?.id,
           subcategory: res?.subcategory?.id,
           brand: res.brand?.id,
-          hsncode:res.hsncode?.id,
+          hsncode: res?.hsncode?.id,
           unit: res.unit.id,
           // sale_tax_including: res.sale_tax_including,
-          return_time:res?.return_time,
-          cod_available:res?.cod_available,
-          product_or_service:res?.product_or_service,
-          purchase_tax:res?.purchase_tax?.id,
-          sale_tax:res?.sale_tax?.id,
+          return_time: res?.return_time,
+          cod_available: res?.cod_available,
+          product_or_service: res?.product_or_service,
+          purchase_tax: res?.purchase_tax?.id,
+          sale_tax: res?.sale_tax?.id,
+          //15-1
+          product_label: res?.product_label?.id
         })
         this.productForm.setControl('product_features', this.udateFeature(this.editRes?.product_feature_product));
         // this.productForm.setControl('product_images', this.updateImage(this.editRes?.product_images));
@@ -179,7 +183,7 @@ export class EditproductComponent implements OnInit {
 
         this.getSubcategoryGroupByCategory(res.category.id);
         this.oncheck(res.subcategory_group.id);
-        this.getFeaturegroupBySubcategory(res?.subcategory.id,'')
+        this.getFeaturegroupBySubcategory(res?.subcategory.id, '')
         this.checkSubact(res.subcategory.id);
         // console.log(this.editRes.variant_product);
         // console.log(this.colorTitle, 'colorarray ');
@@ -207,12 +211,12 @@ export class EditproductComponent implements OnInit {
     this.getSubcatGroup()
     this.getColor()
     this.getSize()
-
     this.getUnit()
     this.getUnitConversion()
     this.getTaxSlab()
     // this.getFeatureData()
     this.getFeatureGroup()
+    this.getProductLabel()
   }
 
   // this working
@@ -230,9 +234,9 @@ export class EditproductComponent implements OnInit {
     // console.log(add);
     let formarr = new FormArray([]);
     add.forEach((j: any) => {
-      console.log(j); 
+      console.log(j);
       formarr.push(this.fb.group({
-        id:j.id,
+        id: j.id,
         feature_group: j?.feature_group?.id,
         feature: j.feature.id,
       }))
@@ -252,7 +256,7 @@ export class EditproductComponent implements OnInit {
   }
 
   // udateVariant(add: any): FormArray {
-    // console.log(add);
+  // console.log(add);
   //   let formarr = new FormArray([]);
   //   add.forEach((k: any) => {
   //     formarr.push(this.fb.group({
@@ -276,7 +280,7 @@ export class EditproductComponent implements OnInit {
 
   features(): FormGroup {
     return this.fb.group({
-      id:(''),
+      id: (''),
       feature_group: (''),
       feature: (''),
     });
@@ -383,7 +387,7 @@ export class EditproductComponent implements OnInit {
       this.filterColorData();
       setTimeout(() => {
         this.colorList.map((map: any) => {
-          this.selectedColor=this.colors.length
+          this.selectedColor = this.colors.length
           if (this.colors.includes(map.id)) {
             // console.log(map.id, 'mapid');
             const formArray: any = this.productForm.get('color') as FormArray;
@@ -415,7 +419,7 @@ export class EditproductComponent implements OnInit {
       this.filterSizeData();
       setTimeout(() => {
         this.sizeList.map((map: any) => {
-          this.selectedSize=this.sizes.length
+          this.selectedSize = this.sizes.length
           // console.log(this.sizes.includes(map.id), 'size');
           if (this.sizes.includes(map.id)) {
             const formArray = this.productForm.get('size') as FormArray;
@@ -443,10 +447,10 @@ export class EditproductComponent implements OnInit {
   //     this.varantList = res
   //     setTimeout(() => {
   //       this.varantList.map((map: any) => {
-          // console.log(this.variants.includes(map.id));
-          // console.log(map);
+  // console.log(this.variants.includes(map.id));
+  // console.log(map);
   //         if (this.variants.includes(map.id)) {
-            // console.log(map.id, 'mapid');
+  // console.log(map.id, 'mapid');
   //           const formArray: any = this.productForm.get('variant') as FormArray;
   //           formArray.push(new FormControl(map.id));
   //         }
@@ -478,7 +482,7 @@ export class EditproductComponent implements OnInit {
       this.brandBySubcat = res;
     })
   }
-  featureList: any[]=[];
+  featureList: any[] = [];
   getFeatureData() {
     this.coreService.getfeature().subscribe(res => {
       // this.featureList = res;
@@ -486,8 +490,8 @@ export class EditproductComponent implements OnInit {
   }
   getFeatureByFeaturegroup(featureGroupid: any, index: number) {
     this.coreService.getFeatureByFeaturegroup(featureGroupid).subscribe(res => {
-      this.featureList[index] = res; 
-      console.log(this.featureList[index]);   
+      this.featureList[index] = res;
+      console.log(this.featureList[index]);
     });
   }
   featureGroupList: any;
@@ -513,37 +517,43 @@ export class EditproductComponent implements OnInit {
       this.taxSlabBysubcatList = res;
     })
   }
-
+  //15-1
+  labelList: any;
+  getProductLabel() {
+    this.coreService.getProductLabel().subscribe((res: any) => {
+      this.labelList = res;
+    })
+  }
   // subcategory wise tax slab
   featureGrpBysubcatGroupList: any;
   featureData: any;
-  getFeaturegroupBySubcategory(val: any,event:any) {
+  getFeaturegroupBySubcategory(val: any, event: any) {
     console.log(event);
-    
+
     this.coreService.getFeaturegroupBySubcategory(val).subscribe(res => {
       console.log(res);
       this.featureGrpBysubcatGroupList = res;
-      if(event){
+      if (event) {
         // open feature form 
-      const feature = this.productForm.get('product_features') as FormArray;
-      feature.clear();
-      for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
-        this.addFeature();
-        this.getFeatureByFeaturegroup(this.featureGrpBysubcatGroupList.feature_group[i].id, i);
-      }
-      this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
-        // console.log(res);
-        const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
-        imageGroup.patchValue({
-          feature_group: res.id
-        });
-      })
-      }else{
+        const feature = this.productForm.get('product_features') as FormArray;
+        feature.clear();
+        for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
+          this.addFeature();
+          this.getFeatureByFeaturegroup(this.featureGrpBysubcatGroupList.feature_group[i].id, i);
+        }
+        this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
+          // console.log(res);
+          const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
+          imageGroup.patchValue({
+            feature_group: res.id
+          });
+        })
+      } else {
         for (let i = 0; i < this.featureGrpBysubcatGroupList.feature_group.length; i++) {
           this.getFeatureByFeaturegroup(this.featureGrpBysubcatGroupList.feature_group[i].id, i);
         }
       }
-     
+
     })
   }
 
@@ -553,7 +563,7 @@ export class EditproductComponent implements OnInit {
       this.subcatbySubCategoryGroup = res.subcategories;
     })
   }
-   
+
   // open feature or subact after select subcatGroup 
   oncheck(val: any) {
     // console.log(val);
@@ -584,7 +594,7 @@ export class EditproductComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.checkcolor = formArray;
       this.selectedColor++;
-      this.selectedColorId=formArray.value
+      this.selectedColorId = formArray.value
     }
     /* unselected */
     else {
@@ -629,7 +639,7 @@ export class EditproductComponent implements OnInit {
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.check = formArray;
       this.selectedSize++;
-      this.selectedSizeId=formArray.value
+      this.selectedSizeId = formArray.value
     }
     /* unselected */
     else {
@@ -777,8 +787,8 @@ export class EditproductComponent implements OnInit {
     // variants.controls.forEach((control, index) => {
     //   const variant = control.value;
     //   Object.keys(variant).forEach((key: string) => {
-        // console.log(key);
-        // console.log(index);
+    // console.log(key);
+    // console.log(index);
     //     const value = variant[key];
     //     formdata.append(`variants[${index}][${key}]`, value);
     //   });
@@ -837,13 +847,17 @@ export class EditproductComponent implements OnInit {
     formdata.append('sale_tax_including', this.productForm.get('sale_tax_including')?.value);
     formdata.append('is_active', this.productForm.get('is_active')?.value);
 
-      // new field add 5-7
-      formdata.append('return_time', this.productForm.get('return_time')?.value);
-      formdata.append('cod_available', this.productForm.get('cod_available')?.value);
-      formdata.append('product_or_service', this.productForm.get('product_or_service')?.value);
-      // end
-      formdata.append('sale_tax', this.productForm.get('sale_tax')?.value);
-      formdata.append('purchase_tax', this.productForm.get('purchase_tax')?.value);
+    // new field add 5-7
+    formdata.append('return_time', this.productForm.get('return_time')?.value);
+    formdata.append('cod_available', this.productForm.get('cod_available')?.value);
+    formdata.append('product_or_service', this.productForm.get('product_or_service')?.value);
+    // end
+    formdata.append('sale_tax', this.productForm.get('sale_tax')?.value);
+    formdata.append('purchase_tax', this.productForm.get('purchase_tax')?.value);
+
+    formdata.append('hsncode', this.productForm.get('hsncode')?.value);
+    //15-1
+    formdata.append('product_label', this.productForm.get('product_label')?.value);
 
     const variantsArray = this.productForm.get('variant_product') as FormArray;
     const variantsData = [];
@@ -872,10 +886,10 @@ export class EditproductComponent implements OnInit {
     formdata.append('product_features', JSON.stringify(featuresData));
 
     if (this.productForm.valid) {
-    
+
       this.loader = true;
       // console.log('else part');
-// send all image files
+      // send all image files
 
       // const product_imageArray = this.productForm.get('product_images') as FormArray;
       // const product_imageData: any = [];
@@ -892,7 +906,7 @@ export class EditproductComponent implements OnInit {
       // formdata.append('product_images', productImageDataJson);
 
       // if id is empty then apply conditon Here 
-    
+
       const product_imageArray = this.productForm.get('product_images') as FormArray;
       const product_imageData: any[] = [];
       product_imageArray.controls.forEach((product_image) => {
@@ -919,17 +933,17 @@ export class EditproductComponent implements OnInit {
           this.toastr.success(res.msg);
           this.router.navigate(['//product/productlist'])
         } else {
-          this.loader=false;
+          this.loader = false;
           this.toastr.error(res.error)
           // console.log('res api error');
         }
       })
 
     } else {
-       this.toastr.error('Please fill all required fields before proceeding.')
+      this.toastr.error('Please fill all required fields before proceeding.')
       this.productForm.markAllAsTouched();
       // console.log('forms invalid');
-     
+
     }
   }
 
@@ -963,6 +977,10 @@ export class EditproductComponent implements OnInit {
   get product_store() {
     return this.productForm.get('product_store')
   }
+  //15-1
+  get product_label() {
+    return this.productForm.get('product_label');
+  }
   get color() {
     return this.productForm.get('color') as FormArray
   }
@@ -987,13 +1005,13 @@ export class EditproductComponent implements OnInit {
   get product_or_service() {
     return this.productForm.get('product_or_service')
   }
-  get purchase_tax(){
+  get purchase_tax() {
     return this.productForm.get('purchase_tax')
   }
-  get sale_tax(){
+  get sale_tax() {
     return this.productForm.get('sale_tax')
   }
-  get hsncode(){
+  get hsncode() {
     return this.productForm.get('hsncode');
   }
   getvariant_name(index: number) {
@@ -1080,7 +1098,7 @@ export class EditproductComponent implements OnInit {
 
   // selectImg(event: Event) {
   //   const file = (event.target as HTMLInputElement).files![0];
-    // console.log(file);
+  // console.log(file);
 
   //   const imageArray = this.productForm.get('product_image') as FormArray;
   //   const newImageGroup = this.fb.group({
@@ -1101,7 +1119,7 @@ export class EditproductComponent implements OnInit {
 
   // selectImg(event: Event) {
   //   const file = (event.target as HTMLInputElement).files![0];
-    // console.log(file);
+  // console.log(file);
 
   //   const productImage = this.productForm.get('product_image') as FormGroup;
   //   const imagesArray = productImage.get('images') as FormArray;

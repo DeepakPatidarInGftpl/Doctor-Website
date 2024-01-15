@@ -1,0 +1,107 @@
+
+<div class="card bg">
+    <div class="card-body">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Product Label Details</h4>
+                <h6>Full details of a Product Label</h6>
+            </div>
+            <div class="page-btn">
+                <a routerLink="//product/product-label" class="btn btn-added">
+                    <img src="assets/img/icons/edit.svg" class="me-1" alt="img" >Edit Product Label
+                </a>
+            </div>
+        </div>
+
+<mat-tab-group animationDuration="0ms">
+    <mat-tab label="General Details">
+        <div class="row">
+            <div class="col-lg-12 col-sm-12" >
+                <div class="card">
+                    <div class="card-body">
+                        <div class="productdetails">                  
+                            <ul class="product-bar">
+                                <li>
+                                    <h4 class="h4">Title</h4>
+                                    <h6>{{productLabelDetail?.title}}</h6>
+                                </li>
+                                <li>
+                                    <h4 class="h4">Incentive</h4>
+                                    <h6>{{productLabelDetail?.incentive}}</h6>
+                                </li>
+                                <li>
+                                    <h4 class="h4">Incentive Type</h4>
+                                    <h6>{{productLabelDetail?.incentive_type}}</h6>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mx-4">
+                        <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                        <span [ngClass]="{'bg-lightgreen': productLabelDetail?.is_active === true, 'bg-lightred' : productLabelDetail?.is_active === false,'bg-lightyellow' : productLabelDetail?.is_active === 'Partial' }"
+                                            class="badges">{{productLabelDetail?.is_active}}</span>
+                    </div>
+                </div>
+            </div>
+          </div>
+    </mat-tab>
+    <mat-tab label="Logs" *ngIf="productLabelDetail?.logs?.length>0">
+        <div class="card">
+             <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table datanew">
+                <thead>
+                    <tr>
+                        <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
+                        <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
+                        <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
+                        <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                    <tr>
+                        <td class="td" (click)="sort('id')">{{i+1}}</td>
+                        <td class="td" (click)="sort('id')">{{log?.userid}}</td>
+                        <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
+                        <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                    </tr> 
+                </ng-container>
+                </tbody>
+                <tbody *ngIf="filteredData?.length==0">
+                    <tr>
+                        <td colspan="10">
+                            <p class="center-textt">Data not available</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                    <div class="entries"> Show per page
+                        <select [(ngModel)]="itemsPerPage" class="pagination">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="-1">All</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                    <div class="f-right">
+                        <pagination-controls
+                            (pageChange)="p = $event"></pagination-controls>
+                        <div class="entries f-right">Showing {{itemsPerPage}} to
+                            {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+</div>

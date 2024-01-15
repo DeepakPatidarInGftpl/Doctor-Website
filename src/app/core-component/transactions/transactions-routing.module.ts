@@ -29,6 +29,11 @@ const routes: Routes = [
   {path:'addpaymentVoucher',loadChildren:()=>import('./add-payment-voucher/add-payment-voucher.module').then((m)=>m.AddPaymentVoucherModule)},
   {path:'updatepaymentVoucher/:id',loadChildren:()=>import('./update-payment-voucher/update-payment-voucher.module').then((m)=>m.UpdatePaymentVoucherModule)},
   {path:'detailspaymentVoucher/:id',loadChildren:()=>import('./details-payment-voucher/details-payment-voucher.module').then((m)=>m.DetailsPaymentVoucherModule)},
+// expenses
+{path:'expensesList',loadChildren:()=>import('./list-expenses/list-expenses.module').then((m)=>m.ListExpensesModule)},
+{path:'addexpensesVoucher',loadChildren:()=>import('./add-expenses/add-expenses.module').then((m)=>m.AddExpensesModule)},
+{path:'updateexpensesVoucher/:id',loadChildren:()=>import('./update-expenses/update-expenses.module').then((m)=>m.UpdateExpensesModule)},
+{path:'detailsexpensesVoucher/:id',loadChildren:()=>import('./detail-expenses/detail-expenses.module').then((m)=>m.DetailExpensesModule)},
 
 ];
 

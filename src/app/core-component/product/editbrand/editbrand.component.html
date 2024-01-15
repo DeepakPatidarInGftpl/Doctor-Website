@@ -61,7 +61,7 @@
         <div class="row">
             <form [formGroup]="brandForm" (ngSubmit)="update()">
                 <div class="row">
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Brand*</label>
                             <input type="text" formControlName="title" id="title" [ngClass]="{
@@ -70,7 +70,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Code</label>
                             <input type="text" formControlName="code" id="code" [ngClass]="{
@@ -79,7 +79,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Discount %</label>
                             <input type="text" formControlName="discount" id="discount" [ngClass]="{
@@ -91,7 +91,7 @@
 
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Markup Percentage Customer*</label>
                             <input type="text" formControlName="markup_percentage_customer" placeholder="Enter Discount"
@@ -102,7 +102,7 @@
                                 discount (ex-1-100) </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Markup Percentage Wholesale*</label>
                             <input type="text" formControlName="markup_percentage_wholesale"
@@ -113,7 +113,7 @@
                                 Markup Percentage Wholesale (ex-1-100) </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Markup Percentage Online*</label>
                             <input type="text" formControlName="markup_percentage_online" placeholder="Enter Discount"
@@ -124,7 +124,7 @@
                                 Markup Percentage Online  (ex-1-100)</span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Markup Percentage Employee*</label>
                             <input type="text" formControlName="markup_percentage_employee" placeholder="Enter Discount"
@@ -139,7 +139,7 @@
                     [settings]="dropdownSettings" [data]="variantList" [(ngModel)]="selectedItems"
                     (onSelect)="onItemSelect($event)" (onDeSelect)="onItemDeselect($event)"  (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeselectAll($event)">
                 </ng-multiselect-dropdown> -->
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Category</label>
                             <div class="dropdown">
@@ -166,7 +166,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Subcategory group</label>
                             <div class="dropdown">
@@ -197,7 +197,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>SubCategory*</label>
                             <div class="dropdown">
@@ -225,7 +225,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label> Brand Image*</label>
                             <!-- <div class="image-upload">
@@ -239,7 +239,7 @@
                                 </span>
                             </div> -->
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="image-upload">
                                         <input type="file" formControlName="image" (change)="onSelect($event)">
                                         <div class="image-uploads">
@@ -251,7 +251,7 @@
                                         <!-- <span class="text-danger" *ngIf="imgError">Select image</span> -->
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-3 col-sm-6 col-12">
                                     <img [src]="url" *ngIf="url" alt="" class="p_img">
                                     <img [src]="imgUrl+updateData?.image" *ngIf="!url" alt="" class="p_img">
                                 </div>

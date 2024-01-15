@@ -254,7 +254,7 @@ const routes: Routes = [
   { path: 'subcategory-details/:id', loadChildren: () => import('./subcategorydetails/subcategorydetails.module').then((m) => m.SubcategorydetailsModule) },
   { path: 'hsncode-details/:id', loadChildren: () => import('./hsncodedetails/hsncodedetails.module').then((m) => m.HsncodedetailsModule) },
   { path: 'batch/:id', loadChildren: () => import('./batch-variant-product/batch-variant-product.module').then((m) => m.BatchVariantProductModule) },
-  { path: 'batchUpdate/:id', loadChildren: () => import('./batch-variant-product-update/batch-variant-product-update.module').then((m) => m.BatchVariantProductUpdateModule) },
+  { path: 'batchUpdate/:id/:v_id', loadChildren: () => import('./batch-variant-product-update/batch-variant-product-update.module').then((m) => m.BatchVariantProductUpdateModule) },
   { path: 'batchList/:id', loadChildren: () => import('./batch-variant-product-list/batch-variant-product-list.module').then((m) => m.BatchVariantProductListModule) },
   { path: 'batchDetails/:id', loadChildren: () => import('./batch-variant-product-details/batch-variant-product-details.module').then((m) => m.BatchVariantProductDetailsModule) },
   { path: 'stock', loadChildren: () => import('./stock-list/stock-list.module').then((m) => m.StockListModule) },
@@ -280,6 +280,9 @@ const routes: Routes = [
   { path: 'unit-conversion-details/:id', loadChildren: () => import('./unit-conversion-details/unit-conversion-details.module').then((m) => m.UnitConversionDetailsModule) },
   { path: 'unit-details/:id', loadChildren: () => import('./unit-details/unit-details.module').then((m) => m.UnitDetailsModule) },
 
+  // prouct label
+{ path: 'product-label', loadChildren: () => import('./product-label-list/product-label-list.module').then((m) => m.ProductLabelListModule) },
+ { path: 'detail-product-label/:id', loadChildren: () => import('./details-product-label/details-product-label.module').then((m) => m.DetailsProductLabelModule) },
 ];
 
 @NgModule({

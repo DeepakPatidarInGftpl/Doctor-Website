@@ -20,23 +20,41 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>MRP*</label>
-                        <input type="text" formControlName="mrp" id="mrp" [ngClass]="{'is-invalid': f['mrp'].touched && f['mrp'].invalid}" placeholder="0" [(ngModel)]="mrpN">
+                        <input type="number" formControlName="mrp" id="mrp" (blur)="checkCost()" (blur)="checkMrpSelling()" [ngClass]="{'is-invalid': f['mrp'].touched && f['mrp'].invalid}" placeholder="0" [ngStyle]="{'border': errorMrp ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="mrp && mrp.invalid && mrp.touched">Enter MRP </span>
+                        <span class="text-danger" *ngIf="errorMrp">{{errorMrp}}</span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Cost Price</label>
-                        <input type="text" formControlName="cost_price" id="cost_price" [ngClass]="{'is-invalid': f['cost_price'].touched && f['cost_price'].invalid}" placeholder="0">
+                        <input type="number" formControlName="cost_price" (blur)="checkCost()" (blur)="checkMrpSelling()" id="cost_price" [ngClass]="{'is-invalid': f['cost_price'].touched && f['cost_price'].invalid}" [ngStyle]="{'border': errorCost ? '1px solid red' : ''}" placeholder="0">
                         <span class="text-danger" *ngIf="cost_price && cost_price.invalid && cost_price.touched">Enter Cost Price</span>
+                        <span class="text-danger" *ngIf="errorCost">{{errorCost}}</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Discount %</label>
+                        <input type="text" formControlName="discount" id="discount" [ngClass]="{'is-invalid': f['discount'].touched && f['discount'].invalid}" placeholder="0">
+                        <span class="text-danger"*ngIf="discount && discount.invalid && discount.touched">Enter discount (ex:0-100)</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Additional Discount %</label>
+                        <input type="text" formControlName="additional_discount" id="additional_discount" [ngClass]="{'is-invalid': f['additional_discount'].touched && f['additional_discount'].invalid}" placeholder="0">
+                        <span class="text-danger"*ngIf="additional_discount && additional_discount.invalid && additional_discount.touched">Enter Enter discount (ex:0-100)</span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Selling Price Online</label>
-                        <input type="text" formControlName="selling_price_online" id="selling_price_online" [ngModel]="mrpN" [ngClass]="{'is-invalid': f['selling_price_online'].touched && f['selling_price_online'].invalid}" placeholder="0">
+                        <input type="number" formControlName="selling_price_online" [ngModel]="mrpN" id="selling_price_online" [ngClass]="{'is-invalid': f['selling_price_online'].touched && f['selling_price_online'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="selling_price_online && selling_price_online.invalid && selling_price_online.touched">Enter Selling Price Online
                         </span>
                     </div>
@@ -45,7 +63,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Selling Price Offline</label>
-                        <input type="text" formControlName="selling_price_offline" id="selling_price_offline" [ngModel]="mrpN" [ngClass]="{'is-invalid': f['selling_price_offline'].touched && f['selling_price_offline'].invalid}" placeholder="0">
+                        <input type="number" formControlName="selling_price_offline" [ngModel]="mrpN" id="selling_price_offline" [ngClass]="{'is-invalid': f['selling_price_offline'].touched && f['selling_price_offline'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="selling_price_offline && selling_price_offline.invalid && selling_price_offline.touched">Enter Selling Price Offline
                         </span>
                     </div>
@@ -54,8 +72,8 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Selling Price Dealer</label>
-                        <input type="text" formControlName="selling_price_dealer" id="selling_price_dealer" [ngModel]="mrpN" [ngClass]="{'is-invalid': f['selling_price_dealer'].touched && f['selling_price_dealer'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="selling_price_vendor && selling_price_vendor.invalid && selling_price_vendor.touched">Enter Selling Price Vendor
+                        <input type="number" formControlName="selling_price_dealer" id="selling_price_dealer" [ngClass]="{'is-invalid': f['selling_price_dealer'].touched && f['selling_price_dealer'].invalid}" placeholder="0">
+                        <span class="text-danger"*ngIf="selling_price_vendor && selling_price_vendor.invalid && selling_price_vendor.touched">Enter Selling Price Dealer
                         </span>
                     </div>
                 </div>
@@ -63,7 +81,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Selling Price Employee</label>
-                        <input type="text" formControlName="selling_price_employee" id="selling_price_employee" [ngModel]="mrpN" [ngClass]="{'is-invalid': f['selling_price_employee'].touched && f['selling_price_employee'].invalid}" placeholder="0">
+                        <input type="number" formControlName="selling_price_employee" [ngModel]="mrpN" id="selling_price_employee" [ngClass]="{'is-invalid': f['selling_price_employee'].touched && f['selling_price_employee'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="selling_price_employee && selling_price_employee.invalid && selling_price_employee.touched">Enter Selling Price Employee
                         </span>
                     </div>
@@ -101,22 +119,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Discount %</label>
-                        <input type="text" formControlName="discount" id="discount" [ngClass]="{'is-invalid': f['discount'].touched && f['discount'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="discount && discount.invalid && discount.touched">Enter discount (ex:0-100)</span>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-sm-3 col-12">
-                    <div class="form-group">
-                        <label>Additional Discount %</label>
-                        <input type="text" formControlName="additional_discount" id="additional_discount" [ngClass]="{'is-invalid': f['additional_discount'].touched && f['additional_discount'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="additional_discount && additional_discount.invalid && additional_discount.touched">Enter Enter discount (ex:0-100)</span>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-3 col-12">
+                <!-- <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group row">
                     <div class="col-lg-12">
                         <label>Employee Incentive*</label>
@@ -132,14 +135,13 @@
                                 <span class="text-danger d-block" *ngIf="employee_incentive_type && employee_incentive_type.invalid && employee_incentive_type.touched">Select Employee Incentive Type</span>
                             </div>
                             <div>
-                                <input type="text" formControlName="employee_incentive" id="em-ployee_incentive"
-                                    [ngClass]="{'is-invalid': f['employee_incentive'].touched && f['employee_incentive'].invalid}">
+                                <input type="text" formControlName="employee_incentive" id="em-ployee_incentive" [ngClass]="{'is-invalid': f['employee_incentive'].touched && f['employee_incentive'].invalid}">
                                 <span class="text-danger ml-5 pl-5" *ngIf="employee_incentive && employee_incentive.invalid && employee_incentive.touched">Employee Incentive</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
                 <!-- <div class="col-lg-12">
                     <button class="btn btn-submit me-2">Submit</button>
