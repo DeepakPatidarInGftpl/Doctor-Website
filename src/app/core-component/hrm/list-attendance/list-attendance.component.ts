@@ -67,14 +67,14 @@ export class ListAttendanceComponent implements OnInit {
     });
   }
 
-  isActive(index: any, id: any) {
+  deActivate(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this Target!",
+      text: "Do you want to Change Status to Draft!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, Deactivate it!',
+      confirmButtonText: 'Yes, Change it!',
       buttonsStyling: true,
       customClass: {
         confirmButton: 'btn btn-primary',
@@ -82,24 +82,31 @@ export class ListAttendanceComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.hrmService.TargetIsActive(id,'').subscribe(res => {
+        this.hrmService.AttendanceIsActive(id,'').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            Swal.fire({
+              icon: 'success',
+              title: this.delRes.status,
+              text: this.delRes.status,
+            });
+            this.ngOnInit();
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Changed!',
+              text: this.delRes.status,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Deactivate!',
-          text: 'Target Is Deactivate Successfully.',
-        });
+        
       }
     });
   }
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this Target!",
+      text: "Do you want to Change Status!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -111,17 +118,24 @@ export class ListAttendanceComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.hrmService.TargetIsActive(id,'').subscribe(res => {
+        this.hrmService.AttendanceIsActive(id,'').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            this.ngOnInit()
+            Swal.fire({
+              icon: 'success',
+              title: 'Changed!',
+              text: this.delRes.msg,
+            });
+            this.ngOnInit();
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Changed!',
+              text: this.delRes.status,
+            });
           }
         })
-        Swal.fire({
-          icon: 'success',
-          title: 'Active!',
-          text: 'Target Is Active Successfully.',
-        });
+      
       }
     });
   }

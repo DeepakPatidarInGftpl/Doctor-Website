@@ -81,7 +81,7 @@
                     <li *ngIf="isDealer"><a routerLink="/contacts/dealerList" routerLinkActive="active">Dealer</a></li>
                 </ul>
             </li> 
-            <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isStock ||isStockTransport || isStockTransportRequest">
+            <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isStock ||isStockTransport || isStockTransportRequest ||isProductLabel">
                 <a  [ngClass]="{'active': activePath === 'product'}"><img src="assets/img/icons/product.svg" alt="img"><span>Product Management</span> <span
                         class="menu-arrow"></span></a>
                 <ul>
@@ -104,6 +104,7 @@
                     <li *ngIf="isHsnCode"><a routerLink="product/hsncode" routerLinkActive="active">HSN Code</a></li>
                     <li *ngIf="isUnit"><a routerLink="product/units" routerLinkActive="active">Units</a></li>
                     <li *ngIf="isUnitConversation"><a routerLink="product/unitconversion" routerLinkActive="active">Unit Conversion</a></li>
+                    <li *ngIf="isProductLabel"><a routerLink="product/product-label" routerLinkActive="active">Product Label</a></li>  
                     <!-- <li><a routerLink="/product/variant" routerLinkActive="active">Variant </a></li>
                     <li><a routerLink="/product/importproduct" routerLinkActive="active">Import Products</a></li>
                     <li><a routerLink="/product/barcode" routerLinkActive="active">Print Barcode</a></li>    -->
@@ -144,13 +145,14 @@
                     <li><a routerLink="/sales/createsalesreturns" routerLinkActive="active">New Sales Return</a></li> -->
                 </ul>
             </li> 
-            <li class="submenu" *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher">
+            <li class="submenu" *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher || isExpenseVoucher">
                 <a  [ngClass]="{'active': activePath === 'transaction'}"><i data-bs-toggle="tooltip" title="fa fa-university" class="fa fa-university"></i><span>Transaction</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isPaymentVoucher"><a routerLink="/transaction/paymentVoucherList" routerLinkActive="active">Payment Voucher</a></li>
                     <li *ngIf="isRecieptVoucher"><a routerLink="/transaction/recieptVoucherList" routerLinkActive="active">Reciept Voucher</a></li>
                     <li *ngIf="isJournalVoucher"><a routerLink="/transaction/journalvoucherList" routerLinkActive="active">Journal Voucher</a></li>
                     <li *ngIf="isCountraVoucher"><a routerLink="/transaction/countravoucherList" routerLinkActive="active">Countra Voucher</a></li>
+                    <li *ngIf="isExpenseVoucher"><a routerLink="/transaction/expensesList" routerLinkActive="active">Expenses Voucher</a></li>
                     <li *ngIf="isDebit"><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
                     <li *ngIf="isCredit"><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
                </ul>

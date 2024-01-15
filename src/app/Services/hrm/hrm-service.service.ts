@@ -76,11 +76,11 @@ export class HrmServiceService {
     return this.http.get<any>(`${url}${id}`)
   }
   AttendanceIsActive(id: any, data) {
-    let url = this.apiUrl + '/pv-api/attendance/?id=';
-    return this.http.patch(`${url}${id}`, data);
+    let url = this.apiUrl + '/pv-api/status_changed_attendence/?attendence_id=';
+    return this.http.post(`${url}${id}`, data);
   }
   updateAttendance(data: any, id: number) {
-    let url = this.apiUrl + '/pv-api/attendance/?id=';
+    let url = this.apiUrl + '/pv-api/update_attendence/?attendence_id=';
     return this.http.put(`${url}${id}`, data)
   }
   deleteAttendance(id: number) {

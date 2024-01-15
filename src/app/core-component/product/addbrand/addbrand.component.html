@@ -10,7 +10,7 @@
         <div class="row">
             <form [formGroup]="brandForm" (ngSubmit)="submit()">
                 <div class="row">
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Brand*</label>
                             <input type="text" formControlName="title" id="title" placeholder="Enter Brand" [ngClass]="{
@@ -19,7 +19,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Code</label>
                             <input type="text" formControlName="code" id="code" placeholder="Enter Code" [ngClass]="{
@@ -28,7 +28,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Discount %</label>
                             <input type="text" formControlName="discount" placeholder="Enter Discount" id="discount"
@@ -37,7 +37,7 @@
                                 discount (ex-1-100) </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Markup Percentage Customer*</label>
                             <input type="text" formControlName="markup_percentage_customer" placeholder="Enter Discount"
@@ -48,7 +48,7 @@
                                 discount (ex-1-100) </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Markup Percentage Wholesale*</label>
                             <input type="text" formControlName="markup_percentage_wholesale"
@@ -59,7 +59,7 @@
                                 Markup Percentage Wholesale (ex-1-100) </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Markup Percentage Online*</label>
                             <input type="text" formControlName="markup_percentage_online" placeholder="Enter Discount"
@@ -70,7 +70,7 @@
                                 Markup Percentage Online  (ex-1-100)</span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Markup Percentage Employee*</label>
                             <input type="text" formControlName="markup_percentage_employee" placeholder="Enter Discount"
@@ -81,7 +81,7 @@
                                 Markup Percentage Employee (ex-1-100) </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Select Category</label>
                             <div class="dropdown">
@@ -111,7 +111,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Select Subcategory group</label>
                             <div class="dropdown">
@@ -143,7 +143,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Select SubCategory</label>
                             <div class="dropdown">
@@ -174,7 +174,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Brand Image*</label>
                             <!-- <div class="image-upload">
@@ -188,7 +188,7 @@
                                         </span>
                                     </div> -->
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="image-upload">
                                         <input type="file" formControlName="image" (change)="onSelect($event)" required>
                                         <div class="image-uploads">
@@ -200,7 +200,7 @@
                                         <!-- <span class="text-danger" *ngIf="imgError">Select image</span> -->
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-3 col-sm-6 col-12">
                                     <svg *ngIf="!url" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         fill="currentColor" class="bi bi-image mx-5 svg" viewBox="0 0 16 16"
                                         style="height: 100px; width: 100px;">

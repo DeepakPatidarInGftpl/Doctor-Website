@@ -192,7 +192,10 @@ export class TransactionService {
     let url =this.apiUrl+'/pv-api/prefix/?id=PaymentVoucher';
     return this.http.get(url)
   } 
-
+  getExpenceVoucherPrefix(){
+    let url =this.apiUrl+'/pv-api/prefix/?id=ExpenseVoucher';
+    return this.http.get(url)
+  } 
   // account service
   getAccount() {
     let url = this.apiUrl + '/pv-api/account/';
@@ -212,5 +215,31 @@ export class TransactionService {
   getSupplier() {
     let url = this.apiUrl + '/pv-api/supplier/';
     return this.http.get(url)
+  }
+
+  // expense voucher 11-1
+  getExpensVoucher() {
+    let url = this.apiUrl + '/pv-api/expense_voucher/';
+    return this.http.get(url)
+  }
+  getExpensVoucherById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/expense_voucher/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  ExpensVoucherIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/expense_voucher/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addExpensVoucher(data: any) {
+    let url = this.apiUrl + '/pv-api/expense_voucher/';
+    return this.http.post(url, data)
+  }
+  updateExpensVoucher(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/expense_voucher/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deleteExpensVoucher(id: number) {
+    let url = this.apiUrl + '/pv-api/expense_voucher/?id=';
+    return this.http.delete(`${url}${id}`)
   }
 }

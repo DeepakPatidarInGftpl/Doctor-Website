@@ -81,13 +81,15 @@ export class AddproductComponent implements OnInit {
       cod_available: new FormControl('', [Validators.required]),
       product_or_service: new FormControl('', [Validators.required]),
       //new field add 4-9
-      sale_tax:new FormControl('',[Validators.required]),
-      purchase_tax:new FormControl('',[Validators.required]),
-      hsncode:new FormControl('',),
+      sale_tax: new FormControl('', [Validators.required]),
+      purchase_tax: new FormControl('', [Validators.required]),
+      hsncode: new FormControl('',),
       //end
       product_features: this.fb.array([]),
       variant_product: this.fb.array([]),
-      product_images: this.fb.array([])
+      product_images: this.fb.array([]),
+      // 15-1
+      product_label: new FormControl('', [Validators.required])
     })
 
     // add form
@@ -109,6 +111,7 @@ export class AddproductComponent implements OnInit {
     this.getTaxSlab()
     this.getFeatureData()
     this.getFeatureGroup()
+    this.getProductLabel()
   }
 
   features(): FormGroup {
@@ -293,6 +296,14 @@ export class AddproductComponent implements OnInit {
       this.featureGroupList = res;
     })
   }
+
+  //15-1
+  labelList: any;
+  getProductLabel() {
+    this.coreService.getProductLabel().subscribe((res: any) => {
+      this.labelList = res;
+    })
+  }
   // getFeatureByFeaturegroup(featureGroupid: any) {
   //   this.coreService.getFeatureByFeaturegroup(featureGroupid).subscribe(res => {
   //     this.featureList = res;
@@ -322,13 +333,13 @@ export class AddproductComponent implements OnInit {
     })
   }
 
- 
+
   // subcategory wise tax slab
   featureGrpBysubcatGroupList: any;
   featureData: any;
   getFeaturegroupBySubcategory(val: any) {
     // this.coreService.getFeaturegroupBySubcategoryGroup(val).subscribe(res => {
-      this.coreService.getFeaturegroupBySubcategory(val).subscribe(res => {
+    this.coreService.getFeaturegroupBySubcategory(val).subscribe(res => {
       // console.log(res);
       this.featureGrpBysubcatGroupList = res;
       // open feature form 
@@ -369,7 +380,7 @@ export class AddproductComponent implements OnInit {
   // open hsn or taxslab or brand after select subcat
   checkSubact(val: any) {
     this.getBrandBySubcategory(val);
-    this.getFeaturegroupBySubcategory(val); 
+    this.getFeaturegroupBySubcategory(val);
     this.getHsnCodeBySubcategory(val);
     // this.getTaxslabBySubcategory(val);
     // this.getHsncodeBySubcategory(val);
@@ -494,6 +505,8 @@ export class AddproductComponent implements OnInit {
     formdata.append('sale_tax', this.productForm.get('sale_tax')?.value);
     formdata.append('purchase_tax', this.productForm.get('purchase_tax')?.value);
     formdata.append('hsncode', this.productForm.get('hsncode')?.value);
+    //15-1
+    formdata.append('product_label', this.productForm.get('product_label')?.value);
     // end
 
     // nested formdata 
@@ -671,14 +684,18 @@ export class AddproductComponent implements OnInit {
   get product_or_service() {
     return this.productForm.get('product_or_service')
   }
-  get purchase_tax(){
+  get purchase_tax() {
     return this.productForm.get('purchase_tax')
   }
-  get sale_tax(){
+  get sale_tax() {
     return this.productForm.get('sale_tax')
   }
+  //15-1
+  get product_label() {
+    return this.productForm.get('product_label');
+  }
 
-  get hsncode(){
+  get hsncode() {
     return this.productForm.get('hsncode');
   }
   getvariant_name(index: number) {
