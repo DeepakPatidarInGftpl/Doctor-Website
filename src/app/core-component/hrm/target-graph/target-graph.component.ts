@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
@@ -10,18 +10,49 @@ import { Observable, map, startWith } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ChartComponent,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexYAxis,
+  ApexLegend,
+  ApexStroke,
+  ApexXAxis,
+  ApexFill,
+  ApexTooltip,
+  ApexNonAxisChartSeries,
+  ApexTitleSubtitle
+} from "ng-apexcharts";
 @Component({
   selector: 'app-target-graph',
   templateUrl: './target-graph.component.html',
   styleUrls: ['./target-graph.component.scss']
 })
 export class TargetGraphComponent implements OnInit {
-  // chart 
-  // public barChartOptions: any = {
-  //   scaleShowVerticalLines: false,
-  //   responsive: true
-  // };
+  @ViewChild("chart") chart: ChartComponent;
+  public chartOptions: Partial<any>;
 
+  chartSeries: ApexNonAxisChartSeries = [40, 32, 20, 55, 10, 40, 5]
+  chartDetails: ApexChart = {
+    type: 'pie',
+    toolbar: {
+      show: true
+    }
+  }
+
+  chartLabels = ["apple", "hp", "dell", "MI", "Redmi", "Microsoft", "window"]
+  chartTitle: ApexTitleSubtitle = {
+    text: 'Loading Companies',
+    align: 'center'
+  }
+
+  chartDataLabel: ApexDataLabels = {
+    enabled: false,
+
+  }
 
   public barChartOptions: any = {
     scales: {
@@ -68,7 +99,73 @@ export class TargetGraphComponent implements OnInit {
   get f() {
     return this.filterForm.controls;
   }
-  constructor(private router: Router, private hrmService: HrmServiceService, private fb: FormBuilder, private contactService: ContactService) { }
+  constructor(private router: Router, private hrmService: HrmServiceService, private fb: FormBuilder, private contactService: ContactService) {
+
+    // this.chartOptions = {
+    //   series: [
+    //     {
+    //       name: "Net Profit",
+    //       data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+    //     },
+    //     {
+    //       name: "Revenue",
+    //       data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+    //     },
+    //     {
+    //       name: "Free Cash Flow",
+    //       data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+    //     }
+    //   ],
+    //   chart: {
+    //     type: "bar",
+    //     height: 350
+    //   },
+    //   plotOptions: {
+    //     bar: {
+    //       horizontal: false,
+    //       columnWidth: "55%",
+    //       endingShape: "rounded"
+    //     }
+    //   },
+    //   dataLabels: {
+    //     enabled: false
+    //   },
+    //   stroke: {
+    //     show: true,
+    //     width: 2,
+    //     colors: ["transparent"]
+    //   },
+    //   xaxis: {
+    //     categories: [
+    //       "Feb",
+    //       "Mar",
+    //       "Apr",
+    //       "May",
+    //       "Jun",
+    //       "Jul",
+    //       "Aug",
+    //       "Sep",
+    //       "Oct"
+    //     ]
+    //   },
+    //   yaxis: {
+    //     title: {
+    //       text: "$ (thousands)"
+    //     }
+    //   },
+    //   fill: {
+    //     opacity: 1
+    //   },
+    //   tooltip: {
+    //     y: {
+    //       formatter: function (val) {
+    //         return "$ " + val + " thousands";
+    //       }
+    //     }
+    //   }
+    // };
+
+  }
 
   loader = true;
   isAdd: any;
@@ -82,22 +179,37 @@ export class TargetGraphComponent implements OnInit {
   public barChartData: any[] = [];
 
   ngOnInit(): void {
-    const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
-    // previous month
     const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
-    currentDate.setDate(1);
-    currentDate.setMonth(currentMonth - 1);
-    const previousMonthDate = currentDate.toISOString().split('T')[0];
-    //2month before
-    const defaultPreviousDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1).toISOString().split('T')[0];
+    // Start date of the current month
+    const startDate = new Date(currentYear, currentMonth, 1);
+    // End date of the current month
+    const endDate = new Date(currentYear, currentMonth + 1, 0);
 
     this.filterForm = this.fb.group({
-      from_date: new FormControl(defaultDate, [Validators.required]),
-      to_date: new FormControl(defaultPreviousDate, [Validators.required]),
-      employee_id: new FormControl('',),
-      department_id: new FormControl('',),
+      from_date: new FormControl(this.formatDate(startDate), [Validators.required]),
+      to_date: new FormControl(this.formatDate(endDate), [Validators.required]),
+      employee_id: new FormControl(''),
+      department_id: new FormControl(''),
     });
+
+    // const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
+    // // previous month
+    // const currentDate = new Date();
+    // const currentMonth = currentDate.getMonth();
+    // currentDate.setDate(1);
+    // currentDate.setMonth(currentMonth - 1);
+    // const previousMonthDate = currentDate.toISOString().split('T')[0];
+    // //2month before
+    // const defaultPreviousDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1).toISOString().split('T')[0];
+    // this.filterForm = this.fb.group({
+    //   from_date: new FormControl(defaultDate, [Validators.required]),
+    //   to_date: new FormControl(defaultPreviousDate, [Validators.required]),
+    //   employee_id: new FormControl('',),
+    //   department_id: new FormControl('',),
+    // });
+
     // call target graph 
     this.submit();
     //filter emplloyee search
@@ -112,7 +224,12 @@ export class TargetGraphComponent implements OnInit {
     this.getEmployee();
     this.getDepartment();
   }
-
+ private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
   private _filter(value: string | number, include: boolean): any[] {
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredemployee = include
@@ -142,29 +259,29 @@ export class TargetGraphComponent implements OnInit {
       this.hrmService.getTargetGraph(employeeId, departmentId, from_date, to_date).subscribe((res: any) => {
         this.targetGraphList = res;
         console.warn(this.targetGraphList);
-        this.loader=false;
+        this.loader = false;
       })
-    }else if(this.isDepartmentAvailable){
+    } else if (this.isDepartmentAvailable) {
       this.hrmService.getTargetGraph(employeeId, departmentId, from_date, to_date).subscribe((res: any) => {
         this.targetGraphList = res?.employees;
         console.warn(this.targetGraphList);
         this.graphList = this.targetGraphList;
-       this.loader=false;
+        this.loader = false;
         this.barChartLabels = this.targetGraphList.map(item => item?.employee_name);
         this.barChartData = this.targetGraphList.map(item => ({
-          data: [Math.min(item['%_achieved'], 100)], 
+          data: [Math.min(item['%_achieved'], 100)],
           label: item.employee_name
         }));
       })
-    }else if(this.isEmployeeAvailable && this.isDepartmentAvailable){
+    } else if (this.isEmployeeAvailable && this.isDepartmentAvailable) {
       console.log('test');
-      
+
       this.hrmService.getTargetGraph(employeeId, departmentId, from_date, to_date).subscribe((res: any) => {
         this.targetGraphList = res;
         console.warn(this.targetGraphList);
-       this.loader=false;
+        this.loader = false;
       })
-    }else{
+    } else {
       this.hrmService.getTargetGraph(employeeId, departmentId, from_date, to_date).subscribe((res: any) => {
         this.targetGraphList = res?.all_departments_data;
         console.warn(this.targetGraphList);
@@ -174,13 +291,49 @@ export class TargetGraphComponent implements OnInit {
           this.loader = false;
         });
 
-        this.barChartLabels = this.graphList.map(item => item?.employee_name);
-        this.barChartData = this.graphList.map(item => ({
-          data: [Math.min(item['%_achieved'], 100)], // Limit to a maximum of 100
-          label: item.employee_name
-        }));
-        console.log(this.barChartData);
-        console.log(this.graphList);
+        // this.barChartLabels = this.graphList.map(item => item?.employee_name);
+        // this.barChartData = this.graphList.map(item => ({
+        //   data: [Math.min(item['%_achieved'], 100)], // Limit to a maximum of 100
+        //   label: item.employee_name
+        // }));
+    // apexchart
+    this.chartOptions = {
+      series: this.graphList.map((item: any) => {
+        return {
+          name: item.employee_name,
+          data: [Math.min(item['%_achieved'], 100)] // Limit to a maximum of 100
+        };
+      }),
+      chart: {
+        type: 'bar',
+        height: 350,
+        stacked: true,
+        stackType: '100%'
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }
+      ],
+      xaxis: {
+        categories: this.graphList.map((item: any) => item.employee_name)
+      },
+      fill: {
+        opacity: 1
+      },
+      legend: {
+        position: 'right',
+        offsetX: 0,
+        offsetY: 50
+      }
+    };
       })
     }
   }
@@ -207,9 +360,9 @@ export class TargetGraphComponent implements OnInit {
     this.filterForm.get('department_id').patchValue(departmentId);
   }
   isDepartment: any;
-  isEmployee:any;
-  isEmployeeAvailable=false;
-  isDepartmentAvailable=false;
+  isEmployee: any;
+  isEmployeeAvailable = false;
+  isDepartmentAvailable = false;
   submit() {
     console.log(this.filterForm.value);
     if (this.filterForm.valid) {
@@ -226,10 +379,10 @@ export class TargetGraphComponent implements OnInit {
         this.isDepartmentAvailable = true;
       } else if (d_id) {
         this.isDepartment = d_id;
-        this.isDepartmentAvailable=true;
-      }else if(empid){
-        this.isEmployee=empid;
-        this.isEmployeeAvailable=true;
+        this.isDepartmentAvailable = true;
+      } else if (empid) {
+        this.isEmployee = empid;
+        this.isEmployeeAvailable = true;
       }
       this.getTargetGraph(empid, d_id, to_date, from_date);
     } else {

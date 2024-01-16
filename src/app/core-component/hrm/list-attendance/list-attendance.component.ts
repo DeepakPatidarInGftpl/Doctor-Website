@@ -82,7 +82,7 @@ export class ListAttendanceComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.hrmService.AttendanceIsActive(id,'').subscribe(res => {
+        this.hrmService.AttendanceIsActive(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -118,7 +118,7 @@ export class ListAttendanceComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.hrmService.AttendanceIsActive(id,'').subscribe(res => {
+        this.hrmService.AttendanceIsActive(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({

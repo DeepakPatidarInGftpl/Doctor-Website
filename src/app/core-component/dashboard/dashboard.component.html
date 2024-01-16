@@ -11,7 +11,7 @@
     <mat-datepicker-toggle matIconSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
     <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
   </mat-form-field> -->
-
+  
 <div class="border" style="width: 20%;">
     <mat-form-field class="example-form-field">
         <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
@@ -218,16 +218,6 @@
                 <div class="card flex-fill">
                     <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Purchase & Sales</h5>
-                        <!-- <div class="graph-sets">
-                            <ul>
-                                <li>
-                                    <span>Sales</span>
-                                </li>
-                                <li>
-                                    <span>Purchase</span>
-                                </li>
-                            </ul>
-                        </div> -->
                         <div class="border" style="width: 40%;">
                             <mat-form-field class="example-form-field">
                                 <mat-date-range-input [formGroup]="salevsPurchaseForm" [rangePicker]="salevsPurchasePicker">
@@ -247,9 +237,21 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <canvas class="barchart" baseChart [datasets]="barChartData" [labels]="barChartLabels"
+                        <!-- <canvas class="barchart" baseChart [datasets]="barChartData" [labels]="barChartLabels"
                             [options]="barChartOptions" [legend]="barChartLegend">
-                        </canvas>
+                        </canvas> -->
+                        <div >
+                            <apx-chart
+                              [series]="chartOptions?.['series']"
+                              [chart]="chartOptions?.['chart']"
+                              [dataLabels]="chartOptions?.['dataLabels']"
+                              [plotOptions]="chartOptions?.['plotOptions']"
+                              [responsive]="chartOptions?.['responsive']"
+                              [xaxis]="chartOptions?.['xaxis']"
+                              [legend]="chartOptions?.['legend']"
+                              [fill]="chartOptions?.['fill']"
+                            ></apx-chart>
+                          </div>
                     </div>
                 </div>
             </div>
