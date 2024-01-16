@@ -1,14 +1,27 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ChartComponent,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexResponsive,
+  ApexXAxis,
+  ApexLegend,
+  ApexFill
+} from "ng-apexcharts";
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  @ViewChild("chart") chart: ChartComponent;
+  public chartOptions: Partial<any>;
 
   public barChartOptions: any = {
     scales: {
@@ -102,7 +115,68 @@ export class DashboardComponent implements OnInit {
     { label: 'This Financial Year', value: 'thisFinancialYear' },
     { label: 'Last Financial Year', value: 'lastFinancialYear' },
   ];
-  constructor(private coreService: CoreService, private datePipe: DatePipe) { }
+
+  //
+
+
+  //
+  constructor(private coreService: CoreService, private datePipe: DatePipe) {
+    this.chartOptions = {
+      series: [
+        {
+          name: "PRODUCT A",
+          data: [44, 55, 41, 67, 22, 43, 21, 49]
+        },
+        {
+          name: "PRODUCT B",
+          data: [13, 23, 20, 8, 13, 27, 33, 12]
+        },
+        {
+          name: "PRODUCT C",
+          data: [11, 17, 15, 15, 21, 14, 15, 13]
+        }
+      ],
+      chart: {
+        type: "bar",
+        height: 350,
+        stacked: true,
+        stackType: "100%"
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: "bottom",
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }
+      ],
+      xaxis: {
+        categories: [
+          "2011 Q1",
+          "2011 Q2",
+          "2011 Q3",
+          "2011 Q4",
+          "2012 Q1",
+          "2012 Q2",
+          "2012 Q3",
+          "2012 Q4"
+        ]
+      },
+      fill: {
+        opacity: 1
+      },
+      legend: {
+        position: "right",
+        offsetX: 0,
+        offsetY: 50
+      }
+    };
+  
+   }
   campaignOne: FormGroup;
   salevsPurchaseForm: FormGroup;
   transactionForm: FormGroup;
@@ -181,13 +255,63 @@ export class DashboardComponent implements OnInit {
   getSalePurchaseTotalDashboard() {
     this.coreService.getDashboardSaleVsPurchase(this.salePurchaseStartDate, this.salePurchaseEndDate).subscribe((res: any) => {
       this.salePurchaseTotalList = res?.data;
-      this.barChartLabels = this.salePurchaseTotalList.map(item => this.formatDateMonth(item.date));
-      this.barChartData = [
-        { data: this.salePurchaseTotalList.map(item => item.total_sale_bill), label: 'Total Sale Bill' },
-        { data: this.salePurchaseTotalList.map(item => item.total_purchase_bill), label: 'Total Purchase Bill' },
-        { data: this.salePurchaseTotalList.map(item => item.total_sale_return), label: 'Total Sale Return' },
-        { data: this.salePurchaseTotalList.map(item => item.total_purchase_return), label: 'Total Purchase Return' }
-      ];
+      // this.barChartLabels = this.salePurchaseTotalList.map(item => this.formatDateMonth(item.date));
+      // this.barChartData = [
+      //   { data: this.salePurchaseTotalList.map(item => item.total_sale_bill), label: 'Total Sale Bill' },
+      //   { data: this.salePurchaseTotalList.map(item => item.total_purchase_bill), label: 'Total Purchase Bill' },
+      //   { data: this.salePurchaseTotalList.map(item => item.total_sale_return), label: 'Total Sale Return' },
+      //   { data: this.salePurchaseTotalList.map(item => item.total_purchase_return), label: 'Total Purchase Return' }
+      // ];
+// apexchart 
+   
+      this.chartOptions = {
+        series: [
+          { name: 'Total Sale Bill', data: this.salePurchaseTotalList.map(item => item.total_sale_bill) },
+          { name: 'Total Purchase Bill', data: this.salePurchaseTotalList.map(item => item.total_purchase_bill) },
+          { name: 'Total Sale Return', data: this.salePurchaseTotalList.map(item => item.total_sale_return) },
+          { name: 'Total Purchase Return', data: this.salePurchaseTotalList.map(item => item.total_purchase_return) }
+        ],
+        chart: {
+          type: 'bar',
+          height: 350,
+          stacked: true,
+          toolbar: {
+            show: true
+          },
+          zoom: {
+            enabled: true
+          }
+        },
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              legend: {
+                position: 'bottom',
+                offsetX: -10,
+                offsetY: 0
+              }
+            }
+          }
+        ],
+        plotOptions: {
+          bar: {
+            horizontal: false
+          }
+        },
+        xaxis: {
+          type: 'category',
+          categories: this.salePurchaseTotalList.map(item => this.formatDateMonth(item.date))
+        },
+        legend: {
+          position: 'right',
+          offsetY: 40
+        },
+        fill: {
+          opacity: 1
+        }
+      };
+      
     })
   }
   //end 

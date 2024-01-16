@@ -24,18 +24,36 @@ export class IncentiveLedgerEmployeeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getEmployee();
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    // Start date of the current month
+    const startDate = new Date(currentYear, currentMonth, 1);
+    // End date of the current month
+    const endDate = new Date(currentYear, currentMonth + 1, 0);
+
     this.filterForm = this.fb.group({
-      from_date: new FormControl('', [Validators.required]),
-      to_date: new FormControl('', [Validators.required]),
+      from_date: new FormControl(this.formatDate(startDate), [Validators.required]),
+      to_date: new FormControl(this.formatDate(endDate), [Validators.required]),
       employee_id: new FormControl('', [Validators.required])
     })
     this.filteredemployee = this.employeeControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
     );
-
+    let from_date=this.filterForm.value?.from_date;
+    let to_date=this.filterForm.value?.to_date;
+    let id = this.filterForm.value?.employee_id;
+    
+    this.getIncentiveLedger(id, from_date, to_date);
     //incentive
     // this.getIncentiveLedger('','','')
+  }
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
   private _filter(value: string | number, include: boolean): any[] {
     // console.log(value);
@@ -78,7 +96,7 @@ export class IncentiveLedgerEmployeeComponent implements OnInit {
       let to_date = data?.to_date;
       let from_date = data?.from_date;
       this.isFilterData=true;
-      this.getIncentiveLedger(id, to_date, from_date);
+      this.getIncentiveLedger(id, from_date, to_date);
     }else{
       this.filterForm.markAllAsTouched();
     }
