@@ -18,6 +18,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 
 import { NgChartsModule } from 'ng2-charts';
+import { NgApexchartsModule } from "ng-apexcharts";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { NgChartsModule } from 'ng2-charts';
     AsyncPipe,
     MatFormFieldModule,
     MatInputModule, 
-    NgChartsModule
+    NgChartsModule,
+    NgApexchartsModule
   ]
 })
 export class TargetGraphModule { }

@@ -75,9 +75,9 @@ export class HrmServiceService {
     let url = this.apiUrl + '/pv-api/attendance/?id='
     return this.http.get<any>(`${url}${id}`)
   }
-  AttendanceIsActive(id: any, data) {
+  AttendanceIsActive(id: any) {
     let url = this.apiUrl + '/pv-api/status_changed_attendence/?attendence_id=';
-    return this.http.post(`${url}${id}`, data);
+    return this.http.get(`${url}${id}`);
   }
   updateAttendance(data: any, id: number) {
     let url = this.apiUrl + '/pv-api/update_attendence/?attendence_id=';

@@ -1,3 +1,11 @@
+
+
+<!-- <div class="chartContainer">
+  <apx-chart
+  [series]="chartSeries" [chart]="chartDetails" [labels]="chartLabels" [title]="chartTitle" [dataLabels]="chartDataLabel"
+></apx-chart>
+</div> -->
+
 <div class="page-header">
     <div class="page-title">
         <h4 class="titl">Target Graph</h4>
@@ -28,7 +36,7 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label style="padding-left: 12px;">Select Employee</label>
-                        <div class="search-input mx-3" style="width: 140%;">
+                        <div class="search-input mx-3" style="width: 100%;">
                             <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
                                 <input type="text" placeholder="Search Employee" aria-label="Employee" matInput
                                     [formControl]="employeeControl" [matAutocomplete]="auto"
@@ -36,7 +44,7 @@
                                 <mat-autocomplete #auto="matAutocomplete">
                                     <ng-container *ngFor="let employee of filteredemployee | async">
                                     <mat-option *ngIf="employee.is_active==true" [value]="employee?.name" (onSelectionChange)="onCheck(employee.id)" style="color:#FF9F43">{{ employee?.name }}</mat-option>
-                                    </ng-container>
+                                    </ng-container> 
                                     <ng-container *ngIf="(filteredemployee | async) as employees">
                                         <mat-option *ngIf="employees.length === 0" [value]="'No data found'">
                                             <a routerLink="//contacts/addEmployee" style="color:#FF9F43">+ Add Employee</a>
@@ -87,9 +95,24 @@
         <div class="card">
         <div class="card-body">
             <div class="container">
-            <canvas class="barchart" baseChart [datasets]="barChartData" [labels]="barChartLabels"
+            <!-- <canvas class="barchart" baseChart [datasets]="barChartData" [labels]="barChartLabels"
                 [options]="barChartOptions" [legend]="barChartLegend">
-            </canvas>
+            </canvas> -->
+
+            <div id="chart">
+                <apx-chart
+                  [series]="chartOptions?.['series']"
+                  [chart]="chartOptions?.['chart']"
+                  [dataLabels]="chartOptions?.['dataLabels']"
+                  [plotOptions]="chartOptions?.['plotOptions']"
+                  [yaxis]="chartOptions?.['yaxis']"
+                  [legend]="chartOptions?.['legend']"
+                  [fill]="chartOptions?.['fill']"
+                  [stroke]="chartOptions?.['stroke']"
+                  [tooltip]="chartOptions?.['tooltip']"
+                  [xaxis]="chartOptions?.['xaxis']"
+                ></apx-chart>
+              </div>
             </div>
         </div>
         </div>
@@ -187,7 +210,8 @@
             </div>
         </div>
 </ng-container>
-<ng-container *ngIf="isEmployeeAvailable">
+<!-- when data come from api is object of employee -->
+<!-- <ng-container *ngIf="isEmployeeAvailable">
     <div class="row">
         <ng-container>
             <div class="col-lg-3 col-sm-3 col-12 d-flex">
@@ -231,6 +255,100 @@
                 </div>
             </div>
         </ng-container>
+    </div>
+</ng-container> -->
+
+<ng-container *ngIf="isEmployeeAvailable">
+    <div class="table-top">
+        <div class="search-set">
+            <div class="search-path">
+                <a class="btn btn-filter" id="filter_search">
+                    <img src="assets/img/icons/filter.svg" alt="img">
+                    <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                </a>
+            </div>
+
+            <div class="search-input">
+                <a class="btn btn-searchset">
+                    <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                <div class="dataTables_filter"><label>
+                        <input type="search" class="form-control form-control-sm" placeholder="Search Department/Employee"
+                            [(ngModel)]="titlee" (ngModelChange)="search()">
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="wordset">
+            <ul>
+                <li>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDF()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                </li>
+                <li>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                </li>
+                <li>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table datanew" id="mytable">
+            <thead>
+                <tr>
+                    <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
+                    <th (click)="sort('id')" class="thone">Employee Name<i class="fa fa-sort"></i></th>
+                    <th (click)="sort('id')" class="thone">Department<i class="fa fa-sort"></i></th>
+                    <th (click)="sort('id')" class="thone">Assigned Target<i class="fa fa-sort"></i></th>
+                    <th (click)="sort('id')" class="thone">Achieved Target<i class="fa fa-sort"></i></th>
+                    <th (click)="sort('id')" class="thone">Achieved (%)<i class="fa fa-sort"></i></th>
+                </tr>
+            </thead>
+            <tbody *ngIf="targetGraphList?.length>=0 ">
+                <ng-container>
+                <tr *ngFor="let graphs of targetGraphList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; let i = index">
+                    <td>{{i+1}}</td>
+                    <td class="productimgname"><a style="line-height: 3;">{{graphs?.employee_name}}</a></td>
+                    <td>{{graphs?.department}}</td>
+                    <td>{{graphs?.assigned_target}}</td>
+                    <td>{{graphs?.achieved_target}}</td>
+                    <td>{{graphs?.['%_achieved'] }}</td>
+                </tr>
+                </ng-container>
+            </tbody>
+            <tbody *ngIf="targetGraphList?.length===0 && !loader">
+                <tr>
+                    <td colspan="10">
+                        <p class="center-textt">Data not available</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="progressbar">
+            <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+        </div>
+        <div class="row" *ngIf="!loader">
+            <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                <div class="entries"> Show per page
+                    <select [(ngModel)]="itemsPerPage" class="pagination">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="-1">All</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                <div class="f-right">
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                    <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}}
+                        entries</div>
+                </div>
+            </div>
+        </div>
     </div>
 </ng-container>
     </div>
