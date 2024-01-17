@@ -20,19 +20,21 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>MRP*</label>
-                        <input type="number" formControlName="mrp" (blur)="checkCost()" (blur)="checkMrpSelling()" id="mrp" [ngClass]="{
-                      'is-invalid': f['mrp'].touched && f['mrp'].invalid}" placeholder="0">
+                        <input type="number" formControlName="mrp" id="mrp" (blur)="checkCost()" (blur)="checkMrpSelling()" [ngClass]="{'is-invalid': f['mrp'].touched && f['mrp'].invalid}" placeholder="0">
                         <span class="text-danger" *ngIf="mrp && mrp.invalid && mrp.touched">Enter MRP </span>
-                        <span class="text-danger" *ngIf="errorMrp">{{errorMrp}}</span>
+                        <!-- <span class="text-danger" *ngIf="errorMrp">{{errorMrp}}</span> -->
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Cost Price</label>
-                        <input type="number" formControlName="cost_price" (blur)="checkCost()" (blur)="checkMrpSelling()" id="cost_price" [ngClass]="{'is-invalid': f['cost_price'].touched && f['cost_price'].invalid}" placeholder="0">
+                        <input type="number" formControlName="cost_price" (blur)="checkCost()" (blur)="checkMrpSelling()" (blur)="checkCostSelling()" id="cost_price" [ngClass]="{'is-invalid': f['cost_price'].touched && f['cost_price'].invalid}"
+                         [ngStyle]="{'border': errorCost ? '1px solid red' : ''}" placeholder="0">
                         <span class="text-danger" *ngIf="cost_price && cost_price.invalid && cost_price.touched">Enter Cost Price</span>
                         <span class="text-danger" *ngIf="errorCost">{{errorCost}}</span>
+                        <br>
+                        <!-- <span class="text-danger" *ngIf="errorCostSell">{{errorCostSell}}</span> -->
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
@@ -53,36 +55,48 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Selling Price Online</label>
-                        <input type="number" formControlName="selling_price_online" id="selling_price_online" [ngClass]="{'is-invalid': f['selling_price_online'].touched && f['selling_price_online'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="selling_price_online && selling_price_online.invalid && selling_price_online.touched">Enter Selling Price Online
-                        </span>
+                        <input type="number" formControlName="selling_price_online" (blur)="checkOnline()" id="selling_price_online" [ngClass]="{'is-invalid': f['selling_price_online'].touched && f['selling_price_online'].invalid}"
+                        [ngStyle]="{'border': errorOnline || errorOnlineMrp? '1px solid red' : ''}" placeholder="0">
+                        <span class="text-danger"*ngIf="selling_price_online && selling_price_online.invalid && selling_price_online.touched">Enter Selling Price Online</span>
+                        <span class="text-danger" *ngIf="errorOnline">{{errorOnline}}</span>
+                        <br>
+                        <span class="text-danger" *ngIf="errorOnlineMrp">{{errorOnlineMrp}}</span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Selling Price Offline</label>
-                        <input type="number" formControlName="selling_price_offline" id="selling_price_offline" [ngClass]="{'is-invalid': f['selling_price_offline'].touched && f['selling_price_offline'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="selling_price_offline && selling_price_offline.invalid && selling_price_offline.touched">Enter Selling Price Offline
-                        </span>
+                        <input type="number" formControlName="selling_price_offline" (blur)="checkOffline()" id="selling_price_offline" [ngClass]="{'is-invalid': f['selling_price_offline'].touched && f['selling_price_offline'].invalid}"
+                        [ngStyle]="{'border': errorOffline || errorOfflineMrp ? '1px solid red' : ''}" placeholder="0">
+                        <span class="text-danger"*ngIf="selling_price_offline && selling_price_offline.invalid && selling_price_offline.touched">Enter Selling Price Offline</span>
+                        <span class="text-danger" *ngIf="errorOffline">{{errorOffline}}</span>
+                        <br>
+                        <span class="text-danger" *ngIf="errorOfflineMrp">{{errorOfflineMrp}}</span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Selling Price Dealer</label>
-                        <input type="number" formControlName="selling_price_dealer" id="selling_price_dealer" [ngClass]="{'is-invalid': f['selling_price_dealer'].touched && f['selling_price_dealer'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="selling_price_vendor && selling_price_vendor.invalid && selling_price_vendor.touched">Enter Selling Price Vendor
-                        </span>
+                        <input type="number" formControlName="selling_price_dealer" (blur)="checkDealer()" id="selling_price_dealer" [ngClass]="{'is-invalid': f['selling_price_dealer'].touched && f['selling_price_dealer'].invalid}"
+                        [ngStyle]="{'border': errorDealer || errorDealerMrp? '1px solid red' : ''}" placeholder="0">
+                        <span class="text-danger"*ngIf="selling_price_vendor && selling_price_vendor.invalid && selling_price_vendor.touched">Enter Selling Price Dealer</span>
+                        <span class="text-danger" *ngIf="errorDealer">{{errorDealer}}</span>
+                        <br>
+                        <span class="text-danger" *ngIf="errorDealerMrp">{{errorDealerMrp}}</span>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Selling Price Employee</label>
-                        <input type="number" formControlName="selling_price_employee" id="selling_price_employee" [ngClass]="{'is-invalid': f['selling_price_employee'].touched && f['selling_price_employee'].invalid}" placeholder="0">
-                        <span class="text-danger"*ngIf="selling_price_employee && selling_price_employee.invalid && selling_price_employee.touched">Enter Selling Price Employee
-                        </span>
+                        <input type="number" formControlName="selling_price_employee" (blur)="checkEmployee()" id="selling_price_employee" [ngClass]="{'is-invalid': f['selling_price_employee'].touched && f['selling_price_employee'].invalid}"
+                        [ngStyle]="{'border': errorEmployee||errorEmployeeMrp ? '1px solid red' : ''}" placeholder="0">
+                        <span class="text-danger"*ngIf="selling_price_employee && selling_price_employee.invalid && selling_price_employee.touched">Enter Selling Price Employee</span>
+                        <span class="text-danger" *ngIf="errorEmployee">{{errorEmployee}}</span>
+                        <br>
+                        <span class="text-danger" *ngIf="errorEmployeeMrp">{{errorEmployeeMrp}}</span>
                     </div>
                 </div>
 
@@ -146,7 +160,7 @@
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
                         <span class="spinner-border spinner-border-sm" role="status"
                             aria-hidden="true"></span>Submit</button>
-                            <a routerLink="//product/{{id}}" class="btn btn-cancel">Cancel</a>
+                            <a (click)="backLoc()" class="btn btn-cancel">Cancel</a>
                 </div>
             </div>
         </form>
