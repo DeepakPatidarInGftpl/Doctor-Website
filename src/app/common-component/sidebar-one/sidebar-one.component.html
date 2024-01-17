@@ -175,7 +175,7 @@
                 </ul>
             </li> 
             <li class="submenu" *ngIf="isAttendnace || isTarget || isDepartment || isIncentive">
-                <a  [ngClass]="{'active': activePath === 'hrm'}"><img src="assets/img/icons/places.svg" alt="img"><span> HRM</span> <span class="menu-arrow"></span></a>
+                <a  [ngClass]="{'active': activePath === 'hrm'}"><i data-bs-toggle="tooltip" title="fa fa-users" class="fa fa-users" style="color: #637381;"></i><span> HRM</span> <span class="menu-arrow"></span></a>
                 <ul >
                     <li *ngIf="isAttendnace"><a routerLink="/hrm/list-attendance" routerLinkActive="active">Attendance</a></li>
                     <li *ngIf="isDepartment"><a routerLink="/hrm/department" routerLinkActive="active">Department </a></li>
