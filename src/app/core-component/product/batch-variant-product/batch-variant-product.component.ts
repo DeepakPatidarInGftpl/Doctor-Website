@@ -67,28 +67,32 @@ export class BatchVariantProductComponent implements OnInit {
         let percentage = cost_price * this.brandList?.markup_percentage_employee / 100;
         let price = cost_price + percentage;
         this.batchForm.get('selling_price_employee')?.patchValue(price);
-        this.checkMrpSelling()
+        this.checkMrpSelling();
+        this.checkCostSelling();
       }
       if (this.brandList?.markup_percentage_online > 0) {
         let cost_price = this.batchForm.value?.cost_price;
         let percentage = cost_price * this.brandList?.markup_percentage_online / 100;
         let price = cost_price + percentage;
         this.batchForm.get('selling_price_online')?.patchValue(price);
-        this.checkMrpSelling()
+        this.checkMrpSelling();
+        this.checkCostSelling();
       }
       if (this.brandList?.markup_percentage_customer > 0) {
         let cost_price = this.batchForm.value?.cost_price;
         let percentage = cost_price * this.brandList?.markup_percentage_customer / 100;
         let price = cost_price + percentage;
         this.batchForm.get('selling_price_offline')?.patchValue(price);
-        this.checkMrpSelling()
+        this.checkMrpSelling();
+        this.checkCostSelling();
       }
       if (this.brandList?.markup_percentage_wholesale > 0) {
         let cost_price = this.batchForm.value?.cost_price;
         let percentage = cost_price * this.brandList?.markup_percentage_wholesale / 100;
         let price = cost_price + percentage;
         this.batchForm.get('selling_price_dealer')?.patchValue(price);
-        this.checkMrpSelling()
+        this.checkMrpSelling();
+        this.checkCostSelling();
       }
       // this.batchForm.get('selling_price_online')?.patchValue(this.brandList?.markup_percentage_online);
       // this.batchForm.get('selling_price_offline')?.patchValue(this.brandList?.markup_percentage_customer);
