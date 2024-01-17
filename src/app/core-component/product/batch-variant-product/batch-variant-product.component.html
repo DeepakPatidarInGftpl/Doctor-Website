@@ -29,9 +29,13 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Cost Price</label>
-                        <input type="number" formControlName="cost_price" (blur)="checkCost()" (blur)="checkMrpSelling()" id="cost_price" [ngClass]="{'is-invalid': f['cost_price'].touched && f['cost_price'].invalid}" [ngStyle]="{'border': errorCost ? '1px solid red' : ''}" placeholder="0">
+                        <input type="number" formControlName="cost_price" (blur)="checkCost()" (blur)="checkMrpSelling()" (blur)="checkCostSelling()" id="cost_price" [ngClass]="{'is-invalid': f['cost_price'].touched && f['cost_price'].invalid}"
+                         [ngStyle]="{'border': errorCost ? '1px solid red' : ''}"
+                         [ngStyle]="{'border': errorCostSell ? '1px solid red' : ''}"  placeholder="0">
                         <span class="text-danger" *ngIf="cost_price && cost_price.invalid && cost_price.touched">Enter Cost Price</span>
                         <span class="text-danger" *ngIf="errorCost">{{errorCost}}</span>
+                        <br>
+                        <span class="text-danger" *ngIf="errorCostSell">{{errorCostSell}}</span>
                     </div>
                 </div>
 

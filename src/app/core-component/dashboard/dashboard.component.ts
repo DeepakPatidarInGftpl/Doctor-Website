@@ -97,10 +97,6 @@ export class DashboardComponent implements OnInit {
   public transactionBarChartLegend: boolean = true;
   public transactionBarChartData: any[] = [];
 
-  // public barChartData: any[] = [
-  //   { data: [65, 59, 80, 81], label: 'Series A' },
-  //   { data: [28, 48, 40, 19], label: 'Series B' }
-  // ];
 
   dateRangeOptions = [
     { label: 'Today', value: 'today' },
@@ -116,65 +112,7 @@ export class DashboardComponent implements OnInit {
     { label: 'Last Financial Year', value: 'lastFinancialYear' },
   ];
 
-  //
-
-
-  //
   constructor(private coreService: CoreService, private datePipe: DatePipe) {
-    this.chartOptions = {
-      series: [
-        {
-          name: "PRODUCT A",
-          data: [44, 55, 41, 67, 22, 43, 21, 49]
-        },
-        {
-          name: "PRODUCT B",
-          data: [13, 23, 20, 8, 13, 27, 33, 12]
-        },
-        {
-          name: "PRODUCT C",
-          data: [11, 17, 15, 15, 21, 14, 15, 13]
-        }
-      ],
-      chart: {
-        type: "bar",
-        height: 350,
-        stacked: true,
-        stackType: "100%"
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: "bottom",
-              offsetX: -10,
-              offsetY: 0
-            }
-          }
-        }
-      ],
-      xaxis: {
-        categories: [
-          "2011 Q1",
-          "2011 Q2",
-          "2011 Q3",
-          "2011 Q4",
-          "2012 Q1",
-          "2012 Q2",
-          "2012 Q3",
-          "2012 Q4"
-        ]
-      },
-      fill: {
-        opacity: 1
-      },
-      legend: {
-        position: "right",
-        offsetX: 0,
-        offsetY: 50
-      }
-    };
   
    }
   campaignOne: FormGroup;
@@ -262,8 +200,7 @@ export class DashboardComponent implements OnInit {
       //   { data: this.salePurchaseTotalList.map(item => item.total_sale_return), label: 'Total Sale Return' },
       //   { data: this.salePurchaseTotalList.map(item => item.total_purchase_return), label: 'Total Purchase Return' }
       // ];
-// apexchart 
-   
+// apexchart    
       this.chartOptions = {
         series: [
           { name: 'Total Sale Bill', data: this.salePurchaseTotalList.map(item => item.total_sale_bill) },
@@ -296,7 +233,7 @@ export class DashboardComponent implements OnInit {
         ],
         plotOptions: {
           bar: {
-            horizontal: false
+            horizontal: false,
           }
         },
         xaxis: {
@@ -304,8 +241,8 @@ export class DashboardComponent implements OnInit {
           categories: this.salePurchaseTotalList.map(item => this.formatDateMonth(item.date))
         },
         legend: {
-          position: 'right',
-          offsetY: 40
+          position: 'top',
+          offsetY: 0
         },
         fill: {
           opacity: 1

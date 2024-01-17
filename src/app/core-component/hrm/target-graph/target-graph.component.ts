@@ -179,36 +179,36 @@ export class TargetGraphComponent implements OnInit {
   public barChartData: any[] = [];
 
   ngOnInit(): void {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
-    // Start date of the current month
-    const startDate = new Date(currentYear, currentMonth, 1);
-    // End date of the current month
-    const endDate = new Date(currentYear, currentMonth + 1, 0);
-
-    this.filterForm = this.fb.group({
-      from_date: new FormControl(this.formatDate(startDate), [Validators.required]),
-      to_date: new FormControl(this.formatDate(endDate), [Validators.required]),
-      employee_id: new FormControl(''),
-      department_id: new FormControl(''),
-    });
-
-    // const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
-    // // previous month
     // const currentDate = new Date();
+    // const currentYear = currentDate.getFullYear();
     // const currentMonth = currentDate.getMonth();
-    // currentDate.setDate(1);
-    // currentDate.setMonth(currentMonth - 1);
-    // const previousMonthDate = currentDate.toISOString().split('T')[0];
-    // //2month before
-    // const defaultPreviousDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1).toISOString().split('T')[0];
+    // // Start date of the current month
+    // const startDate = new Date(currentYear, currentMonth, 1);
+    // // End date of the current month
+    // const endDate = new Date(currentYear, currentMonth + 1, 0);
+
     // this.filterForm = this.fb.group({
-    //   from_date: new FormControl(defaultDate, [Validators.required]),
-    //   to_date: new FormControl(defaultPreviousDate, [Validators.required]),
-    //   employee_id: new FormControl('',),
-    //   department_id: new FormControl('',),
+    //   from_date: new FormControl(this.formatDate(startDate), [Validators.required]),
+    //   to_date: new FormControl(this.formatDate(endDate), [Validators.required]),
+    //   employee_id: new FormControl(''),
+    //   department_id: new FormControl(''),
     // });
+
+    const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
+    // previous month
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    currentDate.setDate(1);
+    currentDate.setMonth(currentMonth - 1);
+    const previousMonthDate = currentDate.toISOString().split('T')[0];
+    //2month before
+    const defaultPreviousDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1).toISOString().split('T')[0];
+    this.filterForm = this.fb.group({
+      from_date: new FormControl(defaultDate, [Validators.required]),
+      to_date: new FormControl(defaultPreviousDate, [Validators.required]),
+      employee_id: new FormControl('',),
+      department_id: new FormControl('',),
+    });
 
     // call target graph 
     this.submit();
@@ -274,8 +274,6 @@ export class TargetGraphComponent implements OnInit {
         }));
       })
     } else if (this.isEmployeeAvailable && this.isDepartmentAvailable) {
-      console.log('test');
-
       this.hrmService.getTargetGraph(employeeId, departmentId, from_date, to_date).subscribe((res: any) => {
         this.targetGraphList = res;
         console.warn(this.targetGraphList);
@@ -297,42 +295,129 @@ export class TargetGraphComponent implements OnInit {
         //   label: item.employee_name
         // }));
     // apexchart
+  
+    // this.chartOptions = {
+    //   series: this.graphList.map((item: any) => {
+    //     return {
+    //       name: item.employee_name,
+    //       data: [item['%_achieved']] 
+    //     };
+    //   }),
+    //   chart: {
+    //     type: 'bar',
+    //     height: 350,
+    //     stacked: true,
+    //     toolbar: {
+    //       show: true
+    //     },
+    //     zoom: {
+    //       enabled: true
+    //     }
+    //   },
+    //   responsive: [
+    //     {
+    //       breakpoint: 480,
+    //       options: {
+    //         legend: {
+    //           position: 'bottom',
+    //           offsetX: -10,
+    //           offsetY: 0
+    //         }
+    //       }
+    //     }
+    //   ],
+    //   plotOptions: {
+    //     bar: {
+    //       horizontal: false,
+    //     }
+    //   },
+    //   xaxis: {
+    //     type: 'category',
+    //     categories: this.graphList.map((item: any) => item.employee_name)
+    //   },
+    //   legend: {
+    //     position: 'right',
+    //     offsetY: 40
+    //   },
+    //   fill: {
+    //     opacity: 1
+    //   }
+    // };
+
     this.chartOptions = {
-      series: this.graphList.map((item: any) => {
-        return {
-          name: item.employee_name,
-          data: [Math.min(item['%_achieved'], 100)] // Limit to a maximum of 100
-        };
-      }),
+      series: [
+        { name: '', data: this.graphList.map(item => item['%_achieved']) },
+      ],
       chart: {
-        type: 'bar',
         height: 350,
-        stacked: true,
-        stackType: '100%'
+        type: "bar"
       },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: 'bottom',
-              offsetX: -10,
-              offsetY: 0
-            }
+      plotOptions: {
+        bar: {
+          dataLabels: {
+            position: "top" 
           }
         }
-      ],
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function(val) {
+          return val + "%";
+        },
+        offsetY: -20,
+        style: {
+          fontSize: "12px",
+          colors: ["#304758"]
+        }
+      },
+
       xaxis: {
-        categories: this.graphList.map((item: any) => item.employee_name)
+        categories: this.graphList.map((item: any) => item.employee_name),  
+        crosshairs: {
+          fill: {
+            type: "gradient",
+            gradient: {
+              colorFrom: "#D8E3F0",
+              colorTo: "#BED1E6",
+              stops: [0, 100],
+              opacityFrom: 0.4,
+              opacityTo: 0.5
+            }
+          }
+        },
+        tooltip: {
+          enabled: true,
+          offsetY: -35
+        }
       },
       fill: {
-        opacity: 1
+        type: "gradient",
+        gradient: {
+          shade: "light",
+          type: "horizontal",
+          shadeIntensity: 0.25,
+          gradientToColors: undefined,
+          inverseColors: true,
+          opacityFrom: 1,
+          opacityTo: 1,
+          stops: [50, 0, 100, 100]
+        }
       },
-      legend: {
-        position: 'right',
-        offsetX: 0,
-        offsetY: 50
-      }
+      yaxis: {
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false
+        },
+        labels: {
+          show: false,
+          formatter: function(val) {
+            return val + "%";
+          }
+        }
+      },
+     
     };
       })
     }

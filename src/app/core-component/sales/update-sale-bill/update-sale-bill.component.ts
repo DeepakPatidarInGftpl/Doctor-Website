@@ -86,8 +86,8 @@ export class UpdateSaleBillComponent implements OnInit {
       this.editRes = res;
       this.saleBillForm.patchValue(this.editRes);
       this.saleBillForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id);
-      this.saleBillForm.get('sale_order').patchValue(this.editRes?.sale_order?.id);
-      this.saleBillForm.get('sales_man').patchValue(this.editRes?.sales_man?.id);
+      this.saleBillForm.get('sale_order').patchValue(this.editRes?.sale_order==null?'':this.editRes?.sale_order.id);
+      this.saleBillForm.get('sales_man').patchValue(this.editRes?.sales_man==null?'':this.editRes?.sales_man?.id);
       if(this.editRes?.cart.length>0){
         this.saleBillForm.setControl('sale_bill_cart', this.udateCart(this.editRes?.cart));
       }else{
@@ -1031,9 +1031,13 @@ export class UpdateSaleBillComponent implements OnInit {
     return this.saleBillForm.get('sales_man')
   }
   discountt(index: number) {
+    console.log(this.getCart().controls[index].get('discount'));
+    
     return this.getCart().controls[index].get('discount');
   }
   additionaldiscountt(index: number) {
+    console.log(this.getCart().controls[index].get('additional_discount'));
+    
     return this.getCart().controls[index].get('additional_discount');
   }
   taxx(index: number) {
@@ -1276,7 +1280,7 @@ export class UpdateSaleBillComponent implements OnInit {
     const subtotal = this.TotalWithoutTax[index]
     const qty = +cartItem.get('qty').value || 0;
     const totalForItem = price * qty || 0
-    console.log(totalForItem);
+    // console.log(totalForItem);
     return totalForItem;
   }
 
