@@ -68,7 +68,6 @@ export class AddAttendanceComponent implements OnInit {
     const month = date.getMonth() + 1;
     const lastDayOfMonth = new Date(year, month, 0).getDate();
     console.log(lastDayOfMonth);
-
     this.attendanceForm.get('total_day_of_month')?.patchValue(lastDayOfMonth);
   }
 
