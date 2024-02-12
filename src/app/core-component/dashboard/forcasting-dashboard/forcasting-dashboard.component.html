@@ -1,0 +1,174 @@
+
+<div class="row mx-2">
+    <div class="col-lg-6 col-sm-6 col-12 d-flex align-items-center">
+        <span style="font-size: 30px;font-weight: 600;">Forcasting & Salesman</span>
+      </div>
+    <div class="col-lg-2 col-sm-2 col-12"></div>
+    <div class="col-lg-4 col-sm-4 col-12">
+       
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 col-sm-12 col-12 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0" style="padding-left: 10px;">Department Wise Target</h5>
+                <!-- <div class="border" > -->
+                <mat-form-field style="width: 45%;">
+                    <mat-date-range-input [formGroup]="departmentForm" [rangePicker]="dailySalesPicker">
+                        <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                            (dateChange)="getSelectedDepartmentSalesDates()">
+                        <span class="mat-input-placeholder-wrapper">
+                            <span class="mat-input-placeholder">to</span>
+                        </span>
+                        <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                            (dateChange)="getSelectedDepartmentSalesDates()">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="dailySalesPicker"
+                        style=" font-size: x-large;"></mat-datepicker-toggle>
+                    <mat-date-range-picker #dailySalesPicker></mat-date-range-picker>
+                </mat-form-field>
+                <!-- </div> -->
+            </div>
+            <div class="card-body">
+                    <apx-chart [series]="departmentChartOptions?.['series']" [chart]="departmentChartOptions?.['chart']"
+                    [dataLabels]="departmentChartOptions?.['dataLabels']" [plotOptions]="departmentChartOptions?.['plotOptions']"
+                    [responsive]="departmentChartOptions?.['responsive']" [xaxis]="departmentChartOptions?.['xaxis']"
+                    [legend]="departmentChartOptions?.['legend']" [fill]="departmentChartOptions?.['fill']"></apx-chart>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-sm-12 col-12 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0" style="padding-left: 10px;">Employee Target</h5>
+                <!-- <div class="border" > -->
+                <mat-form-field style="width: 45%;">
+                    <mat-date-range-input [formGroup]="employeeForm" [rangePicker]="employeeTargetPicker">
+                        <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                            (dateChange)="getSelectedEmployeeDates()">
+                        <span class="mat-input-placeholder-wrapper">
+                            <span class="mat-input-placeholder">to</span>
+                        </span>
+                        <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                            (dateChange)="getSelectedEmployeeDates()">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="employeeTargetPicker"
+                        style=" font-size: x-large;"></mat-datepicker-toggle>
+                    <mat-date-range-picker #employeeTargetPicker></mat-date-range-picker>
+                </mat-form-field>
+                <!-- </div> -->
+            </div>
+            <div class="card-body">
+                <apx-chart
+                [series]="employeeChartOptions?.['series']"
+                [chart]="employeeChartOptions?.['chart']"
+                [dataLabels]="employeeChartOptions?.['dataLabels']"
+                [plotOptions]="employeeChartOptions?.['plotOptions']"
+                [yaxis]="employeeChartOptions?.['yaxis']"
+                [legend]="employeeChartOptions?.['legend']"
+                [fill]="employeeChartOptions?.['fill']"
+                [stroke]="employeeChartOptions?.['stroke']"
+                [tooltip]="employeeChartOptions?.['tooltip']"
+                [xaxis]="employeeChartOptions?.['xaxis']"
+              ></apx-chart>
+            </div>
+        </div>
+    </div>
+ </div>
+
+<!-- employee target-top 10 employee-->
+<div class="card">
+    <div class="card-body">     
+    <div class="row">
+        <div class="col-lg-6 col-sm-12 col-12 d-flex">
+            <div class="card flex-fill">
+                <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0" style="padding-left: 10px;">Employee Targets Achievements</h5>
+                    <mat-form-field style="width: 45%;">
+                        <mat-date-range-input [formGroup]="targetEmployee" [rangePicker]="recievablePicker">
+                            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input" (dateChange)="getSelectedAchieveDates()">
+                            <span class="mat-input-placeholder-wrapper">
+                                <span class="mat-input-placeholder">to</span>
+                            </span>
+                            <input matEndDate placeholder="End date" formControlName="end" class="mat-input" (dateChange)="getSelectedAchieveDates()">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="recievablePicker" style=" font-size: x-large;"></mat-datepicker-toggle>
+                        <mat-date-range-picker #recievablePicker></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive dataview">
+                        <table class="table datatable ">
+                            <thead>
+                                <tr>
+                                    <th>Employee Name</th>
+                                    <th>Assigned Target  </th>
+                                    <th>Achieved Target</th>
+                                    <th>Variation Amount</th>
+                                    <th>Variation %</th>
+                                    <th>% Achieved </th>
+                                </tr>
+                            <tbody>
+                                <tr *ngFor="let customers of achieveList">
+                                    <td>{{customers?.employee_name}}</td>
+                                    <td>{{customers?.assigned_target}}</td>
+                                    <td>{{customers?.achieved_target}}</td>
+                                    <td>{{customers?.variation_amount}}</td>
+                                    <td>{{customers?.["variation_%"]}}</td>
+                                    <td>{{customers?.["%_achieved"]}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-12 col-12 d-flex">
+            <div class="card flex-fill">
+                <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0" style="padding-left: 10px;">Top 10 Employee</h5>
+                    <mat-form-field style="width: 45%;">
+                        <mat-date-range-input [formGroup]="topEmployee" [rangePicker]="payavablePicker">
+                            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input" (dateChange)="getSelectedTop10Dates()">
+                            <span class="mat-input-placeholder-wrapper">
+                                <span class="mat-input-placeholder">to</span>
+                            </span>
+                            <input matEndDate placeholder="End date" formControlName="end" class="mat-input" (dateChange)="getSelectedTop10Dates()">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="payavablePicker" style=" font-size: x-large;"></mat-datepicker-toggle>
+                        <mat-date-range-picker #payavablePicker></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive dataview">
+                        <table class="table datatable ">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>No.Of Invoices </th>
+                                    <th>No.Of Sale Return</th>
+                                    <th>Invoices Value</th>
+                                    <th>Sale Return Value</th>
+                                    <th>Sale Value</th>
+                                </tr>
+                            <tbody>
+                                <tr *ngFor="let customers of top10List">
+                                    <td>{{customers?.name}}</td>
+                                    <td>{{customers?.no_of_invoices}}</td>
+                                    <td>{{customers?.no_of_sale_return}}</td>
+                                    <td>{{customers?.invoices_value}}</td>
+                                    <td>{{customers?.sale_return_value}}</td>
+                                    <td>{{customers?.sale_value}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<!-- end -->

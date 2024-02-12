@@ -141,6 +141,8 @@ const routes: Routes = [
       {path:'account',loadChildren:()=>import('./accounts/accounts.module').then((m)=>m.AccountsModule)},
       {path:'transaction',loadChildren:()=>import('./transactions/transactions.module').then((m)=>m.TransactionsModule)},
       {path:'hrm',loadChildren:()=>import('./hrm/hrm.module').then((m)=>m.HrmModule)},
+    
+      {path:'dashboard',loadChildren:()=>import('./dashboard/dashboard.module').then((m)=>m.DashboardModule)},
  
     ],
   },

@@ -170,6 +170,7 @@ mat-form-field {
   transform: perspective(100px);
   top: 47% !important;
 }
+
 .progressbar {
   background-color: #FF9F43;
   margin-top: 40px;
@@ -209,4 +210,17 @@ mat-form-field {
 }
 .ng-untouched.ng-pristine.ng-valid.cdk-text-field-autofill-monitored.is-invalid{
   border: 1px solid red;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-underline {
+  background-color: transparent !important;
+}
+.mat-form-field-appearance-legacy .mat-form-field-wrapper {
+  padding-bottom: 0% !important;
+}
+.mat-form-field-wrapper {
+  padding-bottom: 0% !important;
+}
+.mat-form-field-appearance-legacy .mat-form-field-underline {
+   height: 0px !important;
 }
