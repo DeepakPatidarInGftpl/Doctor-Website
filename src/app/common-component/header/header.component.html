@@ -8,20 +8,20 @@
   <div [class.container]="changeLayout == '3' || changeLayout == '4'">
     <!-- Logo -->
     <div class="header-left active" *ngIf="activePath != 'pos'">
-      <a routerLink="/dashboard" class="logo">
+      <a routerLink="/dashboard/sales" class="logo">
         <img [src]="logoPath" alt="" />
       </a>
-      <a routerLink="/dashboard" class="logo-small">
+      <a routerLink="/dashboard/sales" class="logo-small">
         <img src="assets/img/logo-small.png" alt="" />
       </a>
       <a id="toggle_btn" *ngIf="changeLayout == '1' || changeLayout == '3'" href="javascript:void(0);">
       </a>
     </div>
     <div class="header-left active" *ngIf="activePath === 'pos'" style="border-right: none">
-      <a routerLink="/dashboard" class="logo">
+      <a routerLink="/dashboard/sales" class="logo">
         <img [src]="logoPath" alt="" />
       </a>
-      <a routerLink="/dashboard" class="logo-small">
+      <a routerLink="/dashboard/sales" class="logo-small">
         <img src="assets/img/logo-small.png" alt="" />
       </a>
     </div>
