@@ -516,14 +516,12 @@ export class UpdatematerialInwardComponent implements OnInit {
     }
   }
 
-
   openDialog() {
     this.dialog.open(PrintMaterialInwardComponent, {
       height: '100%',
       data: this.id
     });
   }
-
 
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
