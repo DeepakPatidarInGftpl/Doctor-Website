@@ -57,6 +57,8 @@ export class UpdateEmployeeComponent implements OnInit {
       //2-1 
       incentive:new FormControl(''),
       is_sales_head:new FormControl('',[Validators.required]),
+      //15-2
+      employee_type:new FormControl('',[Validators.required]),
     });
 
     this.contactService.getEmployeeById(this.id).subscribe(res => {
@@ -291,6 +293,9 @@ mobileError:any;
     //2-1
       formdata.append('is_sales_head', this.employeeForm.get('is_sales_head')?.value);
       formdata.append('incentive', this.employeeForm.get('incentive')?.value);
+    //15-2
+    formdata.append('employee_type',this.employeeForm.get('employee_type')?.value);
+       
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];
@@ -440,6 +445,9 @@ mobileError:any;
   }
   get opening_balance() {
     return this.employeeForm.get('opening_balance')
+  }
+  get employee_type(){
+    return this.employeeForm.get('employee_type')
   }
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');

@@ -11,8 +11,8 @@
     <mat-datepicker-toggle matIconSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
     <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
   </mat-form-field> -->
-  
-  <!-- <div class="border" style="width: 20%;">
+
+<!-- <div class="border" style="width: 20%;">
     <mat-form-field class="example-form-field">
         <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
             <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
@@ -52,11 +52,12 @@
     </div>
     
 </div> -->
-<div class="card">
+
+
     <div class="row mx-2">
         <div class="col-lg-6 col-sm-6 col-12 d-flex align-items-center">
             <span style="font-size: 30px;font-weight: 600;">Sales</span>
-          </div>
+        </div>
         <div class="col-lg-2 col-sm-2 col-12"></div>
         <div class="col-lg-4 col-sm-4 col-12">
             <div style="text-align: end;">
@@ -70,139 +71,207 @@
                         <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
                             (dateChange)="getSelectedDates()">
                     </mat-date-range-input>
-            
-                    <mat-select class="mt-2" placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value,'sale')">
+
+                    <mat-select placeholder="Select Date Range"
+                        (selectionChange)="selectDateRange($event.value,'sale')">
                         <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
                     </mat-select>
-                    <mat-datepicker-toggle matSuffix [for]="campaignOnePicker" style=" font-size: x-large;"></mat-datepicker-toggle>
+                    <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                        style=" font-size: x-large;"></mat-datepicker-toggle>
                     <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
                 </mat-form-field>
             </div>
         </div>
     </div>
-    <div class="card-body">
+   
         <div class="row" *ngIf="saleTotalList">
             <ng-container>
                 <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                    <div class="dash-count">
-                        <div class="dash-counts">
-                            <h4>{{saleTotalList?.total_sale_order}}</h4>
-                            <h5>Total Sales</h5>
+                    <div class="dash-count card_bg_img card_1" style="flex-direction: column; width: 100%;">
+                        <div class="dash-counts" style="width: 100%;">
+                            <div class="num-1">
+                                <div class="num-img">
+                                    <img src="assets/img/dollar.png" alt="">
+                                </div>
+                                <div style="margin-left:10px">
+                                    <p class="card-num1-p1">Total Sales</p>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <!-- <div >
+                            <p class="card-num1-p">{{saleTotalList?.total_sale_order | currency :'INR'}}</p>
+                        </div> -->
+                        <div style="text-align: left; width: 100%;">
+                            <p class="card-num1-p" style="margin-bottom:5px;">{{salePurchaseList?.sales | currency :'INR'}}</p>
+                            <div class="d-flex sale_chart_img">
+                                <ng-container *ngIf="salePurchaseList?.loss_sale_percent">
+                                    <img src="assets/img/chartDown.png" alt="">
+                                    <p class="sale_percentage_p">{{salePurchaseList?.loss_sale_percent}}</p>
+                                </ng-container>
+                                <ng-container *ngIf="salePurchaseList?.profit_sales_percentage">
+                                    <img src="assets/img/chartUp.png" alt="">
+                                    <p class="sale_percentage_p">{{salePurchaseList?.profit_sales_percentage}}</p>
+                                </ng-container>
+                            </div>
+                          <!-- <apx-chart [series]="saleTotalChartOption?.['series']" [chart]="saleTotalChartOption?.['chart']" [stroke]="saleTotalChartOption?.['stroke']" [markers]="saleTotalChartOption?.['markers']" [grid]="saleTotalChartOption?.['grid']" [colors]="saleTotalChartOption?.['colors']" [tooltip]="saleTotalChartOption?.['tooltip']"></apx-chart> -->
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                    <div class="dash-count das1">
-                        <div class="dash-counts">
-                            <h4>{{saleTotalList?.total_purchase_order}}</h4>
-                            <h5>Total Purchase</h5>
+                    <div class="dash-count card_bg_img card_1" style="flex-direction: column; width: 100%;">
+                        <div class="dash-counts" style="width: 100%;">
+                            <div class="num-1" >
+                                <div class="num-img" style="width: 34px; height: 34px; border:0px solid">
+                                    <img src="assets/img/user_circle.png" alt="">
+                                </div>
+                                <div style="margin-left:10px">
+                                    <p class="card-num1-p1">Total Purchase</p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div style="text-align: left; width: 100%;">
+                            <p class="card-num1-p" style="margin-bottom:5px;">{{salePurchaseList?.purchases}}</p>
+                            <div class="d-flex sale_chart_img">
+                                <ng-container *ngIf="salePurchaseList?.loss_purchases_percent">
+                                    <img src="assets/img/chartDown.png" alt="">
+                                    <p class="sale_percentage_p">{{salePurchaseList?.loss_purchases_percent}}</p>
+                                </ng-container>
+                                <ng-container *ngIf="salePurchaseList?.profit_purchases_percentage">
+                                    <img src="assets/img/chartUp.png" alt="">
+                                    <p class="sale_percentage_p">{{salePurchaseList?.profit_purchases_percentage}}</p>
+                                </ng-container>
+                            </div>
                         </div>
                     </div>
                 </div>
             </ng-container>
-          <ng-container>
-            <div class="col-lg-2 col-sm-3 col-12 d-flex">
-                <div class="dash-count das2">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_stock_quantity}}</h4>
-                        <h5>Stock QTY</h5>
+            <ng-container>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex mt-3">
+                    <div class="dash-count das-h">
+                        <div class="dash-counts">
+                            <div class="num-img">
+                                <img src="assets/img/dollar.png" alt="">
+                            </div>
+                            <div>
+                                <p class="card-num-p1">Stock QTY</p>
+                                <p class="card-num-p2">{{saleTotalList?.total_stock_quantity}}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-2 col-sm-3 col-12 d-flex">
-                <div class="dash-count das2">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_stock_value}}</h4>
-                        <h5>Stock Value</h5>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex mt-3">
+                    <div class="dash-count das-h">
+                        <div class="dash-counts">
+                            <div class="num-img">
+                                <img src="assets/img/dollar.png" alt="">
+                            </div>
+                            <div>
+                                <p class="card-num-p1">Stock Value</p>
+                                <p class="card-num-p2">{{saleTotalList?.total_stock_value}}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-2 col-sm-3 col-12 d-flex">
-                <div class="dash-count das2">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_products}}</h4>
-                        <h5>Total Products</h5>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex mt-3">
+                    <div class="dash-count das-h">
+                        <div class="dash-counts">
+                            <div class="num-img">
+                                <img src="assets/img/dollar.png" alt="">
+                            </div>
+                            <div>
+                                <p class="card-num-p1">Total Products</p>
+                                <p class="card-num-p2">{{saleTotalList?.total_products}}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-          </ng-container>
-        <ng-container>
-            <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                <div class="dash-count">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_sale_bill_sold_quantity}}</h4>
-                        <h5>Sold QTY</h5>
+            </ng-container>
+            <ng-container>
+                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das-w">
+                        <div class="dash-counts">
+                            <p class="card-num-p1">Sold QTY</p>
+                            <p class="card-num-p2">{{saleTotalList?.total_sale_bill_sold_quantity}}</p>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                <div class="dash-count">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_sale_bill}}</h4>
-                        <h5>Total Invoice</h5>
+                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das-w">
+                        <div class="dash-counts">
+                            <p class="card-num-p1">Total Invoice</p>
+                            <p class="card-num-p2">{{saleTotalList?.total_sale_bill}}</p>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                <div class="dash-count">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_customers}}</h4>
-                        <h5>Total Customers</h5>
+                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das-w">
+                        <div class="dash-counts">
+                            <p class="card-num-p1">Total Customers</p>
+                            <p class="card-num-p2">{{saleTotalList?.total_customers}}</p>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                <div class="dash-count">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_sale_return}}</h4>
-                        <h5>Total Sale Return</h5>
+                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das-w">
+                        <div class="dash-counts">
+                            <p class="card-num-p1">Total Sale Return</p>
+                            <p class="card-num-p2">{{saleTotalList?.total_sale_return}}</p>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-        </ng-container>
-         
-        <ng-container>
-            <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                <div class="dash-count das1">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_purchase_return}}</h4>
-                        <h5>Total Purchase Return</h5>
+            </ng-container>
+            <ng-container>
+                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das-w">
+                        <div class="dash-counts">
+                            <p class="card-num-p1">Total Purchase Return</p>
+                            <p class="card-num-p2">{{saleTotalList?.total_purchase_return}}</p>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                <div class="dash-count das1">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_purchase_bill}}</h4>
-                        <h5>Total Bills</h5>
+                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das-w">
+                        <div class="dash-counts">
+                            <p class="card-num-p1">Total Bills</p>
+                            <p class="card-num-p2">{{saleTotalList?.total_purchase_bill}}</p>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                <div class="dash-count das1">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_suppliers}}</h4>
-                        <h5>Total Suppliers</h5>
+                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das-w">
+                        <div class="dash-counts">
+                            <p class="card-num-p1">Total Suppliers</p>
+                            <p class="card-num-p2">{{saleTotalList?.total_suppliers}}</p>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                <div class="dash-count das1">
-                    <div class="dash-counts">
-                        <h4>{{saleTotalList?.total_purchase_bill_quantity}}</h4>
-                        <h5>Purchase QTY</h5>
+                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                    <div class="dash-count das-w">
+                        <div class="dash-counts">
+                            <p class="card-num-p1">Purchase QTY</p>
+                            <p class="card-num-p2">{{saleTotalList?.total_purchase_bill_quantity}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </ng-container>
-    </div>
+            </ng-container>
+        </div>
+
         <div class="row">
             <div class="col-lg-6 col-sm-12 col-12 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0" style="padding-left: 10px;">Daily Sales</h5>
+                        <h5 class="card-title mb-0">Daily Sales</h5>
                         <!-- <div class="border" > -->
-                        <mat-form-field style="width: 45%;">
+                        <mat-form-field style="width: 41%;padding-right: 3%;">
                             <mat-date-range-input [formGroup]="dailySalesForm" [rangePicker]="dailySalesPicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
                                     (dateChange)="getSelectedDailySalesDates()">
@@ -219,19 +288,23 @@
                         <!-- </div> -->
                     </div>
                     <div class="card-body">
-                            <apx-chart [series]="dailySaleChartOptions?.['series']" [chart]="dailySaleChartOptions?.['chart']"
-                            [dataLabels]="dailySaleChartOptions?.['dataLabels']" [plotOptions]="dailySaleChartOptions?.['plotOptions']"
-                            [responsive]="dailySaleChartOptions?.['responsive']" [xaxis]="dailySaleChartOptions?.['xaxis']"
-                            [legend]="dailySaleChartOptions?.['legend']" [fill]="dailySaleChartOptions?.['fill']"></apx-chart>
-                          </div>
+                        <apx-chart [series]="dailySaleChartOptions?.['series']"
+                            [chart]="dailySaleChartOptions?.['chart']"
+                            [dataLabels]="dailySaleChartOptions?.['dataLabels']"
+                            [plotOptions]="dailySaleChartOptions?.['plotOptions']"
+                            [responsive]="dailySaleChartOptions?.['responsive']"
+                            [xaxis]="dailySaleChartOptions?.['xaxis']" [legend]="dailySaleChartOptions?.['legend']"
+                            [fill]="dailySaleChartOptions?.['fill']"></apx-chart>
+
+                    </div>
                 </div>
             </div>
             <div class="col-lg-6 col-sm-12 col-12 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0" style="padding-left: 10px;">Sale v/s Purchase</h5>
+                        <h5 class="card-title mb-0">Sale v/s Purchase</h5>
                         <!-- <div class="border" > -->
-                        <mat-form-field style="width: 45%;">
+                        <mat-form-field style="width: 41%; padding-right: 3%;">
                             <mat-date-range-input [formGroup]="salevsPurchaseForm" [rangePicker]="salevsPurchasePicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
                                     (dateChange)="getSelectedSalePurchaseDates()">
@@ -248,27 +321,20 @@
                         <!-- </div> -->
                     </div>
                     <div class="card-body">
-                        <apx-chart
-                        [series]="chartOptions?.['series']"
-                        [chart]="chartOptions?.['chart']"
-                        [dataLabels]="chartOptions?.['dataLabels']"
-                        [plotOptions]="chartOptions?.['plotOptions']"
-                        [yaxis]="chartOptions?.['yaxis']"
-                        [legend]="chartOptions?.['legend']"
-                        [fill]="chartOptions?.['fill']"
-                        [stroke]="chartOptions?.['stroke']"
-                        [tooltip]="chartOptions?.['tooltip']"
-                        [xaxis]="chartOptions?.['xaxis']"
-                      ></apx-chart>
+                        <apx-chart [series]="chartOptions?.['series']" [chart]="chartOptions?.['chart']"
+                            [dataLabels]="chartOptions?.['dataLabels']" [plotOptions]="chartOptions?.['plotOptions']"
+                            [yaxis]="chartOptions?.['yaxis']" [legend]="chartOptions?.['legend']"
+                            [fill]="chartOptions?.['fill']" [stroke]="chartOptions?.['stroke']"
+                            [tooltip]="chartOptions?.['tooltip']" [xaxis]="chartOptions?.['xaxis']"></apx-chart>
                     </div>
                 </div>
             </div>
-         </div>
+        </div>
         <div class="row">
             <div class="col-lg-12 col-sm-12 col-12 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0" style="padding-left: 10px;">Category Wise Sale</h5>
+                        <h5 class="card-title mb-0">Category Wise Sale</h5>
                         <mat-form-field style="width: 26%; padding-left: 9%;padding-right:2%;padding-top:0">
                             <mat-date-range-input [formGroup]="categoryWiseSaleForm" [rangePicker]="catwisesalePicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
@@ -285,21 +351,26 @@
                         </mat-form-field>
                     </div>
                     <div class="card-body">
-                            <apx-chart [series]="categoryWiseSaleChartOptions?.['series']" [chart]="categoryWiseSaleChartOptions?.['chart']"
-                            [dataLabels]="categoryWiseSaleChartOptions?.['dataLabels']" [plotOptions]="categoryWiseSaleChartOptions?.['plotOptions']"
-                            [responsive]="categoryWiseSaleChartOptions?.['responsive']" [xaxis]="categoryWiseSaleChartOptions?.['xaxis']"
-                            [legend]="categoryWiseSaleChartOptions?.['legend']" [fill]="categoryWiseSaleChartOptions?.['fill']"></apx-chart>
-                          </div>
+                        <apx-chart [series]="categoryWiseSaleChartOptions?.['series']"
+                            [chart]="categoryWiseSaleChartOptions?.['chart']"
+                            [dataLabels]="categoryWiseSaleChartOptions?.['dataLabels']"
+                            [plotOptions]="categoryWiseSaleChartOptions?.['plotOptions']"
+                            [responsive]="categoryWiseSaleChartOptions?.['responsive']"
+                            [xaxis]="categoryWiseSaleChartOptions?.['xaxis']"
+                            [legend]="categoryWiseSaleChartOptions?.['legend']"
+                            [fill]="categoryWiseSaleChartOptions?.['fill']"></apx-chart>
+                    </div>
                 </div>
             </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-3 col-sm-12 col-12 d-flex">
-            <div class="card flex-fill">
-                <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0" style="padding-left: 10px;">Sale By Subcategory</h5>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-sm-12 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Sale By Subcategory</h5>
+                    </div>
                     <!-- <div class="border" > -->
-                    <mat-form-field style="width: 45%;">
+                    <mat-form-field style="width: 70%;padding-left: 12%;">
                         <mat-date-range-input [formGroup]="subCatWiseSaleForm" [rangePicker]="subcatPicker">
                             <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
                                 (dateChange)="getSelectedsubCatSaleDates()">
@@ -314,103 +385,87 @@
                         <mat-date-range-picker #subcatPicker></mat-date-range-picker>
                     </mat-form-field>
                     <!-- </div> -->
-                </div>
-                <div class="card-body">
-                    <apx-chart
-                    [series]="subCatSaleChartOptions?.['series']"
-                    [chart]="subCatSaleChartOptions?.['chart']"
-                    [labels]="subCatSaleChartOptions?.['labels']"
-                    [responsive]="subCatSaleChartOptions?.['responsive']"
-                  ></apx-chart>
+                    <div class="card-body d-flex justify-content-center">
+                        <apx-chart [series]="subCatSaleChartOptions?.['series']"
+                            [chart]="subCatSaleChartOptions?.['chart']" [labels]="subCatSaleChartOptions?.['labels']"
+                            [responsive]="subCatSaleChartOptions?.['responsive']"
+                            [legend]="subCatSaleChartOptions?.['legend']"></apx-chart>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-sm-12 col-12 d-flex">
-            <div class="card flex-fill">
-                <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0" style="padding-left: 10px;">Inventory Movement</h5>
+            <div class="col-lg-3 col-sm-12 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Inventory Movement</h5>
+                    </div>
                     <!-- <div class="border" > -->
-                    <mat-form-field style="width: 45%;">
+                    <mat-form-field style="width: 70%;padding-left: 12%;">
                         <mat-date-range-input [formGroup]="inventoryForm" [rangePicker]="inventoryPicker">
-                            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
-                                (dateChange)="getSelectedInventoryDates()">
+                            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input" (dateChange)="getSelectedInventoryDates()">
                             <span class="mat-input-placeholder-wrapper">
                                 <span class="mat-input-placeholder">to</span>
                             </span>
-                            <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                                (dateChange)="getSelectedInventoryDates()">
+                            <input matEndDate placeholder="End date" formControlName="end" class="mat-input" (dateChange)="getSelectedInventoryDates()">
                         </mat-date-range-input>
-                        <mat-datepicker-toggle matSuffix [for]="inventoryPicker"
-                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                        <mat-datepicker-toggle matSuffix [for]="inventoryPicker" style=" font-size: x-large;"></mat-datepicker-toggle>
                         <mat-date-range-picker #inventoryPicker></mat-date-range-picker>
                     </mat-form-field>
                     <!-- </div> -->
-                </div>
-                <div class="card-body">
-                    <apx-chart
-                    [series]="inventoryChartOptions?.['series']"
-                    [chart]="inventoryChartOptions?.['chart']"
-                    [labels]="inventoryChartOptions?.['labels']"
-                    [fill]="inventoryChartOptions?.['fill']"
-                    [dataLabels]="inventoryChartOptions?.['dataLabels']"
-                    [responsive]="inventoryChartOptions?.['responsive']"
-                  ></apx-chart>
-
-                  <!-- <apx-chart
-                  [series]="inventoryChartOptions?.['series']"
-                  [chart]="inventoryChartOptions?.['chart']"
-                  [labels]="inventoryChartOptions?.['labels']"
-                  [responsive]="inventoryChartOptions?.['responsive']"
-                ></apx-chart> -->
+                    <div class="card-body d-flex justify-content-center">
+                        <apx-chart [series]="inventoryChartOptions?.['series']"
+                            [chart]="inventoryChartOptions?.['chart']" [labels]="inventoryChartOptions?.['labels']"
+                            [responsive]="inventoryChartOptions?.['responsive']"
+                            [legend]="inventoryChartOptions?.['legend']"></apx-chart>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-2 col-sm-12 col-12 d-flex">
-            <div class="card flex-fill">
-                <div class="card-body">
+            <div class="col-lg-2 col-sm-12 col-12 d-flex">
+                <div class="card flex-fill">
+                  <div class="row mt-3">
                     <ng-container>
                         <div class="col-lg-12 col-sm-12 col-12 d-flex">
-                            <div class="dash-count">
-                                <div class="dash-counts">
-                                    <h4>{{customerActivty?.vip_customers}}</h4>
-                                    <h5>VIP Customers</h5>
+                            <div class="dash-count vip_card">
+                                <div class="dash-counts text-center">
+                                    <p class="vip_card_p1" style="color:#2673DD;">VIP Customers</p>
+                                    <p class="vip_card_p2">{{customerActivty?.vip_customers}}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-12 col-sm-12 col-12 d-flex">
-                            <div class="dash-count">
-                                <div class="dash-counts">
-                                    <h4>{{customerActivty?.regular_customers}}</h4>
-                                    <h5>Regular Customers</h5>
+                            <div class="dash-count regular_card">
+                                <div class="dash-counts1 text-center">
+                                    <p class="vip_card_p1" style="color:#0F6570;">Regular Customers</p>
+                                    <p class="vip_card_p2">{{customerActivty?.regular_customers}}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-12 col-sm-12 col-12 d-flex">
-                            <div class="dash-count">
-                                <div class="dash-counts">
-                                    <h4>{{customerActivty?.risk_customers}}</h4>
-                                    <h5>Risk Customers</h5>
+                            <div class="dash-count risk_card">
+                                <div class="dash-counts2 text-center">
+                                    <p class="vip_card_p1" style="color:#7C6803;">Risk Customers</p>
+                                    <p class="vip_card_p2">{{customerActivty?.risk_customers}}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-12 col-sm-12 col-12 d-flex">
-                            <div class="dash-count">
-                                <div class="dash-counts">
-                                    <h4>{{customerActivty?.lost_customers}}</h4>
-                                    <h5>Lost Customers</h5>
+                            <div class="dash-count lost_card">
+                                <div class="dash-counts3 text-center">
+                                    <p class="vip_card_p1" style="color:#DD4726;">Lost Customers</p>
+                                    <p class="vip_card_p2">{{customerActivty?.lost_customers}}</p>
                                 </div>
                             </div>
                         </div>
                     </ng-container>
+                  </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-4 col-sm-12 col-12 d-flex">
-            <div class="card flex-fill">
-                <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0" style="padding-left: 10px;">Top 20 Customer</h5>
+            <div class="col-lg-4 col-sm-12 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Top 20 Customer</h5>
+                    </div>
                     <!-- <div class="border" > -->
-                    <mat-form-field style="width: 45%;">
+                    <mat-form-field style="width: 70%;padding-left: 12%;padding-right: 15%;">
                         <mat-date-range-input [formGroup]="customerForm" [rangePicker]="customerPicker">
                             <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
                                 (dateChange)="getSelectedcustomerDates()">
@@ -425,231 +480,227 @@
                         <mat-date-range-picker #customerPicker></mat-date-range-picker>
                     </mat-form-field>
                     <!-- </div> -->
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive dataview">
-                        <table class="table datatable ">
-                            <thead>
-                                <tr>
-                                    <th>Customer UserName</th>
-                                    <th>No. Bill </th>
-                                    <th>Net Total </th>
-                                    <th>Party Name </th>
-                                </tr>
-                            <tbody>
-                                <tr *ngFor="let customers of customerList">
-                                    <td> {{customers?.customer__username}}</td>
-                                    <td> {{customers?.no_bill_bill}}</td>
-                                    <td>{{customers?.net_total|number:'1.2-2'}}</td>
-                                    <td>{{customers?.party_name}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card-body table-container">
+                        <div class="table-responsive dataview">
+                            <table class="table datatable ">
+                                <thead>
+                                    <tr>
+                                        <th>Customer UserName</th>
+                                        <th>No. Bill </th>
+                                        <th>Net Total </th>
+                                        <th>Party Name </th>
+                                    </tr>
+                                <tbody>
+                                    <tr *ngFor="let customers of customerList">
+                                        <td> {{customers?.customer__username}}</td>
+                                        <td> {{customers?.no_bill_bill}}</td>
+                                        <td>{{customers?.net_total|number:'1.2-2'}}</td>
+                                        <td>{{customers?.party_name}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- recent sales & recently added products -->
-    <div class="row">
-        <div class="col-lg-6 col-sm-12 col-12 d-flex">
-            <div class="card flex-fill">
-                <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0" style="padding-left: 10px;">Recent Sales</h5>
-                    <!-- <div class="border" > -->
-                    <mat-form-field style="width: 45%;">
-                        <mat-date-range-input [formGroup]="recentSaleForm" [rangePicker]="recentSalePicker">
-                            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
-                                (dateChange)="getSelectedRecentSalesDates()">
-                            <span class="mat-input-placeholder-wrapper">
-                                <span class="mat-input-placeholder">to</span>
-                            </span>
-                            <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                                (dateChange)="getSelectedRecentSalesDates()">
-                        </mat-date-range-input>
-                        <mat-datepicker-toggle matSuffix [for]="recentSalePicker"
-                            style=" font-size: x-large;"></mat-datepicker-toggle>
-                        <mat-date-range-picker #recentSalePicker></mat-date-range-picker>
-                    </mat-form-field>
-                    <!-- </div> -->
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive dataview">
-                        <table class="table datatable ">
-                            <thead>
-                                <tr>
-                                    <th>Customer Name</th>
-                                    <th>Voucher Number </th>
-                                    <th>Bill Amount </th>
-                                    <th>Pending Amount </th>
-                                    <th>Status </th>
-                                </tr>
-                            <tbody>
-                                <tr *ngFor="let customers of recentSalesList">
-                                    <td> {{customers?. customer_name}}</td>
-                                    <td> {{customers?.voucher_number}}</td>
-                                    <td>{{customers?.bill_amout|number:'1.2-2'}}</td>
-                                    <td>{{customers?.pending_amout}}</td>
-                                    <td>{{customers?.status}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
         </div>
-      
-        <div class="col-lg-6 col-sm-12 col-12 d-flex">
-            <div class="card flex-fill">
-                <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0" style="padding-left: 10px;">Recently Added Products</h5>
-                    <!-- <div class="border" > -->
-                    <mat-form-field style="width: 45%;">
-                        <mat-date-range-input [formGroup]="recentAddedProductForm" [rangePicker]="recentProductPicker">
-                            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
-                                (dateChange)="getSelectedrecentProductDates()">
-                            <span class="mat-input-placeholder-wrapper">
-                                <span class="mat-input-placeholder">to</span>
-                            </span>
-                            <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                                (dateChange)="getSelectedrecentProductDates()">
-                        </mat-date-range-input>
-                        <mat-datepicker-toggle matSuffix [for]="recentProductPicker"
-                            style=" font-size: x-large;"></mat-datepicker-toggle>
-                        <mat-date-range-picker #recentProductPicker></mat-date-range-picker>
-                    </mat-form-field>
-                    <!-- </div> -->
+
+        <!-- recent sales & recently added products -->
+        <div class="row">
+            <div class="col-lg-6 col-sm-12 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Recent Sales</h5>
+                        <!-- <div class="border" > -->
+                        <mat-form-field style="width: 41%;padding-right: 3%;">
+                            <mat-date-range-input [formGroup]="recentSaleForm" [rangePicker]="recentSalePicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                                    (dateChange)="getSelectedRecentSalesDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                                    (dateChange)="getSelectedRecentSalesDates()">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="recentSalePicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #recentSalePicker></mat-date-range-picker>
+                        </mat-form-field>
+                        <!-- </div> -->
+                    </div>
+                    <div class="card-body table-container">
+                        <div class="table-responsive dataview">
+                            <table class="table datatable ">
+                                <thead>
+                                    <tr>
+                                        <th>Customer Name</th>
+                                        <th>Voucher Number </th>
+                                        <th>Bill Amount </th>
+                                        <th>Pending Amount </th>
+                                        <th>Status </th>
+                                    </tr>
+                                <tbody>
+                                    <tr *ngFor="let customers of recentSalesList">
+                                        <td> {{customers?. customer_name}}</td>
+                                        <td> {{customers?.voucher_number}}</td>
+                                        <td>{{customers?.bill_amout|number:'1.2-2'}}</td>
+                                        <td>{{customers?.pending_amout}}</td>
+                                        <td>{{customers?.status}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive dataview">
-                        <table class="table datatable ">
-                            <thead>
-                                <tr>
-                                    <th>Product Name</th>
-                                    <th>Variant Name </th>
-                                    <th>Stock Qty </th>
-                                    <th>MRP</th>
-                                    <th>purchase Price</th>
-                                    <th>Selling Price</th>
-                                </tr>
-                            <tbody>
-                                <tr *ngFor="let customers of recentProductList">
-                                    <td> {{customers?.product_name}}</td>
-                                    <td> {{customers?.variant_name}}</td>
-                                    <td>{{customers?.stock_qty}}</td>
-                                    <td>{{customers?.Mrp}}</td>
-                                    <td>{{customers?.purchase_price}}</td>
-                                    <td>{{customers?.selling_price}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+            </div>
+
+            <div class="col-lg-6 col-sm-12 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Recently Added Products</h5>
+                        <!-- <div class="border" > -->
+                        <mat-form-field style="width: 41%; padding-right: 3%;">
+                            <mat-date-range-input [formGroup]="recentAddedProductForm"
+                                [rangePicker]="recentProductPicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                                    (dateChange)="getSelectedrecentProductDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                                    (dateChange)="getSelectedrecentProductDates()">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="recentProductPicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #recentProductPicker></mat-date-range-picker>
+                        </mat-form-field>
+                        <!-- </div> -->
+                    </div>
+                    <div class="card-body table-container">
+                        <div class="table-responsive dataview">
+                            <table class="table datatable ">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Variant Name </th>
+                                        <th>Stock Qty </th>
+                                        <th>MRP</th>
+                                        <th>purchase Price</th>
+                                        <th>Selling Price</th>
+                                    </tr>
+                                <tbody>
+                                    <tr *ngFor="let customers of recentProductList">
+                                        <td> {{customers?.product_name}}</td>
+                                        <td> {{customers?.variant_name}}</td>
+                                        <td>{{customers?.stock_qty}}</td>
+                                        <td>{{customers?.Mrp}}</td>
+                                        <td>{{customers?.purchase_price}}</td>
+                                        <td>{{customers?.selling_price}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-<!-- best & least selling products -->
-<div class="row">
-    <div class="col-lg-6 col-sm-12 col-12 d-flex">
-        <div class="card flex-fill">
-            <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0" style="padding-left: 10px;">Best Selling Products</h5>
-                <!-- <div class="border" > -->
-                <mat-form-field style="width: 45%;">
-                    <mat-date-range-input [formGroup]="bestSellingProductForm" [rangePicker]="bestProductPicker">
-                        <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
-                            (dateChange)="getSelectedbestProductDates()">
-                        <span class="mat-input-placeholder-wrapper">
-                            <span class="mat-input-placeholder">to</span>
-                        </span>
-                        <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                            (dateChange)="getSelectedbestProductDates()">
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="bestProductPicker"
-                        style=" font-size: x-large;"></mat-datepicker-toggle>
-                    <mat-date-range-picker #bestProductPicker></mat-date-range-picker>
-                </mat-form-field>
-                <!-- </div> -->
-            </div>
-            <div class="card-body">
-                <div class="table-responsive dataview">
-                    <table class="table datatable ">
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th>No.Of Bills </th>
-                                <th>Sale Qty </th>
-                                <th>Sale Amount </th>
-                                <th>Sale(%) </th>
-            
-                            </tr>
-                        <tbody>
-                            <tr *ngFor="let customers of bestProductList">
-                                <td> {{customers?.product_name}}</td>
-                                <td> {{customers?.no_of_bills}}</td>
-                                <td>{{customers?.sale_qty}}</td>
-                                <td>{{customers?.sale_amount | number :'1.2-2'}}</td>
-                                <td>{{customers?.sale_percentage}}</td>
-            
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-  
-    <div class="col-lg-6 col-sm-12 col-12 d-flex">
-        <div class="card flex-fill">
-            <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0" style="padding-left: 10px;">Least Selling Products</h5>
-                <!-- <div class="border" > -->
-                <mat-form-field style="width: 45%;">
-                    <mat-date-range-input [formGroup]="recentAddedProductForm" [rangePicker]="leastProductPicker">
-                        <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
-                            (dateChange)="getSelectedleastProductDates()">
-                        <span class="mat-input-placeholder-wrapper">
-                            <span class="mat-input-placeholder">to</span>
-                        </span>
-                        <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                            (dateChange)="getSelectedleastProductDates()">
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="leastProductPicker"
-                        style=" font-size: x-large;"></mat-datepicker-toggle>
-                    <mat-date-range-picker #leastProductPicker></mat-date-range-picker>
-                </mat-form-field>
-                <!-- </div> -->
-            </div>
-            <div class="card-body">
-                <div class="table-responsive dataview">
-                    <table class="table datatable ">
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th>No.Of Bills </th>
-                                <th>Sale Qty </th>
-                                <th>Sale Amount </th>
-                                <th>Sale(%) </th>
-            
-                            </tr>
-                        <tbody>
-                            <tr *ngFor="let customers of leastProductList">
-                                <td> {{customers?.product_name}}</td>
-                                <td> {{customers?.no_of_bills}}</td>
-                                <td>{{customers?.sale_qty}}</td>
-                                <td>{{customers?.sale_amount | number :'1.2-2'}}</td>
-                                <td>{{customers?.sale_percentage}}</td>
-            
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
- </div>
+        <!-- best & least selling products -->
+        <div class="row">
+            <div class="col-lg-6 col-sm-12 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Best Selling Products</h5>
+                        <!-- <div class="border" > -->
+                        <mat-form-field style="width: 41%; padding-right: 3%;">
+                            <mat-date-range-input [formGroup]="bestSellingProductForm"
+                                [rangePicker]="bestProductPicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                                    (dateChange)="getSelectedbestProductDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                                    (dateChange)="getSelectedbestProductDates()">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="bestProductPicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #bestProductPicker></mat-date-range-picker>
+                        </mat-form-field>
+                        <!-- </div> -->
+                    </div>
+                    <div class="card-body table-container">
+                        <div class="table-responsive dataview">
+                            <table class="table datatable ">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>No.Of Bills </th>
+                                        <th>Sale Qty </th>
+                                        <th>Sale Amount </th>
+                                        <th>Sale(%) </th>
 
-  
+                                    </tr>
+                                <tbody>
+                                    <tr *ngFor="let customers of bestProductList">
+                                        <td> {{customers?.product_name}}</td>
+                                        <td> {{customers?.no_of_bills}}</td>
+                                        <td>{{customers?.sale_qty}}</td>
+                                        <td>{{customers?.sale_amount | number :'1.2-2'}}</td>
+                                        <td>{{customers?.sale_percentage}}</td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-sm-12 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Least Selling Products</h5>
+                        <!-- <div class="border" > -->
+                        <mat-form-field style="width: 41%; padding-right: 3%;">
+                            <mat-date-range-input [formGroup]="recentAddedProductForm"
+                                [rangePicker]="leastProductPicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                                    (dateChange)="getSelectedleastProductDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                                    (dateChange)="getSelectedleastProductDates()">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="leastProductPicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #leastProductPicker></mat-date-range-picker>
+                        </mat-form-field>
+                        <!-- </div> -->
+                    </div>
+                    <div class="card-body table-container">
+                        <div class="table-responsive dataview">
+                            <table class="table datatable ">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>No.Of Bills </th>
+                                        <th>Sale Qty </th>
+                                        <th>Sale Amount </th>
+                                        <th>Sale(%) </th>
+                                    </tr>
+                                <tbody>
+                                    <tr *ngFor="let customers of leastProductList">
+                                        <td> {{customers?.product_name}}</td>
+                                        <td> {{customers?.no_of_bills}}</td>
+                                        <td>{{customers?.sale_qty}}</td>
+                                        <td>{{customers?.sale_amount | number :'1.2-2'}}</td>
+                                        <td>{{customers?.sale_percentage}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

@@ -26,6 +26,7 @@ export class UpdateTargetComponent implements OnInit {
       start_date: new FormControl('', [Validators.required]),
       end_date: new FormControl('', [Validators.required]),
       target_value: new FormControl('', [Validators.required]),
+      employee_type:new FormControl('',[Validators.required]),
       cart: this.fb.array([])
     })
     this.getDepartment();
@@ -34,7 +35,7 @@ export class UpdateTargetComponent implements OnInit {
       // console.log(res);
       this.getRes = res;
       this.targetForm.patchValue(this.getRes)
-      this.targetForm.get('department')?.patchValue(this.getRes.department)
+      this.targetForm.get('department')?.patchValue(this.getRes.department?.id);
       this.targetForm.setControl('cart', this.updateCart(this.getRes.cart));
 
       
@@ -126,9 +127,13 @@ export class UpdateTargetComponent implements OnInit {
   get end_date() {
     return this.targetForm.get('end_date')
   }
+  get employee_type(){
+    return this.targetForm.get('employee_type')
+  }
   get target_value() {
     return this.targetForm.get('target_value')
   }
+  
   discountt(index: number) {
     return this.getCart().controls[index].get('percent_of_total_target');
   }
@@ -209,7 +214,8 @@ export class UpdateTargetComponent implements OnInit {
           formdata.append('start_date', this.targetForm.get('start_date')?.value);
           formdata.append('end_date', this.targetForm.get('end_date')?.value);
           formdata.append('target_value', this.targetForm.get('target_value')?.value);
-
+          formdata.append('employee_type',this.targetForm.get('employee_type')?.value);
+       
           const cartArray = this.targetForm.get('cart') as FormArray;
           const cartData = [];
           cartArray.controls.forEach((address) => {
