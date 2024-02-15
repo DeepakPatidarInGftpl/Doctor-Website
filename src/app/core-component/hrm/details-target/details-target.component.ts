@@ -33,12 +33,11 @@ export class DetailsTargetComponent implements OnInit {
     script.async = false;
     document.body.appendChild(script);
   }
-  productDetail: any
+  targetDetail: any;
   getdata() {
     this.hrmService.getTargetById(this.id).subscribe(res => {
-          this.productDetail = res
-          // console.log(res);
-          this.filteredData = this.productDetail?.logs.slice(); // Initialize filteredData with the original data
+          this.targetDetail = res;
+          this.filteredData = this.targetDetail?.logs.slice(); // Initialize filteredData with the original data
           this.filterData(); 
     })
   }
@@ -60,7 +59,7 @@ export class DetailsTargetComponent implements OnInit {
   filteredData: any[]; 
   filterOpertion:any;
   filterData() {
-    let filteredData = this.productDetail?.logs.slice();
+    let filteredData = this.targetDetail?.logs.slice();
     if (this.filterOpertion) {
       filteredData = filteredData.filter((item) => item?.operation_type === this.filterOpertion);
     }

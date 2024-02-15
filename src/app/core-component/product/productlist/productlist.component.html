@@ -138,7 +138,7 @@
                                 <th (click)="sort('id')" class="thone">Brand <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Unit <i class="fa fa-sort"></i></th>
                                 <!-- <th (click)="sort('id')" class="thone">Unit Conversion <i class="fa fa-sort"></i></th> -->
-                                <!-- <th (click)="sort('id')" class="thone">Features Subcategory <i class="fa fa-sort"></i></th> -->
+                                <th (click)="sort('id')" class="thone">Label<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Product Store <i class="fa fa-sort"></i></th>
                                 <!-- <th (click)="sort('id')" class="thone">Description <i class="fa fa-sort"></i></th>                            -->
                                 <!-- <th (click)="sort('id')" class="thone">Is Measurable <i class="fa fa-sort"></i></th>
@@ -166,6 +166,7 @@
                                 <td>{{products?.subcategory_group?.title}}</td>
                                 <td>{{products?.brand?.title}}</td>
                                 <td>{{products?.unit?.title}}</td>
+                                <td>{{products?.product_label?.title}}</td>
                                 <td>{{products?.product_store}}</td>
                               <!-- <td>
                                     <span [ngClass]="{'bg-lightgreen': products.is_measurable === true, 'bg-lightred' : products.is_measurable === false,'bg-lightyellow' : products.is_measurable === 'Partial' }"

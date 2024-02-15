@@ -24,7 +24,22 @@ export class DashboardService {
     }
     return this.http.get<any>(url);
   }
-
+  
+  getTotalSalePurchase(from_date: any, to_date: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/dashboard/total-sale-vs-total-purchase/';
+    const queryParams: any[] = [];
+    if (from_date) {
+      queryParams.push(`from_date=${from_date}`);
+    }
+    if (to_date) {
+      queryParams.push(`to_date=${to_date}`);
+    }
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  
   getDailySales(from_date: any, to_date: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/daily-sales/';
     const queryParams: any[] = [];
@@ -290,6 +305,7 @@ export class DashboardService {
     }
     return this.http.get<any>(url);
   }
+  
   getEployeeTargetAchieved(from_date: any, to_date: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/employee-target-achievement/';
     const queryParams: any[] = [];
@@ -318,5 +334,18 @@ export class DashboardService {
     }
     return this.http.get<any>(url);
   }
-
+  getEmployeeTargetGraph(from_date: any, to_date: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/dashboard/employee-target-graph/';
+    const queryParams: any[] = [];
+    if (from_date) {
+      queryParams.push(`from_date=${from_date}`);
+    }
+    if (to_date) {
+      queryParams.push(`to_date=${to_date}`);
+    }
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
 }

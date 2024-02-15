@@ -34,7 +34,7 @@ export class AddEmployeeComponent implements OnInit {
       address: this.fb.array([]),
       bank_id: this.fb.array([]),
       // commision: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      wages: new FormControl(0, [Validators.required,Validators.pattern(/^[0-9]*$/)]),
+      wages: new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       // extra_wages: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       // target: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       username: new FormControl('', [Validators.required]),
@@ -43,12 +43,13 @@ export class AddEmployeeComponent implements OnInit {
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type: new FormControl('', [Validators.required]),
       // permissions:new FormArray([],),
-      branch:new FormControl(''),
-      date_of_joining:new FormControl(''),
-      department:new FormControl('',[Validators.required]),
+      branch: new FormControl(''),
+      date_of_joining: new FormControl(''),
+      department: new FormControl('', [Validators.required]),
       // added 0-1
-      is_sales_head:new FormControl('',[Validators.required]),
-      incentive:new FormControl(0)
+      is_sales_head: new FormControl('', [Validators.required]),
+      incentive: new FormControl(0),
+      employee_type: new FormControl('', [Validators.required])
     })
     this.addAddress();
     this.addBank();
@@ -66,19 +67,19 @@ export class AddEmployeeComponent implements OnInit {
       this.groupList = res
     })
   }
-  branchList:any;
-  getBranch(){
-    this.contactService.getBranch().subscribe((res:any)=>{
-      this.branchList=res;
+  branchList: any;
+  getBranch() {
+    this.contactService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
     })
   }
-  departmentList:any;
-  getDepartment(){
-    this.contactService.getDepartment().subscribe((res:any)=>{
-      this.departmentList=res;
+  departmentList: any;
+  getDepartment() {
+    this.contactService.getDepartment().subscribe((res: any) => {
+      this.departmentList = res;
     })
   }
-  
+
   addressAdd(): FormGroup {
     return this.fb.group({
       address_line_1: (''),
@@ -194,8 +195,8 @@ export class AddEmployeeComponent implements OnInit {
   // }
 
   loader = false;
-  userError:any;
-  mobileError:any;
+  userError: any;
+  mobileError: any;
   submit() {
     console.log(this.employeeForm.value);
     let formdata: any = new FormData();
@@ -226,9 +227,11 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('branch', this.employeeForm.get('branch')?.value);
     formdata.append('date_of_joining', this.employeeForm.get('date_of_joining')?.value);
     formdata.append('department', this.employeeForm.get('department')?.value);
-//2-1
-formdata.append('is_sales_head', this.employeeForm.get('is_sales_head')?.value);
-formdata.append('incentive', this.employeeForm.get('incentive')?.value);
+    //2-1
+    formdata.append('is_sales_head', this.employeeForm.get('is_sales_head')?.value);
+    formdata.append('incentive', this.employeeForm.get('incentive')?.value);
+    //15-2
+    formdata.append('employee_type',this.employeeForm.get('employee_type')?.value);
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];
@@ -270,15 +273,15 @@ formdata.append('incentive', this.employeeForm.get('incentive')?.value);
         } else {
           this.loader = false;
           this.toastr.error(this.addRes.msg);
-          if(this.addRes.msg.includes('Username')){
-            this.userError=this.addRes.msg;
+          if (this.addRes.msg.includes('Username')) {
+            this.userError = this.addRes.msg;
             setTimeout(() => {
-              this.userError=''
+              this.userError = ''
             }, 5000);
-          }else if(this.addRes?.msg.includes('Mobile Number')){
-            this.mobileError=this.addRes.msg;
+          } else if (this.addRes?.msg.includes('Mobile Number')) {
+            this.mobileError = this.addRes.msg;
             setTimeout(() => {
-              this.mobileError=''
+              this.mobileError = ''
             }, 5000);
           }
         }
@@ -354,13 +357,13 @@ formdata.append('incentive', this.employeeForm.get('incentive')?.value);
   get payment_terms() {
     return this.employeeForm.get('payment_terms')
   }
-  get date_of_joining(){
+  get date_of_joining() {
     return this.employeeForm.get('date_of_joining')
   }
-  get branch(){
+  get branch() {
     return this.employeeForm.get('branch')
   }
-  get department(){
+  get department() {
     return this.employeeForm.get('department')
   }
   get apply_tds() {
@@ -378,6 +381,12 @@ formdata.append('incentive', this.employeeForm.get('incentive')?.value);
   get opening_balance() {
     return this.employeeForm.get('opening_balance')
   }
+  get employee_type(){
+    return this.employeeForm.get('employee_type')
+  }
+  get is_sales_head(){
+    return this.employeeForm.get('is_sales_head')
+  }
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');
   }
@@ -390,7 +399,7 @@ formdata.append('incentive', this.employeeForm.get('incentive')?.value);
   pincode(index: number) {
     return this.getAddresss().controls[index].get('pincode')
   }
- 
+
   // nested bank error
 
   getBankHolderName(index: number) {

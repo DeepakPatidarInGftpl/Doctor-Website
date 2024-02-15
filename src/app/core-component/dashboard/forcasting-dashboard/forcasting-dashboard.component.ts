@@ -47,7 +47,7 @@ export class ForcastingDashboardComponent implements OnInit {
     const month = today.getMonth();
     const year = today.getFullYear();
     const startDate = new Date(today);
-    startDate.setDate(today.getDate() - 14);
+    startDate.setDate(today.getDate() - 29);
 
     const formattedStartDate = this.formatDate(startDate);
     const formattedToday = this.formatDate(today);
@@ -179,7 +179,7 @@ export class ForcastingDashboardComponent implements OnInit {
   }
   employeeList: any[] = [];
   getEmployeeTarget() {
-    this.dashboardService.getEployeeTargetAchieved(this.employeeStartDate, this.employeeEndDate).subscribe((res: any) => {
+    this.dashboardService.getEmployeeTargetGraph(this.employeeStartDate, this.employeeEndDate).subscribe((res: any) => {
       this.employeeList = res?.data;
       // apexchart    
       this.employeeChartOptions = {

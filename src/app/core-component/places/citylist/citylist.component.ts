@@ -353,33 +353,34 @@ export class CitylistComponent implements OnInit {
 
      // convert to pdf
      generatePDF() {
-      // table data with pagination
       const doc = new jsPDF();
       const title = 'City List';
-  
+    
       doc.setFontSize(15);
       doc.setTextColor(33, 43, 54);
       doc.text(title, 10, 10);
-      // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
-      autoTable(doc,
-  
-        {
-          html: '#mytable',
-          theme: 'grid',
-          headStyles: {
-            fillColor: [255, 159, 67]
-          },
-          columns: [
-            //remove action filed
-            { header: 'Sr No.' },
-            { header: 'City' },
-            { header: 'City Code' },
-            { header: 'State' },
-            { header: 'Is Active' }
-          ],
-        })
+      
+      // Pass tableData to autoTable
+      autoTable(doc, {
+        head: [
+          ['Sr No.', 'City', 'City Code', 'State', 'Is Active']
+        ],
+        body: this.tableData.map((row, index) => [
+          index + 1,
+          row.city,
+          row.city_code,
+          row.state?.state,
+          row.is_active ? 'Yes' : 'No'
+        ]),
+        theme: 'grid',
+        headStyles: {
+          fillColor: [255, 159, 67]
+        },
+      });
+    
       doc.save('city.pdf');
-   }
+    }
+    
   
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {

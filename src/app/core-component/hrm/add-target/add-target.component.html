@@ -47,7 +47,20 @@
                             [ngClass]="{'is-invalid': f['target_value'].touched && f['target_value'].invalid}">
                         <span class="text-danger" *ngIf="target_value && target_value.invalid && target_value.touched">Select Target Value</span>
                     </div>
-                  </div>
+               
+                    </div>
+                    <div class="col-lg-3 col-sm-3 col-12">
+                        <div class="form-group">
+                            <label>Employee Type*</label>
+                            <select formControlName="employee_type" id="employee_type" [ngClass]="{'is-invalid': f['employee_type'].touched && f['employee_type'].invalid}">
+                                <option value="" selected disabled>Select Employee Type</option>
+                                <option value="Fresher">Fresher</option>
+                                <option value="Experienced">Experienced</option>
+                                <option value="Master">Master</option>
+                          </select> 
+                          <span class="text-danger d-block" *ngIf="employee_type && employee_type.invalid && employee_type.touched">Select Employee Type</span>
+                        </div>
+                    </div>
                     <div class="col-lg-12 col-sm-12 col-12" >
                         <table class="table amt-table">
                             <thead>
