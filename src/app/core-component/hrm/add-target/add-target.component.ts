@@ -24,6 +24,7 @@ export class AddTargetComponent implements OnInit {
       start_date: new FormControl('', [Validators.required]),
       end_date: new FormControl('', [Validators.required]),
       target_value: new FormControl('', [Validators.required]),
+      employee_type:new FormControl('',[Validators.required]),
       cart: this.fb.array([])
     })
     this.getDepartment();
@@ -105,6 +106,9 @@ export class AddTargetComponent implements OnInit {
   get target_value() {
     return this.targetForm.get('target_value')
   }
+  get employee_type(){
+    return this.targetForm.get('employee_type')
+  }
   discountt(index: number) {
     return this.getCart().controls[index].get('percent_of_total_target');
   }
@@ -185,7 +189,8 @@ export class AddTargetComponent implements OnInit {
         formdata.append('start_date', this.targetForm.get('start_date')?.value);
         formdata.append('end_date', this.targetForm.get('end_date')?.value);
         formdata.append('target_value', this.targetForm.get('target_value')?.value);
-
+       formdata.append('employee_type',this.targetForm.get('employee_type')?.value);
+       
         const cartArray = this.targetForm.get('cart') as FormArray;
         const cartData = [];
         cartArray.controls.forEach((address) => {

@@ -1,7 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -29,6 +28,10 @@ export class FinancialDashboardComponent implements OnInit {
   public GrowthchartOptions: Partial<any>;
   public grossChartOptions: Partial<any>;
   public netChartOptions: Partial<any>;
+  public netOptions: Partial<any>;
+  public optionsLine:Partial<any>;
+  public currentChart:Partial<any>;
+  public quickChart:Partial<any>;
   dateRangeOptions = [
     { label: 'Today', value: 'today' },
     { label: 'Yesterday', value: 'yesterday' },
@@ -43,8 +46,112 @@ export class FinancialDashboardComponent implements OnInit {
     { label: 'Last Financial Year', value: 'lastFinancialYear' },
   ];
 
-  constructor(private coreService: CoreService, private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService) {
+  constructor(private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService) {
+    this.currentChart = {
+      series: [
+        {
+          name: 'Current Ration',
+          data: [50] // Current Receivable value
+        },
+        {
+          name: 'churrent Ratio',
+          data: [50] // Overdue Receivable value
+        }
+      ],
    
+      chart: {
+        type: 'bar',
+        height: 40,
+        sparkline: {
+          enabled: true // Display as sparkline (compact chart)
+        },
+        stacked: true // Stack the bars
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          barHeight: '80%', // Adjust the bar height
+          dataLabels: {
+            enabled: false
+          }
+        }
+      },
+      xaxis: {
+        type: 'category',
+        categories: ['Current Receivable', 'Overdue Receivable'] // Set category labels
+      },
+      yaxis: {
+        max:50 + 50, 
+        labels: {
+          show: false // Hide y-axis labels
+        }
+      },
+      title: {
+        text: '',
+        align: 'center'
+      },
+      tooltip: {
+        enabled: true,
+        y: {
+          formatter: (val: any) => "₹ " + val // Format tooltip value
+        }
+      },
+      fill: {
+        colors: ['#F96F03', '#EBEDF2'] // Assign colors to the bars
+      }
+    };
+    this.quickChart = {
+      series: [
+        {
+          name: 'Quick Ration',
+          data: [50] 
+        },
+        {
+          name: 'Quick Ratio',
+          data: [50] 
+        }
+      ],
+      chart: {
+        type: 'bar',
+        height: 40,
+        sparkline: {
+          enabled: true // Display as sparkline (compact chart)
+        },
+        stacked: true 
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          barHeight: '80%', // Adjust the bar height
+          dataLabels: {
+            enabled: false
+          }
+        }
+      },
+      xaxis: {
+        type: 'category',
+        categories: ['Quick Receivable', 'Quick Receivable'] 
+      },
+      yaxis: {
+        max:50 + 50, 
+        labels: {
+          show: false 
+        }
+      },
+      title: {
+        text: '',
+        align: 'center'
+      },
+      tooltip: {
+        enabled: true,
+        y: {
+          formatter: (val: any) => "₹ " + val // Format tooltip value
+        }
+      },
+      fill: {
+        colors: ['#F96F03', '#EBEDF2'] 
+      }
+    };
   }
   campaignOne: FormGroup;
   recvsPayForm:FormGroup;
@@ -57,7 +164,7 @@ export class FinancialDashboardComponent implements OnInit {
   ngOnInit(): void {
     const today = new Date();
     const startDate = new Date(today);
-    startDate.setDate(today.getDate() - 14);
+    startDate.setDate(today.getDate() - 29);
 
     const formattedStartDate = this.formatDate(startDate);
     const formattedToday = this.formatDate(today);
@@ -98,7 +205,6 @@ export class FinancialDashboardComponent implements OnInit {
     this.growthstartDate = this.growthForm.value?.start;
     this.growthEndDate = this.growthForm.value?.end;
     this.getGrowth();
-
        // unpaid 
        this.unpaidForm = new FormGroup({
         start: new FormControl(formattedStartDate),
@@ -182,48 +288,77 @@ export class FinancialDashboardComponent implements OnInit {
       console.log(res);
       this.grossList=res
       const grossProfitPercentage = res?.gross_profit_percentage || 0;
-      const remainingPercentage = 100 - grossProfitPercentage;
+
       this.grossChartOptions = {
-        series: [grossProfitPercentage, remainingPercentage], 
+        series: [this.grossList?.gross_profit_percentage],   
         chart: {
-          type: "donut",
-          width: 350,
+          height: 180,
+          type: "radialBar"
         },
-        // labels: this.subCatSaleList.map(item => item?.subcategory),
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 380
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: '70%'
+            },
+            dataLabels: {
+              show: true,
+              name: {
+                show: false
+              },
+              value: {
+                offsetY: 10, // Adjust the vertical position of the value
+                fontSize: '26px', // Set the font size of the value
+                color: '#F96F03', // Set the color of the value
+                fontWeight:700,
+                formatter: function (val: any) {
+                  return val + '%'; // Format the value with a percentage symbol
+                }
               }
             }
           }
-        ],
-        
+        },
+        fill: {
+              colors: ['#F96F03'] 
+            }
       };
       //net chart
       const netProfitPercentage = res?.net_profit_percentage || 0;
-      const remainingNetPercentage = 100 - grossProfitPercentage;
+     
       this.netChartOptions = {
-        series: [netProfitPercentage, remainingNetPercentage], 
+        series: [this.grossList?.net_profit_percentage],
         chart: {
-          type: "donut",
-          width: 350,
+          height: 180,
+          type: "radialBar"
         },
-        // labels: this.subCatSaleList.map(item => item?.subcategory),
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 380
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: '70%'
+            },
+            dataLabels: {
+              show: true,
+              name: {
+                show: false
+              },
+              value: {
+                offsetY: 10, // Adjust the vertical position of the value
+                fontSize: '26px', // Set the font size of the value
+                color: '#F96F03', // Set the color of the value
+                fontWeight:700,
+                formatter: function (val: any) {
+                  return val + '%'; // Format the value with a percentage symbol
+                }
               }
+            
             }
           }
-        ],
-      
+        },
+        // labels: ["Net Profit"],
+        fill: {
+          colors: ['#F96F03']
+        }
       };
+      
     },err=>{
       this.toastr.error(err.message);
     });
@@ -260,7 +395,7 @@ export class FinancialDashboardComponent implements OnInit {
         ],
         chart: {
           type: 'bar',
-          height: 80,
+          height: 50,
           sparkline: {
             enabled: true // Display as sparkline (compact chart)
           },
@@ -280,7 +415,7 @@ export class FinancialDashboardComponent implements OnInit {
           categories: ['Current Receivable', 'Overdue Receivable'] // Set category labels
         },
         yaxis: {
-          max: 9000, // Adjust the maximum value according to your data
+          max: this.resPayList?.current_receivable + this.resPayList?.overdue_receivable, 
           labels: {
             show: false // Hide y-axis labels
           }
@@ -296,10 +431,10 @@ export class FinancialDashboardComponent implements OnInit {
           }
         },
         fill: {
-          colors: ['#008FFB', '#FF4560'] // Current Receivable color and Overdue Receivable color
+          colors: ['#F96F03', '#EBEDF2'] // Assign colors to the bars
         }
       };
-//
+      
       this.PayablechartOptions = {
         series: [
           {
@@ -313,16 +448,16 @@ export class FinancialDashboardComponent implements OnInit {
         ],
         chart: {
           type: 'bar',
-          height: 80,
+          height: 50,
           sparkline: {
-            enabled: true 
+            enabled: true // Display as sparkline (compact chart)
           },
-          stacked: TransactionsModule
+          stacked: true // Stack the bars
         },
         plotOptions: {
           bar: {
             horizontal: true,
-            barHeight: '80%', 
+            barHeight: '80%', // Adjust the bar height
             dataLabels: {
               enabled: false
             }
@@ -330,12 +465,12 @@ export class FinancialDashboardComponent implements OnInit {
         },
         xaxis: {
           type: 'category',
-          categories: ['Current Payables', 'Overdue Payables']
+          categories: ['Current Payables', 'Overdue Payables'] // Set category labels
         },
         yaxis: {
-          max: 9000,
+          max: this.resPayList?.current_payables + this.resPayList?.overdue_payables, 
           labels: {
-            show: false 
+            show: false // Hide y-axis labels
           }
         },
         title: {
@@ -345,11 +480,11 @@ export class FinancialDashboardComponent implements OnInit {
         tooltip: {
           enabled: true,
           y: {
-            formatter: (val: any) => "₹ " + val 
+            formatter: (val: any) => "₹ " + val // Format tooltip value
           }
         },
         fill: {
-          colors: ['#008FFB', '#FF4560'] 
+          colors: ['#F96F03', '#EBEDF2'] // Assign colors to the bars
         }
       };
     },err=>{
@@ -395,23 +530,48 @@ export class FinancialDashboardComponent implements OnInit {
         dataLabels: {
           enabled: false
         },
+        dropShadow: {
+          enabled: true,
+          top: 3,
+          left: 2,
+          blur: 4,
+          opacity: 1,
+        },
         stroke: {
-          curve: "straight"
+          // curve: "straight"
+          curve: "smooth",
+           width: 2
         },
         title: {
           // text: "Product Trends by Month",
           align: "left"
         },
+        markers: {
+          size: 6,
+          strokeWidth: 0,
+          hover: {
+            size: 9
+          }
+        },
         grid: {
           row: {
             colors: ["#f3f3f3", "transparent"],
             opacity: 0.5
-          }
+          },
         },
         xaxis: {
+          tooltip: {
+            enabled: true
+          },
           categories: categories
+        },
+        legend: {
+          position: 'top',
+          horizontalAlign: 'right',
+          offsetY: -20
         }
       };
+    
     },err=>{
       this.toastr.error(err.message);
     });

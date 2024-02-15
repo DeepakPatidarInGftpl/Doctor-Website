@@ -294,3 +294,19 @@
   margin: 0 auto;
   width: 57%;
   }
+
+  .table-container {
+    height: 335px;
+  }
+  
+  .table-responsive {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .dataview{
+    height: 100%;
+  }
+
+  .card-header{
+    padding-top: 10px;
+  }

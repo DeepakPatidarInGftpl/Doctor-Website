@@ -28,7 +28,7 @@ export class SalesDashboardComponent implements OnInit {
   public dailySaleChartOptions!: Partial<any>;
   public subCatSaleChartOptions!: Partial<any>;
   public inventoryChartOptions!: Partial<any>;
-
+  public saleTotalChartOption:Partial<any>;
   series: ApexNonAxisChartSeries;
   labels: string[];
   plotOptions: ApexPlotOptions;
@@ -77,7 +77,7 @@ export class SalesDashboardComponent implements OnInit {
     const month = today.getMonth();
     const year = today.getFullYear();
     const startDate = new Date(today);
-    startDate.setDate(today.getDate() - 14);
+    startDate.setDate(today.getDate() - 29);
 
     const formattedStartDate = this.formatDate(startDate);
     const formattedToday = this.formatDate(today);
@@ -176,6 +176,7 @@ export class SalesDashboardComponent implements OnInit {
     this.transactionType = 'Purchase';
 
     this.getSaleTotalDashboard();
+    this.getSalePurchaseGraph();
     this.getSalePurchaseTotalDashboard();
     this.getDailySales();
     this.getTransactionTotalDashboard();
@@ -189,7 +190,7 @@ export class SalesDashboardComponent implements OnInit {
     this.getbestProduct();
     this.getleastProduct();
   }
-  //sale
+  //sale number
   startDate: any;
   endDate: any;
   getSelectedDates() {
@@ -201,12 +202,55 @@ export class SalesDashboardComponent implements OnInit {
     this.startDate = start;
     this.endDate = end;
     this.getSaleTotalDashboard();
+    this.getSalePurchaseGraph();
   }
   saleTotalList: any;
   getSaleTotalDashboard() {
     this.dashboardService.getSalesNumber(this.startDate, this.endDate).subscribe((res: any) => {
       console.log(res);
       this.saleTotalList = res;
+    })
+  }
+  salePurchaseList: any;
+  getSalePurchaseGraph() {
+    this.dashboardService.getTotalSalePurchase(this.startDate, this.endDate).subscribe((res: any) => {
+      console.log(res);
+      this.salePurchaseList = res;
+      this.saleTotalChartOption = {
+        chart: {
+          id: 'spark1',
+          group: 'sparks',
+          type: 'line',
+          height: 20,
+          width: 80,
+          sparkline: {
+            enabled: true
+          },
+        },
+        series: [{
+          data: [this.salePurchaseList?.loss_sale_percent,this.salePurchaseList?.profit_sales_percentage]
+        }],
+        stroke: {
+          curve: 'smooth',
+          width: 2
+        },
+        markers: {
+          size: 0
+        },
+        colors: ['#FF8431'],
+        tooltip: {
+          x: {
+            show: false
+          },
+          y: {
+            title: {
+              formatter: function formatter(val) {
+                return '';
+              }
+            }
+          }
+        }
+      };
     })
   }
   //end
@@ -269,7 +313,7 @@ export class SalesDashboardComponent implements OnInit {
           categories: this.dailySalesList.map(item => this.formatDateMonth(item.date))
         },
         legend: {
-          position: 'top',
+          position: 'bottom',
           offsetY: 0
         },
         fill: {
@@ -283,9 +327,6 @@ export class SalesDashboardComponent implements OnInit {
           offsetX: 30
         },
       };
-
-
-
     })
   }
   //end 
@@ -478,7 +519,11 @@ export class SalesDashboardComponent implements OnInit {
               }
             }
           }
-        ]
+        ],
+        legend: {
+          position: 'bottom',
+          offsetY: 0
+        },
       };
       // end
     }, err => {
@@ -505,64 +550,68 @@ export class SalesDashboardComponent implements OnInit {
       const inventoryData = res?.inventory_category_percentage || {};
       const categories = Object.keys(inventoryData);
       const values = Object.values(inventoryData);
-      this.inventoryChartOptions = {
-        series: values,
-        chart: {
-          width: 350,
-          type: "donut"
-        },
-        labels: categories,
-        dataLabels: {
-          enabled: true,
-          formatter: function(val) {
-            return val.toFixed(2) + "%";
-          }
-        },
-        // fill: {
-        //   type: "gradient"
-        // },
-        legend: {
-          formatter: function(val, opts) {
-            return val + " - " + opts.w.globals.series[opts.seriesIndex];
-          }
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200
-              },
-              legend: {
-                position: "bottom"
-              }
-            }
-          }
-        ]
-      };
+      // this.inventoryChartOptions = {
+      //   series: values,
+      //   chart: {
+      //     width: 350,
+      //     type: "donut"
+      //   },
+      //   labels: categories,
+      //   dataLabels: {
+      //     enabled: true,
+      //     formatter: function(val) {
+      //       return val.toFixed(2) + "%";
+      //     }
+      //   },
+      //   // fill: {
+      //   //   type: "gradient"
+      //   // },
+      //   legend: {
+      //     formatter: function(val, opts) {
+      //       return val + " - " + opts.w.globals.series[opts.seriesIndex];
+      //     }
+      //   },
+      //   responsive: [
+      //     {
+      //       breakpoint: 480,
+      //       options: {
+      //         chart: {
+      //           width: 200
+      //         },
+      //         legend: {
+      //           position: "bottom"
+      //         }
+      //       }
+      //     }
+      //   ]
+      // };
       
     // 
-    // this.inventoryChartOptions = {
-    //   series: values,
-    //   chart: {
-    //     width: 350,
-    //     type: "donut"
-    //   },
-    //   labels: categories,
-    //   responsive: [
-    //     {
-    //       breakpoint: 480,
-    //       options: {
-    //         chart: {
-    //           width: 350
-    //         },
-    //         legend: {
-    //           position: "bottom"
-    //         }
-    //       }
-    //     }
-    //   ]
-    // };
+    this.inventoryChartOptions = {
+      series: values,
+      chart: {
+        width: 350,
+        type: "donut"
+      },
+      labels: categories,
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 350
+            },
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      ],
+      legend: {
+        position: 'bottom',
+        offsetY: 0
+      },
+    };
     }, err => {
       this.toastr.error(err.message);
     });
@@ -730,6 +779,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         }
         else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
@@ -764,6 +814,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(yesterday),
@@ -799,6 +850,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(firstDayOfWeek),
@@ -832,6 +884,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(firstDayOfMonth),
@@ -865,6 +918,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(firstDayOfLastMonth),
@@ -898,6 +952,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(last15DaysStart),
@@ -931,6 +986,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(last30DaysStart),
@@ -965,6 +1021,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(thisQuarterStart),
@@ -997,6 +1054,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(lastQuarterStart),
@@ -1030,6 +1088,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(thisFinancialYearStart),
@@ -1063,6 +1122,7 @@ export class SalesDashboardComponent implements OnInit {
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
+          this.getSalePurchaseGraph();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(lastFinancialYearStart),

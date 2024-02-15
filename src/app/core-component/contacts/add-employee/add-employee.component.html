@@ -85,7 +85,8 @@
                         <input type="text" formControlName="credit_limit" placeholder="Credit Limit" id="credit_limit" [ngClass]="{'is-invalid': f['credit_limit'].touched && f['credit_limit'].invalid}">
                     </div>
                 </div>
-
+             
+              
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Incentive</label>
@@ -93,6 +94,19 @@
                     </div>
                 </div>
                 
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Employee Type*</label>
+                        <select formControlName="employee_type" id="employee_type" [ngClass]="{'is-invalid': f['employee_type'].touched && f['employee_type'].invalid}">
+                            <option value="" selected disabled>Select Employee Type</option>
+                            <option value="Fresher">Fresher</option>
+                            <option value="Experienced">Experienced</option>
+                            <option value="Master">Master</option>
+                      </select> 
+                      <span class="text-danger d-block" *ngIf="employee_type && employee_type.invalid && employee_type.touched">Select Employee Type</span>
+                    </div>
+                </div>
+
                 <div formArrayName="address">
                     <div *ngFor="let d of getAddresss().controls; let i=index" style="border: 1px solid rgba(145, 158, 171, 0.32); margin-top: 10px;">
                         <div [formGroupName]="i" class="row m-2">
@@ -259,9 +273,7 @@
                               <option class="unhov" value="Cr">Cr</option>
                               <option class="unhov" value="Dr">Dr</option>
                             </select>
-                            <span class="text-danger d-block"
-                              *ngIf="opening_balance_type && opening_balance_type.invalid && opening_balance_type.touched">Select
-                              Balance Type</span>
+                            <span class="text-danger d-block" *ngIf="opening_balance_type && opening_balance_type.invalid && opening_balance_type.touched">Select Balance Type</span>
                           </div>
                           <div>
                             <input type="text" formControlName="opening_balance" id="opening_balance"

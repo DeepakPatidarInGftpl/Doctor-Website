@@ -13,9 +13,9 @@
     <div class="col-lg-6 col-sm-12 col-12 d-flex">
         <div class="card flex-fill">
             <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0" style="padding-left: 10px;">Department Wise Target</h5>
+                <h5 class="card-title mb-0">Department Wise Target</h5>
                 <!-- <div class="border" > -->
-                <mat-form-field style="width: 45%;">
+                <mat-form-field style="width: 40%;padding-right: 3%;">
                     <mat-date-range-input [formGroup]="departmentForm" [rangePicker]="dailySalesPicker">
                         <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
                             (dateChange)="getSelectedDepartmentSalesDates()">
@@ -42,9 +42,9 @@
     <div class="col-lg-6 col-sm-12 col-12 d-flex">
         <div class="card flex-fill">
             <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0" style="padding-left: 10px;">Employee Target</h5>
+                <h5 class="card-title mb-0">Employee Target</h5>
                 <!-- <div class="border" > -->
-                <mat-form-field style="width: 45%;">
+                <mat-form-field style="width: 40%;padding-right: 3%;">
                     <mat-date-range-input [formGroup]="employeeForm" [rangePicker]="employeeTargetPicker">
                         <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
                             (dateChange)="getSelectedEmployeeDates()">
@@ -79,14 +79,13 @@
  </div>
 
 <!-- employee target-top 10 employee-->
-<div class="card">
-    <div class="card-body">     
+    
     <div class="row">
         <div class="col-lg-6 col-sm-12 col-12 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0" style="padding-left: 10px;">Employee Targets Achievements</h5>
-                    <mat-form-field style="width: 45%;">
+                    <h5 class="card-title mb-0">Employee Targets Achievements</h5>
+                    <mat-form-field style="width: 43%;padding-right: 3%;">
                         <mat-date-range-input [formGroup]="targetEmployee" [rangePicker]="recievablePicker">
                             <input matStartDate placeholder="Start date" formControlName="start" class="mat-input" (dateChange)="getSelectedAchieveDates()">
                             <span class="mat-input-placeholder-wrapper">
@@ -98,7 +97,7 @@
                         <mat-date-range-picker #recievablePicker></mat-date-range-picker>
                     </mat-form-field>
                 </div>
-                <div class="card-body">
+                <div class="card-body table-container">
                     <div class="table-responsive dataview">
                         <table class="table datatable ">
                             <thead>
@@ -128,8 +127,8 @@
         <div class="col-lg-6 col-sm-12 col-12 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0" style="padding-left: 10px;">Top 10 Employee</h5>
-                    <mat-form-field style="width: 45%;">
+                    <h5 class="card-title mb-0">Top 10 Employee</h5>
+                    <mat-form-field style="width: 43%;padding-right: 3%;">
                         <mat-date-range-input [formGroup]="topEmployee" [rangePicker]="payavablePicker">
                             <input matStartDate placeholder="Start date" formControlName="start" class="mat-input" (dateChange)="getSelectedTop10Dates()">
                             <span class="mat-input-placeholder-wrapper">
@@ -141,7 +140,7 @@
                         <mat-date-range-picker #payavablePicker></mat-date-range-picker>
                     </mat-form-field>
                 </div>
-                <div class="card-body">
+                <div class="card-body table-container">
                     <div class="table-responsive dataview">
                         <table class="table datatable ">
                             <thead>
@@ -169,6 +168,4 @@
             </div>
         </div>
     </div>
-    </div>
-</div>
 <!-- end -->

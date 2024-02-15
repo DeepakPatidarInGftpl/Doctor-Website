@@ -9,12 +9,12 @@
                     <h4>Full details of a Target</h4>
                 </div>
                 <div class="page-btn">
-                    <a routerLink="//hrm/update-target/{{productDetail?.id}}" class="btn btn-added">
+                    <a routerLink="//hrm/update-target/{{targetDetail?.id}}" class="btn btn-added">
                         <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Target
                     </a>
                 </div>
             </div>
-            <div class="company-details-card card" *ngIf="productDetail">
+            <div class="company-details-card card" *ngIf="targetDetail">
                 <div class="sub-card row">
                     <mat-tab-group animationDuration="0ms" #tabGroup>
                         <mat-tab label="General Details">
@@ -23,19 +23,23 @@
                                     <tbody>
                                         <tr>
                                             <td class="th">Department</td>
-                                            <td class="td">{{productDetail?.department?.title}}</td>
+                                            <td class="td">{{targetDetail?.department?.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Employee Type</td>
+                                            <td class="td">{{targetDetail?.employee_type}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Start Date</td>
-                                            <td class="td">{{productDetail?.start_date}}</td>
+                                            <td class="td">{{targetDetail?.start_date}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">End Date</td>
-                                            <td class="td">{{productDetail?.end_date}}</td>
+                                            <td class="td">{{targetDetail?.end_date}}</td>
                                         </tr>
                                         <tr>
                                             <td class="th">Target Value</td>
-                                            <td class="td">{{productDetail?.target_value}}</td>
+                                            <td class="td">{{targetDetail?.target_value}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -55,7 +59,7 @@
                                             </thead>
                                             <tbody>
                                                 <ng-container
-                                                    *ngFor="let log of productDetail?.cart | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                                    *ngFor="let log of targetDetail?.cart | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
                                                     <tr>
                                                         <td class="td">{{i+1}}</td>
                                                         <td class="td">{{log?.month_and_year}}</td>
@@ -105,12 +109,12 @@
                             <div class="d-flex align-items-center mx-4">
                                 <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
                                 <span
-                                    [ngClass]="{'bg-lightgreen': productDetail?.is_active === true, 'bg-lightred' : productDetail?.is_active === false,'bg-lightyellow' : productDetail?.is_active === 'Partial' }"
-                                    class="badges">{{productDetail?.is_active}}</span>
+                                    [ngClass]="{'bg-lightgreen': targetDetail?.is_active === true, 'bg-lightred' : targetDetail?.is_active === false,'bg-lightyellow' : targetDetail?.is_active === 'Partial' }"
+                                    class="badges">{{targetDetail?.is_active}}</span>
                             </div>
                         </mat-tab>
                        
-                        <mat-tab label="Logs" *ngIf="productDetail?.logs?.length>0">
+                        <mat-tab label="Logs" *ngIf="targetDetail?.logs?.length>0">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
