@@ -289,8 +289,7 @@
                   <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Select branch</label>
-                        <select formControlName="branch" id="branch" [ngClass]="{
-                        'is-invalid': f['branch'].touched && f['branch'].invalid}">
+                        <select formControlName="branch" id="branch" [ngClass]="{'is-invalid': f['branch'].touched && f['branch'].invalid}">
                             <option value="" selected disabled>Select Branch</option>
                             <option value="{{branch.id}}" *ngFor="let branch of branchList">{{branch.title}}</option>
                         </select>
@@ -345,9 +344,10 @@
                             value (ex-123)</span>
                     </div>
                 </div> -->
+<ng-container *ngIf="isloginAccess">
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
-                        <label>UserName*</label>
+                        <label>UserName</label>
                         <input type="text" formControlName="username" id="username" placeholder="Enter UserName"
                             [ngClass]="{'is-invalid': f['username'].touched && f['username'].invalid}" [ngStyle]="{'border': userError ? '1px solid red' : ''}">
                         <span class="text-danger" *ngIf="username && username.invalid && username.touched">Enter your
@@ -366,6 +366,16 @@
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
+                        <label>Discount Limit</label>
+                        <input type="number" formControlName="discount_limit" id="discount_limit" placeholder="Enter Discount Limit"
+                            [ngClass]="{'is-invalid': f['discount_limit'].touched && f['discount_limit'].invalid}">
+                        <span class="text-danger" *ngIf="discount_limit && discount_limit.invalid && discount_limit.touched">Enter your
+                            Discount Limit (ex:1-100)</span>
+                    </div>
+                </div>
+                </ng-container>
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
                         <label>Select User Role</label>
                         <select formControlName="role" id="role" [ngClass]="{
                         'is-invalid': f['role'].touched && f['role'].invalid}">
@@ -375,6 +385,7 @@
                         <span class="text-danger" *ngIf="role && role.invalid && role.touched">Select User role</span>
                     </div>
                 </div>
+           
                 <!-- <div class="col-lg-3 col-sm-3 col-12">
                 <div class="form-group">
                     <label>Permission Group</label>
@@ -414,8 +425,7 @@
                                 style="margin-bottom: 0; margin-left: 5px;">Sales Head</label>
                         </div>
                         <div class="d-flex ">
-                            <input type="checkbox" formControlName="login_access" [id]="'checkboxTax-'"
-                                [ngModel]="true">
+                            <input type="checkbox" formControlName="login_access" [id]="'checkboxTax-'" (change)="loginAccess()" [ngModel]="true">
                             <label [for]="'checkboxTax-'" class="d_flex"
                                 style="margin-bottom: 0; margin-left: 5px;">Login Access</label>
                         </div>

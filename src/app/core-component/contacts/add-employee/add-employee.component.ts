@@ -37,8 +37,8 @@ export class AddEmployeeComponent implements OnInit {
       wages: new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       // extra_wages: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
       // target: new FormControl('', [Validators.pattern(/^[0-9]*$/)]),
-      username: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
+      username: new FormControl('',),
+      password: new FormControl('',),
       role: new FormControl(''),
       opening_balance: new FormControl(0, [Validators.pattern(/^[0-9]*$/)]),
       opening_balance_type: new FormControl('', [Validators.required]),
@@ -49,7 +49,9 @@ export class AddEmployeeComponent implements OnInit {
       // added 0-1
       is_sales_head: new FormControl('', [Validators.required]),
       incentive: new FormControl(0),
-      employee_type: new FormControl('', [Validators.required])
+      employee_type: new FormControl('', [Validators.required]),
+      discount_limit:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)])
+
     })
     this.addAddress();
     this.addBank();
@@ -231,7 +233,9 @@ export class AddEmployeeComponent implements OnInit {
     formdata.append('is_sales_head', this.employeeForm.get('is_sales_head')?.value);
     formdata.append('incentive', this.employeeForm.get('incentive')?.value);
     //15-2
-    formdata.append('employee_type',this.employeeForm.get('employee_type')?.value);
+    formdata.append('employee_type', this.employeeForm.get('employee_type')?.value);
+    
+    formdata.append('discount_limit',this.employeeForm.get('discount_limit')?.value)//17-02
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];
@@ -381,11 +385,15 @@ export class AddEmployeeComponent implements OnInit {
   get opening_balance() {
     return this.employeeForm.get('opening_balance')
   }
-  get employee_type(){
+  get employee_type() {
     return this.employeeForm.get('employee_type')
   }
-  get is_sales_head(){
+  get is_sales_head() {
     return this.employeeForm.get('is_sales_head')
+  }
+  // 17-2
+  get discount_limit(){
+    return this.employeeForm.get('discount_limit');
   }
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');
@@ -490,6 +498,25 @@ export class AddEmployeeComponent implements OnInit {
   bankDetails: any
   getBank() {
     this.bankDetails = ''
+  }
+
+  isloginAccess = true
+  loginAccess() {
+    let data = this.employeeForm.value;
+    if (data.login_access) {
+      this.isloginAccess = true;
+      this.password.setValidators([Validators.required]);
+      this.username.setValidators([Validators.required]);
+      this.discount_limit.setValidators([Validators.required])
+    }else{
+      this.isloginAccess = false;
+      this.username.clearValidators();
+      this.password.clearValidators();
+      this.discount_limit.clearValidators();
+    }
+    this.password.updateValueAndValidity();
+    this.username.updateValueAndValidity();
+    this.discount_limit.updateValueAndValidity();
   }
 }
 

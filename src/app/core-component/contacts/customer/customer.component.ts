@@ -249,9 +249,12 @@ select=false
       this.filteredData = this.filteredData.filter(res => {
         const nameLower = res.name.toLocaleLowerCase();
         const companyNameLower = res.company_name.toLocaleLowerCase();
+        const memberShip=res.membership.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
           return true;
         } else if (companyNameLower.match(searchTerm)) {
+          return true;
+        }else if (memberShip.match(searchTerm)) {
           return true;
         }
         return false;
@@ -401,27 +404,29 @@ select=false
   }
 
   // filter data
-  selectCredit:any
+  selectCredit:any;
+  selectedMember:any
   filterData() {
     let filteredData = this.tableData.slice();
     // if (this.supplierType) {
     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
     // }
     
-    if (this.selectedCompany) {
-      const searchTerm = this.selectedCompany.toLowerCase();
+    if (this.selectedMember) {
+      const searchTerm = this.selectedMember.toLowerCase();
       filteredData = filteredData.filter((item) => {
-        const aliasLower = item?.company_name.toLowerCase();
+        const aliasLower = item?.membership.toLowerCase();
         return aliasLower.includes(searchTerm);
       });
     }
     if (this.selectCredit) {
       filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
     }
+  
     this.filteredData = filteredData;
   }
   clearFilter() {
-    this.supplierType = null;
+    this.selectedMember = null;
     this.selectedCompany = null;
     this.selectCredit=null;
     this.filterData();

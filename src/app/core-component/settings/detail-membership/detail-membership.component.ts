@@ -9,7 +9,7 @@ import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
   styleUrls: ['./detail-membership.component.scss']
 })
 export class DetailMembershipComponent implements OnInit {
-
+  imgUrl = 'https://pv.greatfuturetechno.com';
   constructor(private hrmService: HrmServiceService, private Arout: ActivatedRoute, private router:Router ,private location: Location) { }
   
   termsDetails: any;

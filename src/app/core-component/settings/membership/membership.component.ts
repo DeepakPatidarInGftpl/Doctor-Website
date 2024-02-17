@@ -90,6 +90,8 @@ export class MembershipComponent implements OnInit {
   selectedUserType: string = '';
   selectedBranch:string=''
   isAscending: boolean = true;
+  imgUrl = 'https://pv.greatfuturetechno.com';
+
   constructor(private hrmService: HrmServiceService, private profileService:CompanyService) {
   }
 
@@ -219,7 +221,6 @@ export class MembershipComponent implements OnInit {
     });
   }
 
- 
   allSelected: boolean = false;
   selectedRows:boolean[]
   selectAlll() {
@@ -368,4 +369,5 @@ select=false
     // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }
+  
 }

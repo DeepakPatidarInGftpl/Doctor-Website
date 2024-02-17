@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 
 @Component({
@@ -26,7 +27,8 @@ export class AddMaterialOutwardComponent implements OnInit {
   constructor(private saleService: SalesService, private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
-    private contactService: ContactService) {
+    private contactService: ContactService,
+    private coreService:CoreService) {
   }
 
   customerControlName = 'customer';
@@ -180,9 +182,18 @@ export class AddMaterialOutwardComponent implements OnInit {
   filteredCategoryList: any[] = [];
   searchCategory: string = '';
   getCategory() {
-    this.saleService.getSearchProduct().subscribe((res: any) => {
+    this.coreService.getCategory().subscribe((res: any) => {
       this.categoryList = res;
       this.filteredCategoryList = [...this.categoryList];
+    })
+  }
+  SubcategoryList: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchSubCategory: string = '';
+  getSubCategory(val:any) {
+    this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
+      this.SubcategoryList = res;
+      this.filteredSubCategoryList = [...this.SubcategoryList];
     })
   }
   filterCategory() {
@@ -191,6 +202,15 @@ export class AddMaterialOutwardComponent implements OnInit {
     } else {
       this.filteredCategoryList = this.categoryList.filter(product =>
         product?.product_title?.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  }
+  filterSubCategory() {
+    if (this.searchSubCategory.trim() === '') {
+      this.filteredSubCategoryList = [...this.SubcategoryList];
+    } else {
+      this.filteredSubCategoryList = this.SubcategoryList.filter(product =>
+        product?.title?.toLowerCase().includes(this.searchSubCategory.toLowerCase())
       );
     }
   }
@@ -348,11 +368,19 @@ export class AddMaterialOutwardComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-  selecBatchtModel(address: any, index: any) {
-    const modal = document.getElementById('batchModal');
-    if (modal) {
-      modal.classList.remove('show');
-      modal.style.display = 'none';
+  selecBatchtModel(address: any, index: any,type:string) {
+    if(type=='productModal'){
+      const modal = document.getElementById('productModal');
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+      }
+    }else{
+      const modal = document.getElementById('batchModal');
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+      }
     }
     const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
     let discountRupees = (address?.cost_price * address?.discount) / 100
@@ -376,6 +404,20 @@ export class AddMaterialOutwardComponent implements OnInit {
   }
   closeModalBatch() {
     const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  openModalProduct(i:number){
+    const modal = document.getElementById('productModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+  closeModalProduct(i:number) {
+    const modal = document.getElementById('productModal');
     if (modal) {
       modal.classList.remove('show');
       modal.style.display = 'none';
@@ -417,9 +459,11 @@ export class AddMaterialOutwardComponent implements OnInit {
   batchDiscount: any;
   landingCost: any;
   batchCostPrice: any[] = [];
+  selecteProduct:any;
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
+    this.selecteProduct=event?.product;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax = event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;

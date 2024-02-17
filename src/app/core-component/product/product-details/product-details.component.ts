@@ -31,9 +31,9 @@ export class ProductDetailsComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.coreService.deleteBatch(id).subscribe(res => {
+        this.coreService.deleteBatchNewApi(id).subscribe(res => {
           this.delRes = res
-          if (this.delRes.msg == "Batch Deleted successfully") {
+          if (this.delRes.success) {
             this.ngOnInit()
             Swal.fire({
               icon: 'success',

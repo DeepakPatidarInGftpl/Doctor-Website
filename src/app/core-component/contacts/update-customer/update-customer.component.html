@@ -40,9 +40,9 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Telephone No.</label>
-                        <input type="text" formControlName="telephone_no" placeholder="Enter Telephone No." maxlength="10" minlength="10" id="telephone_no" [ngClass]="{
+                        <input type="text" formControlName="telephone_no" placeholder="Enter Telephone No." maxlength="11" minlength="11" id="telephone_no" [ngClass]="{
                       'is-invalid': f['telephone_no'].touched && f['telephone_no'].invalid}">
-                        <span class="text-danger" *ngIf="telephone_no && telephone_no.invalid && telephone_no.touched">Enter your 10 Digits
+                        <span class="text-danger" *ngIf="telephone_no && telephone_no.invalid && telephone_no.touched">Enter your 11 Digits
                             Telephone Number</span>
                     </div>
                 </div>

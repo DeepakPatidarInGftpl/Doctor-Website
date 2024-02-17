@@ -157,7 +157,6 @@ export class SalesService {
   filterVariant( category: any, subcategory: any, search: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/sales_product_filter/';
     const queryParams: any[] = [];
-  
     if (category) {
       queryParams.push(`category=${category}`);
     }

@@ -59,6 +59,7 @@ export class UpdateEmployeeComponent implements OnInit {
       is_sales_head:new FormControl('',[Validators.required]),
       //15-2
       employee_type:new FormControl('',[Validators.required]),
+      discount_limit:new FormControl('',[Validators.pattern(/^(100|[0-9]{1,2})$/)])
     });
 
     this.contactService.getEmployeeById(this.id).subscribe(res => {
@@ -76,6 +77,7 @@ export class UpdateEmployeeComponent implements OnInit {
 //2-1
       this.employeeForm.get('branch')?.patchValue(res?.branch?.id);
       this.employeeForm.get('department')?.patchValue(res?.department?.id);
+      this.isloginAccess = this.getRes.login_access;
     })
 
     this.addAddress()
@@ -295,7 +297,7 @@ mobileError:any;
       formdata.append('incentive', this.employeeForm.get('incentive')?.value);
     //15-2
     formdata.append('employee_type',this.employeeForm.get('employee_type')?.value);
-       
+    formdata.append('discount_limit',this.employeeForm.get('discount_limit')?.value); //17-02
     // nested addrs data 
     const addressArray = this.employeeForm.get('address') as FormArray;
     const addressData = [];
@@ -449,6 +451,10 @@ mobileError:any;
   get employee_type(){
     return this.employeeForm.get('employee_type')
   }
+   // 17-2
+   get discount_limit(){
+    return this.employeeForm.get('discount_limit');
+  }
   countryy(index: number) {
     return this.getAddresss().controls[index].get('country');
   }
@@ -549,6 +555,19 @@ mobileError:any;
   bankDetails: any
   getBank() {
     this.bankDetails = ''
+  }
+  
+  isloginAccess = true
+  loginAccess() {
+    let data = this.employeeForm.value;
+    if (data.login_access) {
+      this.isloginAccess = true;
+      this.discount_limit.setValidators([Validators.required])
+    }else{
+      this.isloginAccess = false;
+      this.discount_limit.clearValidators();
+    }
+    this.discount_limit.updateValueAndValidity();
   }
 }
 
