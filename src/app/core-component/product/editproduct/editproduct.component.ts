@@ -103,7 +103,8 @@ export class EditproductComponent implements OnInit {
       product_images: this.fb.array([]),
       hsncode: new FormControl('',),
       //15-1
-      product_label: new FormControl('', [Validators.required])
+      product_label: new FormControl('', [Validators.required]),
+      article_no:new FormControl('',)
     })
 
     this.coreService.getProductById(this.id).subscribe(res => {
@@ -858,7 +859,7 @@ export class EditproductComponent implements OnInit {
     formdata.append('hsncode', this.productForm.get('hsncode')?.value);
     //15-1
     formdata.append('product_label', this.productForm.get('product_label')?.value);
-
+    formdata.append('article_no',this.productForm.get('article_no'));
     const variantsArray = this.productForm.get('variant_product') as FormArray;
     const variantsData = [];
     variantsArray.controls.forEach((variants) => {
@@ -980,6 +981,9 @@ export class EditproductComponent implements OnInit {
   //15-1
   get product_label() {
     return this.productForm.get('product_label');
+  }
+  get article_no() {
+    return this.productForm.get('article_no');
   }
   get color() {
     return this.productForm.get('color') as FormArray
@@ -1352,5 +1356,16 @@ export class EditproductComponent implements OnInit {
   isFormValid() {
     this.productForm.markAllAsTouched();
     return this.productForm.valid;
+  }
+  isOnline = false
+  storeOnline(store: any) {
+    if (store === 'Online') {
+      this.description.setValidators([Validators.required]);
+      this.isOnline = true;
+    } else {
+      this.description.clearValidators();
+      this.isOnline = false;
+    }
+    this.description.updateValueAndValidity();
   }
 }

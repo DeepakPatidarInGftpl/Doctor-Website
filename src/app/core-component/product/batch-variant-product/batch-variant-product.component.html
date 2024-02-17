@@ -41,7 +41,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Discount %</label>
-                        <input type="text" formControlName="discount" id="discount" [ngClass]="{'is-invalid': f['discount'].touched && f['discount'].invalid}" placeholder="0">
+                        <input type="number" formControlName="discount" id="discount" [ngClass]="{'is-invalid': f['discount'].touched && f['discount'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="discount && discount.invalid && discount.touched">Enter discount (ex:0-100)</span>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Additional Discount %</label>
-                        <input type="text" formControlName="additional_discount" id="additional_discount" [ngClass]="{'is-invalid': f['additional_discount'].touched && f['additional_discount'].invalid}" placeholder="0">
+                        <input type="number" formControlName="additional_discount" id="additional_discount" [ngClass]="{'is-invalid': f['additional_discount'].touched && f['additional_discount'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="additional_discount && additional_discount.invalid && additional_discount.touched">Enter Enter discount (ex:0-100)</span>
                        
                     </div>
@@ -106,7 +106,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Stock*</label>
-                        <input type="text" formControlName="stock" id="stock" [ngClass]="{'is-invalid': f['stock'].touched && f['stock'].invalid}" placeholder="0">
+                        <input type="number" formControlName="stock" id="stock" [ngClass]="{'is-invalid': f['stock'].touched && f['stock'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="stock && stock.invalid && stock.touched">Enter Stock</span>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Opening Stock*</label>
-                        <input type="text" formControlName="opening_stock" id="opening_stock" [ngClass]="{'is-invalid': f['opening_stock'].touched && f['opening_stock'].invalid}" placeholder="0">
+                        <input type="number" formControlName="opening_stock" id="opening_stock" [ngClass]="{'is-invalid': f['opening_stock'].touched && f['opening_stock'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="opening_stock && opening_stock.invalid && opening_stock.touched">Enter opening stock</span>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Minimum Stock Threshold*</label>
-                        <input type="text" formControlName="minimum_stock_threshold" id="minimum_stock_threshold" [ngClass]="{'is-invalid': f['minimum_stock_threshold'].touched && f['minimum_stock_threshold'].invalid}" placeholder="0">
+                        <input type="number" formControlName="minimum_stock_threshold" id="minimum_stock_threshold" [ngClass]="{'is-invalid': f['minimum_stock_threshold'].touched && f['minimum_stock_threshold'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="minimum_stock_threshold && minimum_stock_threshold.invalid && minimum_stock_threshold.touched">Enter Minimum Stock Threshold</span>
                     </div>
                 </div>
@@ -130,7 +130,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Max Order Quantity</label>
-                        <input type="text" formControlName="max_order_quantity" id="max_order_quantity" [ngClass]="{'is-invalid': f['max_order_quantity'].touched && f['max_order_quantity'].invalid}" placeholder="0">
+                        <input type="number" formControlName="max_order_quantity" id="max_order_quantity" [ngClass]="{'is-invalid': f['max_order_quantity'].touched && f['max_order_quantity'].invalid}" placeholder="0">
                         <span class="text-danger"*ngIf="max_order_quantity && max_order_quantity.invalid && max_order_quantity.touched">Enter Max Order Quantity</span>
                     </div>
                 </div>

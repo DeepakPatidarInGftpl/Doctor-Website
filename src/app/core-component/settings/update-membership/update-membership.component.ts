@@ -11,7 +11,7 @@ import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
 })
 
 export class UpdateMembershipComponent implements OnInit {
-
+  imgUrl = 'https://pv.greatfuturetechno.com';
   constructor(private Arout: ActivatedRoute, private fb: FormBuilder, private hrmService: HrmServiceService, private toastr: ToastrService, private router: Router) { }
   membershipForm!: FormGroup;
 
@@ -24,17 +24,19 @@ export class UpdateMembershipComponent implements OnInit {
     this.id = this.Arout.snapshot.paramMap.get('id');
 
     this.hrmService.getMembershipById(this.id).subscribe((res: any) => {
+      this.url = ''
       this.editRes=res;
       this.membershipForm.patchValue(this.editRes)
     });
 
     this.membershipForm = this.fb.group({
       title: new FormControl('', [Validators.required]),
-      points_per_100: new FormControl('', [Validators.required]),
-      purchase_from: new FormControl('', [Validators.required]),
-      purchase_to: new FormControl('', [Validators.required]),
-      validity_of_points: new FormControl('', [Validators.required]),
-      maximum_redemption_points: new FormControl('', [Validators.required])
+      points_per_100: new FormControl('',[Validators.required]),
+      purchase_from: new FormControl('',[Validators.required]),
+      purchase_to: new FormControl('',),
+      validity_of_points: new FormControl('',[Validators.required]),
+      maximum_redemption_points: new FormControl('',[Validators.required]),
+      attachment:new FormControl(''),
     });
   }
 
@@ -45,7 +47,16 @@ export class UpdateMembershipComponent implements OnInit {
   submit() {
     if (this.membershipForm.valid) {
       this.loader = true;
-      this.hrmService.updateMembership(this.membershipForm.value,this.id).subscribe(res => {
+      let formData = new FormData();
+      formData.append('title',this.membershipForm.get('title')?.value);
+      formData.append('points_per_100',this.membershipForm.get('points_per_100')?.value);
+      formData.append('purchase_from',this.membershipForm.get('purchase_from')?.value);
+      formData.append('purchase_to',this.membershipForm.get('purchase_to')?.value);
+      formData.append('validity_of_points',this.membershipForm.get('validity_of_points')?.value);
+      formData.append('maximum_redemption_points',this.membershipForm.get('maximum_redemption_points')?.value);
+      formData.append('attachment',this.membershipForm.get('attachment')?.value);
+      
+      this.hrmService.updateMembership(formData,this.id).subscribe(res => {
         this.addRes = res
         if (this.addRes.success) {
           this.loader = false;
@@ -57,6 +68,8 @@ export class UpdateMembershipComponent implements OnInit {
         }
       }, err => {
         this.loader = false;
+        this.toastr.error(err?.error?.error?.non_field_errors[0]);
+        this.toastr.error(err?.error?.error?.attachment)
       })
     } else {
       this.membershipForm.markAllAsTouched();
@@ -81,6 +94,33 @@ export class UpdateMembershipComponent implements OnInit {
   }
   get maximum_redemption_points() {
     return this.membershipForm.get('maximum_redemption_points')
+  }
+  get attachment(){
+    return this.membershipForm.get('attachment');
+  }
+  url: any;
+  onSelect(event: Event) {
+    const file = (event.target as HTMLInputElement).files![0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.url = reader.result as string;
+      };
+    }
+    this.membershipForm.patchValue({
+      attachment: file
+    });
+
+    this.membershipForm.get('attachment')?.updateValueAndValidity()
+  }
+
+  errorMsg(){
+  let data = this.membershipForm.value;
+    this.membershipForm.get('purchase_from')
+    if(data.purchase_from>=data.purchase_to){
+      this.toastr.error('Purchase from must be less than purchase to.')
+    }
   }
 }
 

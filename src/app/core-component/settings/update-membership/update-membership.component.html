@@ -20,7 +20,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Points Per 100*</label>
-                        <input type="text" formControlName="points_per_100" placeholder="Enter Points Per 100" id="points_per_100" [ngClass]="{
+                        <input type="number" formControlName="points_per_100" placeholder="Enter Points Per 100" id="points_per_100" [ngClass]="{
                       'is-invalid': f['points_per_100'].touched && f['points_per_100'].invalid}">
                         <span class="text-danger" *ngIf="points_per_100 && points_per_100.invalid && points_per_100.touched">Enter your Points per 100 </span>    
                     </div>
@@ -28,7 +28,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Purchase From*</label>
-                        <input type="text" formControlName="purchase_from" placeholder="Enter Mobile No." id="Purchase From" [ngClass]="{
+                        <input type="number" formControlName="purchase_from" (blur)="errorMsg()" placeholder="Enter Mobile No." id="Purchase From" [ngClass]="{
                       'is-invalid': f['purchase_from'].touched && f['purchase_from'].invalid}">
                         <span class="text-danger" *ngIf="purchase_from&& purchase_from.invalid && purchase_from.touched">Enter your Purchase From</span>
                     </div>
@@ -37,7 +37,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Purchase To</label>
-                        <input type="text" formControlName="purchase_to" placeholder="Enter Valid Purchase To" id="purchase_to" [ngClass]="{
+                        <input type="number" formControlName="purchase_to" (blur)="errorMsg()" placeholder="Enter Valid Purchase To" id="purchase_to" [ngClass]="{
                       'is-invalid': f['purchase_to'].touched && f['purchase_to'].invalid}">
                         <span class="text-danger" *ngIf="purchase_to && purchase_to.invalid && purchase_to.touched">Enter Purchase To</span>
                     </div>
@@ -45,7 +45,7 @@
                 <div class="col-lg-3 col-sm-3 col-12">
                     <div class="form-group">
                         <label>Validity of Points*</label>
-                        <input type="date" formControlName="validity_of_points" placeholder="Enter Validity of Points" id="Validity of Points" [ngClass]="{
+                        <input type="number" formControlName="validity_of_points" placeholder="Enter Validity of Points" id="Validity of Points" [ngClass]="{
                       'is-invalid': f['validity_of_points'].touched && f['validity_of_points'].invalid}">
                         <span class="text-danger" *ngIf="validity_of_points && validity_of_points.invalid && validity_of_points.touched">Select Validity of Points </span>
                     </div>
@@ -53,12 +53,29 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Maximum Redemption Points*</label>
-                        <input type="text" formControlName="maximum_redemption_points" placeholder="Enter Maximum Redemption Points" id="maximum_redemption_points" [ngClass]="{
+                        <input type="number" formControlName="maximum_redemption_points" placeholder="Enter Maximum Redemption Points" id="maximum_redemption_points" [ngClass]="{
                       'is-invalid': f['maximum_redemption_points'].touched && f['maximum_redemption_points'].invalid}">
                         <span class="text-danger" *ngIf="maximum_redemption_points && maximum_redemption_points.invalid && maximum_redemption_points.touched">Enter your Maximum Redemption Points </span>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="image-upload">
+                            <input type="file" formControlName="attachment" (change)="onSelect($event)">
+                            <div class="image-uploads">
+                                <img src="assets/img/icons/upload.svg" alt="img">
+                                <h4>Drag and drop a file to upload</h4>
+                            </div>
+                          
+                        </div>
+                        <span class="text-danger" *ngIf="attachment && attachment.invalid && attachment.touched">Select
+                            attachment</span>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <img [src]="url" *ngIf="url" alt="" class="p_img">
+                        <img [src]="imgUrl+editRes?.attachment" *ngIf="!url" alt="" class="p_img">
+                    </div>
+                </div>
                 <div class="col-lg-12">
                     <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>

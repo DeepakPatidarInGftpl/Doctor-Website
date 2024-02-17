@@ -1524,7 +1524,10 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/batch/?id=';
     return this.http.delete(`${url}${id}`)
   }
-
+  deleteBatchNewApi(id: number) {
+    let url = this.apiUrl + '/pv-api/batch-delete/?batch=';
+    return this.http.delete(`${url}${id}`)
+  }
   getBatchByVariant(id: any) {
     let url = this.apiUrl + '/pv-api/batch_variant_dashboard/?variantid=';
     return this.http.delete(`${url}${id}`)
@@ -1795,4 +1798,34 @@ export class CoreService {
     let url = this.apiUrl + '/pv-api/product_label/?id=';
     return this.http.delete(`${url}${id}`)
   }
+
+
+  // update label from product list
+  updateLabel(product: any, product_label: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/product-label-update/';
+    const queryParams: any[] = [];
+    if (product) {
+      queryParams.push(`product=${product}`);
+    }
+    if (product_label) {
+      queryParams.push(`product_label=${product_label}`);
+    }
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.patch<any>(url,'');
+  }
+  // updateLabel(product: number, product_label: number): Observable<any> {
+  //   const url = `${this.apiUrl}/pv-api/product-label-update/`;
+  //   // Constructing the request body
+  //   const requestBody = {};
+  //   if (product) {
+  //     requestBody['product'] = product;
+  //   }
+  //   if (product_label) {
+  //     requestBody['product_label'] = product_label;
+  //   }
+  //   return this.http.patch<any>(url, requestBody);
+  // }
+  
 }

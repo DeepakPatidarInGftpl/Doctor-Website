@@ -166,5 +166,11 @@ export class HrmServiceService {
     }
     return this.http.get<any>(url);
   }
+
+  //new employee
+  getEmployee():Observable<any>{
+    let url = this.apiUrl+'/pv-api/get-employees/';
+    return this.http.get(url)
+  }
 }
 

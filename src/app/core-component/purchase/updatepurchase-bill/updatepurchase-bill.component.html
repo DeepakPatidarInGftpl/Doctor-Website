@@ -860,7 +860,9 @@
                                 </td>
                                 <td class="text-start">{{calculateTotalUnitCost().toFixed(2)}}</td>
                                 <td class="text-start">{{calculateTotalMrp().toFixed(2)}}</td>
-                                <td class="text-start">{{calculateTotalDiscount()}}</td>
+                                <td class="text-start">{{calculateTotalDiscount()}}
+                                    <input type="text" formControlName="total_discount" class="input" [ngModel]="calculateTotalDiscount()?.toFixed(2)" style="display: none;">
+                                </td>
                                 <th class="text-start">{{calculateTotalAdditionalDiscount()}}</th>
                                 <td class="text-start">{{calculateTotalSellingPriceOnline().toFixed(2)}}</td>
                                 <td class="text-start">{{calculateTotalSellingPriceOffline().toFixed(2)}}</td>

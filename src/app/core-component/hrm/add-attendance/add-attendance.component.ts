@@ -37,7 +37,7 @@ export class AddAttendanceComponent implements OnInit {
   attendance(): FormGroup {
     return this.fb.group({
       employee: new FormControl('', [Validators.required]),
-      total_present_day: new FormControl('', [Validators.required]),
+      total_present_day: new FormControl('', [Validators.required,Validators.maxLength(31)]),
     });
   }
   getattendance(): FormArray {
@@ -58,7 +58,7 @@ export class AddAttendanceComponent implements OnInit {
   employee(index: number) {
     return this.getattendance().controls[index].get('employee');
   }
-  total_present_day(index: number) {
+  total_present_day(index: number) {  
     return this.getattendance().controls[index].get('total_present_day');
   }
 
@@ -73,7 +73,7 @@ export class AddAttendanceComponent implements OnInit {
 
   employeeList: any
   getEmployee() {
-    this.contactService.getEmployee().subscribe(res => {
+    this.hrmService.getEmployee().subscribe(res => {
       this.employeeList = res;
       const variants = this.attendanceForm.get('attendance') as FormArray;
       variants.clear(); 
