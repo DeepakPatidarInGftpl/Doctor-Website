@@ -112,11 +112,11 @@ const routes: Routes = [
             (m) => m.ApplicationModule
           ),
       },
-      // {
-      //   path: 'report',
-      //   loadChildren: () =>
-      //     import('./report/report.module').then((m) => m.ReportModule),
-      // },
+      {
+        path: 'report',
+        loadChildren: () =>
+          import('./reports/reports.module').then((m) => m.ReportsModule),
+      },
       // {
       //   path: 'users',
       //   loadChildren: () =>
