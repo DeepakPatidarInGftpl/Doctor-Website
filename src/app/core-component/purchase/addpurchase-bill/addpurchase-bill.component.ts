@@ -81,7 +81,7 @@ export class AddpurchaseBillComponent implements OnInit {
       additional_charges: this.fb.array([]),
       tax_rate: this.fb.array([]),
       // total_tax: new FormControl('', ),
-      // total_discount: new FormControl('', ),
+      total_discount: new FormControl('', ), // 17-02
       // sub_total: new FormControl('', ),
       round_off: new FormControl('',),
       note: new FormControl(''),
@@ -952,7 +952,9 @@ export class AddpurchaseBillComponent implements OnInit {
       formdata.append('round_off', this.purchaseBillForm.get('round_off')?.value);
       formdata.append('additional_charge', this.purchaseBillForm.get('additional_charge')?.value);
       //2-1
-      formdata.append('total_qty',this.purchaseBillForm.get('total_qty')?.value)
+      formdata.append('total_qty',this.purchaseBillForm.get('total_qty')?.value);
+      //17-02
+      formdata.append('total_discount',this.purchaseBillForm.get('total_discount')?.value)
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }

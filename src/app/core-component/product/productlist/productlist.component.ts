@@ -8,6 +8,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-productlist',
@@ -26,11 +27,11 @@ export class ProductlistComponent implements OnInit {
   filteredData: any[]; // The filtered data
   selectedCategoryType: string = '';
   selectedSubcategoryType: string = '';
-  selectedSubcategoryGroupType:string='';
-  selectedBrandType:string='';
-  selectedProductStoreType:string='';
-
-  constructor(private QueryService: QueryService, private coreService: CoreService, private cs: CompanyService) {
+  selectedSubcategoryGroupType: string = '';
+  selectedBrandType: string = '';
+  selectedProductStoreType: string = '';
+  selectedLabel:string='';
+  constructor(private QueryService: QueryService, private coreService: CoreService, private cs: CompanyService, private toastr: ToastrService) {
     this.QueryService.filterToggle()
   }
   delRes: any
@@ -185,7 +186,7 @@ export class ProductlistComponent implements OnInit {
         }
       });
     });
-
+this.getLabel();
     this.getCategory()
     this.getSubcategory()
     this.getSubcategoryGroup()
@@ -217,7 +218,7 @@ export class ProductlistComponent implements OnInit {
       this.brandlist = res
     })
   }
- 
+
 
   allSelected: boolean = false;
   selectedRows: boolean[]
@@ -268,14 +269,21 @@ export class ProductlistComponent implements OnInit {
   //   }
   // }
 
+
   search() {
-    if (this.titlee === "") {
+    if (this.titlee == "") {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.title?.toLocaleLowerCase();
-        return nameLower.includes(searchTerm);
+        const nameLower = res?.title.toLocaleLowerCase();
+        const label = res?.product_label?.title.toLocaleLowerCase();
+        if (nameLower.match(searchTerm)) {
+          return true;
+        } else if (label.match(searchTerm)) {
+          return true;
+        }
+        return false;
       });
     }
   }
@@ -321,8 +329,12 @@ export class ProductlistComponent implements OnInit {
     if (this.selectedProductStoreType) {
       filteredData = filteredData.filter((item) => item?.product_store === this.selectedProductStoreType);
     }
- 
- 
+    //16-02
+    if (this.selectedLabel) {
+      filteredData = filteredData.filter((item) => item?.product_label?.title === this.selectedLabel);
+    }
+
+
     this.filteredData = filteredData;
   }
   clearFilter() {
@@ -330,6 +342,7 @@ export class ProductlistComponent implements OnInit {
     this.selectedSubcategoryType = null;
     this.selectedSubcategoryGroupType = null;
     this.selectedBrandType = null;
+    this.selectedLabel=null;//16/2
     this.selectedProductStoreType = null;
     this.filterData();
   }
@@ -413,7 +426,7 @@ export class ProductlistComponent implements OnInit {
     });
     return visibleData;
   }
-// Modify your exportToExcel() function
+  // Modify your exportToExcel() function
   exportToExcel(): void {
     const visibleDataToExport = this.getVisibleDataFromTable();
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
@@ -485,4 +498,65 @@ export class ProductlistComponent implements OnInit {
     document.body.innerHTML = originalContents;
   }
 
+
+  // label update
+labelList:any;
+  getLabel(){
+    this.coreService.getProductLabel().subscribe((res:any)=>{
+      console.log(res);
+      this.labelList=res;
+    })
+  }
+  // updateLabel(p_id: number, l_id: number) {
+  //   this.coreService.updateLabel(p_id, l_id).subscribe((res: any) => {
+  //     console.log(res);
+  //     if (res.success) {
+  //       this.toastr.success(res.msg)
+  //     } else {
+  //       this.toastr.success(res.msg)
+  //     }
+  //   }, err => {
+  //     this.toastr.error(err.message)
+  //   })
+  // }
+
+  updateLabel(p_id: number, l_id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do You Want Change The Product Label!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Change it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        this.coreService.updateLabel(p_id, l_id).subscribe(res => {
+        console.log(res);
+          if (res.success) {
+            this.loader = true;
+            Swal.fire({
+              icon: 'success',
+              title: 'Changed!',
+              text: res.msg,
+            });
+            this.ngOnInit();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Changed!',
+              text: res.error,
+            });
+          }
+        },err=>{
+          this.toastr.error(err.message)
+        })
+
+      }
+    });
+  }
 }

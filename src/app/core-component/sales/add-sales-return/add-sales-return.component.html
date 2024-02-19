@@ -388,32 +388,29 @@
                                 <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
                                     <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory"  (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}">
                                     </li>
-                                    <li><a class="dropdown-item"
-                                            *ngFor="let category of filteredCategoryList let i=index;">
-                                            <input type="checkbox" [value]="category.id" (change)="SelectedProduct(category?.product?.category?.id)" 
-                                                [id]="'checkboxCat-' + i">
-                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category?.product?.category?.title}}</label>
-                                        </a></li>
+                                    <li><a class="dropdown-item" *ngFor="let category of filteredCategoryList let i=index;">
+                                            <input type="checkbox" [value]="category.id" (change)="getSubCategory(category.id)" (change)="SelectedProduct(category?.id)" [id]="'checkboxCat-' + i">
+                                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category?.title}}</label>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
-                        <div class="form-group">
-                            <div class="dropdown">
-                                <button type="button" class="dropdown-toggle button" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
-                                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
-                                    <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory"  (ngModelChange)="filterCategory()" [ngModelOptions]="{standalone: true}">
-                                    </li>
-                                    <li><a class="dropdown-item"
-                                            *ngFor="let subcategory of filteredCategoryList let i=index;">
-                                            <input type="checkbox" [value]="subcategory.id" (change)="SelectedProductSubCat(subcategory?.product?.subcategory?.id)" 
-                                                [id]="'checkboxSubCat-' + i">
-                                            <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory?.product?.subcategory?.title}}</label>
-                                        </a></li>
-                                </ul>
-                            </div>
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-toggle button" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
+                            <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                <li><input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchSubCategory"  (ngModelChange)="filterSubCategory()" [ngModelOptions]="{standalone: true}">
+                                </li>
+                                <li><a class="dropdown-item"
+                                        *ngFor="let subcategory of filteredSubCategoryList let i=index;">
+                                        <input type="checkbox" [value]="subcategory.id" (change)="SelectedProductSubCat(subcategory?.id)" 
+                                            [id]="'checkboxSubCat-' + i">
+                                        <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{subcategory?.title}}</label>
+                                    </a></li>
+                            </ul>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -475,8 +472,8 @@
                                                     (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
                                             </td>
                                             <td colspan="1">
-                                                <div class="form-group" style="margin-bottom: 0;">
-                                            <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                <div class="form-group d-flex item-align-center" style="margin-bottom: 0;">
+                                            <!-- <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;"> -->
                                                         <input
                                                         type="text"
                                                         placeholder="Search Product"
@@ -505,8 +502,56 @@
                                                             Please Enter 3 or more characters
                                                         </mat-option>
                                                         </mat-autocomplete>
-                                                    </mat-form-field>
+                                                        <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalProduct(i)"></i>
+                                                
+                                                    <!-- </mat-form-field> -->
                                                 </div>
+                                                <div class="modal fade " id="productModal" tabindex="-1" role="dialog"
+                                                aria-labelledby="addressModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Selected Variants</h1>
+                                                            <button type="button" class="close" (click)="closeModalProduct()" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group" *ngIf="selecteProduct">
+                                                                <div class="row">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table datanew">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="boder space-text">Sr.No.</th>
+                                                                                    <th class="boder space-text">Barcode</th>
+                                                                                    <th class="boder space-text">Product</th>
+                                                                                    <th class="boder space-text">Variant Name</th>
+                                                                                    <th class="boder space-text">Date</th>
+                                                                                    <th class="boder space-text">MRP</th>
+                                                                                    <th class="boder space-text">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr
+                                                                                    *ngFor="let prod of selecteProduct?.variant_product;let ind=index;">
+                                                                                    <td class="boder">{{ ind+1+'.'}}</td>
+                                                                                    <td class="boder">{{ prod?.sku}}</td>
+                                                                                    <td class="boder">{{ prod?.product_title }}</td>
+                                                                                    <td class="boder">{{prod?.variant_name}}</td>
+                                                                                    <td class="boder">{{ prod?.created_date}}</td>
+                                                                                    <td class="boder">{{ prod?.batch[0]?.mrp}}</td>
+                                                                                    <td><button type="button" (click)="selecBatchtModel(prod?.batch[0],i,'productModal')" class="btn btn-primary btn-sm" style="float: right;">Select</button> </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             </td>
                                             <td><input type="number" formControlName="qty" class="input" (blur)="purchase4(i)"></td>
                                             <td><input type="number" formControlName="price" class="input" [(ngModel)]="coastprice[i]" (blur)="purchase(i)" #price (blur)="purchase2(price.value,i)">

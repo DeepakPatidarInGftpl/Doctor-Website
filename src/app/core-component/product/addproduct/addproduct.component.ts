@@ -89,7 +89,8 @@ export class AddproductComponent implements OnInit {
       variant_product: this.fb.array([]),
       product_images: this.fb.array([]),
       // 15-1
-      product_label: new FormControl('', [Validators.required])
+      product_label: new FormControl('', [Validators.required]),
+      article_no: new FormControl('',)
     })
 
     // add form
@@ -302,8 +303,8 @@ export class AddproductComponent implements OnInit {
   getProductLabel() {
     this.coreService.getProductLabel().subscribe((res: any) => {
       this.labelList = res;
-      this.labelList.forEach((res:any)=>{
-        if(res?.title=='New'){
+      this.labelList.forEach((res: any) => {
+        if (res?.title == 'New') {
           this.productForm?.patchValue(res?.id)
         }
       })
@@ -512,6 +513,8 @@ export class AddproductComponent implements OnInit {
     formdata.append('hsncode', this.productForm.get('hsncode')?.value);
     //15-1
     formdata.append('product_label', this.productForm.get('product_label')?.value);
+    // 16-2
+    formdata.append('article_no'), this.productForm.get('article_no');
     // end
 
     // nested formdata 
@@ -699,7 +702,9 @@ export class AddproductComponent implements OnInit {
   get product_label() {
     return this.productForm.get('product_label');
   }
-
+  get article_no() {
+    return this.productForm.get('article_no');
+  }
   get hsncode() {
     return this.productForm.get('hsncode');
   }
@@ -923,5 +928,16 @@ export class AddproductComponent implements OnInit {
   clearForm() {
     this.productForm.reset();
     this.ngOnInit()
+  }
+  isOnline = false
+  storeOnline(store: any) {
+    if (store === 'Online') {
+      this.description.setValidators([Validators.required]);
+      this.isOnline = true;
+    } else {
+      this.description.clearValidators();
+      this.isOnline = false;
+    }
+    this.description.updateValueAndValidity();
   }
 } 
