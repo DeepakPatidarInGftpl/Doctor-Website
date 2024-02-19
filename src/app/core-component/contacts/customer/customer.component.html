@@ -79,6 +79,16 @@
                                     <input type="search" [(ngModel)]="selectedMember" (ngModelChange)="filterData()" class="search" placeholder="Search Membership">
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label>Select Membership</label>
+                                    <select class="form-select" [(ngModel)]="selectedCustomer" (ngModelChange)="filterData()" >
+                                        <option value="" selected disabled>Select Membership</option>
+                                        <option value="">All</option>
+                                        <option value="{{member?.title}}" *ngFor="let member of membershipList">{{member?.title}}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group" (click)="clearFilter()">
                             <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>

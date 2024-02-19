@@ -53,7 +53,7 @@ export class AddEstimateComponent implements OnInit {
 
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
-
+    this.myControl = new FormArray([]);
     const today = new Date();
     const sevenDaysFromToday = new Date(today);
     sevenDaysFromToday.setDate(today.getDate() + 7);
@@ -111,11 +111,13 @@ export class AddEstimateComponent implements OnInit {
   category: any;
   subcategory: any;
   searc: any;
-  myControl = new FormControl('');
+  myControl: FormArray;
   variantList: any[] = [];
+  variantList2: any[] = [];
   isSearch=false;
   getVariant(search: any, index: any, barcode) {
     this.isSearch=true;
+    if(this.search.toString().length>=3){
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -132,11 +134,12 @@ export class AddEstimateComponent implements OnInit {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.isSearch=false;
-        this.variantList = res;
+        this.variantList[index]
+        this.variantList2 = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
-          this.myControl.setValue(res[0].product_title)
+          this.myControl.push(res[0].product_title)
         }
         if (search) {
           //barcode patch
@@ -146,7 +149,7 @@ export class AddEstimateComponent implements OnInit {
           this.productName[index] = this.searchs[0]?.product_title;
           // console.log(this.productName);
           this.check = true;
-          console.log(this.searchs[0]?.variant_name);
+          // console.log(this.searchs[0]?.variant_name);
 
           const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
           barcode.patchValue({
@@ -154,20 +157,20 @@ export class AddEstimateComponent implements OnInit {
             // item_name: this.searchs[0]?.variant_name
           });
         }
-        console.log(this.saleEstimateForm.value);
+        // console.log(this.saleEstimateForm.value);
 
 
       });
     }
     else {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
-        console.log(res);
         this.isSearch=false;
-        this.variantList = res;
+        this.variantList[index] = res;
+        this.variantList2 = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
-          this.myControl.setValue(res[0]?.product_title)
+          this.myControl.push(res[0]?.product_title)
         }
         if (search) {
           //barcode patch
@@ -183,9 +186,10 @@ export class AddEstimateComponent implements OnInit {
             // item_name: this.searchs[0]?.variant_name
           });
         }
-        console.log(this.saleEstimateForm.value);
+        // console.log(this.saleEstimateForm.value);
       });
     }
+  }
   }
 
   categoryList: any[] = [];
@@ -234,8 +238,6 @@ export class AddEstimateComponent implements OnInit {
       this.selectData.push(variant);
     }
     console.log(this.selectData, 'selected data');
-
-    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -247,7 +249,6 @@ export class AddEstimateComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '', '')
   }
 
   get customer() {
@@ -270,9 +271,12 @@ export class AddEstimateComponent implements OnInit {
     return this.saleEstimateForm.get('estimate_cart') as FormArray;
   }
   isCart = false;
-  addCart() {
+  cartIndex:any[]=[];
+  addCart(i:number) {
     this.getCart().push(this.cart());
     this.isCart = false;
+    this.cartIndex.push(i);
+    console.log(this.cartIndex,'cartindex');
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
@@ -334,7 +338,7 @@ export class AddEstimateComponent implements OnInit {
     })
     const variants = this.saleEstimateForm.get('estimate_cart') as FormArray;
     variants.clear();
-    this.addCart();
+    this.addCart(0);
     this.saleEstimateForm.patchValue({
       customer: selectedItemId,
     });
@@ -365,13 +369,19 @@ export class AddEstimateComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  openModalProduct(i:number){
-    const modal = document.getElementById('productModal');
+  indexCartValue:any;
+  openModalProduct(index: number) {
+    console.log(index,'index');
+    // this.cartIndex.findIndex(index)
+    this.indexCartValue=index
+    const modalId = `productModal-${index}`; 
+    const modal = document.getElementById(modalId);
     if (modal) {
-      modal.classList.add('show');
-      modal.style.display = 'block';
+        modal.classList.add('show');
+        modal.style.display = 'block';
     }
-  }
+}
+
   selectAddressBilling(address: string) {
     this.selectedAddressBilling = address;
     // Close Bootstrap modal using JavaScript
@@ -391,19 +401,15 @@ export class AddEstimateComponent implements OnInit {
     }
   }
   selecBatchtModel(address: any, index: any,type:string) {
-    if(type=='productModal'){
-      const modal = document.getElementById('productModal');
-      if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
-      }
-    }else{
+    console.log(index,'index');
+    
+   
       const modal = document.getElementById('batchModal');
       if (modal) {
         modal.classList.remove('show');
         modal.style.display = 'none';
       }
-    }
+    
     console.log(address);
  
     const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
@@ -441,13 +447,15 @@ export class AddEstimateComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-  closeModalProduct(i:number) {
-    const modal = document.getElementById('productModal');
+  closeModalProduct(i: number) {
+    console.log(i, 'index');  
+    const modal = document.getElementById(`productModal-${i}`);
     if (modal) {
-      modal.classList.remove('show');
-      modal.style.display = 'none';
+        modal.classList.remove('show');
+        modal.style.display = 'none';
     }
-  }
+}
+
   closeModalShipping() {
     const modal = document.getElementById('addressModalShipping');
     if (modal) {
@@ -486,6 +494,7 @@ export class AddEstimateComponent implements OnInit {
   batchCostPrice: any[] = [];
   selecteProduct:any;
   oncheckVariant(event: any, index) {
+    console.log(index,'index');
     const selectedItemId = event.id;
     console.log(event);
     this.selecteProduct=event?.product;
@@ -590,7 +599,13 @@ export class AddEstimateComponent implements OnInit {
         tax: 18,
       });
     }
+    
   }
+  handleEvent(prod,i){
+      console.log(i,'index');
+      const prodd = this.getCart().controls[i].value; 
+  }
+
   coastprice: any[] = []
   landingPrice: any[] = []
   isdiscount: any[] = []
@@ -996,11 +1011,12 @@ export class AddEstimateComponent implements OnInit {
     // console.log(this.barcode[index]);
     // console.log(this.barcode);
     this.v_id = value.id;
-    const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
-    barcode.patchValue({
-      barcode: value.id
-    });
-    this.getVariant('', '', '')
+    const modal = document.getElementById(`productModal-${index}`);
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+      }
+    this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
   };
 
   searchs: any[] = [];

@@ -142,7 +142,7 @@
                                 </th>
                                 <th (click)="sort('id')" class="thone">Sr.No. <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Product Name <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Label<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Product Label<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Category <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Subcategory <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Subcategory group <i class="fa fa-sort"></i></th>
@@ -154,7 +154,6 @@
                                 <!-- <th (click)="sort('id')" class="thone">Is Measurable <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Sale Tax Including <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Purchase Tax Including<i class="fa fa-sort"></i></th> -->
-                                <th (click)="sort('id')" class="thone">Label Update<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>  
                             </tr>
@@ -171,7 +170,12 @@
                                 <td class="productimgname">
                                     <a routerLink="//product/product-details/{{products.id}}" style="line-height: 3;white-space: pre-wrap;">{{products.title}}</a>
                                 </td>
-                                <td>{{products?.product_label?.title}}</td>
+                                <td>
+                                    <select #lab (change)="updateLabel(products?.id,lab.value,products.id)">
+                                        <option value="" selected disabled>{{products?.product_label?.title}}</option>
+                                        <option value="{{label?.id}}" *ngFor="let label of labelList">{{label?.title}}</option>
+                                    </select>
+                                </td>
                                 <td>{{products?.category?.title}}</td>
                                 <td>{{products?.subcategory?.title}}</td>
                                 <td>{{products?.subcategory_group?.title}}</td>
@@ -181,12 +185,6 @@
                               <!-- <td> <span [ngClass]="{'bg-lightgreen': products.is_measurable === true, 'bg-lightred' : products.is_measurable === false,'bg-lightyellow' : products.is_measurable === 'Partial' }" class="badges">{{products.is_measurable}}</span> </td>
                                 <td> <span [ngClass]="{'bg-lightgreen': products.sale_tax_including === true, 'bg-lightred' : products.sale_tax_including === false,'bg-lightyellow' : products.sale_tax_including === 'Partial' }" class="badges">{{products.sale_tax_including}}</span> </td>
                                 <td> <span [ngClass]="{'bg-lightgreen': products.purchase_tax_including === true, 'bg-lightred' : products.purchase_tax_including === false,'bg-lightyellow' : products.purchase_tax_including === 'Partial' }" class="badges">{{products.purchase_tax_including}}</span> </td> -->
-                                <td>
-                                    <select #lab (change)="updateLabel(products?.id,lab.value)">
-                                        <option value="" selected disabled>Select Label</option>
-                                        <option value="{{label?.id}}" *ngFor="let label of labelList">{{label?.title}}</option>
-                                    </select>
-                                </td>
                                 <td>
                                     <mat-slide-toggle (click)="products.is_active ? deActivate(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                                 </td>

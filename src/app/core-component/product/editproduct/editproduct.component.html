@@ -293,13 +293,17 @@
 								<div class="row mt-3">
 									<div class="col-lg-3 col-sm-4 col-12">
 										<div class="form-group">
-											<label>Product Name*</label>
-											<input type="text" placeholder="Product Name" formControlName="title" [ngClass]="{
-													'is-invalid': f['title'].touched && f['title'].invalid}" [(ngModel)]="productNamme">
-											<span class="text-danger"
-												*ngIf="title && title.invalid && title.touched">Enter
-												Product Name
+											<label>Article No.</label>
+											<input type="text" placeholder="Article No." formControlName="article_no" [ngClass]="{'is-invalid': f['article_no'].touched && f['article_no'].invalid}" >
+											<span class="text-danger"*ngIf="article_no && article_no.invalid && article_no.touched">Enter Article No.
 											</span>
+										</div>
+									</div>
+									<div class="col-lg-3 col-sm-4 col-12">
+										<div class="form-group">
+											<label>Product Name*</label>
+											<input type="text" placeholder="Product Name" formControlName="title" [ngClass]="{'is-invalid': f['title'].touched && f['title'].invalid}" [(ngModel)]="productNamme">
+											<span class="text-danger" *ngIf="title && title.invalid && title.touched">Enter Product Name</span>
 										</div>
 									</div>
 									<div class="col-lg-3 col-sm-4 col-12">
@@ -553,14 +557,6 @@
 												<option value="{{label.id}}" *ngFor="let label of labelList">{{label?.title}}</option>
 											</select>
 											<span class="text-danger" *ngIf="product_label && product_label.invalid && product_label.touched">Select Product Label</span>
-										</div>
-									</div>
-									<div class="col-lg-3 col-sm-4 col-12">
-										<div class="form-group">
-											<label>Article No.</label>
-											<input type="text" placeholder="Article No." formControlName="article_no" [ngClass]="{'is-invalid': f['article_no'].touched && f['article_no'].invalid}" >
-											<span class="text-danger"*ngIf="article_no && article_no.invalid && article_no.touched">Enter Article No.
-											</span>
 										</div>
 									</div>
 									<div class="col-lg-6 col-sm-6 col-12">
