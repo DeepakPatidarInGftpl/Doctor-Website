@@ -21,3 +21,48 @@
     border-right: 2px solid white;
     border-bottom: 2px solid white;
 }
+
+.user_card {
+    // background: linear-gradient(90.14deg, #F61A05 0%, #FF9405 100%);
+    background-color: #FFEADC;
+    width: 25%;
+}
+
+.name_card {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background-color: #FF8431;
+}
+
+.name_carp_p {
+    font-family: Nunito Sans;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: left;
+    padding-top: 4px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.card_p1 {
+    font-family: Nunito Sans;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #0E1726;
+    margin-bottom: 0;
+}
+
+.card_p2 {
+    font-family: Nunito Sans;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #585858;
+    margin-bottom: 0;
+}

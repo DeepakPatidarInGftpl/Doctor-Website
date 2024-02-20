@@ -3,8 +3,8 @@
         <div class="page-header">
             <div class="page-title">
                 <h6 class="subhead-color" (click)="goBack()"><mat-icon
-                    style="vertical-align: middle;">keyboard_backspace</mat-icon>
-                Back to Customer</h6>
+                        style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                    Back to Customer</h6>
                 <h4>Full details of a Customer</h4>
             </div>
             <div class="page-btn">
@@ -14,12 +14,28 @@
             </div>
         </div>
 
+        <div class="card user_card" *ngIf="productDetail">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="name_card">
+                        <p class="name_carp_p">{{firstLatter}}</p>
+                    </div>
+                    <div style="width: 70%;">
+                        <p class="card_p1">{{productDetail?.name}}</p>
+                        <p class="card_p2" (click)="openModalMembershp(productDetail?.membership?.id)">{{productDetail?.membership?.title }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <mat-tab-group animationDuration="0ms" *ngIf="productDetail">
             <mat-tab label="General Details">
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
                         <div class="card-body">
                             <div class="productdetails">
+
                                 <ul class="product-bar">
                                     <li>
                                         <h4>Name</h4>
@@ -59,7 +75,8 @@
                                     </li>
                                     <li>
                                         <h4>Opening balance</h4>
-                                        <h6>{{ productDetail?.opening_balance_type + (productDetail?.opening_balance != null ? ' : ' + productDetail?.opening_balance : '') }}</h6>
+                                        <h6>{{ productDetail?.opening_balance_type + (productDetail?.opening_balance !=
+                                            null ? ' : ' + productDetail?.opening_balance : '') }}</h6>
                                     </li>
                                     <li>
                                         <h4>Pan no</h4>
@@ -84,7 +101,7 @@
 
                                     <li>
                                         <h4>Membership</h4>
-                                        <h6>{{productDetail?.membership }}</h6>
+                                        <h6>{{productDetail?.membership?.title }}</h6>
                                     </li>
                                     <li>
                                         <h4>Date of birth</h4>
@@ -227,63 +244,189 @@
                         </div>
                         <div class="table-responsive">
                             <table class="table datanew">
-                        <thead>
-                            <tr>
-                                <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
-                                <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
-                                <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
-                                <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
-                            <tr>
-                                <td class="td" (click)="sort('id')">{{i+1}}</td>
-                                <td class="td" (click)="sort('id')">{{log?.userid}}</td>
-                                <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
-                                <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
-                            </tr> 
-                        </ng-container>
-                        </tbody>
-                        <tbody *ngIf="filteredData?.length==0">
-                            <tr>
-                                <td colspan="10">
-                                    <p class="center-textt">Data not available</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="progressbar">
-                        <mat-progress-bar mode="indeterminate" class="progressbar"
-                            *ngIf="loader"></mat-progress-bar>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
-                            <div class="entries"> Show per page
-                                <select [(ngModel)]="itemsPerPage" class="pagination">
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="30">30</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                    <option value="-1">All</option>
-                                </select>
+                                <thead>
+                                    <tr>
+                                        <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
+                                        <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
+                                        <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i>
+                                        </th>
+                                        <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container
+                                        *ngFor="let log of membershipList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                        <tr>
+                                            <td class="td" (click)="sort('id')">{{i+1}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.userid}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.date_time | date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+                                <tbody *ngIf="membershipList?.length==0">
+                                    <tr>
+                                        <td colspan="10">
+                                            <p class="center-textt">Data not available</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="progressbar">
+                                <mat-progress-bar mode="indeterminate" class="progressbar"
+                                    *ngIf="loader"></mat-progress-bar>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                    <div class="entries"> Show per page
+                                        <select [(ngModel)]="itemsPerPage" class="pagination">
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="-1">All</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                    <div class="f-right">
+                                        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                        <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of
+                                            {{itemsPerPage}} entries</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                            <div class="f-right">
-                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                                <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>
-                            </div>
-                        </div>
                     </div>
-                </div>
-                </div>
                 </div>
             </mat-tab>
         </mat-tab-group>
         <div class="container" *ngIf="productDetail?.length==[]">
             <p class="center-textt">Data not available</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalMembershp()"></i> -->
+<div class="modal fade " id="membershipModal" tabindex="-1" role="dialog"
+    aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Membership</h1>
+                <button type="button" class="close"
+                    (click)="closeModalMembership()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" *ngIf="memberDetails">
+                    <div class="row">
+                        <!-- <div class="table-responsive">
+                            <table class="table datanew" id="mytable">
+                                <thead>
+                                    <tr>
+                                        <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
+                                        <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
+                                        <th (click)="sort('id')" class="thone">Validity of Points <i class="fa fa-sort"></i></th>                                  
+                                        <th (click)="sort('id')" class="thone">Points Per 100<i class="fa fa-sort"></i></th>
+                                        <th (click)="sort('id')" class="thone">Purchase From<i class="fa fa-sort"></i></th>
+                                        <th (click)="sort('id')" class="thone">Purchase To<i class="fa fa-sort"></i></th>
+                                        <th (click)="sort('id')" class="thone">Maximum Redemption Points <i class="fa fa-sort"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="membershipList?.length>=0">
+                                    <tr *ngFor="let products of membershipList | orderBy:key:isAscending | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index"
+                                        [ngClass]="{'orange-row': userDetails?.username === products?.username}">
+                                        <td>{{i+1}}</td>   
+                                        <td>
+                                            <a routerLink="//settings/detail-membership/{{products?.id}}" style="line-height: 3;">{{products?.title}}</a>
+                                        </td>
+                                        <td>{{products?.validity_of_points}}</td>
+                                        <td>{{products?.points_per_100}}</td>
+                                        <td>{{products?.purchase_from}}</td>
+                                        <td>{{products?.purchase_to}}</td>
+                                        <td>{{products?.maximum_redemption_points}}</td>
+                                    
+                                    </tr>
+                                </tbody>
+                                <tbody *ngIf="membershipList?.length==0">
+                                    <tr>
+                                        <td colspan="8">
+                                            <p class="center-text">Data not available</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="progressbar">
+                                <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                    <div class="entries"> Show per page
+                                        <select [(ngModel)]="itemsPerPage" class="pagination">   
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="-1">All</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                    <div class="f-right">
+                                        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                        <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}} entries</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td >Attachment</td>
+                                        <td><img [src]="imgUrl+memberDetails?.attachment" alt="product" style="width: 15%"></td>
+                                    </tr>
+                                    <tr>
+                                        <td >Validity of Points</td>
+                                        <td>{{memberDetails?.validity_of_points}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td >Title</td>
+                                        <td>{{memberDetails?.title}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td >Points Per 100</td>
+                                        <td>{{memberDetails?.points_per_100}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td >Purchase From</td>
+                                        <td>{{memberDetails?.purchase_from}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td >Purchase To</td>
+                                        <td>{{memberDetails?.purchase_to}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td >Maximum Redemption Points</td>
+                                        <td>{{memberDetails?.maximum_redemption_points}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex align-items-center mx-4">
+                            <p class="mb-0 d-inline f-500 me-2">Is Active : </p>
+                            <span [ngClass]="{'bg-lightgreen': memberDetails?.is_active === true, 'bg-lightred' : memberDetails?.is_active === false,'bg-lightyellow' : memberDetails?.is_active === 'Partial' }"
+                            class="badges">{{memberDetails?.is_active}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

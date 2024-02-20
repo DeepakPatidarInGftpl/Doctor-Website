@@ -358,7 +358,9 @@ export class AddSalesReturnComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  openModalBatch() {
+  batchCartIndex:any;
+  openModalBatch(i:number) {
+    this.batchCartIndex=i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -414,14 +416,14 @@ export class AddSalesReturnComponent implements OnInit {
     let discountRupees = (address?.cost_price * address?.discount) / 100
     console.log(discountRupees);
     let afterDiscountPrice = (address?.cost_price - discountRupees)
-    let taxRupee: number = (afterDiscountPrice * address?.purchase_tax) / 100
+    let taxRupee: number = (afterDiscountPrice * address?.sale_tax) / 100
     console.log(taxRupee);
     let landingCost = (address?.cost_price - discountRupees) + taxRupee;
     console.log(landingCost);
     barcode.patchValue({
       mrp: address?.mrp,
       qty: address?.stock,
-      tax: address?.purchase_tax,
+      tax: address?.sale_tax,
       discount: address?.discount,
       price: address?.cost_price,
       landing_cost: landingCost
@@ -471,7 +473,7 @@ export class AddSalesReturnComponent implements OnInit {
   //       barcode: selectedItemId,
   //       mrp: event.batch[0]?.mrp,
   //       qty: event.batch[0]?.stock,
-  //       tax: event.batch[0]?.purchase_tax,
+  //       tax: event.batch[0]?.sale_tax,
   //       discount: event.batch[0]?.discount,
   //       price: event.batch[0]?.cost_price,
   //     });
@@ -494,11 +496,11 @@ export class AddSalesReturnComponent implements OnInit {
     this.selecteProduct=event?.product;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
-    this.apiPurchaseTax = event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
 
-    this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
+    this.isTaxAvailable[index] = event?.product?.sale_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
-    if (event?.product?.purchase_tax_including) {
+    if (event?.product?.sale_tax_including) {
       if (this.userType == 'Employee') {
         let Employeeprice = event?.batch[0]?.selling_price_employee || 0;
         this.originalPrice[index] = event?.batch[0]?.selling_price_employee || 0;
@@ -558,7 +560,7 @@ export class AddSalesReturnComponent implements OnInit {
       const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
       this.tax[index] = this.apiPurchaseTax
       console.log(this.originalCoastPrice, 'this.originalCoastPrice');
-      if (event?.product?.purchase_tax_including == true) {
+      if (event?.product?.sale_tax_including == true) {
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,

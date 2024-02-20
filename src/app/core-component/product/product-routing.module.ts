@@ -283,6 +283,8 @@ const routes: Routes = [
   // prouct label
 { path: 'product-label', loadChildren: () => import('./product-label-list/product-label-list.module').then((m) => m.ProductLabelListModule) },
  { path: 'detail-product-label/:id', loadChildren: () => import('./details-product-label/details-product-label.module').then((m) => m.DetailsProductLabelModule) },
+ { path: 'analysis/:query', loadChildren: () => import('./analysis-inventory-list/analysis-inventory-list.module').then((m) => m.AnalysisInventoryListModule) },
+
 ];
 
 @NgModule({

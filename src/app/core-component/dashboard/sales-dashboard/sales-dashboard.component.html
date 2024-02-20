@@ -53,7 +53,6 @@
     
 </div> -->
 
-
     <div class="row mx-2">
         <div class="col-lg-6 col-sm-6 col-12 d-flex align-items-center">
             <span style="font-size: 30px;font-weight: 600;">Sales</span>
@@ -68,12 +67,10 @@
                         <span class="mat-input-placeholder-wrapper">
                             <span class="mat-input-placeholder">to</span>
                         </span>
-                        <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                            (dateChange)="getSelectedDates()">
+                        <input matEndDate placeholder="End date" formControlName="end" class="mat-input" (dateChange)="getSelectedDates()">
                     </mat-date-range-input>
 
-                    <mat-select placeholder="Select Date Range"
-                        (selectionChange)="selectDateRange($event.value,'sale')">
+                    <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value,'sale')">
                         <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
                     </mat-select>
                     <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
@@ -415,7 +412,7 @@
                         <apx-chart [series]="inventoryChartOptions?.['series']"
                             [chart]="inventoryChartOptions?.['chart']" [labels]="inventoryChartOptions?.['labels']"
                             [responsive]="inventoryChartOptions?.['responsive']"
-                            [legend]="inventoryChartOptions?.['legend']"></apx-chart>
+                            [legend]="inventoryChartOptions?.['legend']" (click)="onChartClick($event)"></apx-chart>
                     </div>
                 </div>
             </div>

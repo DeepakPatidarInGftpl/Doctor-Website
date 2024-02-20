@@ -345,7 +345,9 @@ export class AddMaterialOutwardComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  openModalBatch() {
+  batchCartIndex:any;
+  openModalBatch(i:number) {
+    this.batchCartIndex=i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -384,7 +386,7 @@ export class AddMaterialOutwardComponent implements OnInit {
     let discountRupees = (address?.cost_price * address?.discount) / 100
     console.log(discountRupees);
     let afterDiscountPrice = (address?.cost_price - discountRupees)
-    let taxRupee: number = (afterDiscountPrice * address?.purchase_tax) / 100
+    let taxRupee: number = (afterDiscountPrice * address?.sale_tax) / 100
     console.log(taxRupee);
     let landingCost = (address?.cost_price - discountRupees) + taxRupee;
     console.log(landingCost);
@@ -446,7 +448,7 @@ export class AddMaterialOutwardComponent implements OnInit {
   //       barcode: selectedItemId,
   //       mrp: event.batch[0]?.mrp,
   //       qty: event.batch[0]?.stock,
-  //       tax: event.batch[0]?.purchase_tax,
+  //       tax: event.batch[0]?.sale_tax,
   //       discount: event.batch[0]?.discount,
   //       price: event.batch[0]?.cost_price,
   //     });
@@ -470,15 +472,15 @@ export class AddMaterialOutwardComponent implements OnInit {
     this.selecteProduct=event?.product;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
-    this.apiPurchaseTax = event?.product?.purchase_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
+    this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
     this.batchDiscount = event.batch[0]?.discount || 0;
-    this.isTaxAvailable[index] = event?.product?.purchase_tax_including;
+    this.isTaxAvailable[index] = event?.product?.sale_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
 
     if (event.batch.length > 0) {
       const barcode = (this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray).at(index) as FormGroup;
       this.tax[index] = this.apiPurchaseTax;
-      if (event?.product?.purchase_tax_including == true) {
+      if (event?.product?.sale_tax_including == true) {
         barcode.patchValue({
           barcode: selectedItemId,
           item_name: event?.product_title,

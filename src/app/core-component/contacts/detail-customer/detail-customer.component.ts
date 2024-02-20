@@ -11,7 +11,7 @@ import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
   styleUrls: ['./detail-customer.component.scss']
 })
 export class DetailCustomerComponent implements OnInit {
-
+  imgUrl = 'https://pv.greatfuturetechno.com';
   constructor(private Arout: ActivatedRoute, private hrmService: HrmServiceService, private coreService: ContactService, private location: Location) { }
   id: any
   ngOnInit(): void {
@@ -36,12 +36,16 @@ export class DetailCustomerComponent implements OnInit {
     script.async = false;
     document.body.appendChild(script);
   }
-  productDetail: any
+  productDetail: any;
+  firstLatter:any;
   getdata() {
     this.coreService.getCustomerById(this.id).subscribe(res => {
       if (this.id == res.id) {
-        this.productDetail = res
-        this.filteredData = this.productDetail?.logs.slice(); // Initialize filteredData with the original data
+        this.productDetail = res;
+        let words = res.name.split(" ");
+        let combined = words.map(word => word.charAt(0)).join('');
+        this.firstLatter=combined
+        this.filteredData = this.productDetail?.logs.slice();
         this.filterData();
       }
     })
@@ -101,5 +105,38 @@ export class DetailCustomerComponent implements OnInit {
     this.filterOpertion = null;
     this.filterData();
   }
+
+  openModalMembershp(id:number) {
+    const modal = document.getElementById('membershipModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      // this.getMemberShip();
+      this.getMemberShipById(id);
+    }
+  }
+  closeModalMembership() {
+    const modal = document.getElementById('membershipModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  loader=true;
+  membershipList:any;
+  getMemberShip(){
+    this.hrmService.getMembership().subscribe(res => {
+      this.membershipList = res;
+      this.loader=false;
+    });
+  }
+  memberDetails:any
+  getMemberShipById(id:number){
+    this.hrmService.getMembershipById(id).subscribe(res => {
+      this.memberDetails = res;
+      this.loader=false;
+    });
+  }
+
 }
 
