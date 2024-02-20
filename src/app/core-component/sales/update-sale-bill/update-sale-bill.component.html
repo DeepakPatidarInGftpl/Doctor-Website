@@ -595,7 +595,7 @@
                                             </td>
                                             <td><input type="number" formControlName="qty" class="input" (blur)="purchase4(i)"></td>
                                             <td><input type="number" formControlName="price" class="input" [(ngModel)]="coastprice[i]" (blur)="purchase(i)" #price (blur)="purchase2(price.value,i)">
-                                            <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch()"></i>
+                                            <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch(i)"></i>
                                                 <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
                                                     aria-labelledby="addressModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -632,7 +632,7 @@
                                                                                         <td class="boder">{{ batch?.additional_discount + '%'}}</td>
                                                                                         <td>
                                                                                             <button type="button"
-                                                                                                (click)="selecBatchtModel(batch,i)"
+                                                                                                (click)="selecBatchtModel(batch,batchCartIndex)"
                                                                                                 class="btn btn-primary btn-sm"
                                                                                                 style="float: right;">Select</button>
                                                                                         </td>

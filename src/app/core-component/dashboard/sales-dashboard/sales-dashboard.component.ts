@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import {
@@ -16,6 +16,7 @@ import {
 } from "ng-apexcharts";
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-sales-dashboard',
   templateUrl: './sales-dashboard.component.html',
@@ -57,9 +58,9 @@ export class SalesDashboardComponent implements OnInit {
     { label: 'Last Financial Year', value: 'lastFinancialYear' },
   ];
 
-  constructor(private coreService: CoreService, private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService) {
-
-  }
+  constructor(private router:Router,private coreService: CoreService, private dashboardService: DashboardService, private datePipe: DatePipe, 
+    private zone: NgZone,private toastr: ToastrService) {
+ }
   campaignOne: FormGroup;
   dailySalesForm: FormGroup;
   salevsPurchaseForm: FormGroup;
@@ -549,49 +550,30 @@ export class SalesDashboardComponent implements OnInit {
     this.dashboardService.getInventory(this.inventoryStartDate, this.inventoryEndDate).subscribe((res: any) => {
       const inventoryData = res?.inventory_category_percentage || {};
       const categories = Object.keys(inventoryData);
-      const values = Object.values(inventoryData);
-      // this.inventoryChartOptions = {
-      //   series: values,
-      //   chart: {
-      //     width: 350,
-      //     type: "donut"
-      //   },
-      //   labels: categories,
-      //   dataLabels: {
-      //     enabled: true,
-      //     formatter: function(val) {
-      //       return val.toFixed(2) + "%";
-      //     }
-      //   },
-      //   // fill: {
-      //   //   type: "gradient"
-      //   // },
-      //   legend: {
-      //     formatter: function(val, opts) {
-      //       return val + " - " + opts.w.globals.series[opts.seriesIndex];
-      //     }
-      //   },
-      //   responsive: [
-      //     {
-      //       breakpoint: 480,
-      //       options: {
-      //         chart: {
-      //           width: 200
-      //         },
-      //         legend: {
-      //           position: "bottom"
-      //         }
-      //       }
-      //     }
-      //   ]
-      // };
-      
+      const values = Object.values(inventoryData);    
     // 
+    console.log(categories);
+    
     this.inventoryChartOptions = {
       series: values,
       chart: {
         width: 350,
-        type: "donut"
+        type: "donut",
+        events: {
+          dataPointSelection: (event, chartContext, config) => {
+            console.log(chartContext);
+            console.log(config);
+            console.log(categories);
+            categories.forEach((res:any,index:number)=>{
+              if(index==config?.dataPointIndex){
+                console.warn(res);
+                this.zone.run(() => {
+                  this.router.navigate(['/product/analysis/', res]);
+                });
+              }
+            })
+          }
+        }
       },
       labels: categories,
       responsive: [
@@ -612,6 +594,8 @@ export class SalesDashboardComponent implements OnInit {
         offsetY: 0
       },
     };
+
+
     }, err => {
       this.toastr.error(err.message);
     });
@@ -1183,4 +1167,14 @@ export class SalesDashboardComponent implements OnInit {
     script.async = false;
     document.body.appendChild(script);
   }
+  onChartClick(event: any) {
+    console.log(event);
+    const category = event?.x?.label || ''; // Get the clicked category label
+    console.log(category);
+    
+    if (category) {
+      this.router.navigate(['/product/analysis', category]);
+    }
+  }
+  
 }

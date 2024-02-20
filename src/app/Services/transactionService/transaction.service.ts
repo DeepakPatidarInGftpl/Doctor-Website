@@ -193,7 +193,7 @@ export class TransactionService {
     return this.http.get(url)
   } 
   getExpenceVoucherPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=ExpenseVoucher';
+    let url =this.apiUrl+'/pv-api/prefix/?id=ExpensesVoucher';
     return this.http.get(url)
   } 
   // account service

@@ -579,7 +579,7 @@
                                                 <!-- <td><input type="text" formControlName="unit_cost" class="input"></td> -->
                                                 <td><input type="text" formControlName="mrp" placeholder="MRP" class="input">
                                                     <i class="ion-information circle" data-bs-toggle="tooltip"
-                                                        title="ion-information" (click)="openModalBatch()"></i>
+                                                        title="ion-information" (click)="openModalBatch(i)"></i>
                                                     <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
                                                         aria-labelledby="addressModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog modal-lg modal-dialog-centered"
@@ -658,7 +658,7 @@
                                                                                                 '%'}}</td>
                                                                                             <td>
                                                                                                 <button type="button"
-                                                                                                    (click)="selecBatchtModel(batch,i)"
+                                                                                                    (click)="selecBatchtModel(batch,batchCartIndex)"
                                                                                                     class="btn btn-primary btn-sm"
                                                                                                     style="float: right;">Select</button>
                                                                                             </td>

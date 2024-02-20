@@ -348,4 +348,21 @@ export class DashboardService {
     }
     return this.http.get<any>(url);
   }
+
+
+  // analysyx inventory management list
+  getAnalysisInventoryList(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/dashboard/fsn-analysis-product-list/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
 }

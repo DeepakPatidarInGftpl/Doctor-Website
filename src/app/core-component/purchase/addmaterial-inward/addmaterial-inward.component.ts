@@ -222,7 +222,9 @@ export class AddmaterialInwardComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  openModalBatch() {
+  batchCartIndex:any;
+  openModalBatch(i:number) {
+    this.batchCartIndex=i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
