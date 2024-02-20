@@ -44,7 +44,16 @@ const routes: Routes = [
     loadChildren: () =>
     import('./day-book/day-book.module').then((m) =>m.DayBookModule),
 
-  }
+  },
+  {
+    path:'list',
+    loadChildren: () =>
+    import('./all-reports/all-reports.module').then((m) =>m.AllReportsModule),
+
+  },
+ 
+
+
 ];
 
 @NgModule({

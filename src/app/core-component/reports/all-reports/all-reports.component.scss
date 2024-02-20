@@ -1,0 +1,90 @@
+.icon {
+    color: #FF9F43;
+    font-size: 30px;
+}
+
+.p {
+    font-size: 18px;
+    font-weight: 600;
+    padding: 15px 5px 0 20px; // top right bottom left
+    margin-bottom: 0px;
+}
+.p_head{
+    font-size: 24px !important;
+    font-weight: 700;
+    letter-spacing: 10px;
+    color: #FF9F43;
+}
+.icon-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: white;
+}
+
+.icon {
+    font-size: 50px;
+}
+
+.row {
+    font-size: 22px;
+}
+::ng-deep.mat-tab-group .mat-tab-header, .mat-tab-nav-bar .mat-tab-header{
+    border-bottom: none;
+  }
+  ::ng-deep.mat-tab-group .mat-ink-bar, .mat-tab-nav-bar .mat-ink-bar{
+   display: none !important;
+  }
+  ::ng-deep .mat-tab-label-container {
+    border-bottom: none !important;
+}
+
+::ng-deep .mat-tab-label-active .icon {
+    color: #FF9F43;
+}
+
+::ng-deep .mat-tab-label-active .row {
+    color: #FF9F43;
+}
+
+::ng-deep .mat-tab-label:not(.mat-tab-label-active) .icon {
+    
+    color: white;
+}
+
+::ng-deep .mat-ripple.mat-tab-label.mat-focus-indicator.ng-star-inserted {
+    height: 110px !important;
+    background-color: #FF9F43 !important;
+    border: dotted #fff;
+    padding-left: 10px !important;
+    /* Adjust the left padding */
+    padding-right: 10px !important;
+    /* Adjust the right padding */
+    margin: 10px;
+    /* Add space between tabs */
+    opacity: 1;
+  }
+  
+  
+  ::ng-deep .mat-ripple.mat-tab-label.mat-focus-indicator.mat-tab-label-active.ng-star-inserted {
+  
+    // background-color: #fff !important;
+    padding-right: 1% !important;
+    padding-right: 1% !important;
+    border: 4px solid #fff;
+    background-color: white !important;
+  }
+  
+  ::ng-deep .mat-tab-list {
+    background-color: #FF9F43 !important;
+  }
+  .card{
+    box-shadow: 0 2px 4px rgb(211, 212, 213);
+  }
+  
+
+  .card-body{
+    padding: 5px;
+  }
