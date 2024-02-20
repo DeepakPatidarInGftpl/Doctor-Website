@@ -63,7 +63,7 @@
                                         class="search" placeholder="Search Company">
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
+                            <!-- <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                    <label>Opening Balance Type</label>
                                     <select [(ngModel)]="selectCredit" (change)="filterData()" class="form-select">
@@ -78,7 +78,7 @@
                                     <label>Membership</label>
                                     <input type="search" [(ngModel)]="selectedMember" (ngModelChange)="filterData()" class="search" placeholder="Search Membership">
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label>Select Membership</label>
@@ -131,7 +131,7 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//contacts/customerDetails/{{products.id}}" style="line-height: 3;">{{products?.membership}}</a>
+                            <a routerLink="//contacts/customerDetails/{{products.id}}" style="line-height: 3;">{{products?.membership?.title}}</a>
                         </td>
                         <td><a routerLink="//contacts/customerDetails/{{products.id}}" style="line-height: 3;">{{products?.name}}</a></td>
                         <td>{{products?.company_name}}</td>

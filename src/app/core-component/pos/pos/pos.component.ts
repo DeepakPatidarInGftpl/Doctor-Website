@@ -11,6 +11,7 @@ import { __values } from 'tslib';
 import { Modal } from 'bootstrap';
 import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 import { Router } from '@angular/router';
+import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
   selector: 'app-pos',
@@ -20,11 +21,11 @@ import { Router } from '@angular/router';
 
 
 export class PosComponent implements OnInit {
-  selectedPaymentsOption: string = 'sales'; 
-  
-  salesPayments:any = [];
-  purchasePayments:any = [];
-  expensePayments:any = [];
+  selectedPaymentsOption: string = 'sales';
+
+  salesPayments: any = [];
+  purchasePayments: any = [];
+  expensePayments: any = [];
 
   page: number = 1;
 
@@ -32,7 +33,7 @@ export class PosComponent implements OnInit {
 
   streetcontrol = new FormControl('');
 
-  
+
 
   //options: string[] = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry'];
   onlineEvent: Observable<Event>;
@@ -51,11 +52,11 @@ export class PosComponent implements OnInit {
   ];
 
   gstType = [
-    {label: 'UnRegistered', value: 'UnRegistered'},
-    {label: 'Registered Regular', value: 'Registered Regular'},
-    {label: 'Registered Composition', value: 'Registered Composition'},
-    {label: 'Input Service Distributor', value: 'Input Service Distributor'},
-    {label: 'Ecommerce Operator', value: 'Ecommerce Operator'},
+    { label: 'UnRegistered', value: 'UnRegistered' },
+    { label: 'Registered Regular', value: 'Registered Regular' },
+    { label: 'Registered Composition', value: 'Registered Composition' },
+    { label: 'Input Service Distributor', value: 'Input Service Distributor' },
+    { label: 'Ecommerce Operator', value: 'Ecommerce Operator' },
   ]
 
   voucherType = [
@@ -73,22 +74,22 @@ export class PosComponent implements OnInit {
   ];
 
   paymentType = [
-    {id: 1, label: 'Advance Payment', value: 'Advance'},
-    {id: 2, label: 'Against Bill', value: 'Against Bill'}
+    { id: 1, label: 'Advance Payment', value: 'Advance' },
+    { id: 2, label: 'Against Bill', value: 'Against Bill' }
   ];
 
   paymentMode = [
-    {id: 1, label: 'UPI', value: 'UPI'},
-    {id: 2, label: 'Card', value: 'Card'},
-    {id: 3, label: 'Cash', value: 'Cash'},
-    {id: 4, label: 'Bank', value: 'Bank'}
+    { id: 1, label: 'UPI', value: 'UPI' },
+    { id: 2, label: 'Card', value: 'Card' },
+    { id: 3, label: 'Cash', value: 'Cash' },
+    { id: 4, label: 'Bank', value: 'Bank' }
   ]
 
   selectedOptions: any[] = [];
   productsAutocompleteControl = new FormControl();
   //filteredOptions$: Observable<any[]> | undefined;
-  filteredOptions$:any;
-  customers:any = [];
+  filteredOptions$: any;
+  customers: any = [];
   cartItems: any[] = [];
   addMoreDetails: any;
   customerAutoCompleteControl = new FormControl('');
@@ -97,11 +98,11 @@ export class PosComponent implements OnInit {
 
   streets: string[] = ['Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow', 'Jason Roy', 'Sam Curran', 'Cameron Green', 'Alex Hales', 'Johnny Bairstow'];
   filteredStreets: Observable<string[]>;
-  currentCustomer:any | null;
-  currentCustomerPayment:any | null;
-  changeAmount:any;
+  currentCustomer: any | null;
+  currentCustomerPayment: any | null;
+  changeAmount: any;
   tenderedAmount: number = 0;
-  dueAmount:any;
+  dueAmount: any;
   online: any;
   loader: any;
   minLengthTerm = 1;
@@ -112,10 +113,10 @@ export class PosComponent implements OnInit {
   cusErrorMsg!: string;
   cusIsLoading = false;
   partyErrorMsg!: string;
-  filteredParty: any;  
+  filteredParty: any;
   filteredPartyExpense: any;
-  partyIsLoading:boolean = false
-  chargesErrorMsg!:string;
+  partyIsLoading: boolean = false
+  chargesErrorMsg!: string;
   chargesIsLoading = false;
   filteredCustomer: any;
   filteredCustomer2: any;
@@ -133,29 +134,29 @@ export class PosComponent implements OnInit {
   purchasePaymentForm: FormGroup;
   customerRegistrationNumberSame: boolean = false;
   currentCountry: any;
-  currentState:any;
-  stateList:any;
-  currentCities:any;
-  cityList:any;
+  currentState: any;
+  stateList: any;
+  currentCities: any;
+  cityList: any;
   currentProduct: any;
-  currentBatch:any;
-  additionalChargesList:any = [];
-  taxesList:any = [];
-  receiptSales:any = [];
-  companyBankList:any = [];
+  currentBatch: any;
+  additionalChargesList: any = [];
+  taxesList: any = [];
+  receiptSales: any = [];
+  companyBankList: any = [];
   paymentTermsList: any = [];
-  currentOrderAdditionalCharges:any = [];
+  currentOrderAdditionalCharges: any = [];
 
-  currentAdditionalCharges:any = [];
+  currentAdditionalCharges: any = [];
   activeBill: any;
 
-  posOrders:any = [];
-  currentCartIndex:number = 0;
-  currentCartIndex1:number = -1;
-  currentRoundOff:any;
+  posOrders: any = [];
+  currentCartIndex: number = 0;
+  currentCartIndex1: number = -1;
+  currentRoundOff: any;
 
 
-  constructor(private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService:PosCartService, private coreService: CoreService) { 
+  constructor(private transactionService: TransactionService, private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService: PosCartService, private coreService: CoreService) {
     // this.cartItems = this.cartService.getCartItems();
     this.currentItems = this.cartService.getCurrentItems();
     this.customerForm = this.fb.group({
@@ -174,47 +175,47 @@ export class PosComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if(event.code == KEY_CODE.F9){
+    if (event.code == KEY_CODE.F9) {
       var clicking = <HTMLElement>document.querySelector('.bankF9');
       clicking.click();
     }
-    if(event.code == KEY_CODE.UP_ARROW){
+    if (event.code == KEY_CODE.UP_ARROW) {
       // Your row selection code
       // console.log(event);
     }
-    if(event.code == KEY_CODE.F5){
+    if (event.code == KEY_CODE.F5) {
       var clicking = <HTMLElement>document.querySelector('.upiF5');
       clicking.click();
     }
-    if(event.code == KEY_CODE.F6){
+    if (event.code == KEY_CODE.F6) {
       var clicking = <HTMLElement>document.querySelector('.holdF6');
       clicking.click();
     }
-    if(event.code == KEY_CODE.F11){
+    if (event.code == KEY_CODE.F11) {
       var clicking = <HTMLElement>document.querySelector('.plF11');
       clicking.click();
     }
-    if(event.code == KEY_CODE.F3){
+    if (event.code == KEY_CODE.F3) {
       var clicking = <HTMLElement>document.querySelector('.cardF3');
       clicking.click();
     }
-    if(event.code == KEY_CODE.F4){
+    if (event.code == KEY_CODE.F4) {
       var clicking = <HTMLElement>document.querySelector('.cashF4');
       clicking.click();
     }
-    if(event.code == KEY_CODE.F12){
+    if (event.code == KEY_CODE.F12) {
       var clicking = <HTMLElement>document.querySelector('.mpF12');
       clicking.click();
     }
-    if(event.code == KEY_CODE.F7){
+    if (event.code == KEY_CODE.F7) {
       var clicking = <HTMLElement>document.querySelector('.cpF7');
       clicking.click();
     }
-    if(event.code == KEY_CODE.F10){
+    if (event.code == KEY_CODE.F10) {
       var clicking = <HTMLElement>document.querySelector('.upF10');
       clicking.click();
     }
-    if(event.code == KEY_CODE.F8){
+    if (event.code == KEY_CODE.F8) {
       var clicking = <HTMLElement>document.querySelector('.cashprintF8');
       clicking.click();
     }
@@ -222,13 +223,15 @@ export class PosComponent implements OnInit {
 
 
   ngOnInit(): void {
-    
+    this.getExpense();
+    this.getPayment();
+    this.getReciept();
+
     this.filteredStreets = this.streetcontrol.valueChanges.pipe(
       startWith(''),
       map(value => this.__filter(value || '')),
     );
 
-   
     this.heldBills = this.billHoldService.getHeldBills();
 
     this.registrationForm = this.fb.group({
@@ -331,8 +334,6 @@ export class PosComponent implements OnInit {
       non_gst: [false],
     })
 
-
-
     this.salesPaymentForm.get('payment_type').valueChanges.subscribe((value) => {
       if (value === 'Against Bill') {
         this.salesPaymentForm.get('sales').setValidators(Validators.required);
@@ -352,7 +353,7 @@ export class PosComponent implements OnInit {
 
         this.salesPaymentForm.get('upi_id').setValidators(Validators.required);
         this.salesPaymentForm.get('payment_account').setValidators(Validators.required);
-      } else if(value === 'Card') {
+      } else if (value === 'Card') {
         this.salesPaymentForm.get('upi_id').clearValidators();
         this.salesPaymentForm.get('account_no').clearValidators();
 
@@ -361,16 +362,16 @@ export class PosComponent implements OnInit {
         this.salesPaymentForm.get('card_holder_name').setValidators(Validators.required);
         this.salesPaymentForm.get('cart_transactions_no').setValidators(Validators.required);
         this.salesPaymentForm.get('payment_account').setValidators(Validators.required);
-     } else if(value === 'Bank') {
+      } else if (value === 'Bank') {
         this.salesPaymentForm.get('upi_id').clearValidators();
         this.salesPaymentForm.get('customer_bank_name').clearValidators();
         this.salesPaymentForm.get('card_payment_amount').clearValidators();
         this.salesPaymentForm.get('card_holder_name').clearValidators();
         this.salesPaymentForm.get('cart_transactions_no').clearValidators();
 
-      this.salesPaymentForm.get('payment_account').setValidators(Validators.required);
-      this.salesPaymentForm.get('account_no').setValidators(Validators.required);
-     }  else {
+        this.salesPaymentForm.get('payment_account').setValidators(Validators.required);
+        this.salesPaymentForm.get('account_no').setValidators(Validators.required);
+      } else {
         this.salesPaymentForm.get('upi_id').clearValidators();
         this.salesPaymentForm.get('payment_account').clearValidators();
         this.salesPaymentForm.get('customer_bank_name').clearValidators();
@@ -407,7 +408,7 @@ export class PosComponent implements OnInit {
 
         this.purchasePaymentForm.get('upi_id').setValidators(Validators.required);
         this.purchasePaymentForm.get('payment_account').setValidators(Validators.required);
-      } else if(value === 'Card') {
+      } else if (value === 'Card') {
         this.purchasePaymentForm.get('upi_id').clearValidators();
         this.purchasePaymentForm.get('account_no').clearValidators();
 
@@ -416,16 +417,16 @@ export class PosComponent implements OnInit {
         this.purchasePaymentForm.get('card_holder_name').setValidators(Validators.required);
         this.purchasePaymentForm.get('cart_transactions_no').setValidators(Validators.required);
         this.purchasePaymentForm.get('payment_account').setValidators(Validators.required);
-     } else if(value === 'Bank') {
+      } else if (value === 'Bank') {
         this.purchasePaymentForm.get('upi_id').clearValidators();
         this.purchasePaymentForm.get('customer_bank_name').clearValidators();
         this.purchasePaymentForm.get('card_payment_amount').clearValidators();
         this.purchasePaymentForm.get('card_holder_name').clearValidators();
         this.purchasePaymentForm.get('cart_transactions_no').clearValidators();
 
-      this.purchasePaymentForm.get('payment_account').setValidators(Validators.required);
-      this.purchasePaymentForm.get('account_no').setValidators(Validators.required);
-     }  else {
+        this.purchasePaymentForm.get('payment_account').setValidators(Validators.required);
+        this.purchasePaymentForm.get('account_no').setValidators(Validators.required);
+      } else {
         this.purchasePaymentForm.get('upi_id').clearValidators();
         this.purchasePaymentForm.get('payment_account').clearValidators();
         this.purchasePaymentForm.get('customer_bank_name').clearValidators();
@@ -442,14 +443,14 @@ export class PosComponent implements OnInit {
       this.purchasePaymentForm.get('cart_transactions_no').updateValueAndValidity();
       this.purchasePaymentForm.get('account_no').updateValueAndValidity();
     });
- 
+
     window.addEventListener('online', () => {
-      if(this.showSyncButton){
-        document.getElementById("exampleModal7").classList.add('show');      
+      if (this.showSyncButton) {
+        document.getElementById("exampleModal7").classList.add('show');
       }
     })
     // this.httpClient.get("assets/data.json").subscribe(data =>{
-      // console.log(data);
+    // console.log(data);
     //   this.customers = data;
     // })
     this.syncService.checkOnlineStatus();
@@ -460,7 +461,7 @@ export class PosComponent implements OnInit {
     // this.subscriptions.push(this.onlineEvent.subscribe(e => {
     //   this.connectionStatusMessage = 'Back to online';
     //   this.connectionStatus = 'online';
-      // console.log('Online...');
+    // console.log('Online...');
     //   // this.loader = true;
     //   // setTimeout(function() { 
     //   //   this.loader = false
@@ -471,14 +472,14 @@ export class PosComponent implements OnInit {
     // this.subscriptions.push(this.offlineEvent.subscribe(e => {
     //   this.connectionStatusMessage = 'Connection lost! You are not connected to internet';
     //   this.connectionStatus = 'offline';
-      // console.log('Offline...');
+    // console.log('Offline...');
     //   // this.loader = true;
     //   // setTimeout(function() { 
     //   //   this.loader = false
     //   //  }, 2000);
     // }));
 
-    
+
 
     // this.createOnline$().subscribe(isOnline => {
     //   console.log('online now',isOnline)
@@ -497,13 +498,13 @@ export class PosComponent implements OnInit {
     // this.productsAutocompleteControl.valueChanges.subscribe(value => {
     //   this.filterArray(value);
     // });
-    
+
 
     let api_token = "4d586523c3dbbc989192bec34006e72a4edebf00";
     const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Token ${api_token}`
-      });
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${api_token}`
+    });
 
     const requestOptions = { headers: headers };
 
@@ -541,7 +542,7 @@ export class PosComponent implements OnInit {
         // if(data.variants.length > 0){
         //   this.filteredProducts = data.variants;
         // }
-        if(data.length > 0){
+        if (data.length > 0) {
           this.filteredProducts = data;
         } else {
           this.filteredProducts = [];
@@ -559,8 +560,8 @@ export class PosComponent implements OnInit {
         // console.log(this.filteredProducts, 'fil');
         // console.log(this.errorMsg, 'errmg');
       });
-  
-      this.customerAutoCompleteControl.valueChanges
+
+    this.customerAutoCompleteControl.valueChanges
       .pipe(
         filter(res => {
           return res !== null && res?.length >= this.cusMinLengthTerm
@@ -591,14 +592,14 @@ export class PosComponent implements OnInit {
       .subscribe((data: any) => {
         // console.log('data', data)
 
-        if(data.length > 0){
+        if (data.length > 0) {
           // console.log('data', data)
           this.filteredCustomer = data;
         } else {
           this.filteredCustomer = [];
           this.cusErrorMsg = 'No Customers Found';
         }
-        
+
         // if (data['Search'] == undefined) {
         //   this.errorMsg = data['Error'];
         //   this.filteredProducts = [];
@@ -610,8 +611,8 @@ export class PosComponent implements OnInit {
         // }
       });
 
-    
-      this.salesPaymentForm.get('customer').valueChanges
+
+    this.salesPaymentForm.get('customer').valueChanges
       .pipe(
         filter(res => {
           return res !== null && res?.length >= this.cusMinLengthTerm
@@ -642,18 +643,18 @@ export class PosComponent implements OnInit {
       .subscribe((data: any) => {
         // console.log('data', data)
 
-        if(data.length > 0){
+        if (data.length > 0) {
           // console.log('data', data)
           this.filteredCustomer2 = data;
         } else {
           this.filteredCustomer2 = [];
           this.cusErrorMsg = 'No Customers Found';
         }
-        
+
       });
 
 
-      this.purchasePaymentForm.get('party').valueChanges
+    this.purchasePaymentForm.get('party').valueChanges
       .pipe(
         filter(res => {
           return res !== null && res?.length >= this.cusMinLengthTerm
@@ -684,18 +685,18 @@ export class PosComponent implements OnInit {
       .subscribe((data: any) => {
         // console.log('data', data)
 
-        if(data.length > 0){
+        if (data.length > 0) {
           // console.log('data', data)
           this.filteredParty = data;
         } else {
           this.filteredParty = [];
           this.partyErrorMsg = 'No Party Found';
         }
-        
+
       });
 
 
-      this.expensePaymentForm.get('party').valueChanges
+    this.expensePaymentForm.get('party').valueChanges
       .pipe(
         filter(res => {
           return res !== null && res?.length >= this.cusMinLengthTerm
@@ -726,17 +727,17 @@ export class PosComponent implements OnInit {
       .subscribe((data: any) => {
         // console.log('data', data)
 
-        if(data.length > 0){
+        if (data.length > 0) {
           // console.log('data', data)
           this.filteredPartyExpense = data;
         } else {
           this.filteredPartyExpense = [];
           this.partyErrorMsg = 'No Party Found';
         }
-        
+
       });
 
-    
+
     this.addMoreDetails = false;
     // console.log(this.addMoreDetails);
     this.coreService.getCountry().subscribe({
@@ -852,7 +853,7 @@ export class PosComponent implements OnInit {
       }
     })
 
-    
+
   }
 
 
@@ -872,7 +873,7 @@ export class PosComponent implements OnInit {
   clearValidatorsReceipt() {
     // for (let index = 0; index < this.receiptPaymentForm.controls[length]; index++) {
     //   const element = array[index];
-      
+
     // }
     // Object.keys(this.receiptPaymentForm.controls).forEach(key => {
     //   const control = this.receiptPaymentForm.controls[key];
@@ -936,28 +937,28 @@ export class PosComponent implements OnInit {
   //   }
   // }
 
-  setIndexForNotes(index:number){
-    if(this.currentCartIndex1 == index){
+  setIndexForNotes(index: number) {
+    if (this.currentCartIndex1 == index) {
       this.currentCartIndex1 = -1;
     } else {
-    this.currentCartIndex1 = index;
+      this.currentCartIndex1 = index;
     }
   }
 
-  setIndexForProductDetails(index:number){
+  setIndexForProductDetails(index: number) {
     this.playBeepSound();
     this.currentCartIndex = index;
   }
 
   // add row to current additional charges
-  addRowToCAC(){
+  addRowToCAC() {
     this.playBeepSound();
-      let newObject = { additional_charge: "", value: 0, value_type: "percentage", tax: "", total: 0 };
-      this.currentOrderAdditionalCharges.push(newObject);
+    let newObject = { additional_charge: "", value: 0, value_type: "percentage", tax: "", total: 0 };
+    this.currentOrderAdditionalCharges.push(newObject);
   }
 
   // update row in current additional charges
-  updateRowInCAC(index: number){
+  updateRowInCAC(index: number) {
     // console.log(this.currentOrderAdditionalCharges, 'coac');
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
     }
@@ -965,11 +966,11 @@ export class PosComponent implements OnInit {
 
 
   // delete row in current additional charges
-  deleteRowInCAC(index:number, event: Event){
+  deleteRowInCAC(index: number, event: Event) {
     event.stopPropagation();
     this.playBeepSound();
     if (!this.currentOrderAdditionalCharges || this.currentOrderAdditionalCharges.length === 0) {
-    return;
+      return;
     }
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
       this.currentOrderAdditionalCharges.splice(index, 1);
@@ -981,14 +982,14 @@ export class PosComponent implements OnInit {
   }
 
   // update additional charges of an element in current order additional charges
-  updateACInCAC(index:number, event: Event){
+  updateACInCAC(index: number, event: Event) {
     let value = (event.target as HTMLSelectElement).value;
     const acindex = this.additionalChargesList.findIndex(currentItem => currentItem.id == value);
 
     if (acindex !== -1) {
       if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
-        if(this.currentOrderAdditionalCharges[index].tax){
- 
+        if (this.currentOrderAdditionalCharges[index].tax) {
+
           const tindex = this.taxesList.findIndex(currentItem => currentItem.id == this.currentOrderAdditionalCharges[index].tax);
           let total = this.additionalChargesList[acindex].value;
           let percentage = this.taxesList[tindex].tax_percentage;
@@ -999,9 +1000,9 @@ export class PosComponent implements OnInit {
         } else {
           this.currentOrderAdditionalCharges[index].additional_charge = value;
           this.currentOrderAdditionalCharges[index].value = this.additionalChargesList[acindex].value;
-          this.currentOrderAdditionalCharges[index].total = this.additionalChargesList[acindex].value; 
+          this.currentOrderAdditionalCharges[index].total = this.additionalChargesList[acindex].value;
         }
-     
+
       }
     }
     this.currentTotalAdditionalCharges()
@@ -1009,10 +1010,10 @@ export class PosComponent implements OnInit {
   }
 
 
-  getProductDisc(batch:any){
+  getProductDisc(batch: any) {
     let originalAmount = batch.selling_price_offline;
     let discPercentage = batch.discount;
-    if(discPercentage < 0 || originalAmount < 0){
+    if (discPercentage < 0 || originalAmount < 0) {
       return Number(0);
     } else {
       let discAmount = (discPercentage / 100) * originalAmount;
@@ -1020,10 +1021,10 @@ export class PosComponent implements OnInit {
     }
   }
 
-  getProductAddDisc(batch:any){
+  getProductAddDisc(batch: any) {
     let originalAmount = batch.selling_price_offline;
     let addDiscPercentage = batch.additional_discount;
-    if(addDiscPercentage < 0 || originalAmount < 0){
+    if (addDiscPercentage < 0 || originalAmount < 0) {
       return Number(0);
     } else {
       let addDiscAmount = (addDiscPercentage / 100) * originalAmount;
@@ -1031,13 +1032,13 @@ export class PosComponent implements OnInit {
     }
   }
 
-  getProductTax(batch:any){
+  getProductTax(batch: any) {
     let originalAmount = batch.selling_price_offline;
     let taxPercentage = batch.sale_tax;
     let discAmt = this.getProductDisc(batch);
     let addDiscAmt = this.getProductAddDisc(batch);
     originalAmount = originalAmount - (discAmt + addDiscAmt);
-    if(taxPercentage < 0 || originalAmount < 0){
+    if (taxPercentage < 0 || originalAmount < 0) {
       return 0;
     } else {
       let taxAmount = (taxPercentage / 100) * originalAmount;
@@ -1045,10 +1046,10 @@ export class PosComponent implements OnInit {
     }
   }
 
-  getPriceAfterTaxes(batch:any){
+  getPriceAfterTaxes(batch: any) {
     let originalAmount = batch.selling_price_offline;
     let taxPercentage = batch.sale_tax;
-    if(taxPercentage < 0 || originalAmount < 0){
+    if (taxPercentage < 0 || originalAmount < 0) {
       return originalAmount;
     } else {
       let taxAmount = (taxPercentage / 100) * originalAmount;
@@ -1056,14 +1057,14 @@ export class PosComponent implements OnInit {
     }
   }
 
-  getPriceAfterTaxes2(batch:any){
+  getPriceAfterTaxes2(batch: any) {
     let originalAmount = batch.selling_price_offline;
     let taxPercentage = batch.sale_tax;
     let discAmt = this.getProductDisc(batch);
     let addDiscAmt = this.getProductAddDisc(batch);
     originalAmount = originalAmount - (discAmt + addDiscAmt);
 
-    if(taxPercentage < 0 || originalAmount < 0){
+    if (taxPercentage < 0 || originalAmount < 0) {
       return originalAmount;
     } else {
       let taxAmount = (taxPercentage / 100) * originalAmount;
@@ -1071,123 +1072,123 @@ export class PosComponent implements OnInit {
     }
   }
 
-  getNetAmount(batch:any, qty:number){
+  getNetAmount(batch: any, qty: number) {
     let priceAfterTaxes = this.getPriceAfterTaxes(batch);
     return (priceAfterTaxes * qty);
   }
 
-  totalTaxAmount(){
+  totalTaxAmount() {
     let cartItems = this.cartService.getCurrentItems();
     let totalPrice = 0;
-    for(let cart of cartItems){
+    for (let cart of cartItems) {
       totalPrice += this.getProductTax(cart?.batch[0]) * cart?.quantity;
     }
     return Number(totalPrice).toFixed(2);
   }
 
-  totalDiscAmount(){
+  totalDiscAmount() {
     let cartItems = this.cartService.getCurrentItems();
     let totalPrice = 0;
-    for(let cart of cartItems){
+    for (let cart of cartItems) {
       totalPrice += (this.getProductDisc(cart?.batch[0]) + this.getProductAddDisc(cart?.batch[0])) * cart?.quantity;
     }
     return Number(totalPrice).toFixed(2);
   }
 
-  getNetAmount2(batch:any, qty:number){
+  getNetAmount2(batch: any, qty: number) {
     let priceAfterTaxes = this.getPriceAfterTaxes2(batch);
     return (priceAfterTaxes * qty);
   }
 
-  finalAmount(){
+  finalAmount() {
     const numbere = this.totalAmount();
     const integerPart = Math.ceil(numbere);
     return integerPart
   }
 
-  totalAmount(){
+  totalAmount() {
     //let cartItems = this.cartService.getCartItems();
     let cartItems = this.cartService.getCurrentItems();
     //let cartItems = this.selectedOptions;
     let totalPrice = 0 + this.currentTotalAdditionalCharges();
-    for(let cart of cartItems){
+    for (let cart of cartItems) {
       // totalPrice += this.getPriceAfterTaxes(cart?.batch[0]) * cart?.quantity;
       totalPrice += this.getNetAmount2(cart?.batch[0], cart?.quantity);
     }
     return totalPrice;
   }
 
-   // update tax of an element in current order additional charges
-   updateTaxInCAC(index:number, event: Event){
+  // update tax of an element in current order additional charges
+  updateTaxInCAC(index: number, event: Event) {
     let value = (event.target as HTMLSelectElement).value;
     const tindex = this.taxesList.findIndex(currentItem => currentItem.id == value);
 
-    
+
     if (tindex !== -1) {
-    if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
-      if(this.currentOrderAdditionalCharges[index].additional_charge){
-        const acindex = this.additionalChargesList.findIndex(currentItem => currentItem.id == this.currentOrderAdditionalCharges[index].additional_charge);
+      if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
+        if (this.currentOrderAdditionalCharges[index].additional_charge) {
+          const acindex = this.additionalChargesList.findIndex(currentItem => currentItem.id == this.currentOrderAdditionalCharges[index].additional_charge);
 
-        // let total = this.additionalChargesList[acindex].value;
-        let total = this.currentOrderAdditionalCharges[index].value;
-        let percentage = this.taxesList[tindex].tax_percentage;
-        let result = ((percentage / 100) * total) + total;
-  
-        this.currentOrderAdditionalCharges[index].tax = value;
-        this.currentOrderAdditionalCharges[index].total = result;
-      } else {
-        let total = this.currentOrderAdditionalCharges[index].total;
-        let percentage = this.taxesList[tindex].tax_percentage;
-        const result = (percentage / 100) * total;
-  
-        this.currentOrderAdditionalCharges[index].tax = value;
-        this.currentOrderAdditionalCharges[index].total = result;
-      }
-      
-    }
-  }
-    this.currentTotalAdditionalCharges()
-   }
-
-
-
-   // update value of an element in current order additional charges
-   updateValueInCAC(index:number, event: Event){
-    let valuee = (event.target as HTMLInputElement).value;
-    if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
-      if(this.currentOrderAdditionalCharges[index].tax){
-        const tindex = this.taxesList.findIndex(currentItem => currentItem.id == this.currentOrderAdditionalCharges[index].tax);
-          let total = Number(valuee);
+          // let total = this.additionalChargesList[acindex].value;
+          let total = this.currentOrderAdditionalCharges[index].value;
           let percentage = this.taxesList[tindex].tax_percentage;
           let result = ((percentage / 100) * total) + total;
-          this.currentOrderAdditionalCharges[index].value = Number(valuee);
+
+          this.currentOrderAdditionalCharges[index].tax = value;
           this.currentOrderAdditionalCharges[index].total = result;
+        } else {
+          let total = this.currentOrderAdditionalCharges[index].total;
+          let percentage = this.taxesList[tindex].tax_percentage;
+          const result = (percentage / 100) * total;
+
+          this.currentOrderAdditionalCharges[index].tax = value;
+          this.currentOrderAdditionalCharges[index].total = result;
+        }
+
+      }
+    }
+    this.currentTotalAdditionalCharges()
+  }
+
+
+
+  // update value of an element in current order additional charges
+  updateValueInCAC(index: number, event: Event) {
+    let valuee = (event.target as HTMLInputElement).value;
+    if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
+      if (this.currentOrderAdditionalCharges[index].tax) {
+        const tindex = this.taxesList.findIndex(currentItem => currentItem.id == this.currentOrderAdditionalCharges[index].tax);
+        let total = Number(valuee);
+        let percentage = this.taxesList[tindex].tax_percentage;
+        let result = ((percentage / 100) * total) + total;
+        this.currentOrderAdditionalCharges[index].value = Number(valuee);
+        this.currentOrderAdditionalCharges[index].total = result;
       } else {
         this.currentOrderAdditionalCharges[index].value = Number(valuee);
-        this.currentOrderAdditionalCharges[index].total = Number(valuee); 
+        this.currentOrderAdditionalCharges[index].total = Number(valuee);
       }
     }
     this.currentTotalAdditionalCharges();
-   }
+  }
 
-   // update value type of an element in current order additional charges
-   updateValueTypeInCAC(index:number, valueType:any){
+  // update value type of an element in current order additional charges
+  updateValueTypeInCAC(index: number, valueType: any) {
 
     if (index >= 0 && index < this.currentOrderAdditionalCharges.length) {
-      if(valueType === 'percentage'){
+      if (valueType === 'percentage') {
         this.currentOrderAdditionalCharges[index].value_type = 'rupee';
       } else {
         this.currentOrderAdditionalCharges[index].value_type = 'percentage';
       }
     }
     this.updateRowInCAC(index)
-   }
+  }
 
-   // current total additional charges
-   currentTotalAdditionalCharges(){
+  // current total additional charges
+  currentTotalAdditionalCharges() {
 
     let total = 0;
-    if(this.currentOrderAdditionalCharges.length > 0){
+    if (this.currentOrderAdditionalCharges.length > 0) {
       for (let index = 0; index < this.currentOrderAdditionalCharges.length; index++) {
         const element = this.currentOrderAdditionalCharges[index];
         total += element.total;
@@ -1196,11 +1197,11 @@ export class PosComponent implements OnInit {
       total = 0;
     }
     return total;
-   }
-   
+  }
 
 
-  confirmBatch(){
+
+  confirmBatch() {
     this.playBeepSound();
     let product1;
     let product = this.currentProduct.batch;
@@ -1208,7 +1209,7 @@ export class PosComponent implements OnInit {
     let newbatch = [];
     for (let index = 0; index < product.length; index++) {
       const element = product[index];
-      if(element.id == batch){
+      if (element.id == batch) {
         newbatch.push(element);
       }
     }
@@ -1230,12 +1231,12 @@ export class PosComponent implements OnInit {
     modal.hide();
   }
 
-  optionSelected(event){
+  optionSelected(event) {
     this.playBeepSound();
     let product1;
     const selectedOption = event.option.value;
     // console.log('prod', selectedOption?.batch);
-    if(selectedOption.batch.length > 1){
+    if (selectedOption.batch.length > 1) {
       // console.log('length > 1');
       this.currentProduct = selectedOption;
       const element = document.getElementById('batchModal') as HTMLElement;
@@ -1248,27 +1249,27 @@ export class PosComponent implements OnInit {
         quantity: 1,
         notes: '',
       }
-    this.addToCurrent(product1);
-    this.selectedOptions.push(product1);
-    this.productsAutocompleteControl.setValue('');
+      this.addToCurrent(product1);
+      this.selectedOptions.push(product1);
+      this.productsAutocompleteControl.setValue('');
     }
     this.filteredProducts = [];
-    
+
   }
-  
-  
-  optionSelectedCharge(event){
+
+
+  optionSelectedCharge(event) {
     const selectedOption = event.option.value;
     // console.log('charge', selectedOption);
   }
 
-  optionSelected1(event){
+  optionSelected1(event) {
     this.playBeepSound();
     this.currentCustomer = event.option.value;
     // console.log(event.option.value, 'cus');
   }
 
-  optionSelectedReceipt(event){
+  optionSelectedReceipt(event) {
     let customer = event.option.value;
     this.cartService.getReceiptDueOrder(customer.id).subscribe({
       next: (response) => {
@@ -1282,11 +1283,11 @@ export class PosComponent implements OnInit {
 
   }
 
-  optionSelectedParty(event){
+  optionSelectedParty(event) {
 
   }
 
-  optionSelectedPartyExpense(event){
+  optionSelectedPartyExpense(event) {
 
   }
 
@@ -1315,12 +1316,12 @@ export class PosComponent implements OnInit {
     this.cartService.addToCurrent(product);
   }
 
-  increaseQtyCurrent(item){
+  increaseQtyCurrent(item) {
     this.playBeepSound()
     this.cartService.increaseCurrent(item);
   }
 
-  decreaseQtyCurrent(item){
+  decreaseQtyCurrent(item) {
     this.playBeepSound();
     this.cartService.decreaseCurrent(item);
   }
@@ -1329,11 +1330,11 @@ export class PosComponent implements OnInit {
     this.cartService.addToCart(product);
   }
 
-  increaseQty(item){
+  increaseQty(item) {
     this.cartService.increase(item);
   }
 
-  decreaseQty(item){
+  decreaseQty(item) {
     this.cartService.decrease(item);
   }
 
@@ -1372,36 +1373,36 @@ export class PosComponent implements OnInit {
     return this.addMoreDetails = !this.addMoreDetails;
   }
 
-  
 
 
-  totalMrp(){
+
+  totalMrp() {
     //let cartItems = this.cartService.getCartItems();
     let cartItems = this.cartService.getCurrentItems();
     //let cartItems = this.selectedOptions;
     let totalPrice = 0;
-    for(let cart of cartItems){
+    for (let cart of cartItems) {
       totalPrice += cart?.batch[0]?.mrp * cart?.quantity;
     }
     return totalPrice;
   }
 
 
-  getRoundOff(){
+  getRoundOff() {
     const number = this.totalAmount();
     const decimalPart = number % 1;
-    if(decimalPart !== 0){
+    if (decimalPart !== 0) {
       const remainingPart = 1 - decimalPart;
-    return remainingPart.toFixed(2);
+      return remainingPart.toFixed(2);
     } else {
-      return (0).toFixed(2)    
+      return (0).toFixed(2)
     }
   }
 
-  getTaxAmt(batch:any){
+  getTaxAmt(batch: any) {
     let originalAmount = batch.selling_price_offline;
     let taxPercentage = batch.sale_tax;
-    if(taxPercentage < 0 || originalAmount < 0){
+    if (taxPercentage < 0 || originalAmount < 0) {
       return 0;
     } else {
       let taxAmount = (taxPercentage / 100) * originalAmount;
@@ -1410,71 +1411,71 @@ export class PosComponent implements OnInit {
   }
 
 
-  totalQty(){
+  totalQty() {
     //let cartItems = this.cartService.getCartItems();
     let cartItems = this.cartService.getCurrentItems();
     //let cartItems = this.selectedOptions;
     let totalQty = 0;
-    for(let cart of cartItems){
+    for (let cart of cartItems) {
       totalQty += cart?.quantity;
     }
     return totalQty;
   }
 
-  tenderedAmt(event){
+  tenderedAmt(event) {
     let tenderedAmt = event.target.value;
     this.tenderedAmount = tenderedAmt;
   }
 
-  changeTenderedAmt(value:any){
+  changeTenderedAmt(value: any) {
     let newAmt = Number(value);
     this.tenderedAmount += newAmt;
   }
 
-  changeAmt(){
+  changeAmt() {
     let amt = +this.tenderedAmount - this.totalAmount();
     return amt.toFixed(2);
   }
 
-  generateOrder1(){
+  generateOrder1() {
     return this.syncService.checkOnlineStatus();
   }
 
   closeSyncModal() {
-    return document.getElementById("exampleModal7").classList.remove('show');      
+    return document.getElementById("exampleModal7").classList.remove('show');
   }
 
-  generateOrder(){
-    
-  if(navigator.onLine){
-    this.selectedOptions = [];
-    this.currentCustomer = '';
-    this.toastr.success('Created Online', 'Order', {
-      timeOut: 5000
-    });
-    document.getElementById("exampleModal5Close").click();
-  } else {
-    let cartItems = this.selectedOptions;
-    let change = this.changeAmt();
-    let tendered = this.tenderedAmount;
-    let total = this.totalAmount();
-    let customer = this.currentCustomer;
-    let order = {
-      ChangeAmt: change,
-      TenderedAmt: tendered,
-      Total: total,
-      CustomerName: customer,
-      Items: cartItems
+  generateOrder() {
+
+    if (navigator.onLine) {
+      this.selectedOptions = [];
+      this.currentCustomer = '';
+      this.toastr.success('Created Online', 'Order', {
+        timeOut: 5000
+      });
+      document.getElementById("exampleModal5Close").click();
+    } else {
+      let cartItems = this.selectedOptions;
+      let change = this.changeAmt();
+      let tendered = this.tenderedAmount;
+      let total = this.totalAmount();
+      let customer = this.currentCustomer;
+      let order = {
+        ChangeAmt: change,
+        TenderedAmt: tendered,
+        Total: total,
+        CustomerName: customer,
+        Items: cartItems
+      }
+      this.cartService.generateOrder(order);
+      this.toastr.success('Created Offline', 'Order', {
+        timeOut: 5000
+      });
+      this.selectedOptions = [];
+      this.currentCustomer = '';
+      document.getElementById("exampleModal5Close").click();
     }
-    this.cartService.generateOrder(order);
-    this.toastr.success('Created Offline', 'Order', {
-      timeOut: 5000
-    });
-    this.selectedOptions = [];
-    this.currentCustomer = '';
-    document.getElementById("exampleModal5Close").click();
   }
-}
 
   createOnline$() {
     return merge(
@@ -1488,15 +1489,15 @@ export class PosComponent implements OnInit {
 
   showSyncButton() {
     let orders = JSON.parse(localStorage.getItem('orders'));
-    if(orders){
+    if (orders) {
       return (navigator.onLine && (orders.length > 0));
     } else {
       return false
     }
   }
 
-  checkSubmitCus(){
-    
+  checkSubmitCus() {
+
   }
 
   submitCustomerForm() {
@@ -1520,17 +1521,17 @@ export class PosComponent implements OnInit {
     formData.append('gst_type', this.registrationForm.get('gst_type').value || '');
     //formData.append('address', '');
 
-    if(this.address_line_1.value && this.address_line_2.value && this.state.value && this.city.value && this.pincode.value){
+    if (this.address_line_1.value && this.address_line_2.value && this.state.value && this.city.value && this.pincode.value) {
       formData.append('address', JSON.stringify(address))
     } else {
       formData.append('address', '');
     }
 
-     this.cartService
-     .addCustomer(formData)
-     .subscribe({
-        next: (response:any) => {
-          if(response.isSuccess){
+    this.cartService
+      .addCustomer(formData)
+      .subscribe({
+        next: (response: any) => {
+          if (response.isSuccess) {
             this.toastr.success(response.msg)
             var clicking = <HTMLElement>document.querySelector('.addCusModal');
             clicking.click();
@@ -1551,7 +1552,7 @@ export class PosComponent implements OnInit {
       });
 
     // for(let x of formData){
-      // console.log('formdata cus', x);
+    // console.log('formdata cus', x);
     // }
     // this.http
     //   .post('https://pv.greatfuturetechno.com/pv-api/customer/', formData)
@@ -1565,27 +1566,27 @@ export class PosComponent implements OnInit {
     return this.registrationForm.controls;
   }
 
-  onStateChange(event:any) {
+  onStateChange(event: any) {
     this.currentState = event.target.value;
     const selectedState = event.target.value;
     // const stateCode = this.stateList.find(state => state.id == selectedState.id);
     // console.log(stateCode.id, '...');
-      this.coreService.getCityByStateId(selectedState).subscribe({
-        next: (res) => {
-          // console.log(res, 'cites');
-          this.cityList = res;
-          this.currentCities = this.cityList?.id
-        },
-        error: (err) => {
-          // console.log('cities', err);
-        }
-      })
+    this.coreService.getCityByStateId(selectedState).subscribe({
+      next: (res) => {
+        // console.log(res, 'cites');
+        this.cityList = res;
+        this.currentCities = this.cityList?.id
+      },
+      error: (err) => {
+        // console.log('cities', err);
+      }
+    })
 
   }
 
-  onCityChange(event:any) {
-    this.currentCities = event.target.value;    
-  }  
+  onCityChange(event: any) {
+    this.currentCities = event.target.value;
+  }
 
 
 
@@ -1598,7 +1599,7 @@ export class PosComponent implements OnInit {
       });
       return;
     }
-    if(this.customerRegistrationNumberSame){
+    if (this.customerRegistrationNumberSame) {
       this.toastr.error("Mobile number already exists.")
       return;
     }
@@ -1615,7 +1616,7 @@ export class PosComponent implements OnInit {
     //   });
     //   return;
     // }
-    
+
 
     // Form is valid, proceed with submission
     // console.log(this.registrationForm.value);
@@ -1643,8 +1644,8 @@ export class PosComponent implements OnInit {
   get transaction_id() { return this.upiPaymentMethodForm.get('transaction_id'); }
   get payment_account_upi() { return this.upiPaymentMethodForm.get('payment_account'); }
 
-  get account_no() { return this.bankPaymentMethodForm.get('account_no')};
-  get payment_account_bank() { return this.bankPaymentMethodForm.get('payment_account')};
+  get account_no() { return this.bankPaymentMethodForm.get('account_no') };
+  get payment_account_bank() { return this.bankPaymentMethodForm.get('payment_account') };
 
 
   get upi_id_receipt() { return this.receiptPaymentForm.get('upi_id'); }
@@ -1663,79 +1664,79 @@ export class PosComponent implements OnInit {
   get pay_later_date() { return this.payLaterMethodForm.get('date'); }
   get is_send_reminder() { return this.payLaterMethodForm.get('is_send_reminder'); }
 
-  get voucher_type() { return this.receiptPaymentForm.get('voucher_type')};
-  get payment_type() { return this.receiptPaymentForm.get('payment_type')};
-  get payment_mode() { return this.receiptPaymentForm.get('payment_mode')};
-  get receipt_sales() { return this.receiptPaymentForm.get('receipt_sales')};
-  get amount_receipt() { return this.receiptPaymentForm.get('amount_receipt')};
-  get customer_receipt() { return this.receiptPaymentForm.get('customer_receipt')};
-  get receipt_remark() { return this.receiptPaymentForm.get('receipt_remark')};
-  get party_receipt() { return this.receiptPaymentForm.get('party_receipt')};
+  get voucher_type() { return this.receiptPaymentForm.get('voucher_type') };
+  get payment_type() { return this.receiptPaymentForm.get('payment_type') };
+  get payment_mode() { return this.receiptPaymentForm.get('payment_mode') };
+  get receipt_sales() { return this.receiptPaymentForm.get('receipt_sales') };
+  get amount_receipt() { return this.receiptPaymentForm.get('amount_receipt') };
+  get customer_receipt() { return this.receiptPaymentForm.get('customer_receipt') };
+  get receipt_remark() { return this.receiptPaymentForm.get('receipt_remark') };
+  get party_receipt() { return this.receiptPaymentForm.get('party_receipt') };
 
-  get receipt_customer_bank_name() { return this.receiptPaymentForm.get('customer_bank_name')};
-  get receipt_card_payment_amount() { return this.receiptPaymentForm.get('card_payment_amount')};
-  get receipt_card_holder_name() { return this.receiptPaymentForm.get('card_holder_name')};
-  get receipt_cart_transactions_no() { return this.receiptPaymentForm.get('cart_transactions_no')};
-  
-  get receipt_account_no() { return this.receiptPaymentForm.get('account_no')};
-  get expense_non_gst() { return this.receiptPaymentForm.get('non_gst')};
+  get receipt_customer_bank_name() { return this.receiptPaymentForm.get('customer_bank_name') };
+  get receipt_card_payment_amount() { return this.receiptPaymentForm.get('card_payment_amount') };
+  get receipt_card_holder_name() { return this.receiptPaymentForm.get('card_holder_name') };
+  get receipt_cart_transactions_no() { return this.receiptPaymentForm.get('cart_transactions_no') };
+
+  get receipt_account_no() { return this.receiptPaymentForm.get('account_no') };
+  get expense_non_gst() { return this.receiptPaymentForm.get('non_gst') };
 
 
-  get expense_nongst() { return this.expensePaymentForm.get('non_gst')};
-  get expense_party() { return this.expensePaymentForm.get('party')};
-  get expense_amount() { return this.expensePaymentForm.get('amount')};
-  get expense_remark() { return this.expensePaymentForm.get('remark')};
-  get expense_payment_account() { return this.expensePaymentForm.get('payment_account')};
+  get expense_nongst() { return this.expensePaymentForm.get('non_gst') };
+  get expense_party() { return this.expensePaymentForm.get('party') };
+  get expense_amount() { return this.expensePaymentForm.get('amount') };
+  get expense_remark() { return this.expensePaymentForm.get('remark') };
+  get expense_payment_account() { return this.expensePaymentForm.get('payment_account') };
 
-  get sales_amount() { return this.salesPaymentForm.get('amount')};
-  get sales_remark() { return this.salesPaymentForm.get('remark')};
-  get sales_payment_account() { return this.salesPaymentForm.get('payment_account')};
-  get sales_payment_type() { return this.salesPaymentForm.get('payment_type')};
-  get sales_payment_mode() { return this.salesPaymentForm.get('payment_mode')};
-  get sales_sales() { return this.salesPaymentForm.get('sales')};
+  get sales_amount() { return this.salesPaymentForm.get('amount') };
+  get sales_remark() { return this.salesPaymentForm.get('remark') };
+  get sales_payment_account() { return this.salesPaymentForm.get('payment_account') };
+  get sales_payment_type() { return this.salesPaymentForm.get('payment_type') };
+  get sales_payment_mode() { return this.salesPaymentForm.get('payment_mode') };
+  get sales_sales() { return this.salesPaymentForm.get('sales') };
 
-  get sales_customer_bank_name() { return this.salesPaymentForm.get('customer_bank_name')};
-  get sales_card_payment_amount() { return this.salesPaymentForm.get('card_payment_amount')};
-  get sales_card_holder_name() { return this.salesPaymentForm.get('card_holder_name')};
-  get sales_cart_transactions_no() { return this.salesPaymentForm.get('cart_transactions_no')};
-  
-  get sales_account_no() { return this.salesPaymentForm.get('account_no')};
+  get sales_customer_bank_name() { return this.salesPaymentForm.get('customer_bank_name') };
+  get sales_card_payment_amount() { return this.salesPaymentForm.get('card_payment_amount') };
+  get sales_card_holder_name() { return this.salesPaymentForm.get('card_holder_name') };
+  get sales_cart_transactions_no() { return this.salesPaymentForm.get('cart_transactions_no') };
+
+  get sales_account_no() { return this.salesPaymentForm.get('account_no') };
   get sales_upi_id() { return this.salesPaymentForm.get('upi_id'); }
   get sales_customer() { return this.salesPaymentForm.get('customer'); }
 
-  get purchase_amount() { return this.purchasePaymentForm.get('amount')};
-  get purchase_remark() { return this.purchasePaymentForm.get('remark')};
-  get purchase_payment_account() { return this.purchasePaymentForm.get('payment_account')};
-  get purchase_payment_type() { return this.purchasePaymentForm.get('payment_type')};
-  get purchase_payment_mode() { return this.purchasePaymentForm.get('payment_mode')};
-  get purchase_sales() { return this.purchasePaymentForm.get('sales')};
+  get purchase_amount() { return this.purchasePaymentForm.get('amount') };
+  get purchase_remark() { return this.purchasePaymentForm.get('remark') };
+  get purchase_payment_account() { return this.purchasePaymentForm.get('payment_account') };
+  get purchase_payment_type() { return this.purchasePaymentForm.get('payment_type') };
+  get purchase_payment_mode() { return this.purchasePaymentForm.get('payment_mode') };
+  get purchase_sales() { return this.purchasePaymentForm.get('sales') };
 
-  get purchase_customer_bank_name() { return this.purchasePaymentForm.get('customer_bank_name')};
-  get purchase_card_payment_amount() { return this.purchasePaymentForm.get('card_payment_amount')};
-  get purchase_card_holder_name() { return this.purchasePaymentForm.get('card_holder_name')};
-  get purchase_cart_transactions_no() { return this.purchasePaymentForm.get('cart_transactions_no')};
-  
-  get purchase_account_no() { return this.purchasePaymentForm.get('account_no')};
+  get purchase_customer_bank_name() { return this.purchasePaymentForm.get('customer_bank_name') };
+  get purchase_card_payment_amount() { return this.purchasePaymentForm.get('card_payment_amount') };
+  get purchase_card_holder_name() { return this.purchasePaymentForm.get('card_holder_name') };
+  get purchase_cart_transactions_no() { return this.purchasePaymentForm.get('cart_transactions_no') };
+
+  get purchase_account_no() { return this.purchasePaymentForm.get('account_no') };
   get purchase_upi_id() { return this.purchasePaymentForm.get('upi_id'); }
   get purchase_party() { return this.purchasePaymentForm.get('party'); }
 
 
   handleMobileInputChange(event: any) {
     const inputValue = event.target.value;
-    if(this.mobile_no.valid){
+    if (this.mobile_no.valid) {
       this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/mobile_no_check_of_customer/?search=${inputValue}`).subscribe({
-      next: (response:any) => {
-        // console.log(response, 'mobile check');
-        if(response.Same){
-          this.customerRegistrationNumberSame = true;
-        } else {
-          this.customerRegistrationNumberSame = false;
+        next: (response: any) => {
+          // console.log(response, 'mobile check');
+          if (response.Same) {
+            this.customerRegistrationNumberSame = true;
+          } else {
+            this.customerRegistrationNumberSame = false;
+          }
+        },
+        error: (err) => {
+          // console.log(err, 'mobile check');
         }
-      },
-      error: (err) => {
-        // console.log(err, 'mobile check');
-      }
-    })
+      })
     }
   }
 
@@ -1805,7 +1806,7 @@ export class PosComponent implements OnInit {
         const element = selectedBill.currentItems[index];
         this.cartService.addToCurrent(element);
       }
-      if(selectedBill.currentOrderAdditionalCharges.length > 0) {
+      if (selectedBill.currentOrderAdditionalCharges.length > 0) {
         this.currentOrderAdditionalCharges = selectedBill.currentOrderAdditionalCharges
       } else {
         this.currentOrderAdditionalCharges = [];
@@ -1831,27 +1832,27 @@ export class PosComponent implements OnInit {
 
   holdBill() {
     this.playBeepSound();
-    if(this.currentItems.length > 0){
-      if(this.currentCustomer === null || this.currentCustomer === undefined){
+    if (this.currentItems.length > 0) {
+      if (this.currentCustomer === null || this.currentCustomer === undefined) {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
-      let activeBill:any = {};
-      activeBill.currentItems = this.currentItems;
-      if(this.currentOrderAdditionalCharges.length > 0){
-        activeBill.currentOrderAdditionalCharges = this.currentOrderAdditionalCharges;
-      } else {
-        activeBill.currentOrderAdditionalCharges = [];
+        let activeBill: any = {};
+        activeBill.currentItems = this.currentItems;
+        if (this.currentOrderAdditionalCharges.length > 0) {
+          activeBill.currentOrderAdditionalCharges = this.currentOrderAdditionalCharges;
+        } else {
+          activeBill.currentOrderAdditionalCharges = [];
+        }
+        activeBill.totalAmt = this.totalAmount();
+        activeBill.currentCustomer = this.currentCustomer;
+        this.billHoldService.addToHold(activeBill);
+        // this.cartService.clearCurrent();
+        // this.currentItems = this.cartService.getCurrentItems();
+        // this.currentOrderAdditionalCharges = [];
+        // this.currentCustomer = null;
+        this.discardCurrentBill();
+        this.customerAutoCompleteControl.setValue('');
       }
-      activeBill.totalAmt = this.totalAmount();
-      activeBill.currentCustomer = this.currentCustomer;
-      this.billHoldService.addToHold(activeBill);
-      // this.cartService.clearCurrent();
-      // this.currentItems = this.cartService.getCurrentItems();
-      // this.currentOrderAdditionalCharges = [];
-      // this.currentCustomer = null;
-      this.discardCurrentBill();
-      this.customerAutoCompleteControl.setValue('');
-    }
     } else {
       this.toastr.error("Please Items To Cart!");
     }
@@ -1859,13 +1860,13 @@ export class PosComponent implements OnInit {
 
 
   discardCurrentBill() {
-      this.cartService.clearCurrent();
-      this.currentItems = this.cartService.getCurrentItems();
-      this.currentOrderAdditionalCharges = [];
-      this.currentCustomer = null;
+    this.cartService.clearCurrent();
+    this.currentItems = this.cartService.getCurrentItems();
+    this.currentOrderAdditionalCharges = [];
+    this.currentCustomer = null;
   }
 
-  receiptFormSubmit(){
+  receiptFormSubmit() {
     if (this.receiptPaymentForm.invalid) {
       // console.log('invalid');
       Object.keys(this.receiptPaymentForm.controls).forEach(key => {
@@ -1878,16 +1879,16 @@ export class PosComponent implements OnInit {
       });
       return;
     }
-    if(this.voucher_type.value === 'sales'){
+    if (this.voucher_type.value === 'sales') {
       this.formSubmitReceipt();
-    } else if(this.voucher_type.value === 'purchase') {
+    } else if (this.voucher_type.value === 'purchase') {
       this.formSubmitPurchase()
     } else {
       this.formSubmitExpense()
     }
   }
 
-  formSubmitExpense(){ 
+  formSubmitExpense() {
     this.playBeepSound();
     if (this.expensePaymentForm.invalid) {
       // console.log('invalid');
@@ -1909,41 +1910,39 @@ export class PosComponent implements OnInit {
     formData.append('remarks', this.expense_remark.value);
     formData.append('non_gst', this.expense_nongst.value);
     formData.append('payment_account', this.expense_payment_account.value);
-    
-    this.cartService
-     .expensePayment(formData)
-     .subscribe({
-        next: (response:any) => {
-          // console.log('response receipt', response);
-          if(response.isSuccess){
-            // this.discardCurrentBill();
-            this.toastr.success(response.msg)
-            var clicking = <HTMLElement>document.querySelector('.expenseModalClose');
-            clicking.click();
-            this.expensePaymentForm.reset();
-            this.expense_nongst.setValue(false);
-            this.cartService.getExpensePayments().subscribe({
-              next: (response) => {
-                // console.log(response, 'expense payments')
-                this.expensePayments = response;
-              },
-              error: (error) => {
-                // console.log('expense payments', error);
-              }
-            })
-          } else {
-            this.toastr.error(response.msg);
-          }
-        },
-        error: (error) => {
-          // console.log(error)
-          this.toastr.error(error.message);
-        },
-      });
+
+    this.cartService.expensePayment(formData).subscribe({
+      next: (response: any) => {
+        // console.log('response receipt', response);
+        if (response.isSuccess) {
+          // this.discardCurrentBill();
+          this.toastr.success(response.msg)
+          var clicking = <HTMLElement>document.querySelector('.expenseModalClose');
+          clicking.click();
+          this.expensePaymentForm.reset();
+          this.expense_nongst.setValue(false);
+          this.cartService.getExpensePayments().subscribe({
+            next: (response) => {
+              // console.log(response, 'expense payments')
+              this.expensePayments = response;
+            },
+            error: (error) => {
+              // console.log('expense payments', error);
+            }
+          })
+        } else {
+          this.toastr.error(response.msg);
+        }
+      },
+      error: (error) => {
+        // console.log(error)
+        this.toastr.error(error.message);
+      },
+    });
 
   }
 
-  formSubmitPurchase(){ 
+  formSubmitPurchase() {
     this.playBeepSound();
     if (this.purchasePaymentForm.invalid) {
       // console.log('invalid');
@@ -1960,13 +1959,13 @@ export class PosComponent implements OnInit {
 
     let formData = new FormData();
 
-    if(this.purchase_payment_mode.value === 'UPI'){
+    if (this.purchase_payment_mode.value === 'UPI') {
       let upi_data = {
         "upi_no": Number(this.purchase_upi_id.value),
         "payment_account": Number(this.purchase_payment_account.value)
       };
 
-      if(this.purchase_payment_type.value == 'Advance'){
+      if (this.purchase_payment_type.value == 'Advance') {
         formData.append('party', this.purchase_party?.value?.id);
         formData.append('receipt_method', this.purchase_payment_type.value);
         formData.append('payment_mode', this.purchase_payment_mode.value);
@@ -1977,25 +1976,25 @@ export class PosComponent implements OnInit {
         formData.append('bank_detail', '');
         formData.append('upi_detail', JSON.stringify(upi_data));
       } else {
-      formData.append('party', this.purchase_party?.value?.id);
-      formData.append('receipt_method', this.purchase_payment_type.value);
-      formData.append('payment_mode', this.purchase_payment_mode.value);
-      formData.append('amount', this.purchase_amount.value);
-      formData.append('description', this.purchase_remark.value);
-      formData.append('bill_no', this.purchase_sales.value);
-      formData.append('card_detail', '');
-      formData.append('bank_detail', '');
-      formData.append('upi_detail', JSON.stringify(upi_data));
+        formData.append('party', this.purchase_party?.value?.id);
+        formData.append('receipt_method', this.purchase_payment_type.value);
+        formData.append('payment_mode', this.purchase_payment_mode.value);
+        formData.append('amount', this.purchase_amount.value);
+        formData.append('description', this.purchase_remark.value);
+        formData.append('bill_no', this.purchase_sales.value);
+        formData.append('card_detail', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', JSON.stringify(upi_data));
       }
 
-    } else if(this.payment_mode.value === 'Bank'){
+    } else if (this.payment_mode.value === 'Bank') {
 
       let bank_data = {
         "payment_account": Number(this.purchase_payment_account.value),
         "account_no": this.purchase_account_no.value,
       };
 
-      if(this.payment_type.value == 'Advance'){
+      if (this.payment_type.value == 'Advance') {
         formData.append('party', this.purchase_party?.value?.id);
         formData.append('receipt_method', this.purchase_payment_type.value);
         formData.append('payment_mode', this.purchase_payment_mode.value);
@@ -2006,18 +2005,18 @@ export class PosComponent implements OnInit {
         formData.append('bank_detail', JSON.stringify(bank_data));
         formData.append('upi_detail', '');
       } else {
-      formData.append('party', this.purchase_party?.value?.id);
-      formData.append('receipt_method', this.purchase_payment_type.value);
-      formData.append('payment_mode', this.purchase_payment_mode.value);
-      formData.append('amount', this.purchase_amount.value);
-      formData.append('description', this.purchase_remark.value);
-      formData.append('bill_no', this.purchase_sales.value);
-      formData.append('card_detail', '');
-      formData.append('bank_detail', JSON.stringify(bank_data));
-      formData.append('upi_detail', '');
+        formData.append('party', this.purchase_party?.value?.id);
+        formData.append('receipt_method', this.purchase_payment_type.value);
+        formData.append('payment_mode', this.purchase_payment_mode.value);
+        formData.append('amount', this.purchase_amount.value);
+        formData.append('description', this.purchase_remark.value);
+        formData.append('bill_no', this.purchase_sales.value);
+        formData.append('card_detail', '');
+        formData.append('bank_detail', JSON.stringify(bank_data));
+        formData.append('upi_detail', '');
       }
 
-    } else if(this.payment_mode.value === 'Card') {
+    } else if (this.payment_mode.value === 'Card') {
 
       let card_data = {
         "payment_account": Number(this.purchase_payment_account.value),
@@ -2027,7 +2026,7 @@ export class PosComponent implements OnInit {
         "cart_transactions_no": this.purchase_cart_transactions_no.value
       };
 
-      if(this.payment_type.value == 'Advance'){
+      if (this.payment_type.value == 'Advance') {
         formData.append('party', this.purchase_party?.value?.id);
         formData.append('receipt_method', this.purchase_payment_type.value);
         formData.append('payment_mode', this.purchase_payment_mode.value);
@@ -2038,48 +2037,48 @@ export class PosComponent implements OnInit {
         formData.append('bank_detail', '');
         formData.append('upi_detail', '');
       } else {
-      formData.append('party', this.purchase_party?.value?.id);
-      formData.append('receipt_method', this.purchase_payment_type.value);
-      formData.append('payment_mode', this.purchase_payment_mode.value);
-      formData.append('amount', this.purchase_amount.value);
-      formData.append('description', this.purchase_remark.value);
-      formData.append('bill_no', this.purchase_sales.value);
-      formData.append('card_detail', JSON.stringify(card_data));
-      formData.append('bank_detail', '');
-      formData.append('upi_detail', '');
+        formData.append('party', this.purchase_party?.value?.id);
+        formData.append('receipt_method', this.purchase_payment_type.value);
+        formData.append('payment_mode', this.purchase_payment_mode.value);
+        formData.append('amount', this.purchase_amount.value);
+        formData.append('description', this.purchase_remark.value);
+        formData.append('bill_no', this.purchase_sales.value);
+        formData.append('card_detail', JSON.stringify(card_data));
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
       }
     } else {
 
-    if(this.payment_type.value == 'Advance'){
-      formData.append('party', this.purchase_party?.value?.id);
-      formData.append('receipt_method', this.purchase_payment_type.value);
-      formData.append('payment_mode', this.purchase_payment_mode.value);
-      formData.append('amount', this.purchase_amount.value);
-      formData.append('description', this.purchase_remark.value);
-      formData.append('bill_no', '');
-      formData.append('card_detail', '');
-      formData.append('bank_detail', '');
-      formData.append('upi_detail', '');
-    } else {
-    formData.append('party', this.purchase_party?.value?.id);
-    formData.append('receipt_method', this.purchase_payment_type.value);
-    formData.append('payment_mode', this.purchase_payment_mode.value);
-    formData.append('amount', this.purchase_amount.value);
-    formData.append('description', this.purchase_remark.value);
-    formData.append('bill_no', this.purchase_sales.value);
-    formData.append('card_detail', '');
-    formData.append('bank_detail', '');
-    formData.append('upi_detail', '');
+      if (this.payment_type.value == 'Advance') {
+        formData.append('party', this.purchase_party?.value?.id);
+        formData.append('receipt_method', this.purchase_payment_type.value);
+        formData.append('payment_mode', this.purchase_payment_mode.value);
+        formData.append('amount', this.purchase_amount.value);
+        formData.append('description', this.purchase_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
+      } else {
+        formData.append('party', this.purchase_party?.value?.id);
+        formData.append('receipt_method', this.purchase_payment_type.value);
+        formData.append('payment_mode', this.purchase_payment_mode.value);
+        formData.append('amount', this.purchase_amount.value);
+        formData.append('description', this.purchase_remark.value);
+        formData.append('bill_no', this.purchase_sales.value);
+        formData.append('card_detail', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
+      }
+
     }
-    
-  }
 
     this.cartService
-     .purchasePayment(formData)
-     .subscribe({
-        next: (response:any) => {
+      .purchasePayment(formData)
+      .subscribe({
+        next: (response: any) => {
           // console.log('response receipt', response);
-          if(response.isSuccess){
+          if (response.isSuccess) {
             // this.discardCurrentBill();
             this.toastr.success(response.msg)
             var clicking = <HTMLElement>document.querySelector('.purchaseModalClose');
@@ -2106,7 +2105,7 @@ export class PosComponent implements OnInit {
 
   }
 
-  formSubmitReceipt(){ 
+  formSubmitReceipt() {
     this.playBeepSound();
     if (this.salesPaymentForm.invalid) {
       // console.log('invalid');
@@ -2123,13 +2122,13 @@ export class PosComponent implements OnInit {
 
     let formData = new FormData();
 
-    if(this.sales_payment_mode.value === 'UPI'){
+    if (this.sales_payment_mode.value === 'UPI') {
       let upi_data = {
         "upi_no": Number(this.sales_upi_id.value),
         "payment_account": Number(this.sales_payment_account.value)
       };
 
-      if(this.sales_payment_type.value == 'Advance'){
+      if (this.sales_payment_type.value == 'Advance') {
         formData.append('customer', this.sales_customer?.value?.id);
         formData.append('receipt_method', this.sales_payment_type.value);
         formData.append('payment_mode', this.sales_payment_mode.value);
@@ -2140,25 +2139,25 @@ export class PosComponent implements OnInit {
         formData.append('bank_detail', '');
         formData.append('upi_detail', JSON.stringify(upi_data));
       } else {
-      formData.append('customer', this.sales_customer?.value?.id);
-      formData.append('receipt_method', this.sales_payment_type.value);
-      formData.append('payment_mode', this.sales_payment_mode.value);
-      formData.append('amount', this.sales_amount.value);
-      formData.append('description', this.sales_remark.value);
-      formData.append('bill_no', this.sales_sales.value);
-      formData.append('card_detail', '');
-      formData.append('bank_detail', '');
-      formData.append('upi_detail', JSON.stringify(upi_data));
+        formData.append('customer', this.sales_customer?.value?.id);
+        formData.append('receipt_method', this.sales_payment_type.value);
+        formData.append('payment_mode', this.sales_payment_mode.value);
+        formData.append('amount', this.sales_amount.value);
+        formData.append('description', this.sales_remark.value);
+        formData.append('bill_no', this.sales_sales.value);
+        formData.append('card_detail', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', JSON.stringify(upi_data));
       }
 
-    } else if(this.sales_payment_mode.value === 'Bank'){
+    } else if (this.sales_payment_mode.value === 'Bank') {
 
       let bank_data = {
         "payment_account": Number(this.sales_payment_account.value),
         "account_no": this.sales_account_no.value,
       };
 
-      if(this.sales_payment_type.value == 'Advance'){
+      if (this.sales_payment_type.value == 'Advance') {
         formData.append('customer', this.sales_customer?.value?.id);
         formData.append('receipt_method', this.sales_payment_type.value);
         formData.append('payment_mode', this.sales_payment_mode.value);
@@ -2169,18 +2168,18 @@ export class PosComponent implements OnInit {
         formData.append('bank_detail', JSON.stringify(bank_data));
         formData.append('upi_detail', '');
       } else {
-      formData.append('customer', this.sales_customer?.value?.id);
-      formData.append('receipt_method', this.sales_payment_type.value);
-      formData.append('payment_mode', this.sales_payment_mode.value);
-      formData.append('amount', this.sales_amount.value);
-      formData.append('description', this.sales_remark.value);
-      formData.append('bill_no', this.sales_sales.value);
-      formData.append('card_detail', '');
-      formData.append('bank_detail', JSON.stringify(bank_data));
-      formData.append('upi_detail', '');
+        formData.append('customer', this.sales_customer?.value?.id);
+        formData.append('receipt_method', this.sales_payment_type.value);
+        formData.append('payment_mode', this.sales_payment_mode.value);
+        formData.append('amount', this.sales_amount.value);
+        formData.append('description', this.sales_remark.value);
+        formData.append('bill_no', this.sales_sales.value);
+        formData.append('card_detail', '');
+        formData.append('bank_detail', JSON.stringify(bank_data));
+        formData.append('upi_detail', '');
       }
 
-    } else if(this.sales_payment_mode.value === 'Card') {
+    } else if (this.sales_payment_mode.value === 'Card') {
 
       let card_data = {
         "payment_account": Number(this.sales_payment_account.value),
@@ -2190,7 +2189,7 @@ export class PosComponent implements OnInit {
         "cart_transactions_no": this.sales_cart_transactions_no.value
       };
 
-      if(this.sales_payment_type.value == 'Advance'){
+      if (this.sales_payment_type.value == 'Advance') {
         formData.append('customer', this.sales_customer?.value?.id);
         formData.append('receipt_method', this.sales_payment_type.value);
         formData.append('payment_mode', this.sales_payment_mode.value);
@@ -2201,48 +2200,48 @@ export class PosComponent implements OnInit {
         formData.append('bank_detail', '');
         formData.append('upi_detail', '');
       } else {
-      formData.append('customer', this.sales_customer?.value?.id);
-      formData.append('receipt_method', this.sales_payment_type.value);
-      formData.append('payment_mode', this.sales_payment_mode.value);
-      formData.append('amount', this.sales_amount.value);
-      formData.append('description', this.sales_remark.value);
-      formData.append('bill_no', this.sales_sales.value);
-      formData.append('card_detail', JSON.stringify(card_data));
-      formData.append('bank_detail', '');
-      formData.append('upi_detail', '');
+        formData.append('customer', this.sales_customer?.value?.id);
+        formData.append('receipt_method', this.sales_payment_type.value);
+        formData.append('payment_mode', this.sales_payment_mode.value);
+        formData.append('amount', this.sales_amount.value);
+        formData.append('description', this.sales_remark.value);
+        formData.append('bill_no', this.sales_sales.value);
+        formData.append('card_detail', JSON.stringify(card_data));
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
       }
     } else {
 
-    if(this.sales_payment_type.value == 'Advance'){
-      formData.append('customer', this.sales_customer?.value?.id);
-      formData.append('receipt_method', this.sales_payment_type.value);
-      formData.append('payment_mode', this.sales_payment_mode.value);
-      formData.append('amount', this.sales_amount.value);
-      formData.append('description', this.sales_remark.value);
-      formData.append('bill_no', '');
-      formData.append('card_detail', '');
-      formData.append('bank_detail', '');
-      formData.append('upi_detail', '');
-    } else {
-    formData.append('customer', this.sales_customer?.value?.id);
-    formData.append('receipt_method', this.sales_payment_type.value);
-    formData.append('payment_mode', this.sales_payment_mode.value);
-    formData.append('amount', this.sales_amount.value);
-    formData.append('description', this.sales_remark.value);
-    formData.append('bill_no', this.sales_sales.value);
-    formData.append('card_detail', '');
-    formData.append('bank_detail', '');
-    formData.append('upi_detail', '');
+      if (this.sales_payment_type.value == 'Advance') {
+        formData.append('customer', this.sales_customer?.value?.id);
+        formData.append('receipt_method', this.sales_payment_type.value);
+        formData.append('payment_mode', this.sales_payment_mode.value);
+        formData.append('amount', this.sales_amount.value);
+        formData.append('description', this.sales_remark.value);
+        formData.append('bill_no', '');
+        formData.append('card_detail', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
+      } else {
+        formData.append('customer', this.sales_customer?.value?.id);
+        formData.append('receipt_method', this.sales_payment_type.value);
+        formData.append('payment_mode', this.sales_payment_mode.value);
+        formData.append('amount', this.sales_amount.value);
+        formData.append('description', this.sales_remark.value);
+        formData.append('bill_no', this.sales_sales.value);
+        formData.append('card_detail', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
+      }
+
     }
-    
-  }
 
     this.cartService
-     .receiptPayment(formData)
-     .subscribe({
-        next: (response:any) => {
+      .receiptPayment(formData)
+      .subscribe({
+        next: (response: any) => {
           // console.log('response receipt', response);
-          if(response.isSuccess){
+          if (response.isSuccess) {
             // this.discardCurrentBill();
             this.toastr.success(response.msg)
             var clicking = <HTMLElement>document.querySelector('.salesModalClose');
@@ -2270,7 +2269,7 @@ export class PosComponent implements OnInit {
   }
 
 
-  payLaterGenerateOrder(){
+  payLaterGenerateOrder() {
     this.playBeepSound();
     if (this.payLaterMethodForm.invalid) {
       // console.log('invalid');
@@ -2280,75 +2279,75 @@ export class PosComponent implements OnInit {
       return;
     }
 
-    if(this.currentItems.length > 0){
-      if(this.currentCustomer === null || this.currentCustomer === undefined){
+    if (this.currentItems.length > 0) {
+      if (this.currentCustomer === null || this.currentCustomer === undefined) {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
 
-    let pay_later_data = {      
-      "day": Number(this.pay_later_day.value),
-      "date": this.pay_later_date.value,
-      "is_send_reminder": this.is_send_reminder.value == 'false' ? 'False' : 'True',
-    };
+        let pay_later_data = {
+          "day": Number(this.pay_later_day.value),
+          "date": this.pay_later_date.value,
+          "is_send_reminder": this.is_send_reminder.value == 'false' ? 'False' : 'True',
+        };
 
 
 
-    // console.log(cartData, 'cash', pay_later_data);
-    const formData = new FormData();
-    formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
-    formData.append('payment_mode', 'Paylater');
-    formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
-    formData.append('cart_data', JSON.stringify(cartData));
-    formData.append('card_detail', '');
-    formData.append('Multipay', '');
-    formData.append('PayLatter', JSON.stringify(pay_later_data));
-    formData.append('bank_detail', '');
-    formData.append('upi_detail', '');
+        // console.log(cartData, 'cash', pay_later_data);
+        const formData = new FormData();
+        formData.append('customer', JSON.stringify(this.currentCustomer.id));
+        formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+        formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
+        formData.append('payment_mode', 'Paylater');
+        formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
+        formData.append('cart_data', JSON.stringify(cartData));
+        formData.append('card_detail', '');
+        formData.append('Multipay', '');
+        formData.append('PayLatter', JSON.stringify(pay_later_data));
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
 
 
-    this.cartService
-     .generateOrderNew(formData)
-     .subscribe({
-        next: (response:any) => {
-          // console.log('response order', response);
-          if(response.isSuccess){
-            this.customerAutoCompleteControl.setValue('');
-            this.discardCurrentBill();
-            this.toastr.success(response.msg)
-            var clicking = <HTMLElement>document.querySelector('.payLaterModalClose');
-            clicking.click();
-            this.payLaterMethodForm.reset();
-            this.cartService.getPOSOrders().subscribe({
-              next: (response) => {
-                // console.log(response, 'pos orders')
-                this.posOrders = response;
-              },
-              error: (error) => {
-                // console.log('pos orders', error);
+        this.cartService
+          .generateOrderNew(formData)
+          .subscribe({
+            next: (response: any) => {
+              // console.log('response order', response);
+              if (response.isSuccess) {
+                this.customerAutoCompleteControl.setValue('');
+                this.discardCurrentBill();
+                this.toastr.success(response.msg)
+                var clicking = <HTMLElement>document.querySelector('.payLaterModalClose');
+                clicking.click();
+                this.payLaterMethodForm.reset();
+                this.cartService.getPOSOrders().subscribe({
+                  next: (response) => {
+                    // console.log(response, 'pos orders')
+                    this.posOrders = response;
+                  },
+                  error: (error) => {
+                    // console.log('pos orders', error);
+                  }
+                })
+              } else {
+                this.toastr.error(response.msg);
               }
-            })
-          } else {
-            this.toastr.error(response.msg);
-          }
-        },
-        error: (error) => {
-          // console.log(error)
-          this.toastr.error(error.message);
-        },
-      });
+            },
+            error: (error) => {
+              // console.log(error)
+              this.toastr.error(error.message);
+            },
+          });
       }
-    
-  } else {
-    this.toastr.error('Please Add Items To Cart');
-  }
+
+    } else {
+      this.toastr.error('Please Add Items To Cart');
+    }
 
 
   }
 
-  cardPaymentGenerateOrder(type:any){
+  cardPaymentGenerateOrder(type: any) {
     this.playBeepSound();
     if (this.cardPaymentMethodForm.invalid) {
       // console.log('invalid');
@@ -2358,74 +2357,74 @@ export class PosComponent implements OnInit {
       return;
     }
 
-    if(this.currentItems.length > 0){
-      if(this.currentCustomer === null || this.currentCustomer === undefined){
+    if (this.currentItems.length > 0) {
+      if (this.currentCustomer === null || this.currentCustomer === undefined) {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
 
-    let card_data = {
-      "payment_account": this.payment_account_card.value,
-      "customer_bank_name": this.customer_bank_name.value,
-      "card_payment_amount": this.card_payment_amount.value,
-      "card_holder_name": this.card_holder_name.value,
-      "cart_transactions_no": this.cart_transactions_no.value
-    };
+        let card_data = {
+          "payment_account": this.payment_account_card.value,
+          "customer_bank_name": this.customer_bank_name.value,
+          "card_payment_amount": this.card_payment_amount.value,
+          "card_holder_name": this.card_holder_name.value,
+          "cart_transactions_no": this.cart_transactions_no.value
+        };
 
 
 
 
-    // console.log(cartData, 'card');
-    const formData = new FormData();
-    formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
-    formData.append('payment_mode', 'Card');
-    formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
-    formData.append('cart_data', JSON.stringify(cartData));
-    formData.append('card_detail', JSON.stringify(card_data));
-    formData.append('Multipay', '');
-    formData.append('PayLatter', '');
-    formData.append('bank_detail', '');
-    formData.append('upi_detail', '');
+        // console.log(cartData, 'card');
+        const formData = new FormData();
+        formData.append('customer', JSON.stringify(this.currentCustomer.id));
+        formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+        formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
+        formData.append('payment_mode', 'Card');
+        formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
+        formData.append('cart_data', JSON.stringify(cartData));
+        formData.append('card_detail', JSON.stringify(card_data));
+        formData.append('Multipay', '');
+        formData.append('PayLatter', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
 
-    this.cartService
-     .generateOrderNew(formData)
-     .subscribe({
-        next: (response:any) => {
-          // console.log('response order', response);
-          if(response.isSuccess){
-            this.customerAutoCompleteControl.setValue('');
-            this.discardCurrentBill();
-            this.toastr.success(response.msg)
-            if(type == 'print'){
-              window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
-              var clicking = <HTMLElement>document.querySelector('.cardPrintModalClose');
-              clicking.click();
-            } else {
-            var clicking = <HTMLElement>document.querySelector('.cardModalClose');
-            clicking.click();
-            }
-            this.cardPaymentMethodForm.reset();
-          } else {
-            this.toastr.error(response.msg);
-          }
-        },
-        error: (error) => {
-          // console.log(error)
-          this.toastr.error(error.message);
-        },
-      });
+        this.cartService
+          .generateOrderNew(formData)
+          .subscribe({
+            next: (response: any) => {
+              // console.log('response order', response);
+              if (response.isSuccess) {
+                this.customerAutoCompleteControl.setValue('');
+                this.discardCurrentBill();
+                this.toastr.success(response.msg)
+                if (type == 'print') {
+                  window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                  var clicking = <HTMLElement>document.querySelector('.cardPrintModalClose');
+                  clicking.click();
+                } else {
+                  var clicking = <HTMLElement>document.querySelector('.cardModalClose');
+                  clicking.click();
+                }
+                this.cardPaymentMethodForm.reset();
+              } else {
+                this.toastr.error(response.msg);
+              }
+            },
+            error: (error) => {
+              // console.log(error)
+              this.toastr.error(error.message);
+            },
+          });
       }
-    
-  } else {
-    this.toastr.error('Please Add Items To Cart');
-  }
+
+    } else {
+      this.toastr.error('Please Add Items To Cart');
+    }
 
 
   }
 
-  bankPaymentGenerateOrder(type:any){
+  bankPaymentGenerateOrder(type: any) {
     this.playBeepSound();
     if (this.bankPaymentMethodForm.invalid) {
       // console.log('invalid');
@@ -2435,79 +2434,79 @@ export class PosComponent implements OnInit {
       return;
     }
 
-    if(this.currentItems.length > 0){
-      if(this.currentCustomer === null || this.currentCustomer === undefined){
+    if (this.currentItems.length > 0) {
+      if (this.currentCustomer === null || this.currentCustomer === undefined) {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
 
-    let bank_data = {
-      "account_no": Number(this.account_no.value),
-      "payment_account": Number(this.payment_account_bank.value)
-    };
+        let bank_data = {
+          "account_no": Number(this.account_no.value),
+          "payment_account": Number(this.payment_account_bank.value)
+        };
 
 
 
-    // console.log(cartData, 'cash', bank_data);
-    const formData = new FormData();
-    formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
-    formData.append('payment_mode', 'Bank');
-    formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
-    formData.append('cart_data', JSON.stringify(cartData));
-    formData.append('card_detail', '');
-    formData.append('Multipay', '');
-    formData.append('PayLatter', '');
-    formData.append('bank_detail', JSON.stringify(bank_data));
-    formData.append('upi_detail', '');
+        // console.log(cartData, 'cash', bank_data);
+        const formData = new FormData();
+        formData.append('customer', JSON.stringify(this.currentCustomer.id));
+        formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+        formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
+        formData.append('payment_mode', 'Bank');
+        formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
+        formData.append('cart_data', JSON.stringify(cartData));
+        formData.append('card_detail', '');
+        formData.append('Multipay', '');
+        formData.append('PayLatter', '');
+        formData.append('bank_detail', JSON.stringify(bank_data));
+        formData.append('upi_detail', '');
 
-    this.cartService
-     .generateOrderNew(formData)
-     .subscribe({
-        next: (response:any) => {
-          // console.log('response order', response);
-          if(response.isSuccess){
-            this.customerAutoCompleteControl.setValue('');
-            this.discardCurrentBill();
-            this.toastr.success(response.msg)
-            if(type == 'print'){
-              window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
-              var clicking = <HTMLElement>document.querySelector('.bankPrintModalClose');
-              clicking.click();
-            } else {
-            var clicking = <HTMLElement>document.querySelector('.bankModalClose');
-            clicking.click();
-            }
-            this.bankPaymentMethodForm.reset();
-            this.cartService.getPOSOrders().subscribe({
-              next: (response) => {
-                // console.log(response, 'pos orders')
-                this.posOrders = response;
-              },
-              error: (error) => {
-                // console.log('pos orders', error);
+        this.cartService
+          .generateOrderNew(formData)
+          .subscribe({
+            next: (response: any) => {
+              // console.log('response order', response);
+              if (response.isSuccess) {
+                this.customerAutoCompleteControl.setValue('');
+                this.discardCurrentBill();
+                this.toastr.success(response.msg)
+                if (type == 'print') {
+                  window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                  var clicking = <HTMLElement>document.querySelector('.bankPrintModalClose');
+                  clicking.click();
+                } else {
+                  var clicking = <HTMLElement>document.querySelector('.bankModalClose');
+                  clicking.click();
+                }
+                this.bankPaymentMethodForm.reset();
+                this.cartService.getPOSOrders().subscribe({
+                  next: (response) => {
+                    // console.log(response, 'pos orders')
+                    this.posOrders = response;
+                  },
+                  error: (error) => {
+                    // console.log('pos orders', error);
+                  }
+                })
+              } else {
+                this.toastr.error(response.msg);
               }
-            })
-          } else {
-            this.toastr.error(response.msg);
-          }
-        },
-        error: (error) => {
-          // console.log(error)
-          this.toastr.error(error.message);
-        },
-      });
+            },
+            error: (error) => {
+              // console.log(error)
+              this.toastr.error(error.message);
+            },
+          });
       }
-    
-  } else {
-    this.toastr.error('Please Add Items To Cart');
+
+    } else {
+      this.toastr.error('Please Add Items To Cart');
+    }
+
+
   }
 
-
-  } 
-
-  upiPaymentGenerateOrder(type:any){
+  upiPaymentGenerateOrder(type: any) {
     this.playBeepSound()
     if (this.upiPaymentMethodForm.invalid) {
       // console.log('invalid');
@@ -2517,188 +2516,212 @@ export class PosComponent implements OnInit {
       return;
     }
 
-    if(this.currentItems.length > 0){
-      if(this.currentCustomer === null || this.currentCustomer === undefined){
+    if (this.currentItems.length > 0) {
+      if (this.currentCustomer === null || this.currentCustomer === undefined) {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
-    let upi_data = {
-      "upi_no": Number(this.upi_id.value),
-      "payment_account": Number(this.payment_account_upi.value)
-    };
+        let upi_data = {
+          "upi_no": Number(this.upi_id.value),
+          "payment_account": Number(this.payment_account_upi.value)
+        };
 
 
 
-    // console.log(cartData, 'upi', upi_data);
-    const formData = new FormData();
-    formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
-    formData.append('payment_mode', 'UPI');
-    formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
-    formData.append('cart_data', JSON.stringify(cartData));
-    formData.append('card_detail', '');
-    formData.append('Multipay', '');
-    formData.append('PayLatter', '');
-    formData.append('bank_detail', '');
-    formData.append('upi_detail', JSON.stringify(upi_data));
+        // console.log(cartData, 'upi', upi_data);
+        const formData = new FormData();
+        formData.append('customer', JSON.stringify(this.currentCustomer.id));
+        formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+        formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
+        formData.append('payment_mode', 'UPI');
+        formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
+        formData.append('cart_data', JSON.stringify(cartData));
+        formData.append('card_detail', '');
+        formData.append('Multipay', '');
+        formData.append('PayLatter', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', JSON.stringify(upi_data));
 
-    this.cartService
-     .generateOrderNew(formData)
-     .subscribe({
-        next: (response:any) => {
-          // console.log('response order', response);
-          if(response.isSuccess){
-            this.customerAutoCompleteControl.setValue('');
-            this.discardCurrentBill();
-            this.toastr.success(response.msg)
-            if(type == 'print'){
-              window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
-              var clicking = <HTMLElement>document.querySelector('.upiPrintModalClose');
-              clicking.click();
-            } else {
-            var clicking = <HTMLElement>document.querySelector('.upiModalClose');
-            clicking.click();
-            }
-            this.upiPaymentMethodForm.reset();
-            this.cartService.getPOSOrders().subscribe({
-              next: (response) => {
-                // console.log(response, 'pos orders')
-                this.posOrders = response;
-              },
-              error: (error) => {
-                // console.log('pos orders', error);
+        this.cartService
+          .generateOrderNew(formData)
+          .subscribe({
+            next: (response: any) => {
+              // console.log('response order', response);
+              if (response.isSuccess) {
+                this.customerAutoCompleteControl.setValue('');
+                this.discardCurrentBill();
+                this.toastr.success(response.msg)
+                if (type == 'print') {
+                  window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                  var clicking = <HTMLElement>document.querySelector('.upiPrintModalClose');
+                  clicking.click();
+                } else {
+                  var clicking = <HTMLElement>document.querySelector('.upiModalClose');
+                  clicking.click();
+                }
+                this.upiPaymentMethodForm.reset();
+                this.cartService.getPOSOrders().subscribe({
+                  next: (response) => {
+                    // console.log(response, 'pos orders')
+                    this.posOrders = response;
+                  },
+                  error: (error) => {
+                    // console.log('pos orders', error);
+                  }
+                })
+              } else {
+                this.toastr.error(response.msg);
               }
-            })
-          } else {
-            this.toastr.error(response.msg);
-          }
-        },
-        error: (error) => {
-          // console.log(error)
-          this.toastr.error(error.message);
-        },
-      });
-      
+            },
+            error: (error) => {
+              // console.log(error)
+              this.toastr.error(error.message);
+            },
+          });
+
       }
-    
-  } else {
-    this.toastr.error('Please Add Items To Cart');
-  }
+
+    } else {
+      this.toastr.error('Please Add Items To Cart');
+    }
 
 
   }
 
-  cashPaymentGenerateOrder(type:any){
+  cashPaymentGenerateOrder(type: any) {
     this.playBeepSound();
-    if(this.currentItems.length > 0){
-      if(this.currentCustomer === null || this.currentCustomer === undefined){
+    if (this.currentItems.length > 0) {
+      if (this.currentCustomer === null || this.currentCustomer === undefined) {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
-    // console.log(cartData, 'cash');
-    const formData = new FormData();
-    formData.append('customer', JSON.stringify(this.currentCustomer.id));
-    formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
-    formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
-    formData.append('payment_mode', 'Cash');
-    formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
-    formData.append('cart_data', JSON.stringify(cartData));
-    formData.append('card_detail', '');
-    formData.append('Multipay', '');
-    formData.append('PayLatter', '');
-    formData.append('bank_detail', '');
-    formData.append('upi_detail', '');
+        // console.log(cartData, 'cash');
+        const formData = new FormData();
+        formData.append('customer', JSON.stringify(this.currentCustomer.id));
+        formData.append('additional_charge', JSON.stringify(this.getNumberInDecimalPlaces(this.currentTotalAdditionalCharges().toString())));
+        formData.append('total_amount', JSON.stringify(this.getNumberInDecimalPlaces(this.finalAmount().toString())));
+        formData.append('payment_mode', 'Cash');
+        formData.append('total_tax', JSON.stringify(this.getNumberInDecimalPlaces(this.totalTaxAmount().toString())));
+        formData.append('cart_data', JSON.stringify(cartData));
+        formData.append('card_detail', '');
+        formData.append('Multipay', '');
+        formData.append('PayLatter', '');
+        formData.append('bank_detail', '');
+        formData.append('upi_detail', '');
 
-    this.cartService
-     .generateOrderNew(formData)
-     .subscribe({
-        next: (response:any) => {
-          // console.log('response order', response);
-          if(response.isSuccess){
-            this.customerAutoCompleteControl.setValue('');
-            this.discardCurrentBill();
-            this.tenderedAmount = 0;
-            this.toastr.success(response.msg)
-            if(type == 'print'){
-              window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
-              var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
-              clicking.click();
-            } else {
-              var clicking = <HTMLElement>document.querySelector('.cashModalClose');
-              clicking.click();
-            }
-           
-            this.cartService.getPOSOrders().subscribe({
-              next: (response) => {
-                // console.log(response, 'pos orders')
-                this.posOrders = response;
-              },
-              error: (error) => {
-                // console.log('pos orders', error);
+        this.cartService
+          .generateOrderNew(formData)
+          .subscribe({
+            next: (response: any) => {
+              // console.log('response order', response);
+              if (response.isSuccess) {
+                this.customerAutoCompleteControl.setValue('');
+                this.discardCurrentBill();
+                this.tenderedAmount = 0;
+                this.toastr.success(response.msg)
+                if (type == 'print') {
+                  window.open(`/pos/invoice/${response?.order?.id}`, '_blank');
+                  var clicking = <HTMLElement>document.querySelector('.cashPrintModalClose');
+                  clicking.click();
+                } else {
+                  var clicking = <HTMLElement>document.querySelector('.cashModalClose');
+                  clicking.click();
+                }
+
+                this.cartService.getPOSOrders().subscribe({
+                  next: (response) => {
+                    // console.log(response, 'pos orders')
+                    this.posOrders = response;
+                  },
+                  error: (error) => {
+                    // console.log('pos orders', error);
+                  }
+                })
+              } else {
+                this.toastr.error(response.msg);
               }
-            })
-          } else {
-            this.toastr.error(response.msg);
-          }
-        },
-        error: (error) => {
-          // console.log(error)
-          this.toastr.error(error.message);
-        },
-      });
+            },
+            error: (error) => {
+              // console.log(error)
+              this.toastr.error(error.message);
+            },
+          });
       }
-    
-  } else {
-    this.toastr.error('Please Add Items To Cart');
+    } else {
+      this.toastr.error('Please Add Items To Cart');
+    }
   }
 
-}
-
-setItemsArr(){
-  let cart = [];
-  for (let index = 0; index < this.currentItems.length; index++) {
-    const element = this.currentItems[index];
-    let item = {
-      "variant": element.id,
-      "qty": element.quantity,
-      "mrp": element.batch[0].mrp,
-      "discount": element.batch[0].discount,
-      "add_discount": element.batch[0].additional_discount,
-      "unit_cost": element.batch[0]?.selling_price_offline,
-      "net_cost": Number(this.getNetAmount2(element?.batch[0], element?.quantity)).toFixed(2),
-      "tax_amount": Number((this.getProductTax(element.batch[0])) * element.quantity).toFixed(2),
-      "remarks": element.notes,
-      "tax_percentage": element?.batch[0]?.sale_tax
-    };
-    cart.push(item);
+  setItemsArr() {
+    let cart = [];
+    for (let index = 0; index < this.currentItems.length; index++) {
+      const element = this.currentItems[index];
+      let item = {
+        "variant": element.id,
+        "qty": element.quantity,
+        "mrp": element.batch[0].mrp,
+        "discount": element.batch[0].discount,
+        "add_discount": element.batch[0].additional_discount,
+        "unit_cost": element.batch[0]?.selling_price_offline,
+        "net_cost": Number(this.getNetAmount2(element?.batch[0], element?.quantity)).toFixed(2),
+        "tax_amount": Number((this.getProductTax(element.batch[0])) * element.quantity).toFixed(2),
+        "remarks": element.notes,
+        "tax_percentage": element?.batch[0]?.sale_tax
+      };
+      cart.push(item);
+    }
+    return cart;
   }
-  return cart;
-}
 
-getDateForOrders(timestamp:any){
-  const dateObject = new Date(timestamp);
+  getDateForOrders(timestamp: any) {
+    const dateObject = new Date(timestamp);
 
-const year = dateObject.getFullYear();
-const month = dateObject.getMonth() + 1; // Note: Months are zero-based, so we add 1 to get the correct month number.
-const day = dateObject.getDate();
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth() + 1; // Note: Months are zero-based, so we add 1 to get the correct month number.
+    const day = dateObject.getDate();
 
-const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
-return formattedDate;
-}
+    const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+    return formattedDate;
+  }
 
-getNumberInDecimalPlaces(stringValue:any){
-const floatValue = parseFloat(stringValue);
-const roundedNumber = Math.round(floatValue * 100) / 100;
-return roundedNumber;
-}
+  getNumberInDecimalPlaces(stringValue: any) {
+    const floatValue = parseFloat(stringValue);
+    const roundedNumber = Math.round(floatValue * 100) / 100;
+    return roundedNumber;
+  }
 
-// Function to play the beep sound
-playBeepSound(): void {
-  const beepSound = new Audio('assets/dummy/beep.mp3');
-  beepSound.play();
-}
+  // Function to play the beep sound
+  playBeepSound(): void {
+    const beepSound = new Audio('assets/dummy/beep.mp3');
+    beepSound.play();
+  }
 
+  // 20-02
+  expenseList: any;
+  getExpense() {
+    this.transactionService.getExpensVoucher().subscribe((res: any) => {
+      this.expenseList = res;
+    })
+  }
+  key = 'id'
+  reverse: boolean = true;
+  sort(key) {
+    this.key = key;
+    this.reverse = !this.reverse
+  }
+  recieptList: any;
+  getReciept() {
+    this.transactionService.getRecieptVoucher().subscribe((res: any) => {
+      this.recieptList = res;
+    })
+  }
+  paymentList: any;
+  getPayment() {
+    this.transactionService.getPaymentVoucher().subscribe((res: any) => {
+      this.paymentList = res;
+    })
+  }
+ 
 
 }
 
@@ -2710,7 +2733,7 @@ export enum KEY_CODE {
   // DOWN_ARROW = 40,
   // RIGHT_ARROW = 39,
   // LEFT_ARROW = 37,
-   
+
   F3 = 'F3',
   F4 = 'F4',
   F5 = 'F5',

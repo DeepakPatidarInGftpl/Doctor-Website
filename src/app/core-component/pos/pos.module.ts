@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { InovoiceComponent } from './inovoice/inovoice.component';
+import { SharedModuleModule } from '../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { InovoiceComponent } from './inovoice/inovoice.component';
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    SharedModuleModule
     ]
 })
 export class PosModule { }

@@ -412,7 +412,7 @@ select=false
     }
     //19-02
     if (this.selectedCustomer) {
-      filteredData = filteredData.filter((item) => item?.product_label?.title === this.selectedCustomer);
+      filteredData = filteredData.filter((item) => item?.membership?.title === this.selectedCustomer);
     }
     
     this.filteredData = filteredData;

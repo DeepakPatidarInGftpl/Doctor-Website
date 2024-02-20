@@ -2293,7 +2293,7 @@
           </button>
         </div>
         <div class="modal-body">
-            <form [formGroup]="expensePaymentForm" (ngSubmit)="formSubmitExpense()">
+            <!-- <form [formGroup]="expensePaymentForm" (ngSubmit)="formSubmitExpense()">
 
             <div class="row">
                 
@@ -2391,7 +2391,44 @@ Payment Account is required.
 
                 </div>
             </div>
-            </form>
+            </form> -->
+      
+            <div class="table-responsive">
+                <table class="table datanew" id="mytable">
+                    <thead>
+                        <tr>
+                            <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Party<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Expense Voucher No.<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Refrence Bill No.<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Sub Total<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Total<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Reverse Charge<i class="fa fa-sort"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="expenseList?.length>=0 ">
+                        <tr *ngFor="let products of expenseList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                            <td>{{i+1}}</td>
+                            <td class="productimgname"><a routerLink="//transaction/detailsexpensesVoucher/{{products.id}}" style="line-height: 3;">{{products?.party?.name}}</a></td>
+                            <td class="text-center">{{products?.expense_no}}</td>
+                            <td class="text-center">{{products?.refrence_bill_no}}</td>
+                            <td class="text-center">{{products?.expense_date}}</td>
+                            <td class="text-center">{{products?.tax_amount}}</td>
+                            <td class="text-center">{{products?.total_amount}}</td>
+                            <td>{{products?.reverse_charge}}</td>
+                       </tr>
+                    </tbody>
+                    <tbody *ngIf="expenseList?.length===0 && !loader">
+                        <tr>
+                          <td colspan="10">
+                            <p class="center-textt">Data not available</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                 </table>
+            </div>
+      
         </div>
        
       </div>
@@ -2409,7 +2446,7 @@ Payment Account is required.
           </button>
         </div>
         <div class="modal-body">
-            <form [formGroup]="salesPaymentForm" (ngSubmit)="formSubmitReceipt()">
+            <!-- <form [formGroup]="salesPaymentForm" (ngSubmit)="formSubmitReceipt()">
 
             <div class="row">
                 <div class="col-sm-12">
@@ -2643,7 +2680,52 @@ Payment Account is required.
 
                 </div>
             </div>
-            </form>
+            </form> -->
+       
+            <div class="table-responsive">
+                <table class="table datanew" id="mytable">
+                    <thead>
+                        <tr>
+                            <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Account<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Reciept Type<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Mode Type<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Payer<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Payment<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Transaction Date<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Transaction Id<i class="fa fa-sort"></i></th>
+                            <th (click)="sort('id')" class="thone">Amount<i class="fa fa-sort"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="recieptList?.length>=0 ">
+                        <tr *ngFor="let products of recieptList | orderBy:key:reverse let i = index">
+                       
+                            <td>{{i+1}}</td>
+                            <td class="productimgname"><a routerLink="//transaction/detailsrecieptVoucher/{{products.id}}" style="line-height: 3;">{{products?.customer?.account_id}}</a></td>
+                            <td class="text-center">{{products?.receipt_type}}</td>
+                            <td>{{products.mode_type}}</td>
+                            <td>{{products.receipt_voucher_no}}</td>
+                            <td>{{products?.payer?.account_id}}</td>
+                            <td>{{products?.bank_payment}}</td>
+                            <td>{{products?.date}}</td>
+                            <td>{{products?.transaction_date}}</td>
+                            <td class="text-center">{{products?.transaction_id}}</td>
+                            <td>{{products?.amount}}</td>
+                           
+                        </tr>
+                    </tbody>
+                    <tbody *ngIf="recieptList?.length===0 && !loader">
+                        <tr>
+                          <td colspan="10">
+                            <p class="center-textt">Data not available</p>
+                          </td>
+                        </tr>
+                      </tbody>
+                 </table>
+    
+            </div>
         </div>
        
       </div>
@@ -2936,7 +3018,7 @@ Payment Account is required.
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="posPaymentsModalLabel">POS Payments</h5>
+          <h5 class="modal-title" id="posPaymentsModalLabel">Payments</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="playBeepSound()">
             <i class="fa fa-times" data-bs-toggle="tooltip" title="fa fa-times"></i>
           </button>
@@ -2944,7 +3026,7 @@ Payment Account is required.
         <div class="modal-body">
             <div class="form-group">
                 <!-- <label class="d-block">Select Payment Type</label> -->
-                        <div class="radio-payments-modal-wrapper d-flex justify-content-around">
+                        <!-- <div class="radio-payments-modal-wrapper d-flex justify-content-around">
                             <div class="form-check" *ngFor="let option of voucherType2">
                                 <input class="form-check-input" type="radio" [value]="option.value" [(ngModel)]="selectedPaymentsOption">
                                 <label class="form-check-label">{{option.label}}</label>
@@ -3021,9 +3103,54 @@ Payment Account is required.
                                 
                             </tbody>
                         </table>
-                    </div>  
+                    </div>   -->
             
-            
+                    <div class="table-responsive">
+                        <table class="table datanew" id="mytable">
+                            <thead>
+                                <tr>
+                                    <th (click)="sort('id')" class="thone">Sr. No.<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Supplier<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Payment Type<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Mode Type<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Account<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Payment<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Transaction Date<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Transaction Id<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Amount<i class="fa fa-sort"></i></th>
+                             </tr>
+                            </thead>
+                            <tbody *ngIf="paymentList?.length>=0 ">
+                                <tr *ngFor="let products of paymentList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                               
+                                    <td>{{i+1+'.'}}</td>
+                                    <td class="productimgname"><a routerLink="//transaction/detailspaymentVoucher/{{products.id}}" style="line-height: 3;">{{products?.supplier?.company_name}}</a></td>
+                                    <td class="text-center">{{products?.payment_type}}</td>
+                                    <td>{{products?.mode_type}}</td>
+                                    <td>{{products?.payment_voucher_no}}</td>
+                                    <td>{{products?.payment_account?.account_id}}</td>
+                                    <td>{{products?.bank_payment}}</td>
+                                    <td>{{products?.date}}</td>
+                                    <td>{{products?.transaction_date}}</td>
+                                    <td class="text-center">{{products?.transaction_id}}</td>
+                                    <td>{{products?.amount}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="paymentList?.length===0 && !loader">
+                                <tr> 
+                                  <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                  </td>
+                                </tr>
+                              </tbody>
+                         </table>
+                         <div class="progressbar">
+                            <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                         </div>
+                    
+                    </div>
         </div>
         <div class="modal-footer">
             <!-- <div class="col-sm-12">
@@ -3173,13 +3300,9 @@ Payment Account is required.
                             placeholder="UPI ID"
                             formControlName="upi_id">
                         </div>
-                        <div *ngIf="upi_id.invalid && (upi_id.dirty || upi_id.touched)"
-        class="alert alert-danger">
-    
-      <div *ngIf="upi_id.errors?.['required']">
-        UPI ID is required.
-      </div>
-    </div>
+                        <div *ngIf="upi_id.invalid && (upi_id.dirty || upi_id.touched)" class="alert alert-danger">
+                         <div *ngIf="upi_id.errors?.['required']"> UPI ID is required.</div>
+                </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group">
@@ -3205,6 +3328,7 @@ Payment Account is required.
                 </div>
     
             </form>
+            
         </div>
         <!-- <div class="modal-footer mt-2">
             <button type="button" class="btn btn-dark">Finalize Payment</button>
