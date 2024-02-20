@@ -127,6 +127,7 @@ export class UpdateSalesReturnComponent implements OnInit {
   searc: any;
   myControl: FormArray;
   variantList: any[] = [];
+  variantList2: any[] = [];
   isSearch = false;
   getVariant(search: any, index: any, barcode: any) {
     this.isSearch = true;
@@ -147,7 +148,8 @@ export class UpdateSalesReturnComponent implements OnInit {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
         this.isSearch = false;
-        this.variantList = res;
+       this.variantList[index]=res
+  this.variantList2 = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
@@ -173,7 +175,8 @@ export class UpdateSalesReturnComponent implements OnInit {
     }
     else {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
-        this.variantList = res;
+       this.variantList[index]=res
+  this.variantList2 = res;
         this.isSearch = false;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -425,13 +428,18 @@ export class UpdateSalesReturnComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  openModalProduct(i:number){
-    const modal = document.getElementById('productModal');
+   indexCartValue:any;
+  openModalProduct(index: number) {
+    console.log(index,'index');
+    // this.cartIndex.findIndex(index)
+    this.indexCartValue=index
+    const modalId = `productModal-${index}`; 
+    const modal = document.getElementById(modalId);
     if (modal) {
-      modal.classList.add('show');
-      modal.style.display = 'block';
+        modal.classList.add('show');
+        modal.style.display = 'block';
     }
-  }
+}
   selectAddressBilling(address: string) {
     this.selectedAddressBilling = address;
     // Close Bootstrap modal using JavaScript
@@ -498,13 +506,14 @@ export class UpdateSalesReturnComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-  closeModalProduct(i:number) {
-    const modal = document.getElementById('productModal');
+    closeModalProduct(i: number) {
+    console.log(i, 'index');  
+    const modal = document.getElementById(`productModal-${i}`);
     if (modal) {
-      modal.classList.remove('show');
-      modal.style.display = 'none';
+        modal.classList.remove('show');
+        modal.style.display = 'none';
     }
-  }
+}
   closeModalShipping() {
     const modal = document.getElementById('addressModalShipping');
     if (modal) {
@@ -1116,7 +1125,12 @@ export class UpdateSalesReturnComponent implements OnInit {
   barcode: any[] = [];
   v_id: any;
   variantChanged(value: any, index) {
-    console.log(value);
+    const modal = document.getElementById(`productModal-${index}`);
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+      }
+    this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
     // console.log(index);
     // console.log(value?.sku);
     this.barcode[index] = value.sku;

@@ -9,6 +9,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { HrmServiceService } from 'src/app/Services/hrm/hrm-service.service';
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
@@ -29,7 +30,7 @@ export class CustomerComponent implements OnInit {
   selectedCompany: string = '';
 
   constructor(private contactService: ContactService, private QueryService: QueryService,
-    private cs:CompanyService) {
+    private cs:CompanyService, private hrmService:HrmServiceService) {
     this.QueryService.filterToggle()
   }
 
@@ -144,29 +145,7 @@ export class CustomerComponent implements OnInit {
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
     })
-    // from localstorage permission check
-    // const localStorageData = JSON.parse(localStorage.getItem('auth'));
-    // if (localStorageData && localStorageData.permission) {
-    //   const permission = localStorageData.permission;
-    //   permission.map((res: any) => {
-    //     if (res.content_type.app_label === 'contacts'  && res.content_type.model === 'customer' && res.codename=='add_customer') {
-    //       this.isAdd = res.codename;
-    //       console.log(this.isAdd);
-          
-    //     } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename=='change_customer') {
-    //       this.isEdit = res.codename;
-    //       console.log(this.isEdit);
-          
-    //     }else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'customer' && res.codename=='delete_customer') {
-    //       this.isDelete = res.codename;
-    //       console.log(this.isDelete);
-          
-      
-    //     }
-    //   });
-    // }
 
-      // permissin from api profile
       this.cs.userDetails$.subscribe((userDetails) => {
         this.userDetails = userDetails;
         const permission = this.userDetails?.permission;
@@ -187,6 +166,8 @@ export class CustomerComponent implements OnInit {
           }
         });
       });
+
+    this.getMembership();
   }
 
   allSelected: boolean = false;
@@ -403,9 +384,16 @@ select=false
     document.body.innerHTML = originalContents;
   }
 
+  membershipList:any[]=[];
+  getMembership(){
+    this.hrmService.getMembership().subscribe((res:any)=>{
+      this.membershipList=res;
+    });
+  }
   // filter data
   selectCredit:any;
   selectedMember:any
+  selectedCustomer:string='';
   filterData() {
     let filteredData = this.tableData.slice();
     // if (this.supplierType) {
@@ -422,13 +410,19 @@ select=false
     if (this.selectCredit) {
       filteredData = filteredData.filter((item) => item?.opening_balance_type === this.selectCredit);
     }
-  
+    //19-02
+    if (this.selectedCustomer) {
+      filteredData = filteredData.filter((item) => item?.product_label?.title === this.selectedCustomer);
+    }
+    
     this.filteredData = filteredData;
   }
+
   clearFilter() {
     this.selectedMember = null;
     this.selectedCompany = null;
     this.selectCredit=null;
+    this.selectedCustomer=null;
     this.filterData();
   }
 }

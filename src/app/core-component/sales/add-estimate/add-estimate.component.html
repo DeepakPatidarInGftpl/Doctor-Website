@@ -1,3 +1,4 @@
+
 <div class="page-header">
     <div class="page-title">
         <h4>Sales Estimate Add</h4>
@@ -438,7 +439,7 @@
                                     <th></th>
                                 </tr>
                                 <tr>
-                                    <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                                    <th colspan="3"> <span (click)="addCart(0)" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -452,19 +453,15 @@
                                                         <svg (click)="removeCart(i)" style="color:red"
                                                             xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                             fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                            <path
-                                                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                                                         </svg>
                                                     </div>
-                                                    <svg *ngIf="isLastCart(i)" (click)="addCart()" style="color:green"
+                                                    <svg *ngIf="isLastCart(i)" (click)="addCart(i+1)" style="color:green"
                                                         xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                         fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                        <path
-                                                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                                                     </svg>
                                                 </div>
                                             </td>
@@ -472,55 +469,49 @@
                                                 <input class="input" type="text" placeholder="Search Barcode"
                                                     [attr.data-index]="i"
                                                     [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
-                                                    (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
+                                                   (blur)="hideSearch()">
                                             </td>
                                             <td colspan="1">
                                                 <div class="form-group d-flex item-align-center" style="margin-bottom: 0;">
                                             <!-- <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;"> -->
-                                                        <input
-                                                        type="text"
-                                                        placeholder="Search Product"
-                                                        aria-label="Search Products"
-                                                        matInput
-                                                        [formControl]="myControl"
-                                                        (input)="getVariant($event.target.value,i,'')"
-                                                        [matAutocomplete]="autos" 
-                                                        style="box-sizing: border-box;" 
-                                                        />
-                                                        <mat-autocomplete #autos="matAutocomplete">
-                                                        <ng-container *ngIf="myControl.value?.length >= 1 && myControl.value?.length > 0">
-                                                        <ng-container *ngFor="let option of variantList">
-                                                        <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
-                                                                    (onSelectionChange)="oncheckVariant(option,i)"
-                                                                    (onSelectionChange)="variantChanged(option, i)" style="color:#FF9F43">
-                                                            {{ option?.product_title + ' ' + option?.variant_name}}
-                                                        </mat-option>
-                                                        </ng-container>
-                                                        </ng-container>
-                                                        <mat-option *ngIf="isSearch" style="color:#FF9F43">Loading...</mat-option>
-                                                        <mat-option *ngIf="variantList?.length === 0 && !isSearch" [value]="'No data found'">
-                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
-                                                        </mat-option>
-                                                        <mat-option *ngIf="myControl.value?.length < 3" class="is-loading"> Please Enter 3 or more characters
-                                                        </mat-option>
-                                                        </mat-autocomplete>
-                                                        <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalProduct(i)"></i>
-                                                
+                                                <input type="text" placeholder="Search Product"
+                                                aria-label="Search Products" matInput [formControl]="myControl.at(i)"
+                                                (input)="getVariant($event.target.value,i,'')"
+                                                [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                            <mat-autocomplete #autos="matAutocomplete">
+                                                <ng-container *ngIf="variantList && variantList[i]">
+                                                    <ng-container *ngFor="let option of variantList[i]">
+                                                    <mat-option *ngIf="option?.is_active==true"
+                                                        [value]="option?.product_title + ' ' + option?.variant_name"
+                                                        (onSelectionChange)="oncheckVariant(option,i)"
+                                                        (onSelectionChange)="variantChanged(option, i)"
+                                                        style="color:#FF9F43">
+                                                        {{ option?.product_title + ' ' + option?.variant_name}}
+                                                    </mat-option>
+                                                    </ng-container>
+                                                </ng-container>
+                                                <mat-option *ngIf="myControl.at(i)?.value?.length >2 && isSearch" style="color:#FF9F43">Loading...</mat-option>
+                                                <mat-option *ngIf="variantList[i]?.length === 0 && !isSearch"
+                                                    [value]="'No data found'">
+                                                    <a routerLink="//product/addproduct"
+                                                        style="color:#FF9F43">+add Product</a>
+                                                </mat-option>
+                                                <mat-option *ngIf="myControl.at(i)?.value?.length < 3" class="is-loading">  Please Enter 3 or more characters</mat-option>
+                                            </mat-autocomplete>
+                                                <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalProduct(i)"></i>
                                                     <!-- </mat-form-field> -->
-                                                 
                                                 </div>
-                                               <div class="modal fade " id="productModal" tabindex="-1" role="dialog"
-                                                aria-labelledby="addressModalLabel" aria-hidden="true">
+                                               <div class="modal fade" id="productModal-{{i}}" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Selected Variants</h1>
-                                                            <button type="button" class="close" (click)="closeModalProduct()" aria-label="Close">
+                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Selected Products</h1>
+                                                            <button type="button" class="close" (click)="closeModalProduct(i)" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="form-group" *ngIf="selecteProduct">
+                                                            <div class="form-group" *ngIf="variantList && variantList[indexCartValue]">
                                                                 <div class="row">
                                                                     <div class="table-responsive">
                                                                         <table class="table datanew">
@@ -536,15 +527,14 @@
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
-                                                                                <tr
-                                                                                    *ngFor="let prod of selecteProduct?.variant_product;let ind=index;">
-                                                                                    <td class="boder">{{ ind+1+'.'}}</td>
-                                                                                    <td class="boder">{{ prod?.sku}}</td>
-                                                                                    <td class="boder">{{ prod?.product_title }}</td>
+                                                                                <tr *ngFor="let prod of variantList[indexCartValue];let inde=index;">
+                                                                                    <td class="boder">{{inde+1+'.'}}</td>
+                                                                                    <td class="boder">{{prod?.sku}}</td>
+                                                                                    <td class="boder">{{prod?.product_title }}</td>
                                                                                     <td class="boder">{{prod?.variant_name}}</td>
-                                                                                    <td class="boder">{{ prod?.created_date}}</td>
-                                                                                    <td class="boder">{{ prod?.batch[0]?.mrp}}</td>
-                                                                                    <td><button type="button" (click)="selecBatchtModel(prod?.batch[0],i,'productModal')" class="btn btn-primary btn-sm" style="float: right;">Select</button> </td>
+                                                                                    <td class="boder">{{prod?.created_date}}</td>
+                                                                                    <td class="boder">{{prod?.batch[0]?.mrp}}</td>
+                                                                                    <td><button type="button" (click)="oncheckVariant(prod,indexCartValue)" (click)="variantChanged(prod, indexCartValue)" class="btn btn-primary btn-sm" style="float: right;">Select </button> </td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
@@ -586,20 +576,13 @@
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    <tr
-                                                                                        *ngFor="let batch of selectBatch;let ind=index;">
+                                                                                    <tr *ngFor="let batch of selectBatch;let ind=index;">
                                                                                         <td class="boder">{{ ind+1+'.'}}</td>
                                                                                         <td class="boder">{{ batch?.mrp }}</td>
                                                                                         <td class="boder">{{ batch?.cost_price }}</td>
                                                                                         <td class="boder">{{ batch?.discount + '%'}}</td>
                                                                                         <td class="boder">{{ batch?.additional_discount + '%'}}</td>
-                                                                                        <td>
-                                                                                            <button type="button"
-                                                                                                (click)="selecBatchtModel(batch,i)"
-                                                                                                class="btn btn-primary btn-sm"
-                                                                                                style="float: right;">Select</button>
-                                                                                        </td>
-
+                                                                                        <td><button type="button" (click)="selecBatchtModel(batch,i)" class="btn btn-primary btn-sm" style="float: right;">Select</button> </td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
