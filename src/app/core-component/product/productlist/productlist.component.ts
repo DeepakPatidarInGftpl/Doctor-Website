@@ -500,7 +500,7 @@ this.getLabel();
 
 
   // label update
-labelList:any;
+labelList:any[]=[];
   getLabel(){
     this.coreService.getProductLabel().subscribe((res:any)=>{
       console.log(res);
@@ -520,7 +520,7 @@ labelList:any;
   //   })
   // }
 
-  updateLabel(p_id: number, l_id: number) {
+  updateLabel(p_id: number, l_id: number,i:number) {
     Swal.fire({
       title: 'Are you sure?',
       text: "Do You Want Change The Product Label!",

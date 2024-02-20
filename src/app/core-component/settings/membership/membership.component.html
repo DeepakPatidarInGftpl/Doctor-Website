@@ -129,7 +129,7 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone">Sr.No.<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Attechment<i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Attachment<i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Validity of Points <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Title <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Points Per 100<i class="fa fa-sort"></i></th>
@@ -150,11 +150,11 @@
                             </label>
                         </td>
                         <td>{{i+1}}</td>
-                        <td class="productimgname">
+                        <!-- <td class="productimgname">
                             <a class="product-img" routerLink="//settings/detail-membership/{{products?.id}}" style="line-height: 3;">
                                 <img [src]="imgUrl+products?.attachment" alt="product">
                             </a>
-                        </td>
+                        </td> -->
                         <td>
                             <a routerLink="//settings/detail-membership/{{products?.id}}" style="line-height: 3;">{{products?.validity_of_points}}</a>
                         </td>

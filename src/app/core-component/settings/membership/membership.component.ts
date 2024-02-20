@@ -92,8 +92,7 @@ export class MembershipComponent implements OnInit {
   isAscending: boolean = true;
   imgUrl = 'https://pv.greatfuturetechno.com';
 
-  constructor(private hrmService: HrmServiceService, private profileService:CompanyService) {
-  }
+  constructor(private hrmService: HrmServiceService, private profileService:CompanyService) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -204,7 +203,7 @@ export class MembershipComponent implements OnInit {
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); 
-    })
+    });
 
     this.profileService.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;

@@ -292,6 +292,13 @@
 								<div class="row mt-3">
 									<div class="col-lg-3 col-sm-4 col-12">
 										<div class="form-group">
+											<label>Article No.</label>
+											<input type="text" placeholder="Article No." formControlName="article_no" [ngClass]="{'is-invalid': f['article_no'].touched && f['article_no'].invalid}" >
+											<span class="text-danger"*ngIf="article_no && article_no.invalid && article_no.touched">Enter Article No.</span>
+										</div>
+									</div>
+									<div class="col-lg-3 col-sm-4 col-12">
+										<div class="form-group">
 											<label>Product Name*</label>
 											<input type="text" placeholder="Product Name" formControlName="title" [ngClass]="{
 													'is-invalid': f['title'].touched && f['title'].invalid}" [(ngModel)]="productNamme">
@@ -426,8 +433,7 @@
                                   <mat-option *ngFor="let color of colorList; let i=index" [value]="color.id" (click)="onCheckColors(color.title)"> {{color.title}}</mat-option>
                                 </mat-select> -->
 											<p *ngIf="selectedColor>0">{{selectedColor + ' Colors Selected'}}</p>
-											<span class="text-danger" *ngIf="color && color.invalid && color.touched">
-												Select Color </span>
+											<span class="text-danger" *ngIf="color && color.invalid && color.touched">Select Color </span>
 										</div>
 									</div>
 									<div class="col-lg-3 col-sm-4 col-12">
@@ -438,8 +444,7 @@
 													data-bs-toggle="dropdown" aria-expanded="false">Select Size</button>
 												<ul class="dropdown-menu"
 													style="width: 100%; max-height: 300px; overflow-y: auto;">
-													<li><input type="text" placeholder="search size"
-														class="form-control" [(ngModel)]="searchSize"
+													<li><input type="text" placeholder="search size" class="form-control" [(ngModel)]="searchSize"
 														(ngModelChange)="filterSizeData()"
 														[ngModelOptions]="{standalone: true}"></li>
 
@@ -478,23 +483,17 @@
 												<option value="Store">Store</option>
 												<option value="Both">Both</option>
 											</select>
-											<span class="text-danger"
-												*ngIf="product_store && product_store.invalid && product_store.touched">Select
-												Product Store
-											</span>
+											<span class="text-danger" *ngIf="product_store && product_store.invalid && product_store.touched">Select Product Store </span>
 										</div>
 									</div>
 									<div class="col-lg-3 col-sm-4 col-12">
 										<div class="form-group">
 											<label>Unit*</label>
-											<select class="form-select" formControlName="unit"
-												[ngClass]="{'is-invalid': f['unit'].touched && f['unit'].invalid}">
+											<select class="form-select" formControlName="unit" [ngClass]="{'is-invalid': f['unit'].touched && f['unit'].invalid}">
 												<option value="" selected disabled>Select unit</option>
-												<option value="{{unit.id}}" *ngFor="let unit of unitList">{{unit.title}}
-												</option>
+												<option value="{{unit.id}}" *ngFor="let unit of unitList">{{unit.title}}</option>
 											</select>
-											<span class="text-danger"
-												*ngIf="unit && unit.invalid && unit.touched">Select Unit </span>
+											<span class="text-danger" *ngIf="unit && unit.invalid && unit.touched">Select Unit </span>
 										</div>
 									</div>
 
@@ -547,14 +546,7 @@
 											<span class="text-danger" *ngIf="product_label && product_label.invalid && product_label.touched">Select Product Label</span>
 										</div>
 									</div>
-									<div class="col-lg-3 col-sm-4 col-12">
-										<div class="form-group">
-											<label>Article No.</label>
-											<input type="text" placeholder="Article No." formControlName="article_no" [ngClass]="{'is-invalid': f['article_no'].touched && f['article_no'].invalid}" >
-											<span class="text-danger"*ngIf="article_no && article_no.invalid && article_no.touched">Enter Article No.
-											</span>
-										</div>
-									</div>
+									
 									<div class="col-lg-6 col-sm-6 col-12">
 										<div class="form-group">
 											<div class="d_flex">
