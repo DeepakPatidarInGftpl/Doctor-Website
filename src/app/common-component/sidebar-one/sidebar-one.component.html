@@ -87,15 +87,12 @@
                     <li *ngIf="isDealer"><a routerLink="/contacts/dealerList" routerLinkActive="active">Dealer</a></li>
                 </ul>
             </li> 
-            <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isStock ||isStockTransport || isStockTransportRequest ||isProductLabel">
+            <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isProductLabel">
                 <a  [ngClass]="{'active': activePath === 'product'}"><img src="assets/img/icons/product.svg" alt="img"><span>Product Management</span> <span
                         class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isProduct"><a routerLink="/product/productlist" routerLinkActive="active">Product</a></li>
                     <li  *ngIf="isProductLedger"><a routerLink="/product/product-Ledger" routerLinkActive="active">Product Ledger</a></li>
-                    <li  *ngIf="isStock"><a routerLink="/product/stock" routerLinkActive="active">Stock</a></li>
-                    <li *ngIf="isStockTransport"><a routerLink="/product/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
-                    <li *ngIf="isStockTransportRequest"><a routerLink="/product/list-stock-transfer-request" routerLinkActive="active">Stock Transfer Request</a></li>
                    
                     <li *ngIf="isCategory"><a routerLink="/product/categorylist" routerLinkActive="active">Category</a></li> 
                     <li *ngIf="isSubcategory"><a routerLink="/product/subcategorylist" routerLinkActive="active">Sub Category </a></li>
@@ -161,6 +158,7 @@
                     <li *ngIf="isExpenseVoucher"><a routerLink="/transaction/expensesList" routerLinkActive="active">Expenses Voucher</a></li>
                     <li *ngIf="isDebit"><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
                     <li *ngIf="isCredit"><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
+                    <li><a routerLink="/transaction/materialConsuption" routerLinkActive="active">Material Consuption</a></li>
                </ul>
             </li>
             <li class="submenu">
@@ -201,13 +199,15 @@
                 </ul>
             </li>
           
-            <!-- <li class="submenu" *ngIf="isStockTransport || isStockTransportRequest">
+            <li class="submenu" *ngIf="isStock || isStockTransport || isStockTransportRequest">
                 <a [ngClass]="{'active': activePath === 'inventory'}"><img src="assets/img/icons/product.svg" alt="img"><span>Inventory</span> <span class="menu-arrow"></span></a>
                 <ul>
-                <li *ngIf="isStockTransport"><a routerLink="/inventory/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
+                <li  *ngIf="isStock"><a routerLink="/inventory/stock" routerLinkActive="active">Stock</a></li>
                 <li *ngIf="isStockTransportRequest"><a routerLink="/inventory/list-stock-transfer-request" routerLinkActive="active">Stock Transfer Request</a></li>
-                </ul>
-            </li>  -->
+                <li *ngIf="isStockTransport"><a routerLink="/inventory/stock-verfication" routerLinkActive="active">Stock Verification</a></li>
+                <li *ngIf="isStockTransport"><a routerLink="/inventory/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
+            </ul>
+            </li> 
 
             <li class="submenu" *ngIf="isBanner || isStaticPage || isFooterpage || isFooterList || isTrendingProducts || isDealoftheDay || isAddressStore || isCouponList || isReason || isAboutBanner || isAboutFooterBanner || isNewarrivalBanner || isRatingReview || isOrder">
                 <a  [ngClass]="{'active': activePath === 'website'}"><i class="fa fa-sitemap" data-bs-toggle="tooltip" title="fa fa-sitemap" style="color: #637381;"></i><span> Website</span> <span class="menu-arrow"></span></a>

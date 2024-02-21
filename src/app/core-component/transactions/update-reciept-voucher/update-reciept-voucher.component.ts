@@ -59,7 +59,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
 
     this.recieptVoucherBankForm = this.fb.group({
       receipt_type: new FormControl('Bank'),
-      customer: new FormControl('', [Validators.required]),
+      payment_account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       receipt_voucher_no: new FormControl(''),
       mode_type: new FormControl('',[Validators.required]),
@@ -94,7 +94,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.isBank = true;
         this.isCash = false;
         this.recieptVoucherBankForm.patchValue(this.editRes)
-        this.recieptVoucherBankForm.get('customer').patchValue(this.editRes?.customer?.id);
+        this.recieptVoucherBankForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
         this.recieptVoucherBankForm.get('payer').patchValue(this.editRes?.payer?.id);
         if(this.editRes?.bill_cart.length>0){
           this.recieptVoucherBankForm.setControl('receipt_voucher_cart', this.udateCartBank(this.editRes?.bill_cart));
@@ -107,7 +107,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.payerControl.setValue(this.editRes?.payer?.account_id);
       } else {
         this.recieptVoucherForm.patchValue(this.editRes);
-        this.recieptVoucherForm.get('customer').patchValue(this.editRes?.customer?.id);
+        this.recieptVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
         this.recieptVoucherForm.get('payer').patchValue(this.editRes?.payer?.id);
         if(this.editRes?.bill_cart.length>0){
           this.recieptVoucherForm.setControl('receipt_voucher_cart', this.udateCart(this.editRes?.bill_cart));
@@ -291,13 +291,13 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     }
     return filteredCustomer;
   }
-  get customer() {
-    return this.recieptVoucherForm.get('customer') as FormControl;
+  get payment_account() {
+    return this.recieptVoucherForm.get('payment_account') as FormControl;
   }
   oncheck(data: any) {
     const selectedItemId = data.id;
     this.recieptVoucherForm.patchValue({
-      customer: selectedItemId
+      payment_account: selectedItemId
     });
   }
   oncheck1(data: any) {
@@ -316,7 +316,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   oncheckBank(data: any) {
     const selectedItemId = data.id;
     this.recieptVoucherBankForm.patchValue({
-      customer: selectedItemId
+      payment_account: selectedItemId
     });
   }
   oncheckBank1(data: any) {
@@ -355,7 +355,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     if (this.recieptVoucherForm.valid) {
       const formdata = new FormData();
       formdata.append('receipt_type', this.recieptVoucherForm.get('receipt_type')?.value);
-      formdata.append('customer', this.recieptVoucherForm.get('customer')?.value);
+      formdata.append('payment_account', this.recieptVoucherForm.get('payment_account')?.value);
       formdata.append('date', this.recieptVoucherForm.get('date')?.value);
       formdata.append('receipt_voucher_no', this.recieptVoucherForm.get('receipt_voucher_no')?.value);
       formdata.append('mode_type', this.recieptVoucherForm.get('mode_type')?.value);
@@ -413,7 +413,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     if (this.recieptVoucherBankForm.valid) {
       const formdata = new FormData();
       formdata.append('receipt_type', this.recieptVoucherBankForm.get('receipt_type')?.value);
-      formdata.append('customer', this.recieptVoucherBankForm.get('customer')?.value);
+      formdata.append('payment_account', this.recieptVoucherBankForm.get('payment_account')?.value);
       formdata.append('date', this.recieptVoucherBankForm.get('date')?.value);
       formdata.append('receipt_voucher_no', this.recieptVoucherBankForm.get('receipt_voucher_no')?.value);
       formdata.append('mode_type', this.recieptVoucherBankForm.get('mode_type')?.value);

@@ -178,6 +178,7 @@ export class SalesDashboardComponent implements OnInit {
 
     this.getSaleTotalDashboard();
     this.getSalePurchaseGraph();
+    this.getCustomerRetention();
     this.getSalePurchaseTotalDashboard();
     this.getDailySales();
     this.getTransactionTotalDashboard();
@@ -204,12 +205,24 @@ export class SalesDashboardComponent implements OnInit {
     this.endDate = end;
     this.getSaleTotalDashboard();
     this.getSalePurchaseGraph();
+    this.getCustomerRetention();
   }
   saleTotalList: any;
   getSaleTotalDashboard() {
     this.dashboardService.getSalesNumber(this.startDate, this.endDate).subscribe((res: any) => {
       console.log(res);
       this.saleTotalList = res;
+    },err=>{
+      this.toastr.error(err.message)
+    })
+  }
+  customerRetentionList:any;
+  getCustomerRetention() {
+    this.dashboardService.getCutomerRetention(this.startDate, this.endDate).subscribe((res: any) => {
+      console.log(res);
+      this.customerRetentionList = res;
+    },err=>{
+      this.toastr.error(err.message)
     })
   }
   salePurchaseList: any;
@@ -764,6 +777,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         }
         else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
@@ -799,6 +813,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(yesterday),
@@ -835,6 +850,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(firstDayOfWeek),
@@ -869,6 +885,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(firstDayOfMonth),
@@ -903,6 +920,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(firstDayOfLastMonth),
@@ -937,6 +955,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(last15DaysStart),
@@ -971,6 +990,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(last30DaysStart),
@@ -1006,6 +1026,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(thisQuarterStart),
@@ -1039,6 +1060,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(lastQuarterStart),
@@ -1073,6 +1095,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(thisFinancialYearStart),
@@ -1107,6 +1130,7 @@ export class SalesDashboardComponent implements OnInit {
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
           this.getSalePurchaseGraph();
+          this.getCustomerRetention();
         } else if (type == 'salevspurchase') {
           this.salevsPurchaseForm.patchValue({
             start: this.formatDate(lastFinancialYearStart),
