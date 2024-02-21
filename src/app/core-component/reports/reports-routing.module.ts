@@ -51,6 +51,26 @@ const routes: Routes = [
     import('./all-reports/all-reports.module').then((m) =>m.AllReportsModule),
 
   },
+  {
+    path:'sale-overdue',
+    loadChildren: () =>
+    import('./sale-overdue/sale-overdue.module').then((m) =>m.SaleOverdueModule)
+},
+{
+  path:'amount-wise-sale',
+    loadChildren: () =>
+    import('./amount-wise-sale/amount-wise-sale.module').then((m) =>m.AmountWiseSaleModule)
+},
+{
+  path:'category-wise-sale',
+  loadChildren: () =>
+  import('./category-wise-sale/category-wise-sale.module').then((m) =>m.CategoryWiseSaleModule)
+
+},{
+  path:'brand-wise-sale',
+  loadChildren: () =>
+  import('./brand-wise-sale/brand-wise-sale.module').then((m) =>m.BrandWiseSaleModule)
+}
  
 
 

@@ -2,8 +2,8 @@
     <div class="col-lg-12 col-12">
         <div class="page-header">
             <div class="page-title titl">
-                <h4 class="text_24">Stock Alert</h4>
-                <h6>Manage your Stock Alert</h6>
+                <h4 class="text_24">Category Wise Sale</h4>
+                <h6>Manage your Category Wise Sale</h6>
             </div>
 
 
@@ -12,21 +12,21 @@
             <div class="card-body">
                 <div class="table-top">
                     <div class="search-set">
-                        <form [formGroup]="stockAlertform">
+                        <form [formGroup]="categoryWiseSaleform">
                             <div class="row">
-                                <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="col-lg-4 col-sm-6 col-12">
                                     <div class="search-input mx-3">
                                         <strong>Select Date</strong>
                                         <mat-form-field style="width: 100%;" class="border">
-                                            <mat-date-range-input [formGroup]="stockAlertform"
+                                            <mat-date-range-input [formGroup]="categoryWiseSaleform"
                                                 [rangePicker]="startdatePicker">
                                                 <input matStartDate placeholder="Start date" formControlName="start"
-                                                    class="mat-input" (dateChange)="getSelectedStockAlertDates()">
+                                                    class="mat-input" (dateChange)="getSelectedCategoryWiseSaleDates()">
                                                 <span class="mat-input-placeholder-wrapper">
                                                     <span class="mat-input-placeholder">to</span>
                                                 </span>
                                                 <input matEndDate placeholder="End date" formControlName="end"
-                                                    class="mat-input" (dateChange)="getSelectedStockAlertDates()">
+                                                    class="mat-input" (dateChange)="getSelectedCategoryWiseSaleDates()">
                                             </mat-date-range-input>
 
                                             <mat-datepicker-toggle matSuffix [for]="startdatePicker"
@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="col-lg-4 col-sm-6 col-12">
                                     <div class="form-group">
                                         <strong>Select Category</strong>
                                         <input type="text" placeholder="Enter Product" [formControl]="categoryControl"
@@ -49,7 +49,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="col-lg-4 col-sm-6 col-12">
                                     <div class="form-group">
                                         <strong>Select Sub Category</strong>
                                         <input type="text" placeholder="Enter Sub Category"
@@ -64,26 +64,8 @@
 
                                     </div>
                                 </div>
-                                <div class="col-lg-2 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <strong>Select Brand</strong>
-                                        <input type="text" placeholder="Enter Brand" [formControl]="brandControl"
-                                          [matAutocomplete]="autob" class="form-control">
-                                        <mat-autocomplete #autob="matAutocomplete" [displayWith]="displayFn">
-                                            <mat-option *ngFor="let supplier of filteredBrand | async"
-                                                [value]="supplier"
-                                                (blur)="oncheckBrand( supplier?.id)">{{supplier?.title}} </mat-option>
-                                        </mat-autocomplete>
-
-                                    </div>
-                                </div>
-                                <div class="col-lg-2 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <strong>Enter Cost Price</strong>
-                                        <input type="number" placeholder="Enter Cost Price" formControlName="costPrice"
-                                            #val (input)="oncheckCostPrice(val.value)" class="form-control">
-                                    </div>
-                                </div>
+                             
+                            
                             </div>
                         </form>
 
@@ -91,18 +73,15 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
-                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"(click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"
                                         style="max-width: none;"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
-                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"
                                         style="max-width: none;"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
-                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"
                                         style="max-width: none;"></a>
                             </li>
                         </ul>
@@ -115,32 +94,24 @@
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Product Name <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Available Qty <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Min Qty <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">MRP. <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Stock Value <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Landing Stock Value <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Created Date <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Category <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Total Qty <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Total Amount <i class="fa fa-sort"></i></th>
+                               
 
                             </tr>
                         </thead>
-                        <tbody *ngIf="stockAlertList?.length>=0">
+                        <tbody *ngIf="categoryWiseSaleList?.length>=0">
                             <tr
-                                *ngFor="let list of stockAlertList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                                *ngFor="let list of categoryWiseSaleList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <th>{{i+1+'.'}}</th>
-                                <td>{{list.product_name}}</td>
-                                <td>{{list.available_qty}}</td>
-                                <td>{{list.min_qty}}</td>
-                                <td>{{list.mrp}}</td>
-                                <td>{{list.stock_value}}</td>
-                                <td>{{list.landing_stock_value}}</td>
-                                <td>{{list.created_date}}</td>
-                                <td>{{list.status}}</td>
+                                <td>{{list.category}}</td>
+                                <td>{{list.total_qty}}</td>
+                                <td>{{list.total_amount | number:'1.2-2'}}</td>
+                               
                             </tr>
                         </tbody>
-                        <tbody *ngIf="stockAlertList?.length==0">
+                        <tbody *ngIf="categoryWiseSaleList?.length==0">
                             <tr>
                                 <td colspan="10">
                                     <p class="text-center">Data not available</p>

@@ -155,5 +155,72 @@ export class ReportService {
        }
        return this.http.get<any>(url);
       }
+      getSaleOverDue(date:any):Observable<any>{
+        let url = this.apiUrl + '/api/reports/sale/overdue/';
+        const queryParams:any[]=[];
+        if(date){
+          queryParams.push(`date=${date}`);
+        }
+        console.log(date);
+        
+        if(queryParams.length > 0) {
+          url += '?'+queryParams.join('&');
+         }
+         return this.http.get<any>(url);
   
+      }
+      getAmountWiseSale(start_date:any,end_date:any):Observable<any>{
+        let url=this.apiUrl +'/api/reports/amountwise/sale/';
+        const queryParams:any[]=[];
+        if(start_date){
+          queryParams.push(`start_date=${start_date}`);
+        }
+        if(end_date){
+          queryParams.push(`end_date=${end_date}`);
+        }
+        
+        if(queryParams.length > 0) {
+          url += '?'+queryParams.join('&');
+         }
+         return this.http.get<any>(url);
+      }
+      getCategoryWiseSale(start_date:any,end_date:any,category:any,subcategory:any):Observable<any>{
+        let url = this.apiUrl +'/api/reports/categorywise/sale/';
+        const queryParams: any[] = [];
+        if (start_date) {
+          queryParams.push(`start_date=${start_date}`);
+        }
+        if (end_date) {
+          queryParams.push(`end_date=${end_date}`);
+        }
+        if (category) {
+          queryParams.push(`category=${category}`);
+        }
+        if (subcategory) {
+          queryParams.push(`subcategory=${subcategory}`);
+        }
+        
+        if(queryParams.length > 0) {
+          url += '?'+queryParams.join('&');
+         }
+         return this.http.get<any>(url);
+        }
+        getBrandWiseSale(start_date:any,end_date:any,brand:any):Observable<any>{
+          let url = this.apiUrl +'/api/reports/brandwise/sale/';
+          const queryParams: any[] = [];
+          if (start_date) {
+            queryParams.push(`start_date=${start_date}`);
+          }
+          if (end_date) {
+            queryParams.push(`end_date=${end_date}`);
+          }
+          if (brand) {
+            queryParams.push(`brand=${brand}`);
+          }
+      
+          if(queryParams.length > 0) {
+            url += '?'+queryParams.join('&');
+           }
+           return this.http.get<any>(url);
+          }
 }

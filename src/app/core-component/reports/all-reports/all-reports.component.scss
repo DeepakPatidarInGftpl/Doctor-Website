@@ -1,12 +1,12 @@
 .icon {
-    color: #FF9F43;
-    font-size: 30px;
+    color: hsl(29, 100%, 63%);
+    font-size: 35px;
 }
 
 .p {
     font-size: 18px;
     font-weight: 600;
-    padding: 15px 5px 0 20px; // top right bottom left
+    padding: 10px 5px 0 20px; // top right bottom left
     margin-bottom: 0px;
 }
 .p_head{
@@ -23,10 +23,11 @@
     gap: 5px;
     color: white;
 }
-
-.icon {
-    font-size: 50px;
+.icon-label i{
+  color: hsl(29, 100%, 63%);
+  font-size: 50px;
 }
+
 
 .row {
     font-size: 22px;
@@ -41,7 +42,7 @@
     border-bottom: none !important;
 }
 
-::ng-deep .mat-tab-label-active .icon {
+::ng-deep .mat-tab-label-active .icon-label i {
     color: #FF9F43;
 }
 
@@ -49,8 +50,7 @@
     color: #FF9F43;
 }
 
-::ng-deep .mat-tab-label:not(.mat-tab-label-active) .icon {
-    
+::ng-deep .mat-tab-label:not(.mat-tab-label-active) .icon-label i {
     color: white;
 }
 
