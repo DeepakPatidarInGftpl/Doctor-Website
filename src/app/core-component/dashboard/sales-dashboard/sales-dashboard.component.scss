@@ -372,7 +372,8 @@ input[type="datetime-local"],
   height: 90px;
   left: 20px;
   // gap: 116px;
-  display: -webkit-inline-box;
+  // display: -webkit-inline-box;
+  display: inline;
   padding: 10px 0px 10px 0px;
   // padding-bottom: 70%; 
 }
@@ -390,7 +391,7 @@ font-size: 24px;
 font-weight: 600;
 line-height: 33px;
 letter-spacing: 0em;
-text-align: right;
+// text-align: right;
 color: #0E1726;
 }
 

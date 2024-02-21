@@ -83,7 +83,7 @@
    
         <div class="row" *ngIf="saleTotalList">
             <ng-container>
-                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
                     <div class="dash-count card_bg_img card_1" style="flex-direction: column; width: 100%;">
                         <div class="dash-counts" style="width: 100%;">
                             <div class="num-1">
@@ -115,7 +115,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-3 col-12 d-flex">
+                <div class="col-lg-2 col-sm-3 col-12 d-flex">
                     <div class="dash-count card_bg_img card_1" style="flex-direction: column; width: 100%;">
                         <div class="dash-counts" style="width: 100%;">
                             <div class="num-1" >
@@ -139,6 +139,21 @@
                                     <img src="assets/img/chartUp.png" alt="">
                                     <p class="sale_percentage_p">{{salePurchaseList?.profit_purchases_percentage}}</p>
                                 </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex mt-3">
+                    <div class="dash-count das-h">
+                        <div class="dash-counts">
+                            <div class="num-img">
+                                <img src="assets/img/dollar.png" alt="">
+                            </div>
+                            <div>
+                                <p class="card-num-p1" style="font-size: 17px;">Customer Retention</p>
+                                <p class="card-num-p2">{{customerRetentionList?.customer_retention_rate}}</p>
                             </div>
                         </div>
                     </div>

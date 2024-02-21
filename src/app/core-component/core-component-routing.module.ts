@@ -143,6 +143,7 @@ const routes: Routes = [
       {path:'hrm',loadChildren:()=>import('./hrm/hrm.module').then((m)=>m.HrmModule)},
     
       {path:'dashboard',loadChildren:()=>import('./dashboard/dashboard.module').then((m)=>m.DashboardModule)},
+      {path:'inventory',loadChildren:()=>import('./inventory/inventory.module').then((m)=>m.InventoryModule)},
  
     ],
   },

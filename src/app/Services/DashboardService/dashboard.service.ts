@@ -24,7 +24,23 @@ export class DashboardService {
     }
     return this.http.get<any>(url);
   }
-  
+  // /pv-api/customer-retention-rate/?start_date=2024-02-01&end_date=2024-02-20
+
+  getCutomerRetention(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/customer-retention-rate/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+
   getTotalSalePurchase(from_date: any, to_date: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/total-sale-vs-total-purchase/';
     const queryParams: any[] = [];

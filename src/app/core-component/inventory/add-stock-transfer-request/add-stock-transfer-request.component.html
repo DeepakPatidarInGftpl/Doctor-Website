@@ -1,0 +1,297 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Add Stock Transfer Request</h4>
+        <h6>Add/New Stock Transfer Request</h6>
+    </div>
+</div>
+
+<div class="card" id="purchaseForm">
+    <div class="card-body">
+        <form [formGroup]="stockTransferRequestForm" (ngSubmit)="submit()">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-12">
+                    <div class="form-group">
+                        <label>From Branch*</label>
+                        <mat-form-field class="w-100" style="padding: 0;width: 100%;min-width: 100%;border-top: none;">
+                            <input type="text" placeholder="Select From Branch" aria-label="from_branch" matInput
+                                [formControl]="fromBranchControl" [matAutocomplete]="auto"
+                                style="box-sizing: border-box;"
+                                [ngClass]="{'is-invalid': f['from_branch'].touched && f['from_branch'].invalid}">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <ng-container *ngFor="let Branch of filteredFromBranch | async">
+                                    <mat-option *ngIf="Branch.is_active==true" [value]="Branch?.title"
+                                        (onSelectionChange)="oncheck(Branch)" style="color:#FF9F43">{{Branch?.title
+                                        }}</mat-option>
+                                </ng-container>
+                                <ng-container *ngIf="(filteredFromBranch | async) as Branchs">
+                                    <mat-option *ngIf="Branchs.length === 0" [value]="'No data found'">
+                                        <a routerLink="//masters/branch" style="color:#FF9F43">+ Add Branch</a>
+                                    </mat-option>
+                                    <mat-option *ngIf="fromBranchControl.value?.length < 3" class="is-loading">Please
+                                        Enter 1 or more characters</mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <span class="text-danger"
+                            *ngIf="from_branch && from_branch.invalid && from_branch.touched">Select
+                            From Branch
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-12">
+                    <div class="form-group">
+                        <label>To Branch*</label>
+                        <mat-form-field class="w-100" style="padding: 0;width: 100%;min-width: 100%;border-top: none;">
+                            <input type="text" placeholder="Select To Branch" aria-label="to_branch" matInput
+                                [formControl]="toBranchControl" [matAutocomplete]="toBranchAuto"
+                                style="box-sizing: border-box;"
+                                [ngClass]="{'is-invalid': f['to_branch'].touched && f['to_branch'].invalid}">
+                            <mat-autocomplete autoActiveFirstOption #toBranchAuto="matAutocomplete">
+                                <ng-container *ngFor="let Branch of filteredToBranch | async">
+                                    <mat-option *ngIf="Branch.is_active==true" [value]="Branch?.title" (onSelectionChange)="oncheck1(Branch)" style="color:#FF9F43">{{Branch?.title }}</mat-option>
+                                </ng-container>
+                                <ng-container *ngIf="(filteredToBranch | async) as Branchs">
+                                    <mat-option *ngIf="Branchs.length === 0" [value]="'No data found'">
+                                        <a routerLink="//masters/branch" style="color:#FF9F43">+ Add Branch</a>
+                                    </mat-option>
+                                    <mat-option *ngIf="toBranchControl.value?.length < 3" class="is-loading">Please
+                                        Enter 1 or more characters</mat-option>
+                                </ng-container>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <span class="text-danger" *ngIf="to_branch && to_branch.invalid && to_branch.touched">Select To Branch </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Request Date*</label>
+                        <input type="date" formControlName="request_date" [ngClass]="{'is-invalid': f['request_date'].touched && f['request_date'].invalid}">
+                        <span class="text-danger" *ngIf="request_date && request_date.invalid && request_date.touched">Select Request Date </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Transfer Request Number</label>
+                        <input type="text" formControlName="transfer_request_number" [ngModel]="prefixNo"
+                            [ngClass]="{'is-invalid': f['transfer_request_number'].touched && f['transfer_request_number'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="transfer_request_number && transfer_request_number.invalid && transfer_request_number.touched">Enter Transfer
+                           Request Number </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-3 col-12">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select formControlName="status" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['status'].touched && f['status'].invalid}">
+                            <option value="" selected disabled>Select Status</option>
+                            <option value="Open">Open</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                            <option value="Dispatched">Dispatched</option>
+                            <option value="Received">Received</option>
+                        </select>
+                        <span class="text-danger" *ngIf="status && status.invalid && status.touched">select Status</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="page-title">
+                                <p style="color:#FF9F43;font-size: 16px;">Product Details</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">Select Category</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                        <li><input type="text" placeholder="search category" class="form-control"
+                                                [(ngModel)]="searchCategory" (ngModelChange)="filterCategory()"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                *ngFor="let category of filteredCategoryList let i=index;">
+                                                <input type="checkbox" [value]="category.id"
+                                                    (change)="SelectedProduct(category?.id)" [id]="'checkboxCat-' + i"
+                                                    #categoryValue (change)="getSubCategory(categoryValue.value)">
+                                                <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;"
+                                                    (click)="onLabelClick($event)">{{category?.title}}</label>
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <p *ngIf="selectData.length>0">{{selectData.length + ' Category Selected'}}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <div class="dropdown">
+                                    <button type="button" class="dropdown-toggle button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
+                                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                        <li><input type="text" placeholder="search category" class="form-control"
+                                                [(ngModel)]="searchSubCategory" (ngModelChange)="filterSubCategory()"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                *ngFor="let subcategory of filteredSubCategoryList let i=index;">
+                                                <input type="checkbox" [value]="subcategory.id"
+                                                    (change)="SelectedProductSubCat(subcategory?.id)"
+                                                    [id]="'checkboxSubCat-' + i">
+                                                <label [for]="'checkboxSubCat-' + i" style="margin-bottom: 0;"
+                                                    (click)="onLabelClick($event)">{{subcategory?.title}}</label>
+                                            </a></li>
+                                    </ul>
+                                </div>
+                                <p *ngIf="selectSubCate.length>0">{{selectSubCate.length + ' Sub Category Selected'}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table datanew">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th></th>
+                                        <th>Barcode/SKU</th>
+                                        <th>Product Name</th>
+                                        <th>QTY</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container formArrayName="cart">
+                                        <ng-container *ngFor="let d of getCart().controls; let i=index">
+                                            <tr [formGroupName]="i">
+                                                <td>{{i+1+'.'}}</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="me-2">
+                                                            <svg (click)="removeCart(i)" style="color:red"
+                                                                xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-x-circle"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                <path
+                                                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
+                                                        </div>
+                                                        <svg *ngIf="isLastCart(i)" (click)="addCart()"
+                                                            style="color:green" xmlns="http://www.w3.org/2000/svg"
+                                                            width="16" height="16" fill="currentColor"
+                                                            class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path
+                                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                        </svg>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input class="input" type="text" placeholder="Search Barcode"
+                                                        [attr.data-index]="i"
+                                                        [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
+                                                        (keyup)="getVariant(id.value,i,'barcode')"
+                                                        (blur)="hideSearch()">
+                                                </td>
+                                                <td colspan="1">
+                                                    <div class="form-group" style="margin-bottom: 0;">
+                                                        <mat-form-field class="w-100"
+                                                            style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                            <input type="text" placeholder="Search Product"
+                                                                aria-label="Search Products" matInput
+                                                                [formControl]="myControl"
+                                                                (input)="getVariant($event.target.value,i,'')"
+                                                                [matAutocomplete]="autos"
+                                                                style="box-sizing: border-box;" />
+                                                            <mat-autocomplete #autos="matAutocomplete">
+                                                                <ng-container
+                                                                    *ngIf="myControl.value?.length >= 1 && myControl.value?.length > 0">
+                                                                    <ng-container *ngFor="let option of variantList">
+                                                                        <mat-option *ngIf="option.is_active==true"
+                                                                            [value]="option?.product_title + ' ' + option?.variant_name"
+                                                                            (onSelectionChange)="oncheckVariant(option,i)"
+                                                                            (onSelectionChange)="variantChanged(option, i)"
+                                                                            style="color:#FF9F43">
+                                                                            {{ option?.product_title + ' ' +
+                                                                            option?.variant_name}}
+                                                                        </mat-option>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                                <mat-option *ngIf="variantList?.length === 0"
+                                                                    [value]="'No data found'">
+                                                                    <a routerLink="//product/addproduct"
+                                                                        style="color:#FF9F43">+add Product</a>
+                                                                </mat-option>
+                                                                <mat-option *ngIf="myControl.value?.length < 3"
+                                                                    class="is-loading">
+                                                                    Please Enter 3 or more characters
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </td>
+                                                <td><input type="number" formControlName="quantity" class="input" (blur)="purchase4(i)"></td>
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-start"><strong>Total</strong></td>
+                                        <td class="text-start">{{calculateTotalQty()}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 my-3">
+                              
+                            </div>
+                            <div class="col-lg-6 my-3">
+                                <div class="form-group">
+                                    <div class="total-order">
+                                        <ul>
+                                            <li class="total">
+                                                <h4>Total Product</h4>
+                                                <h5>{{calculateTotalProduct()}}
+                                                    <input type="text" formControlName="total_product" class="input"
+                                                    [ngModel]="calculateTotalProduct()" style="display: none;">
+                                                </h5>
+                                            </li>
+                                            <li class="total">
+                                                <h4>Total QTY</h4>
+                                                <h5> {{calculateTotalQty()}}  <input type="text" formControlName="total_qty" class="input"
+                                                    [ngModel]="calculateTotalQty()" style="display: none;"></h5>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="col-lg-12">
+                    <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                    <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status"aria-hidden="true"></span>&nbsp; Submit</button>
+                    <a routerLink="//inventory/list-stock-transfer-request" class="btn btn-cancel text-white">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

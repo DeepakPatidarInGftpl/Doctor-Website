@@ -24,13 +24,13 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
-                        <label>Customer*</label>
+                        <label>Payment Account*</label>
                         <mat-form-field class="w-100" style="padding: 0;
                                     width: 100%;
                                     min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Customer" aria-label="Customer" matInput
+                            <input type="text" placeholder="Search Payment Account" aria-label="Payment Account" matInput
                                 [formControl]="customerControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
-                                [ngClass]="{'is-invalid': h['customer'].touched && h['customer'].invalid}">
+                                [ngClass]="{'is-invalid': h['payment_account'].touched && h['payment_account'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let customer of filteredCustomer | async"
                                     [value]="customer.account_id" (onSelectionChange)="oncheck(customer)"
@@ -46,8 +46,8 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
-                            customer
+                        <span class="text-danger" *ngIf="payment_account && payment_account.invalid && payment_account.touched">Select
+                            Payment Account
                         </span>
                     </div>
                 </div>
@@ -311,12 +311,12 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
-                        <label>Customer*</label>
+                        <label>Payment Account*</label>
                         <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Customer" aria-label="Customer" matInput
+                            <input type="text" placeholder="Search Payment Account" aria-label="Payment Account" matInput
                                 [formControl]="customerControl" [matAutocomplete]="autobank"
                                 style="box-sizing: border-box;"
-                                [ngClass]="{'is-invalid': g['customer'].touched && g['customer'].invalid}">
+                                [ngClass]="{'is-invalid': g['payment_account'].touched && g['payment_account'].invalid}">
                             <mat-autocomplete #autobank="matAutocomplete">
                                 <mat-option *ngFor="let customer of filteredCustomer | async"
                                     [value]="customer.account_id" (onSelectionChange)="oncheckBank(customer)"
@@ -330,7 +330,7 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select customer </span>
+                        <span class="text-danger" *ngIf="payment_account && payment_account.invalid && payment_account.touched">Select Payment Account </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">

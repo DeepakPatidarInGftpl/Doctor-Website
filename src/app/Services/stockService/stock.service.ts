@@ -10,6 +10,10 @@ export class StockService {
   constructor(private http: HttpClient) { }
   apiUrl = `${environment.api}`;
 
+  getStock() {
+    let url = this.apiUrl + '/pv-api/stock/';
+    return this.http.get(url)
+  }
   // stock transfer
 
   getStockTransfer() {
@@ -120,7 +124,6 @@ export class StockService {
     return this.http.get(url)
   }
 
-
   // stock transfer request
   stockTransferrecieved(id: number): Observable<any> {
     let url = this.apiUrl + '/pv-api/stock_transfer_recieved/?id='
@@ -138,5 +141,23 @@ export class StockService {
   stockTransferRequestRecieved(id: number): Observable<any> {
     let url = this.apiUrl + '/pv-api/stock_transfer_request_recieved/?id='
     return this.http.get<any>(`${url}${id}`)
+  }
+
+  getStockVerificationPrefix(){
+    let url =this.apiUrl+'/pv-api/prefix/?id=StockVerification';
+    return this.http.get(url)
+  }
+  //stoke verificiatin
+  addStockVerification(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/stock_verification/';
+    return this.http.post(url, data)
+  }
+  getStockVerification():Observable<any>{
+    let url = this.apiUrl + '/pv-api/stock_verification/';
+    return this.http.get(url)
+  }
+  getStockVerificationById(id:number):Observable<any>{
+    let url = this.apiUrl + '/pv-api/stock_verification/?id=';
+    return this.http.get(`${url}${id}`)
   }
 }
