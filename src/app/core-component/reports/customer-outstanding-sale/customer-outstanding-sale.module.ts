@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { SaleSummaryComponent } from './sale-summary.component';
-import { SaleSummaryRoutingModule } from './sale-summary-routing.module';
+import { CustomerOutstandingSaleRoutingModule } from './customer-outstanding-sale-routing.module';
+import { CustomerOutstandingSaleComponent } from './customer-outstanding-sale.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {NgFor, AsyncPipe} from '@angular/common';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import{NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown'
-
 import { DataTablesModule } from 'angular-datatables';
 import { FeatherModule } from 'angular-feather';
 import { User, UserCheck, FileText, File } from 'angular-feather/icons';
@@ -26,11 +25,13 @@ const icons = {
   File,
 };
 
+
 @NgModule({
-  declarations: [SaleSummaryComponent],
+  declarations: [CustomerOutstandingSaleComponent
+  ],
   imports: [
     CommonModule,
-    SaleSummaryRoutingModule,
+    CustomerOutstandingSaleRoutingModule,
     SharedModuleModule,
     FormsModule,ReactiveFormsModule,
     MatAutocompleteModule,NgFor,AsyncPipe,
@@ -49,4 +50,6 @@ const icons = {
     DatePipe
   ]
 })
-export class SaleSummaryModule { }
+
+ 
+export class CustomerOutstandingSaleModule { }

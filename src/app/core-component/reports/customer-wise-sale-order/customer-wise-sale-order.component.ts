@@ -15,11 +15,11 @@ import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-servi
 import { ReportService } from 'src/app/Services/report/report.service';
 
 @Component({
-  selector: 'app-sale-summary',
-  templateUrl: './sale-summary.component.html',
-  styleUrls: ['./sale-summary.component.scss']
+  selector: 'app-customer-wise-sale-order',
+  templateUrl: './customer-wise-sale-order.component.html',
+  styleUrls: ['./customer-wise-sale-order.component.scss']
 })
-export class SaleSummaryComponent implements OnInit {
+export class CustomerWiseSaleOrderComponent implements OnInit {
   loader = true;
   public tableData: any
   id: any;
@@ -34,16 +34,15 @@ export class SaleSummaryComponent implements OnInit {
 
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
-  saleSummaryPaymentType: any;
 
   constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
   }
-  //sale summary form
-  saleSummaryform!: FormGroup;
+  //Customer Wise Sale Order form
+    customerWiseSaleOrderForm!: FormGroup;
   startDate: any;
   endDate: any;
-  saleSummaryUserId: any;
-   saleSummaryList: any;
+  customerWiseSaleOrderUserId: any;
+     customerWiseSaleOrderList: any;
 
 
   userDetails: any;
@@ -62,19 +61,17 @@ export class SaleSummaryComponent implements OnInit {
     const formattedStartDate = this.formatDate(startDate);
     const formattedToday = this.formatDate(today);
 
-    // salesummaryform
-    this.saleSummaryform = new FormGroup({
+    // Customer Wise Sale form
+    this.customerWiseSaleOrderForm = new FormGroup({
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
       user_id: new FormControl(),
-      payment_type: new FormControl('')
     });
-    this.startDate = this.saleSummaryform.value?.start;
-    this.endDate = this.saleSummaryform.value?.end;
-    this.saleSummaryUserId = this.saleSummaryform.value?.user_id;
-    this.saleSummaryPaymentType = this.saleSummaryform.value?.payment_type;
+    this.startDate = this.customerWiseSaleOrderForm.value?.start;
+    this.endDate = this.customerWiseSaleOrderForm.value?.end;
+    this.customerWiseSaleOrderUserId = this.customerWiseSaleOrderForm.value?.user_id;
 
-    this.getSaleSummary();
+    this.getCustomerWiseSaleOrder();
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
@@ -101,10 +98,10 @@ export class SaleSummaryComponent implements OnInit {
 
   search() {
     if (this.titlee === "") {
-      this.getSaleSummary();
+      this.getCustomerWiseSaleOrder();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.saleSummaryList = this.saleSummaryList?.filter((res: any) => {
+      this.customerWiseSaleOrderList = this.  customerWiseSaleOrderList?.filter((res: any) => {
         const nameLower = res?.user?.party_name.toLocaleLowerCase();
         const usernameLower = res?.receipt_voucher_no.toLocaleLowerCase() || "";
         // return nameLower.includes(searchTerm);
@@ -145,12 +142,16 @@ export class SaleSummaryComponent implements OnInit {
     const endIndex = Math.min(startIndex + productsPerPage - 1, totalProducts - 1);
     return `Showing ${startIndex + 1}–${endIndex + 1} of ${totalProducts} results`;
   }
-saleSummary:any
-  getSaleSummary() {
-    this.reportService.getSaleSummaryList(this.startDate, this.endDate, this.saleSummaryUserId).subscribe((res) => {
+customerWiseSaleOrder:any
+getCustomerWiseSaleOrder() {
+    this.reportService.getCustomerWiseSaleOrder(this.startDate, this.endDate, this.customerWiseSaleOrderUserId).subscribe((res) => {
       console.log(res);
-      this.saleSummaryList = res?.data;
-      this.saleSummary=res
+      this.customerWiseSaleOrderList = res;
+      this.customerWiseSaleOrder=res;
+      this.customerWiseSaleOrderList.map((res:any)=>{
+        console.log(res.sale_order);
+        
+      })
     })
 
   }
@@ -162,28 +163,28 @@ saleSummary:any
     console.log(data);
     this.userName=data?.detail?.company_name
     this.dataId = data?.id;
-   this.saleSummaryform.patchValue({user_id:this.dataId});
-   console.warn(this.saleSummaryform.value);
-   this.saleSummaryUserId = this.saleSummaryform.value?.user_id;
-   this?.getSaleSummary();
+   this.customerWiseSaleOrderForm.patchValue({user_id:this.dataId});
+   console.warn(this.customerWiseSaleOrderForm.value);
+   this.customerWiseSaleOrderUserId = this.customerWiseSaleOrderForm.value?.user_id;
+   this?.getCustomerWiseSaleOrder();
   }
-  getSelectedSaleSummaryDates() {
-    console.log(this.saleSummaryform.value);
-    const start = this.datepipe.transform(this.saleSummaryform.value.start, 'yyyy-MM-dd');
-    const end = this.datepipe.transform(this.saleSummaryform.value.end, 'yyyy-MM-dd');
+  getSelectedCustomerWiseSaleOrderDates() {
+    console.log(this.customerWiseSaleOrderForm.value);
+    const start = this.datepipe.transform(this.customerWiseSaleOrderForm.value.start, 'yyyy-MM-dd');
+    const end = this.datepipe.transform(this.customerWiseSaleOrderForm.value.end, 'yyyy-MM-dd');
     console.log(start);
     console.log(end);
     this.startDate = start;
     this.endDate = end;
-    this?.getSaleSummary();
+    this?.getCustomerWiseSaleOrder();
   }
 
      // convert to pdf
 UserName: any;
-generatePDF() {
+generatePDFAgain() {
   const doc = new jsPDF();
   const subtitle = 'Instant Light Ltd.';
-  const title = 'Sale Summary Report';
+  const title = 'Customer Wise Sale Order Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
   const heading = `User: ${this.userName}`;
 
@@ -196,61 +197,28 @@ generatePDF() {
 
   doc.text('', 10, 25); //,argin x, y
 
+  // Pass tableData to autoTable
   autoTable(doc, {
-    html: '#mytable',
+    head: [
+      ['#', 'UserDetail', 'No.Of Bill', 'Total Amount ',]
+    ],
+    body: this.customerWiseSaleOrderList.map((row:any, index:number ) => [
+      index + 1,
+      row.user_detail,
+      row.no_of_bill,
+      row.total_amount,
+    ]),
     theme: 'grid',
     headStyles: {
       fillColor: [24, 129, 176]
     },
-    startY: 25, // margin top 
+    startY: 25
   });
 
-  doc.save('saleSummary.pdf');
+  doc.save('Customer_wise_sale_Order.pdf');
 }
 
-     generatePDFAgain() {
-      const doc = new jsPDF();
-      const subtitle = 'Instant Light Ltd.';
-      const title = 'Sale Summary Report';
-      const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-      const heading = `User: ${this.userName}`;
-    
-      doc.setFontSize(12);
-      doc.setTextColor(33, 43, 54);
-      doc.text(subtitle, 86, 5);
-      doc.text(title, 82, 10);
-      doc.text(heading, 10, 18);
-      doc.text(heading2, 10, 22)
-    
-      doc.text('', 10, 25); //,argin x, y
-    
-      // Pass tableData to autoTable
-      autoTable(doc, {
-        head: [
-          ['#',  'Date', 'Reciept Method', 'Reciept Voucher No. ','Note']
-        ],
-        body: this.saleSummaryList.map((row:any, index:number ) => [
-          index + 1,
-          row.date,
-          row.receipt_method,
-          row.receipt_voucher_no,
-          row.note
-        ]),
-        theme: 'grid',
-        headStyles: {
-          fillColor: [24, 129, 176]
-        },
-        startY: 25
-      });
-
-      doc.save('saleSummary.pdf');
-    }
-
-
-
- 
-
-    // excel export only filtered data
+// excel export only filtered data
     getVisibleDataFromTable(): any[] {
       const visibleData = [];
       const table = document.getElementById('mytable');
@@ -338,22 +306,4 @@ generatePDF() {
       // Restore the original content of the body
       document.body.innerHTML = originalContents;
     }
-
-    loaderPdf = false;
-    generatePdf() {
-      this.loaderPdf = true;
-      const elementToCapture = document.getElementById('debitNote');
-      if (elementToCapture) {
-        html2canvas(elementToCapture).then((canvas:any) => {
-          this.loaderPdf = false;
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF('p', 'mm', 'a4');
-          const width = pdf.internal.pageSize.getWidth();
-          const height = pdf.internal.pageSize.getHeight();
-          pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-          pdf.save('saleSummary.pdf');
-        });
-      }
-    }
-
   }

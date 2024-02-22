@@ -1,1 +1,135 @@
-<p>brand-wise-sale works!</p>
+<div class="row w-100 m-0">
+    <div class="col-lg-12 col-12">
+        <div class="page-header">
+            <div class="page-title titl">
+                <h4 class="text_24">Brand Wise Sale</h4>
+                <h6>Manage your Brand Wise Sale</h6>
+            </div>
+
+
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <form [formGroup]="brandWiseSaleForm">
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="search-input mx-3">
+                                        <strong>Select Date</strong>
+                                        <mat-form-field style="width: 100%;" class="border">
+                                            <mat-date-range-input [formGroup]="brandWiseSaleForm"
+                                                [rangePicker]="startdatePicker">
+                                                <input matStartDate placeholder="Start date" formControlName="start"
+                                                    class="mat-input" (dateChange)="getSelectedBrandWiseSaleDates()">
+                                                <span class="mat-input-placeholder-wrapper">
+                                                    <span class="mat-input-placeholder">to</span>
+                                                </span>
+                                                <input matEndDate placeholder="End date" formControlName="end"
+                                                    class="mat-input" (dateChange)="getSelectedBrandWiseSaleDates()">
+                                            </mat-date-range-input>
+
+                                            <mat-datepicker-toggle matSuffix [for]="startdatePicker"
+                                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                                            <mat-date-range-picker #startdatePicker></mat-date-range-picker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                           
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <strong>Select Brand</strong>
+                                        <input type="text" placeholder="Enter Brand" [formControl]="brandControl"
+                                          [matAutocomplete]="autob" class="form-control">
+                                        <mat-autocomplete #autob="matAutocomplete" [displayWith]="displayFn">
+                                            <mat-option *ngFor="let supplier of filteredBrand | async"
+                                                [value]="supplier"
+                                                (blur)="oncheckBrand( supplier?.id)">{{supplier?.title}} </mat-option>
+                                        </mat-autocomplete>
+
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"
+                                        style="max-width: none;"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"
+                                        style="max-width: none;"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"
+                                        style="max-width: none;"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+                <div class="table-responsive">
+                    <table class="table datanew" id=mytable>
+                        <thead>
+                            <tr>
+                                <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone"> Name <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Total Qty <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Total Amount <i class="fa fa-sort"></i></th>
+                               
+
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="brandWiseSaleList?.length>=0">
+                            <tr
+                                *ngFor="let list of brandWiseSaleList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                                <th>{{i+1+'.'}}</th>
+                                <td>{{list.name}}</td>
+                                <td>{{list.total_qty}}</td>
+                                <td>{{list.total_amount}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="brandWiseSaleList?.length==0">
+                            <tr>
+                                <td colspan="10">
+                                    <p class="text-center">Data not available</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                                <select [(ngModel)]="itemsPerPage" class="pagination">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="-1">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">
+                                    Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}} entries
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -223,4 +223,81 @@ export class ReportService {
            }
            return this.http.get<any>(url);
           }
+          getProductWiseSale(start_date:any,end_date:any,product:any):Observable<any>{
+            let url=this.apiUrl +'/api/reports/productwise/sale/';
+            const queryParams:any[]=[];
+            if(start_date){
+              queryParams.push(`start_date=${start_date}`);
+            }
+            if(end_date){
+              queryParams.push(`end_date=${end_date}`);
+            }
+            if(product){
+              queryParams.push(`product=${product}`);
+        
+            }
+            if(queryParams.length > 0) {
+              url += '?'+queryParams.join('&');
+             }
+             return this.http.get<any>(url);
+          }
+          getCustomerWiseSale(start_date:any,end_date:any,user_id:any):Observable<any>{
+            let url=this.apiUrl +'/api/reports/customerwise/sale/';
+            const queryParams:any[]=[];
+            if(start_date){
+              queryParams.push(`start_date=${start_date}`);
+            }
+            if(end_date){
+              queryParams.push(`end_date=${end_date}`);
+            }
+            if(user_id){
+              queryParams.push(`user_id=${user_id}`);
+            }
+           
+           if(queryParams.length > 0) {
+            url += '?'+queryParams.join('&');
+           }
+           return this.http.get<any>(url);
+          }
+          getCustomerOutstandingSale(start_date:any,end_date:any,customer_type:any):Observable<any>{
+            let url=this.apiUrl +'/api/reports/customeroutstanding/sale/';
+            const queryParams:any[]=[];
+            if(start_date){
+              queryParams.push(`start_date=${start_date}`);
+            }
+            if(end_date){
+              queryParams.push(`end_date=${end_date}`);
+            }
+            if(customer_type){
+              queryParams.push(`customer_type=${customer_type}`);
+        
+            }
+            if(queryParams.length > 0) {
+              url += '?'+queryParams.join('&');
+             }
+             return this.http.get<any>(url);
+          }
+          getCustomerWiseSaleOrder(start_date:any,end_date:any,user_id:any):Observable<any>{
+            let url=this.apiUrl +'/api/reports/customer/wise/saleorder/';
+            const queryParams:any[]=[];
+            if(start_date){
+              queryParams.push(`start_date=${start_date}`);
+            }
+            if(end_date){
+              queryParams.push(`end_date=${end_date}`);
+            }
+            if(user_id){
+              queryParams.push(`user_id=${user_id}`);
+            }
+           
+           if(queryParams.length > 0) {
+            url += '?'+queryParams.join('&');
+           }
+           return this.http.get<any>(url);
+          }
+          
+          getUser() {
+            let url = this.apiUrl + '/pv-api/contact-user/';
+            return this.http.get(url)
+          }
 }

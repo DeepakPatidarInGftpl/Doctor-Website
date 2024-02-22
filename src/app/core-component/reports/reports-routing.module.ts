@@ -66,10 +66,31 @@ const routes: Routes = [
   loadChildren: () =>
   import('./category-wise-sale/category-wise-sale.module').then((m) =>m.CategoryWiseSaleModule)
 
-},{
+},
+{
   path:'brand-wise-sale',
   loadChildren: () =>
   import('./brand-wise-sale/brand-wise-sale.module').then((m) =>m.BrandWiseSaleModule)
+},
+{
+  path:'product-wise-sale',
+  loadChildren: () =>
+  import('./product-wise-sale/product-wise-sale.module').then((m) =>m.ProductWiseSaleModule)
+},
+{
+  path:'customer-wise-sale',
+  loadChildren: () =>
+  import('./customer-wise-sale/customer-wise-sale.module').then((m) =>m.CustomerWiseSaleModule)
+},
+{
+  path:'customer-outstanding-sale',
+  loadChildren: () =>
+  import('./customer-outstanding-sale/customer-outstanding-sale.module').then((m) =>m.CustomerOutstandingSaleModule)
+},
+{
+  path:'customer-wise-sale-order',
+  loadChildren: () =>
+  import('./customer-wise-sale-order/customer-wise-sale-order.module').then((m) =>m.CustomerWiseSaleOrderModule)
 }
  
 

@@ -15,11 +15,12 @@ import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-servi
 import { ReportService } from 'src/app/Services/report/report.service';
 
 @Component({
-  selector: 'app-sale-summary',
-  templateUrl: './sale-summary.component.html',
-  styleUrls: ['./sale-summary.component.scss']
+  selector: 'app-customer-wise-sale',
+  templateUrl: './customer-wise-sale.component.html',
+  styleUrls: ['./customer-wise-sale.component.scss']
 })
-export class SaleSummaryComponent implements OnInit {
+export class CustomerWiseSaleComponent implements OnInit {
+
   loader = true;
   public tableData: any
   id: any;
@@ -34,24 +35,24 @@ export class SaleSummaryComponent implements OnInit {
 
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
-  saleSummaryPaymentType: any;
 
   constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
   }
-  //sale summary form
-  saleSummaryform!: FormGroup;
+  //Customer Wise Sale form
+    customerWiseSaleForm!: FormGroup;
   startDate: any;
   endDate: any;
-  saleSummaryUserId: any;
-   saleSummaryList: any;
-
+  customerWiseSaleUserId: any;
+     customerWiseSaleList: any;
+     filteredusers: Observable<any[]>;
+     userControl = new FormControl();
 
   userDetails: any;
   ngOnInit(): void {
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       console.log(userDetails);
-      this.userName=userDetails?.username
+      this.UserName=userDetails?.username
     });
     const today = new Date();
     const month = today.getMonth();
@@ -62,49 +63,56 @@ export class SaleSummaryComponent implements OnInit {
     const formattedStartDate = this.formatDate(startDate);
     const formattedToday = this.formatDate(today);
 
-    // salesummaryform
-    this.saleSummaryform = new FormGroup({
+    // Customer Wise Sale form
+    this.customerWiseSaleForm = new FormGroup({
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
       user_id: new FormControl(),
-      payment_type: new FormControl('')
     });
-    this.startDate = this.saleSummaryform.value?.start;
-    this.endDate = this.saleSummaryform.value?.end;
-    this.saleSummaryUserId = this.saleSummaryform.value?.user_id;
-    this.saleSummaryPaymentType = this.saleSummaryform.value?.payment_type;
+    this.startDate = this.customerWiseSaleForm.value?.start;
+    this.endDate = this.customerWiseSaleForm.value?.end;
+    this.customerWiseSaleUserId = this.customerWiseSaleForm.value?.user_id;
 
-    this.getSaleSummary();
-    this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+    this.getCustomerWiseSale();
+    this.getUser();
+    this.filteredusers = this.userControl.valueChanges.pipe(
       startWith(''),
-      map((value: any) => {
-        const name = typeof value === 'string' ? value : value?.detail?.name;
-        return name ? this._filter(name as string) : this.suppliers.slice();
-      }),
+      map(value => this._filter(value, true))
     );
   }
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
   }
 
-  private _filter(item_code: string): any[] {
-    const filterValue = item_code ? item_code.toLowerCase() : '';
-    console.log(filterValue);
-    return this.suppliers.filter((option: any) => (option?.detail?.name.toLowerCase().includes(filterValue)) || (option?.detail?.company_name?.toLowerCase().includes(filterValue)) || (option?.account?.account_id?.toLowerCase().includes(filterValue)));
+  private _filter(value: string | number, include: boolean): any[] {
+    // console.log(value);
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+    const filteredUsers = include
+      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue))
+      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue));
+    if (!include && filteredUsers.length === 0) {
+      // console.log("No results found");
+      filteredUsers.push({ name: "No data found" }); 
+    }
+    return filteredUsers;
   }
 
-
-  displayFn(user: any): string {
-    return user && user?.detail?.company_name ? user?.detail?.company_name : '';
+  users:any[]=[];
+  getUser() {
+    this.reportService.getUser().subscribe((res: any) => {
+      this.users = res?.data;
+    })
   }
+
+ 
   suppliers: any[] = [];
 
   search() {
     if (this.titlee === "") {
-      this.getSaleSummary();
+      this.getCustomerWiseSale();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.saleSummaryList = this.saleSummaryList?.filter((res: any) => {
+      this.  customerWiseSaleList = this.  customerWiseSaleList?.filter((res: any) => {
         const nameLower = res?.user?.party_name.toLocaleLowerCase();
         const usernameLower = res?.receipt_voucher_no.toLocaleLowerCase() || "";
         // return nameLower.includes(searchTerm);
@@ -145,75 +153,46 @@ export class SaleSummaryComponent implements OnInit {
     const endIndex = Math.min(startIndex + productsPerPage - 1, totalProducts - 1);
     return `Showing ${startIndex + 1}–${endIndex + 1} of ${totalProducts} results`;
   }
-saleSummary:any
-  getSaleSummary() {
-    this.reportService.getSaleSummaryList(this.startDate, this.endDate, this.saleSummaryUserId).subscribe((res) => {
+customerWiseSale:any
+getCustomerWiseSale() {
+    this.reportService.getCustomerWiseSale(this.startDate, this.endDate, this.customerWiseSaleUserId).subscribe((res) => {
       console.log(res);
-      this.saleSummaryList = res?.data;
-      this.saleSummary=res
+      this.customerWiseSaleList = res;
+      this.customerWiseSale=res
     })
 
   }
 
   // api call
   dataId: any;
-  userName:any;
-  oncheckAccount(data: any) {
-    console.log(data);
-    this.userName=data?.detail?.company_name
-    this.dataId = data?.id;
-   this.saleSummaryform.patchValue({user_id:this.dataId});
-   console.warn(this.saleSummaryform.value);
-   this.saleSummaryUserId = this.saleSummaryform.value?.user_id;
-   this?.getSaleSummary();
+  selectUser(data: any) {
+    this.dataId = data;
+   this.customerWiseSaleForm.patchValue({user_id:this.dataId});
+   console.warn(this.customerWiseSaleForm.value);
+   this.customerWiseSaleUserId = this.customerWiseSaleForm.value?.user_id;
+   this?.getCustomerWiseSale();
   }
-  getSelectedSaleSummaryDates() {
-    console.log(this.saleSummaryform.value);
-    const start = this.datepipe.transform(this.saleSummaryform.value.start, 'yyyy-MM-dd');
-    const end = this.datepipe.transform(this.saleSummaryform.value.end, 'yyyy-MM-dd');
+  getSelectedCustomerWiseSaleDates() {
+    console.log(this.customerWiseSaleForm.value);
+    const start = this.datepipe.transform(this.customerWiseSaleForm.value.start, 'yyyy-MM-dd');
+    const end = this.datepipe.transform(this.customerWiseSaleForm.value.end, 'yyyy-MM-dd');
     console.log(start);
     console.log(end);
     this.startDate = start;
     this.endDate = end;
-    this?.getSaleSummary();
+    this?.getCustomerWiseSale();
   }
 
      // convert to pdf
 UserName: any;
-generatePDF() {
-  const doc = new jsPDF();
-  const subtitle = 'Instant Light Ltd.';
-  const title = 'Sale Summary Report';
-  const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-  const heading = `User: ${this.userName}`;
 
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(subtitle, 86, 5);
-  doc.text(title, 82, 10);
-  doc.text(heading, 10, 18);
-  doc.text(heading2, 10, 22)
-
-  doc.text('', 10, 25); //,argin x, y
-
-  autoTable(doc, {
-    html: '#mytable',
-    theme: 'grid',
-    headStyles: {
-      fillColor: [24, 129, 176]
-    },
-    startY: 25, // margin top 
-  });
-
-  doc.save('saleSummary.pdf');
-}
 
      generatePDFAgain() {
       const doc = new jsPDF();
       const subtitle = 'Instant Light Ltd.';
-      const title = 'Sale Summary Report';
+      const title = 'Customer Wise Sale Report';
       const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-      const heading = `User: ${this.userName}`;
+      const heading = `User: ${this.UserName}`;
     
       doc.setFontSize(12);
       doc.setTextColor(33, 43, 54);
@@ -227,14 +206,13 @@ generatePDF() {
       // Pass tableData to autoTable
       autoTable(doc, {
         head: [
-          ['#',  'Date', 'Reciept Method', 'Reciept Voucher No. ','Note']
+          ['#', 'UserDetail', 'No.Of Bill', 'Total Amount ',]
         ],
-        body: this.saleSummaryList.map((row:any, index:number ) => [
+        body: this.customerWiseSaleList.map((row:any, index:number ) => [
           index + 1,
-          row.date,
-          row.receipt_method,
-          row.receipt_voucher_no,
-          row.note
+          row.user_detail,
+          row.no_of_bill,
+          row.total_amount,
         ]),
         theme: 'grid',
         headStyles: {
@@ -243,7 +221,7 @@ generatePDF() {
         startY: 25
       });
 
-      doc.save('saleSummary.pdf');
+      doc.save('Customer_wise_sale.pdf');
     }
 
 
@@ -338,22 +316,4 @@ generatePDF() {
       // Restore the original content of the body
       document.body.innerHTML = originalContents;
     }
-
-    loaderPdf = false;
-    generatePdf() {
-      this.loaderPdf = true;
-      const elementToCapture = document.getElementById('debitNote');
-      if (elementToCapture) {
-        html2canvas(elementToCapture).then((canvas:any) => {
-          this.loaderPdf = false;
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF('p', 'mm', 'a4');
-          const width = pdf.internal.pageSize.getWidth();
-          const height = pdf.internal.pageSize.getHeight();
-          pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-          pdf.save('saleSummary.pdf');
-        });
-      }
-    }
-
   }

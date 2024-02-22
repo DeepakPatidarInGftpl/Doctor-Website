@@ -1,13 +1,15 @@
 .icon {
     color: hsl(29, 100%, 63%);
-    font-size: 35px;
+    font-size: 25px;
+    padding-top: 5px;
 }
 
 .p {
     font-size: 18px;
     font-weight: 600;
-    padding: 10px 5px 0 20px; // top right bottom left
+    padding: 5px 9px 4px 7px; // top right bottom left
     margin-bottom: 0px;
+    text-align: center;
 }
 .p_head{
     font-size: 24px !important;
