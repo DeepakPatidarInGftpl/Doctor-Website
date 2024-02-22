@@ -1,0 +1,125 @@
+
+
+
+.example-form-field {
+    margin: 0 8px 5px 0;
+    
+  }
+  .mat-form-field {
+    display: inline-block;
+    position: relative;
+    text-align: left;
+}
+  .mat-form-field {
+    width: 65%;
+    padding-left: 8%;
+    padding-top: 1%;
+    font-size: inherit;
+    font-weight: 400;
+    line-height: 1.125;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    letter-spacing: normal;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-wrapper {
+  padding-bottom: 1.25em;
+}
+.mat-form-field-wrapper {
+  position: relative;
+}
+.mat-form-field-flex {
+  display: inline-flex;
+  align-items: baseline;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.mat-form-field-infix {
+  padding: 0.5em 0;//
+  border-top: 0.84375em solid rgba(0,0,0,0);
+}
+
+.mat-form-field-infix {
+  display: block;
+  position: relative;
+  flex: auto;
+  min-width: 0;
+  width: 180px;
+}
+.mat-form-field-type-mat-date-range-input .mat-form-field-infix {
+  width: 200px;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-infix {
+  padding: 0.4375em 0;
+}
+.mat-form-field-label-wrapper {
+  position: absolute;
+  left: 0;
+  box-sizing: content-box;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mat-form-field-label-wrapper {
+  top: -0.84375em;
+  padding-top: 0.84375em;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-underline {
+  height: 1px;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-underline {
+  background-color: rgba(0,0,0,.42);
+}
+.mat-form-field-appearance-legacy .mat-form-field-underline {
+  bottom: 1.25em;
+}
+.mat-form-field-underline {
+  position: absolute;
+  width: 100%;
+  pointer-events: none;
+  transform: scale3d(1, 1.0001, 1);
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-ripple {
+  top: 0;
+  height: 2px;
+  overflow: hidden;
+}
+.mat-form-field-ripple {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  transform-origin: 50%;
+  transform: scaleX(0.5);
+  opacity: 0;
+  transition: background-color 300ms cubic-bezier(0.55, 0, 0.55, 0.2);
+}
+.mat-form-field-ripple {
+  background-color: rgba(0,0,0,.87);
+}
+
+//date icon
+.mat-form-field-prefix, .mat-form-field-suffix {
+  font-size: x-large;
+  white-space: nowrap;
+  flex: none;
+  position: relative;
+}
+
+select,
+.input
+{
+   border: 1px solid rgba(145, 158, 171, 0.32);
+   height: 40px;
+   width: 100%;
+   font-size: 14px;
+   font-weight: 500;
+   color: #637381;
+   padding: 10px 15px;
+   border-radius: 5px;
+}

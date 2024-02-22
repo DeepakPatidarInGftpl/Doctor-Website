@@ -148,7 +148,7 @@
                     <li><a routerLink="/sales/createsalesreturns" routerLinkActive="active">New Sales Return</a></li> -->
                 </ul>
             </li> 
-            <li class="submenu" *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher || isExpenseVoucher">
+            <li class="submenu" *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher || isExpenseVoucher || isMaterialConsuption">
                 <a  [ngClass]="{'active': activePath === 'transaction'}"><i data-bs-toggle="tooltip" title="fa fa-university" class="fa fa-university"></i><span>Transaction</span> <span class="menu-arrow"></span></a>
                 <ul>
                     <li *ngIf="isPaymentVoucher"><a routerLink="/transaction/paymentVoucherList" routerLinkActive="active">Payment Voucher</a></li>
@@ -158,7 +158,7 @@
                     <li *ngIf="isExpenseVoucher"><a routerLink="/transaction/expensesList" routerLinkActive="active">Expenses Voucher</a></li>
                     <li *ngIf="isDebit"><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
                     <li *ngIf="isCredit"><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
-                    <li><a routerLink="/transaction/materialConsuption" routerLinkActive="active">Material Consuption</a></li>
+                    <li *ngIf="isMaterialConsuption"><a routerLink="/transaction/materialConsuption" routerLinkActive="active">Material Consuption</a></li>
                </ul>
             </li>
             <li class="submenu">
@@ -199,12 +199,12 @@
                 </ul>
             </li>
           
-            <li class="submenu" *ngIf="isStock || isStockTransport || isStockTransportRequest">
+            <li class="submenu" *ngIf="isStock || isStockTransport || isStockTransportRequest || isStockVerification">
                 <a [ngClass]="{'active': activePath === 'inventory'}"><img src="assets/img/icons/product.svg" alt="img"><span>Inventory</span> <span class="menu-arrow"></span></a>
                 <ul>
                 <li  *ngIf="isStock"><a routerLink="/inventory/stock" routerLinkActive="active">Stock</a></li>
                 <li *ngIf="isStockTransportRequest"><a routerLink="/inventory/list-stock-transfer-request" routerLinkActive="active">Stock Transfer Request</a></li>
-                <li *ngIf="isStockTransport"><a routerLink="/inventory/stock-verfication" routerLinkActive="active">Stock Verification</a></li>
+                <li *ngIf="isStockVerification"><a routerLink="/inventory/stock-verfication" routerLinkActive="active">Stock Verification</a></li>
                 <li *ngIf="isStockTransport"><a routerLink="/inventory/list-stock-transfer" routerLinkActive="active">Stock Transfer</a></li>
             </ul>
             </li> 
@@ -229,7 +229,7 @@
                 </ul>
             </li>  
             
-              <li class="submenu" *ngIf="isUser || isFinancialYear || isPaymentTerms || isGroup || isAdditional || isMembership">
+              <li class="submenu" *ngIf="isUser || isFinancialYear || isPaymentTerms || isGroup || isAdditional || isMembership || isCompanyDrive">
                   <a [ngClass]="{'active': activePath === 'settings'}"><img src="assets/img/icons/settings.svg" alt="img"><span> Settings</span> <span
                           class="menu-arrow"></span></a>
                   <ul [ngClass]="{'block': sideBarControls[18].value === true}">
@@ -240,7 +240,8 @@
                         <li *ngIf="isAdditional"><a routerLink="/settings/additionalCharge" routerLinkActive="active">Additional Charges</a></li>            
                         <li *ngIf="isAdditional"><a routerLink="/settings/terms" routerLinkActive="active">Terms</a></li>  
                         <li *ngIf="isMembership"><a routerLink="/settings/membership" routerLinkActive="active">Membership</a></li>  
-             
+                        <li *ngIf="isCompanyDrive"><a routerLink="/settings/company-drive" routerLinkActive="active">Company Drive</a></li>  
+
                  <!-- <li><a routerLink="/settings/generalsettings" routerLinkActive="active">General Settings</a></li>
                       <li><a routerLink="/settings/emailsettings" routerLinkActive="active">Email Settings</a></li>
                       <li><a routerLink="/settings/paymentsettings" routerLinkActive="active">Payment Settings</a></li>

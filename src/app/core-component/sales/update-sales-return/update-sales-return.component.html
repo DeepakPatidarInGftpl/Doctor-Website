@@ -493,13 +493,13 @@
                                                                </mat-option>
                                                                <!-- </ng-container> -->
                                                            </ng-container>
-                                                           <mat-option *ngIf="isSearch" style="color:#FF9F43">Loading...</mat-option>
+                                                           <mat-option *ngIf="searchLength?.toString()?.length > 2 && isSearch" style="color:#FF9F43">Loading...</mat-option>
                                                            <mat-option *ngIf="variantList[i]?.length === 0 && !isSearch"
                                                                [value]="'No data found'">
                                                                <a routerLink="//product/addproduct"
                                                                    style="color:#FF9F43">+add Product</a>
                                                            </mat-option>
-                                                           <mat-option *ngIf="myControl.at(i)?.value?.length < 3"
+                                                           <mat-option *ngIf="searchLength?.toString()?.length < 2 "
                                                                class="is-loading">
                                                                Please Enter 3 or more characters
                                                            </mat-option>

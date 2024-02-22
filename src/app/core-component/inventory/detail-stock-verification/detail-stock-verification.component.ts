@@ -29,11 +29,11 @@ export class DetailStockVerificationComponent implements OnInit {
   totalLandingCost = 0;
   getdata() {
     this.stockService.getStockVerificationById(this.id).subscribe(res => {
-      res.map((res)=>{
+      // res.map((res)=>{
         if (this.id == res.id) {
           this.stockVerifactionDetail = res;
         }
-      });
+      // });
     })
   }
   goBack() {

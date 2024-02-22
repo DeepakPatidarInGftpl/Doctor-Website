@@ -1,225 +1,218 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
+import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
-
+import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 @Component({
   selector: 'app-analysis-inventory-list',
   templateUrl: './analysis-inventory-list.component.html',
   styleUrls: ['./analysis-inventory-list.component.scss']
 })
 export class AnalysisInventoryListComponent implements OnInit {
-
-  dtOptions: DataTables.Settings = {};
-  initChecked: boolean = false
-  public tableData: any;
+  loader = true;
+  id: any;
 
   titlee: any;
   p: number = 1
-  pageSize: number = 10;
   itemsPerPage: number = 10;
-  filteredData: any[]; // The filtered data
-  selectedRecieptType: string = '';
-  date: any
-
-  constructor( private transactionService: TransactionService,private cs: CompanyService,) { }
-
+  userName: any;
   
-  loader = true;
-  userDetails: any;
-  ngOnInit(): void {
-    this.transactionService.getPaymentVoucher().subscribe(res => {
-      // console.log(res);
-      this.tableData = res;
-      this.loader = false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); 
-      this.filterData();
-    })
- 
+  constructor(private Arout: ActivatedRoute, private toastr: ToastrService,private cs: CompanyService, private datepipe: DatePipe, private dashboardService: DashboardService) {
   }
-
- 
-  allSelected: boolean = false;
-  selectedRows: boolean[]
-  selectAlll() {
-    this.selectedRows.fill(this.allSelected);
-  }
-
-  select = false
-  selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = true
-      })
-    } else {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = false
-      })
+    //product Day Book form
+    analysisForm!: FormGroup;
+    startDate: any;
+    endDate: any;
+    userDetails: any;
+    query:any;
+    ngOnInit(): void {
+     this.query= this.Arout.snapshot.paramMap.get('query');
+      console.log(this.query);
+      this.cs.userDetails$.subscribe((userDetails) => {
+        this.userDetails = userDetails;
+        console.log(userDetails);
+        this.userName=userDetails?.username
+      });
+  
+      const today = new Date();
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() - 14);
+      const formattedStartDate = this.formatDate(startDate);
+      const formattedToday = this.formatDate(today);
+  
+      // product DayBook form
+      this.analysisForm = new FormGroup({
+        start: new FormControl(formattedStartDate),
+        end: new FormControl(formattedToday),
+        
+      });
+      this.startDate = this.analysisForm.value?.start;
+      this.endDate = this.analysisForm.value?.end;
+      this.getproductDayBook();
+     
     }
-  }
-
-  search() {
-    if (this.titlee == "") {
-      this.ngOnInit();
-    } else {
-      const searchTerm = this.titlee.toLocaleLowerCase();
-      this.filteredData = this.filteredData.filter(res => {
-        console.log(res); 
-        const nameLower = res?.supplier?.company_name?.toLocaleLowerCase();
-        const companyNameLower = res?.payment_voucher_no.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)) {
-          console.log(nameLower.match(searchTerm));
-          return true;
-        } else if (companyNameLower.match(searchTerm)) {
-          console.log(companyNameLower.match(searchTerm));
-          return true;
+    // getproductDayBook() {
+    //   throw new Error('Method not implemented.');
+    // }
+    private formatDate(date: Date): string {
+      return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
+    }
+  
+    key = 'id'
+    reverse: boolean = false;
+    sort(key: any) {
+      this.key = key;
+      this.reverse = !this.reverse
+    }
+  
+    //select table row
+    allSelected: boolean = false;
+    selectedRows: boolean[] = [];
+    selectAlll() {
+      this.selectedRows.fill(this.allSelected);
+    }
+    calculateProductRange(currentPage: number, productsPerPage: number, totalProducts: number): string {
+      const startIndex = (currentPage - 1) * productsPerPage;
+      const endIndex = Math.min(startIndex + productsPerPage - 1, totalProducts - 1);
+      return `Showing ${startIndex + 1}–${endIndex + 1} of ${totalProducts} results`;
+    }
+  productInventoryList:any
+    getproductDayBook() {
+      this.dashboardService.getAnalysisInventoryList(this.startDate, this.endDate).subscribe((res:any) => {
+        if(this.query=='slow'){
+          this.productInventoryList = res?.slow_product;
+        } else if(this.query=='fast'){
+          this.productInventoryList = res?.fast_product;
+        }else if(this.query=='non'){
+          this.productInventoryList = res?.non_product;
         }
-        return false;
-      });
-    }
-  }
-
-  key = 'id'
-  reverse: boolean = true;
-  sort(key) {
-    this.key = key;
-    this.reverse = !this.reverse
-  }
-
-
-  // convert to pdf
-  generatePDF() {
-    const doc = new jsPDF();
-    const title = 'Payment Voucher';
-    doc.setFontSize(15);
-    doc.setTextColor(33, 43, 54);
-    doc.text(title, 10, 10);
-    autoTable(doc,
-      {
-        html: '#mytable',
-        theme: 'grid',
-        headStyles: {
-          fillColor: [255, 159, 67]
-        },
-        columns: [
-          //remove action filed
-          { header: 'Sr No.' },
-          { header: 'Supplier' },
-          { header: 'Reciept Type' },
-          { header: 'Mode Type' },
-          { header: 'Voucher No.' },
-          { header: 'Payment Account' },
-          { header: 'Bank Payment' },
-          { header: 'Date' },
-          { header: 'Transaction Date' },
-          { header: 'Transaction Id' },
-          { header: 'Amount' },
-          { header: 'Is Active' }
-        ],
+      console.log(this.productInventoryList );   
       })
-    doc.save('paymentVoucher.pdf');
-  }
-  // excel export only filtered data
-  getVisibleDataFromTable(): any[] {
-    const visibleData = [];
-    const table = document.getElementById('mytable');
-    const headerRow = table.querySelector('thead tr');
-    const dataRows = table.querySelectorAll('tbody tr');
-    //table heading
-    const headerData = [];
-    headerRow.querySelectorAll('th').forEach(cell => {
-      const columnHeader = cell.textContent.trim();
-      if (columnHeader !== 'Is Active' && columnHeader !== 'Action') {
-        headerData.push(columnHeader);
+    }
+  
+    // api call
+    getSelectedProductDayBookDates() {
+      console.log(this.analysisForm.value);
+      const start = this.datepipe.transform(this.analysisForm.value.start, 'yyyy-MM-dd');
+      const end = this.datepipe.transform(this.analysisForm.value.end, 'yyyy-MM-dd');
+      console.log(start);
+      console.log(end);
+      this.startDate = start;
+      this.endDate = end;
+      this?.getproductDayBook();
+    }
+    // convert to pdf
+    generatePDF() {
+      const doc = new jsPDF();
+      const title = 'Inventory Analysis List';
+      doc.setFontSize(15);
+      doc.setTextColor(33, 43, 54);
+      doc.text(title, 10, 10);
+      autoTable(doc,
+        {
+          html: '#mytable',
+          theme: 'grid',
+          headStyles: {
+            fillColor: [255, 159, 67]
+          },
+        })
+      doc.save('inventoryAnalysis.pdf');
+  
+   }
+    // excel export only filtered data
+    getVisibleDataFromTable(): any[] {
+      const visibleData = [];
+      const table = document.getElementById('mytable');
+      if (table) {
+        const headerRow = table.querySelector('thead tr');
+        if (headerRow) {
+          const headerData: string[] = [];
+          headerRow.querySelectorAll('th').forEach(cell => {
+            const columnHeader = cell.textContent?.trim(); // Add null check here
+            if (columnHeader && columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+              headerData.push(columnHeader);
+            }
+          });
+          visibleData.push(headerData);
+        }
+    
+        // Include visible data rows
+        const dataRows = table.querySelectorAll('tbody tr');
+        dataRows.forEach(row => {
+          const rowData: string[] = [];
+          row.querySelectorAll('td').forEach(cell => {
+            const cellData = cell.textContent?.trim(); // Add null check here
+            if (cellData) {
+              rowData.push(cellData);
+            }
+          });
+          visibleData.push(rowData);
+        });
       }
-    });
-    visibleData.push(headerData);
-    dataRows.forEach(row => {
-      const rowData = [];
-      row.querySelectorAll('td').forEach(cell => {
-        rowData.push(cell.textContent.trim());
-      });
-      visibleData.push(rowData);
-    });
-    return visibleData;
-  }
-  exportToExcel(): void {
-    const visibleDataToExport = this.getVisibleDataFromTable();
-    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'paymentVoucher.xlsx';
-    saveAs(blob, fileName); 
-  }
-
-  printTable(): void {
-    // Get the table element and its HTML content
-    const tableElement = document.getElementById('mytable');
-    const tableHTML = tableElement.outerHTML;
-    const titleElement = document.querySelector('.titl');
-    const titleHTML = titleElement.outerHTML;
-    const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(15)');
-    if (isActiveTh) {
-      isActiveTh.remove();
+      return visibleData;
     }
-    const actionTh = clonedTable.querySelector('th.thone:last-child');
-    if (actionTh) {
-      actionTh.remove();
+    
+        // Modify your exportToExcel() function
+    exportToExcel(): void {
+      const visibleDataToExport = this.getVisibleDataFromTable();
+      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+      // Create a Blob from the workbook and initiate a download
+      const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const fileName = 'analysisInventory.xlsx';
+      saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
     }
-    const rows = clonedTable.querySelectorAll('tr');
-    rows.forEach((row) => {
-      const isActiveTd = row.querySelector('td:nth-child(15)');
-      if (isActiveTd) {
-        isActiveTd.remove();
+  
+    printTable(): void {
+      // Get the table element and its HTML content
+      const tableElement = document.getElementById('mytable');
+      if (!tableElement) {
+        console.error("Table element with ID 'mytable' not found.");
+        return;
       }
-      const actionTd = row.querySelector('td:last-child');
-      if (actionTd) {
-        actionTd.remove();
+    
+      const tableHTML = tableElement.outerHTML;
+    
+      // Get the title element and its HTML content
+      const titleElement = document.querySelector('.titl');
+      if (!titleElement) {
+        console.error("Title element with class 'titl' not found.");
+        return;
       }
-    });
-    const modifiedTableHTML = clonedTable.outerHTML;
-    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-    const combinedContent = styledTitleHTML + modifiedTableHTML;
-    const originalContents = document.body.innerHTML;
-    document.body.innerHTML = combinedContent;
-    window.print();
-    document.body.innerHTML = originalContents;
+    
+      const titleHTML = titleElement.outerHTML;
+    
+      // Clone the table element to manipulate
+      const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+  
+    
+      // Get the modified table's HTML content
+      const modifiedTableHTML = clonedTable.outerHTML;
+    
+      // Apply styles to add some space from the top after the title
+      const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+    
+      // Combine the title and table content
+      const combinedContent = styledTitleHTML + modifiedTableHTML;
+    
+      // Store the original contents
+      const originalContents = document.body.innerHTML;
+    
+      // Replace the content of the body with the combined content
+      document.body.innerHTML = combinedContent;
+      window.print();
+    
+      // Restore the original content of the body
+      document.body.innerHTML = originalContents;
+    }
   }
-  selectedModeType:any
-  selectedAmount:any
-  filterData() {
-    let filteredData = this.tableData.slice();
-    if (this.date) {
-      const selectedDate = new Date(this.date).toISOString().split('T')[0];
-      filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.date).toISOString().split('T')[0];
-        return receiptDate === selectedDate;
-      });
-    }
-    if (this.selectedRecieptType) {
-      filteredData = filteredData.filter((item) => item?.receipt_type === this.selectedRecieptType);
-    }
-    if (this.selectedModeType) {
-      filteredData = filteredData.filter((item) => item?.mode_type === this.selectedModeType);
-    }
-    if (this.selectedAmount) {
-      filteredData = filteredData.filter((item) => item?.amount <= this.selectedAmount);
-    }
-    this.filteredData = filteredData;
-  }
-  clearFilters() {
-    this.selectedAmount=null;
-    this.selectedModeType=null
-    this.selectedRecieptType = null;
-    this.date = null;
-    this.filterData();
-  }
-}
