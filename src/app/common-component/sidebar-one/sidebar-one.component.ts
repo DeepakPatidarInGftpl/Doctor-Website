@@ -74,7 +74,7 @@ export class SidebarOneComponent implements OnInit {
   isUnitConversation;
   isProductLedger: any;
   isStock: any;
-  isProductLabel:any;
+  isProductLabel: any;
   //purchase
   isPurchase;
   isMaterialInward;
@@ -105,8 +105,9 @@ export class SidebarOneComponent implements OnInit {
   isPaymentTerms: any;
   isGroup: any;
   isAdditional: any
-  isUser:any;
-  isMembership:any;
+  isUser: any;
+  isMembership: any;
+  isCompanyDrive:any;
   //pos
   isPosOrder: any;
   // bank
@@ -126,17 +127,19 @@ export class SidebarOneComponent implements OnInit {
   isCountraVoucher;
   isJournalVoucher;
   isRecieptVoucher;
-  isPaymentVoucher:any
-isExpenseVoucher:any //12-1
+  isPaymentVoucher: any
+  isExpenseVoucher: any //12-1
+  isMaterialConsuption: any; //22-02
   // inventory
   isStockTransport;
   isStockTransportRequest;
+  isStockVerification: any;
   //hrm
-  isAttendnace:any;
-  isTarget:any;
-  isDepartment:any;
+  isAttendnace: any;
+  isTarget: any;
+  isDepartment: any;
   userDetails: any;
-  isIncentive:any;
+  isIncentive: any;
   ngOnInit(): void {
     this.LoadScript("assets/js/sidebar.js")
 
@@ -214,10 +217,9 @@ isExpenseVoucher:any //12-1
           this.isStock = res.codename
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productledger' && res.codename == 'view_productledger') {
           this.isProductLedger = res.codename
-        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productlabel' && res.codename == 'view_productlabel') {
+        } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productlabel' && res.codename == 'view_productlabel') {
           this.isProductLabel = res.codename
         }
-      
         //pos
         else if (res.content_type.app_label === 'pos' && res.content_type.model === 'posorder' && res.codename == 'view_posorder') {
           this.isPosOrder = res.codename;
@@ -297,8 +299,8 @@ isExpenseVoucher:any //12-1
           this.isUser = res.codename
         } else if (res.content_type.app_label === 'account' && res.content_type.model === 'additionalcharge' && res.codename == 'view_additionalcharge') {
           this.isAdditional = res.codename;
-        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'membership' && res.codename == 'view_membership') {
-          this.isMembership = res.codename;
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'companydrive' && res.codename == 'view_companydrive') {
+          this.isCompanyDrive = res.codename;
         }
         // sales
         else if (res.content_type.app_label === 'sale' && res.content_type.model === 'saleorder' && res.codename == 'view_saleorder') {
@@ -313,7 +315,6 @@ isExpenseVoucher:any //12-1
           this.isSalesEstimate = res.codename;
         }
         // transaction
-
         else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'creditnote' && res.codename == 'view_creditnote') {
           this.isCredit = res.codename;
         } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'debitnote' && res.codename == 'view_debitnote') {
@@ -326,33 +327,40 @@ isExpenseVoucher:any //12-1
           this.isRecieptVoucher = res.codename;
         } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'paymentvoucher' && res.codename == 'view_paymentvoucher') {
           this.isPaymentVoucher = res.codename;
-        }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'expensesvoucher' && res.codename == 'view_expensesvoucher') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'expensesvoucher' && res.codename == 'view_expensesvoucher') {
           this.isExpenseVoucher = res.codename; //12-1
+        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'newmaterialconsuption' && res.codename == 'view_newmaterialconsuption') {
+          this.isMaterialConsuption = res.codename; //12-1
         }
+        
         // inventory
         else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'view_stocktransfer') {
           this.isStockTransport = res.codename;
         }
         else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'transferrequest' && res.codename == 'view_transferrequest') {
           this.isStockTransportRequest = res.codename;
-          console.log(res.codename ); 
+          console.log(res.codename);
+        }
+        else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'stockverification' && res.codename == 'view_stockverification') {
+          this.isStockVerification = res.codename;
+          console.log(res.codename);
         }
         //3-1
-          // hrm
-          else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'attendance' && res.codename == 'view_attendance') {
-            this.isAttendnace = res.codename;
-            console.log(res.codename ); 
-          }
-          else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'target' && res.codename == 'view_target') {
-            this.isTarget = res.codename;
-            console.log(res.codename ); 
-          } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'department' && res.codename == 'view_department') {
-            this.isDepartment = res.codename;
-            console.log(res.codename ); 
-          } else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'incentiveledger' && res.codename == 'view_incentiveledger') {
-            this.isIncentive = res.codename;
-            console.log(res.codename ); 
-          }
+        // hrm
+        else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'attendance' && res.codename == 'view_attendance') {
+          this.isAttendnace = res.codename;
+          console.log(res.codename);
+        }
+        else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'target' && res.codename == 'view_target') {
+          this.isTarget = res.codename;
+          console.log(res.codename);
+        } else if (res.content_type.app_label === 'contacts' && res.content_type.model === 'department' && res.codename == 'view_department') {
+          this.isDepartment = res.codename;
+          console.log(res.codename);
+        } else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'incentiveledger' && res.codename == 'view_incentiveledger') {
+          this.isIncentive = res.codename;
+          console.log(res.codename);
+        }
       });
     }
 

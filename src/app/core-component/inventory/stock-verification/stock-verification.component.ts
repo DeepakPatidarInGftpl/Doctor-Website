@@ -145,11 +145,11 @@ export class StockVerificationComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'add_stocktransfer') {
+        if (res.content_type.app_label === 'transactions' && res.content_type.model === 'stockverification' && res.codename == 'add_stockverification') {
           this.isAdd = res.codename;
-        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'change_stocktransfer') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'stockverification' && res.codename == 'change_stockverification') {
           this.isEdit = res.codename;
-        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'delete_stocktransfer') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'stockverification' && res.codename == 'delete_stockverification') {
           this.isDelete = res.codename;
         }
       });

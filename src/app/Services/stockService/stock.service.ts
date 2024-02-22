@@ -14,6 +14,10 @@ export class StockService {
     let url = this.apiUrl + '/pv-api/stock/';
     return this.http.get(url)
   }
+  getStockByVariantId(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/stock/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
   // stock transfer
 
   getStockTransfer() {

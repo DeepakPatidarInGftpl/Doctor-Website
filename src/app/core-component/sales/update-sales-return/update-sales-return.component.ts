@@ -129,8 +129,11 @@ export class UpdateSalesReturnComponent implements OnInit {
   variantList: any[] = [];
   variantList2: any[] = [];
   isSearch = false;
+  searchLength:any;
   getVariant(search: any, index: any, barcode: any) {
-    this.isSearch = true;
+    this.searchLength=search
+    this.isSearch=true;
+    if(search.toString().length>=3){
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
 
       if (this.selectData.length > 0) {
@@ -201,6 +204,7 @@ export class UpdateSalesReturnComponent implements OnInit {
 
       });
     }
+  }
   }
 
   categoryList: any[] = [];

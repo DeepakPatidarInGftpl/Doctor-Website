@@ -3,7 +3,6 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
-import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { StockService } from 'src/app/Services/stockService/stock.service';
 
 @Component({
@@ -60,10 +59,10 @@ export class AddstockVerificationComponent implements OnInit {
       item_code:new FormControl('',[Validators.required]),
       item_name: new FormControl('', [Validators.required]),
       unit: new FormControl('', [Validators.required]),
-      system_qty: new FormControl('', [Validators.required]),
+      system_qty: new FormControl(0, [Validators.required]),
       physical_qty: new FormControl(0, [Validators.required]),
-      discrepancy: new FormControl('',[Validators.required]),
-      reason_for_adjustment: new FormControl(''),
+      discrepancy: new FormControl(0,[Validators.required]),
+      reason_for_adjustment: new FormControl('',[Validators.required]),
     })
   }
   getCart(): FormArray {
@@ -186,13 +185,13 @@ export class AddstockVerificationComponent implements OnInit {
     console.log(product);
     this.supplierControl.reset()
     if (this.getCart().length > 0) {
+      this.myControl.reset()
       this.indexProduct++;
       if (this.indexProduct > 0) {
     console.log(this.indexProduct,'index product');
     this.addCart(this.indexProduct);
-    this.inventoryService.getStock().subscribe((res: any) => {
-      console.log(res);
-        // this.inventoryService.getStockById(product?.id).subscribe((res: any) => {
+    // this.inventoryService.getStock().subscribe((res: any) => {
+        this.inventoryService.getStockByVariantId(product?.id).subscribe((res: any) => {
           this.stockList = res;
           const barcode = (this.stokeVerificationForm.get('cart_item') as FormArray).at(this.indexProduct) as FormGroup;
      console.log(product);
@@ -200,22 +199,22 @@ export class AddstockVerificationComponent implements OnInit {
             barcode: product?.id,
             item_code:product.sku,
             item_name: product?.product_title,
-            system_qty: 1,
+            system_qty: this.stockList?.available_qty,
           });
         })
       }
     } else {
       this.addCart(0);
-      this.inventoryService.getStock().subscribe((res: any) => {
-        console.log(res);
-      // this.inventoryService.getStockById(product?.id).subscribe((res: any) => {
+      // this.inventoryService.getStock().subscribe((res: any) => {
+      //   console.log(res);
+      this.inventoryService.getStockByVariantId(product?.id).subscribe((res: any) => {
       this.stockList = res;
         const barcode = (this.stokeVerificationForm.get('cart_item') as FormArray).at(0) as FormGroup;
         barcode.patchValue({
           barcode: product?.id,
           item_code:product.sku,
           item_name: product?.product_title,
-          system_qty: 1,
+          system_qty: this.stockList?.available_qty,
         });
       })
       console.warn(this.getCart().length);
