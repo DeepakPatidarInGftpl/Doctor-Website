@@ -127,8 +127,11 @@ export class UpdateEstimateComponent implements OnInit {
   variantList2: any[] = [];
   variantList: any[] = [];
   isSearch=false;
+  searchLength:any;
   getVariant(search: any, index: any, barcode: any) {
+    this.searchLength=search
     this.isSearch=true;
+    if(search.toString().length>=3){
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -197,6 +200,7 @@ export class UpdateEstimateComponent implements OnInit {
 
       });
     }
+  }
   }
 
   categoryList: any[] = [];

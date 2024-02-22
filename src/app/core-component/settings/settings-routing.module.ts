@@ -125,6 +125,10 @@ const routes: Routes = [
   {path: 'update-membership/:id', loadChildren: () => import('./update-membership/update-membership.module').then((m) => m.UpdateMembershipModule)},
   {path: 'detail-membership/:id', loadChildren: () => import('./detail-membership/detail-membership.module').then((m) => m.DetailMembershipModule)},
 
+  //22-2
+  {path: 'company-drive', loadChildren: () => import('./company-drive/company-drive.module').then((m) => m.CompanyDriveModule)},
+  {path: 'detail-company-drive/:id', loadChildren: () => import('./detail-company-drive/detail-company-drive.module').then((m) => m.DetailCompanyDriveModule)},
+
 ];
 
 @NgModule({

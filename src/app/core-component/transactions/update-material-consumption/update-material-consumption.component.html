@@ -75,24 +75,7 @@
             <span class="text-danger" *ngIf="consumption_type && consumption_type.invalid && consumption_type.touched">Enter Consumtion Type</span>
           </div>
         </div>
-        <div class="col-lg-4 col-sm-4 col-12">
-          <div class="form-group">
-            <strong>Select Product</strong>
-           <input type="text" placeholder="Search Product" aria-label="Search Products" matInput [formControl]="barcodeControl" (input)="getVariant($event.target.value)" [matAutocomplete]="autos" style="box-sizing: border-box;" />
-           <mat-autocomplete #autos="matAutocomplete">
-               <ng-container *ngIf="barcodeControl.value?.length >= 1 && barcodeControl.value?.length > 0">
-                   <ng-container *ngFor="let option of variantList">
-                     <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name" (onSelectionChange)="oncheckProduct(option)" style="color:#FF9F43"> {{ option?.product_title + ' ' + option?.variant_name}}</mat-option>
-                   </ng-container>
-               </ng-container>
-               <mat-option *ngIf="variantList?.length === 0"[value]="'No data found'">
-                   <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
-               </mat-option>
-               <mat-option *ngIf="barcodeControl.value?.length < 3" class="is-loading"> Please Enter 3 or more characters</mat-option>
-           </mat-autocomplete>
-           </div>
-        </div>
-
+      
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
             <label>Remarks</label>
@@ -101,27 +84,56 @@
           </div>
         </div>
 
-        <div class="col-lg-4 col-sm-4 col-12">
-          <div class="form-group">
-            <label>QTY</label>
-            <input type="number" formControlName="qty" placeholder="Enter qty" id="qty" [ngClass]="{ 'is-invalid': f['qty'].touched && f['qty'].invalid}">
-            <span class="text-danger" *ngIf="qty && qty.invalid && qty.touched">Enter qty</span>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-sm-4 col-12">
-          <div class="form-group">
-            <label>Price</label>
-            <input type="number" formControlName="price" placeholder="Enter price" id="price" [ngClass]="{ 'is-invalid': f['price'].touched && f['price'].invalid}">
-            <span class="text-danger" *ngIf="price && price.invalid && price.touched">Enter Price</span>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-sm-4 col-12">
-          <div class="form-group">
-            <label>Total Action</label>
-            <input type="number" formControlName="total_action" placeholder="Enter total_action" id="total_action" [ngClass]="{ 'is-invalid': f['total_action'].touched && f['total_action'].invalid}">
-            <span class="text-danger" *ngIf="total_action && total_action.invalid && total_action.touched">Enter Total Action</span>
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+            <div class="col-lg-3 col-sm-3 col-12">
+              <div class="form-group">
+                <label>Select Product</label>
+                <input type="text" placeholder="Search Product" aria-label="Search Products" matInput
+                  [formControl]="barcodeControl" (input)="getVariant($event.target.value)" [matAutocomplete]="autos"
+                  style="box-sizing: border-box;" />
+                <mat-autocomplete #autos="matAutocomplete">
+                  <ng-container *ngIf="barcodeControl.value?.length >= 1 && barcodeControl.value?.length > 0">
+                    <ng-container *ngFor="let option of variantList">
+                      <mat-option *ngIf="option.is_active==true"
+                        [value]="option?.product_title + ' ' + option?.variant_name"
+                        (onSelectionChange)="oncheckProduct(option)" style="color:#FF9F43"> {{ option?.product_title + '
+                        ' + option?.variant_name}}</mat-option>
+                    </ng-container>
+                  </ng-container>
+                  <mat-option *ngIf="variantList?.length === 0" [value]="'No data found'">
+                    <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                  </mat-option>
+                  <mat-option *ngIf="barcodeControl.value?.length < 3" class="is-loading"> Please Enter 3 or more
+                    characters</mat-option>
+                </mat-autocomplete>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-3 col-12">
+              <div class="form-group">
+                <label>QTY</label>
+                <input type="number" formControlName="qty" placeholder="Enter qty" id="qty"
+                  [ngClass]="{ 'is-invalid': f['qty'].touched && f['qty'].invalid}">
+                <span class="text-danger" *ngIf="qty && qty.invalid && qty.touched">Enter qty</span>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-3 col-12">
+              <div class="form-group">
+                <label>Price</label>
+                <input type="number" formControlName="price" placeholder="Enter price" id="price"
+                  [ngClass]="{ 'is-invalid': f['price'].touched && f['price'].invalid}">
+                <span class="text-danger" *ngIf="price && price.invalid && price.touched">Enter Price</span>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-3 col-12">
+              <div class="form-group">
+                <label>Total Action</label>
+                <input type="number" formControlName="total_action" placeholder="Enter total_action" id="total_action" [ngClass]="{ 'is-invalid': f['total_action'].touched && f['total_action'].invalid}">
+                <span class="text-danger" *ngIf="total_action && total_action.invalid && total_action.touched">Enter Total Action</span>
+              </div>
+            </div>
+            </div>
           </div>
         </div>
       

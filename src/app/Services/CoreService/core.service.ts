@@ -1828,4 +1828,29 @@ export class CoreService {
   //   return this.http.patch<any>(url, requestBody);
   // }
   
+    // company drive
+    getCompanyDrive() {
+      let url = this.apiUrl + '/pv-api/company_drive/';
+      return this.http.get(url)
+    }
+    getCompanyDriveById(id) {
+      let url = this.apiUrl + '/pv-api/company_drive/?id=';
+      return this.http.get(`${url}${id}`)
+    }
+    CompanyDriveIsActive(id: any, data) {
+      let url = this.apiUrl + '/pv-api/company_drive/?id=';
+      return this.http.patch(`${url}${id}`, data);
+    }
+    addCompanyDrive(data) {
+      let url = this.apiUrl + '/pv-api/company_drive/';
+      return this.http.post(url, data);
+    }
+    updateCompanyDrive(data: any, id: any): Observable<any> {
+      let url = this.apiUrl + '/pv-api/company_drive/?id=';
+      return this.http.put<any>(`${url}${id}`, data);
+    }
+    deleteCompanyDrive(id: number) {
+      let url = this.apiUrl + '/pv-api/company_drive/?id=';
+      return this.http.delete(`${url}${id}`);
+    }
 }

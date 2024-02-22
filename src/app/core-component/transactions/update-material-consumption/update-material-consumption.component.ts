@@ -61,7 +61,6 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
-
   }
 
   prefixNo: any;

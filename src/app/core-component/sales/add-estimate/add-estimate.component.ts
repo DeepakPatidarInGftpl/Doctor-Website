@@ -32,12 +32,12 @@ export class AddEstimateComponent implements OnInit {
   }
 
   customerControlName = 'customer';
-  userControl = new FormControl();
+ 
   productOption: any[] = [];
   filteredOptions: Observable<any>;
   users: any[] = [];
   filteredusers: Observable<any[]>;
-
+  userControl = new FormControl();
   variantControlName = 'customer';
   variantControl = new FormControl();
   variants: any[] = [];
@@ -115,8 +115,11 @@ export class AddEstimateComponent implements OnInit {
   variantList: any[] = [];
   variantList2: any[] = [];
   isSearch=false;
+  searchLength:any;
   getVariant(search: any, index: any, barcode) {
+    this.searchLength=search
     this.isSearch=true;
+    if(search.toString().length>=3){
     if(this.search.toString().length>=3){
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
@@ -190,6 +193,7 @@ export class AddEstimateComponent implements OnInit {
       });
     }
   }
+}
   }
 
   categoryList: any[] = [];

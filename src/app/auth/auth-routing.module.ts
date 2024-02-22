@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './auth.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'signin', pathMatch: 'full' },
+  // { path: '', redirectTo: 'signin', pathMatch: 'full' },
   {
     path:'',
     children: [
