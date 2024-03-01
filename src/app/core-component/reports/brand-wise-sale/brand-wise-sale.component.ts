@@ -214,7 +214,7 @@ export class BrandWiseSaleComponent implements OnInit {
 
  generatePDFAgain() {
   const doc = new jsPDF();
-  const subtitle = 'Instant Light Ltd.';
+  const subtitle = 'PV';
   const title = 'Brand Wise Sale Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
   const heading = `User: ${this.userName}`;
@@ -242,7 +242,7 @@ export class BrandWiseSaleComponent implements OnInit {
     ]),
     theme: 'grid',
     headStyles: {
-      fillColor: [24, 129, 176]
+      fillColor: [255, 159, 67]
     },
     startY: 25, // margin top 
 

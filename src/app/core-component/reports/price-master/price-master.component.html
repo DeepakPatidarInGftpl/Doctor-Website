@@ -1,0 +1,180 @@
+<div class="row w-100 m-0">
+    <div class="col-lg-12 col-12">
+        <div class="page-header">
+            <div class="page-title titl">
+                <h4 class="text_24">Price Master</h4>
+                <h6>Manage your Price Master</h6>
+            </div>
+
+
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <form [formGroup]="stockAlertform">
+                            <div class="row">
+                               
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <strong>Select Product</strong>
+                                        <input type="text" placeholder="Enter Product" [formControl]="supplierControl"
+                                            [matAutocomplete]="auto" class="form-control">
+                                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn5">
+                                            <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier"
+                                            (blur)="oncheckproduct(supplier?.id)" >{{supplier?.title}} </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <strong>Select Variant</strong>
+                                        <input type="text" placeholder="Search Variant"
+                                        aria-label="Search Products" matInput
+                                        [formControl]="productControl"
+                                        (input)="getVariant($event.target.value)"
+                                        [matAutocomplete]="autos"
+                                        style="box-sizing: border-box;" />
+                                    <mat-autocomplete #autos="matAutocomplete">
+                                        <ng-container
+                                            *ngIf="productControl.value?.length >= 1 && productControl.value?.length > 0">
+                                            <ng-container *ngFor="let option of variantList">
+                                                <mat-option *ngIf="option.is_active==true"
+                                                    [value]="option?.product_title + ' ' + option?.variant_name"
+                                                    (onSelectionChange)="oncheckVariant(option?.id)"
+                                                    style="color:#FF9F43">
+                                                    {{ option?.product_title + ' ' +
+                                                    option?.variant_name}}
+                                                </mat-option>
+                                            </ng-container>
+                                        </ng-container>
+                                       
+                                    </mat-autocomplete>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <strong>Select Category</strong>
+                                        <input type="text" placeholder="Enter Product" [formControl]="categoryControl"
+                                             class="form-control" [matAutocomplete]="autoc">
+                                        <mat-autocomplete #autoc="matAutocomplete" [displayWith]="displayFn2">
+                                            <mat-option *ngFor="let supplier of filteredCategory | async"
+                                                [value]="supplier"
+                                                (blur)="oncheckCategory(supplier?.id)">{{supplier?.title}} </mat-option>
+                                        </mat-autocomplete>
+
+                                    </div>
+                                </div>
+                              
+                                <div class="col-lg-2 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <strong>Select Brand</strong>
+                                        <input type="text" placeholder="Enter Brand" [formControl]="brandControl"
+                                          [matAutocomplete]="autob" class="form-control">
+                                        <mat-autocomplete #autob="matAutocomplete" [displayWith]="displayFn">
+                                            <mat-option *ngFor="let supplier of filteredBrand | async"
+                                                [value]="supplier"
+                                                (blur)="oncheckBrand( supplier?.id)">{{supplier?.title}} </mat-option>
+                                        </mat-autocomplete>
+
+                                    </div>
+                                </div>
+                              
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"
+                                        style="max-width: none;"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"
+                                        style="max-width: none;"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"
+                                        style="max-width: none;"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+                <div class="table-responsive">
+                    <table class="table datanew" id=mytable>
+                        <thead>
+                            <tr>
+                                <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">ProductTitle <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">VariantName <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Created Date <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Mrp <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Cost Price <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Selling Price Online <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Selling Price Offline <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Selling Price Employee <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Selling Price Dealer <i class="fa fa-sort"></i></th>
+
+                                
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="stockAlertList?.length>=0">
+                            <tr
+                                *ngFor="let list of stockAlertList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                                <th>{{i+1+'.'}}</th>
+                                <td>{{list?.product_title}}</td>
+                                <td>{{list?.variant_name}}</td>
+                                <td>{{list?.created_date|date:'yy/mm/dd'}}</td>
+                                <td>{{list.batch.mrp}}</td>
+                                <td>{{list.batch.cost_price}}</td>
+                                <td>{{list.batch.selling_price_online}}</td>
+                                <td>{{list.batch.selling_price_offline}}</td>
+                                <td>{{list.batch.selling_price_employee}}</td>
+                                <td>{{list.batch.selling_price_dealer}}</td>
+
+
+
+
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="stockAlertList?.length==0">
+                            <tr>
+                                <td colspan="10">
+                                    <p class="text-center">Data not available</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                                <select [(ngModel)]="itemsPerPage" class="pagination">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="-1">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">
+                                    Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}} entries
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

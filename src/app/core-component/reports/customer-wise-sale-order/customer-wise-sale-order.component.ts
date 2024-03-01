@@ -148,9 +148,9 @@ getCustomerWiseSaleOrder() {
       console.log(res);
       this.customerWiseSaleOrderList = res;
       this.customerWiseSaleOrder=res;
-      this.customerWiseSaleOrderList.map((res:any)=>{
+      this.customerWiseSaleOrder.map((res:any)=>{
         console.log(res.sale_order);
-        
+        this.customerWiseSaleOrderList=res.sale_order;
       })
     })
 
@@ -183,7 +183,7 @@ getCustomerWiseSaleOrder() {
 UserName: any;
 generatePDFAgain() {
   const doc = new jsPDF();
-  const subtitle = 'Instant Light Ltd.';
+  const subtitle = 'PV';
   const title = 'Customer Wise Sale Order Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
   const heading = `User: ${this.userName}`;
@@ -200,18 +200,18 @@ generatePDFAgain() {
   // Pass tableData to autoTable
   autoTable(doc, {
     head: [
-      ['#', 'UserDetail', 'No.Of Bill', 'Total Amount ',]
+      ['#', 'Customer', 'Sale Order Date', 'Sale Order No. ','Total Qty','Total','Invoice Total Qty','Invoice Total Amount']
     ],
     body: this.customerWiseSaleOrderList.map((row:any, index:number ) => [
       index + 1,
-      row.user_detail,
-      row.no_of_bill,
-      row.total_amount,
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [24, 129, 176]
-    },
+      row.customer?.party_name,
+      row.sale_order_date,
+      row.sale_order_no,
+      row.total_qty,
+      row.total,
+      row.invoice_detail?.total_qty,
+      row.invoice_detail?.total_amount,
+]),
     startY: 25
   });
 

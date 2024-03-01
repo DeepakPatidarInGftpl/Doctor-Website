@@ -13,11 +13,6 @@ const routes: Routes = [
       import('./sale-summary/sale-summary.module').then((m) => m.SaleSummaryModule),
   },
   {
-    path: 'purchase-summary',
-    loadChildren: () =>
-      import('./purchase-summary/purchase-summary.module').then((m) => m.PurchaseSummaryModule),
-  },
-  {
     path: 'stock-ledger',
     loadChildren: () =>
       import('./stock-ledger/stock-ledger.module').then((m) => m.StockLedgerModule),
@@ -68,6 +63,12 @@ const routes: Routes = [
 
 },
 {
+  path:'time-wise-sale',
+  loadChildren: () =>
+  import('./time-wise-sale/time-wise-sale.module').then((m) =>m.TimeWiseSaleModule)
+
+},
+{
   path:'brand-wise-sale',
   loadChildren: () =>
   import('./brand-wise-sale/brand-wise-sale.module').then((m) =>m.BrandWiseSaleModule)
@@ -91,9 +92,159 @@ const routes: Routes = [
   path:'customer-wise-sale-order',
   loadChildren: () =>
   import('./customer-wise-sale-order/customer-wise-sale-order.module').then((m) =>m.CustomerWiseSaleOrderModule)
-}
+},
+{
+  path: 'purchase-summary',
+  loadChildren: () =>
+    import('./purchase-summary/purchase-summary.module').then((m) => m.PurchaseSummaryModule),
+},
+{
+  path: 'purchase-overdue',
+  loadChildren: () =>
+    import('./purchase-overdue/purchase-overdue.module').then((m) => m.PurchaseOverdueModule),
+},
  
+{
+  path: 'purchase-outstanding',
+  loadChildren: () =>
+    import('./purchase-outstanding/purchase-outstanding.module').then((m) => m.PurchaseOutstandingModule),
+},
+{
+  path:'product-wise-purchase',
+  loadChildren: () =>
+  import('./product-wise-purchase/product-wise-purchase.module').then((m) =>m.ProductWisePurchaseModule)
+},
+{
+  path:'category-wise-purchase',
+  loadChildren: () =>
+  import('./category-wise-purchase/category-wise-purchase.module').then((m) =>m.CategoryWisePurchaseModule)
 
+},
+{
+  path:'brand-wise-purchase',
+  loadChildren: () =>
+  import('./brand-wise-purchase/brand-wise-purchase.module').then((m) =>m.BrandWisePurchaseModule)
+},
+{
+  path:'price-wise-purchase',
+  loadChildren: () =>
+  import('./price-wise-purchase/price-wise-purchase.module').then((m) =>m.PriceWisePurchaseModule)
+},
+{
+  path:'purchase-register',
+  loadChildren: () =>
+  import('./purchase-register/purchase-register.module').then((m) =>m.PurchaseRegisterModule)
+},
+{
+  path:'discount-wise-purchase',
+  loadChildren: () =>
+  import('./discount-wise-purchase/discount-wise-purchase.module').then((m) =>m.DiscountWisePurchaseModule)
+},
+{
+  path:'supplier-wise',
+  loadChildren: () =>
+  import('./supplier-wise/supplier-wise.module').then((m) =>m.SupplierWiseModule)
+},
+{
+  path:'debit-note-register',
+  loadChildren: () =>
+  import('./debit-note-register/debit-note-register.module').then((m) =>m.DebitNoteRegisterModule)
+},
+{
+  path: 'supplier-outstanding',
+  loadChildren: () =>
+    import('./supplier-outstanding/supplier-outstanding.module').then((m) => m.SupplierOutstandingModule),
+},
+{
+  path: 'sales-by-product',
+  loadChildren: () =>
+    import('./sales-by-product/sales-by-product.module').then((m) => m.SalesByProductModule),
+},
+{
+  path: 'stock-summary',
+  loadChildren: () =>
+    import('./stock-summary/stock-summary.module').then((m) => m.StockSummaryModule),
+},
+{
+  path: 'abc-analysis',
+  loadChildren: () =>
+    import('./abc-analysis/abc-analysis.module').then((m) => m.AbcAnalysisModule),
+},
+{
+  path: 'price-master',
+  loadChildren: () =>
+    import('./price-master/price-master.module').then((m) => m.PriceMasterModule),
+},
+{
+  path: 'stock-register',
+  loadChildren: () =>
+    import('./stock-register/stock-register.module').then((m) => m.StockRegisterModule),
+},
+{
+  path: 'supplier-wise-product',
+  loadChildren: () =>
+    import('./supplier-wise/supplier-wise.module').then((m) => m.SupplierWiseModule),
+},
+{
+  path: 'stock-movement',
+  loadChildren: () =>
+    import('./stock-movement/stock-movement.module').then((m) => m.StockMovementModule),
+},
+{
+  path: 'stock-verification',
+  loadChildren: () =>
+    import('./stock-verification/stock-verification.module').then((m) => m.StockVerificationModule),
+},
+{
+  path: 'tax-wise-purchase',
+  loadChildren: () =>
+    import('./tax-wise-purchase/tax-wise-purchase.module').then((m) => m.TaxWisePurchaseModule),
+},
+{
+  path: 'tax-wise-credit-note',
+  loadChildren: () =>
+    import('./tax-wise-credit-note/tax-wise-credit-note.module').then((m) => m.TaxWiseCreditNoteModule),
+},
+{
+  path: 'tax-wise-debit-note',
+  loadChildren: () =>
+    import('./tax-wise-debit-note/tax-wise-debit-note.module').then((m) => m.TaxWiseDebitNoteModule),
+},
+{
+  path: 'tax-wise-sale-return',
+  loadChildren: () =>
+    import('./tax-wise-sale-return/tax-wise-sale-return.module').then((m) => m.TaxWiseSaleReturnModule),
+},
+{
+  path: 'tax-wise-sale',
+  loadChildren: () =>
+    import('./tax-wise-sale/tax-wise-sale.module').then((m) => m.TaxWiseSaleModule),
+},
+{
+  path: 'tax-wise-purchase-return',
+  loadChildren: () =>
+    import('./tax-wise-purchase-return/tax-wise-purchase-return.module').then((m) => m.TaxWisePurchaseReturnModule),
+},
+{
+  path: 'sale-return',
+  loadChildren: () =>
+    import('./sale-return/sale-return.module').then((m) => m.SaleReturnModule),
+},
+{
+  path: 'tax-wise-purchase',
+  loadChildren: () =>
+    import('./tax-wise-purchase/tax-wise-purchase.module').then((m) => m.TaxWisePurchaseModule),
+},
+{
+  path: 'out-standing-analysis',
+  loadChildren: () =>
+    import('./outstanding-analysis/outstanding-analysis.module').then((m) => m.OutstandingAnalysisModule),
+},
+{
+  path: 'credit-note-register',
+  loadChildren: () =>
+    import('./credit-note-register/credit-note-register.module').then((m) => m.CreditNoteRegisterModule),
+},
 
 ];
 

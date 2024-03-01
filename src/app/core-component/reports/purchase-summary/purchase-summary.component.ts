@@ -183,36 +183,10 @@ export class PurchaseSummaryComponent implements OnInit {
   // convert to pdf
   // convert to pdf
   UserName: any;
-  generatePDF() {
-    const doc = new jsPDF();
-    const subtitle = 'Instant Light Ltd.';
-    const title = 'Purchase Summary Report';
-    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-    const heading = `User: ${this.userName}`;
 
-    doc.setFontSize(12);
-    doc.setTextColor(33, 43, 54);
-    doc.text(subtitle, 86, 5);
-    doc.text(title, 82, 10);
-    doc.text(heading, 10, 18);
-    doc.text(heading2, 10, 22)
-
-    doc.text('', 10, 25); //,argin x, y
-
-    autoTable(doc, {
-      html: '#mytable',
-      theme: 'grid',
-      headStyles: {
-        fillColor: [24, 129, 176]
-      },
-      startY: 25, // margin top 
-    });
-
-    doc.save('PurchaseSummary.pdf');
-  }
   generatePDFAgain() {
     const doc = new jsPDF();
-    const subtitle = 'Instant Light Ltd.';
+    const subtitle = 'PV';
     const title = 'Purchase Summary Report';
     const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
     const heading = `User: ${this.userName}`;
@@ -227,27 +201,51 @@ export class PurchaseSummaryComponent implements OnInit {
     doc.text('', 10, 25); //,argin x, y
 
     // Pass tableData to autoTable
+   // nested table
+    const headers = ['#','Supplier', 'Date', 'Payment Type', 'Payment Voucher No. ', 'Amount','supplier Bill No.', 'Note'];
+    const data: any = [];
+
+    let customerIndex = 1;
+    this.purchaseSummaryList.forEach((list: any) => {
+      console.warn(list);
+      
+      const supplier = list.supplier;
+      const date = list.date;
+      const payment_type = list.payment_type;
+      const payment_voucher_no = list.payment_voucher_no;
+      const amount = list.amount;
+      const note = list.note;
+      let isFirstInvoice = true;
+      list.payment_cart.forEach((res:any,index: number) => {
+        console.log(res);
+        
+        const invoiceNumber = isFirstInvoice ? customerIndex : '';
+        data.push([
+          invoiceNumber, // row no of each cstmr
+          isFirstInvoice ? supplier : '',
+          isFirstInvoice ? date : '',
+          isFirstInvoice ? payment_type : '',
+          isFirstInvoice ? payment_voucher_no : '',
+          isFirstInvoice ? amount : '',
+          res.purchase_bill?.supplier_bill_no,
+          isFirstInvoice ? note : '',  
+        ]);
+        isFirstInvoice = false;
+      });
+      customerIndex++;
+    });
     autoTable(doc, {
-      head: [
-        ['#', 'User', 'Date', 'Payment Method', 'Payment Voucher No. ', 'Amount', 'Note']
-      ],
-      body: this.purchaseSummaryList.map((row: any, index: number) => [
-        index + 1,
-        row.supplier,
-        row.date,
-        row.payment_method,
-        row.payment_voucher_no,
-        row.amount,
-        row.note
-      ]),
+      head: [headers],
+      body: data,
       theme: 'grid',
+      startY: 32, 
       headStyles: {
-        fillColor: [24, 129, 176]
-      },
-      startY: 25, // margin top
+        fillColor: [255, 159, 67], // Header color
+        textColor: [255, 255, 255] // Header text color
+      }
     });
 
-    doc.save('PurchaseSummary.pdf');
+    doc.save('Purchase_Summary.pdf');
   }
 
 

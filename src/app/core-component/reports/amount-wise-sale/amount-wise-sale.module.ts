@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AmountWiseSaleRoutingModule } from './amount-wise-sale-routing.module';
 import { AmountWiseSaleComponent } from './amount-wise-sale.component';
 import { DatePipe } from '@angular/common';

@@ -106,7 +106,7 @@ export class SaleOverdueComponent implements OnInit {
       UserName: any;
       generatePDF() {
         const doc = new jsPDF();
-        const subtitle = 'Instant Light Ltd.';
+        const subtitle = 'PV';
         const title = 'Sale Overdue Report';
         const heading2 = `Date Range From: ${this.date}`
         const heading = `User: ${this.userName}`;
@@ -124,7 +124,7 @@ export class SaleOverdueComponent implements OnInit {
           html: '#mytable',
           theme: 'grid',
           headStyles: {
-            fillColor: [24, 129, 176]
+            fillColor: [255, 159, 67]
           },
           startY: 25, // margin top 
         });
@@ -134,7 +134,7 @@ export class SaleOverdueComponent implements OnInit {
       
       generatePDFAgain() {
         const doc = new jsPDF();
-        const subtitle = 'Instant Light Ltd.';
+        const subtitle = 'PV';
         const title = 'Sale Overdue Report';
         const heading2 = `Date Range From: ${this.date}`
         const heading = `User: ${this.userName}`;
@@ -163,7 +163,7 @@ export class SaleOverdueComponent implements OnInit {
           ]),
           theme: 'grid',
           headStyles: {
-            fillColor: [24, 129, 176]
+            fillColor: [255, 159, 67]
           },
           startY: 25, // margin top 
       

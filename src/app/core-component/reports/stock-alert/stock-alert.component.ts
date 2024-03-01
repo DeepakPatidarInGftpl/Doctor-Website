@@ -307,7 +307,7 @@ export class StockAlertComponent implements OnInit {
  // convert to pdf
  generatePDF() {
    const doc = new jsPDF();
-   const subtitle = 'Instant Light Ltd.';
+   const subtitle = 'PV';
    const title = 'Stock Alert Report';
    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
    const heading = `User: ${this.userName}`;
@@ -325,7 +325,7 @@ export class StockAlertComponent implements OnInit {
      html: '#mytable',
      theme: 'grid',
      headStyles: {
-       fillColor: [24, 129, 176]
+       fillColor: [255, 159, 67]
      },
      startY: 25, // margin top 
    });
@@ -334,7 +334,7 @@ export class StockAlertComponent implements OnInit {
  }
  generatePDFAgain() {
   const doc = new jsPDF();
-  const subtitle = 'Instant Light Ltd.';
+  const subtitle = 'PV';
   const title = 'Stock Alert Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
   const heading = `User: ${this.userName}`;
@@ -366,7 +366,7 @@ export class StockAlertComponent implements OnInit {
     ]),
     theme: 'grid',
     headStyles: {
-      fillColor: [24, 129, 176]
+      fillColor: [255, 159, 67]
     },
     startY: 25, // margin top 
 

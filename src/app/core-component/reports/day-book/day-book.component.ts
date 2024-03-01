@@ -172,7 +172,7 @@ this.getAccount()
       // UserName: any;
       generatePDF() {
         const doc = new jsPDF();
-        const subtitle = 'Instant Light Ltd.';
+        const subtitle = 'PV';
         const title = 'Day Book Report';
         const heading2 = `Date Range From: ${this.date}`
         const heading = `User: ${this.userName}`;
@@ -190,7 +190,7 @@ this.getAccount()
           html: '#mytable',
           theme: 'grid',
           headStyles: {
-            fillColor: [24, 129, 176]
+            fillColor: [255, 159, 67]
           },
           startY: 25, // margin top 
         });
@@ -200,7 +200,7 @@ this.getAccount()
       
       generatePDFAgain() {
         const doc = new jsPDF();
-        const subtitle = 'Instant Light Ltd.';
+        const subtitle = 'PV';
         const title = 'Day Book Report';
         const heading2 = `Date Range From: ${this.date}`
         const heading = `User: ${this.userName}`;
@@ -234,7 +234,7 @@ this.getAccount()
           ]),
           theme: 'grid',
           headStyles: {
-            fillColor: [24, 129, 176]
+            fillColor: [255, 159, 67]
           },
           startY: 25, // margin top 
       

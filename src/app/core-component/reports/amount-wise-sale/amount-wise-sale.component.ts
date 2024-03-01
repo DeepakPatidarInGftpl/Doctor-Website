@@ -177,7 +177,7 @@ export class AmountWiseSaleComponent implements OnInit {
   
     generatePDFAgain() {
       const doc = new jsPDF();
-      const subtitle = 'Instant Light Ltd.';
+      const subtitle = 'PV';
       const title = 'Amount Wise Sale Report';
       const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
       const heading = `User: ${this.userName}`;
@@ -224,7 +224,7 @@ export class AmountWiseSaleComponent implements OnInit {
         theme: 'grid',
         startY: 32, 
         headStyles: {
-          fillColor: [24, 129, 176], // Header color
+          fillColor: [255, 159, 67], // Header color
           textColor: [255, 255, 255] // Header text color
         }
       });

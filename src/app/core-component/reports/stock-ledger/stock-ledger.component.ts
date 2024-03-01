@@ -222,7 +222,7 @@ stockLedger:any
  UserName: any;
  generatePDF() {
    const doc = new jsPDF();
-   const subtitle = 'Instant Light Ltd.';
+   const subtitle = 'PV';
    const title = 'Stock Ledger Report';
    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
    const heading = `User: ${this.userName}`;
@@ -240,7 +240,7 @@ stockLedger:any
      html: '#mytable',
      theme: 'grid',
      headStyles: {
-       fillColor: [24, 129, 176]
+       fillColor: [255, 159, 67]
      },
      startY: 25, // margin top 
    });
@@ -249,7 +249,7 @@ stockLedger:any
  }
  generatePDFAgain() {
   const doc = new jsPDF();
-  const subtitle = 'Instant Light Ltd.';
+  const subtitle = 'PV';
   const title = 'Stock Ledger Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
   const heading = `User: ${this.userName}`;
@@ -280,7 +280,7 @@ stockLedger:any
     ]),
     theme: 'grid',
     headStyles: {
-      fillColor: [24, 129, 176]
+      fillColor: [255, 159, 67]
     },
     startY: 25, // margin top 
 
