@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PendingSaleOrderRoutingModule } from './pending-sale-order-routing.module';
-import { PendingSaleOrderComponent } from './pending-sale-order.component';
-import {  DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { ExpenseRegisterRoutingModule } from './expense-register-routing.module';
+import { ExpenseRegisterComponent } from './expense-register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {NgFor, AsyncPipe} from '@angular/common';
@@ -27,11 +26,14 @@ const icons = {
 };
 
 
+
+
 @NgModule({
-  declarations: [PendingSaleOrderComponent],
+  declarations: [ExpenseRegisterComponent
+  ],
   imports: [
     CommonModule,
-    PendingSaleOrderRoutingModule,
+    ExpenseRegisterRoutingModule,
     FormsModule,ReactiveFormsModule,
     MatAutocompleteModule,NgFor,AsyncPipe,
     MatFormFieldModule,MatInputModule,NgMultiSelectDropDownModule,
@@ -49,6 +51,8 @@ const icons = {
     DatePipe
   ]
 })
-  
 
-export class PendingSaleOrderModule { }
+
+
+
+export class ExpenseRegisterModule { }

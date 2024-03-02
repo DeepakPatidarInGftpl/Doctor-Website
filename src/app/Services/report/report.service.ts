@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ReportService {
+  
   constructor(private http: HttpClient) { }
   apiUrl = `${environment.api}`;
   //{{urls}}/api/reports/supplier/wise/purchase/?start_date=2022-01-19&end_date=2024-03-19&user_id=1
@@ -830,4 +831,131 @@ export class ReportService {
     }
     return this.http.get<any>(url);
   }
+  getPendingSaleOrder(start_date: any, end_date: any, product: any,user_id:any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/pending/saleorder';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+    if (product) {
+      queryParams.push(`product=${product}`);
+
+    }
+    if(user_id){
+      queryParams.push(`user_id=${user_id}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  getExpenseRegister(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/expence/register/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  getGeneralLedger(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/general/ledger/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  getBankBook(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/bank/book/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  getProductLedger(start_date: any, end_date: any, category: any, subcategory: any, brand: any, variant: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/product/ledger/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+    if (category) {
+      queryParams.push(`category=${category}`);
+    }
+    if (subcategory) {
+      queryParams.push(`subcategory=${subcategory}`);
+    }
+    if (brand) {
+      queryParams.push(`brand=${brand}`);
+    }
+   if (variant) {
+      queryParams.push(`variant=${variant}`);
+    }
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  getCashBook(start_date: any, end_date: any, account_id: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/cash/book/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+    if (account_id) {
+      queryParams.push(`account_id=${account_id}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  getJournalBook(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/journal/book/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+ 
 }

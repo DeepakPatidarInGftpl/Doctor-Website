@@ -7,17 +7,18 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import * as XLSX from 'xlsx';
+import html2canvas from 'html2canvas';
+import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
-import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { ReportService } from 'src/app/Services/report/report.service';
-import * as XLSX from 'xlsx';
 @Component({
-  selector: 'app-time-wise-sale',
-  templateUrl: './time-wise-sale.component.html',
-  styleUrls: ['./time-wise-sale.component.scss']
+  selector: 'app-cash-book',
+  templateUrl: './cash-book.component.html',
+  styleUrls: ['./cash-book.component.scss']
 })
-export class TimeWiseSaleComponent implements OnInit {
+export class CashBookComponent implements OnInit {
 
   loader = true;
   public tableData: any
@@ -33,15 +34,19 @@ export class TimeWiseSaleComponent implements OnInit {
 
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
+
   userName: any;
-  amountWiseSaleList: any;
 
   constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
   }
-  //Amount Wise Saleform
-  amountWiseSaleform!: FormGroup;
+  //purchase register form
+  purchaseRegisterForm!: FormGroup;
   startDate: any;
   endDate: any;
+  accountId: any;
+
+  purchaseRegisterList: any
+
 
 
   userDetails: any;
@@ -61,24 +66,34 @@ export class TimeWiseSaleComponent implements OnInit {
     const formattedStartDate = this.formatDate(startDate);
     const formattedToday = this.formatDate(today);
 
-    // amountWiseSaleform
-    this.amountWiseSaleform = new FormGroup({
+    // purchase register form
+    this.purchaseRegisterForm = new FormGroup({
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
+      accountId: new FormControl('')
 
     });
-    this.startDate = this.amountWiseSaleform.value?.start;
-    this.endDate = this.amountWiseSaleform.value?.end;
+    this.startDate = this.purchaseRegisterForm.value?.start;
+    this.endDate = this.purchaseRegisterForm.value?.end;
+    this.accountId = this.purchaseRegisterForm.value.account_Id;
 
-    this.getamountWiseSale();
+    this.getPurchaseRegister();
+  
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
-        const name = typeof value === 'string' ? value : value?.detail?.name;
-        return name ? this._filter(name as string) : this.suppliers.slice();
+        const title = typeof value === 'string' ? value : value?.title;
+        return title ? this._filter(title as string) : this.accountList.slice();
       }),
     );
   }
+   accountList: any[] = [];
+        getAccount() {
+          this.reportService.getAccount().subscribe((res: any) => {
+            this.accountList = res;
+          })
+        }
+  
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
   }
@@ -93,14 +108,19 @@ export class TimeWiseSaleComponent implements OnInit {
   displayFn(user: any): string {
     return user && user?.detail?.company_name ? user?.detail?.company_name : '';
   }
+  displayFn3(user: any): string {
+    return user && user?.title ? user?.title : '';
+  }
+  
+       
   suppliers: any[] = [];
 
   search() {
     if (this.titlee === "") {
-      this.getamountWiseSale();
+      this.getPurchaseRegister();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.amountWiseSaleList = this.amountWiseSaleList.filter((res: any) => {
+      this.purchaseRegisterList = this.purchaseRegisterList.filter((res: any) => {
         const nameLower = res?.user?.party_name.toLocaleLowerCase();
         const usernameLower = res?.payment_voucher_no.toLocaleLowerCase() || "";
         // return nameLower.includes(searchTerm);
@@ -136,17 +156,18 @@ export class TimeWiseSaleComponent implements OnInit {
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
+  
   calculateProductRange(currentPage: number, productsPerPage: number, totalProducts: number): string {
     const startIndex = (currentPage - 1) * productsPerPage;
     const endIndex = Math.min(startIndex + productsPerPage - 1, totalProducts - 1);
     return `Showing ${startIndex + 1}–${endIndex + 1} of ${totalProducts} results`;
   }
-  amountWiseSale: any
-  getamountWiseSale() {
-    this.reportService.getTimeWiseSale(this.startDate, this.endDate).subscribe((res) => {
+  purchaseRegister: any
+  getPurchaseRegister() {
+    this.reportService.getCashBook(this.startDate, this.endDate,this.accountId).subscribe((res) => {
       console.log(res);
-      this.amountWiseSale = res;
-      this.amountWiseSaleList = res;
+      this.purchaseRegister = res;
+      this.purchaseRegisterList = res;
     })
 
   }
@@ -155,81 +176,94 @@ export class TimeWiseSaleComponent implements OnInit {
   dataId: any;
   oncheckAccount(data: any) {
     console.log(data);
-    this.dataId = data;
-    this.amountWiseSaleform.patchValue({ user_id: this.dataId });
-    console.warn(this.amountWiseSaleform.value);
-    this?.getamountWiseSale();
+    this.accountId = data;
+    this.purchaseRegisterForm.patchValue({ account_id: this.accountId });
+    console.warn(this.purchaseRegisterForm.value);
+    this?.getPurchaseRegister();
   }
-
-  getSelectedAmountWiseSaleDates() {
-    console.log(this.amountWiseSaleform.value);
-    const start = this.datepipe.transform(this.amountWiseSaleform.value.start, 'yyyy-MM-dd');
-    const end = this.datepipe.transform(this.amountWiseSaleform.value.end, 'yyyy-MM-dd');
+  getSelectedAccount(data:any){
+    console.log(data);
+    console.log(this.purchaseRegisterForm.value);
+    this.purchaseRegisterForm.patchValue({accountId:data});
+    console.log(this.purchaseRegisterForm.value);
+    this.accountId = this.purchaseRegisterForm.value.accountId;
+    this.getPurchaseRegister();
+  }
+  getSelectedpurchaseRegisterDates() {
+    console.log(this.purchaseRegisterForm.value);
+    const start = this.datepipe.transform(this.purchaseRegisterForm.value.start, 'yyyy-MM-dd');
+    const end = this.datepipe.transform(this.purchaseRegisterForm.value.end, 'yyyy-MM-dd');
     console.log(start);
     console.log(end);
     this.startDate = start;
     this.endDate = end;
-    this.getamountWiseSale();
+    this?.getPurchaseRegister();
+  }
+  isSearch=false
+  userChange(data: any) {
+    this.isSearch=true;
+    if(data.toString().length>=2){
+    console.warn(data);
+    this.reportService.getAccount().subscribe((res:any)=>{
+      console.warn(res?.data); 
+      this.suppliers = res?.data;
+      this.isSearch=false;
+      if(res?.data?.length>0){
+        this.isSearch=false;
+      }
+
+    })
+    }
   }
 
-
-
   // convert to pdf
+  UserName: any;
 
   generatePDFAgain() {
     const doc = new jsPDF();
     const subtitle = 'PV';
-    const title = 'Time Wise Sale Report';
+    const title = 'Cash Book Report';
     const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
     const heading = `User: ${this.userName}`;
-
+  
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(subtitle, 86, 5);
     doc.text(title, 82, 10);
     doc.text(heading, 10, 18);
     doc.text(heading2, 10, 22)
-
+  
     doc.text('', 10, 25); //,argin x, y
-
+  
     // Pass tableData to autoTable
-    const headers = ['#', 'Date', 'Total Sale', 'Start Time', 'End Time', 'Total Sale'];
-    const data: any = [];
-
-    let customerIndex = 1;
-    this.amountWiseSaleList.forEach((list: any) => {
-      console.warn(list);
-
-      const date = list.date;
-      const total_sale = list.total_sale;
-      let isFirstInvoice = true;
-      list.time_wise_data.forEach((res: any, index: number) => {
-        console.log(res);
-
-        const invoiceNumber = isFirstInvoice ? customerIndex : '';
-        data.push([
-          invoiceNumber, // row no of each cstmr
-          this.formatDate(isFirstInvoice ? date : ''),
-          isFirstInvoice ? total_sale : '',
-          res.start_time,
-          res.end_time,
-          res.total_sale
-        ]);
-        isFirstInvoice = false;
-      });
-      customerIndex++;
-    });
     autoTable(doc, {
-      head: [headers],
-      body: data,
+      head: [
+        ['#',  'PartyName', 'VoucherNo', 'VariantName ','ProductName','Lending Cost','Mrp','Qty','Deduction','Tax','Amount']
+      ],
+      body: this.purchaseRegisterList.map((row:any, index:number ) => [
+        index + 1,
+        row.party_name.party_name,
+        row.voucher_no,
+        row.variant_name,
+        row.product_name,
+        row.lending_cost,
+        row.mrp,
+        row.qty,
+        row.deduction,
+        row.tax,
+        row.amount,
+
+
+
+      ]),
       theme: 'grid',
-      startY: 32,
       headStyles: {
-        fillColor: [255, 159, 67], // Header color
-        textColor: [255, 255, 255] // Header text color
-      }
+        fillColor: [255, 159, 67]
+      },
+      startY: 25
     });
-    doc.save('Time_Wise_Sale.pdf');
+
+    doc.save('Cash_Book.pdf');
   }
 
 
@@ -275,7 +309,7 @@ export class TimeWiseSaleComponent implements OnInit {
     // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'timeWiseSale.xlsx';
+    const fileName = 'cashbook.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
 
@@ -321,9 +355,13 @@ export class TimeWiseSaleComponent implements OnInit {
     // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }
-
+ 
 
 }
+
+
+
+
 
 
 
