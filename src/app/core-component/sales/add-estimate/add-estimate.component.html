@@ -12,11 +12,11 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
-                        <label>User Name*</label>
+                        <label>Customer*</label>
                         <mat-form-field class="w-100" style="padding: 0;
                         width: 100%;
                         min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Name/Username" aria-label="customer" matInput
+                            <input type="text" placeholder="Search Customer" aria-label="customer" matInput
                                 [formControl]="userControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
                                 [ngClass]="{'is-invalid': f['customer'].touched && f['customer'].invalid}">
                             <mat-autocomplete #auto="matAutocomplete">
@@ -36,7 +36,7 @@
                             </mat-autocomplete>
                         </mat-form-field>
                         <span class="text-danger" *ngIf="customer && customer.invalid && customer.touched">Select
-                            User
+                            Customer
                         </span>
                     </div>
                 </div>

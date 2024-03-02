@@ -9,6 +9,12 @@ import { Account } from 'src/app/interfaces/account';
   providedIn: 'root'
 })
 export class CoreService {
+  getProductsDayBook(startDate: any, endDate: any) {
+    throw new Error('Method not implemented.');
+  }
+  getsProduct() {
+    throw new Error('Method not implemented.');
+  }
   employeeBehavior = new BehaviorSubject(null);
   accountBehavior = new BehaviorSubject(null);
   companyBehavior = new BehaviorSubject(null);
