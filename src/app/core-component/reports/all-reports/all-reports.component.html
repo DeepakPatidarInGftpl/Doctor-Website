@@ -1,0 +1,719 @@
+<mat-tab-group>
+
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <div class="icon-label">
+                <i data-bs-toggle="tooltip" title="fe fe-heart" class="fe fe-heart "></i>
+                <div class="row">Favourite</div>
+            </div>
+        </ng-template>
+        <h2 class="row justify-content-center p_head">Favourite</h2>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <div class="icon-label">
+                <i data-bs-toggle="tooltip" title="ion-clipboard" class="ion-clipboard "></i>
+                <div class="row">Sales</div>
+            </div>
+        </ng-template>
+        <div>
+            <h2 class="row justify-content-center p_head">SALES</h2>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/sale-summary">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Sale Summary</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/sale-invoice">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Sale Invoice</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/sale-overdue">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Sale Overdue</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- <div class="col-lg-4 col-sm-4 col-12" routerLink="time-wise-sale">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Time Wise Sale</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> -->
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/amount-wise-sale">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Amount Wise Sale</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/category-wise-sale">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Category Wise Sale</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/brand-wise-sale">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Brand Wise Sale</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/product-wise-sale">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Product Wise Sale</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/customer-wise-sale">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Customer Wise Sale</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/customer-outstanding-sale">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Customer Outstanding Sale</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/customer-wise-sale-order">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Customer Wise Sale Order</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/tax-wise-sale-return">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Tax Wise Sale Return</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/tax-wise-sale">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Sale Tax Summary </p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/tax-wise-credit-note">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Tax Wise Credit Note</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> -->
+                <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/sale-return">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p"> Sale Return </p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/credit-note-registe">
+                    <div class="card border">
+                        <div class="card-body">
+                            <div class="d-flex">
+
+                                <i data-bs-toggle="tooltip" title="fas fa-chart-area"
+                                    class="fas fa-chart-area icon"></i>
+                                <p class="p">Credit Note Register</p>
+                                <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                    class="ion-ios7-star-outline icon  ms-auto"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> -->
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <div class="icon-label">
+                <i data-bs-toggle="tooltip" title="ion-bag" class="ion-bag "></i>
+                <div class="row">Purchase</div>
+            </div>
+        </ng-template>
+        <h2 class="row justify-content-center p_head">PURCHASE</h2>
+
+        <div class="row">
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/purchase-summary">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Purchase Summary</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/purchase-overdue">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Purchase Overdue</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/purchase-outstanding">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Purchase Outstanding</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/product-wise-purchase">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Product Wise Purchase</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Scrap Entry</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/category-wise-purchase">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Category Wise Purchase</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/brand-wise-purchase">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Brand Wise Purchase</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/price-wise-purchase">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Price Wise Purchase</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/discount-wise-purchase">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Discount Wise Purchase</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/supplier-wise">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Supplier Wise Purchase</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/supplier-outstanding">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Supplier Outstanding</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/debit-note-register">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Debit Note Register </p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/purchase-register">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p"> Purchase Register</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/tax-wise-purchase-return">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Tax Wise Purchase Return</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/tax-wise-purchase">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p"> Purchase Tax Summary</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/tax-wise-debit-note">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Tax Wise Debit Note</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <div class="icon-label">
+                <i data-bs-toggle="tooltip" title="ion-cube" class="ion-cube "></i>
+                <div class="row">Inventory</div>
+            </div>
+        </ng-template>
+
+        <h2 class="row justify-content-center p_head">Inventory</h2>
+
+        <div class="row">
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/stock-ledger">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Stock Ledger</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/product-history">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Product History</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/product-daybook">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Product Daybook</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/stock-movement">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Stock Movement</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/stock-verification">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Stock Verification</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/out-standing-analysis">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Out Standing Analysis</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/supplier-wise-product">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Supplier Wise Product</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/stock-register">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Stock Register</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/price-master">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Price Master</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/abc-analysis">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Abc Analysis</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/stock-summary">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Stock Summary</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/sales-by-product">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Sales By Product</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-sm-4 col-12" routerLink="/report/stock-alert">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
+                            <p class="p">Stock Alert</p>
+                            <i data-bs-toggle="tooltip" title="ion-ios7-star-outline"
+                                class="ion-ios7-star-outline icon  ms-auto"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <div class="icon-label">
+                <i data-bs-toggle="tooltip" title="ion-document-text" class="ion-document-text"></i>
+                <div class="row">Accounts</div>
+            </div>
+        </ng-template>
+        <h2 class="row justify-content-center p_head">Accounts</h2>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <div class="icon-label">
+                <i data-bs-toggle="tooltip" title="ion-clipboard" class="ion-clipboard"></i>
+                <div class="row">GST Returns</div>
+            </div>
+        </ng-template>
+        <h2 class="row justify-content-center p_head">GST Returns</h2>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <div class="icon-label">
+                <i data-bs-toggle="tooltip" title="ion-arrow-graph-up-right" class="ion-arrow-graph-up-right"></i>
+                i>
