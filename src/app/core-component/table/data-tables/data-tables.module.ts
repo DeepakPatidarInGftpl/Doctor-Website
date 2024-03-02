@@ -5,7 +5,8 @@ import { DataTablesRoutingModule } from './data-tables-routing.module';
 import { DataTablesModule } from 'angular-datatables';
 import { DataTablesComponent } from './data-tables.component';
 
-
+import { NgxBarcodeModule } from 'ngx-barcode';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     DataTablesComponent
@@ -13,7 +14,10 @@ import { DataTablesComponent } from './data-tables.component';
   imports: [
     CommonModule,
     DataTablesRoutingModule,
-    DataTablesModule
+    DataTablesModule,
+    NgxBarcodeModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class DataTableSModule { }
