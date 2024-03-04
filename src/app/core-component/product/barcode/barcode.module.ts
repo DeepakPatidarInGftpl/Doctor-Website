@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { BarcodeRoutingModule } from './barcode-routing.module';
 import { BarcodeComponent } from './barcode.component';
-
+import { NgxBarcodeModule } from 'ngx-barcode';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +13,11 @@ import { BarcodeComponent } from './barcode.component';
   ],
   imports: [
     CommonModule,
-    BarcodeRoutingModule
+    BarcodeRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxBarcodeModule,
+    SharedModuleModule
   ]
 })
 export class BarcodeModule { }

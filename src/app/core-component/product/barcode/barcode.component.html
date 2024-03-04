@@ -14,7 +14,7 @@
                 <div class="form-group">
                     <label>Product Name</label>
                     <div class="input-groupicon">
-                        <input type="text"  placeholder="Please type product code and select...">
+                        <input type="text"  placeholder="Please type product Name/Variant" [(ngModel)]="titlee" (ngModelChange)="search()">
                         <div class="addonset">
                             <img src="assets/img/icons/scanners.svg" alt="img">
                         </div>
@@ -25,24 +25,56 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>SKU</th>
-                                <th>Qty</th>
-                                <th></th>
+                                <th (click)="sort('id')">Name <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')">Variant <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')">SKU <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')">Color <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')">Size <i class="fa fa-sort"></i></th>
+                                <!-- <th></th> -->
                             </tr>
                         </thead>
                         <tbody>
-                            <tr  *ngFor="let products of tableData; let i=index">
-                                <td>{{products.Name}}</td>
-                                <td>{{products.SKU}}</td>
-                                <td>{{products.Qty}}</td>
-                                <td class="text-end">
+                            <tr  *ngFor="let products of variantList | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index;">
+                                <td>{{products.product_title}}</td>
+                                <td>{{products.variant_name}}</td>
+                                <td>{{products.sku}}</td>
+                                <td>{{products.color?.title}}</td>
+                                <td>{{products.size?.title}}</td>
+                                <!-- <td class="text-end">
                                     <a (click)="delete(i)" class="delete-set"><img src="assets/img/icons/delete.svg" alt="img"></a>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                     </div>
+                    <div class="row" *ngIf="!loader">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                            <select [(ngModel)]="itemsPerPage" class="pagination" >         
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="-1">All</option>
+                              </select>
+                            </div>
+                        </div>
+                       <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                        <div class="f-right">
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>  
+                            <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>  
+                        </div>
+                       </div>
+                     </div>
                 </div>
+
+
+
+
+                
                 <div class="row">
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
@@ -61,3 +93,76 @@
             </div>
         </div>
         <!-- /add -->
+
+
+        
+    <div class="container">
+        <div fxLayout="column">
+            <!-- <div fxLayout="column">
+                <textarea  placeholder="bc-value" [(ngModel)]="value"></textarea>
+                <br/>
+                <select placeholder="bc-element-type" [(ngModel)]="elementType">
+                    <option value="svg">svg</option>
+                    <option value="img">img</option>
+                    <option value="canvas">canvas</option>
+                </select>
+                <br/>
+                <select placeholder="bc-format" [(ngModel)]="format">
+                    <option *ngFor="let code of codeList" [value]="code">{{code}}</option>
+                </select>
+                <input  type="text" placeholder="bc-line-color" [(ngModel)]="lineColor">
+                <input  type="number" placeholder="bc-width" [(ngModel)]="width">
+                <input  type="number" placeholder="bc-height" [(ngModel)]="height">
+                <input type="checkbox" [(ngModel)]="displayValue">bc-display-value
+                <input  type="text" placeholder="bc-font-options" [(ngModel)]="fontOptions">
+                <input  type="text" placeholder="bc-font" [(ngModel)]="font">
+            </div>
+            <div fxLayout="column">
+                <input  type="text" placeholder="bc-text-align" [(ngModel)]="textAlign">
+                <input  type="text" placeholder="bc-text-position" [(ngModel)]="textPosition">
+                <input  type="number" placeholder="bc-text-margin" [(ngModel)]="textMargin">
+                <input  type="number" placeholder="bc-font-size" [(ngModel)]="fontSize">
+                <input  type="text" placeholder="bc-background" [(ngModel)]="background">
+                <input  type="number" placeholder="bc-margin" [(ngModel)]="margin">
+                <input  type="number" placeholder="bc-margin-top" [(ngModel)]="marginTop">
+                <input  type="number" placeholder="bc-margin-bottom" [(ngModel)]="marginBottom">
+                <input  type="number" placeholder="bc-margin-left" [(ngModel)]="marginLeft">
+                <input  type="number" placeholder="bc-margin-right" [(ngModel)]="marginRight">
+            </div> -->
+    
+    
+            <div class="card card_">
+                <div class="card-header pb-0 card_header">
+                  <div class="card-title mb-0 title">
+                    DIXY SCOTT
+                  </div>
+                  </div>
+            <div class="card-body card_body">
+                <div class="text-center mrp" >
+                    <p class="p1">MRP : <span>182.00</span></p>
+                    <p class="p2">Inclusive of all taxes</p>
+                </div>
+                <div class="pb-0 d-flex justify-content-between product" >
+                    <p class="p3">Product : <span>DRAWER</span></p>
+                    <P class="p3">Net Qty : <span>1N</span></P>
+                </div>
+                <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -8px;">
+                    <p class="p3">Style : <span>CROSS-TRUNK:90</span></p>
+                    <P class="p3">Size : <span>90 CM</span></P>
+                </div>
+                <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -8px;">
+                    <p class="p3">Price: <span>110.00</span></p>
+                    <P class="p3">Discount : <span>70.00</span></P>
+                </div>
+                <div class="text-center">
+                    <ngx-barcode *ngFor="let bcValue of values" [bc-element-type]="elementType" [bc-value]="bcValue" [bc-format]="format" [bc-line-color]="lineColor"
+                     [bc-width]="width" [bc-height]="height" [bc-display-value]="displayValue" [bc-font-options]="fontOptions" [bc-font]="font"
+                     [bc-text-align]="textAlign" [bc-text-position]="textPosition" [bc-text-margin]="textMargin" [bc-font-size]="fontSize" [bc-background]="background"
+                     [bc-margin]="margin" [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight"></ngx-barcode>
+                </div>
+            </div>
+        </div>
+    
+    
+        </div>
+    </div>
