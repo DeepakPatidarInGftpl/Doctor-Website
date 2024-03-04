@@ -116,7 +116,6 @@ export class PriceMasterComponent implements OnInit {
         return title ? this._filter2(title as string) : this.categoryList.slice();
       }),
     );
-    //sub category name'
    
     this.filteredProduct = this.productControl.valueChanges.pipe(
       startWith(''),
