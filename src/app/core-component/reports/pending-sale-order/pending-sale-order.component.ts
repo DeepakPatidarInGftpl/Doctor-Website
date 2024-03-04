@@ -46,7 +46,7 @@ export class PendingSaleOrderComponent implements OnInit {
     customerWiseSaleForm!: FormGroup;
   startDate: any;
   endDate: any;
-  product: any;
+  product_id: any;
 
   customerWiseSaleUserId: any;
      customerWiseSaleList: any;
@@ -75,11 +75,14 @@ export class PendingSaleOrderComponent implements OnInit {
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
       user_id: new FormControl(),
+      product_id: new FormControl(),
+
       
     });
     this.startDate = this.customerWiseSaleForm.value?.start;
     this.endDate = this.customerWiseSaleForm.value?.end;
     this.customerWiseSaleUserId = this.customerWiseSaleForm.value?.user_id;
+    this.product_id = this.customerWiseSaleForm.value?.product_id
 
     this.getCustomerWiseSale();
     this.getUser();
@@ -91,7 +94,9 @@ export class PendingSaleOrderComponent implements OnInit {
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
   }
-
+  displayFn(user: any): string {
+    return user && user?.title || user?.title ;
+  }
   private _filter(value: string | number, include: boolean): any[] {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
@@ -114,6 +119,13 @@ export class PendingSaleOrderComponent implements OnInit {
 
  
   suppliers: any[] = [];
+  getProduct() {
+    this.reportService.getProducts().subscribe((res: any) => {
+      console.log(res, 'user');
+      this.suppliers = res;
+      // this.variants=res;
+    })
+  }
 
   search() {
     if (this.titlee === "") {
@@ -163,10 +175,10 @@ export class PendingSaleOrderComponent implements OnInit {
   }
 customerWiseSale:any
 getCustomerWiseSale() {
-    this.reportService.getPendingSaleOrder(this.startDate, this.endDate, this.customerWiseSaleUserId,this.product).subscribe((res) => {
+    this.reportService.getPendingSaleOrder(this.startDate, this.endDate, this.customerWiseSaleUserId,this.product_id).subscribe((res) => {
       console.log(res);
       this.customerWiseSale = res;
-      this.customerWiseSaleList=res?.data;
+      this.customerWiseSaleList=res;
     })
 
   }
@@ -180,6 +192,11 @@ getCustomerWiseSale() {
    this.customerWiseSaleUserId = this.customerWiseSaleForm.value?.user_id;
    this?.getCustomerWiseSale();
   }
+  getProductoncheckAccount(data: any) {
+    this.customerWiseSaleForm.patchValue({productName:data});
+    console.warn(this.customerWiseSaleForm.value);
+    this?.getCustomerWiseSale();
+   }
   getSelectedCustomerWiseSaleDates() {
     console.log(this.customerWiseSaleForm.value);
     const start = this.datepipe.transform(this.customerWiseSaleForm.value.start, 'yyyy-MM-dd');
@@ -212,27 +229,46 @@ generatePDFAgain() {
   doc.text('', 10, 25); //,argin x, y
 
   // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#','User', ' Order Qty','Order Price' ,'Order Total','Pending Qty']
-    ],
-    body: this.customerWiseSaleList.map((row:any, index:number ) => [
-      index + 1,
-      row.user.party_name,
-      row.order_qty,
-      row.order_price,
-      row.order_total,
-      row.pending_qty
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor:  [255, 159, 67]
+  const headers =['#','Variant Name','Product','User', ' Order Qty','Order Price' ,'Order Total','Pending Qty'];
+  const data: any = [];
+
+  let customerIndex = 1;
+  this.customerWiseSaleList.forEach((list: any) => {
+    console.warn(list);
     
-    },
-    startY: 25, // margin top 
-
-
+    const variant = list.variant_name;
+    const product= list.product;
+    let isFirstInvoice = true;
+    list.data.forEach((row:any,index: number) => {
+      console.log(row);
+      
+      const invoiceNumber = isFirstInvoice ? customerIndex : '';
+      data.push([
+        invoiceNumber, // row no of each cstmr
+        isFirstInvoice ? variant : '',
+        isFirstInvoice ? product : '',
+        row.user.party_name,
+        row.order_qty,
+        row.order_price,
+        row.order_total,
+        row.pending_qty
+      ]);
+      isFirstInvoice = false;
+    });
+    customerIndex++;
   });
+  autoTable(doc, {
+    head: [headers],
+    body: data,
+    theme: 'grid',
+    startY: 32, 
+    headStyles: {
+      fillColor: [255, 159, 67], // Header color
+      textColor: [255, 255, 255] // Header text color
+    }
+  });
+
+ 
 
   doc.save('Pending_Sale_Order .pdf');
 }

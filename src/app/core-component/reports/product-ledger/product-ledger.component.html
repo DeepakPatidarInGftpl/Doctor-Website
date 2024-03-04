@@ -34,10 +34,9 @@
                                             <mat-date-range-picker #startdatePicker></mat-date-range-picker>
                                         </mat-form-field>
                                     </div>
-                                </div>
                                
                                 </div>
-                                <div class="col-lg-4 col-sm-6 col-12">
+                                <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <strong>Select Variant</strong>
                                         <input type="text" placeholder="Search Variant"
@@ -63,7 +62,7 @@
                                     </mat-autocomplete>
                                     </div>
                                 </div>
-                                <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <strong>Select Category</strong>
                                         <input type="text" placeholder="Enter Product" [formControl]="categoryControl"
@@ -76,7 +75,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <strong>Select Sub Category</strong>
                                         <input type="text" placeholder="Enter Sub Category"
@@ -91,7 +90,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <strong>Select Brand</strong>
                                         <input type="text" placeholder="Enter Brand" [formControl]="brandControl"
@@ -104,7 +103,8 @@
 
                                     </div>
                                 </div>
-                              
+                            </div>
+
                             <!-- </div> -->
                         </form>
 
@@ -129,37 +129,17 @@
                         </ul>
                     </div>
                 </div>
-                <div class="row container" *ngIf="stockAlert">  
-                    <div class="col-lg-3 col-sm-4 col-12 d-flex">
-                        <div class="dash-count" style="margin: 0 0 10px;">
-                            <div class="dash-counts">
-                                <h4
-                                    [ngStyle]="{'font-size': stockAlert?.variant_name?.toString()?.length >= 10 ? '15px' : '24px'}">
-                                    {{stockAlert?.variant_name| number:'1.2-2'}}</h4>
-                                <h5>Variant Name</h5>
-                            </div>
-                        </div>
-                    </div>
-               
-                </div>
-                <div class="row container" *ngIf="stockAlert">  
-                    <div class="col-lg-3 col-sm-4 col-12 d-flex">
-                        <div class="dash-count" style="margin: 0 0 10px;">
-                            <div class="dash-counts">
-                                <h4
-                                    [ngStyle]="{'font-size': stockAlert?.product?.toString()?.length >= 10 ? '15px' : '24px'}">
-                                    {{stockAlert?.product| number:'1.2-2'}}</h4>
-                                <h5>Product</h5>
-                            </div>
-                        </div>
-                    </div>
-               
-                </div>
+                
+           
+
                 <div class="table-responsive">
                     <table class="table datanew" id=mytable>
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Variant Name<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Product<i class="fa fa-sort"></i></th>
+
                                 <th (click)="sort('id')" class="thone">Date  <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Voucher Type <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Voucher No. <i class="fa fa-sort"></i></th>
@@ -173,17 +153,25 @@
                         <tbody *ngIf="stockAlertList?.length>=0">
                             <tr
                                 *ngFor="let list of stockAlertList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
-                                <th>{{i+1+'.'}}</th>
-                               
-                                <td>{{list.data.date|date:'YY/MM/DD'}}</td>
-                                <td>{{list.data.price}}</td>
-                                <td>{{list.data.voucher_type}}</td>
-                                <td>{{list.data.voucher_no}}</td>
-                                <td>{{list.data.name}}</td>
-                                <td>{{list.data.price}}</td>
-                                   <td>{{list.data.in_qty}}</td>
-                                <td>{{list.data.out_qty}}</td>
+                                <td style="vertical-align: top !important;">{{i+1+'.'}}</td>
+                                <td style="vertical-align: top !important;">{{list.variant_name}}</td>
+                                <td style="vertical-align: top !important;">{{list.product}}</td>
 
+                            <td colspan="7">
+                                <table>
+                                    <tbody>
+                                        <tr *ngFor="let data of list?.data">
+                                            <td> {{data.date|date:'YY/MM/dd'}}</td>
+                                            <td>{{data.voucher_type}}</td>
+                                            <td>{{data.voucher_no}}</td>
+                                            <td>{{data.name}}</td>
+                                            <td>{{data.price}}</td>
+                                            <td>{{data.in_qty}}</td>
+                                            <td>{{data.out_qty}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                             </td>
                             </tr>
                         </tbody>
                         <tbody *ngIf="stockAlertList?.length==0">

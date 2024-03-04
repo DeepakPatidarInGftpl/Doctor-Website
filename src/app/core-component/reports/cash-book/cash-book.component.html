@@ -74,40 +74,43 @@
                         <thead>
                             <tr>
                                 <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Party Name <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Voucher Name<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Date <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Particulars <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone"> Voucher Type <i class="fa fa-sort"></i>
+                                <th (click)="sort('id')" class="thone"> Voucher No. <i class="fa fa-sort"></i>
+                                <th (click)="sort('id')" class="thone"> Description <i class="fa fa-sort"></i> </th>
+                                <th (click)="sort('id')" class="thone">Debit<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Credit<i class="fa fa-sort"></i></th>
 
-                                <th class="thone" style="width:10%">Product Name ></th>
-                                <th class="thone" style="width:10%">Landing Cost</th>
-                                <th class="thone" style="width:10%">Mrp</th>
-                                <th class="thone" style="width:10%">Qty</th>
-
-                                <th class="thone" style="width:10%">Deduction </th>
-                                <th class="thone" style="width:10%">Tax </th>
-                                <th class="thone" style="width:10%"> Amount </th>
-                              
                             </tr>
                         </thead>
                         <tbody *ngIf="purchaseRegisterList?.length>=0">
                             <tr
                                 *ngFor="let list of purchaseRegisterList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <th>{{i+1+'.'}}</th>
-                                <td>{{list.party_name.party_name}}</td>
-                                <td>{{list.voucher_no }}</td>
-                                <td>{{list.variant_name }}</td>
-                                <td>{{list.product_name }}</td>
-                                <td>{{list.lending_cost }}</td>
-                                <td>{{list.mrp }}</td>
-                                <td>{{list.qty }}</td>
-                                <td>{{list.deduction }}</td>
-                                <td>{{list.tax }}</td>
-                                <td>{{list.amount }}</td>
+                                <td>{{list.date |date :'dd-MM-yy'}}</td>
+                                <td>{{list.particulars}}</td>
+                                <td>{{list.voucher_type}}</td>
+                                <td>{{list.voucher_no}}</td>
+                                <td>{{list.description}}</td>
+                                <td>{{list.debit}}</td>
+                                <td>{{list.price}}</td>
 
-                   </tr>
-                   </tbody>
-                   </table>
-                     <div class="row">
+
+
+
+
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="purchaseRegisterList?.length==0">
+                            <tr>
+                                <td colspan="10">
+                                    <p class="text-center">Data not available</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                                 <select [(ngModel)]="itemsPerPage" class="pagination">
@@ -128,8 +131,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div> 
                     </div>
+                </div>
                 
             
     

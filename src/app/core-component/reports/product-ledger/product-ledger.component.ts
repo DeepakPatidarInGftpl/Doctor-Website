@@ -285,7 +285,7 @@ export class ProductLedgerComponent implements OnInit {
     this.reportService.getProductLedger(this.startDate, this.endDate, this.category, this.subcategory, this.brand,this.variant).subscribe((res) => {
       console.log(res);
       this.stockAlert = res;
-      this.stockAlertList = res?.data;
+      this.stockAlertList = res;
     })
 
   }
@@ -398,31 +398,46 @@ export class ProductLedgerComponent implements OnInit {
   doc.text('', 10, 25); //,argin x, y
 
   // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#','Date','Voucher Type','Voucher No.','Name','Price','IN Qty','Out Qty']
-    ],
-    body: this.stockAlertList.map((row:any, index:number ) => [
-      index + 1,
-     
-this.formatDate(row.data.date),      
-row.data.price,
-      row.data.voucher_type,
-      row.data.voucher_no,
-      row.data.name,
-      row.data.price,
-      row.data.in_qty,
-      row.data.out_qty
+  const headers =['#','Variant Name','Product','Date','Voucher Type','Voucher No.','Name','Price','IN Qty','Out Qty']
+  const data: any = [];
 
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 25, // margin top 
-
-
+  let customerIndex = 1;
+  this.stockAlertList.forEach((list: any) => {
+    console.warn(list);
+    
+    const variant = list.variant_name;
+    const product= list.product;
+    let isFirstInvoice = true;
+    list.data.forEach((row:any,index: number) => {
+      console.log(row);
+      
+      const invoiceNumber = isFirstInvoice ? customerIndex : '';
+      data.push([
+        invoiceNumber, // row no of each cstmr
+        isFirstInvoice ? variant : '',
+        isFirstInvoice ? product : '',
+        row?.voucher_type,
+        row?.voucher_no,
+        row?.name,
+        row?.price,
+        row?.in_qty,
+        row?.out_qty
+      ]);
+      isFirstInvoice = false;
+    });
+    customerIndex++;
   });
+  autoTable(doc, {
+    head: [headers],
+    body: data,
+    theme: 'grid',
+    startY: 32, 
+    headStyles: {
+      fillColor: [255, 159, 67], // Header color
+      textColor: [255, 255, 255] // Header text color
+    }
+  });
+ 
 
   doc.save('Product_Ledger .pdf');
 }

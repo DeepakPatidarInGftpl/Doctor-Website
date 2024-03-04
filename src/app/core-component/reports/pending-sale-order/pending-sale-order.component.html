@@ -34,17 +34,19 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="col-lg-4 col-sm-6 col-12">
                                         <div class="form-group">
                                             <strong>Select Product</strong>
                                             <input type="text" placeholder="Enter Product" [formControl]="supplierControl"
                                                 [matAutocomplete]="auto" class="form-control">
-                                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn5">
-                                                <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier"
-                                                (blur)="oncheckproduct(supplier?.id)" >{{supplier?.title}} </mat-option>
+                                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                                <mat-option *ngFor="let supplier of filteredSuppliers | async"
+                                                    [value]="supplier"
+                                                    (blur)="oncheckAccount(supplier?.id)">{{supplier?.title}} </mat-option>
                                             </mat-autocomplete>
+    
                                         </div>
-                                    </div> -->
+                                    </div>
                                     <div class="col-lg-5 col-md-6 col-12">
                                         <div class="form-group">
                                             <label>User Name</label>
@@ -86,36 +88,16 @@
                 </div>
               
 
-                <div class="row container" *ngIf="customerWiseSaleList">  
-                    <div class="col-lg-2 col-sm-4 col-12 d-flex">
-                        <div class="dash-count das3" style="margin: 0 0 10px;">
-                            <div class="dash-counts">
-                                <h4
-                                    [ngStyle]="{'font-size': customerWiseSaleList?.product?.toString()?.length >= 10 ? '15px' : '24px'}">
-                                    {{customerWiseSaleList?.product}}</h4>
-                                <h5>Product</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row container" *ngIf="customerWiseSaleList">  
-                    <div class="col-lg-2 col-sm-4 col-12 d-flex">
-                        <div class="dash-count das3" style="margin: 0 0 10px;">
-                            <div class="dash-counts">
-                                <h4
-                                    [ngStyle]="{'font-size': customerWiseSaleList?.variant?.toString()?.length >= 10 ? '15px' : '24px'}">
-                                    {{customerWiseSaleList?.variant}}</h4>
-                                <h5>Variant</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              
                 <div class="table-responsive">
                     <table class="table datanew" id=mytable>
                         <thead>
                             <tr>
 
                                 <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Variant Name<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Product<i class="fa fa-sort"></i></th>
+
                                 <th (click)="sort('id')" class="thone">User<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Order Qty <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Order Price <i class="fa fa-sort"></i></th>
@@ -130,12 +112,23 @@
                             <tr
                                 *ngFor="let list of customerWiseSaleList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                
-                                <th>{{i+1+'.'}}</th>
-                               <td>{{list.user.party_name}}</td>
-                               <td>{{list.order_qty}}</td>
-                                <td>{{list.order_price}}</td>
-                               <td>{{list.order_total}}</td>
-                               <td>{{list.pending_qty}}</td>
+                                <th style="vertical-align: top;">{{i+1+'.'}}</th>
+                                <td style="vertical-align: top;">{{list.variant_name}}</td>
+                                <td style="vertical-align: top;">{{list.product}}</td>
+
+                                <td colspan="7">
+                                    <table>
+                                        <tbody>
+                                            <tr *ngFor="let data of list?.data">
+                                                <td>{{data.user.party_name}}</td>
+                                                <td>{{data.order_qty}}</td>
+                                                <td>{{data.order_price}}</td>
+                                                <td>{{data.order_total}}</td>
+                                                <td>{{data.pending_qty}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                 </td>
 
                             </tr>
                         </tbody>

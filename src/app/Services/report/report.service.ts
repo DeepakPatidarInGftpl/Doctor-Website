@@ -357,6 +357,7 @@ export class ReportService {
     let url = this.apiUrl + '/pv-api/supplier/';
     return this.http.get(url)
   }
+  
   getProductWisePurchase(start_date: any, end_date: any, product: any): Observable<any> {
     let url = this.apiUrl + '/api/reports/product/wise/purchase';
     const queryParams: any[] = [];
@@ -957,5 +958,18 @@ export class ReportService {
     }
     return this.http.get<any>(url);
   }
- 
+    //https://pv.greatfuturetechno.com/pv-api/account
+
+  getAccount() {
+    let url = this.apiUrl + '/pv-api/account/';
+    return this.http.get(url)
+    
+  }
+      //https://pv.greatfuturetechno.com/pv-api/product
+
+  getProducts() {
+    let url = this.apiUrl + '/pv-api/product/';
+    return this.http.get(url)
+   
+  }
 }

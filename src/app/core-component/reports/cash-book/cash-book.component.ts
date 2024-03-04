@@ -44,19 +44,16 @@ export class CashBookComponent implements OnInit {
   startDate: any;
   endDate: any;
   accountId: any;
+ purchaseRegisterList: any
 
-  purchaseRegisterList: any
-
-
-
-  userDetails: any;
+userDetails: any;
   ngOnInit(): void {
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       console.log(userDetails);
       this.userName = userDetails?.username
     });
-
+    this.getAccount()
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
@@ -87,12 +84,7 @@ export class CashBookComponent implements OnInit {
       }),
     );
   }
-   accountList: any[] = [];
-        getAccount() {
-          this.reportService.getAccount().subscribe((res: any) => {
-            this.accountList = res;
-          })
-        }
+  
   
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
@@ -215,10 +207,12 @@ export class CashBookComponent implements OnInit {
     })
     }
   }
+ 
 
   // convert to pdf
   UserName: any;
 
+  
   generatePDFAgain() {
     const doc = new jsPDF();
     const subtitle = 'PV';
@@ -238,31 +232,28 @@ export class CashBookComponent implements OnInit {
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#',  'PartyName', 'VoucherNo', 'VariantName ','ProductName','Lending Cost','Mrp','Qty','Deduction','Tax','Amount']
+        ['#', 'Date', 'Particulars', 'Voucher Type', 'Voucher No.','Description','Debit','Credit']
       ],
       body: this.purchaseRegisterList.map((row:any, index:number ) => [
         index + 1,
-        row.party_name.party_name,
+        this.formatDate(row.date),
+        row.particulars,
+        row.voucher_type,
         row.voucher_no,
-        row.variant_name,
-        row.product_name,
-        row.lending_cost,
-        row.mrp,
-        row.qty,
-        row.deduction,
-        row.tax,
-        row.amount,
-
-
+        row.description,
+        row.debit,
+        row.credit,
 
       ]),
       theme: 'grid',
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 25
+      startY: 25, // margin top 
+  
+  
     });
-
+  
     doc.save('Cash_Book.pdf');
   }
 
@@ -355,7 +346,12 @@ export class CashBookComponent implements OnInit {
     // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }
- 
+  accountList: any[] = [];
+  getAccount() {
+    this.reportService.getAccount().subscribe((res: any) => {
+      this.accountList = res;
+    })
+  }
 
 }
 

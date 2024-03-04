@@ -123,3 +123,9 @@ select,
    padding: 10px 15px;
    border-radius: 5px;
 }
+.table tbody tr td {
+vertical-align: top;
+}
+table {
+  justify-content: center;
+}
