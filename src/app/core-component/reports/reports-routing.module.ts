@@ -151,6 +151,11 @@ const routes: Routes = [
   import('./debit-note-register/debit-note-register.module').then((m) =>m.DebitNoteRegisterModule)
 },
 {
+  path:'credit-note-register',
+  loadChildren: () =>
+  import('./credit-note-register/credit-note-register.module').then((m) =>m.CreditNoteRegisterModule)
+},
+{
   path: 'supplier-outstanding',
   loadChildren: () =>
     import('./supplier-outstanding/supplier-outstanding.module').then((m) => m.SupplierOutstandingModule),
@@ -245,6 +250,42 @@ const routes: Routes = [
   loadChildren: () =>
     import('./credit-note-register/credit-note-register.module').then((m) => m.CreditNoteRegisterModule),
 },
+{
+  path: 'pending-sale-order',
+  loadChildren: () =>
+    import('./pending-sale-order/pending-sale-order.module').then((m) => m.PendingSaleOrderModule),
+},
+{
+  path: 'general-ledger',
+  loadChildren: () =>
+    import('./general-ledger/general-ledger.module').then((m) => m.GeneralLedgerModule),
+},
+{
+  path: 'product-ledger',
+  loadChildren: () =>
+    import('./product-ledger/product-ledger.module').then((m) => m.ProductLedgerModule),
+},
+{
+  path: 'expense-register',
+  loadChildren: () =>
+    import('./expense-register/expense-register.module').then((m) => m.ExpenseRegisterModule),
+},
+{
+  path: 'journal-book',
+  loadChildren: () =>
+    import('./journal-book/journal-book.module').then((m) => m.JournalBookModule),
+},
+{
+  path: 'cash-book',
+  loadChildren: () =>
+    import('./cash-book/cash-book.module').then((m) => m.CashBookModule),
+},
+{
+  path: 'bank-book',
+  loadChildren: () =>
+    import('./bank-book/bank-book.module').then((m) => m.BankBookModule),
+},
+
 
 ];
 
