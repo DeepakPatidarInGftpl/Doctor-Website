@@ -10,18 +10,19 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { ReportService } from 'src/app/Services/report/report.service';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { ReportService } from 'src/app/Services/report/report.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
+
 @Component({
-  selector: 'app-price-master',
-  templateUrl: './price-master.component.html',
-  styleUrls: ['./price-master.component.scss']
+  selector: 'app-product-ledger',
+  templateUrl: './product-ledger.component.html',
+  styleUrls: ['./product-ledger.component.scss']
 })
-export class PriceMasterComponent implements OnInit {
+export class ProductLedgerComponent implements OnInit {
   loader = true;
   public tableData: any
   id: any;
@@ -40,6 +41,8 @@ export class PriceMasterComponent implements OnInit {
   filteredCategory: Observable<any[]> | undefined;
   categoryControl: FormControl = new FormControl('');
 
+  filteredSubCategory: Observable<any[]> | undefined;
+  subCategoryControl: FormControl = new FormControl('');
 
   filteredItemCode: Observable<any[]> | undefined;
   itemCodeControl: FormControl = new FormControl('');
@@ -57,6 +60,7 @@ export class PriceMasterComponent implements OnInit {
   startDate: any;
   endDate: any;
   category: any;
+  subcategory: any;
   brand: any;
   product: any;
   variant:any
@@ -85,6 +89,7 @@ export class PriceMasterComponent implements OnInit {
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
       category: new FormControl(),
+      subcategory: new FormControl(''),
       brand: new FormControl(''),
       product: new FormControl(''),
       variant:new FormControl('')
@@ -92,14 +97,19 @@ export class PriceMasterComponent implements OnInit {
     this.startDate = this.stockAlertform.value?.start;
     this.endDate = this.stockAlertform.value?.end;
     this.category = this.stockAlertform.value?.category;
+    this.subcategory = this.stockAlertform.value?.subcategory;
     this.brand = this.stockAlertform.value?.brand;
     this.product = this.stockAlertform.value?.product;
     this.variant=this.stockAlertform.value?.variant;
     this.getStockAlert();
     this.getBrand();
     this.getCategory();
+    this.getSubcategory();
     this.getProduct();
-   
+    this.reportService.getVariant().subscribe(res=>{
+      console.log(res);
+      
+    })
     // brand
     this.filteredBrand = this.brandControl.valueChanges.pipe(
       startWith(''),
@@ -116,7 +126,14 @@ export class PriceMasterComponent implements OnInit {
         return title ? this._filter2(title as string) : this.categoryList.slice();
       }),
     );
-   
+    //sub category name'
+    this.filteredSubCategory = this.subCategoryControl.valueChanges.pipe(
+      startWith(''),
+      map((value: any) => {
+        const title = typeof value === 'string' ? value : value?.title;
+        return title ? this._filter3(title as string) : this.subCategoryList.slice();
+      }),
+    );
     this.filteredProduct = this.productControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
@@ -161,7 +178,13 @@ export class PriceMasterComponent implements OnInit {
     return user && user?.title ? user?.title : '';
   }
   //product sub category
- 
+  private _filter3(title: string): any[] {
+    const filterValue = title ? title.toLowerCase() : '';
+    console.log(filterValue);
+    return this.subCategoryList.filter((option: any) =>
+      (option?.title && option.title.toLowerCase().includes(filterValue))
+    );
+  }
   displayFn3(user: any): string {
     return user && user?.title ? user?.title : '';
   }
@@ -255,87 +278,54 @@ export class PriceMasterComponent implements OnInit {
     const endIndex = Math.min(startIndex + productsPerPage - 1, totalProducts - 1);
     return `Showing ${startIndex + 1}–${endIndex + 1} of ${totalProducts} results`;
   }
-  
   stockAlert: any
   getStockAlert() {
-    this.reportService.getPriceMaster( this.categoryArray,  this.brandArray, this.productsArray,this.variantsArray).subscribe((res) => {
+    console.log(this.brand);
+    
+    this.reportService.getProductLedger(this.startDate, this.endDate, this.category, this.subcategory, this.brand,this.variant).subscribe((res) => {
       console.log(res);
       this.stockAlert = res;
       this.stockAlertList = res;
-    });
+    })
+
   }
 
   // api call
   dataId: any;
-  selectBrand: any[] = [];
-  brandArray:any;
   oncheckBrand(data: any) {
-    const index = this.selectBrand.indexOf(data);
-    if (index !== -1) {
-      this.selectBrand.splice(index, 1);
-    } else {
-      this.selectBrand.push(data);
-    }
-    console.log(this.selectBrand, 'selected data');
-    if (this.selectBrand.length > 0) {
-      this.brandArray = JSON.stringify(this.selectBrand);
-      console.log(this.brandArray,'brandArray');
-      this.brandControl.reset();
-      this.getStockAlert()
-    } 
+    console.log(data);
+    this.dataId = data;
+    this.stockAlertform.patchValue({ brand: this.dataId });
+    console.warn(this.stockAlertform.value);
+    this.brand = this.stockAlertform.value?.brand;
+    this?.getStockAlert();
   }
-  selectCategory: any[] = [];
-  categoryArray:any;
   oncheckCategory(data: any) {
-    const index = this.selectCategory.indexOf(data);
-    if (index !== -1) {
-      this.selectCategory.splice(index, 1);
-    } else {
-      this.selectCategory.push(data);
-    }
-    console.log(this.selectCategory, 'selected data');
-    if (this.selectCategory.length > 0) {
-      this.categoryArray = JSON.stringify(this.selectCategory);
-      console.log(this.categoryArray,'categoryArray');
-      this.categoryControl.reset();
-      this.getStockAlert()
-    } 
+    console.log(data);
+    this.dataId = data;
+     this.stockAlertform.patchValue({category:this.dataId });
+    console.warn(this.stockAlertform.value);
+    this.category = this.stockAlertform.value?.category;
+    this?.getStockAlert();
   }
-
-  selectProduct: any[] = [];
-  productsArray:any;
-  oncheckproduct(data:any){
-      // this.selectProduct.push(product)
-      const index = this.selectProduct.indexOf(data);
-      if (index !== -1) {
-        this.selectProduct.splice(index, 1);
-      } else {
-        this.selectProduct.push(data);
-      }
-      console.log(this.selectProduct, 'selected data');
-      if (this.selectProduct.length > 0) {
-        this.productsArray = JSON.stringify(this.selectProduct);
-        console.log(this.productsArray,'productsArray');
-        this.productControl.reset();
-        this.getStockAlert()
-      } 
+  oncheckSubCategory(data: any) {
+    console.log(data);
+    this.stockAlertform.patchValue({subcategory: data});
+    console.warn(this.stockAlertform.value);
+    this.subcategory = this.stockAlertform.value?.subcategory;
+    this?.getStockAlert();
   }
-  selectVariant: any[] = [];
-  variantsArray:any;
+  // oncheckproduct(data:any){
+  //   this.stockAlertform.patchValue({product: data});
+  //   console.warn(this.stockAlertform.value);
+  //   this.product = this.stockAlertform.value?.product;
+  //   this?.getStockAlert();
+  // }
   oncheckVariant(data:any){
-    const index = this.selectVariant.indexOf(data);
-    if (index !== -1) {
-      this.selectVariant.splice(index, 1);
-    } else {
-      this.selectVariant.push(data);
-    }
-    console.log(this.selectVariant, 'selected data');
-    if (this.selectVariant.length > 0) {
-      this.variantsArray = JSON.stringify(this.selectVariant);
-      console.log(this.variantsArray,'variantsArray');
-      this.supplierControl.reset();
-      this.getStockAlert();
-    } 
+    this.stockAlertform.patchValue({variant: data});
+    console.warn(this.stockAlertform.value);
+    this.variant = this.stockAlertform.value?.variant;
+    this?.getStockAlert();
   }
   
   getSelectedStockAlertDates() {
@@ -363,7 +353,13 @@ export class PriceMasterComponent implements OnInit {
       this.categoryList = res
     })
   }
-
+  subCategoryList: any[] = [];
+  getSubcategory() {
+    this.coreService.getSubcategory().subscribe((res: any) => {
+      console.log(res);
+      this.subCategoryList = res
+    })
+  }
   isSearch=false;
   searchLength:any;
   variantList:any[]=[]
@@ -388,7 +384,7 @@ export class PriceMasterComponent implements OnInit {
  generatePDFAgain() {
   const doc = new jsPDF();
   const subtitle = 'PV';
-  const title = 'Price Master Report';
+  const title = 'Product Ledger Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
   const heading = `User: ${this.userName}`;
 
@@ -402,37 +398,48 @@ export class PriceMasterComponent implements OnInit {
   doc.text('', 10, 25); //,argin x, y
 
   // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#', 'ProductTitle','VariantName', 'CreatedDate','Mrp','CostPrice','SellingPriceOnline','SellingPriceOffline','SellingPriceEmployee','SellingPriceDealer']
-    ],
-    body: this.stockAlertList.map((row:any, index:number ) => [
-      index + 1,
-      row.product_title,
-      row.variant_name,
-      this.formatDate(row.created_date),
-      row.batch.mrp,
-      row.batch.cost_price,
-      row.batch.selling_price_online,
-      row.batch.selling_price_offline,
-      row.batch.selling_price_employee,
-      row.batch.selling_price_dealer,
+  const headers =['#','Variant Name','Product','Date','Voucher Type','Voucher No.','Name','Price','IN Qty','Out Qty']
+  const data: any = [];
 
-
-
-
-
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 25, // margin top 
-
-
+  let customerIndex = 1;
+  this.stockAlertList.forEach((list: any) => {
+    console.warn(list);
+    
+    const variant = list.variant_name;
+    const product= list.product;
+    let isFirstInvoice = true;
+    list.data.forEach((row:any,index: number) => {
+      console.log(row);
+      
+      const invoiceNumber = isFirstInvoice ? customerIndex : '';
+      data.push([
+        invoiceNumber, // row no of each cstmr
+        isFirstInvoice ? variant : '',
+        isFirstInvoice ? product : '',
+        row?.voucher_type,
+        row?.voucher_no,
+        row?.name,
+        row?.price,
+        row?.in_qty,
+        row?.out_qty
+      ]);
+      isFirstInvoice = false;
+    });
+    customerIndex++;
   });
+  autoTable(doc, {
+    head: [headers],
+    body: data,
+    theme: 'grid',
+    startY: 32, 
+    headStyles: {
+      fillColor: [255, 159, 67], // Header color
+      textColor: [255, 255, 255] // Header text color
+    }
+  });
+ 
 
-  doc.save('Price_Master.pdf');
+  doc.save('Product_Ledger .pdf');
 }
  
 
@@ -478,7 +485,7 @@ exportToExcel(): void {
   // Create a Blob from the workbook and initiate a download
   const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
   const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  const fileName = 'pricemaster.xlsx';
+  const fileName = 'productledger.xlsx';
   saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
 }
 
@@ -524,4 +531,49 @@ printTable(): void {
   // Restore the original content of the body
   document.body.innerHTML = originalContents;
 }
-}  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

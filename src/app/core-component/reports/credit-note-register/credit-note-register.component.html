@@ -34,9 +34,27 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
+                                    <div class="col-lg-5 col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Credit Note No.</label>
+                                            
+                                                 <input type="text" placeholder="Enter Credit No." aria-label="customer" matInput
+                                                    [formControl]="userControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
+                                                    > 
+                                                <mat-autocomplete #auto="matAutocomplete">
+                                                    <ng-container *ngFor="let user of filteredCredit | async">
+                                                        <mat-option *ngIf="user.is_active === true" [value]="user?.credit_note_no " (onSelectionChange)="selectUser(user?.credit_note_no)" style="color:#FF9F43">
+                                                            {{user?.credit_note_no}}
+                                                          </mat-option>                      
+                                                    </ng-container> 
+                                                </mat-autocomplete> 
+                                                 <!-- <input type="text" placeholder="Enter Credit No."  style="box-sizing: border-box; "#val (change)="selectUser(val.value)" > -->
+                                        </div>
                                     </div>   
-                         
+                            </div>
+                        </form>
 
+                    </div>
                     <div class="wordset">
                         <ul>
                             <li>
@@ -53,7 +71,7 @@
                             </li>
                         </ul>
                     </div>
-                
+                </div>
                 <div id="debitNote">
               
 
@@ -62,10 +80,14 @@
                             <thead>
                                 <tr>
                                     <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">User<i class="fa fa-sort"></i></th>
+
                                     <th (click)="sort('id')" class="thone">Date<i class="fa fa-sort"></i></th>
-                                    <th (click)="sort('id')" class="thone">Debit Note No. <i class="fa fa-sort"></i></th>
-                                    <th (click)="sort('id')" class="thone">Party <i class="fa fa-sort"></i>
+                                    <th (click)="sort('id')" class="thone">Credit Note No. <i class="fa fa-sort"></i></th>
+                                    <th (click)="sort('id')" class="thone">Tax <i class="fa fa-sort"></i>
+                                    <th (click)="sort('id')" class="thone">RoundOff <i class="fa fa-sort"></i></th>
                                     <th (click)="sort('id')" class="thone">Total <i class="fa fa-sort"></i></th>
+
 
                                         
         
@@ -75,11 +97,12 @@
                                 <tr
                                 *ngFor="let list of  supplierWiseList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <th>{{i+1+'.'}}</th>
-                                <td>{{list.credi_note.date|date:'yy/mm/dd'}}</td>
-                                <td>{{list.credi_note.debit_note_no}}</td>
+                                <td>{{list.user}}</td>
 
-                                <td>{{list.credi_note.party}}</td>
-
+                                <td>{{list.credi_note.date|date:'yy/MM/dd'}}</td>
+                                <td>{{list.credi_note.credit_note_no}}</td>
+                                <td>{{list.credi_note.tax}}</td>
+                                <td>{{list.credi_note.roundoff}}</td>
                                 <td>{{list.credi_note.total}}</td>
                                 
 
@@ -117,4 +140,8 @@
                         </div>
                     </div>
                 </div>
-   
+            </div>
+        </div>
+    </div>
+    
+</div>

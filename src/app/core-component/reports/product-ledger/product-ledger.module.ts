@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PendingSaleOrderRoutingModule } from './pending-sale-order-routing.module';
-import { PendingSaleOrderComponent } from './pending-sale-order.component';
-import {  DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { ProductLedgerRoutingModule } from './product-ledger-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {NgFor, AsyncPipe} from '@angular/common';
@@ -19,6 +17,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { NgChartsModule } from 'ng2-charts';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
+import { ProductLedgerComponent } from './product-ledger.component';
 const icons = {
   User,
   UserCheck,
@@ -28,10 +27,11 @@ const icons = {
 
 
 @NgModule({
-  declarations: [PendingSaleOrderComponent],
+  declarations: [ProductLedgerComponent],
   imports: [
     CommonModule,
-    PendingSaleOrderRoutingModule,
+    ProductLedgerRoutingModule,
+    SharedModuleModule,
     FormsModule,ReactiveFormsModule,
     MatAutocompleteModule,NgFor,AsyncPipe,
     MatFormFieldModule,MatInputModule,NgMultiSelectDropDownModule,
@@ -48,7 +48,8 @@ const icons = {
   providers:[
     DatePipe
   ]
-})
   
+})
 
-export class PendingSaleOrderModule { }
+
+export class ProductLedgerModule { }
