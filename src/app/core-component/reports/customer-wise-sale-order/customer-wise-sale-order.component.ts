@@ -212,8 +212,13 @@ generatePDFAgain() {
       row.invoice_detail?.total_qty,
       row.invoice_detail?.total_amount,
 ]),
-    startY: 25
-  });
+theme: 'grid',
+headStyles: {
+  fillColor: [255, 159, 67]
+},
+startY: 25
+});
+  
 
   doc.save('Customer_wise_sale_Order.pdf');
 }

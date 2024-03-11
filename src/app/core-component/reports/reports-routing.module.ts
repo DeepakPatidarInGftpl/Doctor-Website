@@ -188,7 +188,7 @@ const routes: Routes = [
 {
   path: 'supplier-wise-product',
   loadChildren: () =>
-    import('./supplier-wise/supplier-wise.module').then((m) => m.SupplierWiseModule),
+    import('./supplier-wise-product/supplier-wise-product.module').then((m) => m.SupplierWiseProductModule),
 },
 {
   path: 'stock-movement',
@@ -285,7 +285,26 @@ const routes: Routes = [
   loadChildren: () =>
     import('./bank-book/bank-book.module').then((m) => m.BankBookModule),
 },
-
+{
+  path: 'least-selling-product',
+  loadChildren: () =>
+    import('./least-selling-product/least-selling-product.module').then((m) => m.LeastSellingProductModule),
+},
+{
+  path: 'sale-register',
+  loadChildren: () =>
+    import('./sale-register/sale-register.module').then((m) => m.SaleRegisterModule),
+},
+{
+  path: 'sale-item-register',
+  loadChildren: () =>
+    import('./sale-item-register/sale-item-register.module').then((m) => m.SaleItemRegisterModule),
+},
+{
+  path: 'loss-qty',
+  loadChildren: () =>
+    import('./loss-qty/loss-qty.module').then((m) => m.LossQtyModule),
+},
 
 ];
 

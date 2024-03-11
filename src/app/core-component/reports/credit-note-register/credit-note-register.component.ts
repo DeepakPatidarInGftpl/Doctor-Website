@@ -216,7 +216,7 @@ export class CreditNoteRegisterComponent implements OnInit {
       ],
       body: this.supplierWiseList.map((row: any, index: number) => [
         index + 1,
-        row.user,
+        row.user.party_name,
         this.formatDate(row.credi_note.date),
         row.credi_note.credit_note_no,
         row.credi_note.tax,
@@ -235,7 +235,7 @@ export class CreditNoteRegisterComponent implements OnInit {
     });
 
 
-    doc.save('Credit_Note_Register_Purchase .pdf');
+    doc.save('Credit_Note_Register .pdf');
   }
 
 

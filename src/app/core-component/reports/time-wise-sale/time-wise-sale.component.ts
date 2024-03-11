@@ -213,7 +213,7 @@ export class TimeWiseSaleComponent implements OnInit {
           isFirstInvoice ? total_sale : '',
           res.start_time,
           res.end_time,
-          res.total_sale
+          res[" total_sale"]
         ]);
         isFirstInvoice = false;
       });

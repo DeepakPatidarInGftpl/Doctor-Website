@@ -386,7 +386,7 @@ export class PriceMasterComponent implements OnInit {
  // convert to pdf
 
  generatePDFAgain() {
-  const doc = new jsPDF();
+  const doc = new jsPDF('landscape');
   const subtitle = 'PV';
   const title = 'Price Master Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`

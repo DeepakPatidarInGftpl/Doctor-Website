@@ -97,7 +97,7 @@
                                 <tr
                                 *ngFor="let list of  supplierWiseList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <th>{{i+1+'.'}}</th>
-                                <td>{{list.user}}</td>
+                                <td>{{list.user.party_name}}</td>
 
                                 <td>{{list.credi_note.date|date:'yy/MM/dd'}}</td>
                                 <td>{{list.credi_note.credit_note_no}}</td>

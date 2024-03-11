@@ -34,39 +34,37 @@
                                             <mat-date-range-picker #startdatePicker></mat-date-range-picker>
                                         </mat-form-field>
                                     </div>
-                               
+
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <strong>Select Variant</strong>
-                                        <input type="text" placeholder="Search Variant"
-                                        aria-label="Search Products" matInput
-                                        [formControl]="productControl"
-                                        (input)="getVariant($event.target.value)"
-                                        [matAutocomplete]="autos"
-                                        style="box-sizing: border-box;" />
-                                    <mat-autocomplete #autos="matAutocomplete">
-                                        <ng-container
-                                            *ngIf="productControl.value?.length >= 1 && productControl.value?.length > 0">
-                                            <ng-container *ngFor="let option of variantList">
-                                                <mat-option *ngIf="option.is_active==true"
-                                                    [value]="option?.product_title + ' ' + option?.variant_name"
-                                                    (onSelectionChange)="oncheckVariant(option?.id)"
-                                                    style="color:#FF9F43">
-                                                    {{ option?.product_title + ' ' +
-                                                    option?.variant_name}}
-                                                </mat-option>
+                                        <input type="text" placeholder="Search Variant" aria-label="Search Products"
+                                            matInput [formControl]="productControl"
+                                            (input)="getVariant($event.target.value)" [matAutocomplete]="autos"
+                                            style="box-sizing: border-box;" />
+                                        <mat-autocomplete #autos="matAutocomplete">
+                                            <ng-container
+                                                *ngIf="productControl.value?.length >= 1 && productControl.value?.length > 0">
+                                                <ng-container *ngFor="let option of variantList">
+                                                    <mat-option *ngIf="option.is_active==true"
+                                                        [value]="option?.product_title + ' ' + option?.variant_name"
+                                                        (onSelectionChange)="oncheckVariant(option?.id)"
+                                                        style="color:#FF9F43">
+                                                        {{ option?.product_title + ' ' +
+                                                        option?.variant_name}}
+                                                    </mat-option>
+                                                </ng-container>
                                             </ng-container>
-                                        </ng-container>
-                                       
-                                    </mat-autocomplete>
+
+                                        </mat-autocomplete>
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <strong>Select Category</strong>
                                         <input type="text" placeholder="Enter Product" [formControl]="categoryControl"
-                                             class="form-control" [matAutocomplete]="autoc">
+                                            class="form-control" [matAutocomplete]="autoc">
                                         <mat-autocomplete #autoc="matAutocomplete" [displayWith]="displayFn2">
                                             <mat-option *ngFor="let supplier of filteredCategory | async"
                                                 [value]="supplier"
@@ -94,7 +92,7 @@
                                     <div class="form-group">
                                         <strong>Select Brand</strong>
                                         <input type="text" placeholder="Enter Brand" [formControl]="brandControl"
-                                          [matAutocomplete]="autob" class="form-control">
+                                            [matAutocomplete]="autob" class="form-control">
                                         <mat-autocomplete #autob="matAutocomplete" [displayWith]="displayFn">
                                             <mat-option *ngFor="let supplier of filteredBrand | async"
                                                 [value]="supplier"
@@ -129,8 +127,8 @@
                         </ul>
                     </div>
                 </div>
-                
-           
+
+
 
                 <div class="table-responsive">
                     <table class="table datanew" id=mytable>
@@ -140,14 +138,14 @@
                                 <th (click)="sort('id')" class="thone">Variant Name<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Product<i class="fa fa-sort"></i></th>
 
-                                <th (click)="sort('id')" class="thone">Date  <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Voucher Type <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Voucher No. <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Name <i class="fa fa-sort"></i></th>
-                                 <th (click)="sort('id')" class="thone">price <i class="fa fa-sort"></i></th>
-                                  <th (click)="sort('id')" class="thone">In Qty <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Out Qty <i class="fa fa-sort"></i></th>
-                                
+                                <th (click)="sort('id')" class="thone" style="width:10%">Date <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" style="width:10%">Voucher Type <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" style="width:10%">Voucher No. <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" style="width:10%">Name <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" style="width:10%">price <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" style="width:10%">In Qty <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" style="width:10%">Out Qty <i class="fa fa-sort"></i></th>
+
                             </tr>
                         </thead>
                         <tbody *ngIf="stockAlertList?.length>=0">
@@ -157,21 +155,17 @@
                                 <td style="vertical-align: top !important;">{{list.variant_name}}</td>
                                 <td style="vertical-align: top !important;">{{list.product}}</td>
 
-                            <td colspan="7">
-                                <table>
-                                    <tbody>
-                                        <tr *ngFor="let data of list?.data">
-                                            <td> {{data.date|date:'YY/MM/dd'}}</td>
-                                            <td>{{data.voucher_type}}</td>
-                                            <td>{{data.voucher_no}}</td>
-                                            <td>{{data.name}}</td>
-                                            <td>{{data.price}}</td>
-                                            <td>{{data.in_qty}}</td>
-                                            <td>{{data.out_qty}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                             </td>
+                                <td colspan="7">
+                                    <tr *ngFor="let data of list?.data">
+                                        <td style="width:10%"> {{data.date|date:'YY/MM/dd'}}</td>
+                                        <td style="width:10%">{{data.voucher_type}}</td>
+                                        <td style="width:10%">{{data.voucher_no}}</td>
+                                        <td style="width:10%">{{data.name}}</td>
+                                        <td style="width:10%">{{data.price}}</td>
+                                        <td style="width:10%">{{data.in_qty}}</td>
+                                        <td style="width:10%">{{data.out_qty}}</td>
+                                    </tr>
+                                </td>
                             </tr>
                         </tbody>
                         <tbody *ngIf="stockAlertList?.length==0">

@@ -222,7 +222,7 @@ UserName: any;
 
 generatePDFAgain() {
   const doc = new jsPDF();
-  const subtitle = 'Instant Light Ltd.';
+  const subtitle = 'Pv Ltd.';
   const title = 'Product Wise Sale Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
   const heading = `User: ${this.userName}`;
@@ -250,7 +250,7 @@ generatePDFAgain() {
     ]),
     theme: 'grid',
     headStyles: {
-      fillColor: [24, 129, 176]
+      fillColor: [255, 159, 67]
     },
     startY: 25, // margin top 
 

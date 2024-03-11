@@ -659,7 +659,7 @@ export class ReportService {
     return this.http.get(url) 
   }
   getStockMovement(start_date: any, end_date: any): Observable<any> {
-    let url = this.apiUrl + '/api/reports/sotck/movement/';
+    let url = this.apiUrl + '/api/reports/stock/movement/';
     const queryParams: any[] = [];
     if (start_date) {
       queryParams.push(`start_date=${start_date}`);
@@ -971,5 +971,65 @@ export class ReportService {
     let url = this.apiUrl + '/pv-api/product/';
     return this.http.get(url)
    
+  }
+  getLeastSellingProduct(from_date: any, to_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/least/selling/product/';
+    const queryParams: any[] = [];
+    if (from_date) {
+      queryParams.push(`from_date=${from_date}`);
+    }
+    if (to_date) {
+      queryParams.push(`to_date=${to_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  getSaleItemRegister(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/sale/item/register/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  getSaleRegister(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/sale/register/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  getLossQty(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/loss/qty/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
   }
 }

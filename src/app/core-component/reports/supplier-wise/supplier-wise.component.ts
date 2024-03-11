@@ -188,7 +188,7 @@ getSupplierWise() {
 
    userName:any; 
  generatePDFAgain() {
-  const doc = new jsPDF();
+  const doc = new jsPDF('landscape');
   const subtitle = 'PV';
   const title = 'Supplier Wise Purchase Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
@@ -220,6 +220,8 @@ getSupplierWise() {
     let isFirstInvoice = true;
     list.data.forEach((res:any,index: number) => {
       console.log(res);
+      console.log(res.barcode.product.category,
+        );
       
       const invoiceNumber = isFirstInvoice ? customerIndex : '';
       data.push([
@@ -228,13 +230,12 @@ getSupplierWise() {
         isFirstInvoice ? total : '',
 
         isFirstInvoice ? check_gst : '',
-
-        isFirstInvoice ? bill_date : '',
+        this.formatDate(isFirstInvoice ? bill_date : '',),
+        
         res.barcode.variant_name,
         res.barcode.sku,
 
         res.barcode.product.title,
-        res.barcode.product.hsncode,
      
         res.barcode.product.category,
         res.barcode.product.subcategory,
