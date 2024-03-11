@@ -349,7 +349,10 @@
                                                     <td class="th">Category</td>
                                                     <td class="td">{{productDetail?.category?.title}}</td>
                                                 </tr>
-
+                                                <tr>
+                                                    <td class="th">Article No.</td>
+                                                    <td class="td">{{productDetail?.article_no}}</td>
+                                                </tr>
                                                 <tr>
                                                     <td class="th">Sub Category</td>
                                                     <td class="td">{{productDetail?.subcategory?.title}}</td>
@@ -603,6 +606,7 @@
                                                                 <th class="boder space-text">Selling Price Dealer</th>
                                                                 <th class="boder space-text">Selling Price Employee</th>
                                                                 <th class="boder space-text">Stock</th>
+                                                                <th class="boder space-text">Opening Stock</th>
                                                                 <th class="boder space-text">Minimum Stock Threshold</th>
                                                                 <th class="boder space-text">Max Order Quantity</th>
                                                                 <!-- <th class="boder space-text">Purchase Tax</th>
@@ -626,6 +630,7 @@
                                                                     <td class="boder">{{ batch?.selling_price_dealer }}</td>
                                                                     <td class="boder">{{ batch?.selling_price_employee }}</td>
                                                                     <td class="boder">{{ batch?.stock }}</td>
+                                                                    <td class="boder">{{ batch?.opening_stock}}</td>
                                                                     <td class="boder">{{ batch?.minimum_stock_threshold }}</td>
                                                                     <td class="boder">{{ batch?.max_order_quantity }} </td>
                                                                     <!-- <td class="boder">{{ batch?.purchase_tax + '%'}}</td>

@@ -272,7 +272,7 @@ stockLedger:any
       index + 1,
       this.formatDate(row.date),
       row.voucher_type,
-      row.Voucher_no,
+      row.voucher_no,
       row.in_qty,
       row.out_qty,
       row.price

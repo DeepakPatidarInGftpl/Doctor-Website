@@ -213,7 +213,7 @@ userName: any;
 
 
 generatePDFAgain() {
-  const doc = new jsPDF();
+  const doc = new jsPDF('landscape');
   const subtitle = 'pv';
   const title = ' Pending Sale Order Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`

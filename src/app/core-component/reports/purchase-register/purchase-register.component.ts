@@ -215,7 +215,7 @@ export class PurchaseRegisterComponent implements OnInit {
   
     });
   
-    doc.save('Product_Wise_Purchase.pdf');
+    doc.save('Purchase_register.pdf');
   }
 
 

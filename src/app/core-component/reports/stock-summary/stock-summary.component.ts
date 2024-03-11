@@ -381,7 +381,7 @@ export class StockSummaryComponent implements OnInit {
  // convert to pdf
 
  generatePDFAgain() {
-  const doc = new jsPDF();
+  const doc = new jsPDF('landscape');
   const subtitle = 'PV';
   const title = 'Stock Summary Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`

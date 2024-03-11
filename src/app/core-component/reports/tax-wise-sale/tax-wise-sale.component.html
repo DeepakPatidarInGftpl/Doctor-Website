@@ -14,28 +14,29 @@
                     <div class="search-set">
                         <form [formGroup]="purchaseRegisterForm">
                             <div class="row">
-                                
-                                    <div class="col-lg-7 col-sm-6 col-12">
-                                        <div class="search-input mx-3">
-                                            <strong>Select Date</strong>
-                                            <mat-form-field style="width: 97%;" class="border">
-                                                <mat-date-range-input [formGroup]="purchaseRegisterForm" [rangePicker]="startdatePicker">
-                                                    <input matStartDate placeholder="Start date" formControlName="start"
-                                                        class="mat-input" (dateChange)="getSelectedpurchaseRegisterDates()">
-                                                    <span class="mat-input-placeholder-wrapper">
-                                                        <span class="mat-input-placeholder">to</span>
-                                                    </span>
-                                                    <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                                                        (dateChange)="getSelectedpurchaseRegisterDates()">
-                                                </mat-date-range-input>
-            
-                                                <mat-datepicker-toggle matSuffix [for]="startdatePicker"
-                                                    style=" font-size: x-large;"></mat-datepicker-toggle>
-                                                <mat-date-range-picker #startdatePicker></mat-date-range-picker>
-                                            </mat-form-field>
-                                        </div>
+
+                                <div class="col-lg-7 col-sm-6 col-12">
+                                    <div class="search-input mx-3">
+                                        <strong>Select Date</strong>
+                                        <mat-form-field style="width: 97%;" class="border">
+                                            <mat-date-range-input [formGroup]="purchaseRegisterForm"
+                                                [rangePicker]="startdatePicker">
+                                                <input matStartDate placeholder="Start date" formControlName="start"
+                                                    class="mat-input" (dateChange)="getSelectedpurchaseRegisterDates()">
+                                                <span class="mat-input-placeholder-wrapper">
+                                                    <span class="mat-input-placeholder">to</span>
+                                                </span>
+                                                <input matEndDate placeholder="End date" formControlName="end"
+                                                    class="mat-input" (dateChange)="getSelectedpurchaseRegisterDates()">
+                                            </mat-date-range-input>
+
+                                            <mat-datepicker-toggle matSuffix [for]="startdatePicker"
+                                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                                            <mat-date-range-picker #startdatePicker></mat-date-range-picker>
+                                        </mat-form-field>
                                     </div>
-                               
+                                </div>
+
                             </div>
                         </form>
 
@@ -43,21 +44,21 @@
                     <div class="wordset">
                         <ul>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
-                                        src="assets/img/icons/pdf.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+                                    (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
-                                        src="assets/img/icons/excel.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"
+                                    (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"(click)="printTable()"><img
-                                        src="assets/img/icons/printer.svg" alt="img"></a>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"
+                                    (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
                             </li>
                         </ul>
                     </div>
                 </div>
-             
+
 
                 <div class="table-responsive">
                     <table class="table datanew" id=mytable>
@@ -69,48 +70,45 @@
                                 <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Total Amount<i class="fa fa-sort"></i></th>
 
-                                <th class="thone" style="width:10%">Date ></th>
+                                 <th class="thone" style="width:10%"> &nbsp;&nbsp;Date &nbsp;&nbsp; &nbsp;&nbsp;
+                                    &nbsp;&nbsp; &nbsp;&nbsp;</th> 
                                 <th class="thone" style="width:10%">Voucher Type</th>
                                 <th class="thone" style="width:10%">Voucher No.</th>
-                                <th class="thone" style="width:10%">Hsn Code</th>
+                                <th class="thone" style="width:10%"> &nbsp;&nbsp;Hsn Code</th>
 
-                                <th class="thone" style="width:10%">Taxable </th>
-                                <th class="thone" style="width:10%">CGST Rate </th>
-                                <th class="thone" style="width:10%">CGST Amount </th>
-                                <th class="thone" style="width:10%">SGST Rate </th>
-                                <th class="thone" style="width:10%">SGST Amount</th>
-                                <th class="thone" style="width:10%">IGST Rate </th>
-                                <th class="thone" style="width:10%">IGST Amount</th>
+                                <th class="thone" style="width:10%"> &nbsp;&nbsp;Taxable </th>
+                                <th class="thone" style="width:10%"> &nbsp;&nbsp;CGST Rate </th>
+                                <th class="thone" style="width:10%"> &nbsp;&nbsp;CGST Amount </th>
+                                <th class="thone" style="width:10%"> &nbsp;&nbsp;SGST Rate </th>
+                                <th class="thone" style="width:10%"> &nbsp;&nbsp;SGST Amount</th>
+                                <th class="thone" style="width:10%"> &nbsp;&nbsp;IGST Rate </th>
+                                <th class="thone" style="width:10%"> &nbsp;&nbsp;IGST Amount</th>
                                 <th class="thone" style="width:10%">Tax Amount</th>
                             </tr>
                         </thead>
                         <tbody *ngIf="purchaseRegisterList?.length>=0">
                             <tr
                                 *ngFor="let list of purchaseRegisterList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
-                                <th>{{i+1+'.'}}</th>
-                                <td>{{list.date}}</td>
-                                <td>{{list.name}}</td>
-                                <td>{{list.voucher_no }}</td>
-                                <td>{{list.total_amount }}</td>
-                                <td colspan = 12 > 
-                                    <table>
-                                        <tbody>
-                                            <tr *ngFor="let data of list.data">
-                                            <td style="width:10%">{{data.date}}</td>
-                                            <td style="width:10%">{{data.voucher_type}}</td>
-                                            <td style="width:10%">{{data.voucher_no}}</td>
-                                            <td style="width:10%">{{data.hsn_code}}</td>
-                                            <td style="width:10%">{{data.taxable}}</td>
-
-                                     <td style="width:10%">{{data.CGST_rate}}</td>
-                                     <td style="width:10%">{{data.CGST_amount}}</td>
-                                     <td style="width:10%">{{data.SGST_rate}}</td>
-                                     <td style="width:10%">{{data.SGST_amount}}</td>
-                                     <td style="width:10%">{{data.IGST_rate}}</td>
-                                     <td  style="width:10%">{{data.IGST_amount}}</td>
-                                    <td style="width:10%"> {{data.Tax_amount}}</td>
-                                   </tr>
-                        </tbody>
+                                <th rowspan="{{list.length}}">{{i+1+'.'}}</th>
+                                <td rowspan="{{list.length}}">{{list.date}}</td>
+                                <td rowspan="{{list.length}}">{{list.name}}</td>
+                                <td rowspan="{{list.length}}">{{list.voucher_no }}</td>
+                                <td rowspan="{{list.length}}">{{list.total_amount }}</td>
+                               
+                                    
+                                 <td>{{list.data[0].date}}</td> 
+                                <td>{{list.data[0].voucher_type}}</td>
+                                <td>{{list.data[0].voucher_no}}</td>
+                                <td>{{list.data[0].hsn_code}}</td>
+                                <td>{{list.data[0].taxable}}</td>
+                                <td>{{list.data[0].CGST_rate}}</td>
+                                <td>{{list.data[0].CGST_amount}}</td>
+                                <td>{{list.data[0].SGST_rate}}</td>
+                                <td>{{list.data[0].SGST_amount}}</td>
+                                <td>{{list.data[0].IGST_rate}}</td>
+                                <td>{{list.data[0].IGST_amount}}</td>
+                                <td> {{list.data[0].Tax_amount}}</td>
+                                    
                         <tbody *ngIf="purchaseRegisterList?.length==0">
                             <tr>
                                 <td colspan="10">
@@ -141,8 +139,3 @@
                             </div>
                         </div>
                     </div> -->
-                
-            
-    
-
-
