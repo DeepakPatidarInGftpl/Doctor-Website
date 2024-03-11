@@ -514,7 +514,7 @@ export class AddproductComponent implements OnInit {
     //15-1
     formdata.append('product_label', this.productForm.get('product_label')?.value);
     // 16-2
-    formdata.append('article_no'), this.productForm.get('article_no');
+    formdata.append('article_no', this.productForm.get('article_no')?.value);
     // end
 
     // nested formdata 
@@ -630,6 +630,8 @@ export class AddproductComponent implements OnInit {
         } else {
           // console.log('res api error');
         }
+      },err=>{
+        this.toastr.error(err.message);
       })
     } else {
       this.productForm.markAllAsTouched();

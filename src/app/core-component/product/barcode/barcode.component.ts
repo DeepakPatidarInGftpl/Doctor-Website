@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormArray, FormControl } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { SalesService } from 'src/app/Services/salesService/sales.service';
 
 @Component({
   selector: 'app-barcode',
@@ -25,7 +28,8 @@ export class BarcodeComponent implements OnInit {
       Qty: '5000.00',
     }
   ]
-  constructor(private coreService: CoreService) { }
+  productControl = new FormControl();
+  constructor(private coreService: CoreService, private saleService: SalesService,private toastr:ToastrService) { }
 
   elementType = 'svg';
   value = 'someValue12340987';
@@ -57,24 +61,24 @@ export class BarcodeComponent implements OnInit {
   delete(index: any) {
     this.tableData.splice(index, 1);
   }
-  
-  productList:any;
-  variantList:any[]=[];
-  loader=false;
-  filteredData: any[]; 
+
+  productList: any;
+  variantList: any[] = [];
+  loader = false;
+  filteredData: any[];
   getProduct() {
-    this.loader=true;
+    this.loader = true;
     this.coreService.getProducts().subscribe((res: any) => {
-      this.productList=res;
-      this.productList.map((res:any)=>{
-        res.variant_product.map((res:any)=>{
-          this.loader=false;
+      this.productList = res;
+      this.productList.map((res: any) => {
+        res.variant_product.map((res: any) => {
+          this.loader = false;
           this.variantList.push(res);
-          this.filteredData = this.tableData.slice(); 
+          this.filteredData = this.tableData.slice();
           this.filterData();
         });
       });
-      console.log(this.variantList,'varianList');
+      console.log(this.variantList, 'varianList');
     });
   }
 
@@ -94,7 +98,7 @@ export class BarcodeComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.variantList = this.variantList.filter((res:any) => {
+      this.variantList = this.variantList.filter((res: any) => {
         const nameLower = res.product_title.toLocaleLowerCase();
         const variantLowerName = res.variant_name.toLocaleLowerCase();
         if (nameLower.match(searchTerm)) {
@@ -106,13 +110,13 @@ export class BarcodeComponent implements OnInit {
       });
     }
   }
-  selectedProduct:any;
+  selectedProduct: any;
   filterData() {
     let filteredData = this.variantList.slice();
     if (this.selectedProduct) {
       const searchTerm = this.selectedProduct.toLowerCase();
-      filteredData = filteredData.filter((item:any) => {
-        const product_title = item?.product_title?.toString()?.toLowerCase(); 
+      filteredData = filteredData.filter((item: any) => {
+        const product_title = item?.product_title?.toString()?.toLowerCase();
         return product_title?.includes(searchTerm);
       });
     }
@@ -122,4 +126,40 @@ export class BarcodeComponent implements OnInit {
     this.selectedProduct = null;
     this.filterData();
   }
+
+  isSearch = false;
+  searchLength: any;
+  variantData: any;
+  getVariant(search: any,) {
+    this.searchLength = search
+    this.isSearch = true;
+    if (search.toString().length >= 3) {
+      if (this.search.toString().length >= 3) {
+        // this.coreService.searchProduct(search).subscribe((res: any) => {
+        this.saleService.filterVariant('', '', search).subscribe((res: any) => {
+          console.log(res);
+          this.isSearch = false;
+          this.variantData = res;
+        });
+      }
+    }
+  }
+
+  selectData: any[] = []
+  oncheckVariant(data: any, id: any) {
+    console.warn(data);
+    this.productControl.reset();
+    this.variantData = [];
+    const isDataExists = this.selectData.some((res: any) => res.id === data.id);
+    console.log(isDataExists);
+    // If data doesn't exist in selectData, push it
+    if (!isDataExists) {
+      this.selectData.push(data);
+    }else{
+      this.toastr.error(`${data?.product_title} - Barcode Already Generated`);
+    }
+    console.log(this.selectData, 'selected data');
+    // this.productControl.reset();
+  }
+
 }
