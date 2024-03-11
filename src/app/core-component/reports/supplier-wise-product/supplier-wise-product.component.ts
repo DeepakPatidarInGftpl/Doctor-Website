@@ -153,7 +153,7 @@ export class SupplierWiseProductComponent implements OnInit {
   }
 supplierWise:any
 getSupplierWise() {
-    this.reportService.getSupplierWise(this.startDate, this.endDate, this.supplierWiseUserId).subscribe((res) => {
+    this.reportService.getSupplierWiseProduct(this.startDate, this.endDate, this.supplierWiseUserId).subscribe((res) => {
       console.log(res);
       this.supplierWiseList = res;
       this.supplierWise=res

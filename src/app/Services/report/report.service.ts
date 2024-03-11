@@ -1032,4 +1032,6 @@ export class ReportService {
     }
     return this.http.get<any>(url);
   }
+  // {{urls}}/api/reports/supplier/wise/product/?start_date=2022-01-19&end_date=2024-03-19
+  
 }
