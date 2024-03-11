@@ -1859,4 +1859,8 @@ export class CoreService {
       let url = this.apiUrl + '/pv-api/company_drive/?id=';
       return this.http.delete(`${url}${id}`);
     }
+    searchProduct(query: any) {
+      let url = this.apiUrl + '/pv-api/variant-search/?search=';
+      return this.http.get(url + query);
+    }
 }

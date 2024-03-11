@@ -407,6 +407,7 @@ export class ProductLedgerComponent implements OnInit {
     
     const variant = list.variant_name;
     const product= list.product;
+
     let isFirstInvoice = true;
     list.data.forEach((row:any,index: number) => {
       console.log(row);
@@ -416,12 +417,13 @@ export class ProductLedgerComponent implements OnInit {
         invoiceNumber, // row no of each cstmr
         isFirstInvoice ? variant : '',
         isFirstInvoice ? product : '',
-        row?.voucher_type,
-        row?.voucher_no,
-        row?.name,
-        row?.price,
-        row?.in_qty,
-        row?.out_qty
+this.formatDate(row.date),
+        row.voucher_type,
+        row.voucher_no,
+        row.name,
+        row.price,
+        row.in_qty,
+        row.out_qty
       ]);
       isFirstInvoice = false;
     });

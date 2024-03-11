@@ -116,8 +116,8 @@
 
                                         <tbody>
                                             <tr *ngFor="let data of list.data">
-                                            <td style="width:10%">{{data.barcode.variant_name}}</td>
-                                            <td style="width:10%">{{data.barcode.sku}}</td>
+                                            <td style="width:10%">{{data?.barcode.variant_name}}</td>
+                                            <td style="width:10%">{{data?.barcode.sku}}</td>
 
                                             <td style="width:10%">{{data.barcode.product.title}}</td>
                                             <td style="width:10%">{{data.barcode.product.hsncode}}</td>

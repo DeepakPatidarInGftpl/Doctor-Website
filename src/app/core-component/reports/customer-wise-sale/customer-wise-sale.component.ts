@@ -206,17 +206,15 @@ UserName: any;
       // Pass tableData to autoTable
       autoTable(doc, {
         head: [
-          ['#', 'Customer', 'Sale Order Date', 'Sale Order No. ','Total Qty','Total','Invoice Total Qty','Invoice Total Amount']
+          ['#', 'UserDetail', 'MobileNo.', 'No.Of Bill ','Total Amount']
         ],
         body: this.customerWiseSaleList.map((row:any, index:number ) => [
           index + 1,
-          row.customer?.party_name,
-          row.sale_order_date,
-          row.sale_order_no,
-          row.total_qty,
-          row.total,
-          row.invoice_detail?.total_qty,
-          row.invoice_detail?.total_amount,
+          row.user_detail.party_name?.name,
+          row.user_detail.party_name?.mobile_no,
+          row.no_of_bill,
+          row.total_amount,
+    
 ]),
         theme: 'grid',
         headStyles: {

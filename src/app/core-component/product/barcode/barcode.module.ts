@@ -6,7 +6,10 @@ import { BarcodeComponent } from './barcode.component';
 import { NgxBarcodeModule } from 'ngx-barcode';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { NgFor, AsyncPipe } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 @NgModule({
   declarations: [
     BarcodeComponent
@@ -17,7 +20,12 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
     FormsModule,
     ReactiveFormsModule,
     NgxBarcodeModule,
-    SharedModuleModule
+    SharedModuleModule,
+    MatAutocompleteModule,
+    NgFor,
+    AsyncPipe,
+    MatFormFieldModule,
+    MatInputModule,
   ]
 })
 export class BarcodeModule { }

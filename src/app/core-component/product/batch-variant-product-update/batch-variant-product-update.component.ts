@@ -292,7 +292,21 @@ batchRes:any;
         ) {
           this.errorMrp='';
       this.loader=true;
-      this.coreService.updateBatch(this.batchForm.value,this.id).subscribe(res => {
+      let formData= new FormData();
+      formData.append('mrp',this.batchForm.get('mrp')?.value);
+      formData.append('cost_price',this.batchForm.get('cost_price')?.value);
+      formData.append('selling_price_online',this.batchForm.get('selling_price_online')?.value);
+      formData.append('selling_price_offline',this.batchForm.get('selling_price_offline')?.value);
+      formData.append('selling_price_dealer',this.batchForm.get('selling_price_dealer')?.value);
+      formData.append('selling_price_employee',this.batchForm.get('selling_price_employee')?.value);
+      formData.append('stock',this.batchForm.get('stock')?.value);
+      formData.append('opening_stock',this.batchForm.get('opening_stock')?.value);
+      formData.append('minimum_stock_threshold',this.batchForm.get('minimum_stock_threshold')?.value);
+      formData.append('max_order_quantity',this.batchForm.get('max_order_quantity')?.value);
+      formData.append('discount',this.batchForm.get('discount')?.value);
+      formData.append('additional_discount',this.batchForm.get('additional_discount')?.value);
+      
+      this.coreService.updateBatch(formData,this.id).subscribe(res => {
         this.addRes = res
         if (this.addRes.success) {
           this.loader=false;

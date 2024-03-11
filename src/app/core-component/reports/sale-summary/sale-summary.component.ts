@@ -34,6 +34,8 @@ export class SaleSummaryComponent implements OnInit {
 
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
+  filteredusers: Observable<any[]>;
+  userControl = new FormControl();
   saleSummaryPaymentType: any;
 
   constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
@@ -75,6 +77,11 @@ export class SaleSummaryComponent implements OnInit {
     this.saleSummaryPaymentType = this.saleSummaryform.value?.payment_type;
 
     this.getSaleSummary();
+    this.getUser();
+    this.filteredusers = this.userControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter1(value, true))
+    );
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
@@ -83,10 +90,29 @@ export class SaleSummaryComponent implements OnInit {
       }),
     );
   }
+  
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
   }
+  private _filter1(value: string | number, include: boolean): any[] {
+    // console.log(value);
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+    const filteredUsers = include
+      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue))
+      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue));
+    if (!include && filteredUsers.length === 0) {
+      // console.log("No results found");
+      filteredUsers.push({ name: "No data found" }); 
+    }
+    return filteredUsers;
+  }
 
+  users:any[]=[];
+  getUser() {
+    this.reportService.getUser().subscribe((res: any) => {
+      this.users = res?.data;
+    })
+  }
   private _filter(item_code: string): any[] {
     const filterValue = item_code ? item_code.toLowerCase() : '';
     console.log(filterValue);
@@ -167,6 +193,13 @@ saleSummary:any
    this.saleSummaryUserId = this.saleSummaryform.value?.user_id;
    this?.getSaleSummary();
   }
+  selectUser(data: any) {
+    this.dataId = data;
+   this. saleSummaryform.patchValue({user_id:this.dataId});
+   console.warn(this. saleSummaryform.value);
+   this.saleSummaryUserId = this. saleSummaryform.value?.user_id;
+   this?.getSaleSummary();
+  }
   getSelectedSaleSummaryDates() {
     console.log(this.saleSummaryform.value);
     const start = this.datepipe.transform(this.saleSummaryform.value.start, 'yyyy-MM-dd');
@@ -180,33 +213,7 @@ saleSummary:any
 
      // convert to pdf
 UserName: any;
-generatePDF() {
-  const doc = new jsPDF();
-  const subtitle = 'PV';
-  const title = 'Sale Summary Report';
-  const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-  const heading = `User: ${this.userName}`;
 
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(subtitle, 86, 5);
-  doc.text(title, 82, 10);
-  doc.text(heading, 10, 18);
-  doc.text(heading2, 10, 22)
-
-  doc.text('', 10, 25); //,argin x, y
-
-  autoTable(doc, {
-    html: '#mytable',
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 25, // margin top 
-  });
-
-  doc.save('saleSummary.pdf');
-}
 
      generatePDFAgain() {
       const doc = new jsPDF();
@@ -232,7 +239,7 @@ generatePDF() {
         body: this.saleSummaryList.map((row:any, index:number ) => [
           index + 1,
           row.date,
-          row.receipt_method,
+          row.receipt_type,
           row.receipt_voucher_no,
           row.note
         ]),

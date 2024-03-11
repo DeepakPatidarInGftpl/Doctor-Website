@@ -327,7 +327,7 @@ export class AbcAnalysisComponent implements OnInit {
       row.no_of_bills,
       row.sale_amount,
       row.sale_percentage,
-      row.grate
+      row.grade
       
     ]),
     theme: 'grid',

@@ -217,7 +217,7 @@ getSupplierWise() {
     ],
     body: this.supplierWiseList.map((row:any, index:number ) => [
       index + 1,
-      this.formatDate(row.date),
+      this.formatDate(row.credi_note.date),
       row.credi_note.debit_note_no,
       row.credi_note.party,
       row.credi_note.total,
@@ -234,7 +234,7 @@ getSupplierWise() {
   });
 
 
-doc.save('Debit_Note_Register_Purchase .pdf');
+doc.save('Debit_Note_Register .pdf');
 }
 
 

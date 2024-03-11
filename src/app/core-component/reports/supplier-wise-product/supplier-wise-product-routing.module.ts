@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SupplierWiseComponent } from '../supplier-wise/supplier-wise.component';
+import { SupplierWiseProductComponent } from './supplier-wise-product.component';
 
 const routes: Routes = [{
-  path:'',component:SupplierWiseComponent
+  path:'',component:SupplierWiseProductComponent
 }];
 
 @NgModule({

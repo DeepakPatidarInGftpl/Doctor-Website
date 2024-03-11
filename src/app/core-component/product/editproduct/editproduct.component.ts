@@ -138,7 +138,7 @@ export class EditproductComponent implements OnInit {
           subcategory_group: res?.subcategory_group?.id,
           subcategory: res?.subcategory?.id,
           brand: res.brand?.id,
-          hsncode: res?.hsncode?.id,
+          hsncode: res?.hsncode?res?.hsncode?.id:'',
           unit: res.unit.id,
           // sale_tax_including: res.sale_tax_including,
           return_time: res?.return_time,
@@ -147,7 +147,9 @@ export class EditproductComponent implements OnInit {
           purchase_tax: res?.purchase_tax?.id,
           sale_tax: res?.sale_tax?.id,
           //15-1
-          product_label: res?.product_label?.id
+          product_label: res?.product_label?.id,
+          // 05-03
+          article_no:res.article_no?res?.article_no:''
         })
         this.productForm.setControl('product_features', this.udateFeature(this.editRes?.product_feature_product));
         // this.productForm.setControl('product_images', this.updateImage(this.editRes?.product_images));
@@ -859,7 +861,7 @@ export class EditproductComponent implements OnInit {
     formdata.append('hsncode', this.productForm.get('hsncode')?.value);
     //15-1
     formdata.append('product_label', this.productForm.get('product_label')?.value);
-    formdata.append('article_no',this.productForm.get('article_no'));
+    formdata.append('article_no',this.productForm.get('article_no')?.value);
     const variantsArray = this.productForm.get('variant_product') as FormArray;
     const variantsData = [];
     variantsArray.controls.forEach((variants) => {
@@ -938,6 +940,8 @@ export class EditproductComponent implements OnInit {
           this.toastr.error(res.error)
           // console.log('res api error');
         }
+      },err=>{
+        this.toastr.error(err.message);
       })
 
     } else {

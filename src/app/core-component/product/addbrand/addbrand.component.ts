@@ -31,7 +31,7 @@ export class AddbrandComponent implements OnInit {
       code: new FormControl(''),
       image: new FormControl('', [Validators.required]),
       discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
-      category: new FormArray([]),
+      category: new FormArray([],),
       subcategory_group: new FormArray<any>([]),
       subcategory: new FormArray([]),
       // 3-1

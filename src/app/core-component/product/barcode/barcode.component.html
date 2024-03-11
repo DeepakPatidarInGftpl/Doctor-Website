@@ -28,6 +28,7 @@
                                 <th (click)="sort('id')">Name <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')">Variant <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')">SKU <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')">MRP <i class="fa fa-sort"></i></th>   
                                 <th (click)="sort('id')">Color <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')">Size <i class="fa fa-sort"></i></th>
                                 <!-- <th></th> -->
@@ -38,6 +39,7 @@
                                 <td>{{products.product_title}}</td>
                                 <td>{{products.variant_name}}</td>
                                 <td>{{products.sku}}</td>
+                                <td>{{products.batch[0]?.selling_price_offline}}</td>
                                 <td>{{products.color?.title}}</td>
                                 <td>{{products.size?.title}}</td>
                                 <!-- <td class="text-end">
@@ -72,10 +74,8 @@
                 </div>
 
 
-
-
                 
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Paper Size</label>
@@ -89,80 +89,106 @@
                         <a href="javascript:void(0);" class="btn btn-submit me-2">Submit</a>
                         <a href="javascript:void(0);"  class="btn btn-cancel">Cancel</a>
                     </div>
+                </div> -->
+
+                <div class="form-group">
+                    <input type="text" placeholder="Search Product"
+                    aria-label="Search Products" matInput [formControl]="productControl"
+                    (input)="getVariant($event.target.value)"
+                    [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                <mat-autocomplete #autos="matAutocomplete">
+                        <ng-container *ngFor="let option of variantData">
+                        <mat-option *ngIf="option?.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
+                            (onSelectionChange)="oncheckVariant(option,option.id)"
+                            style="color:#FF9F43">
+                            {{ option?.product_title + ' ' + option?.variant_name}}
+                        </mat-option>
+                        </ng-container>
+                    <mat-option *ngIf="isSearch && searchLength?.toString()?.length >2 " style="color:#FF9F43">Loading...</mat-option>
+                    <mat-option *ngIf="variantData?.length === 0 && !isSearch" [value]="'No data found'">
+                        <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                    </mat-option>
+                    <mat-option *ngIf="searchLength?.toString()?.length < 2" class="is-loading">Please Enter 3 or more characters</mat-option>
+                </mat-autocomplete>
                 </div>
             </div>
         </div>
         <!-- /add -->
 
-
-        
-    <div class="container">
-        <div fxLayout="column">
-            <!-- <div fxLayout="column">
-                <textarea  placeholder="bc-value" [(ngModel)]="value"></textarea>
-                <br/>
-                <select placeholder="bc-element-type" [(ngModel)]="elementType">
-                    <option value="svg">svg</option>
-                    <option value="img">img</option>
-                    <option value="canvas">canvas</option>
-                </select>
-                <br/>
-                <select placeholder="bc-format" [(ngModel)]="format">
-                    <option *ngFor="let code of codeList" [value]="code">{{code}}</option>
-                </select>
-                <input  type="text" placeholder="bc-line-color" [(ngModel)]="lineColor">
-                <input  type="number" placeholder="bc-width" [(ngModel)]="width">
-                <input  type="number" placeholder="bc-height" [(ngModel)]="height">
-                <input type="checkbox" [(ngModel)]="displayValue">bc-display-value
-                <input  type="text" placeholder="bc-font-options" [(ngModel)]="fontOptions">
-                <input  type="text" placeholder="bc-font" [(ngModel)]="font">
-            </div>
-            <div fxLayout="column">
-                <input  type="text" placeholder="bc-text-align" [(ngModel)]="textAlign">
-                <input  type="text" placeholder="bc-text-position" [(ngModel)]="textPosition">
-                <input  type="number" placeholder="bc-text-margin" [(ngModel)]="textMargin">
-                <input  type="number" placeholder="bc-font-size" [(ngModel)]="fontSize">
-                <input  type="text" placeholder="bc-background" [(ngModel)]="background">
-                <input  type="number" placeholder="bc-margin" [(ngModel)]="margin">
-                <input  type="number" placeholder="bc-margin-top" [(ngModel)]="marginTop">
-                <input  type="number" placeholder="bc-margin-bottom" [(ngModel)]="marginBottom">
-                <input  type="number" placeholder="bc-margin-left" [(ngModel)]="marginLeft">
-                <input  type="number" placeholder="bc-margin-right" [(ngModel)]="marginRight">
-            </div> -->
-    
-    
-            <div class="card card_">
-                <div class="card-header pb-0 card_header">
-                  <div class="card-title mb-0 title">
-                    DIXY SCOTT
-                  </div>
-                  </div>
-            <div class="card-body card_body">
-                <div class="text-center mrp" >
-                    <p class="p1">MRP : <span>182.00</span></p>
-                    <p class="p2">Inclusive of all taxes</p>
-                </div>
-                <div class="pb-0 d-flex justify-content-between product" >
-                    <p class="p3">Product : <span>DRAWER</span></p>
-                    <P class="p3">Net Qty : <span>1N</span></P>
-                </div>
-                <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -8px;">
-                    <p class="p3">Style : <span>CROSS-TRUNK:90</span></p>
-                    <P class="p3">Size : <span>90 CM</span></P>
-                </div>
-                <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -8px;">
-                    <p class="p3">Price: <span>110.00</span></p>
-                    <P class="p3">Discount : <span>70.00</span></P>
-                </div>
-                <div class="text-center">
-                    <ngx-barcode *ngFor="let bcValue of values" [bc-element-type]="elementType" [bc-value]="bcValue" [bc-format]="format" [bc-line-color]="lineColor"
-                     [bc-width]="width" [bc-height]="height" [bc-display-value]="displayValue" [bc-font-options]="fontOptions" [bc-font]="font"
-                     [bc-text-align]="textAlign" [bc-text-position]="textPosition" [bc-text-margin]="textMargin" [bc-font-size]="fontSize" [bc-background]="background"
-                     [bc-margin]="margin" [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight"></ngx-barcode>
+        <div class="row">
+            <div class="col-sm-3 col-lg-4 col-12" *ngFor="let products of selectData" style="padding-left: 10px !important; padding-right: 10px !important;">
+                <div class="">
+                    <div fxLayout="column">
+                        <div class="card card_">
+                            <div class="card-header pb-0 card_header">
+                              <div class="card-title mb-0 title">{{ products.product_title.length > 20 ? (products.product_title | slice:0:20) + '...' : products.product_title }}</div>
+                            </div>
+                        <div class="card-body card_body">
+                            <div class="text-center mrp" >
+                                <p class="p1">MRP : <span>{{products.batch[0]?.mrp |number:'1.2-2'}}</span></p>
+                                <p class="p2"> {{products?.product?.sale_tax_including?'Inclusive of all taxes':'Exclusive of all taxes'}}</p>
+                            </div>
+                            <div class="pb-0 d-flex justify-content-between product" >
+                                <p class="p3">Product : <span> {{products.variant_name.length > 20 ? (products.variant_name | slice:0:20) + '...' : products.variant_name }}</span></p>
+                                <P class="p3">Net Qty : <span>1</span></P>
+                            </div>
+                            <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -8px;">
+                                <p class="p3">Style : <span>{{products?.product?.article_no}}</span></p>
+                                <P class="p3">Size : <span>{{products?.products?.size?.title}}</span></P>
+                            </div>
+                            <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -8px;">
+                                <p class="p3">Price: <span>{{products.batch[0]?.selling_price_offline |number:'1.2-2'}}</span></p>
+                                <P class="p3">Discount : <span>{{products.batch[0]?.discount}}</span></P>
+                            </div>
+                            <div class="text-center">
+                                <ngx-barcode *ngFor="let bcValue of values" [bc-element-type]="elementType" [bc-value]="products.sku" [bc-format]="format" [bc-line-color]="lineColor"
+                                 [bc-width]="width" [bc-height]="height" [bc-display-value]="displayValue" [bc-font-options]="fontOptions" [bc-font]="font"
+                                 [bc-text-align]="textAlign" [bc-text-position]="textPosition" [bc-text-margin]="textMargin" [bc-font-size]="fontSize" [bc-background]="background"
+                                 [bc-margin]="margin" [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight"></ngx-barcode>
+                            </div>
+                        </div>
+                       </div>
+                    </div>
                 </div>
             </div>
         </div>
-    
-    
+
+<!-- <div class="row">
+    <div class="col-sm-4 col-lg-4 col-12" *ngFor="let products of variantList">
+        <div class="container">
+            <div fxLayout="column">
+                <div class="card card_">
+                    <div class="card-header pb-0 card_header">
+                      <div class="card-title mb-0 title">{{ products.product_title.length > 20 ? (products.product_title | slice:0:20) + '...' : products.product_title }}</div>
+                    </div>
+                <div class="card-body card_body">
+                    <div class="text-center mrp" >
+                        <p class="p1">MRP : <span>{{products.batch[0]?.mrp |number:'1.2-2'}}</span></p>
+                        <p class="p2">Inclusive of all taxes</p>
+                    </div>
+                    <div class="pb-0 d-flex justify-content-between product" >
+                        <p class="p3">Product : <span> {{ products.variant_name.length > 20 ? (products.variant_name | slice:0:20) + '...' : products.variant_name }}</span></p>
+                        <P class="p3">Net Qty : <span>1N</span></P>
+                    </div>
+                    <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -8px;">
+                        <p class="p3">Style : <span>CROSS-TRUNK:90</span></p>
+                        <P class="p3">Size : <span>{{products.size?.title}}</span></P>
+                    </div>
+                    <div class="pb-0 d-flex justify-content-between align-items-center" style="margin-bottom: -8px;">
+                        <p class="p3">Price: <span>{{products.batch[0]?.selling_price_offline |number:'1.2-2'}}</span></p>
+                        <P class="p3">Discount : <span>{{products.batch[0]?.discount}}</span></P>
+                    </div>
+                    <div class="text-center">
+                        <ngx-barcode *ngFor="let bcValue of values" [bc-element-type]="elementType" [bc-value]="products.sku" [bc-format]="format" [bc-line-color]="lineColor"
+                         [bc-width]="width" [bc-height]="height" [bc-display-value]="displayValue" [bc-font-options]="fontOptions" [bc-font]="font"
+                         [bc-text-align]="textAlign" [bc-text-position]="textPosition" [bc-text-margin]="textMargin" [bc-font-size]="fontSize" [bc-background]="background"
+                         [bc-margin]="margin" [bc-margin-top]="marginTop" [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight"></ngx-barcode>
+                    </div>
+                </div>
+               </div>
+            </div>
         </div>
     </div>
+</div> -->
+        
+  

@@ -227,7 +227,7 @@ playFn3(user: any): string {
  // convert to pdf
 
  generatePDFAgain() {
-  const doc = new jsPDF();
+  const doc = new jsPDF('landscape');
   const subtitle = 'PV';
   const title = 'Discount Wise Purchase Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
@@ -267,13 +267,12 @@ playFn3(user: any): string {
         isFirstInvoice ? check_gst : '',
         isFirstInvoice ? total : '',
         isFirstInvoice ? total_discount : '',
+this.formatDate(isFirstInvoice ? bill_date : '',),
 
-        isFirstInvoice ? bill_date : '',
         res.barcode.variant_name,
         res.barcode.sku,
 
         res.barcode.product.title,
-        res.barcode.product.hsncode,
      
         res.barcode.product.category,
         res.barcode.product.subcategory,

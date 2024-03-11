@@ -181,7 +181,7 @@ export class TaxWiseSaleReturnComponent implements OnInit {
   UserName: any;
 
   generatePDFAgain() {
-    const doc = new jsPDF();
+    const doc = new jsPDF('landscape');
     const subtitle = 'PV';
     const title = 'Tax Wise Sale Return Report';
     const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
@@ -198,7 +198,7 @@ export class TaxWiseSaleReturnComponent implements OnInit {
   
     
       // Pass tableData to autoTable
-      const headers =  ['#','Date','Name','Voucher No.','Total Amount','Date','Voucher Type','Voucher No.','Voucher Id','Hsn Code','Taxable','CGST Rate','CGST Amount','SGST Rate','SGST Amount','IGST Rate','IGST Amount','Tax Amount']
+      const headers =  ['#','Date','Name','Voucher No.','Total Amount','Date','Voucher Type','Voucher No.','Hsn Code','Taxable','CGST Rate','CGST Amount','SGST Rate','SGST Amount','IGST Rate','IGST Amount','Tax Amount']
 
       const data: any = [];
   
@@ -206,10 +206,10 @@ export class TaxWiseSaleReturnComponent implements OnInit {
       this.purchaseRegisterList.forEach((list: any) => {
         console.warn(list);
         
-        const Date = list.Date;
-        const Name = list.Name;
-        const VoucherNo = list.VoucherNo;
-        const TotalAmount = list.TotalAmount;
+        const Date = list.date;
+        const Name = list.name;
+        const VoucherNo = list.voucher_no;
+        const TotalAmount = list.total_amount;
         let isFirstInvoice = true;
         list.data.forEach((res:any,index: number) => {
           console.log(res);
@@ -217,7 +217,7 @@ export class TaxWiseSaleReturnComponent implements OnInit {
           const invoiceNumber = isFirstInvoice ? customerIndex : '';
           data.push([
             invoiceNumber, // row no of each cstmr
-            isFirstInvoice ? Date : '',
+           this.formatDate( isFirstInvoice ? Date : '',),
             isFirstInvoice ? Name : '',
             isFirstInvoice ? VoucherNo : '',
             isFirstInvoice ? TotalAmount : '',

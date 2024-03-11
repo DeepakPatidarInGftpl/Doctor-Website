@@ -33,6 +33,10 @@ export class SaleInvoiceComponent implements OnInit {
 
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
+  userControl = new FormControl();
+  filteredusers: Observable<any[]>;
+
+  saleSummaryPaymentType: any;
 
   constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private cs: CompanyService, private datepipe: DatePipe, private reportService: ReportService) {
   }
@@ -61,13 +65,18 @@ export class SaleInvoiceComponent implements OnInit {
     this.saleInvoiceListform = new FormGroup({
       start: new FormControl(formattedStartDate,[Validators.required]),
       end: new FormControl(formattedToday,[Validators.required]),
-      
+      user_id:new FormControl('')
     });
     this.startDate = this.saleInvoiceListform.value?.start;
     this.endDate = this.saleInvoiceListform.value?.end;
     
 
     this.getSaleInvoiceList();
+    this.getUser();
+    this.filteredusers = this.userControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter1(value, true))
+    );
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
@@ -78,6 +87,25 @@ export class SaleInvoiceComponent implements OnInit {
   }
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
+  }
+  private _filter1(value: string | number, include: boolean): any[] {
+    // console.log(value);
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+    const filteredUsers = include
+      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue))
+      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue));
+    if (!include && filteredUsers.length === 0) {
+      // console.log("No results found");
+      filteredUsers.push({ name: "No data found" }); 
+    }
+    return filteredUsers;
+  }
+
+  users:any[]=[];
+  getUser() {
+    this.reportService.getUser().subscribe((res: any) => {
+      this.users = res?.data;
+    })
   }
 
   private _filter(item_code: string): any[] {
@@ -151,7 +179,14 @@ export class SaleInvoiceComponent implements OnInit {
   }
 
   // api call
-
+  dataId: any;
+  selectUser(data: any) {
+    this.dataId = data;
+   this. saleInvoiceListform.patchValue({user_id:this.dataId});
+   console.warn(this. saleInvoiceListform.value);
+   this.saleInvoiceListUserId = this. saleInvoiceListform.value?.user_id;
+   this?.getSaleInvoiceList();
+  }
   getSelectedSaleInvoiceListDates() {
     console.log(this.saleInvoiceListform.value);
     const start = this.datepipe.transform(this.saleInvoiceListform.value.start, 'yyyy-MM-dd');
@@ -171,33 +206,7 @@ export class SaleInvoiceComponent implements OnInit {
               // convert to pdf
     // convert to pdf
     UserName: any;
-    generatePDF() {
-      const doc = new jsPDF();
-      const subtitle = 'PV';
-      const title = 'Sale Invoice List Report';
-      const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-      const heading = `User: ${this.UserName}`;
-    
-      doc.setFontSize(12);
-      doc.setTextColor(33, 43, 54);
-      doc.text(subtitle, 86, 5);
-      doc.text(title, 82, 10);
-      doc.text(heading, 10, 18);
-      doc.text(heading2, 10, 22)
-    
-      doc.text('', 10, 25); //,argin x, y
-    
-      autoTable(doc, {
-        html: '#mytable',
-        theme: 'grid',
-        headStyles: {
-          fillColor: [255, 159, 67]
-        },
-        startY: 25, // margin top 
-      });
-    
-      doc.save('SaleInvoiceList.pdf');
-    }
+   
     
     generatePDFAgain() {
       const doc = new jsPDF();
