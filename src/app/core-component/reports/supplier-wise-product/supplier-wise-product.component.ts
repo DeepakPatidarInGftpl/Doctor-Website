@@ -153,7 +153,7 @@ export class SupplierWiseProductComponent implements OnInit {
   }
 supplierWise:any
 getSupplierWise() {
-    this.reportService.getSupplierWise(this.startDate, this.endDate, this.supplierWiseUserId).subscribe((res) => {
+    this.reportService.getSupplierWiseProduct(this.startDate, this.endDate, this.supplierWiseUserId).subscribe((res) => {
       console.log(res);
       this.supplierWiseList = res;
       this.supplierWise=res
@@ -187,7 +187,7 @@ getSupplierWise() {
 
    userName:any; 
  generatePDFAgain() {
-  const doc = new jsPDF();
+  const doc = new jsPDF('landscape');
   const subtitle = 'PV';
   const title = 'Supplier Wise Purchase Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
@@ -264,7 +264,7 @@ getSupplierWise() {
   });
 
 
-doc.save('Supplier_Wise_Purchase .pdf');
+doc.save('Supplier_Wise_Product.pdf');
 }
 
 

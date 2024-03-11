@@ -88,7 +88,7 @@
                             <tr
                                 *ngFor="let list of purchaseRegisterList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <th>{{i+1+'.'}}</th>
-                                <td>{{list.date}}</td>
+                                <td>{{list.date|date:'yy/MM/dd'}}</td>
                                 <td>{{list.name}}</td>
                                 <td>{{list.voucher_no }}</td>
                                 <td>{{list.total_amount }}</td>

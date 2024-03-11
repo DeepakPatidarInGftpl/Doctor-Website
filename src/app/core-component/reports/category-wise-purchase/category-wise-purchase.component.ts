@@ -220,7 +220,7 @@ export class CategoryWisePurchaseComponent implements OnInit {
    // convert to pdf
    
    generatePDFAgain() {
-    const doc = new jsPDF();
+    const doc = new jsPDF('landscape');
     const subtitle = 'PV';
     const title = 'Category Wise Purchase Report';
     const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
@@ -237,7 +237,7 @@ export class CategoryWisePurchaseComponent implements OnInit {
   
     
       // Pass tableData to autoTable
-      const headers =['#', 'User','Check Gst', 'Total','Bill Date','Variant Name','Title','Category','Subcategory','Brand','Qty','Unit Cost','Mrp','Discount','Tax','Landing Cost','Total']
+      const headers =['#', 'User','Check Gst', 'Total','Bill Date','Variant Name','Sku','Title','Category','Subcategory','Brand','Qty','Unit Cost','Mrp','Discount','Tax','Landing Cost','Total']
 
       const data: any = [];
   
@@ -259,8 +259,11 @@ export class CategoryWisePurchaseComponent implements OnInit {
             isFirstInvoice ? user : '',
             isFirstInvoice ? check_gst : '',
             isFirstInvoice ? total : '',
-            isFirstInvoice ? bill_date : '',
+this.formatDate(isFirstInvoice ? bill_date : '',),
+
             res.barcode.variant_name,
+            res.barcode.sku,
+
             res.barcode.product.title,            
             res.barcode.product.category,
             res.barcode.product.subcategory,

@@ -218,9 +218,8 @@ productWisePurchase:any
               // convert to pdf
                 
 UserName: any;
-
 generatePDFAgain() {
-  const doc = new jsPDF();
+  const doc = new jsPDF('landscape');
   const subtitle = 'PV';
   const title = 'Product Wise Purchase Report';
   const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
@@ -235,28 +234,60 @@ generatePDFAgain() {
 
   doc.text('', 10, 25); //,argin x, y
 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#','Name','Total Qty','Total Amount']
-    ],
-    body: this.productWisePurchaseList.map((row:any, index:number ) => [
-      index + 1,
-      row.name,
-      row.total_qty,
-      row.total_amount,
-     
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 25, // margin top 
+  
+    // Pass tableData to autoTable
+    const headers =['#', 'User','Check Gst', 'Total','Bill Date','Variant Name','Qty','Unit Cost','Mrp','Discount','Tax','Landing Cost','Total']
+
+    const data: any = [];
+
+    let customerIndex = 1;
+    this.productWisePurchaseList.forEach((list: any) => {
+      console.warn(list);
+      
+      const user = list.user.party_name;
+      const check_gst = list.check_gst;
+      const total = list.total;
+      const bill_date = list.bill_date;
+      let isFirstInvoice = true;
+      list.data.forEach((res:any,index: number) => {
+        console.log(res);
+        
+        const invoiceNumber = isFirstInvoice ? customerIndex : '';
+        data.push([
+          invoiceNumber, // row no of each cstmr
+          isFirstInvoice ? user : '',
+          isFirstInvoice ? check_gst : '',
+          isFirstInvoice ? total : '',
+this.formatDate(isFirstInvoice ? bill_date : '',),
+
+          res.barcode.variant_name,
+         
+          res.qty , 
+          res.unit_cost , 
+          res.mrp , 
+          res.discount ,
+          res.tax , 
+          res.landing_cost , 
+          res.total , 
+
+        ]);
+        isFirstInvoice = false;
+      });
+      customerIndex++;
+    });
+    autoTable(doc, {
+      head: [headers],
+      body: data,
+      theme: 'grid',
+      startY: 32, 
+      headStyles: {
+        fillColor: [255, 159, 67], // Header color
+        textColor: [255, 255, 255] // Header text color
+      }
+    });
 
 
-  });
-
-  doc.save('Product_Wise_Purchase.pdf');
+  doc.save('Product_wise_Purchase .pdf');
 }
               // excel export only filtered data
               getVisibleDataFromTable(): any[] {

@@ -86,16 +86,12 @@ export class PurchaseOverdueComponent implements OnInit {
   purchaseOverDue:any
     getPurchaseOverDue() {
       this.reportService.getPurchaseOverDue(this.date).subscribe((res:any) => {
-      if(res.isSuccess){
         console.log(res?.successsalebill);
         this.purchaseOverDueList = res?.salebill;
         this.purchaseOverDue=res;
         console.log(this.purchaseOverDue?.Total_Overdue_Amount); 
-      }else{
-        this.toastr.error(res.msg)
-      }
-      },err=>{
-        this.toastr.error(err.message)
+        console.log(this.purchaseOverDueList);
+ 
       })
   
     }

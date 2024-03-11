@@ -212,7 +212,7 @@ export class AmountWiseSaleComponent implements OnInit {
             isFirstInvoice ? total_sale : '',
             res.start_amount,
             res.end_amount,            
-            res.total      
+            res[" total"]     
           ]);
           isFirstInvoice = false;
         });
