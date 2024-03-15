@@ -1034,4 +1034,12 @@ export class ReportService {
   }
   // {{urls}}/api/reports/supplier/wise/product/?start_date=2022-01-19&end_date=2024-03-19
   
+  addFavorite(data:any){
+    let url = this.apiUrl+'/api/reports/favourites/';
+    return this.http.post(url,data)
+  }
+  getFavorite(){
+    let url = this.apiUrl+'/api/reports/favourites/';
+    return this.http.get(url)
+  }
 }

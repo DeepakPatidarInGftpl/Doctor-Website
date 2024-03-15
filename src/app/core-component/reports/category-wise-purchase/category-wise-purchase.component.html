@@ -81,53 +81,54 @@
                                 <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">User <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Check Gst <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Total  <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Bill Date  <i class="fa fa-sort"></i></th>
-                                <th class="thone" style="width:10%">Variant Name ></th>
-                                <th class="thone" style="width:10%">Sku ></th>
+                                <th (click)="sort('id')" class="thone">Total <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Bill Date <i class="fa fa-sort"></i></th>
+                                <th class="thone" style="width:10%">Variant Name </th>
+                                <th class="thone" style="
+                                padding-left: 30px;
+                                padding-right: 64px;">Sku </th>
 
                                 <th class="thone" style="width:10%">Title </th>
-                                <th class="thone" style="width:10%">Category</th>
-                                <th class="thone" style="width:10%">Subcategory </th>
+                                <th class="thone" style="width:10%; padding-left:40px" >Category</th>
+                                <th class="thone" style="width:10%;padding-right: -1px;white-space: pre-wrap;">Sub Category </th>
                                 <th class="thone" style="width:10%">Brand</th>
 
-                                <th class="thone" style="width:10%">Qty </th>
+                                <th class="thone" style="width:10%; padding-left:15px; padding-right:15px">Qty </th>
                                 <th class="thone" style="width:10%">Unit Cost </th>
                                 <th class="thone" style="width:10%">Mrp </th>
                                 <th class="thone" style="width:10%">Discount </th>
                                 <th class="thone" style="width:10%">Tax</th>
-                                <th class="thone" style="width:10%">Landing Cost </th>
+                                <th class="thone" style="width:10%;white-space: pre-wrap;">Landing Cost </th>
                                 <th class="thone" style="width:10%">Total</th>
-
-
                             </tr>
                         </thead>
                         <tbody *ngIf="categoryWisePurchaseList?.length>=0">
                             <tr
                                 *ngFor="let list of categoryWisePurchaseList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <th>{{i+1+'.'}}</th>
-                                <td  rowspan="{{list.length}}">{{list.user.party_name}}</td>
-                                <td rowspan="{{list.length}}">{{list.check_gst}}</td>
-                                <td rowspan="{{list.length}}">{{list.total | number:'1.2-2'}}</td>
+                                <td >{{list.user.party_name}}</td>
+                                <td>{{list.check_gst}}</td>
+                                <td>{{list.total | number:'1.2-2'}}</td>
                                 <td>{{list.bill_date |date:'yy/mm/dd'}}</td>
-                                <td colspan = 12 > 
+                                <td colspan = "13"> 
                                     <table class="nested-table">
-
                                         <tbody>
                                             <tr *ngFor="let data of list.data">
-                                            <td style="width:10%">{{data.barcode.variant_name}}</td>
-                                            <td style="width:10%">{{data.barcode.sku}}</td>
+                                            <td style="width:10%; white-space: pre-wrap;">{{data.barcode.variant_name}}</td>
+                                            <td style="
+                                            padding-left: 35px;
+                                            padding-right: 20px;">{{data.barcode.sku}}</td>
 
-                                            <td style="width:10%">{{data.barcode.product.title}}</td>
-                                            <td style="width:10%">{{data.barcode.product.category}}</td>
-                                            <td style="width:10%">{{data.barcode.product.subcategory}}</td>
-                                            <td style="width:10%">{{data.barcode.product.brand}}</td>
+                                            <td style="width:10%; white-space: pre-wrap;">{{data.barcode.product.title}}</td>
+                                            <td style="width:10%; white-space: pre-wrap;">{{data.barcode.product.category}}</td>
+                                            <td style="width:10%; white-space: pre-wrap;">{{data.barcode.product.subcategory}}</td>
+                                            <td style="width:10%; white-space: pre-wrap;">{{data.barcode.product.brand}}</td>
 
-                                     <td style="width:10%">{{data.qty}}</td>
+                                     <td >{{data.qty}}</td>
                                      <td style="width:10%">{{data.unit_cost}}</td>
                                      <td style="width:10%">{{data.mrp}}</td>
                                      <td style="width:10%">{{data.discount}}</td>
-                                     <td style="width:10%">{{data.tax}}</td>
+                                     <td style="width:7%">{{data.tax}}</td>
                                      <td  style="width:10%">{{data.landing_cost}}</td>
                                     <td style="width:10%"> {{data.total}}</td>
                                     
