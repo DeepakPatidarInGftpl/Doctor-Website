@@ -82,20 +82,26 @@
                             <tr>
                                 <th (click)="sort('id')" class="thone">#<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">User <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone"> Total <i class="fa fa-sort"></i> </th>
-                                <th (click)="sort('id')" class="thone">Check GST<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Bill Date<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Check Gst <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Total  <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Bill Date  <i class="fa fa-sort"></i></th>
+                                <th class="thone" style="width:10% ;white-space:pre-wrap">Variant Name </th>
+                                <th class="thone" style="width:10%;padding-left: 55px;
+                                padding-right: 42px;">Sku </th>
+                                <th class="thone" style="width:10%;padding-right: 42px;">Title</th>
+                                <th class="thone" style="width:10%;white-space:pre-wrap">Hsn Code</th>
+                                <th class="thone" style="width:10%;padding-right: 25px;
+                                padding-left: 20px;">Category</th>
 
-                                <th (click)="sort('id')" class="thone">Variant Name<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Qty<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Unit Cost<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">MRP<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Discount<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Tax<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Landing Cost<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Total<i class="fa fa-sort"></i></th>
-
-
+                                <th class="thone" style="width:10%;white-space:pre-wrap">Sub category </th>
+                                <th class="thone" style="width:10%">Brand</th>
+                                <th class="thone" style="width:10%">Qty </th>
+                                <th class="thone" style="width:10%;white-space:pre-wrap;padding-left:10px;padding-right:20px">Unit Cost </th>
+                                <th class="thone" style="width:10%">Mrp </th>
+                                <th class="thone" style="width:10%">Discount </th>
+                                <th class="thone" style="width:10%">Tax</th>
+                                <th class="thone" style="width:10%;white-space:pre-wrap">Landing Cost </th>
+                                <th class="thone" style="width:10%">Total</th>
 
 
                             </tr>
@@ -105,21 +111,32 @@
                                 *ngFor="let list of productWisePurchaseList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <th>{{i+1+'.'}}</th>
                                 <td>{{list.user.party_name}}</td>
-                                <td>{{list.total}}</td>
                                 <td>{{list.check_gst}}</td>
-                                <td>{{list.bill_date|date:'yy/mm/dd'}}</td>
-                                <td colspan="8">
+                                <td>{{list.total | number:'1.2-2'}}</td>
+                                <td>{{list.bill_date |date:'yy/mm/dd'}}</td>
+                                <td colspan = 14> 
                                     <table>
+
                                         <tbody>
                                             <tr *ngFor="let data of list.data">
-                                                <td>{{data.barcode.variant_name}}</td>
-                                                <td>{{data.qty}}</td>
-                                                <td>{{data.unit_cost}}</td>
-                                                <td>{{data.mrp}}</td>
-                                                <td>{{data.discount}}</td>
-                                                <td>{{data.tax}}</td>
-                                                <td>{{data.landing_cost}}</td>
-                                                <td>{{data.total}}</td>                
+                                            <td style="width:10%;white-space:pre-wrap;">{{data?.barcode.variant_name}}</td>
+                                            <td style="width:10%; padding-left: 10px;
+                                            padding-right: 20px;">{{data?.barcode.sku}}</td>
+
+                                            <td style="width:8%; white-space:pre-wrap;">{{data.barcode.product.title}}</td>
+                                            <td style="width:8%">{{data.barcode.product.hsncode}}</td>
+                                            <td style="width:10%;white-space:pre-wrap;">{{data.barcode.product.category}}</td>
+                                            <td style="width:10%;white-space:pre-wrap;">{{data.barcode.product.subcategory}}</td>
+                                            <td style="width:8%;white-space:pre-wrap;">{{data.barcode.product.brand}}</td>
+
+                                     <td style="width:6%">{{data.qty}}</td>
+                                     <td style="width:6%">{{data.unit_cost}}</td>
+                                     <td style="width:7%">{{data.mrp}}</td>
+                                     <td style="width:7%">{{data.discount}}</td>
+                                     <td style="width:10%">{{data.tax}}</td>
+                                     <td  style="width:10%; padding-right:23px;padding-left:0px;">{{data.landing_cost}}</td>
+                                    <td style="width:10%"> {{data.total}}</td>
+                                    
                                             </tr>
                                         </tbody>
                                     </table>
