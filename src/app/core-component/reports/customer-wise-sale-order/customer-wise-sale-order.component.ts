@@ -142,19 +142,25 @@ export class CustomerWiseSaleOrderComponent implements OnInit {
     const endIndex = Math.min(startIndex + productsPerPage - 1, totalProducts - 1);
     return `Showing ${startIndex + 1}–${endIndex + 1} of ${totalProducts} results`;
   }
-customerWiseSaleOrder:any
+  combinedList: any[] = [];
+customerWiseSaleOrder:any[]=[]
 getCustomerWiseSaleOrder() {
     this.reportService.getCustomerWiseSaleOrder(this.startDate, this.endDate, this.customerWiseSaleOrderUserId).subscribe((res) => {
       console.log(res);
       this.customerWiseSaleOrderList = res;
       this.customerWiseSaleOrder=res;
       this.customerWiseSaleOrder.map((res:any)=>{
-        console.log(res.sale_order);
-        this.customerWiseSaleOrderList=res.sale_order;
+        this.customerWiseSaleOrderList.push(res);
       })
+// combine array of array object data into array of object 
+      this.customerWiseSaleOrder.forEach((innerArray: any[]) => {
+        this.combinedList = this.combinedList.concat(innerArray);
+      });
+      console.log(this.combinedList);
     })
 
   }
+  
 
   // api call
   dataId: any;
@@ -202,7 +208,7 @@ generatePDFAgain() {
     head: [
       ['#', 'Customer', 'Sale Order Date', 'Sale Order No. ','Total Qty','Total','Invoice Total Qty','Invoice Total Amount']
     ],
-    body: this.customerWiseSaleOrderList.map((row:any, index:number ) => [
+    body: this.combinedList.map((row:any, index:number ) => [
       index + 1,
       row.customer?.party_name,
       row.sale_order_date,
