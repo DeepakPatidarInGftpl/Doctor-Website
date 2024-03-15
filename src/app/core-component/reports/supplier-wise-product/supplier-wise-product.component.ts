@@ -157,6 +157,7 @@ getSupplierWise() {
       console.log(res);
       this.supplierWiseList = res;
       this.supplierWise=res
+      this.toastr.error(res?.msg)
     })
 
   }

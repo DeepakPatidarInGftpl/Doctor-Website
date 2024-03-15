@@ -69,19 +69,20 @@
                                 <th (click)="sort('id')" class="thone">Voucher No.<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Total Amount<i class="fa fa-sort"></i></th>
 
-                                 <th class="thone" style="width:10%">&nbsp;&nbsp; Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </th> 
-                                <th class="thone" style="width:10%">&nbsp;&nbsp;&nbsp;&nbsp;Voucher Type</th>
-                                <th class="thone" style="width:10%">&nbsp;&nbsp;&nbsp;&nbsp;Voucher No.</th>
-                                <th class="thone" style="width:10%">&nbsp;&nbsp; &nbsp;&nbsp;&nbspHsn Code</th>
+                                 <th class="thone" style="width:10%; padding-left: 25px;
+                                 padding-right: 50px;">Date </th> 
+                                <th class="thone" style="width:10%">Voucher Type</th>
+                                <th class="thone" style="width:10%">Voucher No.</th>
+                                <th class="thone" style="width:10%">Hsn Code</th>
 
-                                <th class="thone" style="width:10%">&nbsp;&nbsp;&nbsp;&nbsp; Taxable  </th>
-                                <th class="thone" style="width:10%"> &nbsp;&nbsp;&nbsp;&nbsp;CGST Rate  </th>
-                                <th class="thone" style="width:10%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CGST Amount  </th>
-                                <th class="thone" style="width:10%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SGST Rate  </th>
-                                <th class="thone" style="width:10%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SGST Amount </th>
-                                <th class="thone" style="width:10%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IGST Rate  </th>
-                                <th class="thone" style="width:10%"> IGST Amount&nbsp;&nbsp; </th>
-                                <th class="thone" style="width:10%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tax Amount&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </th>
+                                <th class="thone" style="width:10%"> Taxable  </th>
+                                <th class="thone" style="width:10%"> CGST Rate  </th>
+                                <th class="thone" style="width:10%"> CGST Amount  </th>
+                                <th class="thone" style="width:10%"> SGST Rate  </th>
+                                <th class="thone" style="width:10%"> SGST Amount </th>
+                                <th class="thone" style="width:10%"> GST Rate  </th>
+                                <th class="thone" style="width:10%"> IGST Amount  </th>
+                                <th class="thone" style="width:10%"> Tax Amount </th>
                             </tr>
                         </thead>
                         <tbody *ngIf="purchaseRegisterList?.length>=0">
@@ -92,24 +93,28 @@
                                 <td>{{list.name.party_name}}</td>
                                 <td>{{list.voucher_no }}</td>
                                 <td>{{list.total_amount }}</td>
-                                <td colspan = 12 > 
+                                <td colspan="12"> 
                                     <table>
                                         <tbody>
                                             <tr *ngFor="let data of list.data">
                                             <td style="width:10%">{{data.date}}</td>
                                             <td style="width:10%">{{data.voucher_type}}</td>
-                                            <td style="width:10%">{{data.voucher_no}}</td>
-                                            <td style="width:10%">{{data.hsn_code}}</td>
-                                            <td style="width:10%">{{data.taxable}}</td>
+                                            <td style="width:8%">{{data.voucher_no}}</td>
+                                            <td style="width:8%">{{data.hsn_code}}</td>
+                                            <td style="width:8%">{{data.taxable}}</td>
 
-                                     <td style="width:10%">{{data.CGST_rate}}</td>
+                                     <td style="width:8%">{{data.CGST_rate}}</td>
                                      <td style="width:10%">{{data.CGST_amount}}</td>
                                      <td style="width:10%">{{data.SGST_rate}}</td>
-                                     <td style="width:10%">{{data.SGST_amount}}</td>
-                                     <td style="width:10%">{{data.IGST_rate}}</td>
+                                     <td style="width:8%">{{data.SGST_amount}}</td>
+                                     <td style="width:8%">{{data.IGST_rate}}</td>
                                      <td  style="width:10%">{{data.IGST_amount}}</td>
                                     <td style="width:10%"> {{data.Tax_amount}}</td>
                                    </tr>
+                        </tbody>
+                        </table>
+                        </td>
+                        </tr>
                         </tbody>
                         <tbody *ngIf="purchaseRegisterList?.length==0">
                             <tr>
@@ -119,7 +124,7 @@
                             </tr>
                         </tbody>
                     </table>
-                     <!-- <div class="row">
+                      <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
                                 <select [(ngModel)]="itemsPerPage" class="pagination">
@@ -140,8 +145,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>  -->
-                
+                    </div>  
+                </div>
             
     
 

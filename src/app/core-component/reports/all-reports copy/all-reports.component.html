@@ -1,4 +1,4 @@
-<mat-tab-group *ngIf="myData">
+<mat-tab-group>
     <form [formGroup]="favouriteForm" (ngSubmit)="submit()">
         <mat-tab>
             <ng-template mat-tab-label>
@@ -10,22 +10,18 @@
             <div>
             <h2 class="row justify-content-center p_head">Favourite</h2>
             <div class="row">
-
-                <!-- <div class="col-lg-4 col-sm-4 col-12" *ngFor="let fav of myData.sale.concat(myData.accounts, myData.inventory,myData.purchase)"> -->
-                  <ng-container *ngFor="let fav of myData">
-                    <div class="col-lg-4 col-sm-4 col-12" *ngIf="fav.is_Favorite" >
+                <div class="col-lg-4 col-sm-4 col-12" *ngFor="let fav of FavouriteList">
                     <div class="card border">
                         <div class="card-body">
                             <div class="d-flex">
                                 <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
-                                <p class="p"[routerLink]="fav.url">{{fav.reportname}}</p>
-                                <i data-bs-toggle="tooltip" title="fa fa-star" class="fa fa-star icon  ms-auto"(click)="star(fav.reportname)"></i>
+                                <p class="p">{{fav.report_name}}</p>
+                                <i data-bs-toggle="tooltip" title="fa fa-star" class="fa fa-star icon  ms-auto"(click)="removeStar(fav.report_name)"></i>
                             </div>
                         </div>
                     </div>
 
                 </div>
-                </ng-container>
             </div>
             <!-- <div class="row">
                 <ng-container>
@@ -879,23 +875,6 @@
             <div>
                 <h2 class="row justify-content-center p_head">SALES</h2>
                 <div class="row">
-                    <ng-container *ngFor="let fav of myData">
-                <div class="col-lg-4 col-sm-4 col-12" *ngIf="fav.group=='sale'">
-                    <div class="card border">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
-                                <p class="p" [routerLink]="fav.url">{{fav.reportname}}</p>
-                                <i *ngIf="!fav.is_Favorite" data-bs-toggle="tooltip" title="ion-ios7-star-outline" class="ion-ios7-star-outline icon  ms-auto" (click)="star(fav.reportname)"></i>
-                                <i *ngIf="fav.is_Favorite" data-bs-toggle="tooltip" title="fa fa-star" class="fa fa-star icon  ms-auto" (click)="star(fav.reportname)"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                </ng-container>
-                </div>
-                <!-- <div class="row">
                     <div class="col-lg-4 col-sm-4 col-12">
                         <div class="card border">
                             <div class="card-body">
@@ -1180,7 +1159,7 @@
                         </div>
 
                     </div>
-                </div> -->
+                </div>
             </div>
         </mat-tab>
         <mat-tab>
@@ -1191,24 +1170,8 @@
                 </div>
             </ng-template>
             <h2 class="row justify-content-center p_head">PURCHASE</h2>
-            <div class="row">
-                <ng-container *ngFor="let fav of myData">
-                <div class="col-lg-4 col-sm-4 col-12" *ngIf="fav.group=='purchase'">
-                    <div class="card border">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
-                                <p class="p"[routerLink]="fav.url">{{fav.reportname}}</p>
-                                <i *ngIf="!fav.is_Favorite" data-bs-toggle="tooltip" title="ion-ios7-star-outline" class="ion-ios7-star-outline icon  ms-auto" (click)="star(fav.reportname)"></i>
-                                <i *ngIf="fav.is_Favorite" data-bs-toggle="tooltip" title="fa fa-star" class="fa fa-star icon  ms-auto" (click)="star(fav.reportname)"></i>
-                            </div>
-                        </div>
-                    </div>
 
-                </div>
-                </ng-container>
-                </div>
-            <!-- <div class="row">
+            <div class="row">
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="card border">
                         <div class="card-body">
@@ -1269,7 +1232,7 @@
                     </div>
 
                 </div>
-                  <div class="col-lg-4 col-sm-4 col-12">
+                 <!-- <div class="col-lg-4 col-sm-4 col-12">
                 <div class="card border">
                     <div class="card-body">
                         <div class="d-flex">
@@ -1282,7 +1245,7 @@
                     </div>
                 </div>
 
-            </div>  
+            </div>  -->
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="card border">
                         <div class="card-body">
@@ -1446,7 +1409,7 @@
                     </div>
 
                 </div>
-            </div> -->
+            </div>
 
         </mat-tab>
         <mat-tab>
@@ -1458,28 +1421,10 @@
             </ng-template>
 
             <h2 class="row justify-content-center p_head">Inventory</h2>
+
             <div class="row">
-                <ng-container *ngFor="let fav of myData">
-                    <div class="col-lg-4 col-sm-4 col-12" *ngIf="fav.group=='inventory'">
-                
-                    <div class="card border">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
-                                <p class="p" [routerLink]="fav.url">{{fav.reportname}}</p>
-                                <i *ngIf="!fav.is_Favorite" data-bs-toggle="tooltip" title="ion-ios7-star-outline" class="ion-ios7-star-outline icon  ms-auto" (click)="star(fav.reportname)"></i>
-                                <i *ngIf="fav.is_Favorite" data-bs-toggle="tooltip" title="fa fa-star" class="fa fa-star icon  ms-auto" (click)="star(fav.reportname)"></i>
-                            </div>
-                        </div>
-                    </div>
 
-                </div>
-                </ng-container>
-                </div>
-
-            <!-- <div class="row">
-
-                <div class="col-lg-4 col-sm-4 col-12"*ngFor="let fav of myData.inventory">
+                <div class="col-lg-4 col-sm-4 col-12">
                     <div class="card border">
                         <div class="card-body">
                             <div class="d-flex">
@@ -1674,7 +1619,7 @@
                     </div>
 
                 </div>
-                 <div class="col-lg-4 col-sm-4 col-12">
+                 <!-- <div class="col-lg-4 col-sm-4 col-12">
                 <div class="card border">
                     <div class="card-body">
                         <div class="d-flex">
@@ -1687,9 +1632,9 @@
                     </div>
                 </div>
 
-            </div>  
+            </div>  -->
 
-            </div> -->
+            </div>
 
 
         </mat-tab>
@@ -1702,25 +1647,6 @@
             </ng-template>
             <h2 class="row justify-content-center p_head">Accounts</h2>
             <div class="row">
-                <ng-container *ngFor="let fav of myData">
-
-                <div class="col-lg-4 col-sm-4 col-12" *ngIf="fav.group=='accounts'">
-                    <div class="card border">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <i data-bs-toggle="tooltip" title="fas fa-chart-area" class="fas fa-chart-area icon"></i>
-                                <p class="p" [routerLink]="fav.url">{{fav.reportname}}</p>
-                                <i *ngIf="!fav.is_Favorite" data-bs-toggle="tooltip" title="ion-ios7-star-outline" class="ion-ios7-star-outline icon  ms-auto" (click)="star(fav.reportname)"></i>
-                                <i *ngIf="fav.is_Favorite" data-bs-toggle="tooltip" title="fa fa-star" class="fa fa-star icon  ms-auto" (click)="star(fav.reportname)"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                </ng-container>
-                </div>
-
-            <!-- <div class="row">
                 <div class="col-lg-4 col-sm-4 col-12" >
                     <div class="card border">
                         <div class="card-body">
@@ -1841,7 +1767,7 @@
                     </div>
 
                 </div>
-            </div> -->
+            </div>
 
 
         </mat-tab>
