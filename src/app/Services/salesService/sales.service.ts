@@ -195,9 +195,41 @@ export class SalesService {
     let url =this.apiUrl+'/pv-api/prefix/?id=MaterialOutward';
     return this.http.get(url)
   } 
+  getAdvanceBookingPrefix(){
+    let url =this.apiUrl+'/pv-api/prefix/?id=AdvanceBooking';
+    return this.http.get(url)
+  }  
 
   getUser() {
     let url = this.apiUrl + '/pv-api/contact-user/';
     return this.http.get(url)
+  }
+
+  // advance booking 
+  
+   //sales Estimates
+   getAdvanceBooking() {
+    let url = this.apiUrl + '/pv-api/advance_booking/';
+    return this.http.get(url)
+  }
+  getAdvanceBookingById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/advance_booking/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  AdvanceBookingIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/advance_booking/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addAdvanceBooking(data: any) {
+    let url = this.apiUrl + '/pv-api/advance_booking/';
+    return this.http.post(url, data)
+  }
+  updateAdvanceBooking(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/advance_booking/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deleteAdvanceBooking(id: number) {
+    let url = this.apiUrl + '/pv-api/advance_booking/?id=';
+    return this.http.delete(`${url}${id}`)
   }
 }

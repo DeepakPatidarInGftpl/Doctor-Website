@@ -35,6 +35,10 @@ const routes: Routes = [
 {path:'updateexpensesVoucher/:id',loadChildren:()=>import('./update-expenses/update-expenses.module').then((m)=>m.UpdateExpensesModule)},
 {path:'detailsexpensesVoucher/:id',loadChildren:()=>import('./detail-expenses/detail-expenses.module').then((m)=>m.DetailExpensesModule)},
 
+{path:'add-scarp-entry',loadChildren:()=>import('./add-scrap-entry/add-scrap-entry.module').then((m)=>m.AddScrapEntryModule)},
+{path:'details-scarp-entry/:id',loadChildren:()=>import('./details-scrap-entry/details-scrap-entry.module').then((m)=>m.DetailsScrapEntryModule)},
+{path:'scarp-entry-list',loadChildren:()=>import('./scrap-entry-list/scrap-entry-list.module').then((m)=>m.ScrapEntryListModule)},
+
 ];
 
 @NgModule({

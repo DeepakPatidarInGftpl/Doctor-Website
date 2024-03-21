@@ -140,6 +140,7 @@
                     <li *ngIf="isSalesBill"><a routerLink="/sales/salesbill-list" routerLinkActive="active">Sales Bill </a></li>
                     <li *ngIf="isSalesReturn"><a routerLink="/sales/salesReturnlist" routerLinkActive="active">Sales Return</a></li>
                     <li *ngIf="isSalesOutward"><a routerLink="/sales/salesMaterialOutward-list" routerLinkActive="active">Sales Material Outward</a></li>
+                    <li *ngIf="isSalesOutward"><a routerLink="/sales/advance-booking-list" routerLinkActive="active">Sales Advance Booking</a></li>
                     <!-- <li *ngIf="isPosOrder"><a routerLink="/sales/posOrder" routerLinkActive="active">POS Order</a></li>
                     <li *ngIf="isPosOrder"><a routerLink="/sales/payment" routerLinkActive="active">Payment</a></li>
                     <li *ngIf="isReciept"><a routerLink="/sales/reciept" routerLinkActive="active">Payment</a></li>
@@ -161,6 +162,8 @@
                     <li *ngIf="isExpenseVoucher"><a routerLink="/transaction/expensesList" routerLinkActive="active">Expenses Voucher</a></li>
                     <li *ngIf="isDebit"><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
                     <li *ngIf="isCredit"><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
+                    
+                    <li><a routerLink="/transaction/scarp-entry-list" routerLinkActive="active">Scarp Entry</a></li>
                </ul>
             </li>
             <li class="submenu">
