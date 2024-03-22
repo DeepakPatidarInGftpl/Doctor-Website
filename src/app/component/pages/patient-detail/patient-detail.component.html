@@ -1,0 +1,113 @@
+<div class="container  offset-md-1">
+    <div class="row mb-3">
+        <div class="col-md-5 border mt-4">
+            <div class=" border-right border-left mt-3">
+                <span class="me-2"> <i class="fa-solid fa-house"
+                        style="background-color: #168EC2; color: #ffff; padding: 2px; border-radius: 5px;"></i></span>
+                <span class="h5">In-clinic Appointment</span>
+            </div>
+            <hr>
+            <div class="mt-3 ">
+                <span class="h6"> On Feb 07, 2024</span>
+                <span class="h6 float-end"> At {{slots}} PM</span>
+                <p class="text-primary">Change Date & Time</p>
+            </div>
+
+            <hr>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4" style="max-height: 100px;">
+                            <img src="{{docImage}}"
+                                alt="Doctor Image" style="height: 100px;">
+                        </div>
+                        <div class="col-md-8">
+                            <ul style="list-style: none;">
+                                <li style="font-weight: bold;">
+                                    Dr. {{docname}}
+                                </li>
+                                <li>
+                                    {{doceduca}} - {{docaddress}}
+                                </li>
+                                <li>
+                                    {{docspecility}}
+                                </li>
+                                <li>Experience - {{docexp}} Years</li>
+                                <li> Doctor Fess - Rs {{docfees}}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4" style="max-height: 100px;">
+                            <img src="{{clinicimg}}"
+                                alt="Clinic Image" style="height: 100px;">
+                        </div>
+                        <div class="col-md-8">
+                            <ul style="list-style: none;">
+                                <li style="font-weight: bold;">
+                                    {{clinicnames}}
+                                </li>
+                                <li>
+                                    {{clinicloc}} {{countory}}
+                                </li>
+                                <li>
+                                    <h6 style="color:#39849b;font-size: 14px;"><a [href]="maplocation" target="_blank">Get Directions</a></h6>
+                                </li>
+                                 
+                            </ul>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- Patient Detail -->
+        <div class="col-md-6 border mt-4 ms-4">
+            <h3 class="mt-3">Patient Details</h3>
+            <form [formGroup]="appointmentbookform">
+                <label for="">This in-clinic appointment is for:</label>
+                <div class="form-group mt-4">
+                    <label for="">Full Name</label>
+                    <input type="text" formControlName="name" class="form-control"   class="form-control"
+                    placeholder="Name" [ngClass]="{'is-invalid': appointmentbookform.controls['name'].errors && ck }"
+                    >
+                    <p class="text-danger" *ngIf="appointmentbookform.controls['name'].errors && ck"> Enter Your
+                        Name
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label for="">Mobile Number</label>
+                    <input (keypress)="numberOnly($event)" class="form-control" formControlName="phoneNumber"
+                                [ngClass]="{'is-invalid': appointmentbookform.controls['phoneNumber'].errors && ck }"
+                                placeholder="Mobile Number">
+                            <p class="text-danger" *ngIf="appointmentbookform.controls['phoneNumber'].errors && ck"> Enter Your
+                                Mobile Number
+                            </p>
+                </div>
+                <div class="row my-3">
+                    <div class="col-md-8">
+                        <div class="">
+                             You will receive an OTP shortly.
+                            We will send appointment-related communications on this number.
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <!-- <button type="submit" class="btn btn-block text-light" style="background-color: #168EC2;" routerLink="/doctordetail/patient-detail/appointmentconfirmed">Confirm Clinic visit</button> -->
+                    <button type="submit" (click)="addBookApp()" class="btn btn-block text-light" style="background-color: #168EC2;">Send OTP</button>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>

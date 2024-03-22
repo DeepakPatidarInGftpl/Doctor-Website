@@ -1,0 +1,117 @@
+// .hero_section{
+//     background-image: url(./../../../../assets/img/doctor-doing-a-medical-exam-732x549-thumbnail.avif);
+//     background-position: center;
+//     background-repeat: no-repeat;
+//     background-size: cover;
+
+
+// }
+#back{
+   
+    background-image: url(../../../..//assets/img/hro1.png) ; 
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+.service-item {
+    position: relative;
+    height: 350px;
+    padding: 0 30px;
+    transition: .5s;
+}
+
+.service-item .service-icon {
+    width: 150px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    border-radius: 50%;
+    transform: rotate(-14deg);
+}
+
+.service-item .service-icon i {
+    transform: rotate(15deg);
+}
+
+.service-item a.btn {
+    position: absolute;
+    width: 60px;
+    bottom: -48px;
+    left: 50%;
+    margin-left: -30px;
+    opacity: 0;
+}
+
+.service-item:hover a.btn {
+    bottom: -24px;
+    opacity: 1;
+}
+
+ 
+.navbar-nav.me-auto.mb-2.mb-lg-0 li a{
+    // text-transform: capitalize !important;
+ font-size: 100px;
+}
+// 
+.img1:hover {
+    box-shadow: 0px 0px 15px 0px #d0d0d0;
+    border-color: black;
+}
+
+.foot {
+    height: 100%;
+  }
+  
+  #page-content {
+    flex: 1 0 auto;
+  }
+  
+  /* Other Classes for Page Styling */
+  
+  .foot {
+    background: #007bff;
+    background: linear-gradient(to right, #0062E6, #33AEFF);
+  }
+  .input-group>.form-control, .input-group>.form-floating, .input-group>.form-select {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    padding: 0px;
+    box-shadow: 0.5px 0.5px 0.5px 0.5px rgb(179, 173, 173);
+}
+.input-group-text{
+    box-shadow: 0.5px 0.5px 0.5px 0.5px rgb(179, 173, 173);
+}
+.bg{
+    background: url(https://www.practostatic.com/web-assets/images/maps/default.21a85bf25728.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 800px;
+
+}   
+
+.mat-horizontal-stepper-header {
+    display: flex;
+    height: 72px;
+    overflow: hidden;
+    align-items: center;
+    padding: 0 0px !important;
+    height: var(--mat-stepper-header-height);
+}
+.mat-stepper{
+    padding: 0px !important;
+}
+.mat-step{
+    padding: 0px !important;
+}
+.mat-step-header mat-primary ng-tns-c3676410898-0 mat-horizontal-stepper-header ng-star-inserted{
+    padding: 0px !important;
+}
+.mat-step-header{
+padding: 0px !important;
+}

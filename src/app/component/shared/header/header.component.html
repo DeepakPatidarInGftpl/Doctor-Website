@@ -1,0 +1,107 @@
+<nav class="navbar navbar-expand-lg bg-light" >
+    <div class="container-fluid  ">
+
+        <div class="d-flex ">
+            <!-- logo -->
+            <span><img src="../assets/img/lgo-removebg-preview.png" alt="" style="width: 70px; height:70px;"></span>
+
+            <!-- logo -->
+            <!-- physiowla -->
+            <span class=" pt-2"
+                style="color: #3562f6; font-size: xx-large; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Physio</span>
+            <span class="pt-2"
+                style="color:#5da015; font-size: xx-large; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Wala</span>
+            <!-- physiowla -->
+        </div>
+
+        <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse ps-3" id="navbarSupportedContent">
+            <ul class="navbar-nav  my-2 ">
+
+                <li class="nav-item ">
+                    <a class="nav-link active text-dark" aria-current="page" routerLink="clinic"
+                        style="font-size: large;">
+                        Clinic </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link text-dark" routerLink="physiotherapist" style="font-size: large;">
+                        Physiotherapist </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link text-dark" routerLink="chiropractor" style="font-size: large;">Chiropractor </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" routerLink="homevisit" style="font-size: large;"> Home Visit </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" routerLink="dietician" style="font-size: large;"> Dietician </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" routerLink="yoga" style="font-size: large;"> Yoga </a>
+                </li>
+
+
+
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" routerLink="gymfitnesstrainer" style="font-size: large;"> Gym/Fitness
+                        Trainer </a>
+                </li>
+
+
+
+                <!-- <li class="nav-item dropdown" style="font-size: large;">
+                        <a class="nav-link dropdown-toggle text-dark"  routerLink="#" id="navbarDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            More
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item text-dark" routerLink="#">Osteopath</a></li>
+                            <li>
+                                <hr class="dropdown-divider text-dark"> Accupressurist
+                            </li>
+                            <li><a class="dropdown-item text-dark" routerLink="#">Yoga Trainer</a></li>
+                            <li><a class="dropdown-item text-dark" routerLink="#">SPEECH THERAPIST</a></li>
+                            <li><a class="dropdown-item text-dark" routerLink="#">Audiologist</a></li>
+                            <li>
+                                <hr class="dropdown-divider text-dark"> Psychologis
+                            </li>
+                            <li><a class="dropdown-item text-dark" routerLink="#">ORTHOSIS & PROSTHESIS</a></li>
+                        </ul>
+                    </li> -->
+
+                <li>
+                    <select name="" class="m-1 border-0 mt-1 form-select" style="width:120px; font-size: large;  "
+                        id="">
+                        <option><a class="dropdown-item text-dark" routerLink="#">More</a></option>
+                        <option (click)="osthopathist()">Osteopathist</option>
+                        <option (click)="accupressurist()">Accupressurist</option>
+
+                        <option (click)="specialtherapist()">Speech Tharepist</option>
+                        <option (click)="audiologist()">Audiologist</option>
+                        <option (click)="physiotherapist()">Psychologis</option>
+                        <option (click)="prosthesis()">Orthosis & Prosthesis</option>
+
+
+                    </select>
+                </li>
+
+
+                <!-- drop -->
+                <!-- dropdown -->
+
+
+
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+

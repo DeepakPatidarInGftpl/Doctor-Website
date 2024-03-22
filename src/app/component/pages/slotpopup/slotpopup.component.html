@@ -1,0 +1,95 @@
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-title mx-3 mt-2">Booking Slots</div>
+        <div class="card-body">
+            <div *ngFor="let slot of data;let n = index">
+                <div>
+                    <mat-stepper [linear]="isLinear" #stepper>
+                        <mat-step [stepControl]="firstFormGroup" label="Today Slot No Slot Available">
+                            <div class="mt-2 d-flex">
+                                <h6 class="mt-2 mx-2"><i class="fa-solid fa-cloud-sun"></i>&nbsp;
+                                    Morning
+                                </h6>
+                                <div *ngFor="let slots of slot.morningSession;">
+                                <ng-container *ngIf="slots.morningSessionFrom">
+                                    <input type="button" class="btn btn-outline-primary m-1"
+                                        [value]="slots.morningSessionFrom + ' AM'" (click)="toPatientDetail(slot.doctorId,slots.morningSessionFrom)">
+                                </ng-container>
+                            </div> <p style="margin-top: 10px;">--</p>
+                            <div *ngFor="let slots of slot.morningSession;">
+                                <ng-container *ngIf="slots.morningSessionTo">
+                                    <input type="button" class="btn btn-outline-primary m-1"
+                                        [value]="slots.morningSessionTo + ' AM'" (click)="toPatientDetail(slot.doctorId,slots.morningSessionTo)">
+                                </ng-container>
+                            </div>
+                            </div>
+                        </mat-step>
+                        <mat-step [stepControl]="secondFormGroup"
+                            label="Tomorrow Slot 10 Slot Available">
+                            <div class="mt-2 d-flex">
+                                <h6 class="mt-2 mx-2"><i
+                                        class="fa-solid fa-sun-bright"></i>&nbsp;Afternoon
+                                </h6>
+                                <div *ngFor="let slots of slot.afternoonSession;">
+                                <ng-container *ngIf="slots.afternoonTimeFrom">
+                                    <input type="button" class="btn btn-outline-primary m-1"
+                                        [value]="slots.afternoonTimeFrom + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.afternoonTimeFrom)">
+                                </ng-container>
+                            </div>
+                            <p style="margin-top: 10px;">--</p>
+                            <div *ngFor="let slots of slot.afternoonSession;">
+                                <ng-container *ngIf="slots.afternoonTimeTo">
+                                    <input type="button" class="btn btn-outline-primary m-1"
+                                        [value]="slots.afternoonTimeTo + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.afternoonTimeTo)">
+                                </ng-container>
+                            </div>
+                            </div>
+                        </mat-step>
+                        <mat-step label="16 Feb 2024 Slot 10 Slot Available">
+        
+                            <div class="mt-2 d-flex">
+                                <h6 class="mt-2 mx-2"><i class="fa-solid fa-sun-haze"></i>&nbsp;Evening
+                                </h6>
+                                <div *ngFor="let slots of slot.eveningSession;">
+                                <ng-container *ngIf="slots.eveningTimeFrom">
+                                    <input type="button" class="btn btn-outline-primary m-1"
+                                        [value]="slots.eveningTimeFrom + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.eveningTimeFrom)">
+                                </ng-container>
+                                </div>
+                                <p style="margin-top: 10px;">--</p>
+                                <div *ngFor="let slots of slot.eveningSession;">
+                                    <ng-container *ngIf="slots.eveningTimeTo">
+                                        <input type="button" class="btn btn-outline-primary m-1"
+                                            [value]="slots.eveningTimeTo + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.eveningTimeTo)">
+                                    </ng-container>
+                                    </div>
+                            </div>
+                        </mat-step>
+                        <mat-step label="Night Slot 10 Slot Available">
+        
+                            <div class="mt-2 d-flex">
+                                <h6 class="mt-2 mx-2"><i class="fa-solid fa-moon-stars"></i>&nbsp;Night
+                                </h6>
+                                <div *ngFor="let slots of slot.nightSession;">
+                                <ng-container *ngIf="slots.nightTimeFrom">
+                                    <input type="button" class="btn btn-outline-primary m-1"
+                                        [value]="slots.nightTimeFrom + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.nightTimeFrom)">
+                                </ng-container>
+                                </div>
+                                <p style="margin-top: 10px;">--</p>
+                                <div *ngFor="let slots of slot.nightSession;">
+                                    <ng-container *ngIf="slots.nightTimeTo">
+                                        <input type="button" class="btn btn-outline-primary m-1"
+                                            [value]="slots.nightTimeTo + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.nightTimeTo)">
+                                    </ng-container>
+                                    </div>
+                            </div>
+                        </mat-step>
+                    </mat-stepper>
+                </div>
+        
+            </div>
+        </div>
+    </div>
+    <button (click)="Slotcancel()"  type="button" class="btn btn-light mt-2 m-0" style="float: right !important;">Cancel</button>
+</div>

@@ -1,0 +1,181 @@
+// .hero_section{
+//     background-image: url(./../../../../assets/img/doctor-doing-a-medical-exam-732x549-thumbnail.avif);
+//     background-position: center;
+//     background-repeat: no-repeat;
+//     background-size: cover;
+//1.275rem 0.75rem
+
+// }
+#back{
+   
+  background-image: url(../../../..//assets/img/hro1.png) ; 
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.input-group-text{
+padding:1.25rem 0.75rem;
+box-shadow: 0.5px 0.5px 0.5px 0.5px rgb(179, 173, 173) !important;
+}
+
+.service-item {
+  position: relative;
+  height: 350px;
+  padding: 0 30px;
+  transition: .5s;
+}
+
+.service-item .service-icon {
+  width: 150px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  border-radius: 50%;
+  transform: rotate(-14deg);
+}
+
+.service-item .service-icon i {
+  transform: rotate(15deg);
+}
+
+.service-item a.btn {
+  position: absolute;
+  width: 60px;
+  bottom: -48px;
+  left: 50%;
+  margin-left: -30px;
+  opacity: 0;
+}
+
+.service-item:hover a.btn {
+  bottom: -24px;
+  opacity: 1;
+}
+
+
+.navbar-nav.me-auto.mb-2.mb-lg-0 li a{
+  // text-transform: capitalize !important;
+font-size: 100px;
+}
+// 
+.img1:hover {
+  box-shadow: 0px 0px 15px 0px #d0d0d0;
+  border-color: black;
+}
+
+.foot {
+  height: 100%;
+}
+
+#page-content {
+  flex: 1 0 auto;
+}
+
+/* Other Classes for Page Styling */
+
+.foot {
+  background: #007bff;
+  background: linear-gradient(to right, #0062E6, #33AEFF);
+}
+#back{
+   
+    background-image: url(../../../..//assets/img/hro1.png) ; 
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+.service-item {
+    position: relative;
+    height: 350px;
+    padding: 0 30px;
+    transition: .5s;
+}
+
+.service-item .service-icon {
+    width: 150px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    border-radius: 50%;
+    transform: rotate(-14deg);
+}
+
+.service-item .service-icon i {
+    transform: rotate(15deg);
+}
+
+.service-item a.btn {
+    position: absolute;
+    width: 60px;
+    bottom: -48px;
+    left: 50%;
+    margin-left: -30px;
+    opacity: 0;
+}
+
+.service-item:hover a.btn {
+    bottom: -24px;
+    opacity: 1;
+}
+
+ 
+.navbar-nav.me-auto.mb-2.mb-lg-0 li a{
+    // text-transform: capitalize !important;
+ font-size: 100px;
+}
+// 
+.img1:hover {
+    box-shadow: 0px 0px 15px 0px #d0d0d0;
+    border-color: black;
+}
+
+.foot {
+    height: 100%;
+  }
+  
+  #page-content {
+    flex: 1 0 auto;
+  }
+  
+  /* Other Classes for Page Styling */
+  
+  .foot {
+    background: #007bff;
+    background: linear-gradient(to right, #0062E6, #33AEFF);
+  }
+  .input-group>.form-control, .input-group>.form-floating, .input-group>.form-select {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    padding: 0px;
+   
+}
+.input-group-text{
+    box-shadow: 0.5px 0.5px 0.5px 0.5px rgb(179, 173, 173) ;
+    height: 41.2px !important;
+}
+.bg{
+    background: url(https://www.practostatic.com/web-assets/images/maps/default.21a85bf25728.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 800px;
+
+}   
+.mat-stepper-horizontal {
+    margin-top: 8px;
+  }
+  
+  .mat-mdc-form-field {
+    margin-top: 16px;
+  }
+  .ng-autocomplete {
+    width: 600px !important;
+    height: 41.2px !important;
+    box-shadow: 0.5px 0px 0px 0.1px rgb(179, 173, 173);
+  }

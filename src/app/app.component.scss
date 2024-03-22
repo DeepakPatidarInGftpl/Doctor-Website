@@ -1,0 +1,47 @@
+nav1 {
+  background-color: white !important;
+  color: white !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  height: 50px !important;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px !important;
+}
+
+.middile {
+  margin-right: 4rem !important;
+}
+
+.middile-hide {
+  margin-right: 4rem !important;
+}
+
+.end {
+  margin-top: 0.5rem !important;
+}
+
+.set_icon_nav {
+  font-size: 25px !important;
+  color: #00003E !important;
+  letter-spacing: 33px !important;
+}
+
+.set_icon_nav_first {
+  color: #00003E !important;
+  font-size: 26px !important;
+
+}
+
+.set_name {
+  font-size: 22px;
+}
+
+@media screen and (min-width: 480px) {}
+
+// form
+@media only screen and (max-width: 820px) {
+  #remove_section {
+    display: none;
+  }
+
+}

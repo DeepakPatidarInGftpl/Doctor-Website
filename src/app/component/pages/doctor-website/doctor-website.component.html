@@ -1,0 +1,1313 @@
+<!-- Hero Start -->
+<div id="carouselExampleDark" class="carousel carousel-dark slide border " data-bs-ride="carousel" >
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner" >
+      <div class="carousel-item active" data-bs-interval="3000">
+
+        <img src="../../../../assets/img/slidderm (2).png" class="d-block w-100" alt="..." >
+        <div class="carousel-caption d-none d-md-block ">
+            <h1 class="text-center text-light" >Best Healthcare Solution In Your City</h1>
+
+          </div>
+      </div>
+      <div class="carousel-item" data-bs-interval="2000">
+        <img src="../../../../assets/img/slidderm (3).png" class="d-block w-100" alt="..." >
+        <div class="carousel-caption d-none d-md-block">
+            <h1 class="text-center text-light" >Empowering Health and Mobility Through Physiotherapy</h1>
+
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="../../../../assets/img/slidderm (1).png" class="d-block w-100" alt="..." >
+        <div class="carousel-caption d-none d-md-block">
+            <h1 class="text-center text-white  " >Prime Physiotherapy</h1>
+
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+<!-- Hero End -->
+
+<div class="container mt-5">
+    <form [formGroup]="addDoctor">
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </span>
+
+                    <div class="form-control" placeholder="Search location" aria-label="Username"
+                        aria-describedby="basic-addon1">
+                        <ng-autocomplete [data]="allLocation" [searchKeyword]="keyword" placeholder="Select City"
+                            (selected)='selectEvent($event)' (inputChanged)='onChangeSearch($event)'
+                            (inputFocused)='onFocused($event)' [itemTemplate]="itemTemplate"
+                            [notFoundTemplate]="notFoundTemplate">
+
+                        </ng-autocomplete>
+
+                        <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item"></a>
+                        </ng-template>
+
+                        <ng-template #notFoundTemplate let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                        </ng-template>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <div class="col-md-9">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <!-- <select class="form-control" (change)="onChange($event)" style="padding: 8px;"
+                      placeholder="Select Category" aria-label="Username" aria-describedby="basic-addon1"
+                        formControlName="category">
+                        <option disabled>Choose Your Category</option>
+                        <option *ngFor="let cate of doctorData">
+                            {{ cate }}
+                        </option>
+                    </select> -->
+                    <div class="form-control" placeholder="Search Category" aria-label="Search"
+                    aria-describedby="basic-addon1">
+                    <ng-autocomplete [data]="doctorData" [searchKeyword]="keyword" placeholder="Select Category"
+                        formControlName="category" (selected)='onChange($event)' (inputChanged)='onChangeSearch($event)'
+                        (inputFocused)='onFocused($event)' [itemTemplate]="itemTemplate"
+                        [notFoundTemplate]="notFoundTemplate">
+
+                    </ng-autocomplete>
+
+                    <ng-template #itemTemplate let-item>
+                        <a [innerHTML]="item"></a>
+                    </ng-template>
+
+                    <ng-template #notFoundTemplate let-notFound>
+                        <div [innerHTML]="notFound"></div>
+                    </ng-template>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<div *ngIf="!abc==true">
+    <div class="table-responsive mt-4 mx-4">
+        <table style="width: 100%;">
+            <tr>
+                <th> <div class="bg-light rounded overflow-hidden shadow m-2 " style="height: 160px; width: 174px;">
+                    <img class="img-fluid w-100"
+                        src="https://media.istockphoto.com/id/1292015214/photo/portrait-female-doctor-stock-photo.webp?b=1&s=170667a&w=0&k=20&c=ZytFfGECNdiYIgNN9VPXw6Q0xF0vzTlSQVYGMmYEeRM="
+                        alt="">
+                    <div class="p-1">
+                        <h6 class="card-title text-center" style="height: 40px; margin-top: 0;
+                        margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
+              line-height: 1.2;
+              color: #1D2A4D;">Find Expert Near You</h6>
+
+                    </div>
+
+                </div></th>
+                <th>   <div class="bg-light rounded overflow-hidden shadow m-2" style="height: 160px; width: 174px;">
+                    <img class="img-fluid w-100"
+                        src="https://media.istockphoto.com/id/1309747330/photo/online-medical-consultation-female-doctor-talking-to-patient-on-laptop-at-clinic-medic-making.jpg?s=612x612&w=0&k=20&c=92CmNKJ9irWVAA2Dk1TxFHF6S9hECnzNPDryF-Q2UsE="
+                        alt="">
+                    <div class="p-1">
+                        <h6 class="card-title text-center " style="height: 40px; margin-top: 0;
+                        margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
+              line-height: 1.2;
+              color: #1D2A4D;">Book Instant Video Consultation</h6>
+
+                    </div>
+                </div></th>
+                <th> <div class="bg-light rounded overflow-hidden shadow m-2 " style="height: 160px; width: 174px;">
+                    <img class="img-fluid w-100"
+                    src="https://media.istockphoto.com/id/1288223603/photo/online-tv-home-fitness-workout.jpg?s=612x612&w=0&k=20&c=iphPXWCyEpTdSZJoVgzyvqV_tYRdRawtyWvMU3wJaV4="
+                    alt="">
+                <div class="p-1">
+                    <h6 class="card-title text-center " style="height: 40px; margin-top: 0;
+                    margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
+          line-height: 1.2;
+          color: #1D2A4D;">Video Exercise</h6>
+
+                </div>
+
+                </div></th>
+
+                <th> <div class="bg-light rounded overflow-hidden shadow m-2 " style="height: 160px; width: 174px;">
+                    <img class="img-fluid w-100"
+                                src="https://media.istockphoto.com/id/1002745246/photo/package-delivered-successfully.jpg?s=612x612&w=0&k=20&c=nv1r3qzDWGH9NEVLgPvRHrjlYyogKsOew1DCDtd9Wck="
+                                alt="">
+                            <div class="p-1">
+                                <h6 class="card-title text-center " style="height: 40px; margin-top: 0;
+                                margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
+                      line-height: 1.2;
+                      color: #1D2A4D;">PhysioMart <br> <span style="font-size: small;">Doorstep Delivery</span></h6>
+
+
+                            </div>
+
+                </div></th>
+
+                <th> <div class="bg-light rounded overflow-hidden shadow m-2 " style="height: 160px; width: 174px;">
+                    <img class="img-fluid w-100"
+                        src="https://media.istockphoto.com/id/1352283381/photo/doctor-meeting-with-a-senior-patient.jpg?s=612x612&w=0&k=20&c=Uflv-9TYwYICRhg9HDfThqEtpZ4zF_erMpjWxqUafXU="
+                        alt="">
+                    <div class="p-1">
+                        <h6 class="card-title text-center" style="height: 40px; margin-top: 0;
+                        margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
+              line-height: 1.2;
+              color: #1D2A4D;">Super Speciality Doctor</h6>
+
+                    </div>
+
+                </div></th>
+
+
+                <th> <div class="bg-light rounded overflow-hidden shadow m-2 " style="height: 160px; width: 174px;">
+                    <img class="img-fluid w-100"
+                    src="https://media.istockphoto.com/id/1183974981/photo/doctor-taking-real-blood-samples-from-a-patient-medicine-and-science-concept.jpg?s=612x612&w=0&k=20&c=T5b136RZAIS56OQsJ-hynPzqRlH3s_n85uLCNP9VTU8="
+                    alt="">
+                <div class="p-1">
+                    <h6 class="card-title text-center " style="height: 40px; margin-top: 0;
+                    margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
+          line-height: 1.2;
+          color: #1D2A4D;">Lab & Radiology <br> <span style="font-size: small;"> Sample pickup at home</span></h6>
+
+                </div>
+
+                </div></th>
+
+                <th> <div class="bg-light rounded overflow-hidden shadow m-2 " style="height: 160px; width: 174px;">
+                    <img class="img-fluid w-100"
+                    src="https://media.istockphoto.com/id/1286824505/photo/female-healthcare-worker-is-in-home-visit-to-an-older-woman-with-physical-disabilities.jpg?s=612x612&w=0&k=20&c=TNILZqCUiARkkzKnqYjuQQ9XMkYDL4uam1No4BSXSh8="
+                    alt="">
+                <div class="p-1">
+                    <h6 class="card-title text-center" style="height: 40px; margin-top: 0;
+                    margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
+          line-height: 1.2;
+          color: #1D2A4D;">Home Visit
+                        therapist</h6>
+
+                </div>
+
+                </div></th>
+
+
+            </tr>
+        </table>
+        </div>
+        <!-- Services -->
+
+
+        <!-- Consult Start -->
+        <div class="container-fluid my-2 ">
+
+            <div class="text-center mx-auto mb-5" style="max-width: 500px;">
+                <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5"></h5>
+                <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5"
+                    style="color: #13C5DD !important;">Consultant</h5>
+                <h2 class="" style="margin-top: 0;
+                margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
+        line-height: 1.2;
+        color: #1D2A4D;">Consult Top Expert for Your Physical Health</h2>
+            </div>
+
+          <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            </div>
+                            <div class="carousel-inner">
+                              <div class="carousel-item active">
+
+                        <div class="row g-5">
+
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(255, 209, 229); height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/svg.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                    <b class="mb-3" >Back Pain</b>
+
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(153, 242, 224); height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/slip.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3" >Slip Disk</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(149, 224, 242); height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/thigh.png" alt="" width="70px" class="img-fluid ">
+
+                                    </div>
+                                     <b class="mb-3" >Sciaticha</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(190, 242, 153); height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/neck.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3" >Neck Pain</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(226, 205, 236); height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/cervical.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3" >Cervical</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(242, 224, 153); height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/bone.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3" >Knee Pian</b>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                              </div>
+                              <div class="carousel-item">
+
+                        <div class="row g-5">
+
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(242, 153, 195); height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/hurt.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3" >Hip Pian</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(150, 226, 223);  height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/body.png" alt="" width="70px" class="img-fluid ">
+
+                                    </div>
+                                     <b class="mb-3" >Shoulder Pain</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(204, 197, 237);  height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/shoulder.png" alt="" width="70px" class="img-fluid ">
+
+                                    </div>
+                                     <b class="mb-3" >Frozon Shoulder</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center" style="background-color: rgb(241, 209, 179);  height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/Sports in.png" alt="" width="70px" class="img-fluid ">
+
+                                    </div>
+                                     <b class="mb-3" >Tennis Elbow</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(190, 243, 149);  height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/wrist.png" alt="" width="70px" class="img-fluid ">
+
+                                    </div>
+                                     <b class="mb-3" >Wrist Pain</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(255, 151, 151);  height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/ankle-brace.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3" >Ankle Sprain</b>
+
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                              </div>
+                              <div class="carousel-item">
+
+                        <div class="row g-5">
+
+
+
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center" style="background-color: rgb(164, 241, 228);  height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/injury.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3" >Sports Injury</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(238, 188, 147);  height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/face.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3 " >Stroke/ <br> Paralysis</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center" style="background-color: rgb(173, 225, 251) ;  height: 20vh; ">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/hospital-bed.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3" >Post Operative Rehab </b>
+
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center" style="background-color: rgba(235, 210, 102, 0.854);  height: 20vh;">
+                                    <div class="">
+                                        <img src="../../../../assets/icon/muscular-man.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3" >Muscular Distrophy</b>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                <div
+                                    class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center" style="background-color: rgb(207, 202, 243);  height: 20vh;">
+                                    <div class=" ">
+                                        <img src="../../../../assets/icon/neurology.png" alt="" width="70px" class="img-fluid ">
+                                    </div>
+                                     <b class="mb-3" >NeuroLogical Disorders</b>
+
+
+                                </div>
+
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                            <div
+                            class="rounded d-flex flex-column align-items-center justify-content-center text-center " style="background-color: rgb(220, 242, 135);  height: 20vh;"  >
+                            <div class="">
+                                <img src="../../../../assets/icon/newborn.png" alt="" width="70px" class="img-fluid ">
+                            </div>
+                             <b class="mb-3" >Pre & Post Partum</b>
+
+                            <!-- <a class="btn btn-lg btn-primary rounded-pill" href="">
+                                <i class="bi bi-arrow-right"></i>
+                            </a> -->
+                        </div>
+                            </div>
+
+                        </div>
+                              </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon  bg-black" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                              <span class="carousel-control-next-icon  bg-black" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
+                          </div>
+
+
+
+
+
+
+
+        </div>
+        <!-- Consult End -->
+
+
+
+        <!-- Team Start -->
+        <div class="container-fluid py-5">
+            <div class="container">
+                <div class="text-center mx-auto mb-5" style="max-width: 500px;">
+                    <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5"
+                        style="color: #13C5DD !important;">
+                        Book an appointment for an in-clinic consultation </h5>
+                    <h2 class="2"  style="margin-top: 0;
+                    margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
+            line-height: 1.2;
+            color: #1D2A4D;">Find experienced doctors across all specialties</h2>
+                </div>
+                <div class="row">
+
+                    <div id="carouselExample" class="carousel slide">
+                        <div class="carousel-inner">
+                          <div class="carousel-item active">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-6 mt-2 ">
+                                    <div class="card shadow "style="height: 300px;">
+                                        <img src="../../../../assets/img/special1.jpeg" style="height: 150px;" class="card-img-top"  alt="...">
+                                        <div class="card-body">
+                                          <h6 class="card-title text-info" style="font-size: 18px;">CHIROPRACTOR</h6>
+                                          <p class="card-text" style="font-size: 15px;"><b>Highly Experienced Doctors</b> </p>
+
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-6 mt-2">
+                                    <div class="card shadow" style="height: 300px;">
+                                        <img src="../../../../assets/img/special2.jpg"   style="height: 150px;" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                          <h6 class="card-title text-info"  style="font-size: 18px;">ORTHOPEDIC PHYSIOTHERAPY</h6>
+                                          <p class="card-text" style="font-size: 15px;"><b>Highly Experienced Doctors</b></p>
+
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-6 mt-2">
+                                    <div class="card shadow"style="height: 300px;">
+                                        <img src="../../../../assets/img/special3.jpg"  style="height: 150px;" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                          <h6 class="card-title text-info" style="font-size: 18px;">NEURO  PHYSIOTHERAPY</h6>
+                                          <p class="card-text" style="font-size: 15px;"><b>Highly Experienced Doctors</b> </p>
+
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-6 mt-2">
+                                    <div class="card shadow " style="height: 300px;">
+                                        <img src="../../../../assets/img/special4.webp"  style="height: 150px;" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                          <h5 class="card-title text-info" style="font-size: 18px;">PEDIATRIC  PHYSIOTHERAPY</h5>
+                                          <p class="card-text" style="font-size: 15px;"><b> Highly Experienced Doctors</b> </p>
+
+                                        </div>
+                                      </div>
+                                </div>
+                            </div>
+                          </div>
+                          <div class="carousel-item">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-6 mt-2">
+                                    <div class="card"style="height: 300px;">
+                                        <img src="../../../../assets/img/special5.jpg" style="height: 150px;" class="card-img-top"  alt="...">
+                                        <div class="card-body">
+                                          <h5 class="card-title text-info" style="font-size: 18px;">SPORTS  PHYSIOTHERAPY</h5>
+                                          <p class="card-text" style="font-size: 15px;"><b> Highly Experienced Doctors</b> </p>
+
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-6 mt-2">
+                                    <div class="card shadow" style="height: 300px;">
+                                        <img src="../../../../assets/img/special6.jpg"   style="height: 150px;" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                          <h5 class="card-title text-info"  style="font-size: 15px;">CARDIO-PULMONARY  PHYSIOTHERAPY</h5>
+                                          <p class="card-text" style="font-size: 15px;"><b>  Highly Experienced Doctors</b></p>
+
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-6 mt-2">
+                                    <div class="card shadow" style="height: 300px;">
+                                        <img src="../../../../assets/img/special7.png"  style="height: 150px;" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                          <h5 class="card-title text-info" style="font-size: 20px;">GYNE</h5>
+                                          <p class="card-text" style="font-size: 15px;"><b>Child Specialists and Doctors for Infant</b> </p>
+
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-6 mt-2">
+                                    <div class="card shadow" style="height: 300px;">
+                                        <img src="../../../../assets/img/special8.jpg"  style="height: 150px;" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                          <h5 class="card-title text-info" style="font-size: 20px;">OTHERS</h5>
+                                          <p class="card-text" style="font-size: 15px;"><b>Highly Experienced Doctors</b> </p>
+
+                                        </div>
+                                      </div>
+                                </div>
+
+                            </div>
+                          </div>
+
+
+
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                          <span class="carousel-control-prev-icon  bg-black" aria-hidden="true"></span>
+                          <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                          <span class="carousel-control-next-icon  bg-black" aria-hidden="true"></span>
+                          <span class="visually-hidden">Next</span>
+                        </button>
+                      </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- Team End -->
+
+
+        <!-- Pricing Plan Start -->
+        <div class="container-fluid  py-5">
+            <div class="container">
+                <div class="text-center mx-auto mb-5" style="max-width: 800px;">
+                    <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5"  style="color: #13C5DD !important;">Book Appointment For
+                        All Therapies</h5>
+                    <h2 class="" style="margin-top: 0;
+                    margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
+            line-height: 1.2;
+            color: #1D2A4D;">Awesome Medical Programs</h2>
+                </div>
+                </div>
+            </div>
+
+          <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active" data-bs-interval="10000">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/electro.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">ELECTROTHERAPY TREATMENT</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/therapy2.jpg" alt=""
+                                style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">HYDROTHERAPY</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info  text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/physio-tharepy.jpg" alt=""
+                                style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">PHYSIOTHERAPY</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info  text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="2000">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/therapy9.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">CUPPING & Hijama</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info  text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/therapy5.jpg" alt=""
+                                style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">BODY SPA</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info  text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/therapy6.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">DEEP TISSUE MASSAGE</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info  text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+              </div>
+              <div class="carousel-item">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/therapy7.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">IASTM</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/therapy8.jpg" alt=""
+                                style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">DRY-NEEDLING</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info  text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/accu-tharepy-1.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">ACCUPRESSUURE</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+
+                 </div>
+              </div>
+
+              <div class="carousel-item">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/laser-tharepy.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">LYSER THAREPY</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/chiropetic-tharepy.jpg" alt=""
+                                style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">CHIROPRACTIC</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info  text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                  <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/osteo-tharepy.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">OSTEOPATHY</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+              </div>
+
+              <div class="carousel-item">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/sportstaping-tharepy.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">SPORTS TAPING</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/SPINEDECOMPRESSION-tharepy.jpg" alt=""
+                                style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">SPINE DECOMPRESSION</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info  text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                  <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/accu-tharepy.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark"> ACCUPRESSURE</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+              </div>
+
+              <div class="carousel-item">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/yoga-tharepy.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">YOGA</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/personaltraining-tharepy.jpg" alt=""
+                                style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">PERSONAL TRAINING</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info  text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="bg-light rounded text-center">
+                            <div class="position-relative text-center" style="height: 200px; width:410px;">
+                                <img class="img-fluid rounded-top" src="../../../../assets/img/therapy4.jpg" alt=""
+                                    style="height: 100%; width:100%">
+                                <div
+                                    class="position-absolute w-100 h-100 top-50 start-50 translate-middle rounded-top d-flex flex-column align-items-center justify-content-center">
+                                </div>
+                            </div>
+                            <div class="text-center py-5">
+                                <h4 class="text-dark">SAUNA-STEAM</h4>
+                                <p>Highly Experienced Doctors</p>
+                                <p>Highest Success Rate</p>
+                                <p>Telephone Service</p>
+                                <a href="" class="btn btn-info text-light rounded-pill py-3 px-5 my-2">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+
+                 </div>
+              </div>
+            </div>
+            <button class="carousel-control-prev text-dark" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon bg-black" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next text-dark" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+              <span class="carousel-control-next-icon text-dark bg-black"  aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        <!-- Pricing Plan End -->
+        <!-- Mobile Section -->
+<div class="container mt-5 mb-5">
+    <div class="row" >
+        <div class="col-md-5 text-center">
+             <img src="../../../../assets/img/phisioApp-removebg-preview.png" style="height: 500px; width: 400px;" >
+        </div>
+        <div class="col-md-7 mt-5">
+            <h3>Download the PhysioWala app</h3>
+            <p style="font-size: 15px;">Access video consultation with India’s top doctors on the Physiowala app. Connect with doctors online, available 24/7, from the comfort of your home.</p>
+
+            <h6 class="mt-5">Get the link to download the app</h6>
+            <form [formGroup]="getlinkForm">
+            <div class="d-flex justify-content-between mt-2">
+                
+
+                <input type="number"  formControlName="getlink" class="form-control mx-2" placeholder="Enter Mobile Number">
+                <button type="submit" (click)="sendsubmit()" style="background-color: #13C5DD; white-space: nowrap;"  class="btn btn-outline-light ">Send SMS</button>
+           
+              </div>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+<div id="carouselExampleDark1" class="carousel carousel-dark slide border " data-bs-ride="carousel" >
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleDark1" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleDark1" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleDark1" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner" >
+      <div class="carousel-item active" data-bs-interval="3000" >
+
+        <img src="../../../../assets/img/add1 (1).png" class="d-block w-100" alt="..." >
+        <div class="carousel-caption d-none d-md-block ">
+
+
+          </div>
+      </div>
+      <div class="carousel-item" data-bs-interval="2000" >
+        <img src="../../../../assets/img/add1 (2).png" class="d-block w-100" alt="..." >
+        <div class="carousel-caption d-none d-md-block">
+
+
+        </div>
+      </div>
+      <div class="carousel-item" >
+        <img src="../../../../assets/img/add1 (4).png" class="d-block w-100" alt="..." >
+        <div class="carousel-caption d-none d-md-block">
+
+
+        </div>
+      </div>
+
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark1" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark1" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+<!-- Mobile End -->
+</div>
+<!--end Services -->
+
+<!-- Mobile Section -->
+<div *ngIf="abc==true">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="container-fluid" style="background-color: rgb(49, 44, 194);">
+                <div class="row  p-2">
+                    <div class="col-lg-3 col-md-3  my-1 ">
+                       
+                        <select name="" (change)="handleGender($event)"  class="m-1 border-0 mt-1 form-select"   style="width: 15vw; font-size: medium;text-align: center !important;"
+                        id="" Placeholder="Gender">
+                        <option value="" disabled>Please Select</option>
+                        <option value="">Gender</option>
+                        <option value="Male">Male Doctor</option>
+                        <option value="Female">Female Doctor</option>
+                    </select>
+                    </div>
+
+                    
+                   
+                    <div class="col-lg-3 col-md-3  my-1 ">
+                       
+                        <select name="" class="m-1 border-0 mt-1 form-select"   style="width: 15vw; font-size: medium;text-align: center !important;"
+                        id="" Placeholder="Patient Stories">
+                        <option value="" disabled>Please Select</option>
+                        <option value="">Patient Stories</option>
+                        <option value="Male Doctor">20+ Patient Stories</option>
+                        <option value="Female Doctor">70+ Patient Stories</option>
+                        <option value="Female Doctor">140+ Patient Stories</option>
+                    </select>
+                    </div>
+
+
+                    <div class="col-lg-3 col-md-3  my-1 ">
+                       
+                        <select name="" (change)="handleonChange($event)" class="m-1 border-0 mt-1 form-select"   style="width: 15vw; font-size: medium;text-align: center !important;"
+                        id="" Placeholder="Experience">
+                        <option value="" disabled>Please Select</option>
+                        <option value="">Experience</option>
+                        <option value="2Y">2+ Years of experience</option>
+                        <option value="5Y">5+ Years of experience</option>
+                        <option value="10Y">10+ Years of experience</option>
+                        <option value="20Y">20+ Years of experience</option>
+                    </select>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3  my-1 ">
+                       
+                        <select name="" class="m-1 border-0 mt-1 form-select"   style="width: 15vw; font-size: medium;text-align: center !important;"
+                        id="" Placeholder="Experience">
+                        <option value="" disabled>Please Select</option>
+                        <option value="">Relevance</option>
+                        <option value="Male Doctor">Number of patient stories - High to low</option>
+                        <option value="Female Doctor">Experience - High to Low</option>
+                        <option value="Female Doctor">Consultation Fee - Low to High</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="card border-0 ">
+                    <div class="card-body">
+                        <h4 class="mt-2 mb-2">{{(result.length)}} doctors available in {{doccity}}</h4>
+                        <label for=""><img
+                                src="https://www.practostatic.com/web-assets/images/verified.1f87346e730e.svg"
+                                class="mx-1" alt="">Book appointments with minimum wait-time & verified doctor
+                            details</label>
+                        <hr>
+                        <div class="row" *ngFor="let doctor of result; index as i">
+                            <div class="col-md-7">
+                                <div class="heading d-flex justify-content-start ">
+                                    <div class="left-side">
+                                        <img src="{{doctor.profilePicture}}" style="width: 140px;
+                                            height: 140px; border-radius: 50%;" alt="">
+                                        <br>
+                                        <p (click)="viewProfile(doctor._id)"
+                                            class="left-side justify-content-center text-center">
+                                            <u style="font-weight: 500;cursor: pointer;margin-top: 10px;">Veiw
+                                                Profile</u>
+                                        </p>
+                                    </div>
+
+                                    <div class="right-section mt-2 mx-4">
+                                        <h2 class="setborder" (click)="viewProfile(doctor._id)"
+                                            style="color: #199fd9;cursor: pointer;">
+                                            <u>{{doctor.firstName}} {{doctor.lastName}}</u>
+                                        </h2>
+                                        <h6 class="text-secondary "> {{doctor.speciality}}</h6>
+                                        <h6 class="text-secondary ">{{doctor.expreience}} experience overall</h6>
+                                        <h6>{{doctor.clinicAddress}} {{doctor.city}}</h6>
+                                        <span class="text-secondary"> {{doctor.clinicName}} &
+                                            {{doctor.doctorsclinic}}</span>
+                                        <h6 class="text-secondary" *ngFor="let cdata of doctor.details" >₹ {{cdata.clinicPrice}} Consultation fee at clinic</h6>
+                                        <a (click)="viewProfile(doctor._id)"> <b>143 Patient Stories</b></a>
+                                        <hr style=" border-top: 2px dotted rgb(170, 163, 163);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5 mt-5 pt-5">
+                                <div class="mt-5">
+                                <div class="btn float-end mt-2">
+                                    <label for=""> <i class="fa-solid fa-calendar-days text-success "></i> Available
+                                        Today</label>
+
+                                </div>
+    
+                                <div class="btn float-end ">
+                                    <button (click)="bookyourapp(doctor._id)" class="btn btn-primary border-0 "
+                                        style="font-size: 14px;width: 212px;height: 42px;padding: 4px 0;background-color: #199fd9;"
+                                        type="button">Book Clinic Visit
+                                        <div style="font-size: 11px;">No Booking Fee</div>
+                                    </button>
+                                </div>
+                            </div>
+                                <br>
+                                <!-- <div>
+                                <div class="btn float-end mt-2">
+                                    <label for=""> <i class="fa-solid fa-calendar-days text-success "></i> Available
+                                        Today</label>
+
+                                </div>
+                                <div class="btn float-end ">
+                                    <button (click)="bookyourapp(doctor._id)" class="btn btn-outline-success"
+                                    style="font-size: 14px;width: 212px;height: 42px;padding: 4px 0;border-color:2px solid #8a45e6;"
+                                    type="button">Book Video Consult
+                                    
+                                </button>
+                                    <br><button type="button" class="btn btn-outline-secondary mt-2 w-100 ">Book Video Consult</button>
+                                </div>
+                            </div> -->
+                                <br>
+                            </div>
+                            <hr>
+                            <div mat-dialog-actions #loggedOut>
+                                <div *ngFor="let slot of doctorname;let n = index">
+                                    <div *ngIf="slot.doctorId">
+                                        <mat-stepper [linear]="isLinear" #stepper>
+                                            <mat-step [stepControl]="firstFormGroup" label="Today Slot No Slot Available">
+                                                <div class="mt-2 d-flex">
+                                                    <h6 class="mt-2 mx-2"><i class="fa-solid fa-cloud-sun"></i>&nbsp;
+                                                        Morning
+                                                    </h6>
+                                                    <ng-container>
+                                                        <input type="button" class="btn btn-outline-primary m-1"
+                                                            [value]="slot.morningSessionFrom" (click)="toPatientDetail()">
+                                                    </ng-container>
+
+                                                </div>
+                                            </mat-step>
+                                            <mat-step [stepControl]="secondFormGroup"
+                                                label="Tomorrow Slot 10 Slot Available">
+                                                <div class="mt-2 d-flex">
+                                                    <h6 class="mt-2 mx-2"><i
+                                                            class="fa-solid fa-sun-bright"></i>&nbsp;Afternoon
+                                                    </h6>
+                                                    <ng-container>
+                                                        <input type="button" class="btn btn-outline-primary m-1"
+                                                            [value]="slot.afternoonTimeFrom" (click)="toPatientDetail()">
+                                                    </ng-container>
+                                                </div>
+                                            </mat-step>
+                                            <mat-step label="16 Feb 2024 Slot 10 Slot Available">
+
+                                                <div class="mt-2 d-flex">
+                                                    <h6 class="mt-2 mx-2"><i
+                                                            class="fa-solid fa-moon-stars"></i>&nbsp;Evening
+                                                    </h6>
+                                                    <ng-container>
+                                                        <input type="button" class="btn btn-outline-primary m-1"
+                                                            [value]="slot.eveningTimeFrom" (click)="toPatientDetail()">
+                                                    </ng-container>
+                                                </div>
+                                            </mat-step>
+                                            <mat-step label="Night Slot 10 Slot Available">
+
+                                                <div class="mt-2 d-flex">
+                                                    <h6 class="mt-2 mx-2"><i class="fa-solid fa-moon-stars"></i>&nbsp;Night
+                                                    </h6>
+                                                    <ng-container>
+                                                        <input type="button" class="btn btn-outline-primary m-1"
+                                                            [value]="slot.eveningTimeFrom" (click)="toPatientDetail()">
+                                                    </ng-container>
+                                                </div>
+                                            </mat-step>
+                                        </mat-stepper>
+                                    </div>
+
+                                </div>
+                              </div>
+
+                            <ng-template #loggedOut>
+                                <div>
+                                    Please friend, login.
+                                </div>
+                            </ng-template>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-3">
+                <div class="bg">
+                    <div class="card mx-2" style="width: 20rem; height: 12rem;">
+                        <div class="card-body">
+                            <h6>Provide current location to see Dentist near you</h6>
+                            <span style="font-size: 12px;" class="text-secondary">You are seeing results from Vijay
+                                Nagar. See results near you</span>
+                            <br>
+                            <span class="text-primary mt-3 ">Search Location</span>
+                            <button type="button" class="btn btn-primary" disabled> <i
+                                    class="fa-solid fa-location-crosshairs mx-1"></i>Current Location</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+   
+</div>
+<!-- Mobile End -->
+
+<!-- Footer Start -->
+
+<div class="d-flex flex-column foot">
+
+
+    <footer id="sticky-footer" class="flex-shrink-0 py-4 bg-dark text-white-50">
+        <div class="container text-center">
+            <small>Copyright © 2024, Physiowala. All rights reserved.</small>
+        </div>
+    </footer>
+</div>
+
+
+<!-- Footer End -->

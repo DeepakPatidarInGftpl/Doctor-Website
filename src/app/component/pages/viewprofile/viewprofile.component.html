@@ -1,0 +1,319 @@
+<div class="container-fluid">
+    <div class="container card mt-3 mb-3">
+      <div class="row">
+        <div class="col-md-8" >
+          <div class="row mt-4">
+            <div class="col-md-2 col-lg-2 col-sm-2">
+                <img src="{{docImage}}"
+                    class="img-fluid mt-2 w-75">
+            </div>
+            <div class="col-md-7 col-sm-7 col-lg-7 mt-4">
+                <h3>Dr. {{docfname}} {{doclname}} <span style="font-size: 14px;" class="text-secondary ">Profile is
+                        claimed</span></h3>
+                <p style="font-size: 13px;">{{doceduca}}- {{docspecility}}<br>
+                    {{docexp}} Experience Overall ({{docexp}} as specialist)
+                </p>
+                <p style="font-size: 14px;"><span><i class="fa-solid fa-check  text-white rounded-circle p-1"
+                            style="background-color: #01a400; font-size: 10px;"></i></span> Medical Registration
+                    Verified</p>
+
+                <p style="font-size: 14px;"><span><i class="fa-regular fa-thumbs-up text-white rounded-circle p-1"
+                            style="background-color: #01a400;font-size: 10px;"></i></span> 90% (200 patients)</p>
+                <p style="font-size: 14px;">
+                    Dr. {{docfname}} {{doclname}} is a Prosthodontist, Specialized in Implant Dentistry, Cosmetic Treatment
+                    (pertaining to smile), Ceramic veneering and full mouth rehabilitation. His wife is Endodontist,
+                    specialized in Single visit Root Canal Treatment and Teeth whitening.
+                </p>
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-4">
+            <h4 style="background-color: #39849b; color: white;">Information</h4>
+            <p class="mt-3">{{docaddress}}</p>
+            <div class="col-md-4 col-lg-4 col-sm-4">
+                <h6 style="color:#39849b; font-size: 14px;">Dr  {{docfname}} {{doclname}}'s</h6>
+                <h6 style="color:#39849b; font-size: 14px;">{{docspecility}}</h6>
+                <p style="color: #01a400; font-weight:600;">5.0 <span><i class="fa-solid fa-star" style="color:#01a400"></i></span><span><i class="fa-solid fa-star" style="color:#01a400"></i></span><span><i class="fa-solid fa-star" style="color:#01a400"></i></span><span><i class="fa-solid fa-star" style="color:#01a400"></i><i class="fa-solid fa-star-half-stroke" style="color: #01a400;"></i></span></p>
+                <p style="font-size: 14px;">{{docaddress}}, <br>
+                    {{docaddress}}</p>
+                    
+             <h6 style="color:#39849b;font-size: 14px;"><a [href]="maplocation" target="_blank">Get Directions</a></h6>
+             <!-- <google-map 
+             width="400px"
+             height="280px"
+             [zoom]="zoom"
+             [center]="initialCoordinates"
+             [options]="mapConfigurations">
+             </google-map> -->
+             
+             <div class="d-flex">
+                 <img src="https://images1-fabric.practo.com/dr-jatin-agrawal-s-dental-perfection-indore-1479880478-58352f1e513ca.jpg/36x36" alt="" class="mx-1 img-fluid">
+                 <img src="https://images1-fabric.practo.com/dr-jatin-agrawal-s-dental-perfection-indore-1479880478-58352f1e513ca.jpg/36x36" alt="" class="mx-1 img-fluid">
+                 <img src="https://images1-fabric.practo.com/dr-jatin-agrawal-s-dental-perfection-indore-1479880478-58352f1e513ca.jpg/36x36" alt="" class="mx-1 img-fluid">
+                 <img src="https://images1-fabric.practo.com/dr-jatin-agrawal-s-dental-perfection-indore-1479880478-58352f1e513ca.jpg/36x36" alt="" class="mx-1 img-fluid">
+             </div>
+            
+            </div>
+            <div class="col-md-4 col-lg-4 col-sm-4">
+                <p>{{days}}<br>
+                {{stime}} AM - {{etime}} PM <br>
+                   <!-- 04:00 PM - 08:00 PM -->
+                </p>
+            </div>
+            <div class="col-md-4 col-lg-4 col-sm-4">
+                <p>{{docfees}} $</p>
+                <p>Online Payment Available</p>
+
+                <p>Prime <span><i class="fa-solid fa-check  text-white rounded-circle p-1"
+                    style="background-color: #01a400; font-size: 10px;"></i></span>
+                    Max. 15 mins wait + Verified details</p>
+
+                <!-- <button type="button" class="btn btn-primary ">Book Appointment
+                    <br>
+                    <span style="font-size: 13px;">Instant Pay Available</span>
+                </button>       -->
+            </div>
+        </div>
+        </div>
+
+        <div class="col-md-4 px-3 py-2">
+          <h5 class="mt-3 ms-3">Pick a time slot</h5>
+          <div class=" border rounded-3">
+              <div style="background-color:#D7F5FE ;" class="px-3">
+         
+                  <span class="h6" >
+                      Clinic Appointment 
+                      
+                  </span>
+                  <span class="h6 float-end">
+                      ₹ {{docfees}} fees
+                  </span>
+              </div>
+
+              <div class="mt-3">
+                <p style="font-size: 14px;" class="p-2">Dr. {{docfname}} {{doclname}}'s {{docspecility}} &.... <span class="text-info">Change Clinic</span><br>
+              <span>4.5 <i class="fa-solid fa-star"></i> $60</span><span class="text-warning "><b> Verified details</b></span><br>
+              {{docaddress}}</p>
+               <hr>
+               
+               <!-- <div class="col-md-12 m-0 p-0">
+                <div *ngFor="let slot of getDoctorById;let n = index" class="p-0 m-0">
+                    <div *ngFor="let slots of slot.details;let n = index" class="p-0 m-0">
+                        <mat-stepper [linear]="isLinear" #stepper >
+                            <mat-step [stepControl]="firstFormGroup" label="Today" >
+                                <div class="mt-2 d-flex">
+                                    <h6 class="mt-2 mx-2"><i class="fa-solid fa-cloud-sun"></i>&nbsp;
+                                        Morning
+                                    </h6>
+                                    <ng-container *ngIf="slots.morningSessionFrom">
+                                        <input type="button" class="btn btn-outline-primary m-1"
+                                            [value]="slots.morningSessionFrom" (click)="toPatientDetail(slots.doctorId)">
+                                    </ng-container>
+            
+                                </div>
+                            </mat-step>
+                            <mat-step [stepControl]="secondFormGroup"
+                                label="Tomorrow">
+                                <div class="mt-2 d-flex">
+                                    <h6 class="mt-2 mx-2"><i
+                                            class="fa-solid fa-sun-bright"></i>&nbsp;Afternoon
+                                    </h6>
+                                    <ng-container *ngIf="slots.afternoonTimeFrom">
+                                        <input type="button" class="btn btn-outline-primary m-1"
+                                            [value]="slots.afternoonTimeFrom" (click)="toPatientDetail(slots.doctorId)">
+                                    </ng-container>
+                                </div>
+                            </mat-step>
+                            <mat-step label="16 Feb 2024">
+            
+                                <div class="mt-2 d-flex">
+                                    <h6 class="mt-2 mx-2"><i
+                                            class="fa-solid fa-moon-stars"></i>&nbsp;Evening
+                                    </h6>
+                                    <ng-container *ngIf="slots.eveningTimeFrom">
+                                        <input type="button" class="btn btn-outline-primary m-1"
+                                            [value]="slots.eveningTimeFrom" (click)="toPatientDetail(slots.doctorId)">
+                                    </ng-container>
+                                </div>
+                            </mat-step>
+                            <mat-step label="Night Slot">
+            
+                                <div class="mt-2 d-flex">
+                                    <h6 class="mt-2 mx-2"><i class="fa-solid fa-moon-stars"></i>&nbsp;Night
+                                    </h6>
+                                    <ng-container *ngIf="slots.nightTimeFrom">
+                                        <input type="button" class="btn btn-outline-primary m-1"
+                                            [value]="slots.nightTimeFrom" (click)="toPatientDetail(slots.doctorId)">
+                                    </ng-container>
+                                </div>
+                            </mat-step>
+                        </mat-stepper>
+                    </div>
+            
+                </div>
+            </div> -->
+               <div id="carouselExample" class="carousel slide ">
+                  <div class="carousel-inner">
+                    <div class="carousel-item active"  *ngFor="let slot of data;let n = index">
+                      <div class="d-flex" >
+                          <div class="text-center mx-2">
+                              <p style="font-size: 14px;">{{slot.selectDay}}<br>
+                          <span class="text-success">1 Slots Available</span></p>
+                          </div>
+                         
+                      </div>
+                    </div>
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+
+            
+                <div id="carouselExample1" class="carousel slide">
+                  <div class="carousel-inner m-2">
+                    <div class="carousel-item active" *ngFor="let slot of data;let n = index">
+                        <div class="mt-2 d-flex">
+                            <h6 class="mt-2 mx-2"><i class="fa-solid fa-cloud-sun"></i>&nbsp;
+                                Morning
+                            </h6>
+                            <div *ngFor="let slots of slot.morningSession;">
+                            <ng-container *ngIf="slots.morningSessionFrom">
+                                <input type="button" class="btn btn-outline-primary m-1"
+                                    [value]="slots.morningSessionFrom  + ' AM'" (click)="toPatientDetail(slot.doctorId,slots.morningSessionFrom)">
+                            </ng-container>
+                        </div> 
+                        <br>
+                        <div *ngFor="let slots of slot.morningSession;">
+                            <ng-container *ngIf="slots.morningSessionTo">
+                                <input type="button" class="btn btn-outline-primary m-1"
+                                    [value]="slots.morningSessionTo  + ' AM'" (click)="toPatientDetail(slot.doctorId,slots.morningSessionTo)">
+                            </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                   
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample1" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample1" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+
+              <div id="carouselExample2" class="carousel slide">
+                  <div class="carousel-inner m-2">
+                    <div class="carousel-item active" *ngFor="let slot of data;let n = index">
+                        <div class="mt-2 d-flex">
+                            <h6 class="mt-2 mx-2"><i
+                                    class="fa-solid fa-sun-bright"></i>&nbsp;Afternoon
+                            </h6>
+                            <div *ngFor="let slots of slot.afternoonSession;">
+                            <ng-container *ngIf="slots.afternoonTimeFrom">
+                                <input type="button" class="btn btn-outline-primary m-1"
+                                    [value]="slots.afternoonTimeFrom  + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.afternoonTimeFrom)">
+                            </ng-container>
+                        </div>
+                       
+                        <div *ngFor="let slots of slot.afternoonSession;">
+                            <ng-container *ngIf="slots.afternoonTimeTo">
+                                <input type="button" class="btn btn-outline-primary m-1"
+                                    [value]="slots.afternoonTimeTo  + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.afternoonTimeTo)">
+                            </ng-container>
+                        </div>
+                        </div>
+                    </div>
+                    
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample2" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample2" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+                <div id="carouselExample3" class="carousel slide mb-2">
+                    <div class="carousel-inner m-2">
+                      <div class="carousel-item active" *ngFor="let slot of data;let n = index">
+                            <div class="mt-2 d-flex">
+                                <h6 class="mt-2 mx-2"><i class="fa-solid fa-sun-haze"></i>&nbsp;Evening
+                                </h6>
+                                <div *ngFor="let slots of slot.eveningSession;">
+                                <ng-container *ngIf="slots.eveningTimeFrom">
+                                    <input type="button" class="btn btn-outline-primary m-1"
+                                        [value]="slots.eveningTimeFrom  + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.eveningTimeFrom)">
+                                </ng-container>
+                                </div>
+                                <div *ngFor="let slots of slot.eveningSession;">
+                                    <ng-container *ngIf="slots.eveningTimeTo">
+                                        <input type="button" class="btn btn-outline-primary m-1"
+                                            [value]="slots.eveningTimeTo  + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.eveningTimeTo)">
+                                    </ng-container>
+                                    </div>
+                        </div>
+                      </div>
+                     
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample3" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample3" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+
+                <div id="carouselExample4" class="carousel slide mb-2">
+                    <div class="carousel-inner m-2">
+                      <div class="carousel-item active" *ngFor="let slot of data;let n = index">
+                        <div class="mt-2 d-flex">
+                            <h6 class="mt-2 mx-2"><i class="fa-solid fa-moon-stars"></i>&nbsp;Night
+                            </h6>
+                            <div *ngFor="let slots of slot.nightSession;">
+                            <ng-container *ngIf="slots.nightTimeFrom">
+                                <input type="button" class="btn btn-outline-primary m-1"
+                                    [value]="slots.nightTimeFrom   + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.nightTimeFrom)">
+                            </ng-container>
+                            </div>
+                            <div *ngFor="let slots of slot.nightSession;">
+                                <ng-container *ngIf="slots.nightTimeTo">
+                                    <input type="button" class="btn btn-outline-primary m-1"
+                                        [value]="slots.nightTimeTo + ' PM'" (click)="toPatientDetail(slot.doctorId,slots.nightTimeTo)">
+                                </ng-container>
+                                </div>
+                        </div>
+                      </div>
+                   
+                    </div>
+                    <button class="carousel-control-prev " type="button" data-bs-target="#carouselExample4" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample4" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+                
+              </div>
+          </div>
+
+         
+         
+      </div>
+
+      </div>
+       
+    </div>
+</div>

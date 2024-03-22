@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <body style="background-color: #f0f0f5">
+    <div class="container-fluid">
+                <div class="row d-flex justify-content-center">
+                    <div class="card shadow mt-4 border-0 mb-4 mb-4" style="width: 65rem;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn-close float-end " aria-label="Close"></button>
+                                </div>
+                               
+                                  <div class="col-md-6">
+                                    <form [formGroup]="clinicForm">
+                                      <h2>Consult with a Doctor</h2> 
+                                      <h6>Speciality</h6>
+                                       
+                                      <div class="mb-3 w-75 d-flex" style="border: 1px solid #199fd9;">
+                                          <i class="fa-regular fa-circle-check mx-2 mt-1" style="color: #199fd9;"></i>Gynaecology ₹
+                                          <input style="border:none!important;" type="text"  placeholder="Gynaecology ₹499" formControlName="fess"  id="fess" readonly>
+                                        </div>
+                                      <div class="mb-3">
+                                         <h6 for="formGroupExampleInput"  class="form-label"> Patient name </h6>
+                                         <input type="text" formControlName="patientname"  class="form-control" id="patientname" placeholder="Enter patient name for prescriptions" [ngClass]="{'is-invalid': clinicForm.controls['patientname'].errors && ck }">
+                                         <p class="text-danger" *ngIf="clinicForm.controls['patientname'].errors && ck"> Enter Your Patient name
+                                        </p>
+                                       </div>
+                                       <div class="mb-3">
+                                          
+                                         <h6 for="formGroupExampleInput2" class="form-label">Mobile number</h6>
+                                         <input type="number" formControlName="phone"class="form-control" id="phone" placeholder="Enter mobile number" [ngClass]="{'is-invalid': clinicForm.controls['phone'].errors && ck }">
+                                         <p class="text-danger" *ngIf="clinicForm.controls['phone'].errors && ck"> Enter Your Mobile number
+                                        </p>
+                                         <label for="formGroupExampleInput2" class="form-label text-secondary ">A verification code will be sent  to this number</label>
+                                       </div>
+                                       <button type="submit" (click)="clinicsubmit()" [disabled]="clinicForm.invalid"  class="btn btn-primary btn-lg" >Continue</button>
+                                      </form>
+                                  </div>
+                             
+                                <div id="remove_section" class="col-md-5 mt-5">
+                                   
+                                    <div class="img  text-center  mt-4">
+                                        <img src="https://www.practo.com/consult/bundles/cwipage/images/ic-chats-v1.png" alt="">
+                                    </div>
+                                    <h5 class="text-center mt-1">Free-Follow-up</h5>
+                                   
+
+                                </div>
+                            </div>
+                        
+                       
+                        </div>
+                      </div>
+                </div>
+            </div>
+  </body>
+</html>
+
+

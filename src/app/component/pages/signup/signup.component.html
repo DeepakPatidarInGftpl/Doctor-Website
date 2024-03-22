@@ -1,0 +1,160 @@
+<div class="container-fluid">
+    <div class="row">
+            <div class=" d-flex justify-content-center" >
+                <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                           
+                            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+                            <link rel="stylesheet" href="https://kit.fontawesome.com/7d08567bd4.css" crossorigin="anonymous">
+                            <title>Document</title>
+                           
+                        </head>
+                        <body>
+                            <section>
+                                <div class="container">
+                                    <div class="row  ">
+                                        <div class="d-flex justify-content-center mt-2">
+                                            <ul class="nav nav-underline  mb-3" id="pills-tab" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                  <button  class="nav-link active text-dark " id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Login</button>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                  <!-- <button (click)="hendalClick('Register')" class="nav-link text-dark" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Register</button> -->
+                                                  <button  class="nav-link text-dark" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Register</button>
+                                                </li>
+                                               
+                                              </ul>
+                                        </div>
+                                     
+                                          <div class="tab-content" id="pills-tabContent">
+                                            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0"><section>
+                                                <div class="container">
+                                                    <div class="row">
+                        <div class="col-md-2">
+                        
+                        </div>
+                                                        <div class="col-md-4">
+                        <div style="margin-top: 100px;">
+                            <img src="https://accounts.practo.com/static/images/illustration.png"  class="img-fluid" alt="">
+                        </div>
+                                                        </div>
+                                                            <div class="col-md-6 mt-5 "  >
+                                                                <div class="card shadow  border-0">
+                                                                    <div class="card-body ">
+                                                                        <form [formGroup]="loginForm">
+                                                                        <h4 class="text-center my-5"><i class="fa-duotone fa-user"></i> Login</h4>
+                                                                    <div class="my-3">
+                                                                        <label for="username" class="mb-2" style="font-weight: 600;">Mobile Number/Email ID</label>
+                                                                        <input type="text" formControlName="phone"class="form-control" id="phone" placeholder="Enter mobile number" [ngClass]="{'is-invalid': loginForm.controls['phone'].errors && ck }">
+                                                                        <p class="text-danger" *ngIf="loginForm.controls['phone'].errors && ck"> Enter Your Mobile number
+                                                                       </p>
+                                                                    </div>
+                        
+                                                                    <div class="my-4">
+                                                                        <label for="password" class="mb-2" style="font-weight: 600;">Password</label>
+                                                                        <input type="text" formControlName="password"  class="form-control" id="password" placeholder="Enter patient name for prescriptions" [ngClass]="{'is-invalid': loginForm.controls['password'].errors && ck }">
+                                                                        <p class="text-danger" *ngIf="loginForm.controls['password'].errors && ck"> Enter Your Patient name
+                                                                       </p>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-8  my-2">
+                                                                            <input type="checkbox" name="checkbox" value="remember me for 30 days"/> <span style="font-weight: 600; font-size: 14px;margin-left: 5px;">Remember me for 30 days</span>
+                                                                        </div>
+                                                                        <div class="col-md-4  my-2">
+                                                                            <a href="#" style="text-decoration: none;"><span style="font-weight: 600; font-size: 14px;">Forgot Password?</span></a>   
+                                                                        </div>
+                                                                        
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-12 my-3">
+                                                                            <input type="checkbox" name="checkbox" value="login with otp"/> <span style="font-weight: 600; font-size: 14px;margin-left: 5px;">Login with OTP instead of password</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="my-4 d-grid">
+                                                                        <button type="submit" (click)="login()"   class="btn btnBackground py-2"><i class="fa-solid fa-lock-keyhole"></i> Login</button>
+                                                                    </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+                                                <section>
+                                                    
+                                                    <div class="container">
+                                                        <div class="row">
+                                                          <div class="col-md-6">
+                                                        <div class="text-center ">
+                                                            <img src="https://accounts.practo.com/static/images/illustration.png" class="img-fluid " alt="">
+                                                        </div>
+                                                          </div>
+                                                          <div class="col-md-6 mt-5">
+                                                            <div class="card border-0 shadow ">
+                                                                <div class="d-flex justify-content-between mx-2 mt-2">
+                                                                    <h6>Join 125,000+ doctors</h6>
+                                                                    <p>Are you a doctor?<a href=""><span class="blue-link"> Register Here</span></a></p>
+                                                                </div>
+                                                                <hr style="color: rgb(182, 182, 182);">
+                                                                <div class="card-body">
+                                                                    <form [formGroup]="registerForm">
+                                                                        <div class="mb-3">
+                                                                          <label for="exampleInputEmail1" class="form-label text-secondary ">First Name</label>
+                                                                          <input type="text" formControlName="firstname"class="form-control" id="firstname" placeholder="Enter First-Name" [ngClass]="{'is-invalid': registerForm.controls['firstname'].errors && ckk }">
+                                                                          <p class="text-danger" *ngIf="registerForm.controls['firstname'].errors && ckk"> Enter Your Fisrtname
+                                                                         </p>
+                                                                      
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="exampleInputEmail1" class="form-label text-secondary ">Last Name</label>
+                                                                            <input type="text" formControlName="lastname"class="form-control" id="lastname" placeholder="Enter Last-Name" [ngClass]="{'is-invalid': registerForm.controls['lastname'].errors && ckk }">
+                                                                            <p class="text-danger" *ngIf="registerForm.controls['lastname'].errors && ckk"> Enter Your Lastname
+                                                                           </p>
+                                                                        
+                                                                          </div>
+                                                                        <div class="input-group mb-3">
+                                                                            
+                                                                            <select name="cars" id="cars">
+                                                                                <option value="Country code">Country code</option>
+                                                                                <option selected="" value="IN">+91(IND)</option><option value="SG">+65(SGP)</option><option value="PH">+63(PHL)</option><option value="MY">+60(MYS)</option><option value="ID">+62(IDN)</option><option value="BR">+55(BRA)</option><option value="MX">+52(MEX)</option><option value="AR">+54(ARG)</option><option value="CL">+56(CHL)</option><option value="VN">+84(VNM)</option><option value="AE">+971(UAE)</option><option value="KW">+965(KW)</option><option value="TZ">+255(TZA)</option><option value="BH">+973(BH)</option><option value="SA">+966(SA)</option><option value="US">+1(USA)</option>
+                                                                              </select>
+
+                                                                              <input type="text" formControlName="phone"class="form-control" id="phone" placeholder="Enter Mobile" [ngClass]="{'is-invalid': registerForm.controls['phone'].errors && ckk }">
+                                                                          </div>
+                                                                          <p class="text-danger" *ngIf="registerForm.controls['phone'].errors && ckk"> Enter Your Mobile Number
+                                                                        </p>
+                                                                        <div class="mb-3 form-check">
+                                                                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                                                            <label class="form-check-label text-secondary" for="exampleCheck1" style="font-size: 13px;">Receive relevant offers and promotional communication from</label>
+                                                                        <p style="font-size: 12px;" class="text-secondary ">By signing up, I agree to <span ><a class="text-info" href="">terms</a></span> 
+                        
+                                                                        </p>
+                                                                        </div>
+                                                                       
+                                                                        <button type="submit" (click)="register()" class="btn btn-info text-light w-100  ">Send OTP</button>
+                                                                      </form>
+                                                                </div>
+                                                              </div>
+                                                          </div> 
+                                                         
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                          
+                                          </div>
+                                    </div>
+                                </div>
+                            </section>
+                        
+                        </body>
+                        </html>
+            </div>
+    </div>
+</div>
+
+

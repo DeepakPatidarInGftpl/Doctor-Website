@@ -1,0 +1,841 @@
+<div class="container-fluid">
+  <div class="container mt-5">
+    <form>
+      <div class="row">
+        <div class="mb-3 col-md-3">
+          <ng-autocomplete
+            [data]="allLocation"
+            placeholder="Select City"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate"
+          >
+          </ng-autocomplete>
+          <ng-template #itemTemplate let-item>
+            <a [innerHTML]="item"></a>
+          </ng-template>
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
+        </div>
+
+        <div class="mb-3 col-md-8">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"
+              ><i class="fa-solid fa-magnifying-glass"></i
+            ></span>
+
+            <ng-autocomplete
+              placeholder="Select Category"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate"
+            >
+            </ng-autocomplete>
+
+            <ng-template #itemTemplate let-item>
+              <a [innerHTML]="item"></a>
+            </ng-template>
+
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="mb-3 col-md-1">
+          <div class="mb-2">
+            <button type="submit" (click)="openCart()" style="border: 1px solid" class="btn w-100">
+              <i class="fa-solid fa-cart-shopping"></i
+              ><span class="badge bag badge-success">{{
+                _service.addToCard$()
+              }}</span>
+              Cart
+            </button>
+            <div *ngIf="divshow"
+              style="
+                height: auto;
+                width: 290px;
+                position: absolute;
+                z-index: 1;
+                right: 13px;
+                top: 44px;
+             
+                ">
+               <div class="card"  style="width: 18rem;">
+                <div class="card-body">
+                  <h6 class="card-title"><b>Your Cart</b> <span style="font-size: 12px;">1 Test</span></h6><hr>
+                  <ng-container *ngIf="carToData.length > 0">
+                    <ng-container *ngFor="let add of carToData">
+                      <div class="row" >
+                        <div class="col-md-8">
+                            <h6 style="font-size: 13px;"><b>{{add?.testCategory}}</b></h6>
+                        
+                            <p style="font-size: 13px;">Preparation</p>
+                          
+                        </div>
+                        <div class="col-md-4 d-flex">
+                            <h6><span><i class="fa-solid fa-indian-rupee-sign mx-1"></i></span>{{add?.testPrice
+                            }}<span><i class="fa-solid fa-xmark mx-1"></i></span></h6>
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="d-flex">
+                            <div class="col-md-3">
+                            <img src="https://prod-dx.s3.amazonaws.com/dx/labs/Thyrocare.jpg" class="img-fluid">
+                           </div>
+                            <p style="font-size: 13px;" class="mx-2">By Practo Labs</p>
+                            <i class="fa-solid fa-circle-info mx-2"></i>
+                        </div>
+                       </div>
+                    </ng-container>
+                  </ng-container>
+                 
+               
+                  <p style="font-size: 12px;" class="text-secondary mt-1">E-Reports on same day</p>
+                  <hr>
+
+                  <div class="row">
+                      <div class="d-flex  justify-content-between ">
+                        <h6>Pick up charges</h6>
+                        <p><span><i class="fa-solid fa-indian-rupee-sign mx-1"></i></span>150</p>
+                      </div>
+                      <hr>
+                  </div>
+
+                  <div class="row">
+                    <div class="d-flex  justify-content-between bg-light">
+                      <h6>Total</h6>
+                      <p><span><i class="fa-solid fa-indian-rupee-sign mx-1"></i></span>5500.00</p>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                   <button class="btn btn-success" (click)="addtouser()">Proceed to Checkout</button>
+                </div>
+                </div>
+       
+             </div>
+              
+        </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div>
+      <div
+        id="carouselExampleControls"
+        style=""
+        class="carousel slide"
+        data-bs-ride="carousel"
+      >
+        <div class="carousel-inner">
+          <div class="carousel-item active accordion accordion">
+            <div class="row">
+              <!-- <div class="col-md-8">
+                                <h4 class="mt-2 mx-4"><span class="bg-danger px-1 border rounded-5 text-light " style="font-size: 16px;">Limited Offer</span></h4>
+                                <h2 class="mx-4"><b>Tax saver package (Advanced) Now at $499</b></h2>
+                                <ul>
+                                    <li>Full body checkup with cardic </li>
+                                    <li>FREE home sample pickup risk markers & Vit B12</li>
+                                </ul>
+                                <button class="btn bg-light text-dark mx-4">Book Now</button>
+                            </div>
+                            <div class="col-md-4">
+                             
+                            </div> -->
+
+              <img
+                src="https://prod-dx.s3.amazonaws.com/dx/campaigns/dweb_images/TaxSaverBasicB_Yp1CQDS.png"
+              />
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img
+              src="https://prod-dx.s3.amazonaws.com/dx/campaigns/dweb_images/Covidrelaunch.jpg"
+              class="d-block w-100"
+              alt="..."
+            />
+          </div>
+
+          <div class="carousel-item">
+            <img
+              src="https://prod-dx.s3.amazonaws.com/dx/campaigns/dweb_images/BackToWorkBangalore.png"
+              class="d-block w-100"
+              alt="..."
+            />
+          </div>
+        </div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleControls"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleControls"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div
+        class="row mt-3 p-2 rounded"
+        style="background-color: rgb(207, 238, 250)"
+      >
+        <div class="col-md-1">
+          <img
+            src="../../../../assets/img/call_to_order.svg"
+            class="img-fluid rounded"
+          />
+        </div>
+        <div class="col-md-9">
+          <h4>Need help with booking your test?</h4>
+          <p style="font-size: 12px">Our experts are here to help you</p>
+        </div>
+        <div class="col-md-2 float-end">
+          <p><b>+91 8045684087</b></p>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4 mb-0" >
+        <h5>Find Tests by Health Concern</h5>
+    <div style="z-index: 1!important ">
+      <swiper-container
+        [slidesPerView]="5"
+        [pagination]="{ clickable: true }"
+        [allowSlidePrev]="true"
+        [watchSlidesProgress]="true"
+        [loop]="true"
+        [slidePrevClass]="'swiper-slide-prev'"
+        [slideNextClass]="'swiper-slide-next'"
+        [autoplay]="true"
+        [navigation]="true"
+      >
+        <swiper-slide *ngFor="let t of allCatogory">
+          <div class="col-md-12" style="padding-left: 1px" >
+            <div class="shadow-sm">
+              <div class="border mt-3 p-3">
+                <h6 style="font-size: 15px" class="mt-1">{{t.testCategory}}</h6>
+                <p style="font-size: 12px" 
+                [matTooltip]="t.testDescription">
+                {{t.testDescription}}
+                </p>
+                <p style="font-size: 15px">{{t.testName}}</p>
+                <p><b>{{t.testPrice}}$</b></p>
+              </div>
+              <p
+                [ngClass]="{ grey: t.__v === 'Remove' }"
+                class="text-center text-info border p-2"
+                style="cursor: pointer"
+                (click)="hendalclick(t._id,t.__v)"
+              >
+                {{ t.__v}}
+              </p>
+            </div>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+    </div>
+  </div>
+
+    <div class="row mt-4">
+      <h5>Find Tests by Health Concern</h5>
+
+      <!-- <div id="carouselExampleIndicators" class="carousel slide mt-3  " data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                            class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                    </div>
+
+
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+
+
+                            <div class="row g-5">
+
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(255, 209, 229); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Fever.svg" alt="" width="70px" class="img-fluid">
+                                        </div>
+                                        <b class="mb-4 mt-2">Fever</b>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(153, 242, 224); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Diabetes.svg" alt="" width="70px"
+                                                class="img-fluid ">
+                                        </div>
+                                        <b class="mb-4 mt-2">Diabetes</b>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(149, 224, 242); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Skin.svg" alt="" width="70px" class="img-fluid ">
+
+                                        </div>
+                                        <b class="mb-4 mt-2">Skin</b>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(190, 242, 153); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Kidney.svg" alt="" width="70px" class="img-fluid ">
+                                        </div>
+                                        <b class="mb-4 mt-2">Kidney</b>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(226, 205, 236); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Stomach.svg" alt="" width="70px" class="img-fluid ">
+                                        </div>
+                                        <b class="mb-4 mt-2">Digestion</b>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(242, 224, 153); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Cancer.svg" alt="" width="70px" class="img-fluid ">
+                                        </div>
+                                        <b class="mb-4 mt-2">Cancer</b>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+
+                            <div class="row g-5">
+
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(242, 153, 195); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Bones.svg" alt="" width="70px" class="img-fluid ">
+                                        </div>
+                                        <b class="mb-4 mt-2">Bone</b>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(255, 209, 229); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Fever.svg" alt="" width="70px" class="img-fluid">
+                                        </div>
+                                        <b class="mb-4 mt-2">Fever</b>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(242, 224, 153); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Cancer.svg" alt="" width="70px" class="img-fluid ">
+                                        </div>
+                                        <b class="mb-4 mt-2">Cancer</b>
+
+
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(190, 242, 153); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Kidney.svg" alt="" width="70px" class="img-fluid ">
+                                        </div>
+                                        <b class="mb-4 mt-2">Kidney</b>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1  rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(226, 205, 236); height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Stomach.svg" alt="" width="70px" class="img-fluid ">
+                                        </div>
+                                        <b class="mb-4 mt-2">Digestion</b>
+
+
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-6">
+                                    <div class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center "
+                                        style="background-color: rgb(150, 226, 223);  height: 20vh;">
+                                        <div class="mt-4">
+                                            <img src="../../../../assets/img/Sexual_wellness.svg" alt="" width="70px" class="img-fluid ">
+
+                                        </div>
+                                        <b class="mb-4 mt-2">Sexual Wellness</b>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon  bg-black" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon  bg-black" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div> -->
+    </div>
+    <div class="p-0">
+      <swiper-container
+        [slidesPerView]="5"
+        [pagination]="{ clickable: true }"
+        [allowSlidePrev]="true"
+        [watchSlidesProgress]="true"
+        [loop]="true"
+        [slidePrevClass]="'swiper-slide-prev'"
+        [slideNextClass]="'swiper-slide-next'"
+        [autoplay]="true"
+        [navigation]="true"
+      >
+        <swiper-slide *ngFor="let test of allTest">
+          <div
+            class="col-lg-12 col-md-2 col-sm-2 col-6"
+            style="padding-left: 1px"
+          >
+            <div
+              class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center"
+              style="background-color: rgb(255, 209, 229); height: 20vh"
+            >
+              <div class="mt-4">
+                <img
+                  src="{{test.categoryImage}}"
+                  alt=""
+                  width="70px"
+                  class="img-fluid"
+                />
+              </div>
+              <b class="mb-4 mt-2">{{test.category}}</b>
+            </div>
+          </div>
+        </swiper-slide>
+        <!-- <swiper-slide>
+          <div
+            class="col-lg-12 col-md-2 col-sm-2 col-6"
+            style="padding-left: 1px"
+          >
+            <div
+              class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center"
+              style="background-color: rgb(153, 242, 224); height: 20vh"
+            >
+              <div class="mt-4">
+                <img
+                  src="../../../../assets/img/Diabetes.svg"
+                  alt=""
+                  width="70px"
+                  class="img-fluid"
+                />
+              </div>
+              <b class="mb-4 mt-2">Diabetes</b>
+            </div>
+          </div>
+        </swiper-slide>
+        <swiper-slide>
+          <div
+            class="col-lg-12 col-md-2 col-sm-2 col-6"
+            style="padding-left: 1px"
+          >
+            <div
+              class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center"
+              style="background-color: rgb(149, 224, 242); height: 20vh"
+            >
+              <div class="mt-4">
+                <img
+                  src="../../../../assets/img/Skin.svg"
+                  alt=""
+                  width="70px"
+                  class="img-fluid"
+                />
+              </div>
+              <b class="mb-4 mt-2">Skin</b>
+            </div>
+          </div>
+        </swiper-slide>
+        <swiper-slide>
+          <div
+            class="col-lg-12 col-md-2 col-sm-2 col-6"
+            style="padding-left: 1px"
+          >
+            <div
+              class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center"
+              style="background-color: rgb(190, 242, 153); height: 20vh"
+            >
+              <div class="mt-4">
+                <img
+                  src="../../../../assets/img/Kidney.svg"
+                  alt=""
+                  width="70px"
+                  class="img-fluid"
+                />
+              </div>
+              <b class="mb-4 mt-2">Kidney</b>
+            </div>
+          </div>
+        </swiper-slide>
+        <swiper-slide>
+          <div
+            class="col-lg-12 col-md-2 col-sm-2 col-6"
+            style="padding-left: 1px"
+          >
+            <div
+              class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center"
+              style="background-color: rgb(226, 205, 236); height: 20vh"
+            >
+              <div class="mt-4">
+                <img
+                  src="../../../../assets/img/Stomach.svg"
+                  alt=""
+                  width="70px"
+                  class="img-fluid"
+                />
+              </div>
+              <b class="mb-4 mt-2">Digestion</b>
+            </div>
+          </div>
+        </swiper-slide>
+        <swiper-slide>
+          <div
+            class="col-lg-12 col-md-2 col-sm-2 col-6"
+            style="padding-left: 1px"
+          >
+            <div
+              class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center"
+              style="background-color: rgb(242, 153, 195); height: 20vh"
+            >
+              <div class="mt-4">
+                <img
+                  src="../../../../assets/img/Bones.svg"
+                  alt=""
+                  width="70px"
+                  class="img-fluid"
+                />
+              </div>
+              <b class="mb-4 mt-2">Bone</b>
+            </div>
+          </div>
+        </swiper-slide>
+        <swiper-slide>
+          <div
+            class="col-lg-12 col-md-2 col-sm-2 col-6"
+            style="padding-left: 1px"
+          >
+            <div
+              class="pt-1 rounded d-flex flex-column align-items-center justify-content-center text-center"
+              style="background-color: rgb(242, 224, 153); height: 20vh"
+            >
+              <div class="mt-4">
+                <img
+                  src="../../../../assets/img/Cancer.svg"
+                  alt=""
+                  width="70px"
+                  class="img-fluid"
+                />
+              </div>
+              <b class="mb-4 mt-2">Cancer</b>
+            </div>
+          </div>
+        </swiper-slide> -->
+      </swiper-container>
+    </div>
+
+    <div class="row mt-5">
+      <h4 class="mb-4">Popular Health Checkup Packages</h4>
+      <div class="col-md-4">
+        <div class="card" style="width:100%;">
+          <img
+            src="../../../../assets/img/popular.jfif"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <h5 class="card-text" style="font-size: 16px">
+              <b>Basic Women's Health Checkupk</b>
+            </h5>
+            <p style="font-size: 13px">
+              Ideal for individuals aged 15-40 years
+            </p>
+            <h6 style="font-size: 13px">85 tests included</h6>
+            <hr />
+            <div class="row">
+              <div class="d-flex justify-content-between">
+                <h6>100$</h6>
+                <button class="bg-info border-0 text-light">Book Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card" style="width:100%;">
+          <img
+            src="../../../../assets/img/popular.jfif"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <h5 class="card-text" style="font-size: 16px">
+              <b>Basic Women's Health Checkupk</b>
+            </h5>
+            <p style="font-size: 13px">
+              Ideal for individuals aged 15-40 years
+            </p>
+            <h6 style="font-size: 13px">85 tests included</h6>
+            <hr />
+            <div class="row">
+              <div class="d-flex justify-content-between">
+                <h6>100$</h6>
+                <button class="bg-info border-0 text-light">Book Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card" style="width:100%;">
+          <img
+            src="../../../../assets/img/popular.jfif"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <h5 class="card-text" style="font-size: 16px">
+              <b>Vitamin Deficiency Health Checkup</b>
+            </h5>
+            <p style="font-size: 13px">
+              Ideal for individuals aged 11-80 years
+            </p>
+            <h6 style="font-size: 13px">5 tests included</h6>
+            <hr />
+            <div class="row">
+              <div class="d-flex justify-content-between">
+                <h6>988$</h6>
+                <button class="bg-info border-0 text-light">Book Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row border px-2 mt-2 mb-4">
+        <h6 class="mt-3"><b>Our Partner Labs</b></h6>
+        <div class="d-flex justify-content-between">
+          <div class="col-md-8 mt-4">
+            <p>Practo Labs</p>
+          </div>
+          <div class="col-md-2">
+            <img
+              src="../../../../assets/img/Practo_Labs.png"
+              class="img-fluid h-50 w-50 border"
+            />
+          </div>
+        </div>
+
+        <p>
+          Your tests will be conducted in one of our partner labs to ensure
+          highest accuracy of your reports.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <h5><b>Top booked Medical tests</b></h5>
+      <p style="font-size: 13px">Get 10% Health Cashback* T&C</p>
+
+      <div class="row mt-4 mx-1">
+        <div class="col-md-4 card shadow-sm bg-body rounded p-4">
+          <h6><b>Lipid Profile</b></h6>
+          <h6 style="font-size: 13px" class="mt-3">
+            <b>LdI Cholestrol Test</b>
+            <p style="font-size: 12px">
+              Also known as Cholesterol LdI Enzymatic Colorimetric Method Blood
+            </p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>HdI Cholestrol Test</b>
+            <p style="font-size: 12px">
+              Also known as Cholestrol HdI Enzymatic Colorimetic Method Blood
+            </p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>VIdI Cholestrol Test</b>
+            <p style="font-size: 12px">Also known as VIdI Cholestrol Blood</p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>Total Cholestrol Test</b>
+            <p style="font-size: 12px">Also known as Cholestrol Blood</p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>Triglycerides Blood Test</b>
+            <p style="font-size: 12px">Also known as Triglycerides Blood</p>
+          </h6>
+
+          <button class="btn bg-info text-light w-50">Book Now</button>
+        </div>
+
+        <div class="col-md-4 card shadow-sm bg-body rounded p-4">
+          <h6><b>Lipid Profile</b></h6>
+          <h6 style="font-size: 13px" class="mt-3">
+            <b>LdI Cholestrol Test</b>
+            <p style="font-size: 12px">
+              Also known as Cholesterol LdI Enzymatic Colorimetric Method Blood
+            </p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>HdI Cholestrol Test</b>
+            <p style="font-size: 12px">
+              Also known as Cholestrol HdI Enzymatic Colorimetic Method Blood
+            </p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>VIdI Cholestrol Test</b>
+            <p style="font-size: 12px">Also known as VIdI Cholestrol Blood</p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>Total Cholestrol Test</b>
+            <p style="font-size: 12px">Also known as Cholestrol Blood</p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>Triglycerides Blood Test</b>
+            <p style="font-size: 12px">Also known as Triglycerides Blood</p>
+          </h6>
+
+          <button class="btn bg-info text-light w-50">Book Now</button>
+        </div>
+
+        <div class="col-md-4 card shadow-sm bg-body rounded p-4">
+          <h6><b>Lipid Profile</b></h6>
+          <h6 style="font-size: 13px" class="mt-3">
+            <b>LdI Cholestrol Test</b>
+            <p style="font-size: 12px">
+              Also known as Cholesterol LdI Enzymatic Colorimetric Method Blood
+            </p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>HdI Cholestrol Test</b>
+            <p style="font-size: 12px">
+              Also known as Cholestrol HdI Enzymatic Colorimetic Method Blood
+            </p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>VIdI Cholestrol Test</b>
+            <p style="font-size: 12px">Also known as VIdI Cholestrol Blood</p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>Total Cholestrol Test</b>
+            <p style="font-size: 12px">Also known as Cholestrol Blood</p>
+          </h6>
+          <hr />
+          <h6 style="font-size: 13px">
+            <b>Triglycerides Blood Test</b>
+            <p style="font-size: 12px">Also known as Triglycerides Blood</p>
+          </h6>
+
+          <button class="btn bg-info text-light w-50">Book Now</button>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row bg-light mt-3 mx-1">
+          <h3 class="text-center mt-3">Why book with us?</h3>
+          <div class="col-md-4 mt-5">
+            <p style="font-size: 15px" style="font-size: 15px">
+              <b>Home sample collection for FREE</b>
+            </p>
+            <p style="font-size: 13px">
+              A certified professional will collect your sample from your
+              preferred location
+            </p>
+          </div>
+          <div class="col-md-4 mt-5">
+            <p style="font-size: 15px" style="font-size: 15px">
+              <b>Get digital report within a day</b>
+            </p>
+            <p style="font-size: 13px">
+              Our labs ensure turn-around-time of 24 hours from specimen pickup
+            </p>
+          </div>
+          <div class="col-md-4 mt-5">
+            <p style="font-size: 15px" style="font-size: 15px">
+              <b>Offers and affordable prices</b>
+            </p>
+            <p style="font-size: 13px">
+              Get great discounts and offers on tests and packages.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-column foot">
+    <footer id="sticky-footer" class="flex-shrink-0 py-4 bg-dark text-white-50">
+      <div class="container text-center">
+        <small>Copyright © 2024, Physiowala. All rights reserved.</small>
+      </div>
+    </footer>
+  </div>
+</div>
