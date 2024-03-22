@@ -3,12 +3,12 @@
 <!-- Topbar Start -->
 
 <div class="container-fluid py-2 border-bottom d-none d-lg-block">
-    <div class="">
+ 
         <div class="row">
-            <div class="col-md-5 " style="padding: 1%;">
+            <div class="col-md-5 col-sm-12 col-xs-12 " style="padding: 1%;">
                 <div class="d-inline-flex ">
 
-                    <a routerLink="appointment.html" class="btn btn-dark rounded-pill mx-1">Book Appointment</a>
+                    <!-- <a routerLink="appointment.html" class="btn btn-dark rounded-pill mx-1">Book Appointment</a> -->
                      <a
                         class="text-decoration-none text-body p-2" routerLink="" style="font-size:small;">
 
@@ -21,7 +21,7 @@
                                 class="bi bi-envelope me-2"></i>Lab Tests</a>
                 </div>
             </div>
-            <div class="col-md-5 pt-2">
+            <div class="col-md-7 col-sm-12 col-xs-12 pt-2">
                 <div class="d-inline-flex align-items-center">
                     <a class="text-body px-1" style="text-decoration: none; font-size: 15px;" routerLink="">
                         Home
@@ -40,7 +40,7 @@
                 </a>
 
                     <select class="form-select m-1 border-0 " [ngModel]="selected" (change)="onOptionChange($event)"
-                     aria-label="" style="width:120px;">
+                     aria-label="" style="width:130px;" >
                         <option value =""> We Treat</option>
                         <!-- <option value="backpain" >Back Pain</option> -->
                         <option value="backpain" >backpain</option>
@@ -82,145 +82,146 @@
                         <option value="acupressure">Acupressure and acupuncture </option>
 
                     </select>
-                    <div class="nav-items">
-                        <button type="button" routerLink="/login" class="btn btn-primary rounded-pill mt-2">Login / Signup</button>
+                    <div class="nav-items d-flex gap-1">
+                        <button type="button" routerLink="/login" class="btn btn-primary rounded-pill mt-2">Login </button>
+                        <a  href="https://software.physiowala.net" class="btn btn-success rounded-pill mt-2">Software Login</a>
                     </div>
                 </div>
                
             </div>
-            <div class="col-md-1 pt-2  ">
-                <div class="d-inline-flex pt-2 ps-4">
-                    <a class="text-body px-2"  href="https://www.facebook.com/">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a class="text-body px-2 " href="https://twitter.com/">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a class="text-body px-2" href="https://in.linkedin.com/">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a class="text-body px-2" href="https://www.instagram.com/">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a class="text-body px-2" href="https://www.youtube.com/">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </div>
-            </div>
+           
         </div>
-    </div>
+   
 </div>
 <!-- Topbar End -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-    <div class="d-flex px-2" routerLink="/">
-        <!-- logo -->
-        <a class="navbar-brand  " >
-            <h4 class="m-0 text-info" style="color: #13C5DD !important;"><img
-                    src="../assets/img/Pysologo.png" alt=""
-                    style="width: 70px; height:70px;"></h4>
-        </a>
-
-        <!-- logo -->
-        <!-- physiowla -->
-        <span  class=" pt-3"
-            style="color: #3562f6; font-size: xx-large; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Physio</span>
-        <span class="pt-3"
-            style="color:#5da015; font-size: xx-large; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Wala</span>
-        <!-- physiowla -->
-    </div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse px-2" id="navbarTogglerDemo02">
-        <ul class="navbar-nav  my-2 ">
-
-            <li class="nav-item ">
-                <a class="nav-link active text-dark" aria-current="page" routerLink="clinic"
-                style="font-size: medium;">
-                    Clinic </a>
-            </li>
-
-            <li class="nav-item ">
-                <a class="nav-link text-dark" routerLink="physiotherapist" style="font-size: medium;">
-                    Physiotherapist </a>
-            </li>
-
-            <li class="nav-item ">
-                <a class="nav-link text-dark" routerLink="chiropractor" style="font-size: medium;">Chiropractor </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link text-dark" routerLink="homevisit" style="font-size: medium;"> Home Visit </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" routerLink="dietician" style="font-size: medium;"> Dietician </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" routerLink="yoga" style="font-size: medium;"> Yoga </a>
-            </li>
-
-
-            <li class="nav-item">
-                <a class="nav-link text-dark" routerLink="gymfitnesstrainer" style="font-size: medium;"> Gym/Fitness
-                    Trainer </a>
-            </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link text-dark" routerLink="osthopathist" style="font-size: large;">
-                    Osteopath </a>
-            </li> -->
-
-            <li class="nav-item">
-                <a class="nav-link text-dark" routerLink="specialtherapist" style="font-size: medium;">
-                    Super Speciality Consultation</a>
-            </li>
-
-
-
-
-            <!-- <li class="nav-item dropdown" style="font-size: large;">
-                    <a class="nav-link dropdown-toggle text-dark"  routerLink="#" id="navbarDropdown"
-                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        More
+<div class="container-fluid">
+    <div class="row">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="col-md-4 col-sm-6">
+                <div class="d-flex px-2" routerLink="/">
+                    <!-- logo -->
+                    <a class="navbar-brand  " >
+                        <h4 class="m-0 text-info" style="color: #13C5DD !important;"><img
+                                src="../assets/img/Pysologo.png" alt=""
+                                style="height: 50px; "></h4>
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item text-dark" routerLink="#">Osteopath</a></li>
-                        <li>
-                            <hr class="dropdown-divider text-dark"> Accupressurist
+            
+                    <!-- logo -->
+                    <!-- physiowla -->
+                    <span  class=" "
+                        style="color: #3562f6; font-size: xx-large; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Physio</span>
+                    <span class=""
+                        style="color:#5da015; font-size: xx-large; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Wala</span>
+                    <!-- physiowla -->
+                </div>
+             
+            </div>
+            <div class="col-md-8 col-sm-6">
+                <button style="float: right;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                <div class="collapse navbar-collapse px-2" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav  my-2 ">
+            
+                        <li class="nav-item ">
+                            <a class="nav-link active text-dark" aria-current="page" routerLink="clinic"
+                            style="font-size: medium;">
+                                Clinic </a>
                         </li>
-                        <li><a class="dropdown-item text-dark" routerLink="#">Yoga Trainer</a></li>
-                        <li><a class="dropdown-item text-dark" routerLink="#">SPEECH THERAPIST</a></li>
-                        <li><a class="dropdown-item text-dark" routerLink="#">Audiologist</a></li>
-                        <li>
-                            <hr class="dropdown-divider text-dark"> Psychologis
+            
+                        <li class="nav-item ">
+                            <a class="nav-link text-dark" routerLink="physiotherapist" style="font-size: medium;">
+                                Physiotherapist </a>
                         </li>
-                        <li><a class="dropdown-item text-dark" routerLink="#">ORTHOSIS & PROSTHESIS</a></li>
+            
+                        <li class="nav-item ">
+                            <a class="nav-link text-dark" routerLink="chiropractor" style="font-size: medium;">Chiropractor </a>
+                        </li>
+            
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" routerLink="homevisit" style="font-size: medium;"> Home Visit </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" routerLink="dietician" style="font-size: medium;"> Dietician </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" routerLink="yoga" style="font-size: medium;"> Yoga </a>
+                        </li>
+            
+            
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" routerLink="gymfitnesstrainer" style="font-size: medium;"> Gym/Fitness
+                                Trainer </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link text-dark" routerLink="osthopathist" style="font-size: large;">
+                                Osteopath </a>
+                        </li> -->
+            
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" routerLink="specialtherapist" style="font-size: medium;">
+                                Super Speciality Consultation</a>
+                        </li>
+            
+            
+            
+            
+                        <!-- <li class="nav-item dropdown" style="font-size: large;">
+                                <a class="nav-link dropdown-toggle text-dark"  routerLink="#" id="navbarDropdown"
+                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    More
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item text-dark" routerLink="#">Osteopath</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider text-dark"> Accupressurist
+                                    </li>
+                                    <li><a class="dropdown-item text-dark" routerLink="#">Yoga Trainer</a></li>
+                                    <li><a class="dropdown-item text-dark" routerLink="#">SPEECH THERAPIST</a></li>
+                                    <li><a class="dropdown-item text-dark" routerLink="#">Audiologist</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider text-dark"> Psychologis
+                                    </li>
+                                    <li><a class="dropdown-item text-dark" routerLink="#">ORTHOSIS & PROSTHESIS</a></li>
+                                </ul>
+                            </li> -->
+            
+                        <li>
+                            <select name="" class="m-1 border-0 mt-1 form-select"  [ngModel]="OptionSelectedTwo" (change)="onOptionChangeTwo($event)"  style="width:150px; font-size: medium;  "
+                                id="" Placeholder="More ..">
+                                <option value="" disabled>Please Select</option>
+                                <option value="accupressurist">Accupressurist</option>
+                                <option value="specialtherapist">Speech Therapist</option>
+                                <option value="osthopathist">Osteopath</option>
+                                <option value="audiologist">Audiologist</option>
+                                <option value="physiotherapist">Psychologist</option>
+                                <option value="osthopathist">Orthosis & Prosthesis</option>
+                            </select>
+                        </li>
+            
+            
+                        <!-- drop -->
+                        <!-- dropdown -->
                     </ul>
-                </li> -->
+                </div>
+               
 
-            <li>
-                <select name="" class="m-1 border-0 mt-1 form-select"  [ngModel]="OptionSelectedTwo" (change)="onOptionChangeTwo($event)"  style="width:150px; font-size: medium;  "
-                    id="" Placeholder="More ..">
-                    <option value="" disabled>Please Select</option>
-                    <option value="accupressurist">Accupressurist</option>
-                    <option value="specialtherapist">Speech Therapist</option>
-                    <option value="osthopathist">Osteopath</option>
-                    <option value="audiologist">Audiologist</option>
-                    <option value="physiotherapist">Psychologist</option>
-                    <option value="osthopathist">Orthosis & Prosthesis</option>
-                </select>
-            </li>
-
-
-            <!-- drop -->
-            <!-- dropdown -->
-        </ul>
+            </div>
+         
+        
+      
+        </nav>
     </div>
-    </div>
-  </nav>
+</div>
+
+
+
+
+
+  
 
 <div>
     <router-outlet></router-outlet>
 </div>
+<app-footer></app-footer>
 <!-- -->

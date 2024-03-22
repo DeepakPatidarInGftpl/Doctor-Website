@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, effect } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, effect } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -15,40 +15,41 @@ export class LabTestComponent implements OnInit{
   carToData:any[] = []
   allLocation :any;
   allCatogory: any[] = [];
+  filteredItems: any[] = [...this.allCatogory];
   allTest: any;
-  constructor(public _service : DoctorserviceService,private router: Router){
+  Totalprice:any;
+  allPackage: any;
+  constructor(public _service : DoctorserviceService,private router: Router , private _cdk : ChangeDetectorRef){
     effect(()=>{
       let id = this._service.id$()
       let len = this.allCatogory.length;
       let r : any = this.allCatogory.filter((item)=>item._id === id);
       if ( r.length > 0) this.carToData.push(r[0])
 
-      for (const iterator of this.carToData) {
-        console.log(iterator.testPrice)
-      }
-      // this.carToData.forEach(item =>{
-      //   item.testPrice = item.testPrice.length*item.testPrice;
-        
-      // })
-
-     
-      
     
-    console.log('deepak', this.carToData);
+      let price:any=0 ;
+      this.carToData.forEach(item =>{
+        price += +item.testPrice;
+
+        this.Totalprice = price;
+  
+      })
+
+
     })
   }
+
   
   ngOnInit(): void {
     this.GetAllLoction();
     this.GetCategory();
     this.GetAlTest();
-   
+    this.GetAllPackage();
   }
 
   GetAllLoction() {
     this._service.getAlllocation().subscribe({
       next: (res: any) => {
-        console.log(res)
         this.allLocation = res
       }
     })
@@ -56,7 +57,6 @@ export class LabTestComponent implements OnInit{
   GetCategory(){
     this._service.getAllCategory().subscribe({
       next : (res:any)=>{
-        console.log("Category",res)
         this.allCatogory = res;
         this.allCatogory.forEach((i:any)=>i.__v = 'Add')
 
@@ -66,18 +66,25 @@ export class LabTestComponent implements OnInit{
   GetAlTest(){
     this._service.getAllTests().subscribe({
       next :(res:any)=>{
-        console.log("Test",res)
         this.allTest =res;
       }
     })
   }
-
-hendalclick(index : string,str : string){
+GetAllPackage(){
+  this._service.getAllPackage().subscribe({
+    next:(res:any)=>{
+      this.allPackage =res;
+      console.log(this.allPackage)
+    }
+  })
+}
+hendalclick(index : string,str : string,obj:any){
   ((str === 'Remove' ) ?  this.show = false : this.show = true);
   this.openCart(true);
  this.allCatogory.forEach((i:any)=>{
     if(this.show === true && i._id == index) {
     this._service.id$.set(index)
+    this._service.cartData$.mutate((itr:any)=>itr.push(obj))
      this._service.addToCard$.update((i:number)=>i+1);
      i.__v= 'Remove'
 
@@ -86,23 +93,46 @@ hendalclick(index : string,str : string){
    if (this.show === false && i._id == index && str === 'Remove')
    {
      this._service.addToCard$.update((i:number)=>i-1);
+     this.remove(index)
      i.__v= 'Add'
+     
 
    }
-
  })
- 
-
 }
 openCart(val?: boolean){
   
-  if (val) {
-    this.divshow = val
-  }else{
-    this.divshow = !this.divshow
-  }
+   (val === true) ? this.divshow = val : this.divshow = !this.divshow
+  
+}
+removeItem(id:any){
+
+  this.remove(id)
+  this._service.addToCard$.update((i:number)=>i-1);
+ 
+}
+
+
+addTest(category: any){
+  console.log(category);
+  this.filteredItems = this.allCatogory.filter((item: any) => {
+    return item.categories.includes(category.id);
+
+    console.log("Category Filter",this.filteredItems)
+  })
 }
 addtouser(){
   this.router.navigate(["/userdetails"]);
+}
+
+remove(id: any){
+  this.carToData.map((item:any)=>{
+    if(item._id === id){
+    this.Totalprice = this.Totalprice - parseInt(item.testPrice)
+    item.__v= 'Add'
+    }
+  })
+  this.carToData =  this.carToData.filter((item:any)=>item._id !== id)
+ 
 }
 }

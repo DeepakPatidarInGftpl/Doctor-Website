@@ -13,6 +13,7 @@ export class DoctorserviceService {
   public addToCard$ = signal(0);
   public id$  =signal('')
   public data$ :BehaviorSubject<any> = new BehaviorSubject([])
+  public cartData$  = signal([])
   constructor(
     private _http: HttpClient,
     private snackBar:MatSnackBar
@@ -61,8 +62,12 @@ export class DoctorserviceService {
    }
    getAllTests(){
     return this._http.get<any>(environment._api+'/api/category/get')
-    
    }
+
+   getAllPackage(){
+    return this._http.get<any>(environment._api+'/api/package')
+   }
+   
   openSnackBar(data:any) {
     this.snackBar.open(data, 'Ok' ,{
       duration: 1500,

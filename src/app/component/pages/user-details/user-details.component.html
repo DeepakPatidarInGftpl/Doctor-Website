@@ -1,1 +1,134 @@
-<div>Username</div>
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div class="container-fluid" style="background-color: #f0f0f5;">
+        <div class="container">
+            <div class="row  p-3">
+                <div class="col-md-7 ">
+                    <div class="row py-4" style="background-color: #fff;">
+                        <div class="col-md-6 mx-auto  ">
+                            <form>
+                                <div class="mb-3">
+                                    <h5>Add patient details</h5>
+                                    <label for="exampleInputEmail1" class="form-label">Patient Name <span
+                                            class="text-danger">*</span> </label>
+                                    <input type="email" class="form-control" id="exampleInputEmail1"
+                                        aria-describedby="emailHelp " placeholder="john Doe" style="width: 350px;">
+                                    <div id="emailHelp" class="form-text">Required</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Date of Birth <span
+                                            class="text-danger">*</span> </label>
+                                    <div class="d-flex ">
+                                        <input type="text" class="form-control" id="exampleInputPassword1"
+                                            style="width: 50px;">
+                                        <select class="form-select ms-2" aria-label="Default select example"
+                                            style="width: 80px;">
+                                            <option selected>Year</option>
+                                            <option value="1">Years</option>
+                                            <option value="2">Months</option>
+                                            <option value="3">Days</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+
+                                    <div class="form-check">
+
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Male
+                                        </label>
+                                    </div>
+                                    <div class="form-check ms-2">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Female
+                                        </label>
+                                    </div>
+                                    <div class="form-check ms-2">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Other
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="mb-3 py-3">
+
+                                    <label for="exampleInputEmail1" class="form-label">Mobile Number (OTP will be sent
+                                        to
+                                        this
+                                        number)*</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1"
+                                        aria-describedby="emailHelp " placeholder="ex 91454563" style="width: 350px;">
+                                    <div id="emailHelp" class="form-text">Invalid Phone Number</div>
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <label for="exampleInputEmail1" class="form-label">Email</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1"
+                                        aria-describedby="emailHelp " placeholder="you@pacto.comn"
+                                        style="width: 350px;">
+                                    <div id="emailHelp" class="form-text">Required</div>
+                                </div>
+
+                                <button type="submit" class="btn btn-info text-light"
+                                    style="width: 350px;">Continue</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 border">
+                    <div class="p-3" style="background-color: #fff;">
+                        <div class="card">
+                            <div class="card-header">
+                                Your Cart
+                            </div>
+                            <div class="card-body">
+                                <ng-container *ngFor="let cart of carts">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="card-title " style="font-size: 13px;">
+                                        {{cart.testName}}
+                                    </h6>
+                                    <div class="">
+                                        <small class="me-2">₹ {{cart.testPrice}}</small>
+                                        <i class="fa-solid fa-xmark fa-xl "></i>
+                                    </div>
+                                </div>
+                                <p class="card-text" style="font-size: 12px;">Preparation<br>
+                                   {{cart.testDescription}}</p>
+                                <div class="d-flex ">
+                                    <img src="https://prod-dx.s3.amazonaws.com/dx/labs/Practo_Labs.png" alt=" "
+                                        style="width: 55px;">
+                                    <p class="card-text ms-2 p-0 m-0" style="font-size: 13px;"> By Practo Labs
+                                        <img src="https://www.practo.com/tests/public/icons/ic_info.svg?1492164199663"> </p>
+                                </div>
+                            </ng-container>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                <h6 class="card-title " style="font-size: 13px;">Pick up charges</h6>
+                                <div class="">
+                                    <small class="me-2" >₹ 150</small>
+                                </div>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between" style="background-color: #f7f7fa;">
+                                    <p class="mt-2 fw-bold">Total</p>
+                                    <p class="mt-2 fw-bold">₹ 584.00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</body>
+
+</html>

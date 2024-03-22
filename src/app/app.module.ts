@@ -79,6 +79,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import {MatBadgeModule} from '@angular/material/badge';
 import { UserDetailsComponent } from './component/pages/user-details/user-details.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { FooterComponent } from './component/shared/footer/footer.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -142,6 +144,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     CheckotpComponent,
     LabTestComponent,
     UserDetailsComponent,
+    FooterComponent,
   
 
   ],
@@ -163,7 +166,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatTabsModule,
     MatMenuModule,
     MatBadgeModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatToolbarModule
    
   ],
   providers: [DoctorserviceService],
