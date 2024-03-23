@@ -110,7 +110,7 @@
                             <tr
                                 *ngFor="let list of productWisePurchaseList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <th>{{i+1+'.'}}</th>
-                                <td>{{list.user.party_name}}</td>
+                                <td>{{list?.user?.party_name}}</td>
                                 <td>{{list.check_gst}}</td>
                                 <td>{{list.total | number:'1.2-2'}}</td>
                                 <td>{{list.bill_date |date:'yy/mm/dd'}}</td>

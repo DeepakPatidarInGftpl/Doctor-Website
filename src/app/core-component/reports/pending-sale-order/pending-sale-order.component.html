@@ -42,7 +42,7 @@
                                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                                                 <mat-option *ngFor="let supplier of filteredSuppliers | async"
                                                     [value]="supplier"
-                                                    (blur)="oncheckAccount(supplier?.id)">{{supplier?.title}} </mat-option>
+                                                    (blur)="getProductoncheckAccount(supplier)">{{supplier?.title}} </mat-option>
                                             </mat-autocomplete>
     
                                         </div>
@@ -98,11 +98,11 @@
                                 <th (click)="sort('id')" class="thone">Variant Name<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Product<i class="fa fa-sort"></i></th>
 
-                                <th (click)="sort('id')" class="thone">User<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Order Qty <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Order Price <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Order Total <i class="fa fa-sort"></i>
-                                <th (click)="sort('id')" class="thone">Pending Qty <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" style="width: 10%;">User<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" style="width: 10%;">Order Qty <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" style="width: 10%;">Order Price <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone" style="width: 10%;">Order Total <i class="fa fa-sort"></i>
+                                <th (click)="sort('id')" class="thone" style="width: 10%;">Pending Qty <i class="fa fa-sort"></i></th>
 
                                 
                                 
@@ -113,18 +113,18 @@
                                 *ngFor="let list of customerWiseSaleList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                
                                 <th style="vertical-align: top;">{{i+1+'.'}}</th>
-                                <td style="vertical-align: top;">{{list.variant_name}}</td>
+                                <td style="vertical-align: top;">{{list.variant}}</td>
                                 <td style="vertical-align: top;">{{list.product}}</td>
 
                                 <td colspan="5">
                                     <table>
                                         <tbody>
                                             <tr *ngFor="let data of list?.data">
-                                                <td>{{data.user.party_name}}</td>
-                                                <td>{{data.order_qty}}</td>
-                                                <td>{{data.order_price}}</td>
-                                                <td>{{data.order_total}}</td>
-                                                <td>{{data.pending_qty}}</td>
+                                                <td style="width: 10%;">{{data.user.party_name}}</td>
+                                                <td style="width: 10%;">{{data.order_qty}}</td>
+                                                <td style="width: 10%;">{{data.order_price}}</td>
+                                                <td style="width: 10%;">{{data.order_total}}</td>
+                                                <td style="width: 10%;">{{data.pending_qty}}</td>
                                             </tr>
                                         </tbody>
                                     </table>

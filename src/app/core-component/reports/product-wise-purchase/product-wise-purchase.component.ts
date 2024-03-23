@@ -184,7 +184,7 @@ productWisePurchase:any
     this.reportService. getProductWisePurchase(this.startDate, this.endDate, this.product).subscribe((res) => {
       console.log(res);
       this.productWisePurchase=res;
-      this.productWisePurchaseList = res?.data;
+      this.productWisePurchaseList = res;
     })
 
   }

@@ -1,0 +1,156 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Scrap Entry Add</h4>
+        <h6>Add/Update Scrap Entry</h6>
+    </div>
+</div>
+
+<div class="card" id="purchaseForm">
+    <div class="card-body">
+        <form [formGroup]="scrapEntryForm" (ngSubmit)="submit()">   
+            <div class="row">
+             
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Date*</label>
+                        <input type="date" formControlName="date" [ngClass]="{ 'is-invalid': f['date'].touched && f['date'].invalid}">
+                        <span class="text-danger" *ngIf="date && date.invalid && date.touched">Select Date</span>      
+                    </div>
+                </div>
+          
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Voucher Number*</label>
+                        <input type="text" formControlName="voucher_no" [ngModel]="prefixNo"  placeholder="Enter Voucher Number " [ngClass]="{'is-invalid': f['voucher_no'].touched && f['voucher_no'].invalid}">
+                        <span class="text-danger" *ngIf="voucher_no && voucher_no.invalid && voucher_no.touched">Enter Voucher Number </span>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-sm-4 col-12">
+                    <div class="form-group">
+                        <label>Updater Name*</label>
+                        <input type="text" formControlName="updater_name" placeholder="Enter Updater Name" [ngClass]="{'is-invalid': f['updater_name'].touched && f['updater_name'].invalid}">
+                        <span class="text-danger" *ngIf="updater_name && updater_name.invalid && updater_name.touched">Enter Updater Name</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card">
+             <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table datanew">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th></th>
+                                    <th>Item Code</th>
+                                    <th>Item Name</th>
+                                    <th>Unit</th>
+                                    <th>QTY</th>
+                                    <th>Reason</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3"> <span (click)="addCart(0)" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container formArrayName="cart_item">
+                                    <ng-container *ngFor="let d of getCart().controls; let i=index">
+                                        <tr [formGroupName]="i">
+                                            <td>{{i+1+'.'}}</td>
+                                            <td>
+                                                <div>
+                                                    <div class="me-2">
+                                                        <svg (click)="removeCart(i)" style="color:red"
+                                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path
+                                                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                        </svg>
+                                                    </div>
+                                                    <svg *ngIf="isLastCart(i)" (click)="addCart(i+1)" style="color:green"
+                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                        <path
+                                                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                    </svg>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input class="input" type="text" placeholder="Search Barcode"
+                                                    [attr.data-index]="i"
+                                                    [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
+                                                    (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
+                                            </td>
+                                            <td colspan="1">
+                                                <div class="form-group" style="margin-bottom: 0;">
+                                            <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                        <input
+                                                        type="text"
+                                                        placeholder="Search Product"
+                                                        aria-label="Search Products"
+                                                        matInput
+                                                        [formControl]="myControl"
+                                                        (input)="getVariant($event.target.value,i,'')"
+                                                        [matAutocomplete]="autos" 
+                                                        style="box-sizing: border-box;" 
+                                                        />
+                                                        <mat-autocomplete #autos="matAutocomplete">
+                                                        <ng-container *ngIf="myControl.value?.length >= 1 && myControl.value?.length > 0">
+                                                        <ng-container *ngFor="let option of variantList">
+                                                        <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
+                                                                    (onSelectionChange)="oncheckVariant(option,i)" style="color:#FF9F43">
+                                                            {{ option?.product_title + ' ' + option?.variant_name}}
+                                                        </mat-option>
+                                                        </ng-container>
+                                                        </ng-container>
+                                                        <mat-option *ngIf="isSearch" style="color:#FF9F43">Loading...</mat-option>
+                                                        <mat-option *ngIf="variantList?.length === 0 && !isSearch" [value]="'No data found'">
+                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                                                        </mat-option>
+                                                        <mat-option *ngIf="myControl.value?.length < 3" class="is-loading"> Please Enter 3 or more characters
+                                                        </mat-option>
+                                                        </mat-autocomplete>
+                                                    </mat-form-field>
+                                                </div>
+                                            </td>
+                                            <td><input type="text" placeholder="Enter Unit" formControlName="unit" class="input" readonly><span class="text-danger d-block" *ngIf="unit(i) && unit(i).invalid && unit(i).touched">Enter Unit</span>
+                                            </td>
+                                            <td><input type="number" placeholder="Enter Qty" formControlName="qty" class="input"><span class="text-danger d-block" *ngIf="qty(i) && qty(i).invalid && qty(i).touched">Enter QTY</span>
+                                            </td>
+                                            <td><input type="text" placeholder="Enter Reason"  formControlName="reason" class="input"></td>  
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                                <!-- <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-start"><strong>Total</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                  </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+             </div>
+            </div>
+            <div class="col-lg-12">
+                <a routerLink="//transaction/scarp-entry-list" class="btn btn-cancel">Cancel</a>
+                <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>              
+                
+            </div>
+        </form>
+    </div>
+</div>
+
+  

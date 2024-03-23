@@ -126,7 +126,7 @@ export class SaleRegisterComponent implements OnInit {
     UserName: any;
    
     generatePDFAgain() {
-      const doc = new jsPDF();
+      const doc = new jsPDF('landscape');
       const subtitle = 'PV';
       const title = 'Sale Register Report';
       const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
