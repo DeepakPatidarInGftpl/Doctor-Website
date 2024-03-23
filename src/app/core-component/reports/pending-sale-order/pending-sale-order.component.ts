@@ -86,6 +86,14 @@ export class PendingSaleOrderComponent implements OnInit {
 
     this.getCustomerWiseSale();
     this.getUser();
+    this.getProduct()
+    this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+      startWith(''),
+      map((value: any) => {
+        const title = typeof value === 'string' ? value : value?.title;
+        return title ? this._filter2(title as string) : this.suppliers.slice();
+      }),
+    );
     this.filteredusers = this.userControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
@@ -127,6 +135,17 @@ export class PendingSaleOrderComponent implements OnInit {
     })
   }
 
+  private _filter2(title: string): any[] {
+    const filterValue = title ? title.toLowerCase() : '';
+    console.log(filterValue);
+    return this.suppliers.filter((option: any) => 
+    (option?.title && option.title.toLowerCase().includes(filterValue)) || 
+    (option?.name && option.name.toLowerCase().includes(filterValue))
+  );
+  }
+  displayFn2(user: any): string {
+    return user && user?.title || user?.name ? user?.title || user?.name  : '';
+  }
   search() {
     if (this.titlee === "") {
       this.getCustomerWiseSale();
@@ -193,7 +212,10 @@ getCustomerWiseSale() {
    this?.getCustomerWiseSale();
   }
   getProductoncheckAccount(data: any) {
-    this.customerWiseSaleForm.patchValue({productName:data});
+    console.log(data);
+
+    this.customerWiseSaleForm.patchValue({product_id:data?.id});
+    this.product_id=this.customerWiseSaleForm.value?.product_id;
     console.warn(this.customerWiseSaleForm.value);
     this?.getCustomerWiseSale();
    }
@@ -236,7 +258,7 @@ generatePDFAgain() {
   this.customerWiseSaleList.forEach((list: any) => {
     console.warn(list);
     
-    const variant = list.variant_name;
+    const variant = list.variant;
     const product= list.product;
     let isFirstInvoice = true;
     list.data.forEach((row:any,index: number) => {

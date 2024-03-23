@@ -276,4 +276,22 @@ export class TransactionService {
     let url = this.apiUrl + '/pv-api/contact-user/';
     return this.http.get(url)
   }
+  getScrapEntryVoucherPrefix(){
+    let url =this.apiUrl+'/pv-api/prefix/?id=ScarpEntry';
+    return this.http.get(url)
+  }
+
+  getScrapEntry() {
+    let url = this.apiUrl + '/pv-api/scarp_entry/';
+    return this.http.get(url);
+  }
+  getScrapEntryById(id:number) {
+    let url = this.apiUrl + '/pv-api/scarp_entry/?id=';
+    return this.http.get(`${url}${id}`);
+  }
+  
+  addScrapEntry(data: any) {
+    let url = this.apiUrl + '/pv-api/scarp_entry/';
+    return this.http.post<any>(url, data,)
+  }
 }

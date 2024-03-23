@@ -136,6 +136,7 @@
                           <li *ngIf="isSalesBill"><a routerLink="/sales/salesbill-list" routerLinkActive="active">Sales Bill </a></li>
                           <li *ngIf="isSalesReturn"><a routerLink="/sales/salesReturnlist" routerLinkActive="active">Sales Return</a></li>
                           <li *ngIf="isSalesOutward"><a routerLink="/sales/salesMaterialOutward-list" routerLinkActive="active">Sales Material Outward</a></li>
+                          <li *ngIf="isSalesOutward"><a routerLink="/sales/advance-booking-list" routerLinkActive="active">Sales Advance Booking</a></li>
                           <!-- <li *ngIf="isPosOrder"><a routerLink="/sales/posOrder" routerLinkActive="active">POS Order</a></li>
                           <li *ngIf="isPosOrder"><a routerLink="/sales/payment" routerLinkActive="active">Payment</a></li>
                           <li *ngIf="isReciept"><a routerLink="/sales/reciept" routerLinkActive="active">Payment</a></li>
@@ -158,6 +159,7 @@
                           <li *ngIf="isDebit"><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
                           <li *ngIf="isCredit"><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
                           <li *ngIf="isMaterialConsuption"><a routerLink="/transaction/materialConsuption" routerLinkActive="active">Material Consuption</a></li>
+                          <li><a routerLink="/transaction/scarp-entry-list" routerLinkActive="active">Scarp Entry</a></li>
                      </ul>
                   </li>
                   <li class="submenu">
@@ -167,7 +169,7 @@
                       <li><a routerLink="/newpos/pos" target="_blank" routerLinkActive="active">POS New</a></li>
                       </ul>
                   </li> 
-                  <li class="submenu" *ngIf="isCompanyBank">
+                  <li class="submenu" *ngIf="isCompanyBank || isReciept || isExpence || isPurchasepos">
                       <a [ngClass]="{'active': activePath === 'bank'}"> <i class="fa fa-credit-card" data-bs-toggle="tooltip" title="fa fa-credit-card" style="color: #637381;"></i><span> Bank</span> <span class="menu-arrow"></span></a>
                       <ul>
                       <li *ngIf="isCompanyBank"><a routerLink="/bank/companyBank" routerLinkActive="active">Company Bank</a></li>

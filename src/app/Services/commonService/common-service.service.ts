@@ -560,6 +560,7 @@ export class CommonServiceService {
       "url": "/report/tax-wise-debit-note",
       "is_Favorite": false
     },
+   
     {
       "reportname": "Product History",
       "group": "inventory",
@@ -636,6 +637,18 @@ export class CommonServiceService {
       "reportname": "Least Selling Product",
       "group": "inventory",
       "url": "/report/least-selling-product",
+      "is_Favorite": false
+    },
+    {
+      "reportname": "Loss Qty ",
+      "group": "inventory",
+      "url": "/report/loss-qty",
+      "is_Favorite": false
+    },
+    {
+      "reportname": "scrap entry",
+      "group": "inventory",
+      "url": "/report/scrap-entry/",
       "is_Favorite": false
     },
     {

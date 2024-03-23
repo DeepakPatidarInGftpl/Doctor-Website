@@ -40,6 +40,10 @@ const routes: Routes = [
 { path: 'updateMaterialConsuption/:id', loadChildren: () => import('./update-material-consumption/update-material-consumption.module').then((m) => m.UpdateMaterialConsumptionModule) },
 { path: 'detailsMaterialConsuption/:id', loadChildren: () => import('./detail-material-consumption/detail-material-consumption.module').then((m) => m.DetailMaterialConsumptionModule) },
 
+{path:'add-scarp-entry',loadChildren:()=>import('./add-scrap-entry/add-scrap-entry.module').then((m)=>m.AddScrapEntryModule)},
+{path:'details-scarp-entry/:id',loadChildren:()=>import('./details-scrap-entry/details-scrap-entry.module').then((m)=>m.DetailsScrapEntryModule)},
+{path:'scarp-entry-list',loadChildren:()=>import('./scrap-entry-list/scrap-entry-list.module').then((m)=>m.ScrapEntryListModule)},
+
 ];
 
 @NgModule({

@@ -203,7 +203,7 @@ export class SupplierOutstandingComponent implements OnInit {
       ],
       body: this.purchaseRegisterList.map((row:any, index:number ) => [
         index + 1,
-        row.user_detail,
+        row.user_detail?.party_name?.name,
         row.Debit,
         row.Credit,
         row.closing
