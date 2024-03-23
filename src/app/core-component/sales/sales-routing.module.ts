@@ -187,7 +187,27 @@ const routes: Routes = [
       //       (m) => m.DetailsPosOrderModule
       //     ),
       // },
-
+      {
+        path: 'add-advance-booking',
+        loadChildren: () =>
+          import('./add-advance-booking/add-advance-booking.module').then((m) => m.AddAdvanceBookingModule),
+      },
+      {
+        path: 'update-advance-booking/:id',
+        loadChildren: () =>
+          import('./update-advance-booking/update-advance-booking.module').then((m) => m.UpdateAdvanceBookingModule),
+      },
+      {
+        path: 'advance-booking-list',
+        loadChildren: () =>
+          import('./advance-booking-list/advance-booking-list.module').then((m) => m.AdvanceBookingListModule),
+      },
+      {
+        path: 'detail-advance-booking/:id',
+        loadChildren: () =>
+          import('./detail-advance-booking/detail-advance-booking.module').then((m) => m.DetailAdvanceBookingModule),
+      },
+     
 
     ],
   },

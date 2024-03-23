@@ -104,7 +104,7 @@ export class LossQtyComponent implements OnInit {
     }
   productDayBookList:any
     getproductDayBook() {
-      this.reportService.getJournalBook(this.startDate, this.endDate).subscribe((res:any) => {
+      this.reportService.getLossQty(this.startDate, this.endDate).subscribe((res:any) => {
         console.log(res);
         this.productDayBookList = res;
       })
@@ -126,9 +126,9 @@ export class LossQtyComponent implements OnInit {
     UserName: any;
    
     generatePDFAgain() {
-      const doc = new jsPDF();
+      const doc = new jsPDF('landscape');
       const subtitle = 'PV';
-      const title = 'Journal Book Report';
+      const title = 'Loss Qty Report';
       const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
       const heading = `User: ${this.userName}`;
     
@@ -144,18 +144,22 @@ export class LossQtyComponent implements OnInit {
       // Pass tableData to autoTable
       autoTable(doc, {
         head: [
-          ['#', 'Date', 'Particulars', 'Voucher Type', 'Voucher No.','Description','Debit','Credit']
+          ['#', 'Title', 'Category','Subcategory','Brand','Variant','Date','Price','Voucher Type','Voucher No.','IN Qty','Out Qty']
         ],
         body: this.productDayBookList.map((row:any, index:number ) => [
           index + 1,
-          this.formatDate(row.date),
-          row.particulars,
+          row.product.title,
+          row.product.category,
+          row.product.subcategory,
+          row.product.brand,
+          row.variant,
+          row.date,
+          row.price,
           row.voucher_type,
           row.voucher_no,
-          row.description,
-          row.debit,
-          row.credit,
-
+          row.in_qty,
+          row.out_qty
+    
         ]),
         theme: 'grid',
         headStyles: {
@@ -166,7 +170,7 @@ export class LossQtyComponent implements OnInit {
     
       });
     
-      doc.save('Journal_Book.pdf');
+      doc.save('Loss_Qty .pdf');
     }
     
     // excel export only filtered data

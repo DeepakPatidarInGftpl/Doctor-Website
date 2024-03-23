@@ -1,0 +1,164 @@
+<div class="row bg">
+    <div class="card">
+        <div class="card-body">
+            <div class="page-header">
+                <div class="page-title">
+                    <h6 class="subhead-color" (click)="goBack()"><mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>
+                        Back to Payment Voucher</h6>
+                    <h4>Payment Voucher Details</h4>
+                </div>
+               
+            </div>
+            <div class="company-details-card card" *ngIf="recieptVoucherDetail">
+                <div class="sub-card row">
+                    <mat-tab-group animationDuration="0ms" #tabGroup>
+                        <mat-tab label="General Details">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="th">Updater Name</td>
+                                            <td class="td">{{recieptVoucherDetail?.updater_name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Voucher No.</td>
+                                            <td class="td">{{recieptVoucherDetail?.voucher_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Date</td>
+                                            <td class="td">{{recieptVoucherDetail?.date}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                           
+                        </mat-tab>
+                        <mat-tab label="Cart" >
+                            <div class="table-responsive" *ngIf="recieptVoucherDetail?.cart?.length>0">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="th">#</th>
+                                            <th class="th">SKU</th>
+                                            <th class="th">Name</th>
+                                            <th class="th">QTY</th>
+                                            <th class="th">Unit</th>
+                                            <th class="th">Reason</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let cart of recieptVoucherDetail?.cart; index as i">
+                                        <tr>
+                                            <td class="td">{{i+1+'.'}}</td>
+                                            <td class="td">{{cart?.item_code}}</td>
+                                            <td class="td">{{cart?.item_name}}</td>
+                                            <td class="td">{{cart?.qty}}</td>
+                                            <td class="td">{{cart?.unit}}</td>
+                                            <td class="td">{{cart?.reason}}</td>
+                                        </tr> 
+                                     
+                                    </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center" *ngIf="recieptVoucherDetail?.cart?.length==0">
+                                <span class="text-danger">Data Not Available</span>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Logs" *ngIf="recieptVoucherDetail?.logs?.length>0">
+                            <div class="card">
+                                <!-- <div class="search-set mx-3 mt-3">
+                                    <div class="search-path">
+                                        <a class="btn btn-filter" id="filter_search">
+                                            <img src="assets/img/icons/filter.svg" alt="img">
+                                            <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                                        </a>
+                                    </div>
+                                </div> -->
+                                <div class="card-body">
+                                    <!-- <div class="card" id="filter_inputs">
+                                        <div class="card-body border">
+                                            <div class="row my-2">
+                                                <div class="col-lg-12 col-sm-12">
+                                                    <div class="col-lg-4 col-sm-6 col-12">
+                                                        <div class="form-group mb-0 mx-3">
+                                                           <label>Select Operation Type</label>
+                                                            <select [(ngModel)]="filterOpertion" (change)="filterData()" class="form-select">
+                                                                <option value="" selected disabled>Select Operation Type</option>
+                                                                <option value="Add">Add</option>
+                                                                <option value="Update">Update</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group mb-0" (click)="clearFilter()">
+                                                        <a class="btn btn-filters ms-auto" style="width: 20%;">Clear Filter</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <div class="table-responsive">
+                                        <table class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th class="th" (click)="sort('id')"># <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
+                                            <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let log of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p}; index as i">
+                                        <tr>
+                                            <td class="td" (click)="sort('id')">{{i+1}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.userid}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.operation_type}}</td>
+                                            <td class="td" (click)="sort('id')">{{log?.date_time |  date:'dd-MM-yyyy hh:mm:ss a'}}</td>
+                                        </tr> 
+                                    </ng-container>
+                                    </tbody>
+                                    <tbody *ngIf="filteredData?.length==0">
+                                        <tr>
+                                            <td colspan="10">
+                                                <p class="center-textt">Data not available</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="progressbar">
+                                    <mat-progress-bar mode="indeterminate" class="progressbar"
+                                        *ngIf="loader"></mat-progress-bar>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                                        <div class="entries"> Show per page
+                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="-1">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                                        <div class="f-right">
+                                            <pagination-controls
+                                                (pageChange)="p = $event"></pagination-controls>
+                                            <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+             
+            </div>
+        </div>
+    </div>
+</div>

@@ -190,7 +190,7 @@ export class CustomerOutstandingSaleComponent implements OnInit {
       ],
       body: this.customerOutstandingList.map((row:any, index:number ) => [
         index + 1,
-        row.user_detail,
+        row.user_detail?.party_name?.name,
         row.Credit,
         row.Debit,
         row.closing

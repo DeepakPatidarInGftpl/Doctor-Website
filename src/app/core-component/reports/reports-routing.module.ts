@@ -305,7 +305,11 @@ const routes: Routes = [
   loadChildren: () =>
     import('./loss-qty/loss-qty.module').then((m) => m.LossQtyModule),
 },
-
+{
+  path: 'scrap-entry',
+  loadChildren: () =>
+    import('./scrap-entry/scrap-entry-routing.module').then((m) => m.ScrapEntryRoutingModule),
+},
 ];
 
 @NgModule({

@@ -359,7 +359,7 @@ export class ReportService {
   }
   
   getProductWisePurchase(start_date: any, end_date: any, product: any): Observable<any> {
-    let url = this.apiUrl + '/api/reports/product/wise/purchase';
+    let url = this.apiUrl + '/api/reports/product/wise/purchase/';
     const queryParams: any[] = [];
     if (start_date) {
       queryParams.push(`start_date=${start_date}`);
@@ -832,8 +832,10 @@ export class ReportService {
     }
     return this.http.get<any>(url);
   }
-  getPendingSaleOrder(start_date: any, end_date: any, product: any,user_id:any): Observable<any> {
-    let url = this.apiUrl + '/api/reports/pending/saleorder';
+
+  // /api/reports/pending/saleorder/?start_date=2023-01-19&end_date=2024-06-19
+  getPendingSaleOrder(start_date: any, end_date: any, user_id:any,product: any,): Observable<any> {
+    let url = this.apiUrl + '/api/reports/pending/saleorder/';
     const queryParams: any[] = [];
     if (start_date) {
       queryParams.push(`start_date=${start_date}`);
@@ -1041,5 +1043,20 @@ export class ReportService {
   getFavorite(){
     let url = this.apiUrl+'/api/reports/favourites/';
     return this.http.get(url)
+  }
+  getScrapEntry(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/scrap-entry/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
   }
 }
