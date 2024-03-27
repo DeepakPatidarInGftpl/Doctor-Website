@@ -4,7 +4,7 @@ import { UpdateSalesReturnComponent } from './update-sales-return.component';
 import { RolesGuardGuard } from 'src/app/guards/roles-guard.guard';
 
 const routes: Routes = [
-  {path:'',component:UpdateSalesReturnComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['change_salereturn']}}
+  {path:'',component:UpdateSalesReturnComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['change_advancebooking']}}
 ];
 
 @NgModule({

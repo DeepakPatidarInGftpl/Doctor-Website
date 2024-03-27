@@ -46,13 +46,13 @@ userDetails:any;
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'Transactions'  && res.content_type.model === 'scarpentry' && res.codename=='add_scarpentry') {
+        if (res.content_type.app_label === 'transactions'  && res.content_type.model === 'scarpentry' && res.codename=='add_scarpentry') {
           this.isAdd = res.codename;
           console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'Transactions' && res.content_type.model === 'scarpentry' && res.codename=='change_scarpentry') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'scarpentry' && res.codename=='change_scarpentry') {
           this.isEdit = res.codename;
           console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'Transactions' && res.content_type.model === 'scarpentry' && res.codename=='delete_scarpentry') {
+        }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'scarpentry' && res.codename=='delete_scarpentry') {
           this.isDelete = res.codename;
           console.log(this.isDelete);
         }
