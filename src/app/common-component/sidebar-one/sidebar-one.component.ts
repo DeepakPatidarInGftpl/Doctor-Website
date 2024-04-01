@@ -140,6 +140,11 @@ export class SidebarOneComponent implements OnInit {
   isDepartment: any;
   userDetails: any;
   isIncentive: any;
+// offer
+isInvoiceOffer:any;
+isBrandOffer:any;
+isBrandSubcategoryOffer:any;
+
   ngOnInit(): void {
     this.LoadScript("assets/js/sidebar.js")
 
@@ -331,17 +336,14 @@ export class SidebarOneComponent implements OnInit {
           this.isExpenseVoucher = res.codename; //12-1
         } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'newmaterialconsuption' && res.codename == 'view_newmaterialconsuption') {
           this.isMaterialConsuption = res.codename; //12-1
-        }
-        
+        } 
         // inventory
         else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'view_stocktransfer') {
           this.isStockTransport = res.codename;
-        }
-        else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'transferrequest' && res.codename == 'view_transferrequest') {
+        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'transferrequest' && res.codename == 'view_transferrequest') {
           this.isStockTransportRequest = res.codename;
           console.log(res.codename);
-        }
-        else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'stockverification' && res.codename == 'view_stockverification') {
+        } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'stockverification' && res.codename == 'view_stockverification') {
           this.isStockVerification = res.codename;
           console.log(res.codename);
         }
@@ -360,6 +362,10 @@ export class SidebarOneComponent implements OnInit {
         } else if (res.content_type.app_label === 'hrm' && res.content_type.model === 'incentiveledger' && res.codename == 'view_incentiveledger') {
           this.isIncentive = res.codename;
           console.log(res.codename);
+        }
+        //offer
+        else if (res.content_type.app_label === 'master' && res.content_type.model === 'discount' && res.codename == 'view_discount') {
+          this.isInvoiceOffer = res.codename
         }
       });
     }

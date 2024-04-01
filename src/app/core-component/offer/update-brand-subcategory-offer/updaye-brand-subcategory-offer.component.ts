@@ -117,7 +117,7 @@ export class UpdayeBrandSubcategoryOfferComponent implements OnInit {
         purchase_qty: j?.purchase_qty,
         free_qty: j?.free_qty,
       }));
-      this.myControls.push(new FormControl(j?.free_items)); 
+      this.myControls.push(new FormControl(j?.free_items?.product_title)); 
     });
     return formarr;
   }
@@ -361,7 +361,7 @@ export class UpdayeBrandSubcategoryOfferComponent implements OnInit {
       formData.append('discount_type', this.brandOfferForm.get('discount_type')?.value);
       formData.append('brands', JSON.stringify(this.brandOfferForm.get('brands')?.value));
       formData.append('subcategory', JSON.stringify(this.brandOfferForm.get('subcategory')?.value));
-      formData.append('collection', this.brandOfferForm.get('collection')?.value);
+      // formData.append('collection', this.brandOfferForm.get('collection')?.value);
       formData.append('is_active',this.brandOfferForm.get('is_active')?.value);
 
       const cartArray = this.brandOfferForm.get('discount_cart') as FormArray;
