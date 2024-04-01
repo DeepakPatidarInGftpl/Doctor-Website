@@ -771,4 +771,10 @@ export class SubcategorylistComponent implements OnInit {
     // Prevent the event from propagating to the dropdown menu
     event.stopPropagation();
   }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.tableData.length;
+    }
+  }
 }

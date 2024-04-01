@@ -865,6 +865,11 @@ export class TargetGraphComponent implements OnInit {
   get department_id() {
     return this.filterForm.get('department_id');
   }
-
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.graphList?.length;
+    }
+  }
 }
 
