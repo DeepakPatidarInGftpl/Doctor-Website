@@ -144,6 +144,7 @@ const routes: Routes = [
     
       {path:'dashboard',loadChildren:()=>import('./dashboard/dashboard.module').then((m)=>m.DashboardModule)},
       {path:'inventory',loadChildren:()=>import('./inventory/inventory.module').then((m)=>m.InventoryModule)},
+      {path:'offer',loadChildren:()=>import('./offer/offer.module').then((m)=>m.OfferModule)},
  
     ],
   },
