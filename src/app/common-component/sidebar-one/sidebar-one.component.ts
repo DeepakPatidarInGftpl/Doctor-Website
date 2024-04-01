@@ -145,6 +145,9 @@ isInvoiceOffer:any;
 isBrandOffer:any;
 isBrandSubcategoryOffer:any;
 
+
+  isScarpEntry:any;
+  isAdvanceBooking:any;
   ngOnInit(): void {
     this.LoadScript("assets/js/sidebar.js")
 
@@ -318,6 +321,8 @@ isBrandSubcategoryOffer:any;
           this.isSalesReturn = res.codename
         } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename == 'view_estimate') {
           this.isSalesEstimate = res.codename;
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'advancebooking' && res.codename == 'view_advancebooking') {
+          this.isAdvanceBooking = res.codename;
         }
         // transaction
         else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'creditnote' && res.codename == 'view_creditnote') {
@@ -336,7 +341,10 @@ isBrandSubcategoryOffer:any;
           this.isExpenseVoucher = res.codename; //12-1
         } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'newmaterialconsuption' && res.codename == 'view_newmaterialconsuption') {
           this.isMaterialConsuption = res.codename; //12-1
-        } 
+        }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'scarpentry' && res.codename == 'view_scarpentry') {
+          this.isScarpEntry = res.codename; //12-1
+        }
+        
         // inventory
         else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'stocktransfer' && res.codename == 'view_stocktransfer') {
           this.isStockTransport = res.codename;

@@ -351,6 +351,12 @@ displayFn3(user: any): string {
           this.accountList = res;
         })
       }
+      changePg(val: any) {
+        console.log(val);
+        if (val == -1) {
+          this.itemsPerPage = this.dayBookList?.length;
+        }
+      }
     }
   
 

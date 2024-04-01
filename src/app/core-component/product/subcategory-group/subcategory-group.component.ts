@@ -736,4 +736,10 @@ this.getFeatureGroup()
       // Restore the original content of the body
       document.body.innerHTML = originalContents;
     }
+    changePg(val: any) {
+      console.log(val);
+      if (val == -1) {
+        this.itemsPerPage = this.filteredData?.length;
+      }
+    }
 }
