@@ -158,7 +158,12 @@ export class IncentiveLedgerEmployeeComponent implements OnInit {
   get employee_id() {
     return this.filterForm.get('employee_id');
   }
-
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.incentiveList.length;
+    }
+  }
 }
 
 

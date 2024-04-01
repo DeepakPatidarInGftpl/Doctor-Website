@@ -146,13 +146,13 @@ userDetails:any;
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'sale'  && res.content_type.model === 'estimate' && res.codename=='add_estimate') {
+        if (res.content_type.app_label === 'sale'  && res.content_type.model === 'advancebooking' && res.codename=='add_advancebooking') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename=='change_estimate') {
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'advancebooking' && res.codename=='change_advancebooking') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename=='delete_estimate') {
+        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'advancebooking' && res.codename=='delete_advancebooking') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -362,6 +362,12 @@ select=false
     this.selectedAmount=null;
     this.statusFilter=null;
     this.filterData();
+  }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.tableData.length;
+    }
   }
 }
 

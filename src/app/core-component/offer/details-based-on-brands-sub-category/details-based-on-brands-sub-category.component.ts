@@ -19,7 +19,6 @@ export class DetailsBasedOnBrandsSubCategoryComponent implements OnInit {
   brandOfferDetail: any
   getdata() {
     this.OfferService.getDiscountById(this.id).subscribe((res:any) => {
-      res.map((res:any)=>{
         if (this.id == res.id) {
           this.brandOfferDetail = res;
           console.log(this.brandOfferDetail);
@@ -27,7 +26,6 @@ export class DetailsBasedOnBrandsSubCategoryComponent implements OnInit {
           this.filteredData = this.brandOfferDetail?.logs.slice(); // Initialize filteredData with the original data
           this.filterData(); 
         }
-      })
      
     })
   }
@@ -56,6 +54,21 @@ export class DetailsBasedOnBrandsSubCategoryComponent implements OnInit {
     clearFilter() {
       this.filterOpertion=null;
       this.filterData();
+    }
+
+    pp: number = 1;
+    itemsPerPages = 10;
+    keyy = 'id';
+    sortt(key) {
+      this.keyy = key;
+      this.reverse = !this.reverse
+    }
+
+    pgChange(val:any){
+      console.warn(val,'pg');
+      if(val==-1){
+        this.itemsPerPages=this.brandOfferDetail?.discount_cart?.length;
+      }
     }
 }
 

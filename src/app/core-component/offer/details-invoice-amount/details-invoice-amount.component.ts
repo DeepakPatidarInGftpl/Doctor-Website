@@ -54,5 +54,20 @@ export class DetailsInvoiceAmountComponent implements OnInit {
       this.filterOpertion=null;
       this.filterData();
     }
+
+    pp: number = 1;
+    itemsPerPages = 10;
+    keyy = 'id';
+    sortt(key) {
+      this.keyy = key;
+      this.reverse = !this.reverse
+    }
+
+    pgChange(val:any){
+      console.warn(val,'pg');
+      if(val==-1){
+        this.itemsPerPages=this.invoiceOfferDetail?.discount_cart?.length;
+      }
+    }
 }
 

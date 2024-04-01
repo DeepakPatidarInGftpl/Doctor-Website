@@ -363,4 +363,10 @@ export class ListMaterialConsumptionComponent implements OnInit {
     this.date = null;
     this.filterData();
   }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.tableData.length;
+    }
+  }
 }

@@ -53,13 +53,13 @@
                             <span class="text-danger" *ngIf="customers_group && customers_group.invalid && customers_group.touched">Enter Customers Group </span>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-sm-4 col-12">
+                    <!-- <div class="col-lg-3 col-sm-4 col-12">
                         <div class="form-group">
                             <label>Collection</label>
                             <input type="text" placeholder="Enter Collection" formControlName="collection" [ngClass]="{'is-invalid': f['collection'].touched && f['collection'].invalid}">
                             <span class="text-danger" *ngIf="collection && collection.invalid && collection.touched">Enter Collection </span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-lg-3 col-sm-4 col-12" style="display: none;">
                         <div class="form-group">
                             <label>Discount Type*</label>
@@ -147,7 +147,7 @@
                                 <option value="Price-range-discount">Price Range Discount</option>
                                 <option value="Price-range-free-item">Price Range Free Items</option>
                                 <option value="Quantity-per-percentage">Quantity Per Percentage</option>
-                                <option value="Quantity-per-quantity ">Quantity Per Quantity</option> 
+                                <option value="Quantity-per-quantity">Quantity Per Quantity</option> 
                             </select>
                        </div>
                     </div>
@@ -171,7 +171,6 @@
                                                <th>Discount Type</th>
                                                <th>&nbsp;</th>
                                            </tr>
-                                       
                                        </thead>
                                        <tbody>
                                             <ng-container formArrayName="discount_cart">
@@ -215,7 +214,6 @@
                                                                 <option value="Rs">Rs</option>
                                                             </select>
                                                         </td>
-                                                   
                                                     </tr>
                                                </ng-container>
                                            </ng-container>

@@ -161,5 +161,10 @@ export class BarcodeComponent implements OnInit {
     console.log(this.selectData, 'selected data');
     // this.productControl.reset();
   }
-
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.variantList?.length;
+    }
+  }
 }

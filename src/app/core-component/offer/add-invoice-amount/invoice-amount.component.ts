@@ -128,15 +128,15 @@ export class InvoiceAmountComponent implements OnInit {
   get discount_type() {
     return this.invoiceAmountForm.get('discount_type');
   }
-  get collection() {
-    return this.invoiceAmountForm.get('collection');
-  }
-  get brands() {
-    return this.invoiceAmountForm.get('brands');
-  }
-  get subcategory() {
-    return this.invoiceAmountForm.get('subcategory');
-  }
+  // get collection() {
+  //   return this.invoiceAmountForm.get('collection');
+  // }
+  // get brands() {
+  //   return this.invoiceAmountForm.get('brands');
+  // }
+  // get subcategory() {
+  //   return this.invoiceAmountForm.get('subcategory');
+  // }
 
   subcatList: any
   subCategoryList: any[] = [];
@@ -278,9 +278,9 @@ export class InvoiceAmountComponent implements OnInit {
       formData.append('applicable_for_only_coupons', this.invoiceAmountForm.get('applicable_for_only_coupons')?.value);
       formData.append('auto_update_price', this.invoiceAmountForm.get('auto_update_price')?.value);
       formData.append('discount_type', this.invoiceAmountForm.get('discount_type')?.value);
-      formData.append('brands', JSON.stringify(this.invoiceAmountForm.get('brands')?.value));
-      formData.append('subcategory', JSON.stringify(this.invoiceAmountForm.get('subcategory')?.value));
-      formData.append('collection', this.invoiceAmountForm.get('collection')?.value);
+      // formData.append('brands', JSON.stringify(this.invoiceAmountForm.get('brands')?.value));
+      // formData.append('subcategory', JSON.stringify(this.invoiceAmountForm.get('subcategory')?.value));
+      // formData.append('collection', this.invoiceAmountForm.get('collection')?.value);
       formData.append('is_active',this.invoiceAmountForm.get('is_active')?.value);
 
     const cartArray = this.invoiceAmountForm.get('discount_cart') as FormArray;
