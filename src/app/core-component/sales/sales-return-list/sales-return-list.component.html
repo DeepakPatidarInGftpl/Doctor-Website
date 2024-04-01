@@ -163,7 +163,7 @@
             <div class="row">
                 <div class="col-lg-4 col-sm-4 col-12 mt-2">
                     <div class="entries"> Show per page
-                        <select [(ngModel)]="itemsPerPage" class="pagination">   
+                        <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">   
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="30">30</option>
@@ -176,7 +176,7 @@
                 <div class="col-lg-8 col-sm-8 col-12 mt-2">
                     <div class="f-right">
                         <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                        <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}} entries</div>  
                     </div>
                 </div>
             </div>

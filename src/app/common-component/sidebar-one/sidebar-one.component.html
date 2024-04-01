@@ -128,7 +128,7 @@
       
                       </ul>
                   </li>
-                  <li class="submenu" *ngIf="isSalesEstimate || isSalesOrder || isSalesBill || isSalesOutward || isSalesReturn">
+                  <li class="submenu" *ngIf="isSalesEstimate || isSalesOrder || isSalesBill || isSalesOutward || isSalesReturn || isAdvanceBooking">
                       <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span class="menu-arrow"></span></a>
                       <ul>
                           <li *ngIf="isSalesEstimate"><a routerLink="/sales/salesEstimatelist" routerLinkActive="active">Sales Estimate</a></li>
@@ -136,7 +136,7 @@
                           <li *ngIf="isSalesBill"><a routerLink="/sales/salesbill-list" routerLinkActive="active">Sales Bill </a></li>
                           <li *ngIf="isSalesReturn"><a routerLink="/sales/salesReturnlist" routerLinkActive="active">Sales Return</a></li>
                           <li *ngIf="isSalesOutward"><a routerLink="/sales/salesMaterialOutward-list" routerLinkActive="active">Sales Material Outward</a></li>
-                          <li *ngIf="isSalesOutward"><a routerLink="/sales/advance-booking-list" routerLinkActive="active">Sales Advance Booking</a></li>
+                          <li *ngIf="isAdvanceBooking"><a routerLink="/sales/advance-booking-list" routerLinkActive="active">Sales Advance Booking</a></li>
                           <!-- <li *ngIf="isPosOrder"><a routerLink="/sales/posOrder" routerLinkActive="active">POS Order</a></li>
                           <li *ngIf="isPosOrder"><a routerLink="/sales/payment" routerLinkActive="active">Payment</a></li>
                           <li *ngIf="isReciept"><a routerLink="/sales/reciept" routerLinkActive="active">Payment</a></li>
@@ -148,7 +148,7 @@
                           <li><a routerLink="/sales/createsalesreturns" routerLinkActive="active">New Sales Return</a></li> -->
                       </ul>
                   </li> 
-                  <li class="submenu" *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher || isExpenseVoucher || isMaterialConsuption">
+                  <li class="submenu" *ngIf="isRecieptVoucher || isJournalVoucher || isCountraVoucher || isDebit || isCredit || isPaymentVoucher || isExpenseVoucher || isMaterialConsuption || isScarpEntry">
                       <a  [ngClass]="{'active': activePath === 'transaction'}"><i data-bs-toggle="tooltip" title="fa fa-university" class="fa fa-university"></i><span>Transaction</span> <span class="menu-arrow"></span></a>
                       <ul>
                           <li *ngIf="isPaymentVoucher"><a routerLink="/transaction/paymentVoucherList" routerLinkActive="active">Payment Voucher</a></li>
@@ -159,7 +159,7 @@
                           <li *ngIf="isDebit"><a routerLink="/transaction/debitnoteList" routerLinkActive="active">Debit Note List</a></li>
                           <li *ngIf="isCredit"><a routerLink="/transaction/creditnoteList" routerLinkActive="active">Credit Note List</a></li>
                           <li *ngIf="isMaterialConsuption"><a routerLink="/transaction/materialConsuption" routerLinkActive="active">Material Consuption</a></li>
-                          <li><a routerLink="/transaction/scarp-entry-list" routerLinkActive="active">Scarp Entry</a></li>
+                          <li *ngIf="isScarpEntry"><a routerLink="/transaction/scarp-entry-list" routerLinkActive="active">Scarp Entry</a></li>
                      </ul>
                   </li>
                   <li class="submenu">
@@ -210,12 +210,12 @@
                   </ul>
                   </li> 
       
-                  <li class="submenu" >
+                  <li class="submenu" *ngIf="isInvoiceOffer">
                         <a [ngClass]="{'active': activePath === 'offer'}"><img src="assets/img/icons/product.svg" alt="img"><span>Offer</span> <span class="menu-arrow"></span></a>
                         <ul>
-                        <li ><a routerLink="/offer/invoice-amount" routerLinkActive="active">Invoice Amount</a></li>
-                        <li ><a routerLink="/offer/brand-offer" routerLinkActive="active">Brand Offer</a></li>
-                        <li ><a routerLink="/offer/brand-subcategory-offer" routerLinkActive="active">Brand Subcategory Offer</a></li>
+                        <li *ngIf="isInvoiceOffer"><a routerLink="/offer/invoice-amount" routerLinkActive="active">Invoice Amount</a></li>
+                        <li *ngIf="isInvoiceOffer"><a routerLink="/offer/brand-offer" routerLinkActive="active">Brand Offer</a></li>
+                        <li *ngIf="isInvoiceOffer"><a routerLink="/offer/brand-subcategory-offer" routerLinkActive="active">Brand Subcategory Offer</a></li>
                     </ul>
                     </li>
 
@@ -1405,3 +1405,4 @@
         </div>
       </div>
       <!-- /Sidebar -->
+      

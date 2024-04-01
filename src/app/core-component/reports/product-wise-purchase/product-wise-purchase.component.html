@@ -114,7 +114,7 @@
                                 <td>{{list.check_gst}}</td>
                                 <td>{{list.total | number:'1.2-2'}}</td>
                                 <td>{{list.bill_date |date:'yy/mm/dd'}}</td>
-                                <td colspan = 14> 
+                                <td colspan = "14"> 
                                     <table>
 
                                         <tbody>
@@ -156,7 +156,7 @@
                     <div class="row">
                         <div class="col-lg-4 col-sm-4 col-12 mt-2">
                             <div class="entries"> Show per page
-                                <select [(ngModel)]="itemsPerPage" class="pagination">
+                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="30">30</option>
@@ -170,7 +170,7 @@
                             <div class="f-right">
                                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
                                 <div class="entries f-right">
-                                    Showing {{itemsPerPage}} to {{itemsPerPage}} of {{p}} entries
+                                    Showing {{itemsPerPage}} to {{productWisePurchaseList?.length}} of {{p}} entries
                                 </div>
                             </div>
                         </div>

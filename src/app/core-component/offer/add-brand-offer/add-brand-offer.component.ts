@@ -63,10 +63,8 @@ export class AddBrandOfferComponent implements OnInit {
   discount_cart(): FormGroup {
     return this.fb.group({
       discount_offer_type: new FormControl('Price-range-discount',),
-     
       // invoice_amount: new FormControl(0,), // float use
       // free_items: (''),//char use
-
       start_price: (0),//float
       end_price: (0),//float
       flat_discount: (0),//float use
@@ -130,15 +128,15 @@ export class AddBrandOfferComponent implements OnInit {
   get discount_type() {
     return this.brandOfferForm.get('discount_type');
   }
-  get collection() {
-    return this.brandOfferForm.get('collection');
-  }
+  // get collection() {
+  //   return this.brandOfferForm.get('collection');
+  // }
   get brands() {
     return this.brandOfferForm.get('brands');
   }
-  get subcategory() {
-    return this.brandOfferForm.get('subcategory');
-  }
+  // get subcategory() {
+  //   return this.brandOfferForm.get('subcategory');
+  // }
 
   subcatList: any
   subCategoryList: any[] = [];
@@ -218,7 +216,6 @@ export class AddBrandOfferComponent implements OnInit {
 
   selectedBrand = 0;
   selectedBrandIds: any[] = [];
-
   onCheckBrand(event: any) {
     console.log(event);
     const formArray: any = this.brandOfferForm.get('brands') as FormArray;
@@ -281,8 +278,8 @@ export class AddBrandOfferComponent implements OnInit {
       formData.append('auto_update_price', this.brandOfferForm.get('auto_update_price')?.value);
       formData.append('discount_type', this.brandOfferForm.get('discount_type')?.value);
       formData.append('brands', JSON.stringify(this.brandOfferForm.get('brands')?.value));
-      formData.append('subcategory', JSON.stringify(this.brandOfferForm.get('subcategory')?.value));
-      formData.append('collection', this.brandOfferForm.get('collection')?.value);
+      // formData.append('subcategory', JSON.stringify(this.brandOfferForm.get('subcategory')?.value));
+      // formData.append('collection', this.brandOfferForm.get('collection')?.value);
 formData.append('is_active',this.brandOfferForm.get('is_active')?.value);
     const cartArray = this.brandOfferForm.get('discount_cart') as FormArray;
     const cartData = [];

@@ -63,7 +63,7 @@ export class UpdateBrandOfferComponent implements OnInit {
           this.brandOfferForm.patchValue(res);
           this.brandOfferForm.get('customers_group')?.patchValue(res?.customers_group?.id);
           this.brandOfferForm.get('business_location')?.patchValue(res?.business_location?.id);
-          this.selectSubcat = res?.subcategory.map((res: any) => res.id);
+          // this.selectSubcat = res?.subcategory.map((res: any) => res.id);
           this.selectBrand = res?.brands.map((res: any) => res?.id)
           this.selectedCart=this.updateData.discount_cart[0]?.discount_offer_type;
           this.brandOfferForm.get('offer_type')?.patchValue(this.updateData.discount_cart[0]?.discount_offer_type);
@@ -77,7 +77,7 @@ export class UpdateBrandOfferComponent implements OnInit {
       });
     this.myControls = new FormArray([]);
   
-    this.getSubcate();
+    // this.getSubcate();
     this.getBrand();
     this.getBranch();
     this.getMembership();
@@ -94,7 +94,7 @@ export class UpdateBrandOfferComponent implements OnInit {
         discount_type: j?.discount_type,
         purchase_qty: j?.purchase_qty,
       }));
-      this.myControls.push(new FormControl(j?.free_items));
+      this.myControls.push(new FormControl(j?.free_items?.product_title));
      
     });
     return formarr;
@@ -340,8 +340,8 @@ export class UpdateBrandOfferComponent implements OnInit {
       formData.append('auto_update_price', this.brandOfferForm.get('auto_update_price')?.value);
       formData.append('discount_type', this.brandOfferForm.get('discount_type')?.value);
       formData.append('brands', JSON.stringify(this.brandOfferForm.get('brands')?.value));
-      formData.append('subcategory', JSON.stringify(this.brandOfferForm.get('subcategory')?.value));
-      formData.append('collection', this.brandOfferForm.get('collection')?.value);
+      // formData.append('subcategory', JSON.stringify(this.brandOfferForm.get('subcategory')?.value));
+      // formData.append('collection', this.brandOfferForm.get('collection')?.value);
 formData.append('is_active',this.brandOfferForm.get('is_active')?.value);
     const cartArray = this.brandOfferForm.get('discount_cart') as FormArray;
     const cartData = [];
