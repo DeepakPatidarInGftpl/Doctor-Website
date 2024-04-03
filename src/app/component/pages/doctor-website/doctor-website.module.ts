@@ -12,13 +12,15 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
 
 
+
 @NgModule({
   declarations: [ 
     ClinicComponent,
     AccupressuristComponent,
     ChiropractorComponent,
     DieticianComponent,
-    SignupComponent
+    SignupComponent,
+    
   ],
   imports: [
     CommonModule,

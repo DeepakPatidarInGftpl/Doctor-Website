@@ -81,11 +81,12 @@ import { UserDetailsComponent } from './component/pages/user-details/user-detail
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { FooterComponent } from './component/shared/footer/footer.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import { SliderComponent } from './component/pages/doctor-website/components/slider/slider.component';
 @NgModule({
   declarations: [
     AppComponent,
     WebsiteComponent,
-    
+    SliderComponent,
     DoctorWebsiteComponent,
     PhysiotherapistComponent,
     // ChiropractorComponent,

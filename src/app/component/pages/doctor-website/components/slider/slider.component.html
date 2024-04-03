@@ -1,0 +1,26 @@
+   <div class="container mt-3">
+    <div class="row ">
+        <swiper-container
+        [slidesPerView]="3.7"
+        [allowTouchMove]="true"
+        [pagination]="true"
+        [navigation]="{
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          }"
+        >
+           <swiper-slide
+           *ngFor="let item of sliders"
+           >
+           <div class="card shadow-lg" style="width: 18rem; ;">
+               <img [src]="item.img" class="card-img-top" alt="...">
+               <div class="card-body">
+                 <p class="card-text">{{item.title}}</p>
+               </div>
+             </div>
+       </swiper-slide>
+         
+
+         </swiper-container>
+    </div>
+   </div>

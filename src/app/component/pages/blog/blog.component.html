@@ -1,19 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Document</title>
-   
-   
-</head>
-<body>
-<div class="container-fluid mt-5"  style="background-color: rgb(203, 228, 238);">
+
+<div class="container-fluid"  style="background-color: rgb(203, 228, 238);">
   <div class="container">
         <div class="row"> 
           <h2><b>Blog</b></h2>
@@ -31,158 +17,68 @@
 <div class="container-fluid mt-3">
     <div class="container">
         <div class="row">
-            <div class="d-flex justify-content-between ">
+            <div align ='center' class="my-2" >
                 <h3><b>Most popular</b></h3>
-                <!-- <p>View All</p> -->
             </div>
            
             <div class="row">
-                <div class="col-md-4 ">
-                    <div class="bg-light rounded overflow-hidden shadow m-2 ">
-                        <div style="height: 200px; width: 300px;">
-                            <img class="img-fluid  h-100 w-100"
-                            src="https://cdn.shortpixel.ai/spai/w_1920+q_lossy+ret_img+to_webp/www.physio-network.com/wp-content/uploads/2023/05/iStock-1142647245-scaled.jpg"
-                            alt="">
+                <div *ngFor="let item of mostpopular" class="col-md-4 mt-3" >
+                    <div class="card shadow" style="border: none;height: 300px; border-radius: 10%;" >
+                        <div class="card-header card1 rounded-5" style="height: 200px;background-image: url({{item.img}});" >
+                            </div>
+                        <div class="card-body">
+                            <h6 class="card-title text-center" style=" margin-top: 0;
+                             font-family:Roboto Condensed, sans-serif; font-weight: 700;
+                                     line-height: 1.2;
+                          color: #1D2A4D;">{{item.title}}</h6>
                         </div>
-                       
-                        <div class="p-1 mb-2 mt-2">
-                            <h6 class="card-title text-center" style="height: 40px; margin-top: 0;
-                            margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
-                  line-height: 1.2;
-                  color: #1D2A4D;">Master Your Assessment of Athletic Low Back Pain</h6>
-            
-                        </div>
-                       
-                    </div>
-                    
-                </div>
-                <div class="col-md-4">
-                     
-                    <div class="bg-light rounded overflow-hidden shadow m-2" >
-                        <div style="height: 200px; width: 300px;">
-                            <img class="img-fluid h-100 w-100"
-                            src="https://cdn.shortpixel.ai/spai/w_1920+q_lossy+ret_img+to_webp/www.physio-network.com/wp-content/uploads/2022/08/iStock-1226189541-scaled.jpg"
-                            alt="">
-                        </div>
-                       
-                        <div class="p-1 mb-2 mt-2">
-                            <h6 class="card-title text-center " style="height: 40px; margin-top: 0;
-                            margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
-                  line-height: 1.2;
-                  color: #1D2A4D;"> Manage Plantar Fasciitis</h6>
-            
-                        </div>
-                    </div>
-                    
-               </div>
-               <div class="col-md-4 ">
-                <div class="bg-light rounded overflow-hidden shadow m-2 " >
-                    <div style="height: 200px; width: 300px;">
-                    <img class="img-fluid w-100 h-100"
-                    src="https://cdn.shortpixel.ai/spai/w_1920+q_lossy+ret_img+to_webp/www.physio-network.com/wp-content/uploads/2023/06/iStock-478216480-scaled.jpg"
-                    alt="">
-                    </div>
-                    
-                <div class="p-1 mb-2 mt-2">
-                    <h6 class="card-title text-center " style="height: 40px; margin-top: 0;
-                    margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
-          line-height: 1.2;
-          color: #1D2A4D;">Beyond Surgery: The Growing Evidence for Non- Surgical Approaches to ACL Injuries</h6>
-        
-                </div>
+                      </div>
                    
+                    
                 </div>
-                
-               </div>
               
                
 
             </div>
 
-            <div class="d-flex justify-content-between mt-5">
+            <div align ='center' class="mt-5">
                 <h3><b>Most Recent</b></h3>
-                <!-- <p>View All</p> -->
             </div>
            
 
-            <div class="row">
-                <div class="col-md-4 ">
-                    <div class="bg-light rounded overflow-hidden shadow m-2 ">
-                        <div style="height: 200px; width: 300px;">
-                            <img class="img-fluid  h-100 w-100 rounded-5"
-                            src="https://cdn.shortpixel.ai/spai/w_1920+q_lossy+ret_img+to_webp/www.physio-network.com/wp-content/uploads/2024/02/iStock-1356833036-scaled.jpg"
-                            alt="">
+            <div class="row my-3">
+                <div *ngFor="let item of MostRecent" class="col-md-4 mt-3" >
+                    <div class="card shadow" style="border: none;height: 300px; border-radius: 10%;" >
+                        <div class="card-header card1 rounded-5" style="height: 200px;background-image: url({{item.img}});" >
+                            </div>
+                        <div class="card-body">
+                            <h6 class="card-title text-center" style=" margin-top: 0;
+                             font-family:Roboto Condensed, sans-serif; font-weight: 700;
+                                     line-height: 1.2;
+                          color: #1D2A4D;">{{item.title}}</h6>
                         </div>
-                       
-                        <div class="p-1 mb-2 mt-2">
-                            <h6 class="card-title text-center" style="height: 40px; margin-top: 0;
-                            margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
-                  line-height: 1.2;
-                  color: #1D2A4D;">High-stakes performance: Mastering physio management of tactical personnel</h6>
-            
-                        </div>
-                       
-                    </div>
-                    
-                </div>
-                <div class="col-md-4">
-                     
-                    <div class="bg-light rounded overflow-hidden shadow m-2" >
-                        <div style="height: 200px; width: 300px;">
-                            <img class="img-fluid h-100 w-100 rounded-5"
-                            src="https://cdn.shortpixel.ai/spai/w_1920+q_lossy+ret_img+to_webp/www.physio-network.com/wp-content/uploads/2024/02/iStock-1171683752-scaled.jpg"
-                            alt="">
-                        </div>
-                       
-                        <div class="p-1 mb-2 mt-2">
-                            <h6 class="card-title text-center " style="height: 40px; margin-top: 0;
-                            margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
-                  line-height: 1.2;
-                  color: #1D2A4D;">Running-related injuries: Insights into key risk factors</h6>
-            
-                        </div>
-                    </div>
-                    
-               </div>
-               <div class="col-md-4 ">
-                <div class="bg-light rounded overflow-hidden shadow m-2 " >
-                    <div style="height: 200px; width: 300px;">
-                    <img class="img-fluid w-100 h-100 rounded-5"
-                    src="https://cdn.shortpixel.ai/spai/w_1920+q_lossy+ret_img+to_webp/www.physio-network.com/wp-content/uploads/2024/01/iStock-1501185766-scaled.jpg"
-                    alt="">
-                    </div>
-                    
-                <div class="p-1 mb-2 mt-2">
-                    <h6 class="card-title text-center " style="height: 40px; margin-top: 0;
-                    margin-bottom: .5rem; font-family:Roboto Condensed, sans-serif; font-weight: 700;
-          line-height: 1.2;
-          color: #1D2A4D;">The balancing act</h6>
-        
-                </div>
+                      </div>
                    
+                    
                 </div>
-                
-               </div>
             </div>   
-                </div>
+        </div>
+        <div class="row">
+            <div class="card" style="border: none; box-shadow: none;"> 
+              <div class="card-body">
+                <h2 class="card-title  text-center mt-3" style="font-size: 25px;">Elevate Your Physio Knowledge Every Month!</h2>
+                <h4
+                 class="card-text text-center" style="font-size:20px;"><i>Get free blogs, infographics, research reviews, podcasts & more.</i></h4>
+    
+                 <div class="input text-center mt-4">
+                  <input type="text" placeholder="Your email address..." class="w-25 rounded-2  rounded-md  text-md  py-2 px-3 " >
+                  <button type="button" class="btn btn-outline-primary py-1 mx-1 text-light border-0 " style="font-size: 25px; background-color: rgb(9, 156, 149);">Subscribe</button>
+                 </div>
+              </div>
+            </div>
+          </div>
+        
             </div>
         </div>
         
-<div class="container-fluid ">
-      <div class="row">
-        <div class=" card" > 
-          <div class="card-body">
-            <h2 class="card-title  text-center mt-4" style="font-size: 25px;">Elevate Your Physio Knowledge Every Month!</h2>
-            <h4
-             class="card-text text-center mt-4 " style="font-size:20px;"><i>Get free blogs, infographics, research reviews, podcasts & more.</i></h4>
 
-             <div class="input text-center mt-4">
-              <input type="text" placeholder="Your email address..." class="w-25 rounded-2  rounded-md  text-md  py-2 px-3 " >
-              <button type="button" class="btn btn-outline-primary py-1 mx-1 text-light border-0 " style="font-size: 25px; background-color: rgb(9, 156, 149);">Subscribe</button>
-             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-</body>
-</html>
