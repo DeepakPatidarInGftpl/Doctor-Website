@@ -1,0 +1,288 @@
+<div class="page-header">
+    <div class="page-title">
+        <h4>Invoice Amount</h4>
+        <h6>Create new Invoice Amount</h6>
+    </div>
+</div>
+
+
+<!-- /add -->
+<form [formGroup]="invoiceAmountForm" (ngSubmit)="submit()">
+    <div class="row"> 
+        <div class="card ">
+            <div class="card-body">
+                <div class="row form-card">
+                  <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>Name*</label>
+                            <input type="text" placeholder="name" formControlName="name" [ngClass]="{'is-invalid': f['name'].touched && f['name'].invalid}">
+                            <span class="text-danger" *ngIf="name && name.invalid && name.touched">Enter Name </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>Start Date*</label>
+                            <input type="date" placeholder="date" formControlName="start_date" [ngClass]="{'is-invalid': f['start_date'].touched && f['start_date'].invalid}">
+                            <span class="text-danger" *ngIf="start_date && start_date.invalid && start_date.touched">Select Date </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>End Date*</label>
+                            <input type="date" placeholder="end date" formControlName="end_date" [ngClass]="{'is-invalid': f['end_date'].touched && f['end_date'].invalid}">
+                            <span class="text-danger" *ngIf="end_date && end_date.invalid && end_date.touched">Select Date </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>Business Location*</label>
+                          <select formControlName="business_location" formControlName="business_location" [ngClass]="{'is-invalid': f['business_location'].touched && f['business_location'].invalid}">
+                            <option value="" selected disabled>Select Business Location</option>
+                            <option value="{{branch?.id}}" *ngFor="let branch of branchList">{{branch?.title}}</option>
+                           </select>
+                            <span class="text-danger" *ngIf="business_location && business_location.invalid && business_location.touched">Enter Business Location </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>Customer Group*</label>
+                          <select formControlName="customers_group" formControlName="customers_group" [ngClass]="{'is-invalid': f['customers_group'].touched && f['customers_group'].invalid}">
+                                <option value="" selected disabled>Select Business Location</option>
+                                <option value="{{member?.id}}" *ngFor="let member of membershipList">{{member?.title}}</option>
+                            </select>
+                            <span class="text-danger" *ngIf="customers_group && customers_group.invalid && customers_group.touched">Enter Customers Group </span>
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>Collection</label>
+                            <input type="text" placeholder="Enter Collection" formControlName="collection" [ngClass]="{'is-invalid': f['collection'].touched && f['collection'].invalid}">
+                            <span class="text-danger" *ngIf="collection && collection.invalid && collection.touched">Enter Collection </span>
+                        </div>
+                    </div> -->
+                    <div class="col-lg-3 col-sm-4 col-12" style="display: none;">
+                        <div class="form-group">
+                            <label>Discount Type*</label>
+                           <select formControlName="discount_type" [ngClass]="{'is-invalid': f['discount_type'].touched && f['discount_type'].invalid}">
+                                <option value="" selected disabled>Select Discount Type</option>
+                                <option value="BasedOnInvoiceAmount">Based On Invoice Amount</option>
+                                <option value="BasedOnBrands">Based On Brands</option>
+                                <option value="BasedOnSubCategorie’sBrand">Based On Sub-Categorie’s Brand</option>
+                                <option value="BasedOnCollection">Based On Collection</option>
+                            </select>
+                            <span class="text-danger" *ngIf="discount_type && discount_type.invalid && discount_type.touched">Enter discount_type </span>
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>Select Brand*</label>
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-toggle button" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">Select Brand</button>
+                            <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                <li> <input type="text" placeholder="search Brand" class="form-control" [(ngModel)]="searchBrand" (ngModelChange)="filterBrand()" [ngModelOptions]="{standalone: true}">
+                                </li>
+                                <li><a class="dropdown-item" *ngFor="let brand of filteredbrandList let j=index;">
+                                        <input type="checkbox" [value]="brand.id" [checked]="selectedBrandIds.includes(brand.id)" (change)="onCheckBrand($event)" formArrayName="brands" style="margin-right: 5px;" #brandValue [id]="'checkboxBrand-' + j">
+                                        <label [for]="'checkboxBrand-' + j" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{brand.title}}</label>
+                                    </a></li>
+                            </ul>
+                        </div>
+                        <p *ngIf="selectedBrand>0">{{selectedBrand + ' Brand Selected'}}</p>
+                        <span class="text-danger" *ngIf="brands && brands.invalid && brands.touched">Select Brands </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label>Select Sub Category*</label>
+                            <div class="dropdown">
+                                <button type="button" class="dropdown-toggle button" type="button" data-bs-toggle="dropdown" aria-expanded="false">Select Sub Category</button>
+                                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                                    <li> <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory" (ngModelChange)="filterSubCategory()" [ngModelOptions]="{standalone: true}"></li>
+                                    <li><a class="dropdown-item"
+                                            *ngFor="let category of filteredSubCategoryList let j=index;">
+                                            <input type="checkbox" [value]="category.id" [checked]="selectedSubCategoryIds.includes(category.id)" (change)="onCheckSubCategory($event)" formArrayName="subcategory" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + j">
+                                            <label [for]="'checkboxCat-' + j" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category.title}}</label>
+                                        </a></li>
+                                </ul>
+                          </div>
+                          <p *ngIf="selectedSubCat>0">{{selectedSubCat + 'Sub-Category Selected'}}</p>
+                          <span class="text-danger" *ngIf="subcategory && subcategory.invalid && subcategory.touched">Select Subcategory </span>
+                      
+                        </div>
+                    </div>     -->
+                  
+                    <div class="col-lg-3 col-sm-4 col-12">
+                        <div class="form-group">
+                            <div class="d_flex">
+                                <div class="d-flex">
+                                    <input type="checkbox" formControlName="multiuse" [id]="'checkboxmultiuse-'" [ngModel]="true">
+                                    <label [for]="'checkboxmultiuse-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Multiuse</label>
+                                </div>
+                                <div class="d-flex">
+                                    <input type="checkbox" formControlName="is_compulsory" [id]="'checkboxCompulsory-'" [ngModel]="true">
+                                    <label [for]="'checkboxCompulsory-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Compulsory</label>
+                                </div> 
+                            </div>
+                            <div class="d_flex">
+                                <div class="d-flex">
+                                    <input type="checkbox" formControlName="auto_update_price" [id]="'checkboxSale-'" [ngModel]="true">
+                                    <label [for]="'checkboxSale-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Auto Update Price</label>
+                                </div>
+                                <div class="d-flex">
+                                    <input type="checkbox" formControlName="applicable_for_only_coupons" [id]="'checkboxcod-'" [ngModel]="true">
+                                    <label [for]="'checkboxcod-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Applicable For Only Coupons</label>
+                                </div>
+                                <div class="d-flex">
+                                    <input type="checkbox" formControlName="is_active" [id]="'checkboxisActv-'" [ngModel]="true">
+                                    <label [for]="'checkboxisActv-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-4 col-12" >
+                        <div class="form-group">
+                            <label>Discount Offer Type*</label>
+                           <select formControlName="offer_type" #offer (change)="selectType(offer.value)" [ngClass]="{'is-invalid': f['offer_type'].touched && f['offer_type'].invalid}">
+                                <option value="" selected disabled>Select Type</option>
+                                <option value="Free-item-on-invoice">Free Item on Invoice</option>
+                                <option value="Discount-on-Invoice">Discount On Invoice </option>
+                            </select>
+                       </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                           <div class="row">
+                               <div class="col-lg-2 col-sm-2 col-12">
+                                   <div class="page-title">
+                                       <p style="color:#FF9F43;font-size: 16px;">Discount Cart</p>
+                                   </div>
+                               </div>
+                              
+                               <div class="table-responsive">
+                                   <table class="table datanew">
+                                       <thead>
+                                           <tr>
+                                               <th></th>
+                                               <th>Invoice Amount</th>
+                                               <th *ngIf="isFree">Free Items</th>
+                                               <th *ngIf="!isFree">Flat Discount</th>
+                                               <th *ngIf="!isFree">Discount Type</th>
+                                               <th>&nbsp;</th>
+                                           </tr>
+                                       
+                                       </thead>
+                                       <tbody>
+                                            <ng-container formArrayName="discount_cart">
+                                                <ng-container *ngFor="let d of getCart().controls; let i=index">
+                                                    <tr [formGroupName]="i">
+                                                        <td>
+                                                            <div>
+                                                                <div class="me-2">
+                                                                    <svg (click)="removeCart(i)" style="color:red"
+                                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                                        fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                                        <path
+                                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                        <path
+                                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                    </svg>
+                                                                </div>
+                                                                <svg *ngIf="isLastCart(i)" (click)="addCart(i+1)" style="color:green"
+                                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                                    fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                                    <path
+                                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                    <path
+                                                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                                </svg>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" formControlName="invoice_amount" class="input" placeholder="Invoice Amount">
+                                                        </td>
+                                                            <td colspan="1" *ngIf="isFree">
+                                                                <div class="form-group" style="margin-bottom: 0;">
+                                                            <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                                        <input
+                                                                        type="text"
+                                                                        placeholder="Search Free Item"
+                                                                        aria-label="Search Free Items"
+                                                                        matInput
+                                                                        [formControl]="myControls.at(i)"
+                                                                        (input)="getVariant($event.target.value,i,'')"
+                                                                        [matAutocomplete]="autos" 
+                                                                        style="box-sizing: border-box;" 
+                                                                        />
+                                                                        <mat-autocomplete #autos="matAutocomplete">
+                                                                        <ng-container *ngFor="let option of variantList">
+                                                                        <mat-option *ngIf="option.is_active==true" [value]="option?.product_title + ' ' + option?.variant_name"
+                                                                                    (onSelectionChange)="oncheckVariant(option,i)" style="color:#FF9F43">
+                                                                            {{ option?.product_title + ' ' + option?.variant_name}}
+                                                                        </mat-option>
+                                                                        </ng-container>
+                                                                        <mat-option *ngIf="isSearch" style="color:#FF9F43">Loading...</mat-option>
+                                                                        <mat-option *ngIf="variantList?.length === 0 && !isSearch" [value]="'No data found'">
+                                                                            <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                                                                        </mat-option>
+                                                                        <mat-option *ngIf="myControls.at(i)?.value?.length < 3" class="is-loading"> Please Enter 3 or more characters
+                                                                        </mat-option>
+                                                                        </mat-autocomplete>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            
+                                                        </td>
+                                                        <td *ngIf="!isFree">
+                                                            <input type="number" step="0.01" formControlName="flat_discount" class="input" placeholder="Enter Flat Discount">
+                                                        </td>
+                                                        <td *ngIf="!isFree">
+                                                            <select formControlName="discount_type" >
+                                                                <option value="" disabled selected></option>
+                                                                <option value="%">%</option>
+                                                                <option value="Rs">Rs</option>
+                                                            </select>
+                                                        </td>
+                                                        <!-- <td>
+                                                            <input type="text" formControlName="start_price" class="input" placeholder="Start Price">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" formControlName="end_price" class="input" placeholder="End Price">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" formControlName="purchase_qty" class="input" placeholder="Purchase Qty">
+                                                        </td> 
+                                                         <td>
+                                                            <input type="text" formControlName="free_qty" class="input" placeholder="Free Qty">
+                                                        </td>
+                                   
+                                                        <td>
+                                                            <input type="text" formControlName="collection" class="input" placeholder="collection">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" formControlName="discount_offer_type" class="input" placeholder="discount_offer_type">
+                                                        </td>
+                                                        <td> -->
+                                                   
+                                                    </tr>
+                                               </ng-container>
+                                           </ng-container>
+                                         
+                                       </tbody>
+                                   </table>
+                               </div>
+                           </div>
+                        </div>
+                       </div>
+
+                    <div class="col-lg-8 text-end mt-5">
+                        <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
+                        <a routerLink="//offer/invoice-amount" class="btn btn-cancel" style="color: white;">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- /add -->

@@ -138,8 +138,6 @@ export class UpdateRecieptVoucherComponent implements OnInit {
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
     add.forEach((j: any, i) => {
-      console.log(j);
-      
       this.isAgainstBill = true;
       formarr.push(this.fb.group({
         sale_bill: j.sale_bill?.id,
@@ -148,6 +146,8 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         pending_amount: j?.pending_amount,
         payment: j?.payment,
       }))
+      
+      
       this.myControls.push(new FormControl(j?.sale_bill?.customer_bill_no));
     })
     return formarr
