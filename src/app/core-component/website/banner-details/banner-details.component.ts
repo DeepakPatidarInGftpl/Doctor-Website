@@ -58,5 +58,11 @@ export class BannerDetailsComponent implements OnInit {
   navigate(){
     this.router.navigate(['//website/banner'], { state: { id: this.id } })
   }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.filteredData?.length;
+    }
+  }
 }
 

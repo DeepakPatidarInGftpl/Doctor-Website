@@ -248,5 +248,12 @@ export class DetailspurchaseBillComponent implements OnInit {
     this.keyy = key;
     this.reversee = !this.reversee
   }
+
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.purchaseBillDetail?.logs?.length;
+    }
+  }
 }
 

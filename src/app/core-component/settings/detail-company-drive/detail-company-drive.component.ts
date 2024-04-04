@@ -14,9 +14,10 @@ export class DetailCompanyDriveComponent implements OnInit {
   
   financialYearDetails: any;
   id: any;
+  imageUrl="https://pv.greatfuturetechno.com"
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
-    this.contactService.getFinancialYearById(this.id).subscribe((res:any) => {
+    this.contactService.getCompanyDriveById(this.id).subscribe((res:any) => {
       // res.map((res:any)=>{
         if(res.id==this.id){
           this.financialYearDetails = res;
@@ -56,6 +57,12 @@ export class DetailCompanyDriveComponent implements OnInit {
 
   navigate(){
     this.router.navigate(['//settings/finncialYear'], { state: { id: this.id } })
+  }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.filteredData?.length;
+    }
   }
 }
 
