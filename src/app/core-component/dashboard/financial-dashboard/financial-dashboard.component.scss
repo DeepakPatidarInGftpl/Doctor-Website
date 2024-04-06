@@ -399,3 +399,19 @@ input[type="datetime-local"],
   margin-bottom: 0;
   color: #A2A2A2
 }
+// 6-4
+
+#fixedElement {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white; /* Optional: To keep the background white when scrolling */
+  z-index: 1000; /* Adjust the z-index as needed */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: Add shadow for better visibility */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+

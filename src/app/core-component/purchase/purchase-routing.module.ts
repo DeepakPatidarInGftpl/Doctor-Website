@@ -115,7 +115,7 @@ const routes: Routes = [
   {
     path: 'purchaseReturn-list',
     loadChildren: () =>
-      import('./debitnotes/debitnotes.module').then(
+      import('./purchase-return/debitnotes.module').then(
         (m) => m.DebitnotesModule
       ),
   },

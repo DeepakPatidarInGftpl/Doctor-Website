@@ -8,6 +8,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-purchase-bill',
@@ -28,7 +29,8 @@ export class PurchaseBillComponent implements OnInit {
   selectedPurchaseNo: any;
   date:any
   constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,
-    private contactService:ContactService) { }
+    private contactService:ContactService,
+    private datepipe:DatePipe) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -143,6 +145,7 @@ export class PurchaseBillComponent implements OnInit {
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
     })
+    
     //from localstorage permision
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
@@ -254,6 +257,9 @@ materialList: any;
     this.key = key;
     this.reverse = !this.reverse
   }
+  private formatDate(date: Date): string {
+    return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
+  }
 
     // convert to pdf
     generatePDF() {
@@ -289,6 +295,39 @@ materialList: any;
           ],
         })
       doc.save('grn.pdf');
+    }
+    generatePDFAgain() {
+      const doc = new jsPDF();
+      const title = 'Goods Received Note  LIST';
+      doc.setFontSize(12);
+      doc.setTextColor(33, 43, 54);
+      doc.text(title, 82, 10);
+      doc.text('', 10, 15); 
+      // Pass tableData to autoTable
+      autoTable(doc, {
+        head: [
+          ['#', 'Supplier Name ','Supplier Bill Date','Supplier Bill No', 'Refrence Bill No','Inward No','Payment Term','Due Date','Reverse Charge','Shipping Date','Status']
+        ],
+        body: this.tableData.map((row:any, index:number ) => [
+          index + 1,
+          row.party?.name,
+          this.formatDate(row?.supplier_bill_date),
+          row.supplier_bill_no,
+          row.refrence_bill_no,
+          row.material_inward_no?.material_inward_no,
+      row.payment_term?.title,
+      this.formatDate(row?.due_date),
+      row.reverse_charge,
+      this.formatDate(row?.shipping_date),
+      row.status
+        ]),
+        theme: 'grid',
+        headStyles: {
+          fillColor: [255, 159, 67]
+        },
+        startY: 15, 
+      });
+      doc.save('Goods Received Note .pdf');
     }
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {
@@ -377,6 +416,10 @@ materialList: any;
       const combinedContent = styledTitleHTML + modifiedTableHTML;
       // Store the original contents
       const originalContents = document.body.innerHTML;
+      window.addEventListener('afterprint', () => {
+        console.log('afterprint');
+       window.location.reload();
+      });
       // Replace the content of the body with the combined content
       document.body.innerHTML = combinedContent;
       window.print();

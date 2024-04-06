@@ -269,6 +269,35 @@ export class SupplierComponent implements OnInit {
     doc.save('supplier.pdf');
  }
 
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Supplier List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+      ['#', 'Name','Company Name ', 'Mobile Number ','Opening Balance','GSTIN','Supplier Type']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+      index + 1,
+      row.name,
+      row.company_name,
+      row.mobile_no,
+      row?.opening_balance_type + (row?.opening_balance != null ? ' : ' + row?.opening_balance : ''),
+  row?.gstin,
+  row?.supplier_type
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('supplier.pdf');
+}
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -360,6 +389,12 @@ export class SupplierComponent implements OnInit {
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
+      //refresh
+      window.addEventListener('afterprint', () => {
+        console.log('afterprint');
+       window.location.reload();
+      });
+      //end
 
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;

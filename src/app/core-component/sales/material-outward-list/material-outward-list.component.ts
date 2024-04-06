@@ -6,6 +6,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-material-outward-list',
@@ -26,7 +27,7 @@ export class MaterialOutwardListComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs:CompanyService) {}
+  constructor(private saleService: SalesService, private cs:CompanyService,private datePipe:DatePipe) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -203,6 +204,9 @@ select=false
     this.key = key;
     this.reverse = !this.reverse
   }
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
 
    // convert to pdf
    generatePDF() {
@@ -234,7 +238,37 @@ select=false
       })
     doc.save('materialoutward.pdf');
  }
-
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Material Outward List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+      ['#','User Name','Material Outward Date ', 'Refund Status','Voucher Number','Total Qty','Note','Status']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+  
+      index + 1,
+      row?.customer?.name + ' (' + row?.customer?.username + ')',
+     this.formatDate( row?.mo_date),
+      row.refund_status,
+      row.voucher_number,
+      row.total_qty,
+      row?.note,
+  row?.status,
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Material Outward .pdf');
+}
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -306,6 +340,10 @@ select=false
 
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
     document.body.innerHTML = originalContents;

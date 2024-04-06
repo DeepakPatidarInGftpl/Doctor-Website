@@ -128,6 +128,12 @@ export class DetailsSalesReturnComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.returnBillDetail?.logs?.length;
+    }
+  }
 }
 
 

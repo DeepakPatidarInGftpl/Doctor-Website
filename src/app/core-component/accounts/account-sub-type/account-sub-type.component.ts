@@ -387,6 +387,33 @@ export class AccountSubTypeComponent implements OnInit {
     doc.save(fileName);
   }
 
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Account Sub Type List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Title ','Accounts Type', 'Alias',]
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+        index + 1,
+        row.title,
+        row.accounts_type,
+        row.alias,
+      
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('AccountType.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -485,7 +512,12 @@ export class AccountSubTypeComponent implements OnInit {
   
     // Store the original contents
     const originalContents = document.body.innerHTML;
-  
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
+    //end
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

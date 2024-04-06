@@ -6,6 +6,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-sales-return-list',
@@ -26,7 +27,7 @@ export class SalesReturnListComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs: CompanyService) { }
+  constructor(private saleService: SalesService, private cs: CompanyService,private datePipe:DatePipe) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -209,7 +210,9 @@ export class SalesReturnListComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
-
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
   // convert to pdf
   generatePDF() {
     // table data with pagination
@@ -239,7 +242,37 @@ export class SalesReturnListComponent implements OnInit {
       })
     doc.save('salesReturn.pdf');
   }
-
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Sales Return List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#','User Name','Bill Date', 'Bill No.','Sales Bill','Sub Total','Total','Status']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row?.customer?.name + ' (' + row?.customer?.username + ')',
+       this.formatDate( row?.bill_date),
+        row.sale_return_bill_no,
+        row.sale_bill?.customer_bill_no,
+        row.subtotal,
+        row.total,
+    row.status,
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Sales Return .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -304,6 +337,10 @@ export class SalesReturnListComponent implements OnInit {
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
     document.body.innerHTML = originalContents;

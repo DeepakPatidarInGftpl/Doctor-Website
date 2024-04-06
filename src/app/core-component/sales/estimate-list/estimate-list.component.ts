@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-estimate-list',
@@ -14,6 +15,7 @@ import { ContactService } from 'src/app/Services/ContactService/contact.service'
   styleUrls: ['./estimate-list.component.scss']
 })
 export class EstimateListComponent implements OnInit {
+
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
@@ -27,7 +29,7 @@ export class EstimateListComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService) {}
+  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService,private datePipe:DatePipe) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -216,7 +218,9 @@ select=false
     this.key = key;
     this.reverse = !this.reverse
   }
-
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
    // convert to pdf
    generatePDF() {
     const doc = new jsPDF();
@@ -246,7 +250,38 @@ select=false
       })
     doc.save('estimate.pdf');
  }
-
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Estimate List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+          ['#','User Name ','Estimate Date', 'Estimate no','Payment Terms','Expire Date','Sub Total','Total','Status']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+  
+      index + 1,
+      row?.customer?.name + ' (' + row?.customer?.username + ')',
+     this.formatDate( row?.estimate_date),
+      row.estimate_no,
+      row.payment_terms.title,
+      this.formatDate(row?.estimate_expiry_date),
+      row.subtotal,
+      row.total,
+  row?.status,
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Estimate List.pdf');
+}
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -318,6 +353,10 @@ select=false
 
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
     document.body.innerHTML = originalContents;

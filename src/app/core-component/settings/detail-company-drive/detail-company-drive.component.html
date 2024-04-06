@@ -20,13 +20,21 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
+                                       
                                         <tr>
-                                            <td class="th">Start Year</td>
-                                            <td class="td">{{financialYearDetails?.start_year}}</td>
+                                            <td class="th">Attachment</td>
+                                            <td class="td"> 
+                                            <img src="{{imageUrl+financialYearDetails?.attachment}}" alt="{{financialYearDetails?.attachment}}" class="img">
+
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td class="th">Close Year</td>
-                                            <td class="td">{{financialYearDetails?.close_year}}</td>
+                                            <td class="th">Document Name</td>
+                                            <td class="td">{{financialYearDetails?.document_name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="th">Remark</td>
+                                            <td class="td">{{financialYearDetails?.remarks}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -48,6 +56,7 @@
                                             <th class="th" (click)="sort('id')">User <i class="fa fa-sort"></i></th>
                                             <th class="th" (click)="sort('id')">Operation Type <i class="fa fa-sort"></i></th>
                                             <th class="th" (click)="sort('id')">Date Time <i class="fa fa-sort"></i></th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -71,7 +80,7 @@
                                 <div class="row">
                                     <div class="col-lg-4 col-sm-4 col-12 mt-2">
                                         <div class="entries"> Show per page
-                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                            <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
                                                 <option value="30">30</option>
@@ -85,8 +94,8 @@
                                         <div class="f-right">
                                             <pagination-controls
                                                 (pageChange)="p = $event"></pagination-controls>
-                                            <div class="entries f-right">Showing {{itemsPerPage}} to
-                                                {{itemsPerPage}} of {{p}} entries</div>
+                                                <div class="entries f-right">Showing {{itemsPerPage}} to
+                                                    {{filteredData?.length}} of {{p}} entries</div>
                                         </div>
                                     </div>
                                 </div>

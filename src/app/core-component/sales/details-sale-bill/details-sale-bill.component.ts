@@ -161,4 +161,10 @@ totalAdditionalDiscou=0;
     this.key = key;
     this.reverse = !this.reverse
   }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.BillDetail?.logs?.length;
+    }
+  }
 }

@@ -87,6 +87,12 @@ export class DetailsProductLabelComponent implements OnInit {
     this.filterOpertion=null;
     this.filterData();
   }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.filteredData.length;
+    }
+  }
 }
 
 
