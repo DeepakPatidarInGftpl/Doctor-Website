@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { EstimateListRoutingModule } from './estimate-list-routing.module';
 import { EstimateListComponent } from './estimate-list.component';
@@ -14,6 +14,9 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
     CommonModule,
     EstimateListRoutingModule,
     SharedModuleModule
-  ]
+  ], 
+   providers:[
+    DatePipe
+  ],
 })
 export class EstimateListModule { }

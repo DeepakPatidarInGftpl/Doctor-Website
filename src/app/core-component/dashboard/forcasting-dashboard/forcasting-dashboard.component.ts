@@ -257,7 +257,7 @@ export class ForcastingDashboardComponent implements OnInit {
     this.dashboardService.getEployeeTargetAchieved(this.achieveStartDate, this.achieveEndDate).subscribe((res: any) => {
       this.achieveList = res?.data;
     },err=>{
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     })
   }
   //end 
@@ -279,7 +279,7 @@ export class ForcastingDashboardComponent implements OnInit {
     this.dashboardService.getEmployeeTop10(this.top10StartDate, this.top10EndDate).subscribe((res: any) => {
       this.top10List = res?.data;
     },err=>{
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     })
   }
   //end   

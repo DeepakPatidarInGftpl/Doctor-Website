@@ -7,6 +7,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-material-inward',
@@ -27,7 +28,7 @@ export class MaterialInwardComponent implements OnInit {
   selectedPurchaseNo: any;
   date:any
 
-  constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService) { }
+  constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,private datepipe:DatePipe) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -234,7 +235,9 @@ export class MaterialInwardComponent implements OnInit {
     this.reverse = !this.reverse
   }
 
-  
+  private formatDate(date: Date): string {
+    return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
+  }
   // convert to pdf
   generatePDF() {
     // table data with pagination
@@ -267,6 +270,37 @@ export class MaterialInwardComponent implements OnInit {
         ],
       })
     doc.save('materialInward.pdf');
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Material Inward List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Supplier Name ','Purchase Order','PO Date', 'Material Inward Date','Material Inward No','Shipping Note','Recieved By','Status']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+        index + 1,
+        row.party?.name,
+        row.purchase_order?.order_no,
+        this.formatDate(row.po_date),
+        this.formatDate(row.material_inward_date),
+        row.material_inward_no,
+    row.shipping_note,
+    row.recieved_by,
+    row.status
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Material Inward.pdf');
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -355,6 +389,10 @@ export class MaterialInwardComponent implements OnInit {
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     // Store the original contents
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

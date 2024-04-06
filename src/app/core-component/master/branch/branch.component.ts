@@ -263,6 +263,39 @@ export class BranchComponent implements OnInit {
     doc.save('branch.pdf');
 
  }
+
+ 
+generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Branch List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+      ['#', 'Title','GSTIN', 'Address','Pincode','City','State','Country']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+      index + 1,
+      row.title,
+      row.gstin,
+      row.address,
+      row.pincode,
+      row?.city?.city,
+      row?.state?.state,
+      row?.country?.country_name
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Branch.pdf');
+}
+
  getVisibleDataFromTable(): any[] {
     const visibleData = [];
     const table = document.getElementById('mytable');
@@ -313,62 +346,42 @@ export class BranchComponent implements OnInit {
   // }
 
   printTable(): void {
-    // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-
-    // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
-
-    // Clone the table element to manipulate
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-    // Remove the "Is Active" column header from the cloned table
     const isActiveTh = clonedTable.querySelector('th.thone:nth-child(10)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
-
-    // Remove the "Action" column header from the cloned table
     const actionTh = clonedTable.querySelector('th.thone:last-child');
     if (actionTh) {
       actionTh.remove();
     }
-
-    // Loop through each row and remove the "Is Active" column and "Action" column data cells
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
-      // Remove the "Is Active" column data cell
       const isActiveTd = row.querySelector('td:nth-child(10)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
-
-      // Remove the "Action" column data cell
       const actionTd = row.querySelector('td:last-child');
       if (actionTd) {
         actionTd.remove();
       }
     });
-
-    // Get the modified table's HTML content
     const modifiedTableHTML = clonedTable.outerHTML;
-
-    // Apply styles to add some space from the top after the title
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-
-    // Combine the title and table content
     const combinedContent = styledTitleHTML + modifiedTableHTML;
-
-    // Store the original contents
     const originalContents = document.body.innerHTML;
-
-    // Replace the content of the body with the combined content
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
+    //end
     document.body.innerHTML = combinedContent;
     window.print();
-
-    // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }
   changePg(val: any) {

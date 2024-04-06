@@ -7,6 +7,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-purchaselist',
@@ -27,7 +28,8 @@ export class PurchaselistComponent implements OnInit {
   selectedPurchaseNo: any;
   date:any
 
-  constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService) { }
+  constructor(private purchaseService: PurchaseServiceService,private cs:CompanyService,
+    private datePipe:DatePipe) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -274,6 +276,40 @@ export class PurchaselistComponent implements OnInit {
       })
     doc.save('purchaseOrder.pdf');
   }
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Purchase Order';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Supplier Name ','Purchase Date','Purchase No.', 'Shipping Date','Shipping Note','Total','Status']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.party?.name,
+       this.formatDate( row?.order_date),
+        row.order_no,
+        this.formatDate(row?.shipping_date),
+        row.shipping_note,
+        row?.total,
+    row?.status,
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Purchase Order.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -361,6 +397,10 @@ export class PurchaselistComponent implements OnInit {
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     // Store the original contents
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

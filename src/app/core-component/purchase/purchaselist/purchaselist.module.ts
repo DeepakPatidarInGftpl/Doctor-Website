@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { DatepickerModule } from 'ng2-datepicker';
 
 import { PurchaselistRoutingModule } from './purchaselist-routing.module';
@@ -29,6 +29,9 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     OrderModule,
     MatSlideToggleModule,
     MatProgressBarModule
+  ],
+  providers:[
+    DatePipe
   ],
   bootstrap: [PurchaselistComponent]
 })

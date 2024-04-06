@@ -8,6 +8,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-debitnotes',
@@ -28,7 +29,7 @@ export class DebitnotesComponent implements OnInit {
   selectedpaymentTerms: string = '';
   date: any
 
-  constructor(private purchaseService: PurchaseServiceService, private cs: CompanyService, private contactService: ContactService) { }
+  constructor(private purchaseService: PurchaseServiceService, private cs: CompanyService, private contactService: ContactService,private datePipe:DatePipe) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -271,7 +272,9 @@ export class DebitnotesComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
-
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
 
   // convert to pdf
   generatePDF() {
@@ -302,6 +305,35 @@ export class DebitnotesComponent implements OnInit {
         ],
       })
     doc.save('purchasereturn.pdf');
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Purchase Return LIST';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Supplier Name ','Return Date','Return No.', 'Reverse Charge','Purchase Bill','Status']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+        index + 1,
+        row.party?.name,
+        this.formatDate(row?.purchase_return_date),
+        row.purchase_return_no,
+        row.reverse_charge,
+        row?.purchase_bill?.refrence_bill_no,
+    row.status,
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Purchase Return.pdf');
   }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -390,6 +422,10 @@ export class DebitnotesComponent implements OnInit {
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     // Store the original contents
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
