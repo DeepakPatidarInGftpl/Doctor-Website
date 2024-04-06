@@ -34,4 +34,15 @@ export class OfferService {
       let url = this.apiUrl + '/pv-api/discount/?id=';
       return this.http.delete(`${url}${id}`)
     }
+
+     // variant search
+  searchProduct(query: any) {
+    let url = this.apiUrl + '/pv-api/variant-search/?search=';
+    return this.http.get(url + query);
+  }
+
+  getSubcatByBrand(id:any){
+    let url =this.apiUrl+'/pv-api/brands_wise_subcategory/?brands_id=';
+    return this.http.get<any>(`${url}${id}`)
+  }
 }

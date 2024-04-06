@@ -92,7 +92,7 @@ export class UpdateInvoiceAmountComponent implements OnInit {
         discount_offer_type: j.discount_offer_type,
         discount_type: j?.discount_type,
         invoice_amount: j?.invoice_amount,
-        free_items: j?.free_items,
+        free_items: j?.free_items?.id,
         flat_discount: j?.flat_discount,
       }));
       console.log( this.myControls);
@@ -416,7 +416,7 @@ export class UpdateInvoiceAmountComponent implements OnInit {
   barcode: any[] = [];
   isSearch = false;
   getVariant(search: any,i:any) {
-    this.saleService.filterVariant('', '', search).subscribe((res: any) => {
+    this.offerService.searchProduct(search).subscribe((res: any) => {
       console.log(res);
       this.isSearch = false;
       this.variantList[i] = res;

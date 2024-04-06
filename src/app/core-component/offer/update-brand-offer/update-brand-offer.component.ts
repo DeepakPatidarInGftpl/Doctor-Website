@@ -426,7 +426,7 @@ formData.append('is_active',this.brandOfferForm.get('is_active')?.value);
   barcode: any[] = [];
   isSearch = false;
   getVariant(search: any) {
-    this.saleService.filterVariant('', '', search).subscribe((res: any) => {
+    this.offerService.searchProduct(search).subscribe((res: any) => {
       console.log(res);
       this.isSearch = false;
       this.variantList = res;

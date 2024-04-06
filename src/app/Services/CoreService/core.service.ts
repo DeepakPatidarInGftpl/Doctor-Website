@@ -1863,4 +1863,5 @@ export class CoreService {
       let url = this.apiUrl + '/pv-api/variant-search/?search=';
       return this.http.get(url + query);
     }
+    
 }

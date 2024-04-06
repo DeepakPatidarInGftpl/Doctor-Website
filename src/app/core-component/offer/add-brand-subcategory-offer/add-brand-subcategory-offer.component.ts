@@ -137,20 +137,85 @@ export class AddBrandSubcategoryOfferComponent implements OnInit {
     return this.brandOfferForm.get('subcategory');
   }
 
-  subcatList: any
-  subCategoryList: any[] = [];
-  filteredSubCategoryList: any[] = [];
-  searchCategory: string = '';
 
+
+  brandList: any[] = [];
+  filteredbrandList: any[] = [];
+  searchBrand: string = '';
+  getBrand() {
+    this.coreService.getBrand().subscribe(res => {
+      this.brandList = res
+      this.filteredbrandList = [...this.brandList];
+    })
+  }
+
+  filterBrand() {
+    if (this.searchBrand.trim() === '') {
+      this.filteredbrandList = [...this.brandList];
+    } else {
+      this.filteredbrandList = this.brandList.filter(brand =>
+        brand.title.toLowerCase().includes(this.searchBrand.toLowerCase())
+      );
+    }
+  }
+
+  selectedBrand = 0;
+  selectedBrandIds: any[] = [];
+  onCheckBrand(event: any) {
+    console.log(event);
+    const formArray: any = this.brandOfferForm.get('brands') as FormArray;
+    console.log(formArray);
+    /* Selected */
+    if (event.target.checked) {
+      // Add a new control in the arrayForm
+      formArray.push(new FormControl(parseInt(event.target.value)));
+      // parseInt(formArray.push(new FormControl(event.target.value)))
+      this.selectedBrand++;
+      this.selectedBrandIds = formArray.value;
+      this.getSubcatByBrand(formArray.value);
+      // console.log( this.selectedSubCategoryIds);
+    }
+    /* unselected */
+    else {
+      // find the unselected element
+      let i: number = 0;
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          this.getSubcatByBrand(formArray.value);
+          this.selectedBrand--;
+          return;
+        }
+        i++;
+      });
+    }
+  }
+
+  subcatList: any
   getSubcate() {
     this.coreService.getSubcategory().subscribe(res => {
       // console.log(res);
       this.subcatList = res
+      // this.subCategoryList = res;
+      // this.filteredSubCategoryList = [...this.subCategoryList];
+    })
+  }
+  subCategoryList: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchCategory: string = '';
+  getSubcatByBrand(val: number[]) {
+    console.log(val,'selected id');
+    const idString = JSON.stringify(val);
+    this.offerService.getSubcatByBrand(idString).subscribe(res => {
       this.subCategoryList = res;
+      this.selectedSubCat=0;
+      const subcategoryArray = this.brandOfferForm.get('subcategory') as FormArray;
+      subcategoryArray.clear();
+      
       this.filteredSubCategoryList = [...this.subCategoryList];
     })
   }
-
   filterSubCategory() {
     if (this.searchCategory.trim() === '') {
       this.filteredSubCategoryList = [...this.subCategoryList];
@@ -159,8 +224,7 @@ export class AddBrandSubcategoryOfferComponent implements OnInit {
         feature.title.toLowerCase().includes(this.searchCategory.toLowerCase())
       );
     }
-  }
-
+  } 
   selectedSubCat = 0;
   selectedSubCategoryIds: any[] = [];
   check: any;
@@ -193,59 +257,6 @@ export class AddBrandSubcategoryOfferComponent implements OnInit {
     }
   }
 
-  brandList: any[] = [];
-  filteredbrandList: any[] = [];
-  searchBrand: string = '';
-  getBrand() {
-    this.coreService.getBrand().subscribe(res => {
-      this.brandList = res
-      this.filteredbrandList = [...this.brandList];
-    })
-  }
-
-  filterBrand() {
-    if (this.searchBrand.trim() === '') {
-      this.filteredbrandList = [...this.brandList];
-    } else {
-      this.filteredbrandList = this.brandList.filter(brand =>
-        brand.title.toLowerCase().includes(this.searchBrand.toLowerCase())
-      );
-    }
-  }
-
-  selectedBrand = 0;
-  selectedBrandIds: any[] = [];
-
-  onCheckBrand(event: any) {
-    console.log(event);
-    const formArray: any = this.brandOfferForm.get('brands') as FormArray;
-    console.log(formArray);
-
-    /* Selected */
-    if (event.target.checked) {
-      // Add a new control in the arrayForm
-      formArray.push(new FormControl(parseInt(event.target.value)));
-      // parseInt(formArray.push(new FormControl(event.target.value)))
-
-      this.selectedBrand++;
-      this.selectedBrandIds = formArray.value
-      // console.log( this.selectedSubCategoryIds);
-    }
-    /* unselected */
-    else {
-      // find the unselected element
-      let i: number = 0;
-      formArray.controls.forEach((ctrl: any) => {
-        if (ctrl.value == event.target.value) {
-          // Remove the unselected element from the arrayForm
-          formArray.removeAt(i);
-          this.selectedBrand--;
-          return;
-        }
-        i++;
-      });
-    }
-  }
   branchList: any;
   getBranch() {
     this.coreService.getBranch().subscribe(res => {
@@ -258,8 +269,6 @@ export class AddBrandSubcategoryOfferComponent implements OnInit {
       this.membershipList = res;
     })
   }
-
-
   addRes: any;
   loaders = false;
   submit() {
@@ -337,12 +346,9 @@ export class AddBrandSubcategoryOfferComponent implements OnInit {
           cartObject['free_qty'] = cartGroup.get('free_qty')?.value;
           cartObject['discount_offer_type']=cartGroup.get('discount_offer_type')?.value;
         }
-
         cartData.push(cartObject);
       });
-
       formData.append('discount_cart', JSON.stringify(cartData));
-
       this.offerService.addDiscount(formData).subscribe(res => {
         // console.log(res);
         this.addRes = res;
@@ -376,7 +382,7 @@ export class AddBrandSubcategoryOfferComponent implements OnInit {
   isSearch = false;
   getVariant(search: any,i:any) {
     this.isSearch=true;
-    this.saleService.filterVariant('', '', search).subscribe((res: any) => {
+    this.offerService.searchProduct(search).subscribe((res: any) => {
       console.log(res);
       this.isSearch = false;
       this.variantList[i]= res;
@@ -431,11 +437,11 @@ export class AddBrandSubcategoryOfferComponent implements OnInit {
       this.isQuantityPercentage=false;
       this.isQuantity=false;
     }
-
     const barcode = (this.brandOfferForm.get('discount_cart') as FormArray).at(0) as FormGroup;
     barcode.patchValue({
       discount_offer_type: this.selectedCart,
     });
   }
+
 }
 

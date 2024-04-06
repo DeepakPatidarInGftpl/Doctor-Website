@@ -211,12 +211,12 @@ export class AddScrapEntryComponent implements OnInit {
   myControl = new FormControl('');
   barcode: any[] = [];
   getVariant(search:any){
-    this.saleService.filterVariant('', '', search).subscribe((res: any) => {
+    this.transactionService.searchProduct(search).subscribe((res: any) => {
       console.log(res);
       this.isSearch=false;
       this.variantList = res;
       console.log(this.variantList);
-      this.myControl.setValue(res[0].product_title)
+      this.myControl.setValue(res[0].product_title);
 
     });
   }
