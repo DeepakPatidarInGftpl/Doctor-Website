@@ -267,7 +267,7 @@ export class FinancialDashboardComponent implements OnInit {
        console.log(res);
        this.saleTotalList = res;
      },err=>{
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     })
    }
    //end
@@ -308,7 +308,7 @@ export class FinancialDashboardComponent implements OnInit {
               value: {
                 offsetY: 10, // Adjust the vertical position of the value
                 fontSize: '26px', // Set the font size of the value
-                color: '#F96F03', // Set the color of the value
+                color: '#2673DD', // Set the color of the value
                 fontWeight:700,
                 formatter: function (val: any) {
                   return val + '%'; // Format the value with a percentage symbol
@@ -318,7 +318,7 @@ export class FinancialDashboardComponent implements OnInit {
           }
         },
         fill: {
-              colors: ['#F96F03'] 
+              colors: ['#2673DD'] 
             }
       };
       //net chart
@@ -343,7 +343,7 @@ export class FinancialDashboardComponent implements OnInit {
               value: {
                 offsetY: 10, // Adjust the vertical position of the value
                 fontSize: '26px', // Set the font size of the value
-                color: '#F96F03', // Set the color of the value
+                color: '#2673DD', // Set the color of the value
                 fontWeight:700,
                 formatter: function (val: any) {
                   return val + '%'; // Format the value with a percentage symbol
@@ -355,12 +355,12 @@ export class FinancialDashboardComponent implements OnInit {
         },
         // labels: ["Net Profit"],
         fill: {
-          colors: ['#F96F03']
+          colors: ['#2673DD']
         }
       };
       
     },err=>{
-      this.toastr.error(err.message);
+      // //this.toastr.error(err.message);
     });
   }
    //end
@@ -488,7 +488,7 @@ export class FinancialDashboardComponent implements OnInit {
         }
       };
     },err=>{
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     });
   }
   //end
@@ -513,9 +513,8 @@ export class FinancialDashboardComponent implements OnInit {
       const growthData = res?.growth_data || [];
       const categories = achievedAndForecasted.map(entry => `${this.getMonthName(entry.month)} ${entry.year}`);
       const series = [
-        { name: 'Achieved', data: achievedAndForecasted.map(entry => entry.achieved) },
-        { name: 'Forecasted', data: achievedAndForecasted.map(entry => entry.forcasted) },
-        { name: 'Growth Forecasted', data: growthData.map(entry => entry.forcasted) },
+        { name: 'Achieved', data: achievedAndForecasted.map(entry => entry.achieved) ,color: '#00ff00'},
+        { name: 'Forecasted', data: achievedAndForecasted.map(entry => entry.forcasted) ,color: '#0000ff'},
         { name: 'Growth Achieved', data: growthData.map(entry => entry.forcasted) },
       ];
       this.GrowthchartOptions = {
@@ -573,7 +572,7 @@ export class FinancialDashboardComponent implements OnInit {
       };
     
     },err=>{
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     });
   }
   getMonthName(monthNumber: number): string {
@@ -624,7 +623,7 @@ export class FinancialDashboardComponent implements OnInit {
        console.log(res);
        this.recievableList = res;
      },err=>{
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     });
    }
    //end
@@ -647,7 +646,7 @@ export class FinancialDashboardComponent implements OnInit {
         console.log(res);
         this.payableList = res;
       },err=>{
-        this.toastr.error(err.message);
+        //this.toastr.error(err.message);
       });
     }
     //end
@@ -670,7 +669,7 @@ export class FinancialDashboardComponent implements OnInit {
           console.log(res);
           this.expenseList = res?.data;
         },err=>{
-          this.toastr.error(err.message);
+          //this.toastr.error(err.message);
         });
       }
       //end

@@ -294,4 +294,9 @@ export class TransactionService {
     let url = this.apiUrl + '/pv-api/scarp_entry/';
     return this.http.post<any>(url, data,)
   }
+     // variant search
+     searchProduct(query: any) {
+      let url = this.apiUrl + '/pv-api/variant-search/?search=';
+      return this.http.get(url + query);
+    }
 }

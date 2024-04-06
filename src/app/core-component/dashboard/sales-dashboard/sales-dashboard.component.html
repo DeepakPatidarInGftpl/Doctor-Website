@@ -146,20 +146,34 @@
             </ng-container>
             <ng-container>
                 <div class="col-lg-2 col-sm-3 col-12 d-flex mt-3">
+                    <div class="dash-count das-h" >
+                        <div class="dash-counts">
+                            <div class="num-img">
+                                <img src="assets/img/dollar.png" alt="">
+                            </div>
+                            <div>
+                                <p class="card-num-p1" style="font-size: 17px;">Total Sale Return </p>
+                                <p class="card-num-p2">{{saleTotalList?.total_sale_return }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            
+            <ng-container>
+                <div class="col-lg-2 col-sm-3 col-12 d-flex mt-3">
                     <div class="dash-count das-h">
                         <div class="dash-counts">
                             <div class="num-img">
                                 <img src="assets/img/dollar.png" alt="">
                             </div>
                             <div>
-                                <p class="card-num-p1" style="font-size: 17px;">Customer Retention</p>
-                                <p class="card-num-p2">{{customerRetentionList?.customer_retention_rate}}</p>
+                                <p class="card-num-p1">Total Purchase Return</p>
+                                <p class="card-num-p2">{{saleTotalList?.total_purchase_return}}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </ng-container>
-            <ng-container>
                 <div class="col-lg-2 col-sm-3 col-12 d-flex mt-3">
                     <div class="dash-count das-h">
                         <div class="dash-counts">
@@ -186,53 +200,41 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-sm-3 col-12 d-flex mt-3">
-                    <div class="dash-count das-h">
-                        <div class="dash-counts">
-                            <div class="num-img">
-                                <img src="assets/img/dollar.png" alt="">
-                            </div>
-                            <div>
-                                <p class="card-num-p1">Total Products</p>
-                                <p class="card-num-p2">{{saleTotalList?.total_products}}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               
             </ng-container>
             <ng-container>
                 <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                    <div class="dash-count das-w">
+                    <div class="dash-count das-w" style="background: #EDF5FF;">
                         <div class="dash-counts">
-                            <p class="card-num-p1">Sold QTY</p>
+                            <p class="card-num-p1"  style="color: #2673DD;">Sold QTY</p>
                             <p class="card-num-p2">{{saleTotalList?.total_sale_bill_sold_quantity}}</p>
 
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                    <div class="dash-count das-w">
+                    <div class="dash-count das-w" style="background: #EDF5FF;">
                         <div class="dash-counts">
-                            <p class="card-num-p1">Total Invoice</p>
+                            <p class="card-num-p1" style="color: #2673DD;">Total Invoice</p>
                             <p class="card-num-p2">{{saleTotalList?.total_sale_bill}}</p>
 
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                    <div class="dash-count das-w">
+                    <div class="dash-count das-w" style="background: #EDF5FF;">
                         <div class="dash-counts">
-                            <p class="card-num-p1">Total Customers</p>
+                            <p class="card-num-p1" style="color: #2673DD;">Total Customers</p>
                             <p class="card-num-p2">{{saleTotalList?.total_customers}}</p>
 
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                    <div class="dash-count das-w">
+                    <div class="dash-count das-w" style="background: #EDF5FF;">
                         <div class="dash-counts">
-                            <p class="card-num-p1">Total Sale Return</p>
-                            <p class="card-num-p2">{{saleTotalList?.total_sale_return}}</p>
+                            <p class="card-num-p1" style="color: #2673DD;">Customer Retention</p>
+                            <p class="card-num-p2">{{customerRetentionList?.customer_retention_rate}}</p>
 
                         </div>
                     </div>
@@ -240,37 +242,37 @@
             </ng-container>
             <ng-container>
                 <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                    <div class="dash-count das-w">
+                    <div class="dash-count das-w" style="background: #EDF5FF;">
                         <div class="dash-counts">
-                            <p class="card-num-p1">Total Purchase Return</p>
-                            <p class="card-num-p2">{{saleTotalList?.total_purchase_return}}</p>
+                            <p class="card-num-p1" style="color: #2673DD;">Purchase QTY</p>
+                            <p class="card-num-p2">{{saleTotalList?.total_purchase_bill_quantity}}</p>
 
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                    <div class="dash-count das-w">
+                    <div class="dash-count das-w" style="background: #EDF5FF;">
                         <div class="dash-counts">
-                            <p class="card-num-p1">Total Bills</p>
+                            <p class="card-num-p1" style="color: #2673DD;">Total Bills</p>
                             <p class="card-num-p2">{{saleTotalList?.total_purchase_bill}}</p>
 
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                    <div class="dash-count das-w">
+                    <div class="dash-count das-w" style="background: #EDF5FF;">
                         <div class="dash-counts">
-                            <p class="card-num-p1">Total Suppliers</p>
+                            <p class="card-num-p1" style="color: #2673DD;">Total Suppliers</p>
                             <p class="card-num-p2">{{saleTotalList?.total_suppliers}}</p>
 
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-3 col-12 d-flex">
-                    <div class="dash-count das-w">
+                    <div class="dash-count das-w" style="background: #EDF5FF;">
                         <div class="dash-counts">
-                            <p class="card-num-p1">Purchase QTY</p>
-                            <p class="card-num-p2">{{saleTotalList?.total_purchase_bill_quantity}}</p>
+                            <p class="card-num-p1" style="color: #2673DD;">Total Products</p>
+                            <p class="card-num-p2">{{saleTotalList?.total_products}}</p>
                         </div>
                     </div>
                 </div>
@@ -497,7 +499,7 @@
                             <table class="table datatable ">
                                 <thead>
                                     <tr>
-                                        <th>Customer UserName</th>
+                                        <th> UserName</th>
                                         <th>No. Bill </th>
                                         <th>Net Total </th>
                                         <th>Party Name </th>
@@ -548,7 +550,7 @@
                                         <th>Customer Name</th>
                                         <th>Voucher Number </th>
                                         <th>Bill Amount </th>
-                                        <th>Pending Amount </th>
+                                        <th>Due </th>
                                         <th>Status </th>
                                     </tr>
                                 <tbody>

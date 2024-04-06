@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { PurchaseBillRoutingModule } from './purchase-bill-routing.module';
 import { PurchaseBillComponent } from './purchase-bill.component';
@@ -30,6 +30,9 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     OrderModule,
     MatSlideToggleModule,
     MatProgressBarModule
-  ]
+  ],
+  providers:[
+    DatePipe
+  ],
 })
 export class PurchaseBillModule { }

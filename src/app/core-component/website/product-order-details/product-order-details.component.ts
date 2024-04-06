@@ -207,5 +207,6 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.sho1 = false;
     this.sho2 = !this.sho2;
   }
+
 }
 

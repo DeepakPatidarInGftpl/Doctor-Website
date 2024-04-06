@@ -137,6 +137,11 @@ export class DetailCustomerComponent implements OnInit {
       this.loader=false;
     });
   }
-
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.filteredData?.length;
+    }
+  }
 }
 

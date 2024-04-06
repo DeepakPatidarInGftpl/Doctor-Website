@@ -59,6 +59,12 @@ export class DetailsTrendingProductsComponent implements OnInit {
   navigate(){
     this.router.navigate(['//website/trendingProducts'], { state: { id: this.id } })
   }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.filteredData?.length;
+    }
+  }
 }
 
 

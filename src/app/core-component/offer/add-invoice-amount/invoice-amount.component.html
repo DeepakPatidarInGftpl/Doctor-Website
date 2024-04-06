@@ -73,7 +73,8 @@
                             <span class="text-danger" *ngIf="discount_type && discount_type.invalid && discount_type.touched">Enter discount_type </span>
                         </div>
                     </div>
-                    <!-- <div class="col-lg-3 col-sm-4 col-12">
+                    <!--
+                         <div class="col-lg-3 col-sm-4 col-12">
                         <div class="form-group">
                             <label>Select Brand*</label>
                         <div class="dropdown">
@@ -116,21 +117,21 @@
                         <div class="form-group">
                             <div class="d_flex">
                                 <div class="d-flex">
-                                    <input type="checkbox" formControlName="multiuse" [id]="'checkboxmultiuse-'" [ngModel]="true">
+                                    <input type="checkbox" formControlName="multiuse" [id]="'checkboxmultiuse-'" [ngModel]="false">
                                     <label [for]="'checkboxmultiuse-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Multiuse</label>
                                 </div>
                                 <div class="d-flex">
-                                    <input type="checkbox" formControlName="is_compulsory" [id]="'checkboxCompulsory-'" [ngModel]="true">
+                                    <input type="checkbox" formControlName="is_compulsory" [id]="'checkboxCompulsory-'" [ngModel]="false">
                                     <label [for]="'checkboxCompulsory-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Compulsory</label>
                                 </div> 
                             </div>
                             <div class="d_flex">
                                 <div class="d-flex">
-                                    <input type="checkbox" formControlName="auto_update_price" [id]="'checkboxSale-'" [ngModel]="true">
+                                    <input type="checkbox" formControlName="auto_update_price" [id]="'checkboxSale-'" [ngModel]="false">
                                     <label [for]="'checkboxSale-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Auto Update Price</label>
                                 </div>
                                 <div class="d-flex">
-                                    <input type="checkbox" formControlName="applicable_for_only_coupons" [id]="'checkboxcod-'" [ngModel]="true">
+                                    <input type="checkbox" formControlName="applicable_for_only_coupons" [id]="'checkboxcod-'" [ngModel]="false">
                                     <label [for]="'checkboxcod-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Is Applicable For Only Coupons</label>
                                 </div>
                                 <div class="d-flex">

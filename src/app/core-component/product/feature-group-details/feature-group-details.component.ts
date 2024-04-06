@@ -52,5 +52,11 @@ export class FeatureGroupDetailsComponent implements OnInit {
   navigate() {
     this.router.navigate(['//product/feature_group'], { state: { id: this.id } })
   }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.filteredData.length;
+    }
+  }
 }
 

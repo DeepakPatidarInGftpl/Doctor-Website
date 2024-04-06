@@ -255,4 +255,17 @@ export class ProductDetailsComponent implements OnInit {
       this.filterOpertion=null;
       this.filterData();
     }
+    changePg(val: any) {
+      console.log(val);
+      if (val == -1) {
+        this.itemsPerPage = this.productDetail?.product_ledger_product?.length;
+      }
+    }
+    changePg1(val: any) {
+      console.log(val);
+      if (val == -1) {
+        this.itemsPerPage = this.productDetail?.logs?.length;
+      }
+    }
+    
 }

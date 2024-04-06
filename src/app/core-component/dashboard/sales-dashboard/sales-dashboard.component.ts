@@ -440,7 +440,7 @@ export class SalesDashboardComponent implements OnInit {
           type: "bar",
           height: 350
         },
-        plotOptions: {
+        plotOptions: {           
           bar: {
             horizontal: false,
             columnWidth: "15%",

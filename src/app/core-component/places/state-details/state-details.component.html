@@ -5,11 +5,11 @@
             <div class="page-header">
                 <div class="page-title">
                     <h6 class="subhead-color" (click)="goBack()"><mat-icon style="vertical-align: middle;">keyboard_backspace</mat-icon>Back to Colors</h6>
-                    <h4>Full details of a Colors</h4>
+                    <h4>Full details of a State</h4>
                 </div>
                 <div class="page-btn">
                     <a (click)="navigate()" class="btn btn-added">
-                        <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit Colors
+                        <img src="assets/img/icons/edit.svg" class="me-1" alt="img">Edit State
                     </a>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                                         </tr>
                                         <tr>
                                             <td class="th">Country</td>
-                                            <td class="td">{{employeeDetails?.country_name}}</td>
+                                            <td class="td">{{employeeDetails?.country?.country_name}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -75,7 +75,7 @@
                                 <div class="row">
                                     <div class="col-lg-4 col-sm-4 col-12 mt-2">
                                         <div class="entries"> Show per page
-                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                            <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
                                                 <option value="30">30</option>
@@ -89,8 +89,8 @@
                                         <div class="f-right">
                                             <pagination-controls
                                                 (pageChange)="p = $event"></pagination-controls>
-                                            <div class="entries f-right">Showing {{itemsPerPage}} to
-                                                {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                                <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}} entries</div>  
+
                                         </div>
                                     </div>
                                 </div>

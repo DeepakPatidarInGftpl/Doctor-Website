@@ -354,7 +354,7 @@ export class InvoiceAmountComponent implements OnInit {
   isSearch = false;
   getVariant(search: any) {
     this.isSearch=true;
-    this.saleService.filterVariant('', '', search).subscribe((res: any) => {
+    this.offerService.searchProduct(search).subscribe((res: any) => {
       console.log(res);
       this.isSearch = false;
       this.variantList = res;
