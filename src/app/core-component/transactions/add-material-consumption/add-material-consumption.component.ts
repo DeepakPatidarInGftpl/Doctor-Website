@@ -37,7 +37,7 @@ export class AddMaterialConsumptionComponent implements OnInit {
     this.materialConsumptionForm = this.fb.group({
       user: new FormControl('', [Validators.required]),
       consumption_date: new FormControl(defaultDateTime, [Validators.required]),
-      prefix: new FormControl('',),
+      prefix: new FormControl('',[Validators.required]),
       consumption_no: new FormControl('',),
       consumption_type: new FormControl('', [Validators.required]),
       remarks: new FormControl(''),

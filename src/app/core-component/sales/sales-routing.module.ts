@@ -208,7 +208,35 @@ const routes: Routes = [
           import('./detail-advance-booking/detail-advance-booking.module').then((m) => m.DetailAdvanceBookingModule),
       },
      
-
+ // sales deleivery challan
+ {
+  path: 'delivery-challan-list',
+  loadChildren: () =>
+    import('./list-delivery-challan/list-delivery-challan.module').then(
+      (m) => m.ListDeliveryChallanModule
+    ),
+},
+{
+  path: 'add-delivery-challan',
+  loadChildren: () =>
+    import('./add-delivery-challan/add-delivery-challan.module').then(
+      (m) => m.AddDeliveryChallanModule
+    ),
+},
+{
+  path: 'update-delivery-challan/:id',
+  loadChildren: () =>
+    import('./update-delivery-challan/update-delivery-challan.module').then(
+      (m) => m.UpdateDeliveryChallanModule
+    ),
+},
+{
+  path: 'detail-delivery-challan/:id',
+  loadChildren: () =>
+    import('./detail-delivery-challan/detail-delivery-challan.module').then(
+      (m) => m.DetailDeliveryChallanModule
+    ),
+},
     ],
   },
 

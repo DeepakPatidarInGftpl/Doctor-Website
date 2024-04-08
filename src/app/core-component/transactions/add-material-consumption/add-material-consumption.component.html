@@ -51,7 +51,7 @@
 
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
-            <label>Prefix</label>
+            <label>Prefix*</label>
             <input type="text" formControlName="prefix" placeholder="Enter Prefix" [ngModel]="prefixNo" readonly
               id="prefix" [ngClass]="{ 'is-invalid': f['prefix'].touched && f['prefix'].invalid}">
             <span class="text-danger" *ngIf="prefix && prefix.invalid && prefix.touched">Enter Prefix</span>

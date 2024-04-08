@@ -1,32 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
-import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { SalesService } from 'src/app/Services/salesService/sales.service';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-list-material-consumption',
-  templateUrl: './list-material-consumption.component.html',
-  styleUrls: ['./list-material-consumption.component.scss']
+  selector: 'app-list-delivery-challan',
+  templateUrl: './list-delivery-challan.component.html',
+  styleUrls: ['./list-delivery-challan.component.scss']
 })
-export class ListMaterialConsumptionComponent implements OnInit {
+export class ListDeliveryChallanComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
   public tableData: any;
 
   titlee: any;
-  p: number = 1
+  p:number=1
   pageSize: number = 10;
-  itemsPerPage: number = 10;
+  itemsPerPage:number=10;
   filteredData: any[]; // The filtered data
-  selectedpaymentTerms: string = '';
-  date: any
+  supplierType: string = '';
+  selectedCompany: string = '';
 
-  constructor( private transactionService: TransactionService,private cs: CompanyService,) { }
+  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService,private datePipe:DatePipe) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -44,17 +46,17 @@ export class ListMaterialConsumptionComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.deleteMaterialConsuption(id).subscribe(res => {
+        this.saleService.deleteDelivryChallan(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Deleted!',
-              text: this.delRes.msg,
-            });
-            this.filteredData.splice(index, 1);
-            this.ngOnInit();
-          } else {
+           this.ngOnInit();
+           Swal.fire({
+            icon: 'success',
+            title: 'Deleted!',
+            text: this.delRes.msg,
+          });
+          this.tableData.splice(index, 1);
+          }else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -62,16 +64,14 @@ export class ListMaterialConsumptionComponent implements OnInit {
             });
           }
         })
-
       }
     });
   }
-
   // active deactive
   isActive(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Deactivate this Debit Note!",
+      text: "Do you want to Deactivate this sale Delivery Challan!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -83,7 +83,7 @@ export class ListMaterialConsumptionComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.MaterialConsuptionIsActive(id, '').subscribe(res => {
+        this.saleService.DelivryChallanIsActive(id,'').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -92,22 +92,16 @@ export class ListMaterialConsumptionComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.ngOnInit()
-          }else{
-            Swal.fire({
-              icon: 'error',
-              title: 'Not-Deactivate!',
-              text: this.delRes.error,
-            });
           }
         })
-      
+       
       }
     });
   }
   Active(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you want to Active this Debit Note!",
+      text: "Do you want to Active this sale Delivery Challan!",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -119,7 +113,7 @@ export class ListMaterialConsumptionComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.transactionService.MaterialConsuptionIsActive(id, '').subscribe(res => {
+        this.saleService.DelivryChallanIsActive(id,'').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -128,62 +122,63 @@ export class ListMaterialConsumptionComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.ngOnInit()
-          }else{
-            Swal.fire({
-              icon: 'error',
-              title: 'Not-Active!',
-              text: this.delRes.error,
-            });
           }
-          
         })
       
       }
     });
   }
-
-  loader = true;
-  isAdd: any
-  isEdit: any;
-  isDelete: any;
-  userDetails: any;
+loader=true;
+isAdd:any;
+isEdit:any;
+isDelete:any;
+userDetails:any;
   ngOnInit(): void {
-    this.transactionService.getMaterialConsuption().subscribe(res => {
-      // console.log(res);
+    this.saleService.getDelivryChallan().subscribe(res => {
       this.tableData = res;
-      this.loader = false;
+      this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); 
+      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
     })
 
-    // permissin from api profile
+    //permission from profile api
+  
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'inventory' && res.content_type.model === 'materialconsumption' && res.codename == 'add_materialconsumption') {
+        if (res.content_type.app_label === 'sale'  && res.content_type.model === 'estimate' && res.codename=='add_estimate') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'materialconsumption' && res.codename == 'change_materialconsumption') {
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename=='change_estimate') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'materialconsumption' && res.codename == 'delete_materialconsumption') {
+        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename=='delete_estimate') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
-      });
     });
+  })
+  this.getPaymentTerms();
   }
 
- 
+  
+  paymentList: any;
+  getPaymentTerms() {
+    this.contactService.getPaymentTerms().subscribe(res => {
+      // console.log(res);
+      this.paymentList = res;
+    })
+  }
+
   allSelected: boolean = false;
-  selectedRows: boolean[]
+  selectedRows:boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
 
-  select = false
+select=false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -195,37 +190,39 @@ export class ListMaterialConsumptionComponent implements OnInit {
       })
     }
   }
-
+  
   search() {
-    if (this.titlee == "") {
+    if (this.titlee === "") {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.user?.username.toLocaleLowerCase();
-        const companyNameLower = res?.barcode?.product_title.toLocaleLowerCase();
-        if (nameLower.match(searchTerm)) {
+        const nameLower = res?.account?.title?.toLocaleLowerCase() || "";
+        const usernameLower = res?.sale_bill?.customer_bill_no.toLocaleLowerCase() || "";
+        if (nameLower.includes(searchTerm)) {
           return true;
-        } else if (companyNameLower.match(searchTerm)) {
+        } else if (usernameLower.includes(searchTerm)) {
           return true;
         }
         return false;
       });
     }
   }
+  
+
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
   }
-
-
-  // convert to pdf
-  generatePDF() {
-    // table data with pagination
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
+   // convert to pdf
+   generatePDF() {
     const doc = new jsPDF();
-    const title = 'Debit Note';
+    const title = 'Delivery Challan List';
     doc.setFontSize(15);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 10, 10);
@@ -238,20 +235,51 @@ export class ListMaterialConsumptionComponent implements OnInit {
         },
         columns: [
           { header: 'Sr No.' },
-          { header: 'Company Name ' },
-          { header: 'Debit Note Date' },
-          { header: 'Debit Note No' },
-          { header: 'Purchase Bill' },
-          { header: 'Reason' },
-          { header: 'Amount' },
-          { header: 'Tax' },
+          { header: 'User Name ' },
+          { header: 'Delivery Date ' },
+          { header: 'Delivery no' },
+          { header: 'Payment Terms' },
+          { header: 'Expire Date' },
+          { header: 'Sub Total' },
           { header: 'Total' },
           { header: 'Status' },
           { header: 'Is Active' }
         ],
       })
-    doc.save('debitnote.pdf');
-  }
+    doc.save('deliveryChallan.pdf');
+ }
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Delivery Challan List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+          ['#','User Name ','Delivery Challan Date', 'Delivery Challan no','Payment Terms','Expire Date','Sub Total','Total','Status']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+  
+      index + 1,
+      row?.customer?.name + ' (' + row?.customer?.username + ')',
+     this.formatDate( row?.estimate_date),
+      row.estimate_no,
+      row.payment_terms.title,
+      this.formatDate(row?.estimate_expiry_date),
+      row.subtotal,
+      row.total,
+  row?.status,
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('deliveryChallan.pdf');
+}
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -267,6 +295,7 @@ export class ListMaterialConsumptionComponent implements OnInit {
       }
     });
     visibleData.push(headerData);
+
     // Include visible data rows
     dataRows.forEach(row => {
       const rowData = [];
@@ -277,96 +306,106 @@ export class ListMaterialConsumptionComponent implements OnInit {
     });
     return visibleData;
   }
+
   // Modify your exportToExcel() function
   exportToExcel(): void {
     const visibleDataToExport = this.getVisibleDataFromTable();
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    // Create a Blob from the workbook and initiate a download
     const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const fileName = 'debitnote.xlsx';
+    const fileName = 'deliverychallan.xlsx';
     saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
   }
+
   printTable(): void {
-    // Get the table element and its HTML content
     const tableElement = document.getElementById('mytable');
     const tableHTML = tableElement.outerHTML;
-    // Get the title element and its HTML content
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
-
-    // Clone the table element to manipulate
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-    // Remove the "Is Active" column header from the cloned table
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(12)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(11)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
 
-    // Remove the "Action" column header from the cloned table
     const actionTh = clonedTable.querySelector('th.thone:last-child');
     if (actionTh) {
       actionTh.remove();
     }
 
-    // Loop through each row and remove the "Is Active" column and "Action" column data cells
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
-      // Remove the "Is Active" column data cell
-      const isActiveTd = row.querySelector('td:nth-child(12)');
+      const isActiveTd = row.querySelector('td:nth-child(11)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
-
-      // Remove the "Action" column data cell
       const actionTd = row.querySelector('td:last-child');
       if (actionTd) {
         actionTd.remove();
       }
     });
-
-    // Get the modified table's HTML content
     const modifiedTableHTML = clonedTable.outerHTML;
-    // Apply styles to add some space from the top after the title
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-    // Combine the title and table content
+
     const combinedContent = styledTitleHTML + modifiedTableHTML;
-    // Store the original contents
     const originalContents = document.body.innerHTML;
-    // Replace the content of the body with the combined content
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
-    // Restore the original content of the body
     document.body.innerHTML = originalContents;
   }
-  //filter based on the start date and end date & also filter with the receipt_mode & receipt_method
-  selectedAmount:any;
+
+
+  date: any
+  espireDate:any;
+  filterPaymentTerms:any
+  selectedAmount:any
+  statusFilter:any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
       const selectedDate = new Date(this.date).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.date).toISOString().split('T')[0];
+        const receiptDate = new Date(item?.estimate_date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
       });
     }
+    if (this.espireDate) {
+      const selectedDate = new Date(this.espireDate).toISOString().split('T')[0];
+      filteredData = filteredData.filter((item) => {
+        const receiptDate = new Date(item?.estimate_expiry_date).toISOString().split('T')[0];
+        return receiptDate === selectedDate;
+      });
+    }
+    if (this.filterPaymentTerms) {
+      filteredData = filteredData.filter((item) => item?.payment_terms?.title=== this.filterPaymentTerms);
+    }
     if (this.selectedAmount) {
-      filteredData = filteredData.filter((item) => item?.amount <= this.selectedAmount);
+      filteredData = filteredData.filter((item) => item?.total <= this.selectedAmount);
+    }
+    if (this.statusFilter) {
+      filteredData = filteredData.filter((item) => item?.status=== this.statusFilter);
     }
     this.filteredData = filteredData;
   }
-  clearFilters() {
-    this.selectedAmount = null;
+  clearFilter() {
     this.date = null;
+    this.espireDate = null;
+    this.filterPaymentTerms=null
+    this.selectedAmount=null;
+    this.statusFilter=null;
     this.filterData();
   }
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData?.length;
     }
   }
 }
+

@@ -197,7 +197,7 @@ export class TransactionService {
     return this.http.get(url)
   } 
   getMaterialConsuptionPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=MaterialConsuption';
+    let url =this.apiUrl+'/pv-api/prefix/?id=MaterialConsumption';
     return this.http.get(url)
   }
   // account service
@@ -249,23 +249,23 @@ export class TransactionService {
 
   //material consumption
   getMaterialConsuption() {
-    let url = this.apiUrl + '/pv-api/new_material_consuption/';
+    let url = this.apiUrl + '/pv-api/material_consumption/';
     return this.http.get(url)
   }
   getMaterialConsuptionById(id: number): Observable<any> {
-    let url = this.apiUrl + '/pv-api/new_material_consuption/?id='
+    let url = this.apiUrl + '/pv-api/material_consumption/?id='
     return this.http.get<any>(`${url}${id}`)
   }
   MaterialConsuptionIsActive(id: any, data) {
-    let url = this.apiUrl + '/pv-api/new_material_consuption/?id=';
+    let url = this.apiUrl + '/pv-api/material_consumption/?id=';
     return this.http.patch(`${url}${id}`, data);
   }
   addMaterialConsuption(data: any) {
-    let url = this.apiUrl + '/pv-api/new_material_consuption/';
+    let url = this.apiUrl + '/pv-api/material_consumption/';
     return this.http.post(url, data)
   }
   updateMaterialConsuption(data: any, id: number) {
-    let url = this.apiUrl + '/pv-api/new_material_consuption/?id=';
+    let url = this.apiUrl + '/pv-api/material_consumption/?id=';
     return this.http.put(`${url}${id}`, data)
   }
   deleteMaterialConsuption(id: number) {

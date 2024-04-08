@@ -339,7 +339,7 @@ isBrandSubcategoryOffer:any;
           this.isPaymentVoucher = res.codename;
         } else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'expensesvoucher' && res.codename == 'view_expensesvoucher') {
           this.isExpenseVoucher = res.codename; //12-1
-        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'newmaterialconsuption' && res.codename == 'view_newmaterialconsuption') {
+        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'materialconsumption' && res.codename == 'view_materialconsumption') {
           this.isMaterialConsuption = res.codename; //12-1
         }else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'scarpentry' && res.codename == 'view_scarpentry') {
           this.isScarpEntry = res.codename; //12-1
