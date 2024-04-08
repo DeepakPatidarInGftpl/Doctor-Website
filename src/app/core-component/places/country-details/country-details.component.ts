@@ -59,4 +59,10 @@ export class CountryDetailsComponent implements OnInit {
   navigate(){
     this.router.navigate(['//places/countrieslist'], { state: { id: this.id } })
   }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.filteredData?.length;
+    }
+  }
 }

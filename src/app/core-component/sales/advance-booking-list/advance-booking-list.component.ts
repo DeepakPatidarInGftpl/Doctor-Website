@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-advance-booking-list',
@@ -26,7 +27,7 @@ export class AdvanceBookingListComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService) {}
+  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService,private datePipe:DatePipe) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -215,7 +216,9 @@ select=false
     this.key = key;
     this.reverse = !this.reverse
   }
-
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
    // convert to pdf
    generatePDF() {
     const doc = new jsPDF();
@@ -245,7 +248,38 @@ select=false
       })
     doc.save('Advance Booking.pdf');
  }
-
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Advance Booking List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+      ['#', 'Account','Booking Date', 'Booking no','Payment Terms','Due Date','Sub Total','Total','Status']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+  
+      index + 1,
+      row.account?.account_id ,
+      row.booking_date,
+     row.booking_no,
+      row.payment_terms.title,
+     row.due_date,
+      row.subtotal,
+      row.total,
+  row.status,
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Advance Booking .pdf');
+}
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -317,6 +351,10 @@ select=false
 
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
     document.body.innerHTML = originalContents;

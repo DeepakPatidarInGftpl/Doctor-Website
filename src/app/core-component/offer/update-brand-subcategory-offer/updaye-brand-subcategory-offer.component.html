@@ -101,7 +101,7 @@
                                     <li> <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchCategory" (ngModelChange)="filterSubCategory()" [ngModelOptions]="{standalone: true}"></li>
                                     <li><a class="dropdown-item"
                                             *ngFor="let category of filteredSubCategoryList let j=index;">
-                                            <input type="checkbox" [value]="category.id" [checked]="selectSubcat?.includes(category.id) ||selectedSubCategoryIds.includes(category.id)" (change)="onCheckSubCategory($event)" formArrayName="subcategory" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + j">
+                                            <input type="checkbox" [value]="category.id" [checked]="selectSubcat?.includes(stringToNumber(category.id)) ||selectedSubCategoryIds.includes(stringToNumber(category.id))" (change)="onCheckSubCategory($event)" formArrayName="subcategory" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + j">
                                             <label [for]="'checkboxCat-' + j" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{category.title}}</label>
                                         </a></li>
                                 </ul>

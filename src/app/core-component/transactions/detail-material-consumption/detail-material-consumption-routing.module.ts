@@ -4,7 +4,7 @@ import { DetailMaterialConsumptionComponent } from './detail-material-consumptio
 import { RolesGuardGuard } from 'src/app/guards/roles-guard.guard';
 
 const routes: Routes = [
-  {path:'',component:DetailMaterialConsumptionComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['view_newmaterialconsuption']}}
+  {path:'',component:DetailMaterialConsumptionComponent,canActivate:[RolesGuardGuard],data:{allowedRoles:['view_materialconsumption']}}
 ];
 
 @NgModule({

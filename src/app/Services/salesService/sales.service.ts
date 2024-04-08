@@ -231,4 +231,31 @@ export class SalesService {
     let url = this.apiUrl + '/pv-api/advance_booking/?id=';
     return this.http.delete(`${url}${id}`)
   }
+
+  // delivery challan
+  
+   getDelivryChallan() {
+    let url = this.apiUrl + '/pv-api/delivery_challan/';
+    return this.http.get(url)
+  }
+  getDelivryChallanById(id: number): Observable<any> {
+    let url = this.apiUrl + '/pv-api/delivery_challan/?id='
+    return this.http.get<any>(`${url}${id}`)
+  }
+  DelivryChallanIsActive(id: any, data) {
+    let url = this.apiUrl + '/pv-api/delivery_challan/?id=';
+    return this.http.patch(`${url}${id}`, data);
+  }
+  addDelivryChallan(data: any) {
+    let url = this.apiUrl + '/pv-api/delivery_challan/';
+    return this.http.post(url, data)
+  }
+  updateDelivryChallan(data: any, id: number) {
+    let url = this.apiUrl + '/pv-api/delivery_challan/?id=';
+    return this.http.put(`${url}${id}`, data)
+  }
+  deleteDelivryChallan(id: number) {
+    let url = this.apiUrl + '/pv-api/delivery_challan/?id=';
+    return this.http.delete(`${url}${id}`)
+  }
 }

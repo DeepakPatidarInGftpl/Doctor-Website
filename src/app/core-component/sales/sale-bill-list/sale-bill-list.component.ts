@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-sale-bill-list',
   templateUrl: './sale-bill-list.component.html',
@@ -27,7 +28,7 @@ export class SaleBillListComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService) {}
+  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService,private datePipe:DatePipe) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -220,7 +221,9 @@ select=false
     this.key = key;
     this.reverse = !this.reverse
   }
-
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
    // convert to pdf
    generatePDF() {
     // table data with pagination
@@ -255,7 +258,38 @@ select=false
       })
     doc.save('saleBill.pdf');
  }
-
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Sale Bill List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+      ['#','Company Name','Sale Bill Date', 'Due Date','customer bill no','Payment Terms','Sale Order','Sub Total','Total']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+  
+      index + 1,
+      row?.customer?.name + ' (' + row?.customer?.username + ')',
+     this.formatDate( row?.bill_date),
+      this.formatDate(row?.due_date),
+      row.customer_bill_no,
+      row.payment_terms?.title,
+  row.sale_order?.sale_order_no,
+row.subtotal,
+row.total
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Sale Bill .pdf');
+}
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
     const table = document.getElementById('mytable');
@@ -322,6 +356,10 @@ select=false
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
     document.body.innerHTML = originalContents;

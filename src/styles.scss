@@ -232,3 +232,11 @@ mat-form-field {
 
 
 // reports all list tabs
+
+
+/* Add custom class to apex chart component */
+.apexcharts-legend.apx-legend-position-bottom.apexcharts-align-center,
+.apexcharts-legend.apx-legend-position-top.apexcharts-align-center {
+    justify-content: center !important;
+    inset: auto 6px 0px !important;
+}

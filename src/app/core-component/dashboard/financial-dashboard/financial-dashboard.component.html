@@ -1,4 +1,4 @@
-<div class="row mx-2">
+<div class="row mx-2" id="fixedElement">
     <div class="col-lg-6 col-sm-6 col-12 d-flex align-items-center">
         <span style="font-size: 30px;font-weight: 600;">Financial</span>
     </div>
@@ -14,7 +14,7 @@
         <div class="card flex-fill">
             <div class="card-header pb-0  d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">Total Receivables</h5>
-                <mat-form-field style="width: 40%; padding-right: 3%;">
+                <mat-form-field style="width: 42%; padding-right: 3%;">
                     <mat-date-range-input [formGroup]="recvsPayForm" [rangePicker]="recpayPicker">
                         <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
                             (dateChange)="getResPayDates()">
@@ -37,11 +37,11 @@
 
                 <div class="row">
                     <div class="col-lg-6 col-sm-6 col-12">
-                        <p class="chart-top-p1">{{resPayList?.current_receivable}}</p>
-                        <p class="chart-top-p2">Current</p>
+                        <p class="chart-top-p1">{{resPayList?.current_receivable |currency:'INR'}}</p>
+                        <p class="chart-top-p2">Current </p>
                     </div>
                     <div class="col-lg-6 col-sm-6 col-12">
-                        <p class="chart-top-p1">{{resPayList?.overdue_receivable}}</p>
+                        <p class="chart-top-p1">{{resPayList?.overdue_receivable |currency:'INR'}}</p>
                         <p class="chart-top-p2">Overdue</p>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
         <div class="card flex-fill">
             <div class="card-header pb-0  d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">Total Payables</h5>
-                <mat-form-field style="width: 40%; padding-right: 3%;">
+                <mat-form-field style="width: 43%; padding-right: 3%;">
                     <mat-date-range-input [formGroup]="recvsPayForm" [rangePicker]="recpay1Picker">
                         <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
                             (dateChange)="getResPayDates()">
@@ -74,11 +74,11 @@
                     [tooltip]="PayablechartOptions?.['tooltip']" [fill]="PayablechartOptions?.['fill']"></apx-chart>
                 <div class="row">
                     <div class="col-lg-6 col-sm-6 col-12">
-                        <p class="chart-top-p1">{{resPayList?.current_payables}}</p>
+                        <p class="chart-top-p1">{{resPayList?.current_payables|currency:'INR'}}</p>
                         <p class="chart-top-p2">Current</p>
                     </div>
                     <div class="col-lg-6 col-sm-6 col-12">
-                        <p class="chart-top-p1">{{resPayList?.overdue_payables}}</p>
+                        <p class="chart-top-p1">{{resPayList?.overdue_payables|currency:'INR'}}</p>
                         <p class="chart-top-p2">Overdue</p>
                     </div>
                 </div>
@@ -121,15 +121,15 @@
 
         <div class="row" *ngIf="saleTotalList">
             <div class="col-lg-7 col-sm-7 col-12 d-flex">
-                <div class="row">
+                <div class="row" >
                     <ng-container>
                         <div class="col-lg-4 col-sm-4 col-12 d-flex">
-                            <div class="dash-count" style="margin: 0 0 10px; height: 103px;">
+                            <div class="dash-count" style="margin: 0 0 10px; height: 103px;" >
                                 <div class="dash-counts">
                                     <p class="card-num-p1">Total Paid</p>
                                     <p class="card-num-p2"
                                         [ngStyle]="{'font-size': saleTotalList?.total_received?.toString()?.length >= 10 ? '15px' : '24px'}">
-                                        {{saleTotalList?.total_paid | number:'1.2-2'}}</p>
+                                        ₹{{saleTotalList?.total_paid | number:'1.2-2'}}</p>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                                     <p class="card-num-p1">Total Recieved</p>
                                     <p class="card-num-p2"
                                         [ngStyle]="{'font-size': saleTotalList?.total_received?.toString()?.length >= 10 ? '15px' : '24px'}">
-                                        {{saleTotalList?.total_received | number:'1.2-2'}}</p>
+                                        ₹{{saleTotalList?.total_received | number:'1.2-2'}}</p>
                                 </div>
                             </div>
                         </div>
@@ -149,7 +149,7 @@
                                     <p class="card-num-p1">Cash in hand</p>
                                     <p class="card-num-p2"
                                         [ngStyle]="{'font-size': saleTotalList?.total_received?.toString()?.length >= 10 ? '15px' : '24px'}">
-                                        {{cash_in_hand| number:'1.2-2'}}</p>
+                                        ₹{{cash_in_hand| number:'1.2-2'}}</p>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +161,7 @@
                                     <p class="card-num-p1">Balance In Bank</p>
                                     <p class="card-num-p2"
                                         [ngStyle]="{'font-size': saleTotalList?.total_received?.toString()?.length >= 10 ? '15px' : '24px'}">
-                                        {{balance_in_bank| number:'1.2-2'}}</p>
+                                        ₹{{balance_in_bank| number:'1.2-2'}}</p>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +171,7 @@
                                     <p class="card-num-p1">Average Cart Value</p>
                                     <p class="card-num-p2"
                                         [ngStyle]="{'font-size': saleTotalList?.total_received?.toString()?.length >= 10 ? '15px' : '24px'}">
-                                        {{saleTotalList?.average_cart_value| number:'1.2-2'}}</p>
+                                        ₹{{saleTotalList?.average_cart_value| number:'1.2-2'}}</p>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +181,7 @@
                                     <p class="card-num-p1">Total Expence</p>
                                     <p class="card-num-p2"
                                         [ngStyle]="{'font-size': saleTotalList?.total_received?.toString()?.length >= 10 ? '15px' : '24px'}">
-                                        {{saleTotalList?.total_expense| number:'1.2-2'}}</p>
+                                        ₹{{saleTotalList?.total_expense| number:'1.2-2'}}</p>
                                 </div>
                             </div>
                         </div>
@@ -191,7 +191,7 @@
             <div class="col-lg-5 col-sm-5 col-12 d-flex">
                 <div class="row">
                     <div class="col-lg-6 col-sm-6 col-12">
-                        <div class="dash-count d-flex justify-content-center" style="margin: 0 0 10px; height: 216px;">
+                        <div class="dash-count d-flex justify-content-center" style="margin: 0 0 10px; height: 216px;"style="background: #EDF5FF;">
                             <div class="dash-counts">
                                 <div>
                                     <apx-chart [series]="grossChartOptions?.series" [chart]="grossChartOptions?.chart"
@@ -199,7 +199,7 @@
                                         [fill]="grossChartOptions?.fill"></apx-chart>
                                 </div>
                                 <div>
-                                    <p class="card-num-p1 text-center">Gross Profit</p>
+                                    <p class="card-num-p1 text-center"style="color: #2673DD;">Gross Profit</p>
                                     <p class="card-num-p2 text-center" style="margin-bottom:10px"
                                         [ngStyle]="{'font-size': saleTotalList?.total_received?.toString()?.length >= 10 ? '15px' : '24px'}">
                                         {{grossList?.gross_profit| number:'1.2-2'}}</p>
@@ -208,7 +208,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-6 col-12 d-flex">
-                        <div class="dash-count d-flex justify-content-center" style="margin: 0 0 10px; height: 216px;">
+                        <div class="dash-count d-flex justify-content-center" style="margin: 0 0 10px; height: 216px;"style="background: #EDF5FF;">
                             <div class="dash-counts">
                                 <div>
                                     <apx-chart [series]="netChartOptions?.series" [chart]="netChartOptions?.chart"
@@ -216,7 +216,7 @@
                                         [fill]="netChartOptions?.fill"></apx-chart>
                                 </div>
                                 <div>
-                                    <p class="card-num-p1 text-center">Net Profit</p>
+                                    <p class="card-num-p1 text-center"style="color: #2673DD;">Net Profit</p>
                                     <p class="card-num-p2 text-center"
                                         [ngStyle]="{'font-size': saleTotalList?.total_received?.toString()?.length >= 10 ? '15px' : '24px'}">
                                         {{grossList?.net_profit| number:'1.2-2'}}</p>
@@ -292,12 +292,12 @@
 <!-- unpaid invoices & aspect ratio -->
 
         <div class="row">
-            <div class="col-lg-6 col-sm-12 col-12 d-flex" style="height: 420px;">
+            <div class="col-lg-4 col-sm-4 col-4 d-flex" style="height: 420px;">
                 <div class="card flex-fill">
                     <div class="card-header pb-0  d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0" style="padding-left: 10px;">Unpaid Invoices</h5>
                         <!-- <div class="border" > -->
-                        <mat-form-field style="padding-right: 3%; width: 41%;">
+                        <mat-form-field style="padding-right: 3%; width: 70%;">
                             <mat-date-range-input [formGroup]="unpaidForm" [rangePicker]="unpaidPicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
                                     (dateChange)="getUnpaidDates()">
@@ -331,162 +331,6 @@
                                         <td>{{customers?.total|number:'1.2-2'}}</td>
                                         <td>{{customers?.pending_amount}}</td>
                                         <td>{{customers?.status}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6 col-sm-12 col-12 d-flex" >
-              
-              <div class="row">
-                <div class="col-lg-12 col-sm-12 col-12">
-                  <div class="card flex-fill" style="height: 190px; margin:0 0 10px;">
-                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0" style="padding-left: 10px;">Quick Ratio</h5>
-                        <mat-form-field style="padding-right: 3%; width: 41%;">
-                            <mat-date-range-input [formGroup]="unpaidForm" [rangePicker]="unpaidPicker">
-                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
-                                    (dateChange)="getUnpaidDates()">
-                                <span class="mat-input-placeholder-wrapper">
-                                    <span class="mat-input-placeholder">to</span>
-                                </span>
-                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                                    (dateChange)="getUnpaidDates()">
-                            </mat-date-range-input>
-                            <mat-datepicker-toggle matSuffix [for]="unpaidPicker"
-                                style=" font-size: x-large;"></mat-datepicker-toggle>
-                            <mat-date-range-picker #unpaidPicker></mat-date-range-picker>
-                        </mat-form-field>
-                    </div>
-                    <div class="card-body" style="padding: 0% 4%">
-                     <div>
-                        <p class="ratio_p1">0:9:8</p>
-                        <p class="ratio_p2">Quick Ratio = (Cash + Cash Equivalents + Liquid Securities + Receivables) ÷ Current Liabilities</p>
-
-                     </div>
-                     <apx-chart [series]="quickChart?.['series']" [chart]="quickChart?.['chart']"
-                     [plotOptions]="quickChart?.['plotOptions']" [xaxis]="quickChart?.['xaxis']"
-                     [yaxis]="quickChart?.['yaxis']" [title]="quickChart?.['title']"
-                     [tooltip]="quickChart?.['tooltip']" [fill]="quickChart?.['fill']"></apx-chart>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-12 col-sm-12 col-12">
-                    <div class="card flex-fill" style="height: 190px;">
-                      <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                          <h5 class="card-title mb-0" style="padding-left: 10px;">Current Ratio</h5>
-                          <mat-form-field style="padding-right: 3%; width: 41%;">
-                              <mat-date-range-input [formGroup]="unpaidForm" [rangePicker]="unpaidPicker">
-                                  <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
-                                      (dateChange)="getUnpaidDates()">
-                                  <span class="mat-input-placeholder-wrapper">
-                                      <span class="mat-input-placeholder">to</span>
-                                  </span>
-                                  <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                                      (dateChange)="getUnpaidDates()">
-                              </mat-date-range-input>
-                              <mat-datepicker-toggle matSuffix [for]="unpaidPicker"
-                                  style=" font-size: x-large;"></mat-datepicker-toggle>
-                              <mat-date-range-picker #unpaidPicker></mat-date-range-picker>
-                          </mat-form-field>
-                      </div>
-                      <div class="card-body" style="padding: 0% 4%">
-                        <div>
-                           <p class="ratio_p1">9:8</p>
-                           <p class="ratio_p2">Current Ratio = Current Assets ÷ Current Liabilities</p>
-   
-                        </div>
-                        <apx-chart [series]="currentChart?.['series']" [chart]="currentChart?.['chart']"
-                        [plotOptions]="currentChart?.['plotOptions']" [xaxis]="currentChart?.['xaxis']"
-                        [yaxis]="currentChart?.['yaxis']" [title]="currentChart?.['title']"
-                        [tooltip]="currentChart?.['tooltip']" [fill]="currentChart?.['fill']"></apx-chart>
-                       </div>
-                    </div>
-                  </div>
-              </div>
-            </div>
-        </div>
-<!-- end -->
-
-<!-- today expense-recievable-payable -->
-
-        <div class="row">
-            <div class="col-lg-4 col-sm-4 col-12 d-flex">
-                <div class="card flex-fill">
-                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0" style="padding-left: 10px;">Today Recievable</h5>
-                    </div>
-                    <mat-form-field style="width: 51%;">
-                        <mat-date-range-input [formGroup]="recievableForm" [rangePicker]="recievablePicker">
-                            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
-                                (dateChange)="getRecivableDates()">
-                            <span class="mat-input-placeholder-wrapper">
-                                <span class="mat-input-placeholder">to</span>
-                            </span>
-                            <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                                (dateChange)="getRecivableDates()">
-                        </mat-date-range-input>
-                        <mat-datepicker-toggle matSuffix [for]="recievablePicker"
-                            style=" font-size: x-large;"></mat-datepicker-toggle>
-                        <mat-date-range-picker #recievablePicker></mat-date-range-picker>
-                    </mat-form-field>
-                    <div class="card-body table-container">
-                        <div class="table-responsive dataview">
-                            <table class="table datatable ">
-                                <thead>
-                                    <tr>
-                                        <th>Customer</th>
-                                        <th>customer Bill No. </th>
-                                        <th>Pending Amount</th>
-                                    </tr>
-                                <tbody>
-                                    <tr *ngFor="let recievable of recievableList">
-                                        <td> {{recievable?.customer.party_name}}</td>
-                                        <td> {{recievable?.customer_bill_no}}</td>
-                                        <td>{{recievable?.pending_amount}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-sm-4 col-12 d-flex">
-                <div class="card flex-fill">
-                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0" style="padding-left: 10px;">Today Payables</h5>
-                    </div>
-                    <mat-form-field style="width: 51%;">
-                        <mat-date-range-input [formGroup]="payableForm" [rangePicker]="payavablePicker">
-                            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
-                                (dateChange)="getPayableDates()">
-                            <span class="mat-input-placeholder-wrapper">
-                                <span class="mat-input-placeholder">to</span>
-                            </span>
-                            <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
-                                (dateChange)="getPayableDates()">
-                        </mat-date-range-input>
-                        <mat-datepicker-toggle matSuffix [for]="payavablePicker"
-                            style=" font-size: x-large;"></mat-datepicker-toggle>
-                        <mat-date-range-picker #payavablePicker></mat-date-range-picker>
-                    </mat-form-field>
-                    <div class="card-body table-container">
-                        <div class="table-responsive dataview">
-                            <table class="table datatable ">
-                                <thead>
-                                    <tr>
-                                        <th>Party</th>
-                                        <th>Supplier Bill No. </th>
-                                        <th>Pending Amount</th>
-                                    </tr>
-                                <tbody>
-                                    <tr *ngFor="let payable of payableList">
-                                        <td>{{payable?.party}}</td>
-                                        <td>{{payable?.supplier_bill_no}}</td>
-                                        <td>{{payable?.pending_amount}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -534,5 +378,161 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-4 col-sm-4 col-4 d-flex" > 
+              <div class="row">
+                <div class="col-lg-12 col-sm-12 col-12">
+                  <div class="card flex-fill" style="height: 190px; margin:0 0 10px;">
+                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0" >Quick Ratio</h5>
+                        <mat-form-field style="padding-right: 3%; width: 60%;">
+                            <mat-date-range-input [formGroup]="unpaidForm" [rangePicker]="unpaidPicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                                    (dateChange)="getUnpaidDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                                    (dateChange)="getUnpaidDates()">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="unpaidPicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #unpaidPicker></mat-date-range-picker>
+                        </mat-form-field>
+                    </div>
+                    <div class="card-body" style="padding: 0% 4%">
+                     <div>
+                        <p class="ratio_p1">0:9:8</p>
+                        <p class="ratio_p2">Quick Ratio = (Cash + Cash Equivalents + Liquid Securities + Receivables) ÷ Current Liabilities</p>
+
+                     </div>
+                     <apx-chart [series]="quickChart?.['series']" [chart]="quickChart?.['chart']"
+                     [plotOptions]="quickChart?.['plotOptions']" [xaxis]="quickChart?.['xaxis']"
+                     [yaxis]="quickChart?.['yaxis']" [title]="quickChart?.['title']"
+                     [tooltip]="quickChart?.['tooltip']" [fill]="quickChart?.['fill']"></apx-chart>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 col-sm-12 col-12">
+                    <div class="card flex-fill" style="height: 190px;">
+                      <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                          <h5 class="card-title mb-0" >Current Ratio</h5>
+                          <mat-form-field style="padding-right: 3%; width: 60%;">
+                              <mat-date-range-input [formGroup]="unpaidForm" [rangePicker]="unpaidPicker">
+                                  <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                                      (dateChange)="getUnpaidDates()">
+                                  <span class="mat-input-placeholder-wrapper">
+                                      <span class="mat-input-placeholder">to</span>
+                                  </span>
+                                  <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                                      (dateChange)="getUnpaidDates()">
+                              </mat-date-range-input>
+                              <mat-datepicker-toggle matSuffix [for]="unpaidPicker"
+                                  style=" font-size: x-large;"></mat-datepicker-toggle>
+                              <mat-date-range-picker #unpaidPicker></mat-date-range-picker>
+                          </mat-form-field>
+                      </div>
+                      <div class="card-body" style="padding: 0% 4%">
+                        <div>
+                           <p class="ratio_p1">9:8</p>
+                           <p class="ratio_p2">Current Ratio = Current Assets ÷ Current Liabilities</p>
+   
+                        </div>
+                        <apx-chart [series]="currentChart?.['series']" [chart]="currentChart?.['chart']"
+                        [plotOptions]="currentChart?.['plotOptions']" [xaxis]="currentChart?.['xaxis']"
+                        [yaxis]="currentChart?.['yaxis']" [title]="currentChart?.['title']"
+                        [tooltip]="currentChart?.['tooltip']" [fill]="currentChart?.['fill']"></apx-chart>
+                       </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+           
+        </div>
+<!-- end -->
+
+<!-- today expense-recievable-payable -->
+
+        <div class="row">
+            <div class="col-lg-6 col-sm-4 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0" style="padding-left: 10px;">Today Recievable</h5>
+                    </div>
+                    <mat-form-field style="width: 51%;">
+                        <mat-date-range-input [formGroup]="recievableForm" [rangePicker]="recievablePicker">
+                            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                                (dateChange)="getRecivableDates()">
+                            <span class="mat-input-placeholder-wrapper">
+                                <span class="mat-input-placeholder">to</span>
+                            </span>
+                            <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                                (dateChange)="getRecivableDates()">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="recievablePicker"
+                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                        <mat-date-range-picker #recievablePicker></mat-date-range-picker>
+                    </mat-form-field>
+                    <div class="card-body table-container">
+                        <div class="table-responsive dataview">
+                            <table class="table datatable ">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>customer Bill No. </th>
+                                        <th>Pending Amount</th>
+                                    </tr>
+                                <tbody>
+                                    <tr *ngFor="let recievable of recievableList">
+                                        <td> {{recievable?.customer.party_name}}</td>
+                                        <td> {{recievable?.customer_bill_no}}</td>
+                                        <td>{{recievable?.pending_amount}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-4 col-12 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header pb-0  d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0" style="padding-left: 10px;">Today Payables</h5>
+                    </div>
+                    <mat-form-field style="width: 51%;">
+                        <mat-date-range-input [formGroup]="payableForm" [rangePicker]="payavablePicker">
+                            <input matStartDate placeholder="Start date" formControlName="start" class="mat-input"
+                                (dateChange)="getPayableDates()">
+                            <span class="mat-input-placeholder-wrapper">
+                                <span class="mat-input-placeholder">to</span>
+                            </span>
+                            <input matEndDate placeholder="End date" formControlName="end" class="mat-input"
+                                (dateChange)="getPayableDates()">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="payavablePicker"
+                            style=" font-size: x-large;"></mat-datepicker-toggle>
+                        <mat-date-range-picker #payavablePicker></mat-date-range-picker>
+                    </mat-form-field>
+                    <div class="card-body table-container">
+                        <div class="table-responsive dataview">
+                            <table class="table datatable ">
+                                <thead>
+                                    <tr>
+                                        <th>Party</th>
+                                        <th>Supplier Bill No. </th>
+                                        <th>Pending Amount</th>
+                                    </tr>
+                                <tbody>
+                                    <tr *ngFor="let payable of payableList">
+                                        <td>{{payable?.party}}</td>
+                                        <td>{{payable?.supplier_bill_no}}</td>
+                                        <td>{{payable?.pending_amount}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
         </div>
 <!-- end -->

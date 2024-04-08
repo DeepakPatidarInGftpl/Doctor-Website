@@ -59,4 +59,10 @@ export class CityDetailsComponent implements OnInit {
   navigate(){
     this.router.navigate(['//places/citylist'], { state: { id: this.id } })
   }
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.filteredData?.length;
+    }
+  }
 }

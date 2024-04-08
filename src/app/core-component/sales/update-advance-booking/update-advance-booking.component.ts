@@ -82,7 +82,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       this.saleEstimateForm.patchValue(this.editRes);
       this.saleEstimateForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
       if(this.editRes?.cart.length>0){
-        this.saleEstimateForm.setControl('advance_booking_cart', this.udateCart(this.editRes?.cart));
+        this.saleEstimateForm.setControl('cart', this.udateCart(this.editRes?.cart));
       }else{
         this.isCart=true;
       }

@@ -64,7 +64,10 @@ export class UpdayeBrandSubcategoryOfferComponent implements OnInit {
           this.brandOfferForm.get('customers_group')?.patchValue(res?.customers_group?.id);
           this.brandOfferForm.get('business_location')?.patchValue(res?.business_location?.id);
           this.selectSubcat = res?.subcategory.map((res: any) => res.id);
-          this.selectBrand = res?.brands.map((res: any) => res?.id)
+          this.selectBrand = res?.brands.map((res: any) => res?.id);
+          if(res?.brands?.length>0){
+            this.getSubcatByBrand(this.selectBrand);
+          }  
           this.selectedCart=this.updateData.discount_cart[0]?.discount_offer_type;
           this.brandOfferForm.get('offer_type')?.patchValue(this.updateData.discount_cart[0]?.discount_offer_type);
           this.brandOfferForm.setControl('discount_cart', this.udateCart(this.updateData?.discount_cart));
@@ -109,7 +112,7 @@ export class UpdayeBrandSubcategoryOfferComponent implements OnInit {
     add.forEach((j: any, i) => {
       formarr.push(this.fb.group({
         discount_offer_type: j.discount_offer_type,
-        free_items: j?.free_items,
+        free_items: j?.free_items?.id,
         start_price: j?.start_price,
         end_price: j?.end_price,
         flat_discount: j?.flat_discount,
@@ -200,71 +203,6 @@ export class UpdayeBrandSubcategoryOfferComponent implements OnInit {
     return this.brandOfferForm.get('subcategory');
   }
 
-  subcatList: any;
-  subCategoryList: any[] = [];
-  filteredSubCategoryList: any[] = [];
-  searchCategory: string = '';
-
-  getSubcate() {
-    this.coreService.getSubcategory().subscribe(res => {
-      console.log(res);
-      this.subcatList = res;
-      this.subCategoryList = res;
-      this.filteredSubCategoryList = [...this.subCategoryList];
-         // update auto display data
-         this.subCategoryList.map((map: any) => {
-          this.selectedSubCat = this.selectSubcat.length;
-          // console.log(this.selectSubcat.includes(map.id), 'subcategory');
-          if (this.selectSubcat.includes(map.id)) {
-            const formArray = this.brandOfferForm.get('subcategory') as FormArray;
-            formArray.push(new FormControl(map.id));
-          }
-        });
-    });
- 
-  }
-
-  filterSubCategory() {
-    if (this.searchCategory.trim() === '') {
-      this.filteredSubCategoryList = [...this.subCategoryList];
-    } else {
-      this.filteredSubCategoryList = this.subCategoryList.filter(feature =>
-        feature.title.toLowerCase().includes(this.searchCategory.toLowerCase())
-      );
-    }
-  }
-
-  selectedSubCat = 0;
-  selectedSubCategoryIds: any[] = [];
-  check: any;
-  onCheckSubCategory(event: any) {
-    console.log(event);
-    const formArray: any = this.brandOfferForm.get('subcategory') as FormArray;
-    console.log(formArray);
-    /* Selected */
-    if (event.target.checked) {
-      // Add a new control in the arrayForm
-      formArray.push(new FormControl(parseInt(event.target.value)));
-      // parseInt(formArray.push(new FormControl(event.target.value)))
-      this.selectedSubCat++;
-      this.selectedSubCategoryIds = formArray.value;
-      // console.log( this.selectedSubCategoryIds);
-    }
-    /* unselected */
-    else {
-      // find the unselected element
-      let i: number = 0;
-      formArray.controls.forEach((ctrl: any) => {
-        if (ctrl.value == event.target.value) {
-          // Remove the unselected element from the arrayForm
-          formArray.removeAt(i);
-          this.selectedSubCat--;
-          return;
-        }
-        i++;
-      });
-    }
-  }
 
   brandList: any[] = [];
   filteredbrandList: any[] = [];
@@ -310,7 +248,8 @@ export class UpdayeBrandSubcategoryOfferComponent implements OnInit {
       formArray.push(new FormControl(parseInt(event.target.value)));
       // parseInt(formArray.push(new FormControl(event.target.value)))
       this.selectedBrand++;
-      this.selectedBrandIds = formArray.value
+      this.selectedBrandIds = formArray.value;
+      this.getSubcatByBrand(formArray.value);
       // console.log( this.selectedSubCategoryIds);
     }
     /* unselected */
@@ -322,6 +261,82 @@ export class UpdayeBrandSubcategoryOfferComponent implements OnInit {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
           this.selectedBrand--;
+          this.getSubcatByBrand(formArray.value);
+          return;
+        }
+        i++;
+      });
+    }
+  }
+
+  subcatList: any
+  getSubcate() {
+    this.coreService.getSubcategory().subscribe(res => {
+      // console.log(res);
+      this.subcatList = res
+      // this.subCategoryList = res;
+      // this.filteredSubCategoryList = [...this.subCategoryList];
+    })
+  }
+  subCategoryList: any[] = [];
+  filteredSubCategoryList: any[] = [];
+  searchCategory: string = '';
+  getSubcatByBrand(val: number[]) {
+    // console.log(val,'selected id');
+    const idString = JSON.stringify(val);
+    this.offerService.getSubcatByBrand(idString).subscribe(res => {
+      this.subCategoryList = res;
+      this.selectedSubCat=0; 
+      this.filteredSubCategoryList = [...this.subCategoryList];
+      this.subCategoryList.map((map: any) => {
+        this.selectedSubCat = this.selectSubcat.length;
+        console.log(this.selectSubcat,'this.selectSubcat');
+        console.log(Number(map?.id));
+        console.log(this.selectSubcat.includes(Number(map?.id)), 'subcategory');
+        if (this.selectSubcat.includes(Number(map?.id))) {
+          const formArray = this.brandOfferForm.get('subcategory') as FormArray;
+          formArray.push(new FormControl(Number(map?.id)));
+        }
+      });
+    })
+  }
+  stringToNumber(value: string): number {
+    return Number(value);
+  }
+  filterSubCategory() {
+    if (this.searchCategory.trim() === '') {
+      this.filteredSubCategoryList = [...this.subCategoryList];
+    } else {
+      this.filteredSubCategoryList = this.subCategoryList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchCategory.toLowerCase())
+      );
+    }
+  } 
+  selectedSubCat = 0;
+  selectedSubCategoryIds: any[] = [];
+  check: any;
+  onCheckSubCategory(event: any) {
+    console.log(event);
+    const formArray: any = this.brandOfferForm.get('subcategory') as FormArray;
+    console.log(formArray);
+    /* Selected */
+    if (event.target.checked) {
+      // Add a new control in the arrayForm
+      formArray.push(new FormControl(parseInt(event.target.value)));
+      // parseInt(formArray.push(new FormControl(event.target.value)))
+      this.selectedSubCat++;
+      this.selectedSubCategoryIds = formArray.value
+      // console.log( this.selectedSubCategoryIds);
+    }
+    /* unselected */
+    else {
+      // find the unselected element
+      let i: number = 0;
+      formArray.controls.forEach((ctrl: any) => {
+        if (ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          this.selectedSubCat--;
           return;
         }
         i++;
@@ -458,7 +473,7 @@ export class UpdayeBrandSubcategoryOfferComponent implements OnInit {
   isSearch = false;
   getVariant(search: any,i:any) {
     this.isSearch=true;
-    this.saleService.filterVariant('', '', search).subscribe((res: any) => {
+    this.offerService.searchProduct(search).subscribe((res: any) => {
       console.log(res);
       this.isSearch = false;
       this.variantList[i]= res;

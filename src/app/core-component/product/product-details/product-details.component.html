@@ -715,7 +715,8 @@
                                         <div class="row">
                                             <div class="col-lg-4 col-sm-4 col-12 mt-2">
                                                 <div class="entries"> Show per page
-                                                    <select [(ngModel)]="itemsPerPage" class="pagination">
+                                                    <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                                                        
                                                         <option value="10">10</option>
                                                         <option value="20">20</option>
                                                         <option value="30">30</option>
@@ -729,8 +730,9 @@
                                                 <div class="f-right">
                                                     <pagination-controls
                                                         (pageChange)="p = $event"></pagination-controls>
-                                                    <div class="entries f-right">Showing {{itemsPerPage}} to
-                                                        {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                                        <div class="entries f-right">Showing {{itemsPerPage}} to {{productDetail?.product_ledger_product?.length}} of {{p}} entries</div> 
+                    
+
                                                 </div>
 
                                             </div>
@@ -777,7 +779,7 @@
                                 <div class="row">
                                     <div class="col-lg-4 col-sm-4 col-12 mt-2">
                                         <div class="entries"> Show per page
-                                            <select [(ngModel)]="itemsPerPage" class="pagination">
+                                            <select [(ngModel)]="itemsPerPage" class="pagination" #v1 (change)="changePg1(v.value)">
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
                                                 <option value="30">30</option>
@@ -792,7 +794,7 @@
                                             <pagination-controls
                                                 (pageChange)="p = $event"></pagination-controls>
                                             <div class="entries f-right">Showing {{itemsPerPage}} to
-                                                {{itemsPerPage}} of {{itemsPerPage}} entries</div>
+                                                {{productDetail?.logs?.length}} of {{p}} entries</div>
                                         </div>
                                     </div>
                                 </div>

@@ -39,5 +39,6 @@ export class BatchVariantProductDetailsComponent implements OnInit {
           // console.log(res);
     })
   }
+  
 }
 

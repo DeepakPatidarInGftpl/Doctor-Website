@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-saleslist',
@@ -27,7 +28,7 @@ export class SaleslistComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService) {}
+  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService,private datePipe:DatePipe) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -220,7 +221,9 @@ select=false
     this.key = key;
     this.reverse = !this.reverse
   }
-
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
    // convert to pdf
    generatePDF() {
     const doc = new jsPDF();
@@ -249,6 +252,37 @@ select=false
       })
     doc.save('saleOrder.pdf');
  }
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Sale Order List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+      ['#','User Name','Sale Order Date', 'Sale Order no.','Payment Terms','Due Date','Estimate','Total']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+  
+      index + 1,
+      row?.customer?.name + ' (' + row?.customer?.username + ')',
+row.sale_order_date,
+row.sale_order_no,
+      row.payment_terms?.title,
+      row?.due_date,
+  row.estimate?.estimate_no,
+  row.total
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Sale Order .pdf');
+}
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
     const table = document.getElementById('mytable');
@@ -331,6 +365,10 @@ select=false
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     // Store the original contents
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

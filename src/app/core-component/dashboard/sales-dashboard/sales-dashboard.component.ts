@@ -213,7 +213,7 @@ export class SalesDashboardComponent implements OnInit {
       console.log(res);
       this.saleTotalList = res;
     },err=>{
-      this.toastr.error(err.message)
+      // this.toastr.error(err.message)
     })
   }
   customerRetentionList:any;
@@ -222,7 +222,7 @@ export class SalesDashboardComponent implements OnInit {
       console.log(res);
       this.customerRetentionList = res;
     },err=>{
-      this.toastr.error(err.message)
+      // this.toastr.error(err.message)
     })
   }
   salePurchaseList: any;
@@ -428,19 +428,19 @@ export class SalesDashboardComponent implements OnInit {
   }
   categoryWiseSaleList: any[] = [];
   getcategoryWiseSale() {
-    this.dashboardService.getCategoryWiseSale(this.categoryWiseSaleStartDate, this.categoryWiseSaleEndDate).subscribe((res: any) => {
+    this.dashboardService.getSubCatWiseSale(this.categoryWiseSaleStartDate, this.categoryWiseSaleEndDate).subscribe((res: any) => {
       this.categoryWiseSaleList = res?.data;
       // apexchart    
       this.categoryWiseSaleChartOptions = {
         series: [
           { name: 'Percentage', data: this.categoryWiseSaleList.map(item => item.percentage) },
-          { name: 'Total Sale Amount', data: this.categoryWiseSaleList.map(item => item.total_sale_amount) },
+          { name: 'Total Sale Amount', data: this.categoryWiseSaleList.map(item => item.total_sale_amount?.toFixed(2)) },
         ],
         chart: {
           type: "bar",
           height: 350
         },
-        plotOptions: {
+        plotOptions: {           
           bar: {
             horizontal: false,
             columnWidth: "15%",
@@ -457,7 +457,7 @@ export class SalesDashboardComponent implements OnInit {
         },
         xaxis: {
           type: 'category',
-          categories: this.categoryWiseSaleList.map(item => item.category)
+          categories: this.categoryWiseSaleList.map(item => item.subcategory)
         },
         yaxis: [
           {
@@ -492,7 +492,7 @@ export class SalesDashboardComponent implements OnInit {
       };
 
     }, err => {
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     });
   }
   //end 
@@ -511,7 +511,7 @@ export class SalesDashboardComponent implements OnInit {
   }
   subCatSaleList: any[] = [];
   getsubCatSale() {
-    this.dashboardService.getSubCatWiseSale(this.subCatSaleStartDate, this.subCatSaleEndDate).subscribe((res: any) => {
+    this.dashboardService.getCategoryWiseSale(this.subCatSaleStartDate, this.subCatSaleEndDate).subscribe((res: any) => {
       this.subCatSaleList = res?.data;
       // apexchart    
       this.subCatSaleChartOptions = {
@@ -520,7 +520,8 @@ export class SalesDashboardComponent implements OnInit {
           type: "donut",
           width: 350,
         },
-        labels: this.subCatSaleList.map(item => item?.subcategory),
+        // labels: this.subCatSaleList.map(item => item?.subcategory),
+        labels: this.subCatSaleList.map(item => item?.category),
         responsive: [
           {
             breakpoint: 480,
@@ -541,7 +542,7 @@ export class SalesDashboardComponent implements OnInit {
       };
       // end
     }, err => {
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     });
   }
   //end 
@@ -610,7 +611,7 @@ export class SalesDashboardComponent implements OnInit {
 
 
     }, err => {
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     });
   }
   //end 
@@ -620,7 +621,7 @@ export class SalesDashboardComponent implements OnInit {
     this.dashboardService.getCustomerActivity().subscribe((res: any) => {
       this.customerActivty = res;
     }, err => {
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     })
   }
   //top 20customer 
@@ -641,7 +642,7 @@ export class SalesDashboardComponent implements OnInit {
     this.dashboardService.getTopCustomer(this.customerStartDate, this.customerEndDate).subscribe((res: any) => {
       this.customerList = res?.data;
     }, err => {
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     });
   }
   //end 
@@ -664,7 +665,7 @@ export class SalesDashboardComponent implements OnInit {
      this.dashboardService.getRecentlySales(this.customerStartDate, this.customerEndDate).subscribe((res: any) => {
        this.recentSalesList = res?.data;
      }, err => {
-       this.toastr.error(err.message);
+       //this.toastr.error(err.message);
      });
    }
    //end 
@@ -686,7 +687,7 @@ export class SalesDashboardComponent implements OnInit {
     this.dashboardService.getRecentlyAddedProduct(this.recentProductStartDate, this.recentProductEndDate).subscribe((res: any) => {
       this.recentProductList = res?.data;
     }, err => {
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     });
   }
   //end 
@@ -709,7 +710,7 @@ export class SalesDashboardComponent implements OnInit {
     this.dashboardService.getBestSellingProduct(this.bestProductStartDate, this.bestProductEndDate).subscribe((res: any) => {
       this.bestProductList = res?.data;
     }, err => {
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     });
   }
   //end 
@@ -731,7 +732,7 @@ export class SalesDashboardComponent implements OnInit {
     this.dashboardService.getLeastSellingProduct(this.leastProductStartDate, this.leastProductEndDate).subscribe((res: any) => {
       this.leastProductList = res?.data;
     }, err => {
-      this.toastr.error(err.message);
+      //this.toastr.error(err.message);
     });
   }
   //end 
@@ -1201,4 +1202,21 @@ export class SalesDashboardComponent implements OnInit {
     }
   }
   
+
+
+  // hide show product readmore
+  sho = true;
+  sho1 = false;
+  sho2 = false;
+  hide() {
+    this.sho = false;
+    this.sho1 = !this.sho1;
+    this.sho2 = false;
+  }
+  hide1() {
+    this.sho = true;
+    this.sho1 = false;
+    this.sho2 = !this.sho2;
+  }
+
 }

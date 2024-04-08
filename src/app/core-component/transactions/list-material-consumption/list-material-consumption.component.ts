@@ -162,13 +162,13 @@ export class ListMaterialConsumptionComponent implements OnInit {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'inventory' && res.content_type.model === 'newmaterialconsuption' && res.codename == 'add_newmaterialconsuption') {
+        if (res.content_type.app_label === 'inventory' && res.content_type.model === 'materialconsumption' && res.codename == 'add_materialconsumption') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'newmaterialconsuption' && res.codename == 'change_newmaterialconsuption') {
+        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'materialconsumption' && res.codename == 'change_materialconsumption') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'newmaterialconsuption' && res.codename == 'delete_newmaterialconsuption') {
+        } else if (res.content_type.app_label === 'inventory' && res.content_type.model === 'materialconsumption' && res.codename == 'delete_materialconsumption') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }

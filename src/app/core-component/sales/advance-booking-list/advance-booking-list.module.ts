@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { AdvanceBookingListRoutingModule } from './advance-booking-list-routing.module';
 import { AdvanceBookingListComponent } from './advance-booking-list.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
@@ -12,6 +12,9 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
     CommonModule,
     AdvanceBookingListRoutingModule,
     SharedModuleModule
-  ]
+  ],
+  providers:[
+    DatePipe
+  ],
 })
 export class AdvanceBookingListModule { }
