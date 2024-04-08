@@ -14,8 +14,6 @@ import { JsonPipe } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { NgChartsModule } from 'ng2-charts';
 import { NgApexchartsModule } from "ng-apexcharts";
-import { ReadMorePipe } from './read-more.pipe';
-import { ReadLessPipe } from './read-less.pipe';
 const icons = {
   User,
   UserCheck,
@@ -25,8 +23,6 @@ const icons = {
 @NgModule({
   declarations: [
     DashboardComponent, 
-    ReadMorePipe,
-    ReadLessPipe
   ],
   imports: [
     CommonModule,
