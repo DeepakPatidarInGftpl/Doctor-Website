@@ -36,10 +36,11 @@ const icons = {
     JsonPipe,
     MatSelectModule,
     NgChartsModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+
   ],
   exports: [
-    FeatherModule
+    FeatherModule,
   ],
   providers: [
     DatePipe,

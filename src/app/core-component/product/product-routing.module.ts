@@ -273,6 +273,11 @@ const routes: Routes = [
  { path: 'detail-product-label/:id', loadChildren: () => import('./details-product-label/details-product-label.module').then((m) => m.DetailsProductLabelModule) },
  { path: 'analysis/:query', loadChildren: () => import('./analysis-inventory-list/analysis-inventory-list.module').then((m) => m.AnalysisInventoryListModule) },
 
+ //production voucher
+ { path: 'add-production-voucher', loadChildren: () => import('./add-production-voucher/add-production-voucher.module').then((m) => m.AddProductionVoucherModule) },
+ { path: 'production-voucher-list', loadChildren: () => import('./list-production-voucher/list-production-voucher.module').then((m) => m.ListProductionVoucherModule) },
+ { path: 'detail-production-voucher/:id', loadChildren: () => import('./details-product-label/details-product-label.module').then((m) => m.DetailsProductLabelModule) },
+ 
 ];
 
 @NgModule({

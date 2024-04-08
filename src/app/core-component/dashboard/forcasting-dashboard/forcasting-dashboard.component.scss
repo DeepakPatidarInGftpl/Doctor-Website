@@ -310,3 +310,9 @@
   .card-header{
     padding-top: 10px;
   }
+  #fixedElement {
+    position: fixed;
+    top: 5px;
+    z-index: 1000; 
+    white-space: nowrap;
+}
