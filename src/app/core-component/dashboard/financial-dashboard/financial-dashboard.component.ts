@@ -45,8 +45,7 @@ export class FinancialDashboardComponent implements OnInit {
     { label: 'This Financial Year', value: 'thisFinancialYear' },
     { label: 'Last Financial Year', value: 'lastFinancialYear' },
   ];
-
-  constructor(private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService) {
+constructor(private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService) {
     this.currentChart = {
       series: [
         {
@@ -318,7 +317,7 @@ export class FinancialDashboardComponent implements OnInit {
           }
         },
         fill: {
-              colors: ['#2673DD'] 
+              colors: ['#808080'] 
             }
       };
       //net chart
@@ -355,7 +354,7 @@ export class FinancialDashboardComponent implements OnInit {
         },
         // labels: ["Net Profit"],
         fill: {
-          colors: ['#2673DD']
+          colors: ['#808080']
         }
       };
       
