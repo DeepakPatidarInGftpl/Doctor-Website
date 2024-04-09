@@ -148,13 +148,13 @@ userDetails:any;
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'sale'  && res.content_type.model === 'estimate' && res.codename=='add_estimate') {
+        if (res.content_type.app_label === 'sale'  && res.content_type.model === 'deliverychallan' && res.codename=='add_deliverychallan') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename=='change_estimate') {
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'deliverychallan' && res.codename=='change_deliverychallan') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename=='delete_estimate') {
+        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'deliverychallan' && res.codename=='delete_deliverychallan') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
@@ -258,19 +258,17 @@ select=false
   // Pass tableData to autoTable
   autoTable(doc, {
     head: [
-          ['#','User Name ','Delivery Challan Date', 'Delivery Challan no','Payment Terms','Expire Date','Sub Total','Total','Status']
+          ['#','Account','Date', 'Challan no.','Sale Bill','Transporter Account','Total QTY','Status']
     ],
     body: this.tableData.map((row:any, index:number ) => [
-  
       index + 1,
-      row?.customer?.name + ' (' + row?.customer?.username + ')',
-     this.formatDate( row?.estimate_date),
-      row.estimate_no,
-      row.payment_terms.title,
-      this.formatDate(row?.estimate_expiry_date),
-      row.subtotal,
-      row.total,
-  row?.status,
+      row?.account?.title + ' (' + row?.account?.account_id + ')',
+     this.formatDate( row?.bill_date),
+      row.delivery_challan_bill_no,
+      row.sale_bill?.customer_bill_no,
+      row?.transporter_account?.title,
+      row.total_qty,
+      row?.status,
     ]),
     theme: 'grid',
     headStyles: {
@@ -325,7 +323,7 @@ select=false
     const titleElement = document.querySelector('.titl');
     const titleHTML = titleElement.outerHTML;
     const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(11)');
+    const isActiveTh = clonedTable.querySelector('th.thone:nth-child(8)');
     if (isActiveTh) {
       isActiveTh.remove();
     }
@@ -337,7 +335,7 @@ select=false
 
     const rows = clonedTable.querySelectorAll('tr');
     rows.forEach((row) => {
-      const isActiveTd = row.querySelector('td:nth-child(11)');
+      const isActiveTd = row.querySelector('td:nth-child(8)');
       if (isActiveTd) {
         isActiveTd.remove();
       }
@@ -371,34 +369,18 @@ select=false
     if (this.date) {
       const selectedDate = new Date(this.date).toISOString().split('T')[0];
       filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.estimate_date).toISOString().split('T')[0];
+        const receiptDate = new Date(item?.bill_date).toISOString().split('T')[0];
         return receiptDate === selectedDate;
       });
-    }
-    if (this.espireDate) {
-      const selectedDate = new Date(this.espireDate).toISOString().split('T')[0];
-      filteredData = filteredData.filter((item) => {
-        const receiptDate = new Date(item?.estimate_expiry_date).toISOString().split('T')[0];
-        return receiptDate === selectedDate;
-      });
-    }
-    if (this.filterPaymentTerms) {
-      filteredData = filteredData.filter((item) => item?.payment_terms?.title=== this.filterPaymentTerms);
     }
     if (this.selectedAmount) {
-      filteredData = filteredData.filter((item) => item?.total <= this.selectedAmount);
-    }
-    if (this.statusFilter) {
-      filteredData = filteredData.filter((item) => item?.status=== this.statusFilter);
+      filteredData = filteredData.filter((item) => item?.total_qty <= this.selectedAmount);
     }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.date = null;
-    this.espireDate = null;
-    this.filterPaymentTerms=null
     this.selectedAmount=null;
-    this.statusFilter=null;
     this.filterData();
   }
   changePg(val: any) {

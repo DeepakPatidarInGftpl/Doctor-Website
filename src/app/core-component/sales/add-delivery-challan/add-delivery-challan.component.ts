@@ -474,7 +474,6 @@ export class AddDeliveryChallanComponent implements OnInit {
     }
   }
 
-
   getRes: any;
   loader = false;
   loaderCreate = false;

@@ -87,7 +87,7 @@
                           <li *ngIf="isDealer"><a routerLink="/contacts/dealerList" routerLinkActive="active">Dealer</a></li>
                       </ul>
                   </li> 
-                  <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isProductLabel">
+                  <li class="submenu" *ngIf="isProduct || isCategory || isSubcategory || isSubcategoryGroup || isBrand || isColors ||isSize ||isTax ||isTaxSlab || isFeature || isFeatureGroup || isHsnCode || isUnit || isUnitConversation || isProductLedger||isProductLabel || isProductionVoucher">
                       <a  [ngClass]="{'active': activePath === 'product'}"><img src="assets/img/icons/product.svg" alt="img"><span>Product Management</span> <span
                               class="menu-arrow"></span></a>
                       <ul>
@@ -110,7 +110,7 @@
                           <!-- <li><a routerLink="/product/variant" routerLinkActive="active">Variant </a></li>
                           <li><a routerLink="/product/importproduct" routerLinkActive="active">Import Products</a></li> -->
                           <li><a routerLink="/product/barcode" routerLinkActive="active">Print Barcode</a></li>
-                          <li><a routerLink="/product/production-voucher-list" routerLinkActive="active">Production Voucher</a></li> 
+                          <li *ngIf="isProductionVoucher"><a routerLink="/product/production-voucher-list" routerLinkActive="active">Production Voucher</a></li> 
                      
                       </ul>
                   </li> 
@@ -130,7 +130,7 @@
       
                       </ul>
                   </li>
-                  <li class="submenu" *ngIf="isSalesEstimate || isSalesOrder || isSalesBill || isSalesOutward || isSalesReturn || isAdvanceBooking">
+                  <li class="submenu" *ngIf="isSalesEstimate || isSalesOrder || isSalesBill || isSalesOutward || isSalesReturn || isAdvanceBooking || isDeliveryChallan">
                       <a [ngClass]="{'active': activePath === 'sales'}"> <img src="assets/img/icons/sales1.svg" alt="img"><span> Sales</span> <span class="menu-arrow"></span></a>
                       <ul>
                           <li *ngIf="isSalesEstimate"><a routerLink="/sales/salesEstimatelist" routerLinkActive="active">Sales Estimate</a></li>
@@ -139,7 +139,7 @@
                           <li *ngIf="isSalesReturn"><a routerLink="/sales/salesReturnlist" routerLinkActive="active">Sales Return</a></li>
                           <li *ngIf="isSalesOutward"><a routerLink="/sales/salesMaterialOutward-list" routerLinkActive="active">Sales Material Outward</a></li>
                           <li *ngIf="isAdvanceBooking"><a routerLink="/sales/advance-booking-list" routerLinkActive="active">Sales Advance Booking</a></li>
-                          <li><a routerLink="/sales/delivery-challan-list" routerLinkActive="active">Delivery Challan</a></li>
+                          <li *ngIf="isDeliveryChallan"><a routerLink="/sales/delivery-challan-list" routerLinkActive="active">Delivery Challan</a></li>
                           <!-- <li *ngIf="isPosOrder"><a routerLink="/sales/posOrder" routerLinkActive="active">POS Order</a></li>
                           <li *ngIf="isPosOrder"><a routerLink="/sales/payment" routerLinkActive="active">Payment</a></li>
                           <li *ngIf="isReciept"><a routerLink="/sales/reciept" routerLinkActive="active">Payment</a></li>
