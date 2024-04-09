@@ -712,7 +712,16 @@ export class AddDeliveryChallanComponent implements OnInit {
     }
     return totalQty;
   }
-
+  calculateTotalMRP(): any {
+    let totalQty = 0;
+    for (let i = 0; i < this.getCart().controls.length; i++) {
+      const qtyControl = this.getCart().controls[i].get('mrp') || 0;
+      if (qtyControl) {
+        totalQty += +qtyControl.value || 0;
+      }
+    }
+    return totalQty;
+  }
   clearForm() {
     this.deliveryChallanForm.reset();
     this.userControl.reset()
