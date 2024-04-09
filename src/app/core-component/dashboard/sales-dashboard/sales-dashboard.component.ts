@@ -284,6 +284,7 @@ export class SalesDashboardComponent implements OnInit {
   dailySalesList: any[] = [];
   getDailySales() {
     this.dashboardService.getDailySales(this.dailySalesStartDate, this.dailySalesEndDate).subscribe((res: any) => {
+    if(res?.success){
       this.dailySalesList = res?.data;
       // apexchart    
       this.dailySaleChartOptions = {
@@ -341,7 +342,11 @@ export class SalesDashboardComponent implements OnInit {
           offsetX: 30
         },
       };
+    }else{
+      this.toastr.error(res?.msg)
+    }
     })
+  
   }
   //end 
   //salevspurchase
@@ -360,6 +365,7 @@ export class SalesDashboardComponent implements OnInit {
   salevsPurchaseList: any[] = [];
   getSalePurchaseTotalDashboard() {
     this.dashboardService.getSalevsPurchase(this.salePurchaseStartDate, this.salePurchaseEndDate).subscribe((res: any) => {
+      if(res.success){
       this.salevsPurchaseList = res?.data;
       // apexchart    
       this.chartOptions = {
@@ -408,7 +414,9 @@ export class SalesDashboardComponent implements OnInit {
           // }
         }
       };
-
+    }else{
+      this.toastr.error(res?.msg)
+    }
 
     })
   }
@@ -429,6 +437,7 @@ export class SalesDashboardComponent implements OnInit {
   categoryWiseSaleList: any[] = [];
   getcategoryWiseSale() {
     this.dashboardService.getSubCatWiseSale(this.categoryWiseSaleStartDate, this.categoryWiseSaleEndDate).subscribe((res: any) => {
+    if(res?.success){
       this.categoryWiseSaleList = res?.data;
       // apexchart    
       this.categoryWiseSaleChartOptions = {
@@ -490,7 +499,9 @@ export class SalesDashboardComponent implements OnInit {
           ]
         }
       };
-
+    }else{
+      this.toastr.error(res.msg)
+    }
     }, err => {
       //this.toastr.error(err.message);
     });
@@ -512,6 +523,7 @@ export class SalesDashboardComponent implements OnInit {
   subCatSaleList: any[] = [];
   getsubCatSale() {
     this.dashboardService.getCategoryWiseSale(this.subCatSaleStartDate, this.subCatSaleEndDate).subscribe((res: any) => {
+    if(res?.success){
       this.subCatSaleList = res?.data;
       // apexchart    
       this.subCatSaleChartOptions = {
@@ -540,6 +552,9 @@ export class SalesDashboardComponent implements OnInit {
           offsetY: 0
         },
       };
+    }else{
+      this.toastr.error(res.msg)
+    }
       // end
     }, err => {
       //this.toastr.error(err.message);

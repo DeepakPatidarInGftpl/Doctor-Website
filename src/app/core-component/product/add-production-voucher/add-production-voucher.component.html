@@ -134,15 +134,15 @@
                                        <td></td>
                                        <td></td>
                                        <td class="text-start"><strong>Total</strong></td>
-                                       <td class="text-start"></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
+                                       <td class="text-start">{{calculateTotalQty()}}</td>
+                                       <td class="text-start">{{calculateTotalMrp()| number:'1.2-2'}}</td>
+                                       <td class="text-start">{{calculateTotalCostPrice()| number:'1.2-2'}}</td>
+                                       <td class="text-start">{{calculateTotalOnline()| number:'1.2-2'}}</td>
+                                       <td class="text-start">{{calculateTotalOffline()| number:'1.2-2'}}</td>
+                                       <td class="text-start">{{calculateTotalEmployee()| number:'1.2-2'}}</td>
+                                       <td class="text-start">{{calculateTotalDealer()| number:'1.2-2'}}</td>
+                                       <td class="text-start">{{calculateTotalDiscount()| number:'1.2-2'}}</td>
+                                       <td class="text-start">{{calculateTotalAdditionalDiscount()| number:'1.2-2'}}</td>
                                      </tr>
                                </tbody>
                            </table>
@@ -252,11 +252,12 @@
                                    <tr style=" background: rgba(145, 158, 171, 0.32);">
                                        <td></td>
                                        <td></td>
+                                       <td></td>
                                        <td class="text-start"><strong>Total</strong></td>
-                                       <td class="text-start"></td>
+                                       <td class="text-start">{{totalQtyConsumed()}}</td>
+                                       <td class="text-start">{{totalMrpConsumed()| number:'1.2-2'}}</td>
                                        <td></td>
-                                       <td></td>
-                                       <td></td>
+                                     
                                      </tr>
                                </tbody>
                            </table>
