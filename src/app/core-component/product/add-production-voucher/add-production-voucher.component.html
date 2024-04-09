@@ -1,1 +1,277 @@
-<p>add-production-voucher works!</p>
+<div class="page-header">
+    <div class="page-title">
+        <h4>Production Voucher Add</h4>
+        <h6>Create New Production Voucher</h6>
+    </div>
+</div>
+
+<div class="card" id="purchaseForm">
+    <div class="card-body">
+        <form [formGroup]="productionvoucherForm" (ngSubmit)="submit()">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Select Date*</label>
+                        <input type="date" formControlName="material_consumption_date"
+                            [ngClass]="{'is-invalid': f['material_consumption_date'].touched && f['material_consumption_date'].invalid}">
+                        <span class="text-danger" *ngIf="material_consumption_date && material_consumption_date.invalid && material_consumption_date.touched">Select Date</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Production Voucher No.*</label>
+                        <input type="text" formControlName="material_consumption_no" placeholder="Enter Production Voucher No." [ngModel]="prefixNo" readonly 
+                            [ngClass]="{'is-invalid': f['material_consumption_no'].touched && f['material_consumption_no'].invalid}">
+                        <span class="text-danger" *ngIf="material_consumption_no && material_consumption_no.invalid && material_consumption_no.touched">Enter
+                            Production Voucher No.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                   <div class="row">
+                       <div class="col-lg-4 col-sm-4 col-12">
+                           <div class="page-title">
+                               <p style="color:#FF9F43;font-size: 16px;">Item Generated</p>
+                           </div>
+                       </div>
+                   
+                       <div class="table-responsive">
+                           <table class="table datanew">
+                               <thead>
+                                   <tr>
+                                       <th>#</th>
+                                       <th></th>
+                                       <th class="th">Barcode/SKU</th>
+                                       <th class="th">Product Name</th>
+                                       <th class="th">QTY</th>
+                                       <th class="th">MRP</th>
+                                       <th class="th">Cost Price</th>
+                                       <th class="th">Online Price</th>
+                                       <th class="th">Offline Price</th>
+                                       <th class="th">Employee Price</th>
+                                       <th class="th">Dealer Price</th>
+                                       <th class="th">Discount</th>
+                                       <th class="th">Additional Discount</th>
+                                       <th></th>
+                                   </tr>
+                                   <tr>
+                                       <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Item Generated Cart+</span></th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   <ng-container formArrayName="item_generated_cart">
+                                       <ng-container *ngFor="let d of getCartItem().controls; let i=index">
+                                           <tr [formGroupName]="i">
+                                               <td>{{i+1+'.'}}</td>
+                                               <td>
+                                                   <div>
+                                                       <div class="me-2">
+                                                           <svg (click)="removeCartItem(i)" style="color:red"
+                                                               xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                               fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                               <path
+                                                                   d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                               <path
+                                                                   d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                           </svg>
+                                                       </div>
+                                                       <svg *ngIf="isLastCart(i)" (click)="addCartItem()" style="color:green"
+                                                           xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                           fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                           <path
+                                                               d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                           <path
+                                                               d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                       </svg>
+                                                   </div>
+                                               </td>
+                                               <td>
+                                                   <input class="input" type="text" placeholder="Search Barcode"
+                                                       [attr.data-index]="i"
+                                                       [value]="barcode[i] !== undefined ? barcode[i] : ''" #id
+                                                       (keyup)="getVariant(id.value,i,'barcode')" (blur)="hideSearch()">
+                                               </td>
+                                               <td colspan="1">
+                                                   <div class="form-group d-flex item-align-center" style="margin-bottom: 0;">
+                                                <input type="text" placeholder="Search Product"
+                                                   aria-label="Search Products" matInput [formControl]="myControl.at(i)"
+                                                   (input)="getVariant($event.target.value,i,'')"
+                                                   [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                               <mat-autocomplete #autos="matAutocomplete">
+                                                  <ng-container *ngFor="let option of variantList[i]">
+                                                       <mat-option *ngIf="option?.is_active==true"
+                                                           [value]="option?.product_title + ' ' + option?.variant_name"
+                                                           (onSelectionChange)="oncheckVariant(option,i)"
+                                                           (onSelectionChange)="variantChanged(option, i)"
+                                                           style="color:#FF9F43">
+                                                           {{ option?.product_title + ' ' + option?.variant_name}}
+                                                       </mat-option>
+                                                   </ng-container>
+                                                   <mat-option *ngIf="searchLength?.toString()?.length < 2 && isSearch" style="color:#FF9F43">Loading...</mat-option>
+                                                   <mat-option *ngIf="variantList[i]?.length === 0 && !isSearch" [value]="'No data found'">
+                                                       <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                                                   </mat-option>
+                                                   <mat-option *ngIf="searchLength?.toString()?.length < 2" class="is-loading"> Please Enter 3 or more characters </mat-option>
+                                               </mat-autocomplete>
+                                                   </div>
+                                               </td>
+                                               <td><input type="number" formControlName="qty" class="input"></td>
+                                               <td><input type="number" formControlName="mrp" class="input"></td> 
+                                               <td><input type="number" formControlName="cost_price" class="input"></td>  
+                                               <td><input type="number" formControlName="selling_price_online" class="input"></td>
+                                               <td><input type="number" formControlName="selling_price_offline" class="input"></td>
+                                               <td><input type="number" formControlName="selling_price_employee" class="input"></td>
+                                               <td><input type="number" formControlName="selling_price_dealer" class="input"></td>
+                                               <td><input type="number" formControlName="discount" class="input"></td>
+                                               <td><input type="number" formControlName="additional_discount" class="input"></td>
+                                              
+                                           </tr>
+                                       </ng-container>
+                                   </ng-container>
+                                   <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td class="text-start"><strong>Total</strong></td>
+                                       <td class="text-start"></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                     </tr>
+                               </tbody>
+                           </table>
+                       </div>
+                   </div>
+                </div>
+            </div>
+          
+            <div class="card">
+                <div class="card-body">
+                   <div class="row">
+                       <div class="col-lg-4 col-sm-4 col-12">
+                           <div class="page-title">
+                               <p style="color:#FF9F43;font-size: 16px;">Item Consumed</p>
+                           </div>
+                       </div>
+                   
+                       <div class="table-responsive">
+                           <table class="table datanew">
+                               <thead>
+                                   <tr>
+                                       <th>#</th>
+                                       <th></th>
+                                       <th>Barcode/SKU</th>
+                                       <th>Product Name</th>
+                                       <th style="width: 8%;">QTY</th>
+                                       <th>MRP</th>
+                                       <th style="width: 12%;">Batch</th>
+                                       <th></th>
+                                   </tr>
+                                   <tr>
+                                       <th colspan="3"> <span (click)="addCartIConsumed()" class="debitIntoCart" *ngIf="isCartConsumed">Add Item Consumed Cart+</span></th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   <ng-container formArrayName="item_consumed_cart">
+                                       <ng-container *ngFor="let d of getCartConsumed().controls; let i=index">
+                                           <tr [formGroupName]="i">
+                                               <td>{{i+1+'.'}}</td>
+                                               <td>
+                                                   <div>
+                                                       <div class="me-2">
+                                                           <svg (click)="removeCartConsumed(i)" style="color:red"
+                                                               xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                               fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                               <path
+                                                                   d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                               <path
+                                                                   d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                           </svg>
+                                                       </div>
+                                                       <svg *ngIf="isLastConsumed(i)" (click)="addCartIConsumed()" style="color:green"
+                                                           xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                           fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                           <path
+                                                               d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                           <path
+                                                               d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                       </svg>
+                                                   </div>
+                                               </td>
+                                               <td>
+                                                   <input class="input" type="text" placeholder="Search Barcode"
+                                                       [attr.data-index]="i"
+                                                       [value]="barcodeConsumed[i] !== undefined ? barcodeConsumed[i] : ''" #id
+                                                       (keyup)="getVariantConsumed(id.value,i,'barcode')" (blur)="hideSearch()">
+                                               </td>
+                                               <td colspan="1">
+                                                   <div class="form-group d-flex item-align-center" style="margin-bottom: 0;">
+                                                <input type="text" placeholder="Search Product"
+                                                   aria-label="Search Products" matInput [formControl]="myControlConsumed.at(i)"
+                                                   (input)="getVariantConsumed($event.target.value,i,'')"
+                                                   [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                                               <mat-autocomplete #autos="matAutocomplete">
+                                                  <ng-container *ngFor="let option of variantList2[i]">
+                                                       <mat-option *ngIf="option?.is_active==true"
+                                                           [value]="option?.product_title + ' ' + option?.variant_name"
+                                                           (onSelectionChange)="oncheckVariantConsumed(option,i)"
+                                                           (onSelectionChange)="variantChangedConsumed(option, i)"
+                                                           style="color:#FF9F43">
+                                                           {{ option?.product_title + ' ' + option?.variant_name}}
+                                                       </mat-option>
+                                                   </ng-container>
+                                                   <mat-option *ngIf="searchLengthConsumed?.toString()?.length < 2 && isSearch" style="color:#FF9F43">Loading...</mat-option>
+                                                   <mat-option *ngIf="variantList2[i]?.length === 0 && !isSearch" [value]="'No data found'">
+                                                       <a routerLink="//product/addproduct" style="color:#FF9F43">+add Product</a>
+                                                   </mat-option>
+                                                   <mat-option *ngIf="searchLengthConsumed?.toString()?.length < 2" class="is-loading"> Please Enter 3 or more characters </mat-option>
+                                               </mat-autocomplete>
+                                                   </div>
+                                               </td>
+                                               <td><input type="number" formControlName="qty" class="input"></td>
+                                               <td><input type="number" formControlName="mrp" class="input"></td> 
+                                               <td><select formControlName="batch_id">
+                                                <ng-container *ngIf="selectedBatch[i]?.length>0">
+                                                    <option disabled selected>Select Batch</option>
+                                                    <option [value]="batch?.id" *ngFor="let batch of selectedBatch[i]">{{batch?.mrp}}</option>
+                                                </ng-container>
+                                                <ng-container *ngIf="selectedBatch[i]?.length==0">
+                                                    <option disabled selected>Batch Not Available</option>
+                                                </ng-container>
+                                              </select></td>
+                                              
+                                           </tr>
+                                       </ng-container>
+                                   </ng-container>
+                                   <tr style=" background: rgba(145, 158, 171, 0.32);">
+                                       <td></td>
+                                       <td></td>
+                                       <td class="text-start"><strong>Total</strong></td>
+                                       <td class="text-start"></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                     </tr>
+                               </tbody>
+                           </table>
+                       </div>
+                   </div>
+                </div>
+               </div>
+
+               
+            <div class="col-lg-12">
+                <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
+                <a routerLink="//transaction/journalvoucherList" class="btn btn-cancel text-white">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
