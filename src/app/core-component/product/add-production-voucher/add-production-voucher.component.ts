@@ -313,13 +313,121 @@ export class AddProductionVoucherComponent implements OnInit {
   get material_consumption_no() {
     return this.productionvoucherForm.get('material_consumption_no')
   }
+ 
 
-  amount_type(index: number) {
-    return this.getCartItem().controls[index].get('amount_type');
+  //calculation
+  calculateTotalQty(): any {
+    let totalQty = 0;
+    for (let i = 0; i < this.getCartItem().controls.length; i++) {
+      const qtyControl = this.getCartItem().controls[i].get('qty') || 0;
+      if (qtyControl) {
+        totalQty += +qtyControl.value || 0;
+      }
+    }
+    return totalQty;
   }
-  amount(index: number) {
-    return this.getCartItem().controls[index].get('amount');
+  calculateTotalMrp(): any {
+    let totalMRP = 0;
+    for (let i = 0; i < this.getCartItem().controls.length; i++) {
+      const mrpControl = this.getCartItem().controls[i].get('mrp') || 0;
+      if (mrpControl) {
+        totalMRP += +mrpControl.value || 0;
+      }
+    }
+    return totalMRP;
+  }
+  calculateTotalCostPrice(): any {
+    let totalCostPrice = 0;
+    for (let i = 0; i < this.getCartItem().controls.length; i++) {
+      const costPriceControl = this.getCartItem().controls[i].get('cost_price') || 0;
+      if (costPriceControl) {
+        totalCostPrice += +costPriceControl.value || 0;
+      }
+    }
+    return totalCostPrice;
+  }
+  calculateTotalOnline(): any {
+    let totalOnline = 0;
+    for (let i = 0; i < this.getCartItem().controls.length; i++) {
+      const OnlineControl = this.getCartItem().controls[i].get('selling_price_online') || 0;
+      if (OnlineControl) {
+        totalOnline += +OnlineControl.value || 0;
+      }
+    }
+    return totalOnline;
+  }
+  calculateTotalOffline(): any {
+    let totalOffline = 0;
+    for (let i = 0; i < this.getCartItem().controls.length; i++) {
+      const offlineControl = this.getCartItem().controls[i].get('selling_price_offline') || 0;
+      if (offlineControl) {
+        totalOffline += +offlineControl.value || 0;
+      }
+    }
+    return totalOffline;
+  }
+  calculateTotalEmployee(): any {
+    let totalEmployee = 0;
+    for (let i = 0; i < this.getCartItem().controls.length; i++) {
+      const employeeControl = this.getCartItem().controls[i].get('selling_price_employee') || 0;
+      if (employeeControl) {
+        totalEmployee += +employeeControl.value || 0;
+      }
+    }
+    return totalEmployee;
+  }
+  calculateTotalDealer(): any {
+    let totalDealer = 0;
+    for (let i = 0; i < this.getCartItem().controls.length; i++) {
+      const dealerControl = this.getCartItem().controls[i].get('selling_price_dealer') || 0;
+      if (dealerControl) {
+        totalDealer += +dealerControl.value || 0;
+      }
+    }
+    return totalDealer;
+  }
+  calculateTotalDiscount(): any {
+    let totalDiscount = 0;
+    for (let i = 0; i < this.getCartItem().controls.length; i++) {
+      const discountControl = this.getCartItem().controls[i].get('discount') || 0;
+      if (discountControl) {
+        totalDiscount += +discountControl.value || 0;
+      }
+    }
+    return totalDiscount;
+  }
+  calculateTotalAdditionalDiscount(): any {
+    let totalAdditionalDiscount = 0;
+    for (let i = 0; i < this.getCartItem().controls.length; i++) {
+      const addDiscountControl = this.getCartItem().controls[i].get('additional_discount') || 0;
+      if (addDiscountControl) {
+        totalAdditionalDiscount += +addDiscountControl.value || 0;
+      }
+    }
+    return totalAdditionalDiscount;
   }
 
+  // consumed
+  totalQtyConsumed(): any {
+    let totalQty = 0;
+    for (let i = 0; i < this.getCartConsumed().controls.length; i++) {
+      const qtyControl = this.getCartConsumed().controls[i].get('qty') || 0;
+      if (qtyControl) {
+        totalQty += +qtyControl.value || 0;
+      }
+    }
+    return totalQty;
+  }
+  totalMrpConsumed(): any {
+    let totalMRP = 0;
+    for (let i = 0; i < this.getCartConsumed().controls.length; i++) {
+      const mrpControl = this.getCartConsumed().controls[i].get('mrp') || 0;
+      if (mrpControl) {
+        totalMRP += +mrpControl.value || 0;
+      }
+    }
+    return totalMRP;
+  }
+  
 }
 

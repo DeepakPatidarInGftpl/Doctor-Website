@@ -580,10 +580,10 @@
                                     <td></td>
                                     <td></td>
                                     <td class="text-start"><strong>Total</strong></td>
-                                    <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
-                                        <input type="text" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
+                                    <td class="text-start">{{calculateTotalQty()}}
+                                        <input type="text" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty()" style="display: none;">
                                     </td>
-                                    <td></td>
+                                    <td class="text-start">{{calculateTotalMRP()}}</td>
                                   </tr>
                             </tbody>
                         </table>
