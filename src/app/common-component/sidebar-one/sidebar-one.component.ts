@@ -75,6 +75,7 @@ export class SidebarOneComponent implements OnInit {
   isProductLedger: any;
   isStock: any;
   isProductLabel: any;
+  isProductionVoucher:any
   //purchase
   isPurchase;
   isMaterialInward;
@@ -121,6 +122,7 @@ export class SidebarOneComponent implements OnInit {
   isSalesOutward;
   isSalesReturn;
   isSalesEstimate;
+  isDeliveryChallan:any
   // transaction
   isCredit;
   isDebit;
@@ -144,8 +146,6 @@ export class SidebarOneComponent implements OnInit {
 isInvoiceOffer:any;
 isBrandOffer:any;
 isBrandSubcategoryOffer:any;
-
-
   isScarpEntry:any;
   isAdvanceBooking:any;
   ngOnInit(): void {
@@ -227,6 +227,8 @@ isBrandSubcategoryOffer:any;
           this.isProductLedger = res.codename
         } else if (res.content_type.app_label === 'product' && res.content_type.model === 'productlabel' && res.codename == 'view_productlabel') {
           this.isProductLabel = res.codename
+        }else if (res.content_type.app_label === 'product' && res.content_type.model === 'productionvoucher' && res.codename == 'view_productionvoucher') {
+          this.isProductionVoucher = res.codename
         }
         //pos
         else if (res.content_type.app_label === 'pos' && res.content_type.model === 'posorder' && res.codename == 'view_posorder') {
@@ -323,6 +325,8 @@ isBrandSubcategoryOffer:any;
           this.isSalesEstimate = res.codename;
         } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'advancebooking' && res.codename == 'view_advancebooking') {
           this.isAdvanceBooking = res.codename;
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'deliverychallan' && res.codename == 'view_deliverychallan') {
+          this.isDeliveryChallan = res.codename;
         }
         // transaction
         else if (res.content_type.app_label === 'transactions' && res.content_type.model === 'creditnote' && res.codename == 'view_creditnote') {

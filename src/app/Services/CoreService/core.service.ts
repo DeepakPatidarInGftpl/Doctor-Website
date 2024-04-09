@@ -1864,4 +1864,33 @@ export class CoreService {
       return this.http.get(url + query);
     }
     
+       // production voucher
+       getProductionVoucher(): Observable<any> {
+        let url = this.apiUrl + '/pv-api/production_voucher/'
+        return this.http.get<any>(url)
+      }
+      getProductionVoucherById(id: number): Observable<any> {
+        let url = this.apiUrl + '/pv-api/production_voucher/?id='
+        return this.http.get<any>(`${url}${id}`)
+      }
+      ProductionVoucherIsActive(id: any, data) {
+        let url = this.apiUrl + '/pv-api/production_voucher/?id=';
+        return this.http.patch(`${url}${id}`, data);
+      }
+      addProductionVoucher(data: any): Observable<any> {
+        let url = this.apiUrl + '/pv-api/production_voucher/';
+        return this.http.post<any>(url, data)
+      }
+      updateProductionVoucher(data: any, id: number): Observable<any> {
+        let url = this.apiUrl + '/pv-api/production_voucher/?id=';
+        return this.http.put<any>(`${url}${id}`, data)
+      }
+      deleteProductionVoucher(id: number) {
+        let url = this.apiUrl + '/pv-api/production_voucher/?id=';
+        return this.http.delete(`${url}${id}`)
+      }
+      getProductionVoucherPrefix(){
+        let url =this.apiUrl+'/pv-api/prefix/?id=ProductionVoucher';
+        return this.http.get(url)
+      }
 }

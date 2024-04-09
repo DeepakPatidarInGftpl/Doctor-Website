@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class ReadMorePipe implements PipeTransform {
 
-  transform(text: string, length: number = 20, suffix: string = '...'): string {
+  transform(text: string, length: number = 20, suffix: string = ''): string {
 
     if (text?.length > length) {
       let truncated: string = text?.substring(0, length)?.trim() ;
