@@ -102,66 +102,149 @@ export class ForcastingDashboardComponent implements OnInit {
     this.departmentEndDate = end;
     this.getDepartmentWiseTarget();
   }
-  departMentList: any[] = [];
+  departMentList: any;
   getDepartmentWiseTarget() {
     this.dashboardService.getDepartmentWiseTarget(this.departmentStartDate, this.departmentEndDate).subscribe((res: any) => {
-      this.departMentList = res?.departments_wise_targets;
+      this.departMentList = res;
       // apexchart    
-      this.departmentChartOptions = {
-        series: [
-          { name: 'Forcasted', data: this.departMentList.map(item => item.forcasted?.toFixed(2)) },
-          { name: 'Achieved', data: this.departMentList.map(item => item.achieved?.toFixed(2)) },
-        ],
-        chart: {
+      // this.departmentChartOptions = {
+      //   series: [
+      //     { name: 'Forcasted', data: this.departMentList.map(item => item.forcasted?.toFixed(2)) },
+      //     { name: 'Achieved', data: this.departMentList.map(item => item.achieved?.toFixed(2)) },
+      //   ],
+      //   chart: {
+      //     type: 'bar',
+      //     height: 350,
+      //     stacked: true,
+      //     toolbar: {
+      //       show: true
+      //     },
+      //     zoom: {
+      //       enabled: true
+      //     }
+      //   },
+      //   responsive: [
+      //     {
+      //       breakpoint: 480,
+      //       options: {
+      //         legend: {
+      //           position: 'bottom',
+      //           offsetX: -10,
+      //           offsetY: 0
+      //         }
+      //       }
+      //     }
+      //   ],
+      //   plotOptions: {
+      //     bar: {
+      //       horizontal: false,
+      //       // columnWidth: '5%',
+      //     }
+      //   },
+      //   xaxis: {
+      //     type: 'category',
+      //     categories: this.departMentList.map(item => item.department)
+      //   },
+      //   legend: {
+      //     position: 'top',
+      //     offsetY: 0
+      //   },
+      //   // legend: {
+      //   //   position: 'bottom',
+      //   //   offsetY: 0
+      //   // },
+      //   fill: {
+      //     opacity: 1
+      //   },
+      //   dataLabels: {
+      //     enabled: false,
+      //     style: {
+      //       colors: ['#333']
+      //     },
+      //     offsetX: 30
+      //   },
+      // };
+    //   tooltip: {
+    //     enabled: true,
+    //     shared: false,
+    //     custom: function({ series, seriesIndex, dataPointIndex, w }) {
+    //         return '<div class="tooltip">' + series[seriesIndex][dataPointIndex] + '</div>';
+    //     }
+    // }
+     
+      const combinedData = [
+        ...this.departMentList.experienced.map(item => ({ ...item, category: 'Experienced' })),
+        ...this.departMentList.freasher.map(item => ({ ...item, category: 'Fresher' })),
+        ...this.departMentList.master.map(item => ({ ...item, category: 'Master' }))
+    ];
+    this.departmentChartOptions = {
+      series: [
+          { name: 'Experienced - Forcasted', data: this.departMentList.experienced.map(item => item.forcasted.toFixed(2)) },
+          { name: 'Experienced - Achieved', data: this.departMentList.experienced.map(item => item.achieved.toFixed(2)) },
+          { name: 'Fresher - Forcasted ', data: this.departMentList.freasher.map(item => item.forcasted.toFixed(2)) },
+          { name: 'Fresher - Achieved ', data: this.departMentList.freasher.map(item => item.achieved.toFixed(2)) },
+          { name: 'Master - Forcasted ', data: this.departMentList.master.map(item => item.forcasted.toFixed(2)) },
+          { name: 'Master - Achieved', data: this.departMentList.master.map(item => item.achieved.toFixed(2)) }
+      ],
+      chart: {
           type: 'bar',
           height: 350,
           stacked: true,
           toolbar: {
-            show: true
+              show: true
           },
           zoom: {
-            enabled: true
+              enabled: true
           }
-        },
-        responsive: [
+      },
+      responsive: [
           {
-            breakpoint: 480,
-            options: {
-              legend: {
-                position: 'bottom',
-                offsetX: -10,
-                offsetY: 0
+              breakpoint: 480,
+              options: {
+                  legend: {
+                      position: 'bottom',
+                      offsetX: -10,
+                      offsetY: 0
+                  }
               }
-            }
           }
-        ],
-        plotOptions: {
+      ],
+      plotOptions: {
           bar: {
-            horizontal: false,
-            // columnWidth: '5%',
+              horizontal: false,
+              // columnWidth: '5%',
           }
-        },
-        xaxis: {
+      },
+      xaxis: {
           type: 'category',
-          categories: this.departMentList.map(item => item.department)
-        },
-        legend: {
-          position: 'top',
-          offsetY: 0
-        },
-        fill: {
+          categories: this.departMentList.experienced.map(item => item.department)
+      },
+      legend: {
+          show: false
+      },
+      fill: {
           opacity: 1
-        },
-        dataLabels: {
+      },
+      dataLabels: {
           enabled: false,
           style: {
-            colors: ['#333']
+              colors: ['#333']
           },
           offsetX: 30
-        },
-      };
+      },
+      tooltip: {
+          enabled: true,
+          shared: false,
+          custom: function({ series, seriesIndex, dataPointIndex, w }) {
+              return '<div class="tooltip">' + series[seriesIndex][dataPointIndex] + '</div>';
+          }
+      }
+  };
+  
+
       //end
-    })
+    });
+
   }
   //end 
   //salevspurchase

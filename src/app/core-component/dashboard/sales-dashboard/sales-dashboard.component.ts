@@ -686,10 +686,18 @@ export class SalesDashboardComponent implements OnInit {
   getRecentProduct() {
     this.dashboardService.getRecentlyAddedProduct(this.recentProductStartDate, this.recentProductEndDate).subscribe((res: any) => {
       this.recentProductList = res?.data;
+      this.recentProductList.forEach((res:any,index:any)=>{
+        this.sho[index] = true;
+        this.sho1[index] = false;
+        this.sho2[index] = false;
+      })
+     
     }, err => {
       //this.toastr.error(err.message);
     });
   }
+
+                                  
   //end 
 
   //Recent added product 
@@ -1205,18 +1213,18 @@ export class SalesDashboardComponent implements OnInit {
 
 
   // hide show product readmore
-  sho = true;
-  sho1 = false;
-  sho2 = false;
-  hide() {
-    this.sho = false;
-    this.sho1 = !this.sho1;
-    this.sho2 = false;
+  sho: boolean[] = [];;
+  sho1: boolean[] = [];
+  sho2: boolean[] = [];
+  hide(i: number) {
+    this.sho[i] = false;
+    this.sho1[i] = true;
+    console.log(this.sho[i]);  
   }
-  hide1() {
-    this.sho = true;
-    this.sho1 = false;
-    this.sho2 = !this.sho2;
+  hide1(i: number) {
+    this.sho[i] = true;
+    this.sho1[i] = false;
   }
+  
 
 }

@@ -312,7 +312,6 @@
                             [responsive]="dailySaleChartOptions?.['responsive']"
                             [xaxis]="dailySaleChartOptions?.['xaxis']" [legend]="dailySaleChartOptions?.['legend']"
                             [fill]="dailySaleChartOptions?.['fill']"></apx-chart>
-
                     </div>
                 </div>
             </div>
@@ -606,13 +605,11 @@
                                         <th>Selling Price</th>
                                     </tr>
                                 <tbody>
-                                    <tr *ngFor="let customers of recentProductList">
-                                        <td> {{customers?.product_name }}</td>
-                                        <!-- <td *ngIf="sho"> {{customers?.product_name | readMore}}
-                                            <span *ngIf="sho && productDetail?.product_name?.length>20 " (click)="hide()" class="spandes " style="color:red">Read more...</span> 
-                                         </td>
-                                        <td *ngIf="sho1">{{customers?.product_name | readLess}}
-                                            <span *ngIf="sho1" (click)="hide1()" class="spandes" style="color:red">Read less...</span></td>  -->
+                                    <tr *ngFor="let customers of recentProductList;let i=index">
+                                        <!-- <td> {{customers?.product_name }}</td> -->
+                                        <td *ngIf="sho[i]"> {{customers?.product_name | readMore}}
+                                            <span *ngIf="sho[i] && customers?.product_name?.length>20" (click)="hide(i)" class="spandes" style="color: orange;">...</span>  </td>
+                                           <td *ngIf="sho1[i]">{{customers?.product_name | readLess}} <span *ngIf="sho1[i]" (click)="hide1(i)" class="spandes" style="color:gray;">...</span></td> 
                                         <td> {{customers?.variant_name}}</td>
                                         <td>{{customers?.stock_qty}}</td>
                                         <td>{{customers?.Mrp}}</td>
