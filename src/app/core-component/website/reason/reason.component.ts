@@ -345,6 +345,39 @@ export class ReasonComponent implements OnInit {
         })
       doc.save('reason.pdf');
    }
+   generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Footer list';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', ' Logo', 'Phone','Email','Facebook','Instagram','Twitter','Whatsapp']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.logo,
+       row.phone,
+        row.email,
+        row.facebook,
+        row.instagram,
+        row.twitter,
+        row.whatsapp,
+
+    
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Footer_list .pdf');
+  }  
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {
       const visibleData = [];
@@ -423,6 +456,10 @@ export class ReasonComponent implements OnInit {
       const combinedContent = styledTitleHTML + modifiedTableHTML;
       // Store the original contents
       const originalContents = document.body.innerHTML;
+      window.addEventListener('afterprint', () => {
+        console.log('afterprint');
+       window.location.reload();
+      });
       // Replace the content of the body with the combined content
       document.body.innerHTML = combinedContent;
       window.print();
