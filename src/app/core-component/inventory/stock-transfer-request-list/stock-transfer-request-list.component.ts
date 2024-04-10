@@ -234,7 +234,39 @@ select=false
       })
     doc.save('stockTransferRequest.pdf');
   }
-
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Stock Transfer Request ';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Transfer Request Number',' Transfer Request Date ', 'From Branch','To Branch','Total Qty','Total Product','Status']
+      ],
+      body: this.filteredData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.transfer_request_number,
+        row.request_date,
+        row.from_branch?.title,
+        row.to_branch?.title,
+       row.total_qty,
+        row.total_product,
+        row.status,
+        
+  
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Stock Transfer Request  .pdf');
+  }
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
     const table = document.getElementById('mytable');
@@ -301,6 +333,10 @@ select=false
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
     document.body.innerHTML = originalContents;

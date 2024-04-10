@@ -146,6 +146,38 @@ export class StockListComponent implements OnInit {
       })
     doc.save('productStock.pdf');
  }
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Product Stock List ';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+      ['#', 'Item Code',' Product Name ', 'Min QTY','Available QTY','MRP','Stock Value','Landing Stock Value']
+    ],
+    body: this.filteredData.map((row:any, index:number ) => [
+  
+      index + 1,
+      row.variant?.sku,
+      row.product_name,
+      row.min_qty,
+      row.available_qty,
+     row.mrp,
+      row.stock_value,
+      row.landing_stock_value
+
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Product Stock  .pdf');
+}
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
     const table = document.getElementById('mytable');
@@ -185,6 +217,10 @@ export class StockListComponent implements OnInit {
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
     document.body.innerHTML = originalContents;

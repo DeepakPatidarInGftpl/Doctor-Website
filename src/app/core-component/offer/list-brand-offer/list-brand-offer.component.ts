@@ -244,7 +244,7 @@ select=false
  generatePDFAgain() {
   const doc = new jsPDF('landscape');
   const subtitle = 'PV';
-  const title = 'Amount Wise Offer';
+  const title = 'Brand Offer';
 
   doc.setFontSize(12);
   doc.setTextColor(33, 43, 54);
@@ -280,7 +280,7 @@ select=false
 
   });
 
-  doc.save('amount_wise_offer.pdf');
+  doc.save('Brand_offer.pdf');
 }
  
 
@@ -366,6 +366,10 @@ select=false
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     // Store the original contents
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

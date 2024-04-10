@@ -111,6 +111,38 @@ export class IncentiveLedgerComponent implements OnInit {
     doc.save('incentiveLedger.pdf');
 
  }
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'incentive Ledger ';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+      ['#', 'Employee','Created Date', 'Transaction Type','Voucher Type','Voucher Number,Amount']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+  
+      index + 1,
+      row.products?.employee?.name,
+      row.created_date,
+     row.transaction_type,
+      row.voucher_type,
+     row.voucher_number,
+      row.amount,
+
+
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('incentive Ledger .pdf');
+}
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];

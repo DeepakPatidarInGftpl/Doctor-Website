@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-debit-note',
@@ -24,9 +25,8 @@ export class DebitNoteComponent implements OnInit {
   itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   selectedpaymentTerms: string = '';
-  date: any
-
-  constructor( private transactionService: TransactionService,private cs: CompanyService,) { }
+ date:any
+  constructor( private transactionService: TransactionService,private cs: CompanyService,private datePipe:DatePipe) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -253,6 +253,42 @@ export class DebitNoteComponent implements OnInit {
       })
     doc.save('debitnote.pdf');
   }
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Debit Note';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Company Name',' Date', 'Debit Note No','Purchase Bill','Reason','Amount','Tax','Total','Status']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.party?.company_name ,
+        this.formatDate(row.date),
+       row.debit_note_no,
+        row.purchase_bill?.refrence_bill_no,
+       row.reason,
+        row.amount,
+        row.tax,
+    row.total,
+    row.status
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Debit Note .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -337,6 +373,10 @@ export class DebitNoteComponent implements OnInit {
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     // Store the original contents
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
