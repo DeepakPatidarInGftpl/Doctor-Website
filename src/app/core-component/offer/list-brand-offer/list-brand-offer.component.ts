@@ -15,18 +15,18 @@ export class ListBrandOfferComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any;
+  public tableData: any[] = [];
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private offerService: OfferService, private cs:CompanyService) {
-  
+  constructor(private offerService: OfferService, private cs: CompanyService) {
+
   }
 
   delRes: any
@@ -48,14 +48,14 @@ export class ListBrandOfferComponent implements OnInit {
         this.offerService.deleteDiscount(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-           this.ngOnInit();
-           Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: this.delRes.msg,
-          });
-          this.tableData.splice(index, 1);
-          }else {
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
+            this.tableData.splice(index, 1);
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -83,7 +83,7 @@ export class ListBrandOfferComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.offerService.DiscountIsActive(id,'').subscribe(res => {
+        this.offerService.DiscountIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -94,7 +94,7 @@ export class ListBrandOfferComponent implements OnInit {
             this.ngOnInit()
           }
         })
-     
+
       }
     });
   }
@@ -113,7 +113,7 @@ export class ListBrandOfferComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.offerService.DiscountIsActive(id,'').subscribe(res => {
+        this.offerService.DiscountIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -124,20 +124,28 @@ export class ListBrandOfferComponent implements OnInit {
             this.ngOnInit();
           }
         })
-       
+
       }
     });
   }
-loader=true;
-isAdd:any;
-isEdit:any;
-isDelete:any;
-userDetails:any;
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any;
   ngOnInit(): void {
-    this.offerService.getDiscount().subscribe(res => {
+    this.offerService.getDiscount().subscribe((res: any) => {
       // console.log(res);
-      this.tableData = res;
-      this.loader=false;
+      res.forEach((res: any) => {
+        if (res.discount_type === 'BasedOnBrands') {
+          this.tableData.push(res);
+        }
+      })
+
+      // this.tableData = res;
+      console.log(this.tableData);
+      
+      this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
@@ -147,27 +155,27 @@ userDetails:any;
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'master'  && res.content_type.model === 'discount' && res.codename=='add_discount') {
+        if (res.content_type.app_label === 'master' && res.content_type.model === 'discount' && res.codename == 'add_discount') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'discount' && res.codename=='change_discount') {
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'discount' && res.codename == 'change_discount') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'master' && res.content_type.model === 'discount' && res.codename=='delete_discount') {
+        } else if (res.content_type.app_label === 'master' && res.content_type.model === 'discount' && res.codename == 'delete_discount') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
-    });
-  })
+      });
+    })
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
 
-select=false
+  select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -180,7 +188,7 @@ select=false
     }
   }
 
-  
+
   search() {
     if (this.titlee == "") {
       this.ngOnInit();
@@ -191,7 +199,7 @@ select=false
         const nameLower = res.name.toLocaleLowerCase();
         if (discountLower.match(searchTerm)) {
           return true;
-        } 
+        }
         else if (nameLower.match(searchTerm)) {
           return true;
         }
@@ -207,8 +215,8 @@ select=false
     this.reverse = !this.reverse
   }
 
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     // table data with pagination
     const doc = new jsPDF();
     const title = 'Brand Offer';
@@ -239,50 +247,50 @@ select=false
         ],
       })
     doc.save('dealer.pdf');
- }
+  }
 
- generatePDFAgain() {
-  const doc = new jsPDF('landscape');
-  const subtitle = 'PV';
-  const title = 'Amount Wise Offer';
+  generatePDFAgain() {
+    const doc = new jsPDF('landscape');
+    const subtitle = 'PV';
+    const title = 'Amount Wise Offer';
 
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(subtitle, 86, 5);
-  doc.text(title, 82, 10);
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(subtitle, 86, 5);
+    doc.text(title, 82, 10);
 
-  doc.text('', 10, 20); //,argin x, y
+    doc.text('', 10, 20); //,argin x, y
 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-      ['#','name', 'Discount Type','Start Date', 'End Date','Business Location','Customers Group','Multiuse','Is Compulsory','Applicable For Only Coupons','Auto Update Price']
-    ],
-    body: this.filteredData.map((row:any, index:number ) => [
-      index + 1,
-      row.name,
-      row.discount_type,
-      row.start_date,
-      row.end_date,
-      row.business_location,
-      row.customers_group,
-      row.multiuse,
-      row.is_compulsory,
-      row.applicable_for_only_coupons,
-      row.auto_update_price,
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 22, // margin top 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'name', 'Discount Type', 'Start Date', 'End Date', 'Business Location', 'Customers Group', 'Multiuse', 'Is Compulsory', 'Applicable For Only Coupons', 'Auto Update Price']
+      ],
+      body: this.filteredData.map((row: any, index: number) => [
+        index + 1,
+        row.name,
+        row.discount_type,
+        row.start_date,
+        row.end_date,
+        row.business_location,
+        row.customers_group,
+        row.multiuse,
+        row.is_compulsory,
+        row.applicable_for_only_coupons,
+        row.auto_update_price,
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 22, // margin top 
 
 
-  });
+    });
 
-  doc.save('amount_wise_offer.pdf');
-}
- 
+    doc.save('amount_wise_offer.pdf');
+  }
+
 
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
@@ -374,13 +382,13 @@ select=false
   }
 
   // filter data
-  selectCredit:any;
+  selectCredit: any;
   filterData() {
     let filteredData = this.tableData.slice();
     // if (this.supplierType) {
     //   filteredData = filteredData.filter((item) => item?.supplier_type === this.supplierType);
     // }
-    
+
     if (this.selectedCompany) {
       const searchTerm = this.selectedCompany.toLowerCase();
       filteredData = filteredData.filter((item) => {
@@ -396,16 +404,16 @@ select=false
   clearFilter() {
     this.selectCredit = null;
     this.selectedCompany = null;
-    this.selectCredit=null;
+    this.selectCredit = null;
     this.filterData();
   }
 
-  pgChange(val:any){
-    console.warn(val,'pg');
-    if(val==-1){
-      this.itemsPerPage=this.filteredData.length;
+  pgChange(val: any) {
+    console.warn(val, 'pg');
+    if (val == -1) {
+      this.itemsPerPage = this.filteredData.length;
     }
-   
+
   }
 }
 

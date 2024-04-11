@@ -919,12 +919,12 @@ export class AddSaleBillComponent implements OnInit {
       formdata.append('payment_terms', this.saleBillForm.get('payment_terms')?.value);
       formdata.append('sale_order', this.saleBillForm.get('sale_order')?.value);
       formdata.append('note', this.saleBillForm.get('note')?.value);
-      formdata.append('total_qty', this.saleBillForm.get('total_qty')?.value);
-      formdata.append('total_tax', this.saleBillForm.get('total_tax')?.value);
+      formdata.append('total_qty',parseInt(this.saleBillForm.get('total_qty')?.value));
+      formdata.append('total_tax',parseFloat(this.saleBillForm.get('total_tax')?.value));
       formdata.append('total_discount', this.saleBillForm.get('total_discount')?.value);
       formdata.append('roundoff', this.saleBillForm.get('roundoff')?.value);
-      formdata.append('subtotal', this.saleBillForm.get('subtotal')?.value);
-      formdata.append('total', this.saleBillForm.get('total')?.value);
+      formdata.append('subtotal', parseFloat(this.saleBillForm.get('subtotal')?.value));
+      formdata.append('total',parseFloat(this.saleBillForm.get('total')?.value));
       formdata.append('additional_charges', this.saleBillForm.get('additional_charges')?.value);
       //2-1
       formdata.append('sales_man',this.saleBillForm.get('sales_man')?.value);
@@ -952,7 +952,6 @@ export class AddSaleBillComponent implements OnInit {
         // console.log(res);
         this.getRes = res;
         if (this.getRes.success) {
-
           if (type == 'new') {
             this.loaderCreate = false;
             this.saleBillForm.reset()
@@ -1124,7 +1123,7 @@ export class AddSaleBillComponent implements OnInit {
     // console.log(this.barcode[index]);
     // console.log(this.barcode);
     this.v_id = value.id;
-    const barcode = (this.saleBillForm.get('  sale_bill_cart') as FormArray).at(index) as FormGroup;
+    const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       barcode: value.id
     });

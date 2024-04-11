@@ -15,7 +15,7 @@ export class ListInvoiceAmountComponent implements OnInit {
 
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false
-  public tableData: any;
+  public tableData: any[]=[];
 
   titlee: any;
   p:number=1
@@ -134,9 +134,15 @@ isEdit:any;
 isDelete:any;
 userDetails:any;
   ngOnInit(): void {
-    this.offerService.getDiscount().subscribe(res => {
+    this.offerService.getDiscount().subscribe((res:any) => {
       // console.log(res);
-      this.tableData = res;
+      res.forEach((res: any) => {
+        if (res.discount_type === 'BasedOnInvoiceAmount') {
+          this.tableData.push(res);
+        }
+      });
+      // this.tableData = res;
+      console.log(this.tableData);
       this.loader=false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
