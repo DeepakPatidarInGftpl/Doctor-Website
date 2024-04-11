@@ -207,7 +207,10 @@ export class AnalysisInventoryListComponent implements OnInit {
     
       // Store the original contents
       const originalContents = document.body.innerHTML;
-    
+      window.addEventListener('afterprint', () => {
+        console.log('afterprint');
+       window.location.reload();
+      });
       // Replace the content of the body with the combined content
       document.body.innerHTML = combinedContent;
       window.print();

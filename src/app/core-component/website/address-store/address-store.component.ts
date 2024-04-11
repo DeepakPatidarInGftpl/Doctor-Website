@@ -273,7 +273,7 @@ selectAlll() {
       doc.save('addressstorelist.pdf');
    }
    generatePDFAgain() {
-    const doc = new jsPDF();
+    const doc = new jsPDF('landscape');
     const title = 'Address Store list';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
@@ -282,8 +282,7 @@ selectAlll() {
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-            { header: 'Address' },
-            ['#', 'Name',' Email', 'Phone','Alternative Mobile No.','Line 1','Line 2','Country','State','City','Pincode','Address']
+            ['#', 'Name',' Email', 'Phone','Alternative No.','Line 1','Line 2','Country','State','City','Pincode','Address']
       ],
       body: this.tableData.map((row:any, index:number ) => [
     

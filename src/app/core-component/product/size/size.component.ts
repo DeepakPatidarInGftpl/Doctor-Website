@@ -378,6 +378,34 @@ update(){
     doc.save('size.pdf');
 
  }
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Size List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+          ['#','Size Name','Size Code']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+      index + 1,
+      row.title,
+      row.code,
+     
+
+
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Size.pdf');
+}
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -467,7 +495,10 @@ update(){
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

@@ -12,6 +12,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 // vaidation for future date
 function futureDateValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -50,7 +51,7 @@ export class DealOfTheDayComponent implements OnInit {
   pageSize: number = 10;
   navigateData:any
   itemsPerPage = 10;
-  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService,private router:Router) {
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService,private router:Router,private datePipe:DatePipe) {
     this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
     if (this.navigateData){
       this.editForm(this.navigateData)
@@ -427,7 +428,9 @@ export class DealOfTheDayComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
-
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
   // convert to pdf
   generatePDF() {
     // table data with pagination
@@ -471,9 +474,8 @@ export class DealOfTheDayComponent implements OnInit {
     
         index + 1,
         row.discount +'%' ,
-       row.product_title,
-        row.datetime,
-        row.discount+'%'
+       row.variant[0]?.product_title,
+        this.formatDate(row.datetime),
     
       ]),
       theme: 'grid',

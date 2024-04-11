@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { TrendingProductsRoutingModule } from './trending-products-routing.module';
 import { TrendingProductsComponent } from './trending-products.component';
@@ -32,6 +32,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     MatSlideToggleModule,
     NgMultiSelectDropDownModule.forRoot(),
     MatProgressBarModule
-  ]
+  ],
+providers:[DatePipe]
 })
 export class TrendingProductsModule { }

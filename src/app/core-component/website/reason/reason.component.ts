@@ -347,7 +347,7 @@ export class ReasonComponent implements OnInit {
    }
    generatePDFAgain() {
     const doc = new jsPDF();
-    const title = 'Footer list';
+    const title = 'Reason';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
@@ -355,18 +355,14 @@ export class ReasonComponent implements OnInit {
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', ' Logo', 'Phone','Email','Facebook','Instagram','Twitter','Whatsapp']
+        ['#', ' Title', 'Type']
       ],
       body: this.tableData.map((row:any, index:number ) => [
     
         index + 1,
-        row.logo,
-       row.phone,
-        row.email,
-        row.facebook,
-        row.instagram,
-        row.twitter,
-        row.whatsapp,
+        row.title,
+       row.type,
+       
 
     
       ]),
@@ -376,7 +372,7 @@ export class ReasonComponent implements OnInit {
       },
       startY: 15, 
     });
-    doc.save('Footer_list .pdf');
+    doc.save('Reason .pdf');
   }  
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {

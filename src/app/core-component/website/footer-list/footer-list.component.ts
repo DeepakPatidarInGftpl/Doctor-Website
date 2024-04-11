@@ -274,7 +274,7 @@ selectAlll() {
       doc.save('footer.pdf');
    }
    generatePDFAgain() {
-    const doc = new jsPDF();
+    const doc = new jsPDF('landscape');
     const title = 'Footer list';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);

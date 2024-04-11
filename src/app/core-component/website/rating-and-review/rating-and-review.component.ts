@@ -290,7 +290,7 @@ export class RatingAndReviewComponent implements OnInit {
    }
    generatePDFAgain() {
     const doc = new jsPDF();
-    const title = 'Footer list';
+    const title = 'Rating and Review ';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
@@ -298,18 +298,18 @@ export class RatingAndReviewComponent implements OnInit {
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', ' Logo', 'Phone','Email','Facebook','Instagram','Twitter','Whatsapp']
+        ['#', ' Product Name', 'User Name','Name','Review','Rating', 'Status']
       ],
       body: this.tableData.map((row:any, index:number ) => [
     
         index + 1,
-        row.logo,
-       row.phone,
-        row.email,
-        row.facebook,
-        row.instagram,
-        row.twitter,
-        row.whatsapp,
+        row.product?.title,
+       row.user?.username,
+        row.user?.username,
+        row.review,
+        row.rating,
+        row.status
+      
 
     
       ]),
@@ -319,7 +319,7 @@ export class RatingAndReviewComponent implements OnInit {
       },
       startY: 15, 
     });
-    doc.save('Footer_list .pdf');
+    doc.save('Rating_Review.pdf');
   }  
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {
