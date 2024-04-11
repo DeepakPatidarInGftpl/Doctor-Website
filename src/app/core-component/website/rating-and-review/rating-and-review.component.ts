@@ -288,6 +288,39 @@ export class RatingAndReviewComponent implements OnInit {
         })
       doc.save('rating&review.pdf');
    }
+   generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Rating and Review ';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', ' Product Name', 'User Name','Name','Review','Rating', 'Status']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.product?.title,
+       row.user?.username,
+        row.user?.username,
+        row.review,
+        row.rating,
+        row.status
+      
+
+    
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Rating_Review.pdf');
+  }  
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {
       const visibleData = [];
@@ -366,6 +399,10 @@ export class RatingAndReviewComponent implements OnInit {
       const combinedContent = styledTitleHTML + modifiedTableHTML;
       // Store the original contents
       const originalContents = document.body.innerHTML;
+      window.addEventListener('afterprint', () => {
+        console.log('afterprint');
+       window.location.reload();
+      });
       // Replace the content of the body with the combined content
       document.body.innerHTML = combinedContent;
       window.print();

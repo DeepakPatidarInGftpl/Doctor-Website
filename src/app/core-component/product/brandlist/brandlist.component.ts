@@ -314,6 +314,39 @@ getSubCategory(){
     doc.save('brand.pdf');
 
  }
+ generatePDFAgain() {
+  const doc = new jsPDF('landscape');
+  const title = 'Brand List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+      ['#', 'Image', 'Brand Name','Code','Discount','Category','Subcategory group','SubCategory']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+  
+      index + 1,
+      row.image,
+      row.title ,
+      row.code,
+      row.discount,
+      row.category[0]?.title,
+      row.subcategory_group[0]?.title,
+      row.subcategory[0]?.title
+  
+
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Brand  .pdf');
+}
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -403,7 +436,10 @@ getSubCategory(){
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

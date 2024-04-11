@@ -400,6 +400,39 @@ this.getLabel();
     //   });
     //   doc.save('table.pdf');
   }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Product List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+            ['#','Product Name','Product Label','Category','Subcategory','Subcategory group','Brand','Unit','Product Store']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+        index + 1,
+        row.title,
+        row.product_label?.title,
+        row.category?.title,
+        row.subcategory?.title,
+        row.subcategory_group?.title,
+        row.brand?.title,
+        row.unit?.title,
+        row.product_store,
+  
+  
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Product List.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -489,7 +522,10 @@ this.getLabel();
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

@@ -433,7 +433,34 @@ export class AboutFooterBannerComponent implements OnInit {
         })
       doc.save('aboutFooterBanner.pdf');
    }
-    // excel export only filtered data
+   generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'About Footer Banner';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Image',' Title', 'Description']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.image ,
+       row.title,
+        row.description,
+    
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('AboutFooterBanner .pdf');
+  }    // excel export only filtered data
     getVisibleDataFromTable(): any[] {
       const visibleData = [];
       const table = document.getElementById('mytable');
@@ -511,6 +538,10 @@ export class AboutFooterBannerComponent implements OnInit {
       const combinedContent = styledTitleHTML + modifiedTableHTML;
       // Store the original contents
       const originalContents = document.body.innerHTML;
+      window.addEventListener('afterprint', () => {
+        console.log('afterprint');
+       window.location.reload();
+      });
       // Replace the content of the body with the combined content
       document.body.innerHTML = combinedContent;
       window.print();

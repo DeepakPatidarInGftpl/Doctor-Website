@@ -424,6 +424,35 @@ loaders=false;
     doc.save('unitconversion.pdf');
 
  }
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Unit Conversion list';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+          ['#', 'Alternate Unit','Units','Quantity']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+      index + 1,
+      row.alternate_unit.title,
+      row.unit.title,
+      row.quantity
+     
+
+
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Unit Conversion  .pdf');
+}
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -513,7 +542,10 @@ loaders=false;
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

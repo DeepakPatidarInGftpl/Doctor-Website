@@ -12,6 +12,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 // vaidation for future date
 function futureDateValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -50,7 +51,7 @@ export class DealOfTheDayComponent implements OnInit {
   pageSize: number = 10;
   navigateData:any
   itemsPerPage = 10;
-  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService,private router:Router) {
+  constructor(private websiteService: WebsiteService, private fb: FormBuilder, private toastr: ToastrService, private cs: CompanyService,private router:Router,private datePipe:DatePipe) {
     this.navigateData=this.router.getCurrentNavigation()?.extras?.state?.['id']
     if (this.navigateData){
       this.editForm(this.navigateData)
@@ -427,7 +428,9 @@ export class DealOfTheDayComponent implements OnInit {
     this.key = key;
     this.reverse = !this.reverse
   }
-
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
   // convert to pdf
   generatePDF() {
     // table data with pagination
@@ -455,6 +458,34 @@ export class DealOfTheDayComponent implements OnInit {
       })
     doc.save('dealoftheday.pdf');
   }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Deal Of The Day';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', ' Discount', 'Variant','Created Date']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.discount +'%' ,
+       row.variant[0]?.product_title,
+        this.formatDate(row.datetime),
+    
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Deal _Of _The _Day .pdf');
+  }  
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -540,6 +571,10 @@ export class DealOfTheDayComponent implements OnInit {
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     // Store the original contents
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

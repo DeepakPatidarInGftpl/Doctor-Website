@@ -779,6 +779,36 @@ export class TargetGraphComponent implements OnInit {
     doc.save('target.pdf');
 
   }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Target Graph List ';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Employee Name',' Departmentt ', 'Assigned Target','Achieved Target','Achieved (%)']
+      ],
+      body: this.graphList.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.employee_name,
+        row.department,
+       row.assigned_target,
+        row.achieved_target,
+        row?.['%_achieved']
+  
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('target .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -848,7 +878,10 @@ export class TargetGraphComponent implements OnInit {
 
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     const originalContents = document.body.innerHTML;
-
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
     document.body.innerHTML = originalContents;

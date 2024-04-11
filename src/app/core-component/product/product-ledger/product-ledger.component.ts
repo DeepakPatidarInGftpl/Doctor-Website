@@ -155,6 +155,38 @@ export class ProductLedgerComponent implements OnInit {
     doc.save('productLedger.pdf');
 
  }
+ generatePDFAgain() {
+  const doc = new jsPDF();
+  const title = 'Product Ledger List';
+  doc.setFontSize(12);
+  doc.setTextColor(33, 43, 54);
+  doc.text(title, 82, 10);
+  doc.text('', 10, 15); 
+  // Pass tableData to autoTable
+  autoTable(doc, {
+    head: [
+          ['#','Name.','Date','Voucher Type','Voucher No.','Price','In QTY','Out QTY']
+    ],
+    body: this.tableData.map((row:any, index:number ) => [
+      index + 1,
+      row.name,
+      row.date,
+      row.voucher_type,
+      row.voucher_no,
+      row.price,
+      row.in_qty,
+      row.out_qty
+
+
+    ]),
+    theme: 'grid',
+    headStyles: {
+      fillColor: [255, 159, 67]
+    },
+    startY: 15, 
+  });
+  doc.save('Product _Ledger.pdf');
+}
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -216,7 +248,10 @@ export class ProductLedgerComponent implements OnInit {
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

@@ -2,7 +2,7 @@
     // box-shadow: 0 2px 4px rgb(211, 212, 213);
     // width: 40%;
     box-shadow: 0 2px 4px rgb(211, 212, 213);
-    width: 50mm; /* Adjusted width */
+    width: 55mm; /* Adjusted width */
     height: 25mm; /* Adjusted height */
     margin: 0 5mm 0 0; 
 }
@@ -128,28 +128,22 @@ select,
   }
 
 /* CSS */
-@media print {
-  .print-div {
-    width: 25mm; /* Each barcode will have half the required width */
-    height: 25mm; /* Height of each barcode */
-    float: left;
-    margin-right: 5mm; /* Margin between barcodes */
-    margin-bottom: 5mm; /* Margin between rows */
-    box-sizing: border-box; /* Include padding and border in the width */
-  }
-}
-.card-wrapper {
-  margin-right: 90px !important; /* Adjust as needed */
-}
-.card-wrapper {
-  margin-right: 10px; /* Adjust this value as needed */
-}
+// @media print {
+//   .print-div {
+//     width: 25mm; /* Each barcode will have half the required width */
+//     height: 25mm; /* Height of each barcode */
+//     float: left;
+//     margin-right: 5mm; /* Margin between barcodes */
+//     margin-bottom: 5mm; /* Margin between rows */
+//     box-sizing: border-box; /* Include padding and border in the width */
+//   }
+// }
 
-@media print {
-  .card-wrapper {
-      margin-right: 5px; /* Adjust this value for printing */
-  }
-}
+// @media print {
+//   .card-wrapper {
+//       margin-right: 5px; /* Adjust this value for printing */
+//   }
+// }
 
 
 // @media print {
@@ -195,13 +189,13 @@ select,
 //   }
 // }
 
-@media print {
-  .col-print {
-    width: 50mm; /* Adjust width for printing */
-    height: 25mm; /* Adjust height for printing */
-    page-break-after: always; /* Ensure each div fits on a separate page */
-  }
-}
+// @media print {
+//   .col-print {
+//     width: 50mm; /* Adjust width for printing */
+//     height: 25mm; /* Adjust height for printing */
+//     page-break-after: always; /* Ensure each div fits on a separate page */
+//   }
+// }
 
 
 
