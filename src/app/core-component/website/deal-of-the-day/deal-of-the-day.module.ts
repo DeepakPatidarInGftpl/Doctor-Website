@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { DealOfTheDayRoutingModule } from './deal-of-the-day-routing.module';
 import { DealOfTheDayComponent } from './deal-of-the-day.component';
@@ -34,6 +34,9 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     MatSlideToggleModule,
     NgMultiSelectDropDownModule.forRoot(),
     MatProgressBarModule
-  ]
+  ],
+  providers:[DatePipe]
+
+  
 })
 export class DealOfTheDayModule { }

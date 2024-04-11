@@ -342,6 +342,7 @@ export class ListProductionVoucherComponent implements OnInit {
     });
     document.body.innerHTML = combinedContent;
     window.print();
+
     document.body.innerHTML = originalContents;
   }
 

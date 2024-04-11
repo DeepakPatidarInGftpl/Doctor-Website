@@ -253,6 +253,39 @@ export class CreditNoteComponent implements OnInit {
       })
     doc.save('creditNote.pdf');
   }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Credit Note';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Company Name','Credit Note Date', 'Credit Note No','Sale Bill','Reason','Round off','Tax','Total','Status']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.account?.account_id ,
+        row.date,
+       row.credit_note_no,
+        row.sale_bill_no?.customer_bill_no,
+       row.reason,
+        row.roundoff,
+        row.tax,
+    row.total,
+    row.status
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Credit Note .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -333,6 +366,10 @@ export class CreditNoteComponent implements OnInit {
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     // Store the original contents
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();

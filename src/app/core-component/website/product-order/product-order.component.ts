@@ -9,6 +9,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-product-order',
   templateUrl: './product-order.component.html',
@@ -25,7 +26,7 @@ export class ProductOrderComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage:number=10;
 
-  constructor(private websiteService: WebsiteService, private QueryService: QueryService,) {
+  constructor(private websiteService: WebsiteService, private QueryService: QueryService,private datePipe:DatePipe) {
     this.QueryService.filterToggle()
   }
 
@@ -100,11 +101,13 @@ select=false
     this.key = key;
     this.reverse = !this.reverse
   }
-
+  private formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+  }
      // convert to pdf
      generatePDF() {
       // table data with pagination
-      const doc = new jsPDF();
+      const doc = new jsPDF('landscape');
       const title = 'Product Order';
       doc.setFontSize(15);
       doc.setTextColor(33, 43, 54);
@@ -137,6 +140,42 @@ select=false
         })
       doc.save('productOrder.pdf');
    }
+   generatePDFAgain() {
+    const doc = new jsPDF('landscape');
+    const title = 'Product Order';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', ' Title', 'Payment Type','Payment Status','Sub Total Amount','Total Discount %','Total Amount','Final Amount','Couopn Discount %','Address Type','Status','Order Date','Delivered At']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.carts[0]?.product?.title,
+       row.payment_type,
+        row.payment_status,
+        row.sub_total_amount,
+        row.total_discount,
+        row.final_amount,
+        row.couopn_discount,
+        row.total_amount,
+        row.address_type,
+        row.status,
+        this.formatDate(row.order_date),
+        this.formatDate(row.delivered_at)
+]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Product _Order .pdf');
+  }  
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {
       const visibleData = [];
@@ -215,6 +254,10 @@ select=false
       const combinedContent = styledTitleHTML + modifiedTableHTML;
       // Store the original contents
       const originalContents = document.body.innerHTML;
+      window.addEventListener('afterprint', () => {
+        console.log('afterprint');
+       window.location.reload();
+      });
       // Replace the content of the body with the combined content
       document.body.innerHTML = combinedContent;
       window.print();

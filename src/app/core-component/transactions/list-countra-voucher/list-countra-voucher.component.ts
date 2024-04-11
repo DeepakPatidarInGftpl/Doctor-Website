@@ -237,6 +237,37 @@ export class ListCountraVoucherComponent implements OnInit {
       })
     doc.save('countravoucher.pdf');
   }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Countra Voucher';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Countra Voucher No.','From Account', 'To Account','Amount','Date','Description']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.countra_voucher_no,
+        row.from_account?.account_id,
+       row.to_account?.account_id,
+        row.amount,
+       row.date,
+        row.note,
+    
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Countra Voucher .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -322,6 +353,10 @@ export class ListCountraVoucherComponent implements OnInit {
     // Store the original contents
     const originalContents = document.body.innerHTML;
     // Replace the content of the body with the combined content
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
     // Restore the original content of the body
