@@ -620,6 +620,36 @@ this.getFeatureGroup()
       doc.save('subcategorygroup.pdf');
   
    }
+   generatePDFAgain() {
+    const doc = new jsPDF('landscape');
+    const title = 'Sub Category Group list';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+            ['#','Image','Sub Category Group','Category','Subcategories']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+        index + 1,
+        row.image,
+        row.title,
+        row.category.title,
+        row.subcategories[0]?.title,
+       
+  
+  
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Sub _Category _Group.pdf');
+  }
 
   // generatePDF() {
   //   const doc = new jsPDF();
@@ -728,7 +758,10 @@ this.getFeatureGroup()
   
       // Store the original contents
       const originalContents = document.body.innerHTML;
-  
+      window.addEventListener('afterprint', () => {
+        console.log('afterprint');
+       window.location.reload();
+      });
       // Replace the content of the body with the combined content
       document.body.innerHTML = combinedContent;
       window.print();

@@ -242,6 +242,36 @@ export class ListJournalVoucherComponent implements OnInit {
       })
     doc.save('journalVoucher.pdf');
   }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Journal Voucher';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Account','Journal Voucher No.', 'Date ',' Total Debit','Total Credit','Description']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.cart[0]?.from_account?.account_id,
+        row.journal_voucher_no,
+       row.date,
+        row.total_debit,
+       row.total_credit,
+        row.description,
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Journal Voucher .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -310,6 +340,10 @@ export class ListJournalVoucherComponent implements OnInit {
     const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     document.body.innerHTML = combinedContent;
     window.print();
     document.body.innerHTML = originalContents;

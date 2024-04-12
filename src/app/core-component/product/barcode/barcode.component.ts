@@ -352,7 +352,7 @@ export class BarcodeComponent implements OnInit {
     });
 }
 
-  selectedPageSize: string='50mm x 25mm x 1UP'; 
+  selectedPageSize: string='a4'; 
   isSelectPg=true;
   selectPG(size: string): void {
     this.selectedPageSize = size;

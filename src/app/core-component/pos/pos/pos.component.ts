@@ -12,6 +12,7 @@ import { Modal } from 'bootstrap';
 import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 import { Router } from '@angular/router';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
+import { OfferService } from 'src/app/Services/offer/offer.service';
 
 @Component({
   selector: 'app-pos',
@@ -156,7 +157,8 @@ export class PosComponent implements OnInit {
   currentRoundOff: any;
 
 
-  constructor(private transactionService: TransactionService, private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService: PosCartService, private coreService: CoreService) {
+  constructor(private transactionService: TransactionService, private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService: PosCartService,
+    private offerService: OfferService, private coreService: CoreService) {
     // this.cartItems = this.cartService.getCartItems();
     this.currentItems = this.cartService.getCurrentItems();
     this.customerForm = this.fb.group({
@@ -223,10 +225,17 @@ export class PosComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    this.isQPQ[0]=false;
+    this.isQPP[0]=false;
+    this.isDiscountInvoice[0]=false;
+          this.isPriceRangeFreeItem[0]=false;
+          this.isPriceRange[0]=false;
+          this.isFreeItemInvoice[0]=false;
+
     this.getExpense();
     this.getPayment();
     this.getReciept();
-
     this.filteredStreets = this.streetcontrol.valueChanges.pipe(
       startWith(''),
       map(value => this.__filter(value || '')),
@@ -507,8 +516,6 @@ export class PosComponent implements OnInit {
     });
 
     const requestOptions = { headers: headers };
-
-
     this.productsAutocompleteControl.valueChanges
       .pipe(
         filter(res => {
@@ -522,6 +529,7 @@ export class PosComponent implements OnInit {
           this.isLoading = true;
         }),
         switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/pos/product_search/?search=${value}`, requestOptions)
+        // switchMap(value => this.http.get(`https://pv.greatfuturetechno.com/pv-api/sales_product_filter/?search=${value}`, requestOptions)
           .pipe(
             catchError(err => {
               // handleError(err);
@@ -1226,6 +1234,7 @@ export class PosComponent implements OnInit {
     this.addToCurrent(product1);
     this.selectedOptions.push(product1);
     this.productsAutocompleteControl.setValue('');
+    this.allDiscount();//10-04
     var myModalEl = document.getElementById('batchModal')
     var modal = Modal.getInstance(myModalEl)
     modal.hide();
@@ -1319,11 +1328,13 @@ export class PosComponent implements OnInit {
   increaseQtyCurrent(item) {
     this.playBeepSound()
     this.cartService.increaseCurrent(item);
+    this.discountQty();//11-04
   }
 
   decreaseQtyCurrent(item) {
     this.playBeepSound();
     this.cartService.decreaseCurrent(item);
+    this.discountQty(); //11-04
   }
 
   addToCart(product: any): void {
@@ -2439,14 +2450,10 @@ export class PosComponent implements OnInit {
         this.toastr.error('Please Select/Add a Customer!');
       } else {
         let cartData = this.setItemsArr();
-
         let bank_data = {
           "account_no": Number(this.account_no.value),
           "payment_account": Number(this.payment_account_bank.value)
         };
-
-
-
         // console.log(cartData, 'cash', bank_data);
         const formData = new FormData();
         formData.append('customer', JSON.stringify(this.currentCustomer.id));
@@ -2721,8 +2728,186 @@ export class PosComponent implements OnInit {
       this.paymentList = res;
     })
   }
- 
 
+
+  discount: any[] = []
+  selectedBatch(val: any,i:any) {
+    console.log(val);
+    console.warn(this.currentBatch);
+    this.discount.push(val);
+    // this.allDiscount()
+  }
+
+  discountTyp: any[] = [];
+  selectedValue:any;
+  priceRange: any[] = [];
+  isPriceRange:boolean[]=[];
+  qtyPerQty: any[] = [];
+  qtyPerPercentage: any[] = [];
+  priceRangeFreeItem: any[] = [];
+  isPriceRangeFreeItem:boolean[]=[];
+  freeItemOnInvoice: any[] = [];
+  isFreeItemInvoice:boolean[]=[];
+  discountOnInvoice: any[] = [];
+  isDiscountInvoice:boolean[]=[];
+
+  allDiscount() {
+    console.log(this.discount);
+    this.discountTyp = [];
+    this.priceRange=[];
+   
+    this.qtyPerQty=[];
+    this.qtyPerPercentage=[];
+    this.priceRangeFreeItem=[];
+    this.freeItemOnInvoice=[];
+    this.discountOnInvoice=[];
+
+    this.discount.forEach((batch: any, i: number) => {
+      batch?.discount.forEach((discount: any) => {
+        if (!this.discountTyp[i]) {
+          this.discountTyp[i] = [];
+        }
+        this.discountTyp[i].push(discount);
+        console.warn(this.discountTyp[i]);
+  
+        if (discount?.is_compulsory === "True") {
+          this.selectedValue = discount;
+        } else {
+          if (batch?.is_active) { // Add your condition here
+            if (discount.discount_offer_type === 'Price-range-free-item') {
+              if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
+                // this.priceRangeFreeItem.push(discount);
+                this.isPriceRangeFreeItem[i]=true;
+                this.isPriceRange[i]=false;
+                this.isFreeItemInvoice[i]=false;
+                this.isDiscountInvoice[i]=false;
+                this.isQPQ[i]=false;
+                this.isQPP[i]=false;
+                if (!this.priceRangeFreeItem[i]) {
+                  this.priceRangeFreeItem[i] = [];
+                }
+                this.priceRangeFreeItem[i].push(discount);
+                console.warn(this.priceRangeFreeItem, 'price range free item');
+              }
+            } else if (discount.discount_offer_type === 'Price-range-discount') {
+              if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
+                this.isPriceRange[i]=true;
+                this.isPriceRangeFreeItem[i]=false;
+                this.isFreeItemInvoice[i]=false;
+                this.isDiscountInvoice[i]=false;
+                this.isQPQ[i]=false;
+                this.isQPP[i]=false;
+                // this.priceRange.push(discount);
+                if (!this.priceRange[i]) {
+                  this.priceRange[i] = [];
+                }
+                this.priceRange[i].push(discount);
+                console.warn(this.priceRange, 'price range discount');
+              }
+            } else if (discount.discount_offer_type === 'Free-item-on-invoice') {
+              if (batch?.mrp >= discount.invoice_amount) {
+                // this.freeItemOnInvoice.push(discount);
+                this.isFreeItemInvoice[i]=true;
+                this.isPriceRangeFreeItem[i]=false;
+                this.isPriceRange[i]=false;
+                this.isDiscountInvoice[i]=false;
+                this.isQPQ[i]=false;
+                this.isQPP[i]=false;
+                if (!this.freeItemOnInvoice[i]) {
+                  this.freeItemOnInvoice[i] = [];
+                }
+                this.freeItemOnInvoice[i].push(discount);
+                console.warn(this.freeItemOnInvoice, 'free item on invoice');
+              }
+            } else if (discount.discount_offer_type === 'Discount-on-Invoice') {
+              if (batch?.mrp >= discount.invoice_amount) {
+                this.isDiscountInvoice[i]=true;
+                this.isPriceRangeFreeItem[i]=false;
+                this.isPriceRange[i]=false;
+                this.isFreeItemInvoice[i]=false;
+                this.isQPQ[i]=false;
+                this.isQPP[i]=false;
+                if (!this.discountOnInvoice[i]) {
+                  this.discountOnInvoice[i] = [];
+                }
+                this.discountOnInvoice[i].push(discount);
+                // this.discountOnInvoice.push(discount);
+                console.warn(this.discountOnInvoice, 'discount on invoice');
+              }
+            } else if (discount.discount_offer_type === 'Quantity-per-percentag') {
+              if (this.totalQty() >= discount.purchase_qty) {
+                // this.qtyPerPercentage.push(discount);
+                this.isQPP[i]=true;
+                this.isDiscountInvoice[i]=false;
+                this.isPriceRangeFreeItem[i]=false;
+                this.isPriceRange[i]=false;
+                this.isFreeItemInvoice[i]=false;
+                this.isQPQ[i]=false;
+                if (!this.qtyPerPercentage[i]) {
+                  this.qtyPerPercentage[i] = [];
+                }
+                this.qtyPerPercentage[i].push(discount);
+                console.warn(this.qtyPerPercentage, 'qty per %');
+              }
+            } else if (discount.discount_offer_type === 'Quantity-per-quantity') {
+              if (this.totalQty() >= discount.purchase_qty) {
+                this.isQPQ[i]=true;
+                this.isDiscountInvoice[i]=false;
+                this.isPriceRangeFreeItem[i]=false;
+                this.isPriceRange[i]=false;
+                this.isFreeItemInvoice[i]=false;
+                this.isQPP[i]=false;
+                // this.qtyPerQty.push(discount);
+                if (!this.qtyPerQty[i]) {
+                  this.qtyPerQty[i] = [];
+                }
+                this.qtyPerQty[i].push(discount);
+                console.warn(this.qtyPerQty, 'qty per qty');
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+  
+  
+
+isQPQ:boolean[]=[];
+isQPP:boolean[]=[]
+  discountQty(){
+    console.log(this.discountTyp);
+    this.discountTyp.forEach((res:any,i:any)=>{
+   if (res.discount_offer_type == 'Quantity-per-quantity') {
+        if (this.totalQty() >= res.purchase_qty) {
+          this.qtyPerQty.push(res);
+          this.isQPQ[i]=true;
+          this.isQPP[i]=false;
+          this.isDiscountInvoice[i]=false;
+                this.isPriceRangeFreeItem[i]=false;
+                this.isPriceRange[i]=false;
+                this.isFreeItemInvoice[i]=false;
+          console.warn(this.qtyPerQty, 'qty per qty');
+        }
+      } else if (res.discount_offer_type == 'Quantity-per-percentag') {
+        if (this.totalQty() >= res.purchase_qty) {
+          this.isQPP[i]=true;
+          this.isQPQ[i]=false;
+          this.isDiscountInvoice[i]=false;
+                this.isPriceRangeFreeItem[i]=false;
+                this.isPriceRange[i]=false;
+                this.isFreeItemInvoice[i]=false;
+          this.qtyPerPercentage.push(res);
+          console.warn(this.qtyPerPercentage, 'qty per %');
+        }
+      }
+    })
+
+  }
+
+  selectDiscount(val){
+    console.warn(val,'selected discount'); 
+  }
 }
 
 

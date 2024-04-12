@@ -237,6 +237,41 @@ export class PosOrderComponent implements OnInit {
       })
     doc.save('posOrder.pdf');
   }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Pos Order';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'User Id','Customer', 'Payment Mode','Due Amount','GST','SCFST','Supply GST','Supply State','Total Tax ','Total Amount']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.id ,
+        row.customer.name,
+       row.payment_mode,
+        row.dueAmount,
+       row.get_gst,
+        row.get_scgst,
+        row.place_of_supply_gst_code,
+    row.place_of_supply_state,
+    row.total_tax,
+    row.total_amount
+
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Pos Order .pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -315,6 +350,10 @@ export class PosOrderComponent implements OnInit {
     const combinedContent = styledTitleHTML + modifiedTableHTML;
     // Store the original contents
     const originalContents = document.body.innerHTML;
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+     window.location.reload();
+    });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
@@ -338,7 +377,7 @@ export class PosOrderComponent implements OnInit {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filteredData.length;
     }
   }
 }

@@ -195,7 +195,31 @@
                                             <!-- <input type="text" disabled value="{{cart?.batch[0]?.mrp}}" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1"> -->
                                         </td>
                                         <td>{{cart?.batch[0]?.selling_price_offline}}</td>
-                                        <td>{{getProductDisc(cart?.batch[0])}}</td>
+                                        <td>
+                                            <!-- 11-04 -->
+                                            <ng-container *ngIf="isQPQ[i]">
+                                                <select #disV (change)="selectDiscount(disV.value)">
+                                                    <ng-container *ngFor="let dis of discountTyp">
+                                                        <option [value]="dis?.discount_offer_type" [selected]="dis.is_compulsory=='True'">{{dis?.discount_offer_type}}</option>
+                                                    </ng-container>
+                                                </select>
+                                            </ng-container>
+                                            <ng-container *ngIf="isQPP[i]">
+                                                <select #disV (change)="selectDiscount(disV.value)">
+                                                    <ng-container *ngFor="let dis of discountTyp">
+                                                        <option [value]="dis?.discount_offer_type" [selected]="dis.is_compulsory=='True'">{{dis?.discount_offer_type}}</option>
+                                                    </ng-container>
+                                                </select>
+                                            </ng-container>
+                                            <ng-container *ngIf="!isQPP[i] || !isQPQ[i]">
+                                                <select #disV (change)="selectDiscount(disV.value)">
+                                                    <ng-container *ngFor="let dis of discountTyp[i]">
+                                                        <option [value]="dis?.discount_offer_type" [selected]="dis.is_compulsory=='True'">{{dis?.discount_offer_type}}</option>
+                                                    </ng-container>
+                                                </select>
+                                            </ng-container>
+                                            <!-- {{getProductDisc(cart?.batch[0])}} -->
+                                        </td>
                                             <!-- <div class="input-group pos-i-grp table-black-grp">
                                                 <span class="input-group-text" id="basic-addon1">₹
                                                 </span>
@@ -246,8 +270,12 @@
                                         </button>
                                     </li>
                                     <li>
+                                        <!-- <select #discountVal (change)="selectedBatch(discountVal.value)">
+                                            <option value="{{data?.discount_offer_type}}" *ngFor="let data of discountTyp">{{data?.discount_offer_type}}</option>
+                                        </select> -->
                                         <p>₹{{this.totalDiscAmount()}}</p>
                                         <h5>Discount %</h5>
+                                       
                                     </li>
                                     <li>
                                         <div class="flat-disc-wrapper">
@@ -1739,11 +1767,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let batch of currentProduct?.batch">
+                    <tr *ngFor="let batch of currentProduct?.batch;let i=index">
                     
                         <td>
                             <label>
-                                <input type="radio" name="batchProduct" value="{{batch?.id}}" [(ngModel)]="currentBatch" >
+                                <input type="radio" name="batchProduct" value="{{batch?.id}}" (change)="selectedBatch(batch,i)" [(ngModel)]="currentBatch" >
                             </label>
                         </td>
                         <td>{{batch?.mrp}}</td>

@@ -374,7 +374,36 @@ update(){
         })
       doc.save('staticPages.pdf');
    }
-  
+   generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Static Pages List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', ' Title', 'Slug','Choice Type']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.title,
+       row.slug,
+       row.choice_type
+       
+
+    
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Static _Pages .pdf');
+  }   
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {
       const visibleData = [];
@@ -466,7 +495,10 @@ update(){
   
       // Store the original contents
       const originalContents = document.body.innerHTML;
-  
+      window.addEventListener('afterprint', () => {
+        console.log('afterprint');
+       window.location.reload();
+      });
       // Replace the content of the body with the combined content
       document.body.innerHTML = combinedContent;
       window.print();

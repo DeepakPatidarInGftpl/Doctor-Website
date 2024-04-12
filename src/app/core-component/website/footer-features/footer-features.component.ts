@@ -405,6 +405,8 @@ export class FooterFeaturesComponent implements OnInit {
       doc.setTextColor(33, 43, 54);
       doc.text(title, 10, 10);
       // autoTable(doc, { html: '#mytable' }); // here all table field downloaded
+
+    
       autoTable(doc,
         {
           html: '#mytable',
@@ -422,7 +424,32 @@ export class FooterFeaturesComponent implements OnInit {
         })
       doc.save('footerFeatures.pdf');
    }
-  
+   generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Footer Features';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15); 
+   ;
+    autoTable(doc, {
+      head: [
+        ['#','Title']
+      ],
+      body: this.tableData.map((row:any, index:number ) => [
+    
+        index + 1,
+        row.title,
+    
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15, 
+    });
+    doc.save('Footer Features .pdf');
+  } 
     // excel export only filtered data
     getVisibleDataFromTable(): any[] {
       const visibleData = [];
@@ -514,7 +541,10 @@ export class FooterFeaturesComponent implements OnInit {
   
       // Store the original contents
       const originalContents = document.body.innerHTML;
-  
+      window.addEventListener('afterprint', () => {
+        console.log('afterprint');
+       window.location.reload();
+      });
       // Replace the content of the body with the combined content
       document.body.innerHTML = combinedContent;
       window.print();
