@@ -219,6 +219,56 @@
                                                 </select>
                                             </ng-container>
                                             <!-- {{getProductDisc(cart?.batch[0])}} -->
+                                            <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch(i)"></i>
+
+                                            <div class="modal fade" id="batchModal" tabindex="-1" role="dialog"
+                                                aria-labelledby="addressModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Select Discount</h1>
+                                                            <button type="button" class="close"
+                                                                (click)="closeModalBatch()" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group" >
+                                                                <div class="row">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table datanew">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="boder space-text">Sr.No.</th>
+                                                                                    <th class="boder space-text">Name</th>
+                                                                                    <th class="boder space-text">Offer Type</th>
+                                                                                    <th class="boder space-text">Free Items</th>
+                                                                                    <th class="boder space-text">Start Price</th>
+                                                                                    <th class="boder space-text">End Price</th>
+                                                                                    <th class="boder space-text">Flat Discount</th>
+                                                                                    <th class="boder space-text">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr *ngFor="let discount of discountTyp[i];let ind=index;">
+                                                                                    <td class="boder">{{ ind+1+'.'}}</td>
+                                                                                    <td class="boder">{{ discount?.name }}</td>
+                                                                                    <td class="boder">{{ discount?.discount_offer_type }}</td>
+                                                                                    <td class="boder">{{ discount?.free_items }}</td>
+                                                                                    <td class="boder">{{ discount?.start_price}}</td>
+                                                                                    <td class="boder">{{ discount?.end_price}}</td>
+                                                                                    <td class="boder">{{discount?.discount_type==undefined?'-':discount?.discount_type+' '+ discount?.flat_discount==undefined?'':discount?.flat_discount}}</td>
+                                                                                    <td><button type="button"  class="btn btn-primary btn-sm" style="float: right;">Select</button> </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                             <!-- <div class="input-group pos-i-grp table-black-grp">
                                                 <span class="input-group-text" id="basic-addon1">₹
@@ -1768,7 +1818,6 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let batch of currentProduct?.batch;let i=index">
-                    
                         <td>
                             <label>
                                 <input type="radio" name="batchProduct" value="{{batch?.id}}" (change)="selectedBatch(batch,i)" [(ngModel)]="currentBatch" >
@@ -1783,9 +1832,7 @@
                         <td>{{batch?.discount}}</td>                        
                         <td>{{batch?.additional_discount}}</td>                                                
                     </tr>
-                    
                 </tbody>
-    
             </table>
         </div>
         <div class="modal-footer">
