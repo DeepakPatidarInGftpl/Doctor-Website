@@ -256,7 +256,12 @@ export class SaleItemRegisterComponent implements OnInit {
     
       // Store the original contents
       const originalContents = document.body.innerHTML;
-    
+      //refresh
+  window.addEventListener('afterprint', () => {
+    console.log('afterprint');
+   window.location.reload();
+  });
+  //end
       // Replace the content of the body with the combined content
       document.body.innerHTML = combinedContent;
       window.print();

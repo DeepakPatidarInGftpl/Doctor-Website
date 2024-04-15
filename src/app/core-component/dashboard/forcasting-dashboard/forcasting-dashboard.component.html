@@ -105,6 +105,7 @@
                             <thead>
                                 <tr>
                                     <th>Employee Name</th>
+                                    <th> Employee Id</th>
                                   <th>Department Name</th>
                                     <th>Assigned Target  </th>
                                     <th>Achieved Target</th>
@@ -115,6 +116,8 @@
                             <tbody>
                                 <tr *ngFor="let customers of achieveList">
                                     <td>{{customers?.employee_name}}</td>
+                                    <td>{{customers?.employee_id}}</td>
+
                                     <td>{{customers?.department_names}}</td>
                                     <td>{{customers?.assigned_target}}</td>
                                     <td>{{customers?.achieved_target}}</td>
@@ -150,7 +153,8 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>No.Of Invoices </th>
+                                    <th> Employee Id</th>
+                                     <th>No.Of Invoices </th>
                                     <th>No.Of Sale Return</th>
                                     <th>Invoices Value</th>
                                     <th>Sale Return Value</th>
@@ -159,6 +163,8 @@
                             <tbody>
                                 <tr *ngFor="let customers of top10List">
                                     <td>{{customers?.name}}</td>
+                                    <td>{{customers?.employee_id}}</td>
+
                                     <td>{{customers?.no_of_invoices}}</td>
                                     <td>{{customers?.no_of_sale_return}}</td>
                                     <td>{{customers?.invoices_value}}</td>
