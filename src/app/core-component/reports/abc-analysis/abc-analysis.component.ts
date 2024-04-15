@@ -396,25 +396,18 @@ printTable(): void {
     console.error("Table element with ID 'mytable' not found.");
     return;
   }
-
   const tableHTML = tableElement.outerHTML;
-
   // Get the title element and its HTML content
   const titleElement = document.querySelector('.titl');
   if (!titleElement) {
     console.error("Title element with class 'titl' not found.");
     return;
   }
-
   const titleHTML = titleElement.outerHTML;
-
   // Clone the table element to manipulate
   const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-
-
   // Get the modified table's HTML content
   const modifiedTableHTML = clonedTable.outerHTML;
-
   // Apply styles to add some space from the top after the title
   const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
 
@@ -423,7 +416,12 @@ printTable(): void {
 
   // Store the original contents
   const originalContents = document.body.innerHTML;
-
+  //refresh
+  window.addEventListener('afterprint', () => {
+    console.log('afterprint');
+   window.location.reload();
+  });
+  //end
   // Replace the content of the body with the combined content
   document.body.innerHTML = combinedContent;
   window.print();
