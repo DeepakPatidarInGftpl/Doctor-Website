@@ -499,6 +499,8 @@ export class AddEstimateComponent implements OnInit {
   landingCost: any;
   batchCostPrice: any[] = [];
   selecteProduct:any;
+//12-04
+discountArray: any[] = [];
   oncheckVariant(event: any, index) {
     console.log(index,'index');
     const selectedItemId = event.id;
@@ -506,6 +508,13 @@ export class AddEstimateComponent implements OnInit {
     this.selecteProduct=event?.product;
     console.log(this.selecteProduct);
     
+     //12-04
+     event?.batch.forEach((batch:any)=>{
+      this.discountArray.push(batch);
+    });
+    this.allDiscount();
+    //end
+
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
@@ -612,6 +621,148 @@ export class AddEstimateComponent implements OnInit {
       const prodd = this.getCart().controls[i].value; 
   }
 
+  
+// 12-04
+discountTyp: any[] = [];
+selectedValue:any;
+priceRange: any[] = [];
+isPriceRange:boolean[]=[];
+qtyPerQty: any[] = [];
+isQPQ:boolean[]=[];
+qtyPerPercentage: any[] = [];
+isQPP:boolean[]=[];
+priceRangeFreeItem: any[] = [];
+isPriceRangeFreeItem:boolean[]=[];
+freeItemOnInvoice: any[] = [];
+isFreeItemInvoice:boolean[]=[];
+discountOnInvoice: any[] = [];
+isDiscountInvoice:boolean[]=[];
+
+allDiscount() {
+  console.log(this.discountArray);
+  this.discountTyp = [];
+  this.priceRange=[];
+  this.qtyPerQty=[];
+  this.qtyPerPercentage=[];
+  this.priceRangeFreeItem=[];
+  this.freeItemOnInvoice=[];
+  this.discountOnInvoice=[];
+  this.discountArray?.forEach((batch: any, i: number) => {
+    console.warn(batch);
+    batch?.discount?.forEach((discount: any) => {
+      console.log(discount);
+
+  if (!this.discountTyp[i]) {
+    this.discountTyp[i] = [];
+  }
+  this.discountTyp[i].push(discount);
+  console.warn(this.discountTyp[i]);
+
+  if (discount?.is_compulsory === "True") {
+    this.selectedValue = discount;
+  } else {
+    if (batch?.is_active) { // Add your condition here
+      if (discount.discount_offer_type === 'Price-range-free-item') {
+        if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
+          // this.priceRangeFreeItem.push(discount);
+          this.isPriceRangeFreeItem[i]=true;
+          this.isPriceRange[i]=false;
+          this.isFreeItemInvoice[i]=false;
+          this.isDiscountInvoice[i]=false;
+          this.isQPQ[i]=false;
+          this.isQPP[i]=false;
+          if (!this.priceRangeFreeItem[i]) {
+            this.priceRangeFreeItem[i] = [];
+          }
+          this.priceRangeFreeItem[i].push(discount);
+          console.warn(this.priceRangeFreeItem, 'price range free item');
+        }
+      } else if (discount.discount_offer_type === 'Price-range-discount') {
+        if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
+          this.isPriceRange[i]=true;
+          this.isPriceRangeFreeItem[i]=false;
+          this.isFreeItemInvoice[i]=false;
+          this.isDiscountInvoice[i]=false;
+          this.isQPQ[i]=false;
+          this.isQPP[i]=false;
+          // this.priceRange.push(discount);
+          if (!this.priceRange[i]) {
+            this.priceRange[i] = [];
+          }
+          this.priceRange[i].push(discount);
+          console.warn(this.priceRange, 'price range discount');
+        }
+      } else if (discount.discount_offer_type === 'Free-item-on-invoice') {
+        if (batch?.mrp >= discount.invoice_amount) {
+          // this.freeItemOnInvoice.push(discount);
+          this.isFreeItemInvoice[i]=true;
+          this.isPriceRangeFreeItem[i]=false;
+          this.isPriceRange[i]=false;
+          this.isDiscountInvoice[i]=false;
+          this.isQPQ[i]=false;
+          this.isQPP[i]=false;
+          if (!this.freeItemOnInvoice[i]) {
+            this.freeItemOnInvoice[i] = [];
+          }
+          this.freeItemOnInvoice[i].push(discount);
+          console.warn(this.freeItemOnInvoice, 'free item on invoice');
+        }
+      } else if (discount.discount_offer_type === 'Discount-on-Invoice') {
+        if (batch?.mrp >= discount.invoice_amount) {
+          this.isDiscountInvoice[i]=true;
+          this.isPriceRangeFreeItem[i]=false;
+          this.isPriceRange[i]=false;
+          this.isFreeItemInvoice[i]=false;
+          this.isQPQ[i]=false;
+          this.isQPP[i]=false;
+          if (!this.discountOnInvoice[i]) {
+            this.discountOnInvoice[i] = [];
+          }
+          this.discountOnInvoice[i].push(discount);
+          // this.discountOnInvoice.push(discount);
+          console.warn(this.discountOnInvoice, 'discount on invoice');
+        }
+      } else if (discount.discount_offer_type === 'Quantity-per-percentag') {
+        if (this.totalQty() >= discount.purchase_qty) {
+          // this.qtyPerPercentage.push(discount);
+          this.isQPP[i]=true;
+          this.isDiscountInvoice[i]=false;
+          this.isPriceRangeFreeItem[i]=false;
+          this.isPriceRange[i]=false;
+          this.isFreeItemInvoice[i]=false;
+          this.isQPQ[i]=false;
+          if (!this.qtyPerPercentage[i]) {
+            this.qtyPerPercentage[i] = [];
+          }
+          this.qtyPerPercentage[i].push(discount);
+          console.warn(this.qtyPerPercentage, 'qty per %');
+        }
+      } else if (discount.discount_offer_type === 'Quantity-per-quantity') {
+        if (this.totalQty() >= discount.purchase_qty) {
+          this.isQPQ[i]=true;
+          this.isDiscountInvoice[i]=false;
+          this.isPriceRangeFreeItem[i]=false;
+          this.isPriceRange[i]=false;
+          this.isFreeItemInvoice[i]=false;
+          this.isQPP[i]=false;
+          // this.qtyPerQty.push(discount);
+          if (!this.qtyPerQty[i]) {
+            this.qtyPerQty[i] = [];
+          }
+          this.qtyPerQty[i].push(discount);
+          console.warn(this.qtyPerQty, 'qty per qty');
+        }
+      }
+    }
+  } 
+    });
+  });
+}
+
+selectDiscount(val){
+  console.warn(val,'selected discount'); 
+}
+//end
   coastprice: any[] = []
   landingPrice: any[] = []
   isdiscount: any[] = []
