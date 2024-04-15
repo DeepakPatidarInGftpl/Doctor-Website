@@ -316,3 +316,31 @@
     z-index: 1000; 
     white-space: nowrap;
 }
+
+.table th{
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 2; 
+ }
+ 
+ 
+ .table-container { 
+   overflow-y: auto;
+ } 
+ .table-container thead th { 
+   position: sticky; 
+   top: 10; 
+ } 
+ table { 
+   border-collapse: collapse;         
+   width: 100%; 
+ } 
+ th, 
+ td { 
+   padding: 8px 15px; 
+   border: 2px solid #dbddda; 
+ } 
+ th { 
+   background: #dddfdc; 
+ } 
+ 

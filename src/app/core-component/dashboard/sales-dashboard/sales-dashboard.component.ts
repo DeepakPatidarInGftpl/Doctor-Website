@@ -212,9 +212,10 @@ export class SalesDashboardComponent implements OnInit {
     this.dashboardService.getSalesNumber(this.startDate, this.endDate).subscribe((res: any) => {
       console.log(res);
       this.saleTotalList = res;
-    },err=>{
-      // this.toastr.error(err.message)
+    // },err=>{
+    //   // this.toastr.error(err.message)
     })
+    
   }
   customerRetentionList:any;
   getCustomerRetention() {
@@ -500,7 +501,7 @@ export class SalesDashboardComponent implements OnInit {
         }
       };
     }else{
-      this.toastr.error(res.msg)
+      // this.toastr.error(res.msg)
     }
     }, err => {
       //this.toastr.error(err.message);
@@ -553,7 +554,7 @@ export class SalesDashboardComponent implements OnInit {
         },
       };
     }else{
-      this.toastr.error(res.msg)
+      // this.toastr.error(res.msg)
     }
       // end
     }, err => {

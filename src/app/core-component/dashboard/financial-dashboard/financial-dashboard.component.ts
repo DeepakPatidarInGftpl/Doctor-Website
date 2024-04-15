@@ -307,7 +307,7 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
               value: {
                 offsetY: 10, // Adjust the vertical position of the value
                 fontSize: '26px', // Set the font size of the value
-                color: '#2673DD', // Set the color of the value
+                color: '#000', // Set the color of the value
                 fontWeight:700,
                 formatter: function (val: any) {
                   return val + '%'; // Format the value with a percentage symbol
@@ -342,7 +342,7 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
               value: {
                 offsetY: 10, // Adjust the vertical position of the value
                 fontSize: '26px', // Set the font size of the value
-                color: '#2673DD', // Set the color of the value
+                color: '#000', // Set the color of the value
                 fontWeight:700,
                 formatter: function (val: any) {
                   return val + '%'; // Format the value with a percentage symbol
