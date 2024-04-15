@@ -619,7 +619,13 @@
                                                 </div>
                                             </td>
                                             <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
-                                            <td><input type="number" formControlName="discount" class="input" (blur)="purchase4(i)">
+                                            <td>
+                                                <!-- <input type="number" formControlName="discount" class="input" (blur)="purchase4(i)"> -->
+                                                <select #disV (change)="selectDiscount(disV.value)">
+                                                    <ng-container *ngFor="let dis of discountTyp[i]">
+                                                        <option [value]="dis?.discount_offer_type" [selected]="dis.is_compulsory=='True'">{{dis?.discount_offer_type}}</option>
+                                                    </ng-container>
+                                                </select>
                                             <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span>
                                             </td>  
                                             <td>
