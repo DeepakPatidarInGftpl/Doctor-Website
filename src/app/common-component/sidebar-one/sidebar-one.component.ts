@@ -309,6 +309,8 @@ isBrandSubcategoryOffer:any;
           this.isUser = res.codename
         } else if (res.content_type.app_label === 'account' && res.content_type.model === 'additionalcharge' && res.codename == 'view_additionalcharge') {
           this.isAdditional = res.codename;
+        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'membership' && res.codename == 'view_membership') {
+          this.isMembership = res.codename;
         } else if (res.content_type.app_label === 'master' && res.content_type.model === 'companydrive' && res.codename == 'view_companydrive') {
           this.isCompanyDrive = res.codename;
         }

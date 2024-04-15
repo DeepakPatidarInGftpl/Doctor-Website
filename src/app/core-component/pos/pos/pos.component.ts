@@ -2729,7 +2729,6 @@ export class PosComponent implements OnInit {
     })
   }
 
-
   discount: any[] = []
   selectedBatch(val: any,i:any) {
     console.log(val);
