@@ -2749,7 +2749,7 @@ export class PosComponent implements OnInit {
   isFreeItemInvoice:boolean[]=[];
   discountOnInvoice: any[] = [];
   isDiscountInvoice:boolean[]=[];
-
+  selectedPrice:any[]=[];
   allDiscount() {
     console.log(this.discount);
     this.discountTyp = [];
@@ -2768,7 +2768,12 @@ export class PosComponent implements OnInit {
         }
         this.discountTyp[i].push(discount);
         console.warn(this.discountTyp[i]);
-  
+  // auto selected data of isComuplsory
+  this.discountTyp[i].forEach((element,j) => {
+    if(element?.is_compulsory=='True'){
+      this.selectedPrice[0]=element
+    }
+  });
         if (discount?.is_compulsory === "True") {
           this.selectedValue = discount;
         } else {
@@ -2906,6 +2911,24 @@ isQPP:boolean[]=[]
 
   selectDiscount(val){
     console.warn(val,'selected discount'); 
+  }
+
+  batchCartIndex:any;
+  openModalBatch(i:number) {
+    this.batchCartIndex=i
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+  closeModalBatch() {
+    const modal = document.getElementById('batchModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
   }
 }
 

@@ -190,8 +190,8 @@
             </div>
             <div class="col-lg-5 col-sm-5 col-12 d-flex">
                 <div class="row">
-                    <div class="col-lg-6 col-sm-6 col-12">
-                        <div class="dash-count d-flex justify-content-center" style="margin: 0 0 10px; height: 216px;"style="background: #EDF5FF;">
+                    <div class="col-lg-6 col-sm-6 col-12 gross">
+                        <div class="dash-count d-flex justify-content-center" style="margin: 0 0 10px; height: 216px;"style="background: #EDD5FF;">
                             <div class="dash-counts">
                                 <div>
                                     <apx-chart [series]="grossChartOptions?.series" [chart]="grossChartOptions?.chart"
@@ -199,7 +199,7 @@
                                         [fill]="grossChartOptions?.fill"></apx-chart>
                                 </div>
                                 <div>
-                                    <p class="card-num-p1 text-center"style="color: #2673DD;">Gross Profit</p>
+                                    <p class="card-num-p1 text-center"style="color: #024259;">Gross Profit</p>
                                     <p class="card-num-p2 text-center" style="margin-bottom:10px"
                                         [ngStyle]="{'font-size': saleTotalList?.total_received?.toString()?.length >= 10 ? '15px' : '24px'}">
                                         {{grossList?.gross_profit| number:'1.2-2'}}</p>
@@ -208,7 +208,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-6 col-12 d-flex">
-                        <div class="dash-count d-flex justify-content-center" style="margin: 0 0 10px; height: 216px;"style="background: #EDF5FF;">
+                        <div class="dash-count d-flex justify-content-center" style="margin: 0 0 10px; height: 216px;"style="background: #ffdf88;">
                             <div class="dash-counts">
                                 <div>
                                     <apx-chart [series]="netChartOptions?.series" [chart]="netChartOptions?.chart"
@@ -216,7 +216,7 @@
                                         [fill]="netChartOptions?.fill"></apx-chart>
                                 </div>
                                 <div>
-                                    <p class="card-num-p1 text-center"style="color: #2673DD;">Net Profit</p>
+                                    <p class="card-num-p1 text-center"style="color: #024259;">Net Profit</p>
                                     <p class="card-num-p2 text-center"
                                         [ngStyle]="{'font-size': saleTotalList?.total_received?.toString()?.length >= 10 ? '15px' : '24px'}">
                                         {{grossList?.net_profit| number:'1.2-2'}}</p>
