@@ -1893,4 +1893,9 @@ export class CoreService {
         let url =this.apiUrl+'/pv-api/prefix/?id=ProductionVoucher';
         return this.http.get(url)
       }
+      // product shipping charges
+      getShippingCharges(){
+        let url =this.apiUrl+'/pv-api/shipping_charges/';
+        return this.http.get(url)
+      }
 }

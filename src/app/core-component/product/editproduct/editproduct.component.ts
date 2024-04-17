@@ -104,7 +104,13 @@ export class EditproductComponent implements OnInit {
       hsncode: new FormControl('',),
       //15-1
       product_label: new FormControl('', [Validators.required]),
-      article_no:new FormControl('',)
+      article_no: new FormControl('',),
+      //16-4
+      shipping_charges: new FormControl(''),
+      weight: new FormControl(''),
+      length: new FormControl(''),
+      height: new FormControl(''),
+      breadth: new FormControl(''),
     })
 
     this.coreService.getProductById(this.id).subscribe(res => {
@@ -138,7 +144,7 @@ export class EditproductComponent implements OnInit {
           subcategory_group: res?.subcategory_group?.id,
           subcategory: res?.subcategory?.id,
           brand: res.brand?.id,
-          hsncode: res?.hsncode?res?.hsncode?.id:'',
+          hsncode: res?.hsncode ? res?.hsncode?.id : '',
           unit: res.unit.id,
           // sale_tax_including: res.sale_tax_including,
           return_time: res?.return_time,
@@ -149,8 +155,20 @@ export class EditproductComponent implements OnInit {
           //15-1
           product_label: res?.product_label?.id,
           // 05-03
-          article_no:res.article_no?res?.article_no:''
-        })
+          article_no: res.article_no ? res?.article_no : '',
+          //16-04
+          shipping_charges: res?.shipping_charges ? res.shipping_charges.id : '',
+          weight: res.weight ? res.weight : '',
+          length: res.length ? res.length : '',
+          height: res.height ? res.height : '',
+          breadth: res.breadth ? res.breadth : '',
+        });
+        if(res?.product_store=='Online' || res?.product_store=='Both'){
+          this.isOnline=true;
+          this.storeOnline(res?.product_store)
+        }else{
+          this.isOnline=false;
+        }
         this.productForm.setControl('product_features', this.udateFeature(this.editRes?.product_feature_product));
         // this.productForm.setControl('product_images', this.updateImage(this.editRes?.product_images));
         // Patch the `product_features` form array
@@ -861,7 +879,15 @@ export class EditproductComponent implements OnInit {
     formdata.append('hsncode', this.productForm.get('hsncode')?.value);
     //15-1
     formdata.append('product_label', this.productForm.get('product_label')?.value);
-    formdata.append('article_no',this.productForm.get('article_no')?.value);
+    formdata.append('article_no', this.productForm.get('article_no')?.value);
+    //16-04
+    formdata.append('shipping_charges', this.productForm.get('shipping_charges')?.value);
+    formdata.append('weight', this.productForm.get('weight')?.value);
+    formdata.append('length', this.productForm.get('length')?.value);
+    formdata.append('height', this.productForm.get('height')?.value);
+    formdata.append('breadth', this.productForm.get('breadth')?.value);
+    //end
+
     const variantsArray = this.productForm.get('variant_product') as FormArray;
     const variantsData = [];
     variantsArray.controls.forEach((variants) => {
@@ -940,7 +966,7 @@ export class EditproductComponent implements OnInit {
           this.toastr.error(res.error)
           // console.log('res api error');
         }
-      },err=>{
+      }, err => {
         this.toastr.error(err.message);
       })
 
@@ -1028,6 +1054,23 @@ export class EditproductComponent implements OnInit {
   getvariant_size(index: number) {
     return this.getVarinatsForm().controls[index].get('variant_size');
   }
+  //16-04
+  get shipping_charges() {
+    return this.productForm.get('shipping_charges');
+  }
+  get weight() {
+    return this.productForm.get('weight');
+  }
+  get length() {
+    return this.productForm.get('length');
+  }
+  get height() {
+    return this.productForm.get('height');
+  }
+  get breadth() {
+    return this.productForm.get('breadth');
+  }
+  //end
 
   currentSizes: any = [];
   currentColors: any = [];
@@ -1361,15 +1404,46 @@ export class EditproductComponent implements OnInit {
     this.productForm.markAllAsTouched();
     return this.productForm.valid;
   }
-  isOnline = false
+  isOnline = false;
   storeOnline(store: any) {
     if (store === 'Online') {
-      this.description.setValidators([Validators.required]);
       this.isOnline = true;
+      this.getShippingCharges();
+      this.description.setValidators([Validators.required]);
+      this.shipping_charges.setValidators([Validators.required]);
+      this.weight.setValidators([Validators.required]);
+      this.length.setValidators([Validators.required]);
+      this.height.setValidators([Validators.required]);
+      this.breadth.setValidators([Validators.required]);
+    } else if (store === 'Both') {
+      this.isOnline = true;
+      this.getShippingCharges();
+      this.description.setValidators([Validators.required]);
+      this.shipping_charges.setValidators([Validators.required]);
+      this.weight.setValidators([Validators.required]);
+      this.length.setValidators([Validators.required]);
+      this.height.setValidators([Validators.required]);
+      this.breadth.setValidators([Validators.required]);
     } else {
-      this.description.clearValidators();
       this.isOnline = false;
+      this.description.clearValidators();
+      this.shipping_charges.clearValidators();
+      this.weight.clearValidators();
+      this.length.clearValidators();
+      this.height.clearValidators();
+      this.breadth.clearValidators();
     }
     this.description.updateValueAndValidity();
+    this.shipping_charges.updateValueAndValidity();
+    this.weight.updateValueAndValidity();
+    this.length.updateValueAndValidity();
+    this.height.updateValueAndValidity();
+    this.breadth.updateValueAndValidity();
+  }
+  shippingChargeList: any;
+  getShippingCharges() {
+    this.coreService.getShippingCharges().subscribe((res: any) => {
+      this.shippingChargeList = res;
+    })
   }
 }

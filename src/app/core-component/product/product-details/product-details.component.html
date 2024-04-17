@@ -425,8 +425,28 @@
                                                     <td class="th">Product Store</td>
                                                     <td class="td">{{productDetail?.product_store}}</td>
                                                 </tr>
+                                                <tr *ngIf="productDetail?.product_store=='Online'|| productDetail?.product_store=='Both'">
+                                                    <td class="th">Shipping Charges</td>
+                                                    <td class="td">{{productDetail?.shipping_charges?productDetail?.shipping_charges?.title:''+'('+productDetail?.shipping_charges?productDetail?.shipping_charges?.amount:'' +')'}}</td>
+                                                </tr>
+                                                <tr *ngIf="productDetail?.product_store=='Online'|| productDetail?.product_store=='Both'">
+                                                    <td class="th">Weight</td>
+                                                    <td class="td">{{productDetail?.weight}}</td>
+                                                </tr>
+                                                <tr *ngIf="productDetail?.product_store=='Online'|| productDetail?.product_store=='Both'">
+                                                    <td class="th">Length</td>
+                                                    <td class="td">{{productDetail?.length}}</td>
+                                                </tr>
+                                                <tr *ngIf="productDetail?.product_store=='Online'|| productDetail?.product_store=='Both'">
+                                                    <td class="th">Height</td>
+                                                    <td class="td">{{productDetail?.height}}</td>
+                                                </tr>
+                                                <tr *ngIf="productDetail?.product_store=='Online'|| productDetail?.product_store=='Both'">
+                                                    <td class="th">Breadth</td>
+                                                    <td class="td">{{productDetail?.breadth}}</td>
+                                                </tr>
 
-                                                <tr>
+                                                <tr *ngIf="productDetail?.product_store=='Online'|| productDetail?.product_store=='Both'">
                                                     <td class="th">Description</td>
                                                     <td class="td">
                                                         <ul *ngIf="sho ">
@@ -444,6 +464,7 @@
                                                         </ul>
                                                     </td>
                                                 </tr>
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -611,7 +632,7 @@
                                                                 <th class="boder space-text">Max Order Quantity</th>
                                                                 <!-- <th class="boder space-text">Purchase Tax</th>
                                                                   <th class="boder space-text">Sale Tax</th> -->
-                                                                <th class="boder space-text">Discount %</th>
+                                                                <!-- <th class="boder space-text">Discount %</th> -->
                                                                 <th class="boder space-text">Additional Discount %</th>
                                                                 <!-- <th class="boder space-text">Employee_Incentive</th> -->
                                                                 <th class="boder space-text">Enable</th>
@@ -635,7 +656,7 @@
                                                                     <td class="boder">{{ batch?.max_order_quantity }} </td>
                                                                     <!-- <td class="boder">{{ batch?.purchase_tax + '%'}}</td>
                                                                         <td class="boder">{{ batch?.sale_tax + '%'}}</td> -->
-                                                                    <td class="boder">{{ batch?.discount + '%'}}</td>
+                                                                    <!-- <td class="boder">{{ batch?.discount + '%'}}</td> -->
                                                                     <td class="boder">{{ batch?.additional_discount +'%'}}</td>
                                                                     <!-- <td class="boder">{{ batch?.employee_incentive_type +' '+ batch?.employee_incentive}}</td> -->
                                                                     <td class="boder"><mat-slide-toggle (click)="batch?.is_active ? isActive(i,batch.id):Active(i,batch?.id)" [(ngModel)]="batch.is_active"></mat-slide-toggle>
