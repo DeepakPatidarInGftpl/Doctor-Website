@@ -90,8 +90,14 @@ export class AddproductComponent implements OnInit {
       product_images: this.fb.array([]),
       // 15-1
       product_label: new FormControl('', [Validators.required]),
-      article_no: new FormControl('',)
-    })
+      article_no: new FormControl('',),
+      //16-4
+      shipping_charges: new FormControl(''),
+      weight: new FormControl(''),
+      length: new FormControl(''),
+      height: new FormControl(''),
+      breadth: new FormControl(''),
+    });
 
     // add form
     // this.addFeature();
@@ -274,7 +280,7 @@ export class AddproductComponent implements OnInit {
   unitConversionList: any;
   getUnitConversion() {
     this.coreService.getunitconversion().subscribe(res => {
-      this.unitConversionList = res
+      this.unitConversionList = res;
     })
   }
 
@@ -339,7 +345,6 @@ export class AddproductComponent implements OnInit {
     })
   }
 
-
   // subcategory wise tax slab
   featureGrpBysubcatGroupList: any;
   featureData: any;
@@ -355,10 +360,8 @@ export class AddproductComponent implements OnInit {
         this.addFeature();
         this.getFeatureByFeaturegroup(this.featureGrpBysubcatGroupList.feature_group[i].id, i); // Call the function here
       }
-
       this.featureGrpBysubcatGroupList.feature_group.forEach((res, index) => {
         // console.log(res);
-
         const imageGroup = (this.productForm.get('product_features') as FormArray).at(index) as FormGroup;
         imageGroup.patchValue({
           feature_group: res.id
@@ -423,7 +426,6 @@ export class AddproductComponent implements OnInit {
     }
   }
 
-
   selectedSize = 0;
   selectedTaxes = {};
   selectedSizeId: any[] = []
@@ -481,7 +483,6 @@ export class AddproductComponent implements OnInit {
     }
   }
 
-
   loader = false
   submit() {
     // console.log(this.productForm.value);
@@ -516,7 +517,13 @@ export class AddproductComponent implements OnInit {
     // 16-2
     formdata.append('article_no', this.productForm.get('article_no')?.value);
     // end
-
+    //16-04
+    formdata.append('shipping_charges', this.productForm.get('shipping_charges')?.value);
+    formdata.append('weight', this.productForm.get('weight')?.value);
+    formdata.append('length', this.productForm.get('length')?.value);
+    formdata.append('height', this.productForm.get('height')?.value);
+    formdata.append('breadth', this.productForm.get('breadth')?.value);
+    //end
     // nested formdata 
     // working also
     // const variants = this.productForm.get('variants') as FormArray;
@@ -630,7 +637,7 @@ export class AddproductComponent implements OnInit {
         } else {
           // console.log('res api error');
         }
-      },err=>{
+      }, err => {
         this.toastr.error(err.message);
       })
     } else {
@@ -716,6 +723,23 @@ export class AddproductComponent implements OnInit {
   getvariant_size(index: number) {
     return this.getVarinatsForm().controls[index].get('variant_size');
   }
+  //16-04
+  get shipping_charges() {
+    return this.productForm.get('shipping_charges');
+  }
+  get weight() {
+    return this.productForm.get('weight');
+  }
+  get length() {
+    return this.productForm.get('length');
+  }
+  get height() {
+    return this.productForm.get('height');
+  }
+  get breadth() {
+    return this.productForm.get('breadth');
+  }
+  //end
 
   currentSizes: any = [];
   currentColors: any = [];
@@ -838,7 +862,6 @@ export class AddproductComponent implements OnInit {
     for (let i = 0; i < this.currentVariants.length; i++) {
       this.getVarinatsForm().push(this.variants());
     }
-
   }
 
 
@@ -934,12 +957,43 @@ export class AddproductComponent implements OnInit {
   isOnline = false
   storeOnline(store: any) {
     if (store === 'Online') {
-      this.description.setValidators([Validators.required]);
       this.isOnline = true;
+      this.getShippingCharges();
+      this.description.setValidators([Validators.required]);
+      this.shipping_charges.setValidators([Validators.required]);
+      this.weight.setValidators([Validators.required]);
+      this.length.setValidators([Validators.required]);
+      this.height.setValidators([Validators.required]);
+      this.breadth.setValidators([Validators.required]);
+    } else if (store === 'Both') {
+      this.isOnline = true;
+      this.getShippingCharges();
+      this.description.setValidators([Validators.required]);
+      this.shipping_charges.setValidators([Validators.required]);
+      this.weight.setValidators([Validators.required]);
+      this.length.setValidators([Validators.required]);
+      this.height.setValidators([Validators.required]);
+      this.breadth.setValidators([Validators.required]);
     } else {
-      this.description.clearValidators();
       this.isOnline = false;
+      this.description.clearValidators();
+      this.shipping_charges.clearValidators();
+      this.weight.clearValidators();
+      this.length.clearValidators();
+      this.height.clearValidators();
+      this.breadth.clearValidators(); 
     }
     this.description.updateValueAndValidity();
+    this.shipping_charges.updateValueAndValidity();
+    this.weight.updateValueAndValidity();
+    this.length.updateValueAndValidity();
+    this.height.updateValueAndValidity();
+    this.breadth.updateValueAndValidity();
+  }
+  shippingChargeList: any;
+  getShippingCharges() {
+    this.coreService.getShippingCharges().subscribe((res: any) => {
+      this.shippingChargeList = res;
+    })
   }
 } 
