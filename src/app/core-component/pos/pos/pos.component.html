@@ -185,9 +185,9 @@
                                         </td>
                                         <td>
                                             <div class="input-group pos-i-grp table-black-grp qty-input">
-                                                <span (click)="decreaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
+                                                <span (click)="decreaseQtyCurrent(cart,i)" class="input-group-text cursor-pointer-pos" id="basic-addon1">-</span>
                                                 <input type="text" value={{cart?.quantity}} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
-                                                <span (click)="increaseQtyCurrent(cart)" class="input-group-text cursor-pointer-pos" id="basic-addon1">+</span>
+                                                <span (click)="increaseQtyCurrent(cart,i)" class="input-group-text cursor-pointer-pos" id="basic-addon1">+</span>
                                             </div>
                                         </td>
                                         <td>
@@ -197,38 +197,42 @@
                                         <td>{{cart?.batch[0]?.selling_price_offline}}</td>
                                         <td>
                                             <!-- 11-04 -->
-                                            <ng-container *ngIf="isQPQ[i]">
+                                            <!-- <ng-container *ngIf="isQPQ[i]">
                                                 <select #disV (change)="selectDiscount(disV.value)">
                                                     <ng-container *ngFor="let dis of discountTyp">
-                                                        <option [value]="dis?.discount_offer_type" [selected]="dis.is_compulsory=='True'">{{dis?.discount_offer_type}}</option>
+                                                        <option [value]="dis?.discount_offer_type" [selected]="dis.is_compulsory">{{dis?.discount_offer_type}}</option>
                                                     </ng-container>
                                                 </select>
                                             </ng-container>
                                             <ng-container *ngIf="isQPP[i]">
                                                 <select #disV (change)="selectDiscount(disV.value)">
                                                     <ng-container *ngFor="let dis of discountTyp">
-                                                        <option [value]="dis?.discount_offer_type" [selected]="dis.is_compulsory=='True'">{{dis?.discount_offer_type}}</option>
+                                                        <option [value]="dis?.discount_offer_type" [selected]="dis.is_compulsory">{{dis?.discount_offer_type}}</option>
                                                     </ng-container>
                                                 </select>
                                             </ng-container>
                                             <ng-container *ngIf="!isQPP[i] || !isQPQ[i]">
                                                 <select #disV (change)="selectDiscount(disV.value)">
                                                     <ng-container *ngFor="let dis of discountTyp[i]">
-                                                        <option [value]="dis?.discount_offer_type" [selected]="dis.is_compulsory=='True'">{{dis?.discount_offer_type}}</option>
+                                                        <option [value]="dis?.discount_offer_type" [selected]="dis.is_compulsory">{{dis?.discount_offer_type}}</option>
                                                     </ng-container>
                                                 </select>
                                             </ng-container>
-                                            <!-- {{getProductDisc(cart?.batch[0])}} -->
-                                            <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch(i)"></i>
+                                            <ng-container *ngFor="let dis of discountTyp[i]"> 
+                                            </ng-container> -->
 
-                                            <div class="modal fade" id="batchModal" tabindex="-1" role="dialog"
-                                                aria-labelledby="addressModalLabel" aria-hidden="true">
+                                            <!-- {{getProductDisc(cart?.batch[0])}} -->
+                                            <ng-container *ngIf="isDiscountSelect[i]">{{selectedDiscount[i]}}</ng-container>
+
+                                            <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalDiscount(i)"></i>
+
+                                            <div class="modal fade" id="discountModal-{{i}}"  tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h1 class="modal-title fs-5" id="staticBackdropLabel">Select Discount</h1>
                                                             <button type="button" class="close"
-                                                                (click)="closeModalBatch()" aria-label="Close">
+                                                                (click)="closeModalDiscount(i)" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
@@ -250,7 +254,7 @@
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
-                                                                                <tr *ngFor="let discount of discountTyp[i];let ind=index;">
+                                                                                <tr *ngFor="let discount of discountTyp[discountCartIndex]; let ind=index;">
                                                                                     <td class="boder">{{ ind+1+'.'}}</td>
                                                                                     <td class="boder">{{ discount?.name }}</td>
                                                                                     <td class="boder">{{ discount?.discount_offer_type }}</td>
@@ -258,7 +262,7 @@
                                                                                     <td class="boder">{{ discount?.start_price}}</td>
                                                                                     <td class="boder">{{ discount?.end_price}}</td>
                                                                                     <td class="boder">{{discount?.discount_type==undefined?'-':discount?.discount_type+' '+ discount?.flat_discount==undefined?'':discount?.flat_discount}}</td>
-                                                                                    <td><button type="button"  class="btn btn-primary btn-sm" style="float: right;">Select</button> </td>
+                                                                                    <td><button type="button"  class="btn btn-primary btn-sm" style="float: right;" (click)="selectDiscount(discount,i)">Select</button> </td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
