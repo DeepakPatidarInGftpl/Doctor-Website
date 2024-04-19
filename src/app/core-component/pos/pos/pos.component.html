@@ -170,7 +170,7 @@
                                         <td>
                                             <div class="product-title-div">
                                                 <p class="product-title-cart">
-                                                    {{cart?.product?.title}} | {{cart?.variant_name}}
+                                                    {{cart?.product?.title?cart.product?.title:cart.product.name}} | {{cart?.variant_name}} 
                                                     <button class="cart-btn2 cart-btn1" data-bs-toggle="modal" data-bs-target="#productDetailsModal" (click)="setIndexForProductDetails(i)">
                                                         <i class="fas fa-info-circle"></i>
                                                     </button>
@@ -244,11 +244,11 @@
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th class="boder space-text">Sr.No.</th>
-                                                                                    <th class="boder space-text">Name</th>
+                                                                                    <th class="boder space-text">Compulsory</th>
                                                                                     <th class="boder space-text">Offer Type</th>
                                                                                     <th class="boder space-text">Free Items</th>
-                                                                                    <th class="boder space-text">Start Price</th>
-                                                                                    <th class="boder space-text">End Price</th>
+                                                                                    <th class="boder space-text">Price Range</th>
+                                                                                    <th class="boder space-text">Invoice Amount</th>
                                                                                     <th class="boder space-text">Flat Discount</th>
                                                                                     <th class="boder space-text">Action</th>
                                                                                 </tr>
@@ -256,11 +256,11 @@
                                                                             <tbody>
                                                                                 <tr *ngFor="let discount of discountTyp[discountCartIndex]; let ind=index;">
                                                                                     <td class="boder">{{ ind+1+'.'}}</td>
-                                                                                    <td class="boder">{{ discount?.name }}</td>
+                                                                                    <td class="boder">{{ discount?.is_compulsory }}</td>
                                                                                     <td class="boder">{{ discount?.discount_offer_type }}</td>
-                                                                                    <td class="boder">{{ discount?.free_items }}</td>
-                                                                                    <td class="boder">{{ discount?.start_price}}</td>
-                                                                                    <td class="boder">{{ discount?.end_price}}</td>
+                                                                                    <td class="boder">{{ discount?.free_items?.name }}</td>
+                                                                                    <td class="boder">{{ discount?.start_price?discount?.start_price:'-' +'-'+discount?.end_price?discount?.end_price:'-'}}</td>
+                                                                                    <td class="boder">{{discount?.invoice_amount?discount?.invoice_amount:'-'}}</td>
                                                                                     <td class="boder">{{discount?.discount_type==undefined?'-':discount?.discount_type+' '+ discount?.flat_discount==undefined?'':discount?.flat_discount}}</td>
                                                                                     <td><button type="button"  class="btn btn-primary btn-sm" style="float: right;" (click)="selectDiscount(discount,i)">Select</button> </td>
                                                                                 </tr>
@@ -327,9 +327,9 @@
                                         <!-- <select #discountVal (change)="selectedBatch(discountVal.value)">
                                             <option value="{{data?.discount_offer_type}}" *ngFor="let data of discountTyp">{{data?.discount_offer_type}}</option>
                                         </select> -->
-                                        <p>₹{{this.totalDiscAmount()}}</p>
-                                        <h5>Discount %</h5>
-                                       
+                                        <!-- <p>₹{{this.totalDiscAmount()}}</p> -->
+                                        <p>₹{{this.totalDiscountRupees()}}</p>
+                                        <h5>Discount </h5>
                                     </li>
                                     <li>
                                         <div class="flat-disc-wrapper">
@@ -1816,7 +1816,7 @@
                         <th>Minimum Stock Threshold</th>
                         <th>Max Order Quantity</th>
                         <th>Sale Tax</th>
-                        <th>Discount %</th>
+                        <!-- <th>Discount %</th> -->
                         <th>Additional Discount %</th>
                     </tr>
                 </thead>
@@ -1833,7 +1833,7 @@
                         <td>{{batch?.minimum_stock_threshold}}</td>
                         <td>{{batch?.max_order_quantity}}</td>
                         <td>{{batch?.sale_tax}}</td>
-                        <td>{{batch?.discount}}</td>                        
+                        <!-- <td>{{batch?.discount}}</td>                         -->
                         <td>{{batch?.additional_discount}}</td>                                                
                     </tr>
                 </tbody>
