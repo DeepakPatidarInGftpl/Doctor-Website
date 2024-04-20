@@ -66,8 +66,6 @@ export class PosCartService {
   }
 
   removeFromCurrent(item: any): void {
-    console.log(item);
-    
     const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
     if (index !== -1) {
       this.currentItems.splice(index, 1);
