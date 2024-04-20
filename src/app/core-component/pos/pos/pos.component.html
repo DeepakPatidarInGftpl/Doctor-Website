@@ -191,7 +191,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            {{cart?.batch[0]?.mrp}}
+                                            {{cart?.batch[0]?.mrp?cart?.batch[0]?.mrp:cart?.product?.mrp}}
                                             <!-- <input type="text" disabled value="{{cart?.batch[0]?.mrp}}" class="form-control mrp-input-table" aria-label="Username" aria-describedby="basic-addon1"> -->
                                         </td>
                                         <td>{{cart?.batch[0]?.selling_price_offline}}</td>
@@ -244,7 +244,6 @@
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th class="boder space-text">Sr.No.</th>
-                                                                                    <th class="boder space-text">Compulsory</th>
                                                                                     <th class="boder space-text">Offer Type</th>
                                                                                     <th class="boder space-text">Free Items</th>
                                                                                     <th class="boder space-text">Price Range</th>
@@ -256,7 +255,6 @@
                                                                             <tbody>
                                                                                 <tr *ngFor="let discount of discountTyp[discountCartIndex]; let ind=index;">
                                                                                     <td class="boder">{{ ind+1+'.'}}</td>
-                                                                                    <td class="boder">{{ discount?.is_compulsory }}</td>
                                                                                     <td class="boder">{{ discount?.discount_offer_type }}</td>
                                                                                     <td class="boder">{{ discount?.free_items?.name }}</td>
                                                                                     <td class="boder">{{ discount?.start_price?discount?.start_price:'-' +'-'+discount?.end_price?discount?.end_price:'-'}}</td>
@@ -1821,6 +1819,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <ng-container>
                     <tr *ngFor="let batch of currentProduct?.batch;let i=index">
                         <td>
                             <label>
@@ -1836,6 +1835,7 @@
                         <!-- <td>{{batch?.discount}}</td>                         -->
                         <td>{{batch?.additional_discount}}</td>                                                
                     </tr>
+                    </ng-container>
                 </tbody>
             </table>
         </div>
