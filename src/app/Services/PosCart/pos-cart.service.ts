@@ -36,6 +36,8 @@ export class PosCartService {
   }
 
   addToCurrent(item: any): void {
+    console.warn(item,'item service');
+    
     const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
 
      if (index !== -1) {
@@ -46,7 +48,6 @@ export class PosCartService {
   }
 
   increaseCurrent(item: any):void {
-    console.log(item,'item');
     const index = this.currentItems.findIndex(currentItem => currentItem.id === item.id && currentItem.batch[0].id === item.batch[0].id);
     if (index !== -1) {
       this.currentItems[index].quantity += 1;

@@ -228,11 +228,11 @@ export class PosComponent implements OnInit {
 
     this.isQPQ[0] = false;
     this.isQPP[0] = false;
-    this.isDiscountInvoice[0] = false;
-    this.isPriceRangeFreeItem[0] = false;
-    this.isPriceRange[0] = false;
-    this.isFreeItemInvoice[0] = false;
-this.isDiscountSelect[0]=false;
+    this.isDiscountSelect[0] = false;
+    this.isInvoiceFree[0] = false;
+    this.isFreePriceRange[0] = false;
+    this.isQtyPerQty[0] = false;
+    this.isQtyPerPercentage[0] = false;
     this.getExpense();
     this.getPayment();
     this.getReciept();
@@ -1042,10 +1042,10 @@ this.isDiscountSelect[0]=false;
 
   getProductTax(batch: any) {
     let originalAmount = batch.selling_price_offline;
-    let taxPercentage = batch?.sale_tax ||0;
+    let taxPercentage = batch?.sale_tax || 0;
     let discAmt = this.getProductDisc(batch);
     let addDiscAmt = this.getProductAddDisc(batch);
-    originalAmount = originalAmount - (discAmt + addDiscAmt);    
+    originalAmount = originalAmount - (discAmt + addDiscAmt);
     if (taxPercentage < 0 || originalAmount < 0) {
       return 0;
     } else {
@@ -1056,7 +1056,7 @@ this.isDiscountSelect[0]=false;
 
   getPriceAfterTaxes(batch: any) {
     let originalAmount = batch.selling_price_offline;
-    let taxPercentage = batch.sale_tax||0;
+    let taxPercentage = batch.sale_tax || 0;
     if (taxPercentage < 0 || originalAmount < 0) {
       return originalAmount;
     } else {
@@ -1067,7 +1067,7 @@ this.isDiscountSelect[0]=false;
 
   getPriceAfterTaxes2(batch: any) {
     let originalAmount = batch.selling_price_offline;
-    let taxPercentage = batch.sale_tax ||0;
+    let taxPercentage = batch.sale_tax || 0;
     let discAmt = this.getProductDisc(batch);
     let addDiscAmt = this.getProductAddDisc(batch);
     originalAmount = originalAmount - (discAmt + addDiscAmt);
@@ -1089,8 +1089,8 @@ this.isDiscountSelect[0]=false;
     let cartItems = this.cartService.getCurrentItems();
     let totalPrice = 0;
     for (let cart of cartItems) {
-      if(cart?.batch){
-      totalPrice += this.getProductTax(cart?.batch[0]) * cart?.quantity;
+      if (cart?.batch) {
+        totalPrice += this.getProductTax(cart?.batch[0]) * cart?.quantity;
       }
     }
     return Number(totalPrice).toFixed(2);
@@ -1100,8 +1100,8 @@ this.isDiscountSelect[0]=false;
     let cartItems = this.cartService.getCurrentItems();
     let totalPrice = 0;
     for (let cart of cartItems) {
-      if(cart?.batch){
-      totalPrice += (this.getProductDisc(cart?.batch[0]) + this.getProductAddDisc(cart?.batch[0])) * cart?.quantity;
+      if (cart?.batch) {
+        totalPrice += (this.getProductDisc(cart?.batch[0]) + this.getProductAddDisc(cart?.batch[0])) * cart?.quantity;
       }
     }
     return Number(totalPrice).toFixed(2);
@@ -1124,9 +1124,9 @@ this.isDiscountSelect[0]=false;
     //let cartItems = this.selectedOptions;
     let totalPrice = 0 + this.currentTotalAdditionalCharges();
     for (let cart of cartItems) {
-      if(cart?.batch){
-      // totalPrice += this.getPriceAfterTaxes(cart?.batch[0]) * cart?.quantity;
-      totalPrice += this.getNetAmount2(cart?.batch[0], cart?.quantity);
+      if (cart?.batch) {
+        // totalPrice += this.getPriceAfterTaxes(cart?.batch[0]) * cart?.quantity;
+        totalPrice += this.getNetAmount2(cart?.batch[0], cart?.quantity);
       }
     }
     return totalPrice;
@@ -1235,7 +1235,7 @@ this.isDiscountSelect[0]=false;
       ...selectedOption,
       quantity: 1,
       notes: '',
-      discount:0
+      discount: 0
     }
 
     this.addToCurrent(product1);
@@ -1332,14 +1332,14 @@ this.isDiscountSelect[0]=false;
     this.cartService.addToCurrent(product);
   }
 
-  increaseQtyCurrent(item,i:number) {
+  increaseQtyCurrent(item, i: number) {
     this.playBeepSound()
     this.cartService.increaseCurrent(item);
 
     this.discountQty(i);//11-04
   }
 
-  decreaseQtyCurrent(item,i:number) {
+  decreaseQtyCurrent(item, i: number) {
     this.playBeepSound();
     this.cartService.decreaseCurrent(item);
     this.discountQty(i); //11-04
@@ -1398,7 +1398,7 @@ this.isDiscountSelect[0]=false;
     //let cartItems = this.selectedOptions;
     let totalPrice = 0;
     for (let cart of cartItems) {
-      if(cart?.batch){
+      if (cart?.batch) {
         totalPrice += cart?.batch[0]?.mrp * cart?.quantity;
       }
     }
@@ -1419,7 +1419,7 @@ this.isDiscountSelect[0]=false;
 
   getTaxAmt(batch: any) {
     let originalAmount = batch.selling_price_offline;
-    let taxPercentage = batch.sale_tax||0;
+    let taxPercentage = batch.sale_tax || 0;
     if (taxPercentage < 0 || originalAmount < 0) {
       return 0;
     } else {
@@ -1435,8 +1435,8 @@ this.isDiscountSelect[0]=false;
     //let cartItems = this.selectedOptions;
     let totalQty = 0;
     for (let cart of cartItems) {
-      if(cart?.batch){
-      totalQty += cart?.quantity;
+      if (cart?.batch) {
+        totalQty += cart?.quantity;
       }
     }
     return totalQty;
@@ -2682,7 +2682,7 @@ this.isDiscountSelect[0]=false;
         "net_cost": Number(this.getNetAmount2(element?.batch[0], element?.quantity)).toFixed(2),
         "tax_amount": Number((this.getProductTax(element.batch[0])) * element.quantity).toFixed(2),
         "remarks": element.notes,
-        "tax_percentage": element?.batch[0]?.sale_tax||0
+        "tax_percentage": element?.batch[0]?.sale_tax || 0
       };
       cart.push(item);
     }
@@ -2744,423 +2744,690 @@ this.isDiscountSelect[0]=false;
     console.warn(this.currentBatch);
     this.discount.push(val);
     // this.allDiscount()
+
   }
 
   discountTyp: any[] = [];
-  selectedValue: any;
-  priceRange: any[] = [];
-  isPriceRange: boolean[] = [];
-  qtyPerQty: any[] = [];
-  qtyPerPercentage: any[] = [];
-  priceRangeFreeItem: any[] = [];
-  isPriceRangeFreeItem: boolean[] = [];
-  freeItemOnInvoice: any[] = [];
-  isFreeItemInvoice: boolean[] = [];
-  discountOnInvoice: any[] = [];
-  isDiscountInvoice: boolean[] = [];
-  selectedPrice: any[] = [];
-
-  isDiscountSelect:boolean[]=[];
+  isDiscountSelect: boolean[] = [];
+  isInvoiceFree: boolean[] = [];
+  isFreePriceRange: boolean[] = [];
+  isQtyPerQty: boolean[] = [];
+  isQtyPerPercentage: boolean[] = [];
+  discountInvoice: any;
+  productSelected: any;
+  freePriceProductSelected: any;
+  compulsoryDiscounts: any
   allDiscount() {
     console.log(this.discount);
-    this.discountTyp = [];
-    this.priceRange = [];
-    this.qtyPerQty = [];
-    this.qtyPerPercentage = [];
-    this.priceRangeFreeItem = [];
-    this.freeItemOnInvoice = [];
-    this.discountOnInvoice = [];
-
     this.discount.forEach((batch: any, i: number) => {
       batch?.discount.forEach((discount: any) => {
         if (!this.discountTyp[i]) {
           this.discountTyp[i] = [];
         }
         this.discountTyp[i].push(discount);
-        console.warn(this.discountTyp[i],'discount selected based on index');
+        // console.warn(this.discountTyp[i], 'discount selected based on index');
         // auto selected data of isComuplsory
-        this.discountTyp[i].forEach((element, j) => { 
-          if (element?.is_compulsory) {
-            if(element?.discount_offer_type=='Price-range-free-item'){
-              this.isDiscountSelect[i]=true;
-              this.selectedDiscount[i]='Free Item';
-              let product1 = {
-                product: {
-                  ...element?.free_items,
-                  id: element?.free_items?.id || 0,
-                  title: element?.free_items?.title || '',
-                },
-                batch: [
-                  {
-                    mrp: 0,
-                    cost_price: 0,
-                    selling_price_offline: 0,
-                    is_active: false,
-                    additional_discount: 0
-                  }
-                ],
-                variant_name: '',
-                sku: '',
-                quantity: 1,
-                notes: '',
-                discount: 0
-              }; 
-              this.addToCurrent(product1);
-              this.currentItems = this.cartService.getCurrentItems();
-              console.log(this.currentItems, 'current items');
-            }else if(element?.discount_offer_type=='Price-range-discount'){
-              this.isDiscountSelect[i]=true;
-              this.selectedDiscount[i]='Discount';
-              if(this.currentItems[i]?.batch[0]?.selling_price_offline>= parseInt(element.start_price) && this.currentItems[i]?.batch[0]?.selling_price_offline <= parseInt(element.end_price)){
-                if(element?.discount_type=='%'){
-                  console.log(this.currentItems[i]);
-                   let flatDisc= this.currentItems[i]?.batch[0]?.selling_price_offline*parseInt(element?.flat_discount)/100;
-                   console.log(flatDisc);
-                   let totalFlatDiscount=this.currentItems[i]?.batch[0]?.selling_price_offline-flatDisc;
-                   console.warn(totalFlatDiscount);
-                   this.flatDiscount[i]=totalFlatDiscount;
-                   this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
-                  console.log(this.currentItems,'current items');
-                }else{
-                      let totalFlatDiscount=this.currentItems[i]?.batch[0]?.selling_price_offline-parseInt(element?.flat_discount);
-                      console.warn(totalFlatDiscount);
-                      this.flatDiscount[i]=totalFlatDiscount;
-                      this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
-                     console.log(this.currentItems,'current items');
-                }
-              }
-            }else if(element?.discount_offer_type=='Free-item-on-invoice'){
-              this.isDiscountSelect[i]=true;
-              this.selectedDiscount[i]='Free Item Invoice';
-              let product1 = {
-                product: {
-                  ...element?.free_items,
-                  id: element?.free_items?.id || 0,
-                  title: element?.free_items?.title || '',
-                },
-                batch: [
-                  {
-                    mrp: 0,
-                    cost_price: 0,
-                    selling_price_offline: 0,
-                    is_active: false,
-                    additional_discount: 0
-                  }
-                ],
-                variant_name: '',
-                sku: '',
-                quantity: 1,
-                notes: '',
-                discount: 0
-              }; 
-              this.addToCurrent(product1);
-              this.currentItems = this.cartService.getCurrentItems();
-              console.log(this.currentItems, 'current items');
-            }else if(element?.discount_offer_type=='Discount-on-Invoice'){
-              this.isDiscountSelect[i]=true;
-              this.selectedDiscount[i]='Discount Invoice';
-            }else if(element?.discount_offer_type=='Quantity-per-percentage'){
-              this.isDiscountSelect[i]=true;
-              this.selectedDiscount[i]='Qty % Discount';
-              if(element?.discount_type=='%'){
-                console.log(this.currentItems[i]);
-                 let flatDisc= this.currentItems[i]?.batch[0]?.selling_price_offline*parseInt(element?.flat_discount)/100;
-                 console.log(flatDisc);
-                 this.flatDiscount[i]=flatDisc;
-                 let totalFlatDiscount=this.currentItems[i]?.batch[0]?.selling_price_offline-flatDisc;
-                 console.warn(totalFlatDiscount);
-                 this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
-                 this.currentItems[i].discount = flatDisc;
-                console.log(this.currentItems,'current items');
-                  }else{
-                    let totalFlatDiscount=this.currentItems[i]?.batch[0]?.selling_price_offline-parseInt(element?.flat_discount);
-                    console.warn(totalFlatDiscount);
-                    this.flatDiscount[i]=element?.flat_discount;
-                    this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
-                    this.currentItems[i].discount = element?.flat_discount;
-                   console.log(this.currentItems,'current items');
-                  }
-            }else if(element?.discount_offer_type=='Quantity-per-quantity'){
-              this.isDiscountSelect[i]=true;
-              this.selectedDiscount[i]='Qty Per Qty';
-              console.warn(element);
-              console.warn(this.currentItems[i]?.quantity);
-            if(this.currentItems[i]?.quantity>=parseInt(element?.purchase_qty)){
-              this.cartService.increaseCurrent(this.currentItems[i]);
-              console.log(parseInt(element?.purchase_qty));
-            }
-            }
-            
-          }
-        });
-        if (discount?.is_compulsory) {
-          this.selectedValue = discount;
-        } else {
-          if (batch?.is_active) { // Add your condition here
-            if (discount.discount_offer_type === 'Price-range-free-item') {
-              if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
-                // this.priceRangeFreeItem.push(discount);
-                this.isPriceRangeFreeItem[i] = true;
-                this.isPriceRange[i] = false;
-                this.isFreeItemInvoice[i] = false;
-                this.isDiscountInvoice[i] = false;
-                this.isQPQ[i] = false;
-                this.isQPP[i] = false;
-                if (!this.priceRangeFreeItem[i]) {
-                  this.priceRangeFreeItem[i] = [];
-                }
-                this.priceRangeFreeItem[i].push(discount);
-                // console.warn(this.priceRangeFreeItem, 'price range free item');
-              }
-            } else if (discount.discount_offer_type === 'Price-range-discount') {
-              if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
-                this.isPriceRange[i] = true;
-                this.isPriceRangeFreeItem[i] = false;
-                this.isFreeItemInvoice[i] = false;
-                this.isDiscountInvoice[i] = false;
-                this.isQPQ[i] = false;
-                this.isQPP[i] = false;
-                // this.priceRange.push(discount);
-                if (!this.priceRange[i]) {
-                  this.priceRange[i] = [];
-                }
-                this.priceRange[i].push(discount);
-                // console.warn(this.priceRange, 'price range discount');
-              }
-            } else if (discount.discount_offer_type === 'Free-item-on-invoice') {
-              if (batch?.mrp >= discount.invoice_amount) {
-                // this.freeItemOnInvoice.push(discount);
-                this.isFreeItemInvoice[i] = true;
-                this.isPriceRangeFreeItem[i] = false;
-                this.isPriceRange[i] = false;
-                this.isDiscountInvoice[i] = false;
-                this.isQPQ[i] = false;
-                this.isQPP[i] = false;
-                if (!this.freeItemOnInvoice[i]) {
-                  this.freeItemOnInvoice[i] = [];
-                }
-                this.freeItemOnInvoice[i].push(discount);
-                // console.warn(this.freeItemOnInvoice, 'free item on invoice');
-              }
-            } else if (discount.discount_offer_type === 'Discount-on-Invoice') {
-              if (batch?.mrp >= discount.invoice_amount) {
-                this.isDiscountInvoice[i] = true;
-                this.isPriceRangeFreeItem[i] = false;
-                this.isPriceRange[i] = false;
-                this.isFreeItemInvoice[i] = false;
-                this.isQPQ[i] = false;
-                this.isQPP[i] = false;
-                if (!this.discountOnInvoice[i]) {
-                  this.discountOnInvoice[i] = [];
-                }
-                this.discountOnInvoice[i].push(discount);
-                // this.discountOnInvoice.push(discount);
-                // console.warn(this.discountOnInvoice, 'discount on invoice');
-              }
-            } else if (discount.discount_offer_type === 'Quantity-per-percentage') {
-              if (this.totalQty() >= discount.purchase_qty) {
-                // this.qtyPerPercentage.push(discount);
-                this.isQPP[i] = true;
-                this.isDiscountInvoice[i] = false;
-                this.isPriceRangeFreeItem[i] = false;
-                this.isPriceRange[i] = false;
-                this.isFreeItemInvoice[i] = false;
-                this.isQPQ[i] = false;
-                if (!this.qtyPerPercentage[i]) {
-                  this.qtyPerPercentage[i] = [];
-                }
-                this.qtyPerPercentage[i].push(discount);
-                // console.warn(this.qtyPerPercentage, 'qty per %');
-              }
-            } else if (discount.discount_offer_type === 'Quantity-per-quantity') {
-              if (this.totalQty() >= discount.purchase_qty) {
-                this.isQPQ[i] = true;
-                this.isDiscountInvoice[i] = false;
-                this.isPriceRangeFreeItem[i] = false;
-                this.isPriceRange[i] = false;
-                this.isFreeItemInvoice[i] = false;
-                this.isQPP[i] = false;
-                // this.qtyPerQty.push(discount);
-                if (!this.qtyPerQty[i]) {
-                  this.qtyPerQty[i] = [];
-                }
-                this.qtyPerQty[i].push(discount);
-                // console.warn(this.qtyPerQty, 'qty per qty');
-              }
-            }
-          }
-        }
+        this.compulsoryDiscounts = this.discountTyp[i].filter(element => element.is_compulsory);
+        console.log(this.compulsoryDiscounts);
+        // this.discountTyp[i].forEach((element, j) => {
+        //   if (element?.is_compulsory) {
+        //     console.log(element, 'element');
+        //     if (element?.discount_offer_type == 'Price-range-free-item') {
+        //       this.isDiscountSelect[i] = true;
+        //       this.selectedDiscount[i] = 'Free Item';
+        //       if (this.currentItems[i]?.batch[0]?.selling_price_offline >= parseInt(element.start_price) && this.currentItems[i]?.batch[0]?.selling_price_offline <= parseInt(element.end_price)) {
+        //       this.isFreePriceRange[i]=true;
+        //       let product1 = {
+        //         product: {
+        //           ...element?.free_items,
+        //           id: element?.free_items?.id || 0,
+        //           title: element?.free_items?.title || '',
+        //         },
+        //         batch: [
+        //           {
+        //             mrp: 0,
+        //             cost_price: 0,
+        //             selling_price_offline: 0,
+        //             is_active: false,
+        //             additional_discount: 0,
+        //             discount: [
+        //               {
+        //                 discount_offer_type: "",
+        //                 discount_parent_id: "",
+        //                 discount_type: "",
+        //                 end_price: "",
+        //                 flat_discount: "",
+        //                 id: "",
+        //                 is_compulsory: false,
+        //                 name: "",
+        //                 start_price: ""
+        //               }
+        //             ]
+        //           }
+        //         ],
+        //         variant_name: '',
+        //         sku: '',
+        //         quantity: 1,
+        //         notes: '',
+        //         discount: 0
+        //       };
+        //       this.freePriceProductSelected=product1;
+        //     }
+        //     } else if (element?.discount_offer_type == 'Price-range-discount') {
+        //       this.isDiscountSelect[i] = true;
+        //       this.selectedDiscount[i] = 'Discount';
+        //       if (this.currentItems[i]?.batch[0]?.selling_price_offline >= parseInt(element.start_price) && this.currentItems[i]?.batch[0]?.selling_price_offline <= parseInt(element.end_price)) {
+        //         if (element?.discount_type == '%') {
+        //           // console.log(this.currentItems[i]);
+        //           let flatDisc = this.currentItems[i]?.batch[0]?.selling_price_offline * parseInt(element?.flat_discount) / 100;
+        //           // console.log(flatDisc);
+        //           let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - flatDisc;
+        //           // console.warn(totalFlatDiscount);
+        //           this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+        //           this.currentItems[i].discount = flatDisc;
+        //           // console.log(this.currentItems, 'current items');
+        //         } else {
+        //           let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - parseInt(element?.flat_discount);
+        //           // console.warn(totalFlatDiscount);
+        //           this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+        //           this.currentItems[i].discount = parseInt(element?.flat_discount);
+        //           // console.log(this.currentItems, 'current items');
+        //         }
+        //       }
+        //     } else if (element?.discount_offer_type == 'Free-item-on-invoice') {
+        //       if (this.finalAmount() >= parseInt(element?.invoice_amount)) {
+        //         this.isInvoiceFree[i]=true;
+        //       this.isDiscountSelect[i] = true;
+        //       this.selectedDiscount[i] = 'Free Item Invoice';
+        //       // console.warn(element);
+        //       let product1 = {
+        //         product: {
+        //           ...element?.free_items,
+        //           id: element?.free_items?.id || 0,
+        //           title: element?.free_items?.title || '',
+        //         },
+        //         batch: [
+        //           {
+        //             mrp: 0,
+        //             cost_price: 0,
+        //             selling_price_offline: 0,
+        //             additional_discount: 0,
+        //             discount: [
+        //               {
+        //                 discount_offer_type: "",
+        //                 discount_parent_id: "",
+        //                 discount_type: "",
+        //                 end_price: "",
+        //                 flat_discount: "",
+        //                 id: "",
+        //                 is_compulsory: false,
+        //                 name: "",
+        //                 start_price: ""
+        //               }
+        //             ]
+        //           }
+        //         ],
+        //         variant_name: '',
+        //         sku: '',
+        //         quantity: 1,
+        //         notes: '',
+        //         discount: 0
+        //       };
+        //     this.productSelected=product1;
+        //       }
+        //     } else if (element?.discount_offer_type == 'Discount-on-Invoice') {
+        //       this.isDiscountSelect[i] = true;
+        //       this.selectedDiscount[i] = 'Discount Invoice';
+        //       if (element?.discount_type == '%') {
+        //         let flatDisc = this.finalAmount() * parseInt(element?.flat_discount) / 100;
+        //         // console.log(flatDisc);
+        //         let totalFlatDiscount = this.finalAmount() - flatDisc;
+        //         // console.warn(totalFlatDiscount);
+        //         this.discountInvoice = flatDisc;
+        //       } else {
+        //         let totalFlatDiscount = this.finalAmount() - parseInt(element?.flat_discount);
+        //         // console.warn(totalFlatDiscount);
+        //         this.discountInvoice = element?.flat_discount;
+        //       }
+        //     } else if (element?.discount_offer_type == 'Quantity-per-percentage') {
+        //       this.isDiscountSelect[i] = true;
+        //       this.selectedDiscount[i] = 'Qty % Discount';
+        //       this.isQtyPerPercentage[i]=true
+        //       if (element?.discount_type == '%') {
+        //         let flatDisc = this.currentItems[i]?.batch[0]?.selling_price_offline * parseInt(element?.flat_discount) / 100;
+        //         // console.log(flatDisc);
+        //         let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - flatDisc;
+        //         // console.warn(totalFlatDiscount);
+        //         this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+        //         // this.currentItems[i].discount = flatDisc;
+        //         // console.log(this.currentItems, 'current items');
+        //       } else {
+        //         let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - parseInt(element?.flat_discount);
+        //         // console.warn(totalFlatDiscount);
+        //         this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+        //         this.currentItems[i].discount = parseInt(element?.flat_discount);
+        //         // console.log(this.currentItems, 'current items else');
+        //       }
+        //     } else if (element?.discount_offer_type == 'Quantity-per-quantity') {
+        //       this.isDiscountSelect[i] = true;
+        //       this.selectedDiscount[i] = 'Qty Per Qty';
+        //       // console.warn(element);
+        //       // console.warn(this.currentItems[i]?.quantity);
+        //       if (this.currentItems[i]?.quantity >= parseInt(element?.purchase_qty)) {
+        //         this.isQtyPerQty[i]=true;
+        //         // this.cartService.increaseCurrent(this.currentItems[i]);
+        //         // console.log(parseInt(element?.purchase_qty));
+        //       }
+        //     }
+
+        //   }
+        // });
       });
+
+      if (this.discount.length - 1 == i) {
+        const lastCompulsoryDiscount = this.compulsoryDiscounts[this.compulsoryDiscounts.length - 1];
+        console.log(lastCompulsoryDiscount);
+        if (lastCompulsoryDiscount?.is_compulsory) {
+          console.log(lastCompulsoryDiscount, 'lastCompulsoryDiscount');
+          if (lastCompulsoryDiscount?.discount_offer_type == 'Price-range-free-item') {
+            this.isDiscountSelect[i] = true;
+            this.selectedDiscount[i] = 'Free Item';
+            if (this.currentItems[i]?.batch[0]?.selling_price_offline >= parseInt(lastCompulsoryDiscount.start_price) && this.currentItems[i]?.batch[0]?.selling_price_offline <= parseInt(lastCompulsoryDiscount.end_price)) {
+              this.isFreePriceRange[i] = true;
+              let product1 = {
+                product: {
+                  ...lastCompulsoryDiscount?.free_items,
+                  id: lastCompulsoryDiscount?.free_items?.id || 0,
+                  title: lastCompulsoryDiscount?.free_items?.title || '',
+                },
+                batch: [
+                  {
+                    id: 0,
+                    mrp: 0,
+                    cost_price: 0,
+                    selling_price_offline: 0,
+                    is_active: false,
+                    additional_discount: 0,
+                    discount: [
+                      {
+                        discount_offer_type: "",
+                        discount_parent_id: "",
+                        discount_type: "",
+                        end_price: "",
+                        flat_discount: "",
+                        id: "",
+                        is_compulsory: false,
+                        name: "",
+                        start_price: ""
+                      }
+                    ]
+                  }
+                ],
+                type: 'Free Item',
+                variant_name: '',
+                sku: '',
+                id: 0,
+                quantity: 1,
+                notes: '',
+                discount: 0
+              };
+              this.freePriceProductSelected = product1;
+              this.discount.push(this.freePriceProductSelected?.batch[0]);
+              console.log(this.discount, 'discount');
+              this.addToCurrent(this.freePriceProductSelected);
+              this.currentItems = this.cartService.getCurrentItems();
+              console.log(this.currentItems, 'current items');
+            }
+          } else if (lastCompulsoryDiscount?.discount_offer_type == 'Price-range-discount') {
+            this.isDiscountSelect[i] = true;
+            this.selectedDiscount[i] = 'Discount';
+            if (this.currentItems[i]?.batch[0]?.selling_price_offline >= parseInt(lastCompulsoryDiscount.start_price) && this.currentItems[i]?.batch[0]?.selling_price_offline <= parseInt(lastCompulsoryDiscount.end_price)) {
+              if (lastCompulsoryDiscount?.discount_type == '%') {
+                // console.log(this.currentItems[i]);
+                let flatDisc = this.currentItems[i]?.batch[0]?.selling_price_offline * parseInt(lastCompulsoryDiscount?.flat_discount) / 100;
+                // console.log(flatDisc);
+                let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - flatDisc;
+                // console.warn(totalFlatDiscount);
+                this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+                this.currentItems[i].discount = flatDisc;
+                // console.log(this.currentItems, 'current items');
+              } else {
+                let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - parseInt(lastCompulsoryDiscount?.flat_discount);
+                // console.warn(totalFlatDiscount);
+                this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+                this.currentItems[i].discount = parseInt(lastCompulsoryDiscount?.flat_discount);
+                // console.log(this.currentItems, 'current items');
+              }
+            }
+          } else if (lastCompulsoryDiscount?.discount_offer_type == 'Free-item-on-invoice') {
+            this.isInvoiceFree[i] = true;
+            this.isDiscountSelect[i] = true;
+            this.selectedDiscount[i] = 'Free Item Invoice';
+            console.log(this.selectedDiscount[i]);
+            this.currentItems = this.cartService.getCurrentItems();
+            console.log(this.currentItems, 'current items');
+            if (this.finalAmount() >= parseInt(lastCompulsoryDiscount?.invoice_amount)) {
+            // console.warn(lastCompulsoryDiscount);
+            let product1 = {
+              product: {
+                ...lastCompulsoryDiscount?.free_items,
+                id: lastCompulsoryDiscount?.free_items?.id || 0,
+                title: lastCompulsoryDiscount?.free_items?.title || '',
+              },
+              batch: [
+                {
+                  id:0,
+                  mrp: 0,
+                  cost_price: 0,
+                  selling_price_offline: 0,
+                  additional_discount: 0,
+                  discount: [
+                    {
+                      discount_offer_type: "",
+                      discount_parent_id: "",
+                      discount_type: "",
+                      end_price: "",
+                      flat_discount: "",
+                      id: 0,
+                      is_compulsory: false,
+                      name: "",
+                      start_price: ""
+                    }
+                  ]
+                }
+              ],
+              type: 'Free Item Invoice',
+              variant_name: '',
+              sku: '',
+              quantity: 1,
+              id: 0,
+              notes: '',
+              discount: 0
+            };
+            this.productSelected = product1;
+            this.discount.push(this.productSelected?.batch[0]);
+            console.log(this.discount, 'discount');
+            // this.selectedDiscount[i+1] = 'Free Item'; 
+            this.addToCurrent(this.productSelected);
+              this.currentItems = this.cartService.getCurrentItems();
+              console.log(this.currentItems, 'current items');
+            }
+          } else if (lastCompulsoryDiscount?.discount_offer_type == 'Discount-on-Invoice') {
+            this.isDiscountSelect[i] = true;
+            this.selectedDiscount[i] = 'Discount Invoice';
+            if (lastCompulsoryDiscount?.discount_type == '%') {
+              let flatDisc = this.finalAmount() * parseInt(lastCompulsoryDiscount?.flat_discount) / 100;
+              // console.log(flatDisc);
+              let totalFlatDiscount = this.finalAmount() - flatDisc;
+              console.warn(totalFlatDiscount);
+              this.discountInvoice = flatDisc;
+            } else {
+              let totalFlatDiscount = this.finalAmount() - parseInt(lastCompulsoryDiscount?.flat_discount);
+              console.warn(totalFlatDiscount);
+              this.discountInvoice = parseFloat(lastCompulsoryDiscount?.flat_discount);
+            }
+          } else if (lastCompulsoryDiscount?.discount_offer_type == 'Quantity-per-percentage') {
+            this.isDiscountSelect[i] = true;
+            this.selectedDiscount[i] = 'Qty % Discount';
+            this.isQtyPerPercentage[i] = true
+            if (lastCompulsoryDiscount?.discount_type == '%') {
+              let flatDisc = this.currentItems[i]?.batch[0]?.selling_price_offline * parseInt(lastCompulsoryDiscount?.flat_discount) / 100;
+              console.log(flatDisc);
+              let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - flatDisc;
+              console.warn(totalFlatDiscount);
+              this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+              this.currentItems[i].discount = flatDisc;
+              console.log(this.currentItems, 'current items');
+            } else {
+              let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - parseInt(lastCompulsoryDiscount?.flat_discount);
+              console.warn(totalFlatDiscount);
+              this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+              this.currentItems[i].discount = parseInt(lastCompulsoryDiscount?.flat_discount);
+              console.log(this.currentItems, 'current items else');
+            }
+          } else if (lastCompulsoryDiscount?.discount_offer_type == 'Quantity-per-quantity') {
+            this.isDiscountSelect[i] = true;
+            this.selectedDiscount[i] = 'Qty Per Qty';
+            console.warn(lastCompulsoryDiscount);
+            console.warn(this.currentItems[i]?.quantity);
+            if (this.currentItems[i]?.quantity >= parseInt(lastCompulsoryDiscount?.purchase_qty)) {
+              this.isQtyPerQty[i] = true;
+              this.cartService.increaseCurrent(this.currentItems[i]);
+              console.log(parseInt(lastCompulsoryDiscount?.purchase_qty));
+            }
+          }
+
+        }
+      }
     });
+
   }
   isQPQ: boolean[] = [];
   isQPP: boolean[] = []
   discountQty(i) {
     console.log(this.discountTyp);
-    console.warn(this.discountTyp[i],'based on index discountType');
- if(this.selectDiscount){
-  if(this.selectDiscount==this.discountTyp[i]?.discount_offer_type){
-      if (this.selectedDiscount[i] == 'Quantity-per-quantity') {
-        console.warn(this.currentItems[i]?.quantity);
-        if(this.currentItems[i]?.quantity>=parseInt(this.discountTyp[i]?.purchase_qty)){
-          this.cartService.increaseCurrent(this.currentItems[i]);
-          console.log(parseInt(this.discountTyp[i]?.purchase_qty));
-        }
-      } else if (this.selectedDiscount[i] == 'Quantity-per-percentage') {
-        if(this.discountTyp[i]?.discount_type=='%'){
-          console.log(this.currentItems[i]);
-           let flatDisc= this.currentItems[i]?.batch[0]?.selling_price_offline*parseInt(this.discountTyp[i]?.flat_discount)/100;
-           console.log(flatDisc);
-           this.flatDiscount[i]=flatDisc;
-           let totalFlatDiscount=this.currentItems[i]?.batch[0]?.selling_price_offline-flatDisc;
-           console.warn(totalFlatDiscount);
-           this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
-           this.currentItems[i].discount = flatDisc;
-          console.log(this.currentItems,'current items');
-         }else{
-              let totalFlatDiscount=this.currentItems[i]?.batch[0]?.selling_price_offline-parseInt(this.discountTyp[i]?.flat_discount);
-              console.warn(totalFlatDiscount);
-              this.flatDiscount[i]=this.discountTyp[i]?.flat_discount;
-              this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
-              // let flatPer=(parseInt(this.discountTyp[i]?.flat_discount)/this.currentItems[i].batch[0].selling_price_offline)*100;
-              this.currentItems[i].discount = this.discountTyp[i]?.flat_discount;;
-             console.log(this.currentItems,'current items');
-       }
-      }
-  }
-  }
-
-  }
-
-flatDiscount:any[]=[];
-selectedDiscount:any[]=[];
-  selectDiscount(val,i) {
-    this.isDiscountSelect[i]=true;
-    console.warn(this.selectedDiscount[i]);
-    this.closeModalDiscount(i)
-    console.warn(val,'selected discount'+i);
-    if(val?.discount_offer_type=='Price-range-free-item'){
-      this.selectedDiscount[i]='Free Item';
-      if(this.currentItems[i]?.batch[0]?.selling_price_offline>= parseInt(val.start_price) && this.currentItems[i]?.batch[0]?.selling_price_offline <= parseInt(val.end_price)){ 
-      console.warn(val);
-      let product1 = {
-        product: {
-          ...val?.free_items,
-          id: val?.free_items?.id || 0,
-          title: val?.free_items?.title || '',
-        },
-        batch: [
-          {
-            mrp: 0,
-            cost_price: 0,
-            selling_price_offline: 0,
-            is_active: false,
-            additional_discount: 0
+    console.warn(this.discountTyp[i], 'based on index discountType');
+    if (this.selectDiscount) {
+      if (this.selectDiscount == this.discountTyp[i]?.discount_offer_type) {
+        if (this.selectedDiscount[i] == 'Quantity-per-quantity') {
+          console.warn(this.currentItems[i]?.quantity);
+          if (this.currentItems[i]?.quantity >= parseInt(this.discountTyp[i]?.purchase_qty)) {
+            this.cartService.increaseCurrent(this.currentItems[i]);
+            console.log(parseInt(this.discountTyp[i]?.purchase_qty));
           }
-        ],
-        variant_name: '',
-        sku: '',
-        quantity: 1,
-        notes: '',
-        discount: 0
-      }; 
-      this.addToCurrent(product1);
-      this.currentItems = this.cartService.getCurrentItems();
-      console.log(this.currentItems, 'current items');
-    }
-    }else if(val?.discount_offer_type=='Price-range-discount'){
-      this.selectedDiscount[i]='Discount';
-      if(this.currentItems[i]?.batch[0]?.selling_price_offline>= parseInt(val.start_price) && this.currentItems[i]?.batch[0]?.selling_price_offline <= parseInt(val.end_price)){
-        if(val?.discount_type=='%'){
-          console.log(this.currentItems[i]);
-           let flatDisc= this.currentItems[i]?.batch[0]?.selling_price_offline*parseInt(val?.flat_discount)/100;
-           console.log(flatDisc);
-           let totalFlatDiscount=this.currentItems[i]?.batch[0]?.selling_price_offline-flatDisc;
-           console.warn(totalFlatDiscount);
-           this.flatDiscount[i]=totalFlatDiscount;
-           this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
-          console.log(this.currentItems,'current items');
-        }else{
-              let totalFlatDiscount=this.currentItems[i]?.batch[0]?.selling_price_offline-parseInt(val?.flat_discount);
-              console.warn(totalFlatDiscount);
-              this.flatDiscount[i]=totalFlatDiscount;
-              this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
-             console.log(this.currentItems,'current items');
+        } else if (this.selectedDiscount[i] == 'Quantity-per-percentage') {
+          if (this.discountTyp[i]?.discount_type == '%') {
+            console.log(this.currentItems[i]);
+            let flatDisc = this.currentItems[i]?.batch[0]?.selling_price_offline * parseInt(this.discountTyp[i]?.flat_discount) / 100;
+            console.log(flatDisc);
+            this.flatDiscount[i] = flatDisc;
+            let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - flatDisc;
+            console.warn(totalFlatDiscount);
+            this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+            this.currentItems[i].discount = flatDisc;
+            console.log(this.currentItems, 'current items');
+          } else {
+            let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - parseInt(this.discountTyp[i]?.flat_discount);
+            console.warn(totalFlatDiscount);
+            this.flatDiscount[i] = this.discountTyp[i]?.flat_discount;
+            this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+            // let flatPer=(parseInt(this.discountTyp[i]?.flat_discount)/this.currentItems[i].batch[0].selling_price_offline)*100;
+            this.currentItems[i].discount = this.discountTyp[i]?.flat_discount;;
+            console.log(this.currentItems, 'current items');
+          }
         }
       }
-    }else if(val?.discount_offer_type=='Free-item-on-invoice'){
-      this.selectedDiscount[i]='Free Item Invoice';
-      console.warn(val);
-      let product1 = {
-         ...val,
-         quantity: 1,
-         notes: '',
-       }
-       this.addToCurrent(product1);
-       this.currentItems = this.cartService.getCurrentItems();
-       console.log(this.currentItems,'current items');
-    }else if(val?.discount_offer_type=='Discount-on-Invoice'){
-      this.selectedDiscount[i]='Discount Invoice';
-      console.warn(val);
-      let product1 = {
-         ...val,
-         quantity: 1,
-         notes: '',
-       }
-       this.addToCurrent(product1);
-       this.currentItems = this.cartService.getCurrentItems();
-       console.log(this.currentItems,'current items');
-    }else if(val?.discount_offer_type=='Quantity-per-percentage'){
-      this.selectedDiscount[i]='Qty % Discount';
-      if(val?.discount_type=='%'){
-    console.log(this.currentItems[i]);
-     let flatDisc= this.currentItems[i]?.batch[0]?.selling_price_offline*parseInt(val?.flat_discount)/100;
-     console.log(flatDisc);
-     this.flatDiscount[i]=flatDisc;
-     let totalFlatDiscount=this.currentItems[i]?.batch[0]?.selling_price_offline-flatDisc;
-     console.warn(totalFlatDiscount);
-     this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
-     this.currentItems[i].discount = flatDisc;
-    console.log(this.currentItems,'current items');
-      }else{
-        let totalFlatDiscount=this.currentItems[i]?.batch[0]?.selling_price_offline-parseInt(val?.flat_discount);
-        console.warn(totalFlatDiscount);
-        this.flatDiscount[i]=val?.flat_discount;
-        this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
-        this.currentItems[i].discount = val?.flat_discount;
-       console.log(this.currentItems,'current items');
+    }
+
+  }
+
+  flatDiscount: any[] = [];
+  selectedDiscount: any[] = [];
+  selectDiscount(val, i) {
+    this.isDiscountSelect[i] = true;
+    this.closeModalDiscount(i)
+    console.warn(val, 'selected discount' + i);
+    if (val?.discount_offer_type == 'Price-range-free-item') {
+      this.selectedDiscount[i] = 'Free Item';
+      if (this.currentItems[i]?.batch[0]?.selling_price_offline >= parseInt(val.start_price) && this.currentItems[i]?.batch[0]?.selling_price_offline <= parseInt(val.end_price)) {
+        console.warn(val);
+        let product1 = {
+          product: {
+            ...val?.free_items,
+            id: val?.free_items?.id || 0,
+            title: val?.free_items?.title || '',
+          },
+          batch: [
+            {
+              id: 0,
+              mrp: 0,
+              cost_price: 0,
+              selling_price_offline: 0,
+              is_active: false,
+              additional_discount: 0
+            }
+          ],
+          variant_name: '',
+          sku: '',
+          type: 'Free Item',
+          quantity: 1,
+          id: 0,
+          notes: '',
+          discount: 0
+        };
+        this.addToCurrent(product1);
+        this.currentItems = this.cartService.getCurrentItems();
+        console.log(this.currentItems, 'current items');
+        this.discount.push(product1?.batch[0]);
+        //remove mathing item from array
+        this.discount.forEach((dis: any) => {
+          if (dis.id == 0) {
+            this.discount = this.discount.filter(d => d.id !== 0);
+            console.log(this.discount);
+          }
+        })
+        this.currentItems.forEach((dis: any) => {
+          console.log(dis);
+          if (dis.id == 0) {
+            if (dis.type == 'Free Item Invoice')
+              this.currentItems = this.currentItems.filter(d => d.id !== 0);
+            console.log(this.currentItems);
+          } else {
+            this.currentItems = this.currentItems.filter(d => d.id !== 0);
+          }
+        });
+
       }
-    }else if(val?.discount_offer_type=='Quantity-per-quantity'){
-      this.selectedDiscount[i]='Qty Per Qty';
+    } else if (val?.discount_offer_type == 'Price-range-discount') {
+      this.selectedDiscount[i] = 'Discount';
+      if (this.currentItems[i]?.batch[0]?.selling_price_offline >= parseInt(val.start_price) && this.currentItems[i]?.batch[0]?.selling_price_offline <= parseInt(val.end_price)) {
+        if (val?.discount_type == '%') {
+          console.log(this.currentItems[i]);
+          let flatDisc = this.currentItems[i]?.batch[0]?.selling_price_offline * parseInt(val?.flat_discount) / 100;
+          console.log(flatDisc);
+          let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - flatDisc;
+          console.warn(totalFlatDiscount);
+          this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+          this.currentItems[i].discount = flatDisc;
+          console.log(this.currentItems, 'current items');
+          //remove mathing item from array
+          this.discount.forEach((dis: any) => {
+            if (dis.id == 0) {
+              this.discount = this.discount.filter(d => d.id !== 0);
+              console.log(this.discount);
+            }
+          })
+          this.currentItems.forEach((dis: any) => {
+            console.log(dis);
+            if (dis.id == 0) {
+              if (dis.type == 'Free Item Invoice')
+                this.currentItems = this.currentItems.filter(d => d.id !== 0);
+              console.log(this.currentItems);
+            } else {
+              this.currentItems = this.currentItems.filter(d => d.id !== 0);
+            }
+          });
+        } else {
+          let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - parseInt(val?.flat_discount);
+          console.warn(totalFlatDiscount);
+          this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+          this.currentItems[i].discount = parseInt(val?.flat_discount);
+          console.log(this.currentItems, 'current items');
+        }
+      }
+    } else if (val?.discount_offer_type == 'Free-item-on-invoice') {
+      this.isDiscountSelect[i] = true;
+      this.selectedDiscount[i] = 'Free Item Invoice';
+      if (this.finalAmount() >= parseInt(val?.invoice_amount)) {
+        console.warn(val);
+        let product1 = {
+          product: {
+            ...val?.free_items,
+            id: val?.free_items?.id || 0,
+            title: val?.free_items?.title || '',
+          },
+          batch: [
+            {
+              id: 0,
+              mrp: 0,
+              cost_price: 0,
+              selling_price_offline: 0,
+              is_active: false,
+              additional_discount: 0
+            }
+          ],
+          id: 0,
+          type: 'Free Item Invoice',
+          variant_name: '',
+          sku: '',
+          quantity: 1,
+          notes: '',
+          discount: 0
+        };
+        this.addToCurrent(product1);
+        this.currentItems = this.cartService.getCurrentItems();
+        this.discount.push(product1?.batch[0]);
+        console.warn(product1?.batch[0], 'batch');
+
+        //remove mathing item from array
+        this.discount.forEach((dis: any) => {
+          if (dis.id == 0) {
+            this.discount = this.discount.filter(d => d.id !== 0);
+            console.log(this.discount);
+          }
+        })
+        this.currentItems.forEach((dis: any) => {
+          console.log(dis);
+          if (dis.id == 0) {
+            if (dis.type == 'Free Item Invoice')
+              this.currentItems = this.currentItems.filter(d => d.id !== 0);
+            console.log(this.currentItems);
+          } else {
+            this.currentItems = this.currentItems.filter(d => d.id !== 0);
+          }
+        });
+
+      }
+    } else if (val?.discount_offer_type == 'Discount-on-Invoice') {
+      this.isDiscountSelect[i] = true;
+      this.selectedDiscount[i] = 'Discount Invoice';
+      console.log(val?.discount_offer_type,'discont type');
+      if (this.finalAmount() >= parseInt(val?.invoice_amount)) {
+        if (val?.discount_type == '%') {
+          let flatDisc = this.finalAmount() * parseInt(val?.flat_discount) / 100;
+          console.log(flatDisc,'flat disc');
+          let totalFlatDiscount = this.finalAmount() - flatDisc;
+          console.warn(totalFlatDiscount);
+          this.discountInvoice = flatDisc;
+          //remove mathing item from array
+          this.discount.forEach((dis: any) => {
+            console.log(dis);
+            if (dis.id == 0) {
+              this.discount = this.discount.filter(d => d.id !== 0);
+              console.log(this.discount,'discount');
+            }
+          })
+          console.warn(this.currentItems,'current item');
+          
+          this.currentItems.forEach((dis: any) => {
+            console.log(dis);
+            if (dis.id == 0) {
+              if (dis.type == 'Free Item Invoice')
+                this.currentItems = this.currentItems.filter(d => d.id !== 0);
+              console.log(this.currentItems,'current item');
+            } else {
+              this.currentItems = this.currentItems.filter(d => d.id !== 0);
+              console.log(this.currentItems,'current item');
+            }
+          });
+        } else {
+          let totalFlatDiscount = this.finalAmount() - parseInt(val?.flat_discount);
+          console.warn(totalFlatDiscount);
+          this.discountInvoice = parseInt(val?.flat_discount);
+        }
+      }
+    } else if (val?.discount_offer_type == 'Quantity-per-percentage') {
+      this.selectedDiscount[i] = 'Qty % Discount';
+      if (val?.discount_type == '%') {
+        console.log(this.currentItems[i]);
+        let flatDisc = this.currentItems[i]?.batch[0]?.selling_price_offline * parseInt(val?.flat_discount) / 100;
+        console.log(flatDisc);
+        this.flatDiscount[i] = flatDisc;
+        let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - flatDisc;
+        console.warn(totalFlatDiscount);
+        this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+        this.currentItems[i].discount = flatDisc;
+        console.log(this.currentItems, 'current items');
+        //remove mathing item from array
+        this.discount.forEach((dis: any) => {
+          if (dis.id == 0) {
+            this.discount = this.discount.filter(d => d.id !== 0);
+            console.log(this.discount);
+          }
+        })
+        this.currentItems.forEach((dis: any) => {
+          console.log(dis);
+          if (dis.id == 0) {
+            if (dis.type == 'Free Item Invoice')
+              this.currentItems = this.currentItems.filter(d => d.id !== 0);
+            console.log(this.currentItems);
+          } else {
+            this.currentItems = this.currentItems.filter(d => d.id !== 0);
+          }
+        });
+      } else {
+        let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - parseInt(val?.flat_discount);
+        console.warn(totalFlatDiscount);
+        this.flatDiscount[i] = val?.flat_discount;
+        this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
+        this.currentItems[i].discount = parseInt(val?.flat_discount);
+        console.log(this.currentItems, 'current items');
+      }
+    } else if (val?.discount_offer_type == 'Quantity-per-quantity') {
+      this.selectedDiscount[i] = 'Qty Per Qty';
       console.warn(val);
       console.warn(this.currentItems[i]?.quantity);
-    if(this.currentItems[i]?.quantity>=parseInt(val?.purchase_qty)){
-      this.cartService.increaseCurrent(this.currentItems[i]);
-      console.log(parseInt(val?.purchase_qty));
-    }
+      if (this.currentItems[i]?.quantity >= parseInt(val?.purchase_qty)) {
+        this.cartService.increaseCurrent(this.currentItems[i]);
+        console.log(parseInt(val?.purchase_qty));
+        //remove mathing item from array
+        this.discount.forEach((dis: any) => {
+          if (dis.id == 0) {
+            this.discount = this.discount.filter(d => d.id !== 0);
+            console.log(this.discount);
+          }
+        })
+        this.currentItems.forEach((dis: any) => {
+          console.log(dis);
+          if (dis.id == 0) {
+            if (dis.type == 'Free Item Invoice')
+              this.currentItems = this.currentItems.filter(d => d.id !== 0);
+            console.log(this.currentItems);
+          } else {
+            this.currentItems = this.currentItems.filter(d => d.id !== 0);
+          }
+        });
+      }
     }
   }
 
   discountCartIndex: any;
   openModalDiscount(i: number) {
-    this.discountCartIndex=i
-    const modalId = `discountModal-${i}`; 
+    this.discountCartIndex = i;
+    this.cartItems.forEach((res: any) => {
+      res.batch((res: any) => {
+
+      })
+    })
+    const modalId = `discountModal-${i}`;
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.add('show');
-        modal.style.display = 'block';
+      modal.classList.add('show');
+      modal.style.display = 'block';
     }
   }
 
-  
   closeModalDiscount(i) {
-    console.log(i, 'index');  
+    console.log(i, 'index');
     const modal = document.getElementById(`discountModal-${i}`);
     if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
+      modal.classList.remove('show');
+      modal.style.display = 'none';
     }
   }
+
+  totalDiscountRupees() {
+    let cartItems = this.cartService.getCurrentItems();
+    let totalDiscount = 0;
+    cartItems.forEach(item => {
+      totalDiscount += parseFloat(item?.discount) || 0;
+    });
+    if (this.discountInvoice) {
+      totalDiscount += this.discountInvoice;
+    }
+    return totalDiscount;
+  }
+
 }
 
 
@@ -3184,3 +3451,4 @@ export enum KEY_CODE {
   F12 = 'F12',
   UP_ARROW = 'ArrowUp'
 }
+
