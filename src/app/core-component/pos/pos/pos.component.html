@@ -257,9 +257,9 @@
                                                                                     <td class="boder">{{ ind+1+'.'}}</td>
                                                                                     <td class="boder">{{ discount?.discount_offer_type }}</td>
                                                                                     <td class="boder">{{ discount?.free_items?.name }}</td>
-                                                                                    <td class="boder">{{ discount?.start_price?discount?.start_price:'-' +'-'+discount?.end_price?discount?.end_price:'-'}}</td>
+                                                                                    <td class="boder">{{ discount?.start_price?discount?.start_price:''}} - {{discount?.end_price?discount?.end_price:''}}</td>
                                                                                     <td class="boder">{{discount?.invoice_amount?discount?.invoice_amount:'-'}}</td>
-                                                                                    <td class="boder">{{discount?.discount_type==undefined?'-':discount?.discount_type+' '+ discount?.flat_discount==undefined?'':discount?.flat_discount}}</td>
+                                                                                    <td class="boder">{{discount?.discount_type?discount.discount_type:''}} - {{ discount?.flat_discount?discount?.flat_discount:''}}</td>
                                                                                     <td><button type="button"  class="btn btn-primary btn-sm" style="float: right;" (click)="selectDiscount(discount,i)">Select</button> </td>
                                                                                 </tr>
                                                                             </tbody>
