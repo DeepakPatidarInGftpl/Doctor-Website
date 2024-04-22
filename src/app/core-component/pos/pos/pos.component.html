@@ -3,6 +3,7 @@
 
 <!-- <button (click)="addPer('add')">addd per</button>
 <button (click)="addPer('hhh')">addd per</button> -->
+
     <!-- <div class="row align-items-center pb-1">
         <div class="col-lg-9 col-sm-12 tabs_wrapper" style="width: 81%">
             <div class="top-header-left">
@@ -227,7 +228,7 @@
                                             <!-- {{getProductDisc(cart?.batch[0])}} -->
                                             <ng-container *ngIf="isDiscountSelect[i]">{{selectedDiscount[i]}}</ng-container>
 <ng-container *ngIf="cart.product.name">
-    <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalDiscount(i); freeItemBatch(cart)"></i>
+    <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalDiscount(i); freeItemBatch(cart,i)"></i>
 </ng-container>
 <ng-container *ngIf="cart.id>0">
     <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalDiscount(i)"></i>

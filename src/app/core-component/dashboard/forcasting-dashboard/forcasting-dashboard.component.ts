@@ -16,6 +16,7 @@ import {
 } from "ng-apexcharts";
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 @Component({
   selector: 'app-forcasting-dashboard',
   templateUrl: './forcasting-dashboard.component.html',
@@ -25,7 +26,7 @@ export class ForcastingDashboardComponent implements OnInit {
   @ViewChild("chart") chart: ChartComponent;
   public employeeChartOptions: Partial<any>;
   public departmentChartOptions!: Partial<any>;
-  constructor(private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService) {
+  constructor(private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService,private companyService: CompanyService) {
 
   }
   campaignOne: FormGroup;
@@ -42,7 +43,16 @@ export class ForcastingDashboardComponent implements OnInit {
   leastSellingProductForm: FormGroup;
   topEmployee: FormGroup;
   targetEmployee: FormGroup;
+  isAdmin=false;
   ngOnInit(): void {
+    this.companyService.userDetails$.subscribe((res: any) => {
+      if (res.role=='admin'){
+this.isAdmin=true;
+      }else{
+        this.isAdmin=false;
+      }
+    });
+    this.getBranch();
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
@@ -104,7 +114,9 @@ export class ForcastingDashboardComponent implements OnInit {
   }
   departMentList: any;
   getDepartmentWiseTarget() {
-    this.dashboardService.getDepartmentWiseTarget(this.departmentStartDate, this.departmentEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getDepartmentWiseTarget(this.departmentStartDate, this.departmentEndDate,idString).subscribe((res: any) => {
       this.departMentList = res;
       // apexchart    
       // this.departmentChartOptions = {
@@ -262,7 +274,9 @@ export class ForcastingDashboardComponent implements OnInit {
   }
   employeeList: any[] = [];
   getEmployeeTarget() {
-    this.dashboardService.getEmployeeTargetGraph(this.employeeStartDate, this.employeeEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getEmployeeTargetGraph(this.employeeStartDate, this.employeeEndDate,idString).subscribe((res: any) => {
       this.employeeList = res?.data;
       // apexchart    
       this.employeeChartOptions = {
@@ -337,7 +351,9 @@ export class ForcastingDashboardComponent implements OnInit {
   }
   achieveList: any[] = [];
   getAchieveTarget() {
-    this.dashboardService.getEployeeTargetAchieved(this.achieveStartDate, this.achieveEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getEployeeTargetAchieved(this.achieveStartDate, this.achieveEndDate,idString).subscribe((res: any) => {
       this.achieveList = res?.data;
     },err=>{
       //this.toastr.error(err.message);
@@ -359,7 +375,9 @@ export class ForcastingDashboardComponent implements OnInit {
   }
   top10List: any[] = [];
   getTop10Target() {
-    this.dashboardService.getEmployeeTop10(this.top10StartDate, this.top10EndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getEmployeeTop10(this.top10StartDate, this.top10EndDate,idString).subscribe((res: any) => {
       this.top10List = res?.data;
     },err=>{
       //this.toastr.error(err.message);
@@ -377,4 +395,56 @@ export class ForcastingDashboardComponent implements OnInit {
     const date = new Date(formattedDate);
     return this.datePipe.transform(date, 'dd MMM') || '';
   }
+   //get branch
+   branchList: any[] = [];
+   filteredBranchList: any[] = [];
+   searchBranch: string = '';
+   getBranch() {
+     this.dashboardService.getBranch().subscribe((res: any) => {
+       this.branchList = res;
+       this.filteredBranchList = [...this.branchList];
+     });
+   }
+   filterBranch() {
+     if (this.searchBranch.trim() === '') {
+       this.filteredBranchList = [...this.branchList];
+     } else {
+       this.filteredBranchList = this.branchList.filter(feature =>
+         feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+       );
+     }
+   }
+   // add remove branch 
+   searchVariant = ''
+   selectData: any[] = [];
+   selectedCategoryIds: any[] = []
+   SelectedBranch(variant: any,event:any) {
+     if(event){
+       console.log(variant);
+       this.selectData.push(variant)
+       console.log(this.selectData, 'selected data');
+       //close dropdown 
+       this.searchVariant = '';
+       this.getDepartmentWiseTarget();
+       this.getEmployeeTarget();
+       this.getAchieveTarget();
+       this.getTop10Target();
+     }else{
+       const selectedIndex = this.selectData.findIndex(item => item == variant);
+       console.log(selectedIndex);
+       if (selectedIndex !== -1) {
+         this.selectData.splice(selectedIndex, 1);
+         this.getDepartmentWiseTarget();
+         this.getEmployeeTarget();
+         this.getAchieveTarget();
+         this.getTop10Target();
+       }
+       console.log(this.selectData);
+     }
+   }
+     //dropdown auto close stop
+     onLabelClick(event: Event) {
+       // Prevent the event from propagating to the dropdown menu
+       event.stopPropagation();
+     }
 }

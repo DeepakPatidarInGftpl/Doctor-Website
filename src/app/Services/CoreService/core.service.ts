@@ -1754,7 +1754,7 @@ export class CoreService {
     return this.http.get<any>(url);
   }
   // /pv-api/dashboard/transaction/?start_date=2023-12-18&end_date=2023-12-27&transaction_type=Sale
-  getDashboardTransaction(start_date: any, end_date: any, transaction_type:any): Observable<any> {
+  getDashboardTransaction(start_date: any, end_date: any, transaction_type:any,branch:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/transaction/';
     const queryParams: any[] = [];
     if (start_date) {
@@ -1763,7 +1763,10 @@ export class CoreService {
       queryParams.push(`end_date=${end_date}`);
     } if(transaction_type){
       queryParams.push(`transaction_type=${transaction_type}`)
-    } if (queryParams.length > 0) {
+    } if (branch) {
+      queryParams.push(`branch=${branch}`);
+    }
+     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
