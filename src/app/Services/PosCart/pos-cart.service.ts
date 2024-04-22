@@ -267,4 +267,11 @@ export class PosCartService {
       })
     })
   }
+
+  //20-04
+  productSearch(val:any){
+    let url=this.apiUrl+'/pv-api/pos/product_search/?search=';
+    return this.http.get(`${url}${val}`)
+  }
+
 }
