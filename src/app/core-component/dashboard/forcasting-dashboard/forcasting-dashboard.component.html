@@ -7,7 +7,26 @@
     <div class="col-lg-4 col-sm-4 col-12"> 
     </div>
 </div>
-
+<div class="row">
+    <div class="col-lg-9 col-sm-6 col-12 d-flex"></div>
+    <div class="col-lg-3 col-sm-6 col-12 d-flex">
+        <div class="form-group w-100" *ngIf="isAdmin">
+            <label>Select Branch</label>
+            <div class="dropdown">
+                <button type="button" class="dropdown-toggle button" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">Select Branch</button>
+                <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                    <li> <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()" [ngModelOptions]="{standalone: true}"></li>
+                    <li><a class="dropdown-item" *ngFor="let branch of filteredBranchList let i=index;">
+                            <input type="checkbox" [value]="branch.id" [checked]="selectData.includes(branch.id)" (change)="SelectedBranch(branch.id,$event.target.checked)" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
+                            <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{branch.title}}</label>
+                    </a></li>
+                </ul>
+            </div>
+            <p *ngIf="selectData.length>0">{{selectData.length + ' Branch Selected'}}</p>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-lg-6 col-sm-12 col-12 d-flex">

@@ -16,6 +16,7 @@ import {
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
 import { TransactionsModule } from '../../transactions/transactions.module';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 @Component({
   selector: 'app-financial-dashboard',
   templateUrl: './financial-dashboard.component.html',
@@ -45,7 +46,7 @@ export class FinancialDashboardComponent implements OnInit {
     { label: 'This Financial Year', value: 'thisFinancialYear' },
     { label: 'Last Financial Year', value: 'lastFinancialYear' },
   ];
-constructor(private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService) {
+constructor(private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService,private companyService: CompanyService) {
     this.currentChart = {
       series: [
         {
@@ -160,7 +161,16 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
   recievableForm:FormGroup;
   payableForm:FormGroup;
   expenseForm:FormGroup;
+  isAdmin=false;
   ngOnInit(): void {
+    this.companyService.userDetails$.subscribe((res: any) => {
+      if (res.role=='admin'){
+this.isAdmin=true;
+      }else{
+        this.isAdmin=false;
+      }
+    });
+    this.getBranch();
     const today = new Date();
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 29);
@@ -262,7 +272,9 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
    }
    saleTotalList: any;
    getSaleTotalDashboard() {
-     this.dashboardService.getSalesNumber(this.startDate, this.endDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+     this.dashboardService.getSalesNumber(this.startDate, this.endDate,idString).subscribe((res: any) => {
        console.log(res);
        this.saleTotalList = res;
      },err=>{
@@ -283,7 +295,9 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
    }
    grossList: any;
    getGross() {
-    this.dashboardService.getGrossNetProfit(this.grossStartDate, this.grossEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getGrossNetProfit(this.grossStartDate, this.grossEndDate,idString).subscribe((res: any) => {
       console.log(res);
       this.grossList=res
       const grossProfitPercentage = res?.gross_profit_percentage || 0;
@@ -378,7 +392,9 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
   }
   resPayList: any;
   getResvsPay() {
-    this.dashboardService.getTotalRecvsPay(this.recPaystartDate, this.recPayEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getTotalRecvsPay(this.recPaystartDate, this.recPayEndDate,idString).subscribe((res: any) => {
       console.log(res);
       this.resPayList = res;
       this.chartOptions = {
@@ -506,7 +522,9 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
   }
   growthList: any;
   getGrowth() {
-    this.dashboardService.getGrowth(this.growthstartDate, this.growthEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getGrowth(this.growthstartDate, this.growthEndDate,idString).subscribe((res: any) => {
       console.log(res);
       const achievedAndForecasted = res?.["achieved and forcasted"] || [];
       const growthData = res?.growth_data || [];
@@ -597,7 +615,9 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
    }
    unPaidList: any;
    getUnpaid() {
-     this.dashboardService.getUnpaidInvoices(this.unpaidstartDate, this.unpaidEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+     this.dashboardService.getUnpaidInvoices(this.unpaidstartDate, this.unpaidEndDate,idString).subscribe((res: any) => {
        console.log(res);
        this.unPaidList = res;
      });
@@ -618,7 +638,9 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
    }
    recievableList: any;
    getRecivable() {
-     this.dashboardService.getTotalReceivables(this.recievableStartDate, this.recivableEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+     this.dashboardService.getTotalReceivables(this.recievableStartDate, this.recivableEndDate,idString).subscribe((res: any) => {
        console.log(res);
        this.recievableList = res;
      },err=>{
@@ -641,7 +663,9 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
     }
     payableList: any;
     getPayable() {
-      this.dashboardService.getTodayPayables(this.payablebleStartDate, this.payableEndDate).subscribe((res: any) => {
+      const idString = JSON.stringify(this.selectData);
+      console.log(idString);
+      this.dashboardService.getTodayPayables(this.payablebleStartDate, this.payableEndDate,idString).subscribe((res: any) => {
         console.log(res);
         this.payableList = res;
       },err=>{
@@ -664,7 +688,9 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
       }
       expenseList: any;
       getExpense() {
-        this.dashboardService.getTodayExpense(this.expenseStartDate, this.expenseEndDate).subscribe((res: any) => {
+        const idString = JSON.stringify(this.selectData);
+        console.log(idString);
+        this.dashboardService.getTodayExpense(this.expenseStartDate, this.expenseEndDate,idString).subscribe((res: any) => {
           console.log(res);
           this.expenseList = res?.data;
         },err=>{
@@ -858,4 +884,64 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
     }
   }
 
+   //get branch
+   branchList: any[] = [];
+   filteredBranchList: any[] = [];
+   searchBranch: string = '';
+   getBranch() {
+     this.dashboardService.getBranch().subscribe((res: any) => {
+       this.branchList = res;
+       this.filteredBranchList = [...this.branchList];
+     });
+   }
+   filterBranch() {
+     if (this.searchBranch.trim() === '') {
+       this.filteredBranchList = [...this.branchList];
+     } else {
+       this.filteredBranchList = this.branchList.filter(feature =>
+         feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+       );
+     }
+   }
+   // add remove branch 
+   searchVariant = ''
+   selectData: any[] = [];
+   selectedCategoryIds: any[] = []
+   SelectedBranch(variant: any,event:any) {
+     if(event){
+       console.log(variant);
+       this.selectData.push(variant)
+       console.log(this.selectData, 'selected data');
+       //close dropdown 
+       this.searchVariant = '';
+       this.getSaleTotalDashboard();
+       this.getGross();
+       this.getResvsPay();
+       this.getGrowth();
+       this.getUnpaid();
+       this.getRecivable();
+       this.getPayable();
+       this.getExpense();
+     }else{
+       const selectedIndex = this.selectData.findIndex(item => item == variant);
+       console.log(selectedIndex);
+       if (selectedIndex !== -1) {
+         this.selectData.splice(selectedIndex, 1);
+         this.getSaleTotalDashboard();
+         this.getGross();
+         this.getResvsPay();
+         this.getGrowth();
+         this.getUnpaid();
+         this.getRecivable();
+         this.getPayable();
+         this.getExpense();
+       }
+       console.log(this.selectData);
+     }
+   }
+     //dropdown auto close stop
+     onLabelClick(event: Event) {
+       // Prevent the event from propagating to the dropdown menu
+       event.stopPropagation();
+     }
 }

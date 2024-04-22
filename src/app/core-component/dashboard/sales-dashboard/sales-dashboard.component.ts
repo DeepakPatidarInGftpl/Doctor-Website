@@ -17,6 +17,7 @@ import {
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 @Component({
   selector: 'app-sales-dashboard',
   templateUrl: './sales-dashboard.component.html',
@@ -29,7 +30,7 @@ export class SalesDashboardComponent implements OnInit {
   public dailySaleChartOptions!: Partial<any>;
   public subCatSaleChartOptions!: Partial<any>;
   public inventoryChartOptions!: Partial<any>;
-  public saleTotalChartOption:Partial<any>;
+  public saleTotalChartOption: Partial<any>;
   series: ApexNonAxisChartSeries;
   labels: string[];
   plotOptions: ApexPlotOptions;
@@ -58,9 +59,9 @@ export class SalesDashboardComponent implements OnInit {
     { label: 'Last Financial Year', value: 'lastFinancialYear' },
   ];
 
-  constructor(private router:Router,private coreService: CoreService, private dashboardService: DashboardService, private datePipe: DatePipe, 
-    private zone: NgZone,private toastr: ToastrService) {
- }
+  constructor(private router: Router, private coreService: CoreService, private dashboardService: DashboardService, private datePipe: DatePipe,
+    private zone: NgZone, private toastr: ToastrService, private companyService: CompanyService) {
+  }
   campaignOne: FormGroup;
   dailySalesForm: FormGroup;
   salevsPurchaseForm: FormGroup;
@@ -70,10 +71,19 @@ export class SalesDashboardComponent implements OnInit {
   inventoryForm: FormGroup;
   customerForm: FormGroup;
   recentSaleForm: FormGroup;
-  recentAddedProductForm:FormGroup;
-  bestSellingProductForm:FormGroup;
-  leastSellingProductForm:FormGroup;
+  recentAddedProductForm: FormGroup;
+  bestSellingProductForm: FormGroup;
+  leastSellingProductForm: FormGroup;
+
+  isAdmin=false;
   ngOnInit(): void {
+    this.companyService.userDetails$.subscribe((res: any) => {
+      if (res.role=='admin'){
+this.isAdmin=true;
+      }else{
+        this.isAdmin=false;
+      }
+    });
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
@@ -153,20 +163,20 @@ export class SalesDashboardComponent implements OnInit {
     })
     this.recentProductStartDate = this.recentAddedProductForm.value?.start;
     this.recentProductEndDate = this.recentAddedProductForm.value?.end;
-        //best selliing product 
+    //best selliing product 
     this.bestSellingProductForm = new FormGroup({
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
     })
     this.bestProductStartDate = this.bestSellingProductForm.value?.start;
     this.bestProductEndDate = this.bestSellingProductForm.value?.end;
-      //least selling product 
-      this.leastSellingProductForm = new FormGroup({
-        start: new FormControl(formattedStartDate),
-        end: new FormControl(formattedToday),
-      })
-      this.leastProductStartDate = this.leastSellingProductForm.value?.start;
-      this.leastProductEndDate = this.leastSellingProductForm.value?.end;
+    //least selling product 
+    this.leastSellingProductForm = new FormGroup({
+      start: new FormControl(formattedStartDate),
+      end: new FormControl(formattedToday),
+    })
+    this.leastProductStartDate = this.leastSellingProductForm.value?.start;
+    this.leastProductEndDate = this.leastSellingProductForm.value?.end;
     // transaction form
     this.transactionForm = new FormGroup({
       start: new FormControl(formattedStartDate),
@@ -176,6 +186,7 @@ export class SalesDashboardComponent implements OnInit {
     this.transactionEndDate = this.transactionForm.value?.end;
     this.transactionType = 'Purchase';
 
+    this.getBranch(); //22-4
     this.getSaleTotalDashboard();
     this.getSalePurchaseGraph();
     this.getCustomerRetention();
@@ -209,26 +220,33 @@ export class SalesDashboardComponent implements OnInit {
   }
   saleTotalList: any;
   getSaleTotalDashboard() {
-    this.dashboardService.getSalesNumber(this.startDate, this.endDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getSalesNumber(this.startDate, this.endDate, idString).subscribe((res: any) => {
       console.log(res);
       this.saleTotalList = res;
-    // },err=>{
-    //   // this.toastr.error(err.message)
+      // },err=>{
+      //   // this.toastr.error(err.message)
     })
-    
+
   }
-  customerRetentionList:any;
+  customerRetentionList: any;
   getCustomerRetention() {
-    this.dashboardService.getCutomerRetention(this.startDate, this.endDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getCutomerRetention(this.startDate, this.endDate, idString).subscribe((res: any) => {
       console.log(res);
       this.customerRetentionList = res;
-    },err=>{
+    }, err => {
       // this.toastr.error(err.message)
     })
   }
   salePurchaseList: any;
   getSalePurchaseGraph() {
-    this.dashboardService.getTotalSalePurchase(this.startDate, this.endDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+
+    this.dashboardService.getTotalSalePurchase(this.startDate, this.endDate, idString).subscribe((res: any) => {
       console.log(res);
       this.salePurchaseList = res;
       this.saleTotalChartOption = {
@@ -243,7 +261,7 @@ export class SalesDashboardComponent implements OnInit {
           },
         },
         series: [{
-          data: [this.salePurchaseList?.loss_sale_percent,this.salePurchaseList?.profit_sales_percentage]
+          data: [this.salePurchaseList?.loss_sale_percent, this.salePurchaseList?.profit_sales_percentage]
         }],
         stroke: {
           curve: 'smooth',
@@ -284,70 +302,72 @@ export class SalesDashboardComponent implements OnInit {
   }
   dailySalesList: any[] = [];
   getDailySales() {
-    this.dashboardService.getDailySales(this.dailySalesStartDate, this.dailySalesEndDate).subscribe((res: any) => {
-    if(res?.success){
-      this.dailySalesList = res?.data;
-      // apexchart    
-      this.dailySaleChartOptions = {
-        series: [
-          { name: 'Total Sale Bill', data: this.dailySalesList.map(item => item.total_sale_bill?.toFixed(2)) },
-          { name: 'Total Purchase Bill', data: this.dailySalesList.map(item => item.total_purchase_bill?.toFixed(2)) },
-          { name: 'Total Sale Return', data: this.dailySalesList.map(item => item.total_sale_return?.toFixed(2)) },
-          { name: 'Total Purchase Return', data: this.dailySalesList.map(item => item.total_purchase_return?.toFixed(2)) }
-        ],
-        chart: {
-          type: 'bar',
-          height: 350,
-          stacked: true,
-          toolbar: {
-            show: true
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getDailySales(this.dailySalesStartDate, this.dailySalesEndDate, idString).subscribe((res: any) => {
+      if (res?.success) {
+        this.dailySalesList = res?.data;
+        // apexchart    
+        this.dailySaleChartOptions = {
+          series: [
+            { name: 'Total Sale Bill', data: this.dailySalesList.map(item => item.total_sale_bill?.toFixed(2)) },
+            { name: 'Total Purchase Bill', data: this.dailySalesList.map(item => item.total_purchase_bill?.toFixed(2)) },
+            { name: 'Total Sale Return', data: this.dailySalesList.map(item => item.total_sale_return?.toFixed(2)) },
+            { name: 'Total Purchase Return', data: this.dailySalesList.map(item => item.total_purchase_return?.toFixed(2)) }
+          ],
+          chart: {
+            type: 'bar',
+            height: 350,
+            stacked: true,
+            toolbar: {
+              show: true
+            },
+            zoom: {
+              enabled: true
+            }
           },
-          zoom: {
-            enabled: true
-          }
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              legend: {
-                position: 'bottom',
-                offsetX: -10,
-                offsetY: 0
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                legend: {
+                  position: 'bottom',
+                  offsetX: -10,
+                  offsetY: 0
+                }
               }
             }
-          }
-        ],
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            // columnWidth: '5%',
-          }
-        },
-        xaxis: {
-          type: 'category',
-          categories: this.dailySalesList.map(item => this.formatDateMonth(item.date))
-        },
-        legend: {
-          position: 'bottom',
-          offsetY: 0
-        },
-        fill: {
-          opacity: 1
-        },
-        dataLabels: {
-          enabled: false,
-          style: {
-            colors: ['#333']
+          ],
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              // columnWidth: '5%',
+            }
           },
-          offsetX: 30
-        },
-      };
-    }else{
-      this.toastr.error(res?.msg)
-    }
+          xaxis: {
+            type: 'category',
+            categories: this.dailySalesList.map(item => this.formatDateMonth(item.date))
+          },
+          legend: {
+            position: 'bottom',
+            offsetY: 0
+          },
+          fill: {
+            opacity: 1
+          },
+          dataLabels: {
+            enabled: false,
+            style: {
+              colors: ['#333']
+            },
+            offsetX: 30
+          },
+        };
+      } else {
+        this.toastr.error(res?.msg)
+      }
     })
-  
+
   }
   //end 
   //salevspurchase
@@ -365,59 +385,61 @@ export class SalesDashboardComponent implements OnInit {
   }
   salevsPurchaseList: any[] = [];
   getSalePurchaseTotalDashboard() {
-    this.dashboardService.getSalevsPurchase(this.salePurchaseStartDate, this.salePurchaseEndDate).subscribe((res: any) => {
-      if(res.success){
-      this.salevsPurchaseList = res?.data;
-      // apexchart    
-      this.chartOptions = {
-        series: [
-          { name: 'Total Sale Bill', data: this.salevsPurchaseList.map(item => item.total_sale_bill?.toFixed(2)) },
-          { name: 'Total Purchase Bill', data: this.salevsPurchaseList.map(item => item.total_purchase_bill?.toFixed(2)) },
-          { name: 'Total Sale Return', data: this.salevsPurchaseList.map(item => item.total_sale_return?.toFixed(2)) },
-          { name: 'Total Purchase Return', data: this.salevsPurchaseList.map(item => item.total_purchase_return?.toFixed(2)) }
-        ],
-        chart: {
-          type: "bar",
-          height: 350
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: "55%",
-            endingShape: "rounded"
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getSalevsPurchase(this.salePurchaseStartDate, this.salePurchaseEndDate, idString).subscribe((res: any) => {
+      if (res.success) {
+        this.salevsPurchaseList = res?.data;
+        // apexchart    
+        this.chartOptions = {
+          series: [
+            { name: 'Total Sale Bill', data: this.salevsPurchaseList.map(item => item.total_sale_bill?.toFixed(2)) },
+            { name: 'Total Purchase Bill', data: this.salevsPurchaseList.map(item => item.total_purchase_bill?.toFixed(2)) },
+            { name: 'Total Sale Return', data: this.salevsPurchaseList.map(item => item.total_sale_return?.toFixed(2)) },
+            { name: 'Total Purchase Return', data: this.salevsPurchaseList.map(item => item.total_purchase_return?.toFixed(2)) }
+          ],
+          chart: {
+            type: "bar",
+            height: 350
+          },
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: "55%",
+              endingShape: "rounded"
+            }
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            show: true,
+            width: 2,
+            colors: ["transparent"]
+          },
+          xaxis: {
+            type: 'category',
+            categories: this.salevsPurchaseList.map(item => this.formatDateMonth(item.date))
+          },
+          yaxis: {
+            // title: {
+            //   text: "$ (thousands)"
+            // }
+          },
+          fill: {
+            opacity: 1
+          },
+          tooltip: {
+            // y: {
+            //   formatter: function(val) {
+            //     return "$ " + val + " thousands";
+            //   }
+            // }
           }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ["transparent"]
-        },
-        xaxis: {
-          type: 'category',
-          categories: this.salevsPurchaseList.map(item => this.formatDateMonth(item.date))
-        },
-        yaxis: {
-          // title: {
-          //   text: "$ (thousands)"
-          // }
-        },
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          // y: {
-          //   formatter: function(val) {
-          //     return "$ " + val + " thousands";
-          //   }
-          // }
-        }
-      };
-    }else{
-      this.toastr.error(res?.msg)
-    }
+        };
+      } else {
+        this.toastr.error(res?.msg)
+      }
 
     })
   }
@@ -437,72 +459,74 @@ export class SalesDashboardComponent implements OnInit {
   }
   categoryWiseSaleList: any[] = [];
   getcategoryWiseSale() {
-    this.dashboardService.getSubCatWiseSale(this.categoryWiseSaleStartDate, this.categoryWiseSaleEndDate).subscribe((res: any) => {
-    if(res?.success){
-      this.categoryWiseSaleList = res?.data;
-      // apexchart    
-      this.categoryWiseSaleChartOptions = {
-        series: [
-          { name: 'Percentage', data: this.categoryWiseSaleList.map(item => item.percentage) },
-          { name: 'Total Sale Amount', data: this.categoryWiseSaleList.map(item => item.total_sale_amount?.toFixed(2)) },
-        ],
-        chart: {
-          type: "bar",
-          height: 350
-        },
-        plotOptions: {           
-          bar: {
-            horizontal: false,
-            columnWidth: "15%",
-            endingShape: "rounded"
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ["transparent"]
-        },
-        xaxis: {
-          type: 'category',
-          categories: this.categoryWiseSaleList.map(item => item.subcategory)
-        },
-        yaxis: [
-          {
-            title: {
-              text: "Percentage (%)"
-            },
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getSubCatWiseSale(this.categoryWiseSaleStartDate, this.categoryWiseSaleEndDate, idString).subscribe((res: any) => {
+      if (res?.success) {
+        this.categoryWiseSaleList = res?.data;
+        // apexchart    
+        this.categoryWiseSaleChartOptions = {
+          series: [
+            { name: 'Percentage', data: this.categoryWiseSaleList.map(item => item.percentage) },
+            { name: 'Total Sale Amount', data: this.categoryWiseSaleList.map(item => item.total_sale_amount?.toFixed(2)) },
+          ],
+          chart: {
+            type: "bar",
+            height: 350
           },
-          {
-            opposite: true,
-            title: {
-              text: "Total Sale Amount (₹)"
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: "15%",
+              endingShape: "rounded"
             }
-          }
-        ],
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          y: [
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            show: true,
+            width: 2,
+            colors: ["transparent"]
+          },
+          xaxis: {
+            type: 'category',
+            categories: this.categoryWiseSaleList.map(item => item.subcategory)
+          },
+          yaxis: [
             {
-              formatter: function (val) {
-                return val.toFixed(2) + " %";
-              }
+              title: {
+                text: "Percentage (%)"
+              },
             },
             {
-              formatter: function (val) {
-                return "₹ " + val.toFixed(2);
+              opposite: true,
+              title: {
+                text: "Total Sale Amount (₹)"
               }
             }
-          ]
-        }
-      };
-    }else{
-      // this.toastr.error(res.msg)
-    }
+          ],
+          fill: {
+            opacity: 1
+          },
+          tooltip: {
+            y: [
+              {
+                formatter: function (val) {
+                  return val.toFixed(2) + " %";
+                }
+              },
+              {
+                formatter: function (val) {
+                  return "₹ " + val.toFixed(2);
+                }
+              }
+            ]
+          }
+        };
+      } else {
+        // this.toastr.error(res.msg)
+      }
     }, err => {
       //this.toastr.error(err.message);
     });
@@ -523,39 +547,41 @@ export class SalesDashboardComponent implements OnInit {
   }
   subCatSaleList: any[] = [];
   getsubCatSale() {
-    this.dashboardService.getCategoryWiseSale(this.subCatSaleStartDate, this.subCatSaleEndDate).subscribe((res: any) => {
-    if(res?.success){
-      this.subCatSaleList = res?.data;
-      // apexchart    
-      this.subCatSaleChartOptions = {
-        series: this.subCatSaleList.map(item => item.percentage),
-        chart: {
-          type: "donut",
-          width: 350,
-        },
-        // labels: this.subCatSaleList.map(item => item?.subcategory),
-        labels: this.subCatSaleList.map(item => item?.category),
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 350
-              },
-              legend: {
-                position: "bottom"
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getCategoryWiseSale(this.subCatSaleStartDate, this.subCatSaleEndDate, idString).subscribe((res: any) => {
+      if (res?.success) {
+        this.subCatSaleList = res?.data;
+        // apexchart    
+        this.subCatSaleChartOptions = {
+          series: this.subCatSaleList.map(item => item.percentage),
+          chart: {
+            type: "donut",
+            width: 350,
+          },
+          // labels: this.subCatSaleList.map(item => item?.subcategory),
+          labels: this.subCatSaleList.map(item => item?.category),
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 350
+                },
+                legend: {
+                  position: "bottom"
+                }
               }
             }
-          }
-        ],
-        legend: {
-          position: 'bottom',
-          offsetY: 0
-        },
-      };
-    }else{
-      // this.toastr.error(res.msg)
-    }
+          ],
+          legend: {
+            position: 'bottom',
+            offsetY: 0
+          },
+        };
+      } else {
+        // this.toastr.error(res.msg)
+      }
       // end
     }, err => {
       //this.toastr.error(err.message);
@@ -577,53 +603,55 @@ export class SalesDashboardComponent implements OnInit {
   }
   inventoryList: any[] = [];
   getInventory() {
-    this.dashboardService.getInventory(this.inventoryStartDate, this.inventoryEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getInventory(this.inventoryStartDate, this.inventoryEndDate, idString).subscribe((res: any) => {
       const inventoryData = res?.inventory_category_percentage || {};
       const categories = Object.keys(inventoryData);
-      const values = Object.values(inventoryData);    
-    // 
-    console.log(categories);
-    
-    this.inventoryChartOptions = {
-      series: values,
-      chart: {
-        width: 350,
-        type: "donut",
-        events: {
-          dataPointSelection: (event, chartContext, config) => {
-            console.log(chartContext);
-            console.log(config);
-            console.log(categories);
-            categories.forEach((res:any,index:number)=>{
-              if(index==config?.dataPointIndex){
-                console.warn(res);
-                this.zone.run(() => {
-                  this.router.navigate(['/product/analysis/', res]);
-                });
-              }
-            })
-          }
-        }
-      },
-      labels: categories,
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 350
-            },
-            legend: {
-              position: "bottom"
+      const values = Object.values(inventoryData);
+      // 
+      console.log(categories);
+
+      this.inventoryChartOptions = {
+        series: values,
+        chart: {
+          width: 350,
+          type: "donut",
+          events: {
+            dataPointSelection: (event, chartContext, config) => {
+              console.log(chartContext);
+              console.log(config);
+              console.log(categories);
+              categories.forEach((res: any, index: number) => {
+                if (index == config?.dataPointIndex) {
+                  console.warn(res);
+                  this.zone.run(() => {
+                    this.router.navigate(['/product/analysis/', res]);
+                  });
+                }
+              })
             }
           }
-        }
-      ],
-      legend: {
-        position: 'bottom',
-        offsetY: 0
-      },
-    };
+        },
+        labels: categories,
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 350
+              },
+              legend: {
+                position: "bottom"
+              }
+            }
+          }
+        ],
+        legend: {
+          position: 'bottom',
+          offsetY: 0
+        },
+      };
 
 
     }, err => {
@@ -655,7 +683,9 @@ export class SalesDashboardComponent implements OnInit {
   }
   customerList: any[] = [];
   getcustomer() {
-    this.dashboardService.getTopCustomer(this.customerStartDate, this.customerEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getTopCustomer(this.customerStartDate, this.customerEndDate, idString).subscribe((res: any) => {
       this.customerList = res?.data;
     }, err => {
       //this.toastr.error(err.message);
@@ -663,28 +693,30 @@ export class SalesDashboardComponent implements OnInit {
   }
   //end 
 
-   //Recent sale 
-   recentSalesStartDate: any;
-   recentSalesEndDate: any;
-   getSelectedRecentSalesDates() {
-     console.log(this.recentSaleForm.value);
-     const start = this.datePipe.transform(this.recentSaleForm.value.start, 'yyyy-MM-dd');
-     const end = this.datePipe.transform(this.recentSaleForm.value.end, 'yyyy-MM-dd');
-     console.log(start);
-     console.log(end);
-     this.recentSalesStartDate = start;
-     this.recentSalesEndDate = end;
-     this.getRecentSale();
-   }
-   recentSalesList: any[] = [];
-   getRecentSale() {
-     this.dashboardService.getRecentlySales(this.customerStartDate, this.customerEndDate).subscribe((res: any) => {
-       this.recentSalesList = res?.data;
-     }, err => {
-       //this.toastr.error(err.message);
-     });
-   }
-   //end 
+  //Recent sale 
+  recentSalesStartDate: any;
+  recentSalesEndDate: any;
+  getSelectedRecentSalesDates() {
+    console.log(this.recentSaleForm.value);
+    const start = this.datePipe.transform(this.recentSaleForm.value.start, 'yyyy-MM-dd');
+    const end = this.datePipe.transform(this.recentSaleForm.value.end, 'yyyy-MM-dd');
+    console.log(start);
+    console.log(end);
+    this.recentSalesStartDate = start;
+    this.recentSalesEndDate = end;
+    this.getRecentSale();
+  }
+  recentSalesList: any[] = [];
+  getRecentSale() {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getRecentlySales(this.customerStartDate, this.customerEndDate, idString).subscribe((res: any) => {
+      this.recentSalesList = res?.data;
+    }, err => {
+      //this.toastr.error(err.message);
+    });
+  }
+  //end 
   //Recent added product 
   recentProductStartDate: any;
   recentProductEndDate: any;
@@ -700,20 +732,22 @@ export class SalesDashboardComponent implements OnInit {
   }
   recentProductList: any[] = [];
   getRecentProduct() {
-    this.dashboardService.getRecentlyAddedProduct(this.recentProductStartDate, this.recentProductEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getRecentlyAddedProduct(this.recentProductStartDate, this.recentProductEndDate, idString).subscribe((res: any) => {
       this.recentProductList = res?.data;
-      this.recentProductList.forEach((res:any,index:any)=>{
+      this.recentProductList.forEach((res: any, index: any) => {
         this.sho[index] = true;
         this.sho1[index] = false;
         this.sho2[index] = false;
       })
-     
+
     }, err => {
       //this.toastr.error(err.message);
     });
   }
 
-                                  
+
   //end 
 
   //Recent added product 
@@ -731,7 +765,9 @@ export class SalesDashboardComponent implements OnInit {
   }
   bestProductList: any[] = [];
   getbestProduct() {
-    this.dashboardService.getBestSellingProduct(this.bestProductStartDate, this.bestProductEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getBestSellingProduct(this.bestProductStartDate, this.bestProductEndDate, idString).subscribe((res: any) => {
       this.bestProductList = res?.data;
     }, err => {
       //this.toastr.error(err.message);
@@ -753,7 +789,9 @@ export class SalesDashboardComponent implements OnInit {
   }
   leastProductList: any[] = [];
   getleastProduct() {
-    this.dashboardService.getLeastSellingProduct(this.leastProductStartDate, this.leastProductEndDate).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getLeastSellingProduct(this.leastProductStartDate, this.leastProductEndDate, idString).subscribe((res: any) => {
       this.leastProductList = res?.data;
     }, err => {
       //this.toastr.error(err.message);
@@ -776,7 +814,9 @@ export class SalesDashboardComponent implements OnInit {
   }
   transactionTotalList: any[] = [];
   getTransactionTotalDashboard() {
-    this.coreService.getDashboardTransaction(this.transactionStartDate, this.transactionEndDate, this.transactionType).subscribe((res: any) => {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.coreService.getDashboardTransaction(this.transactionStartDate, this.transactionEndDate, this.transactionType, idString).subscribe((res: any) => {
       this.transactionTotalList = res?.data;
       this.transactionBarChartLabels = this.transactionTotalList.map(item => this.formatDateMonth(item.date));
       this.transactionBarChartData = [
@@ -1188,7 +1228,6 @@ export class SalesDashboardComponent implements OnInit {
     // Assuming date format is "DD/MM/YYYY"
     const [day, month, year] = dateString.split('/');
     const formattedDate = `${year}-${month}-${day}`;
-
     const date = new Date(formattedDate);
     return this.datePipe.transform(date, 'dd MMM') || '';
   }
@@ -1220,13 +1259,10 @@ export class SalesDashboardComponent implements OnInit {
     console.log(event);
     const category = event?.x?.label || ''; // Get the clicked category label
     console.log(category);
-    
     if (category) {
       this.router.navigate(['/product/analysis', category]);
     }
   }
-  
-
 
   // hide show product readmore
   sho: boolean[] = [];;
@@ -1235,12 +1271,84 @@ export class SalesDashboardComponent implements OnInit {
   hide(i: number) {
     this.sho[i] = false;
     this.sho1[i] = true;
-    console.log(this.sho[i]);  
+    console.log(this.sho[i]);
   }
   hide1(i: number) {
     this.sho[i] = true;
     this.sho1[i] = false;
   }
-  
 
+  //get branch
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.dashboardService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.getSalePurchaseGraph();
+      this.getCustomerRetention();
+      this.getSaleTotalDashboard();
+      this.getTransactionTotalDashboard();
+      this.getDailySales();
+      this.getSalePurchaseTotalDashboard();
+      this.getcategoryWiseSale();
+      this.getsubCatSale();
+      this.getInventory();
+      this.getcustomer();
+      this.getRecentSale();
+      this.getRecentProduct();
+      this.getbestProduct();
+      this.getleastProduct();
+      this.searchVariant = '';
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+        this.getSalePurchaseGraph();
+        this.getCustomerRetention();
+        this.getSaleTotalDashboard();
+        this.getTransactionTotalDashboard();
+        this.getDailySales();
+        this.getSalePurchaseTotalDashboard();
+        this.getcategoryWiseSale();
+        this.getsubCatSale();
+        this.getInventory();
+        this.getcustomer();
+        this.getRecentSale();
+        this.getRecentProduct();
+        this.getbestProduct();
+        this.getleastProduct();
+      }
+
+      console.log(this.selectData);
+    }
+  }
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
+  }
 }
