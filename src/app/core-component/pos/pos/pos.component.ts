@@ -2982,6 +2982,7 @@ export class PosComponent implements OnInit {
                         selling_price_offline: 0,
                         is_active: false,
                         additional_discount: 0,
+                        typeBatch:'Free Item',
                         discount: [
                           {
                             discount_offer_type: "",
@@ -3057,6 +3058,7 @@ export class PosComponent implements OnInit {
                         cost_price: 0,
                         selling_price_offline: 0,
                         additional_discount: 0,
+                        typeBatch:'Free Item Invoice',
                         discount: [
                           {
                             discount_offer_type: "",
@@ -3232,7 +3234,7 @@ export class PosComponent implements OnInit {
   discountTypeSelect: any[] = [];
   selectDiscount(val, i) {
     this.isDiscountSelect[i] = true;
-    this.closeModalDiscount(i)
+    this.closeModalDiscount(i);
     console.warn(val, 'selected discount' + i);
     if (val?.discount_offer_type == 'Price-range-free-item') {
       this.selectedDiscount[i] = 'Free Item';
@@ -3262,13 +3264,22 @@ export class PosComponent implements OnInit {
           if (this.discountTypeSelect[i]) {
             this.discountTypeSelect.splice(i, 1);
           }
+            //remove free item batch
+            dis.batch.forEach((batch)=>{
+              if(batch.typeBatch=='Free Item Invoice'){
+                this.removeOptionCurrent(dis)
+              }
+            });
         });
-        // const selectedIndex = this.discount.findIndex((item, i) => i === i);
-        // console.log(selectedIndex, 'selectedIndex');
-        // if (i !== -1) {
-        //   this.discount.splice(i, 1);
-        // }
-        // console.log(this.discount);
+       //remove discount
+       this.discount.forEach((res:any,i:any)=>{
+        if(res.id==0){
+          if(res.typeBatch=='Free Item Invoice'){
+            this.discount.splice(i, 1);
+          }
+        }
+       });
+      //end discount
         //add into list
         console.warn(val);
         let product1 = {
@@ -3286,6 +3297,7 @@ export class PosComponent implements OnInit {
               selling_price_offline: 0,
               is_active: false,
               additional_discount: 0,
+              typeBatch:'Free Item',
               discount: [
                 {
                   discount_offer_type: "",
@@ -3313,7 +3325,6 @@ export class PosComponent implements OnInit {
         this.currentItems = this.cartService.getCurrentItems();
         this.discount.push(product1?.batch[0]);
         console.log(this.discount, 'discount');
-
         console.log(this.currentItems[i])
         console.log(this.currentItems, 'current items')
       }
@@ -3346,7 +3357,23 @@ export class PosComponent implements OnInit {
             if (this.discountTypeSelect[i]) {
               this.discountTypeSelect.splice(i, 1);
             }
+              //remove free item batch
+          dis.batch.forEach((batch)=>{
+            if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
+              this.removeOptionCurrent(dis)
+            }
           });
+          });
+          //remove discount
+          this.discount.forEach((res:any,i:any)=>{
+            if(res.id==0){
+              if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
+                this.discount.splice(i, 1);
+              }
+            }
+           });
+          console.warn(this.discount,'discount after remove');
+          //end remove
           //add
           console.log(this.currentItems[i]);
           let flatDisc = this.currentItems[i]?.batch[0]?.selling_price_offline * parseInt(val?.flat_discount) / 100;
@@ -3356,7 +3383,6 @@ export class PosComponent implements OnInit {
           this.currentItems[i].batch[0].selling_price_offline = totalFlatDiscount;
           this.currentItems[i].discount = flatDisc;
           console.log(this.currentItems, 'current items');
-
         } else {
           //remove mathing item from array
           this.currentItems.forEach((dis: any) => {
@@ -3379,7 +3405,23 @@ export class PosComponent implements OnInit {
             if (dis.type = 'Discount Invoice') {
               this.discountInvoice = 0;
             }
+              //remove free item batch
+          dis.batch.forEach((batch)=>{
+            if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
+              this.removeOptionCurrent(dis)
+            }
           });
+          });
+            //remove discount
+            this.discount.forEach((res:any,i:any)=>{
+              if(res.id==0){
+                if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
+                  this.discount.splice(i, 1);
+                }
+              }
+             });
+            console.warn(this.discount,'discount after remove');
+            //end remove
           //add
           let totalFlatDiscount = this.currentItems[i]?.batch[0]?.selling_price_offline - parseInt(val?.flat_discount);
           console.warn(totalFlatDiscount);
@@ -3418,7 +3460,24 @@ export class PosComponent implements OnInit {
           if (this.discountTypeSelect[i]) {
             this.discountTypeSelect.splice(i, 1);
           }
+            //remove free item batch
+            dis.batch.forEach((batch)=>{
+              if(batch.typeBatch=='Free Item'){
+                this.removeOptionCurrent(dis)
+              }
+            });
         });
+          //remove discount
+          this.discount.forEach((res:any,i:any)=>{
+            if(res.id==0){
+              if(this.discount[i].typeBatch=='Free Item'){
+                this.discount.splice(i, 1);
+              }
+            }
+           });
+          console.warn(this.discount,'discount after remove');
+          //end remove
+        //end discount
         //add
         console.warn(val);
         let product1 = {
@@ -3435,14 +3494,28 @@ export class PosComponent implements OnInit {
               cost_price: 0,
               selling_price_offline: 0,
               is_active: false,
-              additional_discount: 0
+              additional_discount: 0,
+              typeBatch:'Free Item Invoice',
+              discount: [
+                {
+                  discount_offer_type: "",
+                  discount_parent_id: "",
+                  discount_type: "",
+                  end_price: "",
+                  flat_discount: "",
+                  id: 0,
+                  is_compulsory: false,
+                  name: "",
+                  start_price: ""
+                }
+              ]
             }
           ],
-          id: 0,
-          type: 'Free Item Invoice',
           variant_name: '',
           sku: '',
+          type: 'Free Item Invoice',
           quantity: 1,
+          id: 0,
           notes: '',
           discount: 0
         };
@@ -3455,36 +3528,53 @@ export class PosComponent implements OnInit {
       this.isDiscountSelect[i] = true;
       this.selectedDiscount[i] = 'Discount Invoice';
       console.log(val?.discount_offer_type, 'discont type');
+        //remove mathing item from array
+        this.currentItems.forEach((dis: any) => {
+          console.log(dis);
+          if (dis.id == 0) {
+            if (dis.type == 'Free Item Invoice')
+              // this.currentItems = this.currentItems.filter(d => d.id !== 0);
+              this.removeOptionCurrent(dis)
+            console.log(this.currentItems, 'current item');
+          } else {
+            this.currentItems = this.currentItems.filter(d => d.id !== 0);
+            console.log(this.currentItems, 'current item');
+          }
+          if (dis.discount > 0) {
+            this.currentItems[i].batch[0].selling_price_offline = this.currentItems[i].batch[0].selling_price_offline + this.currentItems[i].discount;
+            this.currentItems[i].discount = 0;
+          }
+          if (dis.quantity > 1) {
+            if (dis.type == 'Qty Per Qty') {
+              this.currentItems[i].quantity = 1;
+            }
+          }
+          if (dis.type = 'Discount Invoice') {
+            this.discountInvoice = 0;
+          }
+          if (this.discountTypeSelect[i]) {
+            this.discountTypeSelect.splice(i, 1);
+          }
+            //remove free item batch
+        dis.batch.forEach((batch)=>{
+          if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
+            this.removeOptionCurrent(dis)
+          }
+        });
+        });
+        console.warn(this.currentItems,'discount after remove');
+         //remove discount
+         this.discount.forEach((res:any,i:any)=>{
+          if(res.id==0){
+            if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
+              this.discount.splice(i, 1);
+            }
+          }
+         });
+        console.warn(this.discount,'discount after remove');
+        //end remove
       if (this.finalAmount() >= parseInt(val?.invoice_amount)) {
-        if (val?.discount_type == '%') {
-          //remove mathing item from array
-          this.currentItems.forEach((dis: any) => {
-            console.log(dis);
-            if (dis.id == 0) {
-              if (dis.type == 'Free Item Invoice')
-                // this.currentItems = this.currentItems.filter(d => d.id !== 0);
-                this.removeOptionCurrent(dis)
-              console.log(this.currentItems, 'current item');
-            } else {
-              this.currentItems = this.currentItems.filter(d => d.id !== 0);
-              console.log(this.currentItems, 'current item');
-            }
-            if (dis.discount > 0) {
-              this.currentItems[i].batch[0].selling_price_offline = this.currentItems[i].batch[0].selling_price_offline + this.currentItems[i].discount;
-              this.currentItems[i].discount = 0;
-            }
-            if (dis.quantity > 1) {
-              if (dis.type == 'Qty Per Qty') {
-                this.currentItems[i].quantity = 1;
-              }
-            }
-            if (dis.type = 'Discount Invoice') {
-              this.discountInvoice = 0;
-            }
-            if (this.discountTypeSelect[i]) {
-              this.discountTypeSelect.splice(i, 1);
-            }
-          });
+        if (val?.discount_type == '%') {    
           // add
           let flatDisc = this.finalAmount() * parseInt(val?.flat_discount) / 100;
           console.log(flatDisc, 'flat disc');
@@ -3494,35 +3584,6 @@ export class PosComponent implements OnInit {
           this.currentItems[i].type = 'Discount Invoice';
         } else {
           let totalFlatDiscount = this.finalAmount() - parseInt(val?.flat_discount);
-          //remove mathing item from array
-          this.currentItems.forEach((dis: any) => {
-            console.log(dis);
-            if (dis.id == 0) {
-              if (dis.type == 'Free Item Invoice') {
-                // this.currentItems = this.currentItems.filter(d => d.id !== 0);
-                this.removeOptionCurrent(dis)
-                console.log(this.currentItems, 'current item');
-              }
-            } else {
-              this.currentItems = this.currentItems.filter(d => d.id !== 0);
-              console.log(this.currentItems, 'current item');
-            }
-            if (dis.discount > 0) {
-              this.currentItems[i].batch[0].selling_price_offline = this.currentItems[i].batch[0].selling_price_offline + this.currentItems[i].discount;
-              this.currentItems[i].discount = 0;
-            }
-            if (dis.quantity > 1) {
-              if (dis.type == 'Qty Per Qty') {
-                this.currentItems[i].quantity = 1;
-              }
-            }
-            if (dis.type = 'Discount Invoice') {
-              this.discountInvoice = 0;
-            }
-            if (this.discountTypeSelect[i]) {
-              this.discountTypeSelect.splice(i, 1);
-            }
-          });
           //add
           console.warn(totalFlatDiscount);
           this.discountInvoice = parseInt(val?.flat_discount);
@@ -3558,7 +3619,25 @@ export class PosComponent implements OnInit {
           if (dis.type = 'Discount Invoice') {
             this.discountInvoice = 0;
           }
+          //remove free item batch
+          dis.batch.forEach((batch)=>{
+            console.log(batch);
+            if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
+              console.log(batch);
+              this.removeOptionCurrent(dis)
+            }
+          });
         });
+        //remove discount
+        this.discount.forEach((res:any,i:any)=>{
+          if(res.id==0){
+            if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
+              this.discount.splice(i, 1);
+            }
+          }
+         });
+        console.warn(this.discount,'discount after remove');
+        //end remove
         //add
         console.log(this.currentItems[i]);
         let flatDisc = this.currentItems[i]?.batch[0]?.selling_price_offline * parseInt(val?.flat_discount) / 100;
@@ -3596,8 +3675,23 @@ export class PosComponent implements OnInit {
           if (dis.type = 'Discount Invoice') {
             this.discountInvoice = 0;
           }
-
+        //remove free item batch
+          dis.batch.forEach((batch)=>{
+            if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
+              this.removeOptionCurrent(dis)
+            }
+          });
         });
+        //remove discount
+        this.discount.forEach((res:any,i:any)=>{
+          if(res.id==0){
+            if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
+              this.discount.splice(i, 1);
+            }
+          }
+         });
+        console.warn(this.discount,'discount after remove');
+        //end remove
         //add
         console.warn(totalFlatDiscount);
         this.flatDiscount[i] = val?.flat_discount;
@@ -3610,9 +3704,8 @@ export class PosComponent implements OnInit {
       console.warn(val);
       console.warn(this.currentItems[i]?.quantity);
       this.discountTypeSelect.push(val);
-      if (this.currentItems[i]?.quantity >= parseInt(val?.purchase_qty)) {
-        //remove mathing item from array
-        this.currentItems.forEach((dis: any) => {
+         //remove mathing item from array
+         this.currentItems.forEach((dis: any) => {
           console.log(dis);
           if (dis.id == 0) {
             if (dis.type == 'Free Item Invoice') {
@@ -3636,8 +3729,26 @@ export class PosComponent implements OnInit {
           if (dis.type = 'Discount Invoice') {
             this.discountInvoice = 0;
           }
-
+  //remove free item batch
+  dis.batch.forEach((batch)=>{
+    if(batch.typeBatch=='Free Item' || batch.typeBatch=='Free Item Invoice'){
+      this.removeOptionCurrent(dis)
+    }
+  });
+  console.log(this.currentItems,'currentItems');
+  
         });
+        //remove discount
+        this.discount.forEach((res:any,i:any)=>{
+          if(res.id==0){
+            if(this.discount[i].typeBatch=='Free Item' || this.discount[i].typeBatch=='Free Item Invoice'){
+              this.discount.splice(i, 1);
+            }
+          }
+         });
+        console.warn(this.discount,'discount after remove');
+        //end remove
+      if (this.currentItems[i]?.quantity >= parseInt(val?.purchase_qty)) {
         //add
         this.cartService.increaseCurrent(this.currentItems[i]);
         this.currentItems[i].type = 'Qty Per Qty';
@@ -3647,11 +3758,17 @@ export class PosComponent implements OnInit {
   }
   // free item qty
   freeItemBatch(cart, i) {
-    console.warn(cart + 'index=>' + i);
+    console.warn(cart);
+    console.warn('index=>' + i);
+    console.log(this.discount[i], 'discount');
+    console.log(this.discount[i].discount, 'discount');
+    if(this.discount[i].discount[0].id==0){
     this.cartService.productSearch(cart.product.sku).subscribe((res: any) => {
-      console.warn(res, 'search result');
+      if(res.length>0){
+      console.warn(res[0].batch[0]?.discount, 'search result');
+      console.log(this.discount[i]?.discount, 'discount batch');
       console.log(this.discount[i], 'discount');
-      this.discount[i] = res[0].batch[0]; // store value into it
+      this.discount[i].discount = res[0].batch[0]?.discount; // store value into it
       console.log(this.discount, 'discount');
       // push value in discountType
       this.discount.forEach((batch: any, i: any) => {
@@ -3663,8 +3780,9 @@ export class PosComponent implements OnInit {
           console.log(this.discountTyp[i]);
         });
       });
-
+    }
     });
+  }
   }
   //end
   discountCartIndex: any;
