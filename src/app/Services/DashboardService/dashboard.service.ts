@@ -462,4 +462,22 @@ export class DashboardService {
     let url = this.apiUrl + '/pv-api/branch/';
     return this.http.get(url)
   }
+
+// daybook day close
+//- /api/reports/profit_and_loss/?start_date=2023-01-01&end_date=2024-01-01
+
+getDayBook(start_date: any, end_date: any,): Observable<any> {
+  let url = this.apiUrl + '/api/reports/profit_and_loss/';
+  const queryParams: any[] = [];
+  if (start_date) {
+    queryParams.push(`start_date=${start_date}`);
+  }
+  if (end_date) {
+    queryParams.push(`end_date=${end_date}`);
+  }
+  if (queryParams.length > 0) {
+    url += '?' + queryParams.join('&');
+  }
+  return this.http.get<any>(url);
+}
 }
