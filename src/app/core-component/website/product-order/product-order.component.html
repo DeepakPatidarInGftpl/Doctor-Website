@@ -1,7 +1,7 @@
 <div class="page-header">
     <div class="page-title">
-        <h4 class="titl">Product Order list</h4>
-        <h6>View/Search Product Order</h6>
+        <h4 class="titl">Order list</h4>
+        <h6>View/Search Order</h6>
     </div> 
 </div>
 
@@ -54,6 +54,9 @@
                             <i class="fa fa-sort"></i>
                         </th>
                         <th (click)="sort('id')" class="thone tdd">Sr. No.<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Status<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">User<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone tdd">Address Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone tdd">Title<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone tdd">Payment Type<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone tdd">Payment Status<i class="fa fa-sort"></i></th>
@@ -63,7 +66,6 @@
                         <th (click)="sort('id')" class="thone tdd">Final Amount <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone tdd">Couopn Discount %<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone tdd">Address Type<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Status<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone tdd">Order Date<i class="fa fa-sort"></i></th>
                         <!-- <th (click)="sort('id')" class="thone tdd">Accepted At<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone tdd">Cancel At <i class="fa fa-sort"></i></th>
@@ -73,8 +75,7 @@
                     </tr>
                 </thead>
                 <tbody *ngIf="tableData?.length>=0">
-                    <tr
-                        *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                    <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -83,17 +84,21 @@
                         </td>
                         <td>{{i+1}}</td>
                         <td class="productimgname">
-                            <a routerLink="//website/productOrder/{{products.id}}" style="line-height: 3;">{{products?.carts[0]?.product?.title}}</a>
+                            <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 3;"><span [ngClass]="{'bg-lightgreen': products?.status === 'Accepted','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Delivered', 'bg-lightgray': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' || 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                        </td>
+                        <td>{{products?.user?.username+''+products?.user?.user_type+''+products?.user?.phone_number}}</td>
+                        <td>{{products?.address_type}}</td>
+                        <td>
+                            <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 3;">{{products?.carts[0]?.product?.title}}</a>
                         </td>
                         <td>{{products?.payment_type}}</td>
-                       <td>{{products?.payment_status}}</td> 
+                        <td>{{products?.payment_status}}</td> 
                         <td>{{products?.sub_total_amount}}</td>
                         <td>{{products?.total_discount}}</td>
                         <td>{{products?.final_amount}}</td>
                         <td>{{products?.couopn_discount}}</td>
                         <td>{{products?.total_amount}}</td>
-                        <td>{{products.address_type}}</td>
-                        <td>{{products?.status}}</td>
+                        <td>{{products.address_type}}</td> 
                        <td>{{products?.order_date |date}}</td>
                        <!-- <td>{{products?.accepted_at |date}}</td>
                        <td>{{products?.cancel_date |date}}</td>
@@ -103,7 +108,7 @@
                             <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
                         </td> -->
                         <td>
-                            <a class="me-1" routerLink="//website/productOrder/{{products.id}}">
+                            <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">
                             </a>
                             <!-- <a class="me-1" routerLink="//contacts/updateDealer/{{products.id}}" *ngIf="isEdit">

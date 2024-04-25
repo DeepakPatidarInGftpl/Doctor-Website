@@ -322,4 +322,14 @@ export class WebsiteService {
     let url =this.apiUrl+'/pv-api/website_orders_dashboard/?id=';
     return this.http.get(`${url}${id}`)
   }
+
+  // get branch
+  addAcceptOrder(data:any){
+    let url = this.apiUrl+'/pv-api/order_accepted/';
+    return this.http.post(url,data)
+  }
+  rejectOrder(id:any){
+    let url = this.apiUrl+'/pv-api/order_rejected/?id=';
+    return this.http.post(`${url}${id}`,'')
+  }
 }

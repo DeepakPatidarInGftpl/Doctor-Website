@@ -26,8 +26,8 @@ const routes: Routes = [
       { path: 'aboutFooterBanner', loadChildren: () => import('./about-footer-banner/about-footer-banner.module').then((m) => m.AboutFooterBannerModule) },
       { path: 'newArrivalBanner', loadChildren: () => import('./new-arrival-banner/new-arrival-banner.module').then((m) => m.NewArrivalBannerModule) },
       { path: 'ratingAndReview', loadChildren: () => import('./rating-and-review/rating-and-review.module').then((m) => m.RatingAndReviewModule) },
-      { path: 'productOrder', loadChildren: () => import('./product-order/product-order.module').then((m) => m.ProductOrderModule) },
-      { path: 'productOrder/:id', loadChildren: () => import('./product-order-details/product-order-details.module').then((m) => m.ProductOrderDetailsModule) },
+      { path: 'order', loadChildren: () => import('./product-order/product-order.module').then((m) => m.ProductOrderModule) },
+      { path: 'order-detail/:id', loadChildren: () => import('./product-order-details/product-order-details.module').then((m) => m.ProductOrderDetailsModule) },
 
       // 
       { path: 'bannerDetails/:id', loadChildren: () => import('./banner-details/banner-details.module').then((m) => m.BannerDetailsModule ) },
