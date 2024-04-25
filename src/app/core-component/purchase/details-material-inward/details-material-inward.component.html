@@ -364,9 +364,8 @@
                                         <p>Status : <span
                                                 [ngClass]="{'bg-lightgreen': materialDetail?.status === 'Completed', 'bg-lightred' : materialDetail?.status === 'Inprogress','bg-lightyellow' : materialDetail?.status === 'Draft'}"
                                                 class="badges">{{materialDetail?.status}}</span></p>
-                                        <p class="mx-3">Export: <span
-                                                [ngClass]="{'bg-lightgreen': materialDetail?.export === true, 'bg-lightred' : materialDetail?.export === false,'bg-lightyellow' : materialDetail?.is_active === 'Partial' }"
-                                                class="badges">{{materialDetail?.is_active}}</span> </p>
+                                        <!-- <p class="mx-3">Export: <span [ngClass]="{'bg-lightgreen': materialDetail?.export === true, 'bg-lightred' : materialDetail?.export === false,'bg-lightyellow' : materialDetail?.is_active === 'Partial' }"
+                                                class="badges">{{materialDetail?.is_active}}</span> </p> -->
                                     </div>
 
                                     <div class="pdf-footer">
