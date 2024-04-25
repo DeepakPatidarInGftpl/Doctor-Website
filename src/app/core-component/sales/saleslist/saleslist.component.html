@@ -135,7 +135,7 @@
                         <th (click)="sort('id')" class="thone">Due Date <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Estimate<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Total<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
+                        <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                         <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
@@ -159,11 +159,10 @@
                         <td>{{products.due_date}}</td>
                         <td>{{products?.estimate?.estimate_no}}</td>
                         <td>{{products?.total}}</td>
-                        <td>
-                            <mat-slide-toggle
-                                (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
+                        <!-- <td>
+                            <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)"
                                 [(ngModel)]="products.is_active"></mat-slide-toggle>
-                        </td>
+                        </td> -->
                         <td>
                             <a class="me-1" routerLink="//sales/sales-details/{{products.id}}">
                                 <img src="assets/img/icons/eye.svg" alt="img">

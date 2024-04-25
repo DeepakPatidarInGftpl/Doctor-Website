@@ -368,9 +368,8 @@
                                         <p><strong>Status : </strong><span
                                             [ngClass]="{'bg-lightgreen': BillDetail?.status === 'Complete', 'bg-lightred' : BillDetail?.status === 'Pending','bg-lightyellow' : BillDetail?.status === 'Draft'}"
                                             class="badges">{{BillDetail?.status}}</span></p>
-                                        <p class="mx-3"><strong>IS Active : </strong> <span
-                                            [ngClass]="{'bg-lightgreen': BillDetail?.is_active === true, 'bg-lightred' : BillDetail?.is_active === false,'bg-lightyellow' : BillDetail?.is_active === 'Partial' }"
-                                            class="badges">{{BillDetail?.is_active}}</span> </p>
+                                        <!-- <p class="mx-3"><strong>IS Active : </strong> <span [ngClass]="{'bg-lightgreen': BillDetail?.is_active === true, 'bg-lightred' : BillDetail?.is_active === false,'bg-lightyellow' : BillDetail?.is_active === 'Partial' }"
+                                            class="badges">{{BillDetail?.is_active}}</span> </p> -->
                                     </div>
 
                                     <div class="pdf-footer">

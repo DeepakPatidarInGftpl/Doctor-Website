@@ -379,8 +379,7 @@
     'bg-lightorange': purchaseDetail?.status === 'Received' || purchaseDetail?.status === 'Partially Received' || purchaseDetail?.status === 'Exceed',
     'bg-lightgray': purchaseDetail?.status === 'Cancel'
   }" class="badges">{{ purchaseDetail?.status }}</span></p>
-  <p class="mx-3">Export: <span [ngClass]="{'bg-lightgreen': purchaseDetail?.export === true, 'bg-lightred' : purchaseDetail?.export === false,'bg-lightyellow' : purchaseDetail?.is_active === 'Partial' }" class="badges">{{purchaseDetail?.is_active}}</span>
-  </p>
+  <!-- <p class="mx-3">Export: <span [ngClass]="{'bg-lightgreen': purchaseDetail?.export === true, 'bg-lightred' : purchaseDetail?.export === false,'bg-lightyellow' : purchaseDetail?.is_active === 'Partial' }" class="badges">{{purchaseDetail?.is_active}}</span></p> -->
                                     </div>
                                   
                                     <div class="pdf-footer">

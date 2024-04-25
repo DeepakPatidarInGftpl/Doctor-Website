@@ -113,7 +113,7 @@
                                 <th (click)="sort('id')" class="thone">Shipping Note <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Total <i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Is Active <i class="fa fa-sort"></i></th> -->
                                 <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
                             </tr>
                         </thead>
@@ -146,9 +146,9 @@
                                       }" class="badges">{{ products?.status }}</span>
                                       
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <mat-slide-toggle (click)="products?.is_active ? isActive(i,products?.id):Active(i,products?.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
-                                </td>
+                                </td> -->
                                 <td>
                                     <a class="me-1" routerLink="//purchase/purchaseDetails/{{products?.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">

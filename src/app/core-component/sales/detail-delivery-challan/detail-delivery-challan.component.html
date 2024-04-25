@@ -217,9 +217,8 @@
                                         <p><strong>Status : </strong><span
                                             [ngClass]="{'bg-lightgreen': deliveryChallanDetail?.status === 'Complete', 'bg-lightred' : deliveryChallanDetail?.status === 'Pending','bg-lightyellow' : deliveryChallanDetail?.status === 'Draft'}"
                                             class="badges">{{deliveryChallanDetail?.status}}</span></p>
-                                        <p class="mx-3"><strong>IS Active : </strong> <span
-                                            [ngClass]="{'bg-lightgreen': deliveryChallanDetail?.is_active === true, 'bg-lightred' : deliveryChallanDetail?.is_active === false,'bg-lightyellow' : deliveryChallanDetail?.is_active === 'Partial' }"
-                                            class="badges">{{deliveryChallanDetail?.is_active}}</span> </p>
+                                        <!-- <p class="mx-3"><strong>IS Active : </strong> <span [ngClass]="{'bg-lightgreen': deliveryChallanDetail?.is_active === true, 'bg-lightred' : deliveryChallanDetail?.is_active === false,'bg-lightyellow' : deliveryChallanDetail?.is_active === 'Partial' }"
+                                            class="badges">{{deliveryChallanDetail?.is_active}}</span> </p> -->
                                     </div>
 
                                     <div class="pdf-footer">
