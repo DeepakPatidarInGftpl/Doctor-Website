@@ -1,12 +1,20 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsiteService {
+
+   // blur bg when modal open & transfer data to another components
+   public checkBlurSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+   public CheckBlur$: Observable<any> = this.checkBlurSubject.asObservable();
+   setCheckBlur(CheckBlur: any) {
+     this.checkBlurSubject.next(CheckBlur);
+   }
+   
   constructor(private http: HttpClient) { }
   apiUrl = `${environment.api}`;
 
@@ -321,6 +329,10 @@ export class WebsiteService {
   getProductOrderById(id:any){
     let url =this.apiUrl+'/pv-api/website_orders_dashboard/?id=';
     return this.http.get(`${url}${id}`)
+  }
+  getProductOrderByStatus(status:any){
+    let url =this.apiUrl+'/pv-api/website_orders_dashboard/?status=';
+    return this.http.get(`${url}${status}`)
   }
 
   // get branch

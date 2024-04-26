@@ -3,6 +3,7 @@ import { SettingsService } from 'src/app/shared/settings/settings.service';
 import { NavigationStart, Router } from '@angular/router';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { WebsiteService } from 'src/app/Services/website/website.service';
 
 @Component({
   selector: 'app-sidebar-one',
@@ -33,7 +34,7 @@ export class SidebarOneComponent implements OnInit {
     { value: false, key: 'users' },
     { value: false, key: 'settings' },
   ];
-  constructor(private Router: Router, private profileService: CompanyService) {
+  constructor(private Router: Router, private profileService: CompanyService,private websiteService:WebsiteService) {
     this.activePath = this.Router.url.split('/')[1]
     this.Router.events.subscribe((data: any) => {
       if (data instanceof NavigationStart) {
@@ -148,8 +149,25 @@ isBrandOffer:any;
 isBrandSubcategoryOffer:any;
   isScarpEntry:any;
   isAdvanceBooking:any;
+  isModalOpen=false;
   ngOnInit(): void {
-    this.LoadScript("assets/js/sidebar.js")
+    this.LoadScript("assets/js/sidebar.js");
+
+    if(this.websiteService.CheckBlur$){
+      this.websiteService.CheckBlur$.subscribe((res:any)=>{
+        console.log(res);
+        if(res !== null){
+        if(res){
+          this.isModalOpen = res;
+          console.log(this.isModalOpen);
+        }else if(res==false){
+          this.isModalOpen = res;
+          console.log(this.isModalOpen);
+        }
+      }
+        
+      })
+    }
 
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData) {
