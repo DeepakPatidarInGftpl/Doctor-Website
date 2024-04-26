@@ -583,7 +583,7 @@
                                             </div>
                                             </td>
                                             <td><input type="number" formControlName="qty" class="input" (blur)="purchase4(i)"></td>
-                                            <td><input type="number" formControlName="price" class="input" [(ngModel)]="coastprice[i]" (blur)="purchase(i)" #price (blur)="purchase2(price.value,i)">
+                                            <td><input type="text" formControlName="price" class="input" [(ngModel)]="coastprice[i]" (blur)="purchase(i)" #price (blur)="purchase2(price.value,i)">
                                             <i class="ion-information circle" data-bs-toggle="tooltip" title="ion-information" (click)="openModalBatch(i)"></i>
                                                 <div class="modal fade " id="batchModal" tabindex="-1" role="dialog"
                                                     aria-labelledby="addressModalLabel" aria-hidden="true">
@@ -638,10 +638,10 @@
                                                 </div>
                                             </td>
                                             <!-- <td><input type="text" formControlName="amount" class="input"></td> -->
-                                            <td><input type="number" formControlName="discount" class="input" (blur)="purchase4(i)">
+                                            <td><input type="text" formControlName="discount" class="input" (blur)="purchase4(i)">
                                             <span class="text-danger" style="display: block;" *ngIf="discountt(i) && discountt(i).invalid && discountt(i).touched">Enter Discount ex: 1-100 % </span>
                                             </td>  
-                                            <td><input type="number" formControlName="additional_discount" class="input" (blur)="purchase4(i)">
+                                            <td><input type="text" formControlName="additional_discount" class="input" (blur)="purchase4(i)">
                                                 <span class="text-danger" style="display: block;" *ngIf="additionaldiscountt(i) && additionaldiscountt(i).invalid && additionaldiscountt(i).touched">Enter Discount ex: 1-100 % </span>
                                                 </td>  
                                             <td>
@@ -654,7 +654,7 @@
                                             <!-- <td><input type="number" formControlName="amount" readonly [value]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalLandingCostEveryIndex(i).toFixed(2)" class="input"> </td> -->
                                             <td class="text-end"> <input type="number" class="input" readonly [value]="TotalWithoutTax[i]"></td>
                                             <td class="text-end">
-                                            <input type="number" formControlName="total" class="input" readonly [value]="calculateTotalEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
+                                            <input type="text" formControlName="total" class="input" readonly [value]="calculateTotalEveryIndex(i).toFixed(2)" [ngModel]="calculateTotalEveryIndex(i).toFixed(2)">
                                          </td>          
                                         </tr>
                                     </ng-container>
@@ -665,7 +665,7 @@
                                     <td></td>
                                     <td class="text-start"><strong>Total</strong></td>
                                     <td class="text-start">{{calculateTotalQty()?.toFixed(2)}}
-                                        <input type="text" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
+                                        <input type="number" formControlName="total_qty" class="input" [ngModel]="calculateTotalQty()?.toFixed(2)" style="display: none;">
                                     </td>
                                     <td class="text-start">{{calculateTotalPrice()?.toFixed(2)}}</td>
                                     <!-- <td class="text-start">{{calculateTotalAmount()?.toFixed(2)}}</td> -->

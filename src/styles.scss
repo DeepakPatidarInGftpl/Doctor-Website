@@ -240,3 +240,8 @@ mat-form-field {
     justify-content: center !important;
     inset: auto 6px 0px !important;
 }
+
+/* blur background when modal open */
+.blur-background:not(.modal-container) {
+  filter: blur(3px);
+}

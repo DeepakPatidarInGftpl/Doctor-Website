@@ -176,9 +176,9 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.getdata();
     this.getBranch();
     this.acceptForm = this.fb.group({
-      length: new FormControl('',[Validators.required,Validators.min(1)]),
-      breadth: new FormControl('',[Validators.required,Validators.min(1)]),
-      height: new FormControl('',[Validators.required,Validators.min(1)]),
+      length: new FormControl('',[Validators.min(1)]),
+      breadth: new FormControl('',[Validators.min(1)]),
+      height: new FormControl('',[Validators.min(1)]),
       weight: new FormControl('',[Validators.required,Validators.min(1)]),
       branch: new FormControl('',[Validators.required,Validators.min(1)]),
       id: new FormControl(this.id,[Validators.required,Validators.min(1)]),
@@ -299,13 +299,16 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.sho1 = false;
     this.sho2 = !this.sho2;
   }
-
+  isModalOpen = false;
   openModalBatch() {
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
       modal.classList.add('show');
       modal.style.display = 'block';
+         //blur bg
+         this.isModalOpen = true;
+         this.websiteService.setCheckBlur(true);
     }
   }
   closeModalBatch() {
@@ -313,6 +316,8 @@ export class ProductOrderDetailsComponent implements OnInit {
     if (modal) {
       modal.classList.remove('show');
       modal.style.display = 'none';
+      this.isModalOpen = false;
+      this.websiteService.setCheckBlur(false);
     }
   }
 
