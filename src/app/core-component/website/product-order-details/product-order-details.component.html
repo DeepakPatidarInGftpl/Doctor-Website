@@ -423,88 +423,39 @@
 </div> -->
 
 
-<div class="row bg">
+<div class="row bg" [ngClass]="{'blur-background':isModalOpen}">
     <div class="card">
         <div class="card-body">
-            <div class="page-header">
-                <div class="page-title">
+            <div class="page-header" style="width: 100%;">
+                <div class="page-title" style="width: 70%;">
                     <h4>Order Details</h4>
                     <h6 class="subhead-color">Full details of a Order</h6>
                 </div>
+                <ng-container *ngIf="productOrderDetail?.status!=='Reject'">
                 <div class="page-btn">
-                    <a class="btn btn-added" (click)="openModalBatch()">
+                    <fieldset [disabled]="productOrderDetail?.address_type=='Pickup'">
+                    <a class="btn btn-added" (click)="openModalBatch()" style="background: green;">
                         <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Accept Order
                     </a>
+                    </fieldset>
                 </div>
                 <div class="page-btn">
-                    <a class="btn btn-added" (click)="rejectOrder(productOrderDetail.id)">
+                    <a class="btn btn-added" (click)="rejectOrder(productOrderDetail.id)" style="background: red;">
                         <img src="assets/img/icons/close-circle.svg" class="me-1" alt="img">Reject Order
                     </a>
                 </div>
+                </ng-container>
             </div>
-            <div class="modal fade " id="batchModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Accept Order</h1>
-                            <button type="button" class="close" (click)="closeModalBatch()" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form [formGroup]="acceptForm" (ngSubmit)="acceptSubmit()">
-                                <div class="row">
-                                    <div class="col-lg-2 col-sm-3 col-12">
-                                        <div class="form-group">
-                                            <label>Length*</label>
-                                            <input type="number" formControlName="length" placeholder="Enter Length" id="length" [ngClass]="{'is-invalid': f['length'].touched && f['length'].invalid}">
-                                            <span class="text-danger" *ngIf="length && length.invalid && length.touched">Enter Length greater than or equal to 1</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2 col-sm-3 col-12">
-                                        <div class="form-group">
-                                            <label>Breadth*</label>
-                                            <input type="number" formControlName="breadth" placeholder="Enter Breadth" id="breadth" [ngClass]="{'is-invalid': f['breadth'].touched && f['breadth'].invalid}">
-                                            <span class="text-danger" *ngIf="breadth && breadth.invalid && breadth.touched">Enter Breadth greater than or equal to 1</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2 col-sm-3 col-12">
-                                        <div class="form-group">
-                                            <label>Height*</label>
-                                            <input type="number" formControlName="height" placeholder="Enter Height" id="height" [ngClass]="{'is-invalid': f['height'].touched && f['height'].invalid}">
-                                            <span class="text-danger" *ngIf="height && height.invalid && height.touched">Enter Height greater than or equal to 1</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2 col-sm-3 col-12">
-                                        <div class="form-group">
-                                            <label>Weight*</label>
-                                            <input type="number" formControlName="weight" placeholder="Enter Weight" id="weight" [ngClass]="{'is-invalid': f['weight'].touched && f['weight'].invalid}">
-                                            <span class="text-danger" *ngIf="weight && weight.invalid && weight.touched">Enter Weight greater than or equal to 1</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-sm-3 col-12">
-                                        <div class="form-group">
-                                            <label>Select Branch*</label>
-                                           <select formControlName="branch" id="branch" [ngClass]="{'is-invalid': f['branch'].touched && f['branch'].invalid}">
-                                                <option value="" disabled selected> Select Branch</option>
-                                                <option [value]="branch.title" *ngFor="let branch of branchList"> {{branch.title}}</option>
-                                            </select>
-                                            <span class="text-danger" *ngIf="branch && branch.invalid && branch.touched">Select Branch</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
-                                        <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>
-                                    </div>
-                                    </div>
-                                    </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <h4><span>Order No.</span>{{productOrderDetail?.order_no}}</h4>
+           
+            <h4 class="mb-2"><span>Order No.</span>{{productOrderDetail?.order_no}}</h4>
+            <p>Status : <span [ngClass]="{
+                'bg-lightgreen': productOrderDetail?.status === 'Accepted',
+                'bg-lightblue': productOrderDetail?.status === 'Dispatched', 
+                'bg-lightorange': productOrderDetail?.status === 'Delivered',
+                'bg-lightgray': productOrderDetail?.status === 'Assigned',
+                'bg-lightred' : productOrderDetail?.status === 'Reject' || 'Cancelled',
+                'bg-lightyellow' : productOrderDetail?.status === 'New'
+                }" class="badges" style="padding: 2px 10px;">{{productOrderDetail?.status}}</span></p>
             <mat-tab-group animationDuration="0ms" #tabGroup>
                 <mat-tab label="Order">
             <div class="company-details-card card" *ngIf="productOrderDetail">
@@ -512,7 +463,7 @@
                     <div class="content-part my-3">
                         <div class="container py-10">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3>Order</h3>
+                                <!-- <h3>Order</h3> -->
                                 <button class="btn btn-primary" (click)="generatePDF()" *ngIf="!loaderPdf">Download Order</button>
                                 <button class="btn btn-primary" *ngIf="loaderPdf" disabled>
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Download Order</button>
@@ -536,8 +487,8 @@
                                                                 <!-- <h1>Details</h1> -->
                                                                 <p><span>Store Name</span> : {{productOrderDetail?.store_address?.name}}</p>
                                                                 <!-- <p><span>Date</span> :{{productOrderDetail?.store_address?.datetime | date: 'dd-MMMM-yyyy'}}</p> -->
-                                                                <p><span>Address</span> :{{productOrderDetail?.store_address?.address+' , '+productOrderDetail?.store_address?.city+' , '+productOrderDetail?.store_address?.state+' , '+productOrderDetail?.store_address?.country+' , '+productOrderDetail?.store_address?.pincode}}</p>
-                                                                <p><span>Pincode</span> : {{productOrderDetail?.store_address?.pincode}}</p>
+                                                                <p><span>Address</span> :{{productOrderDetail?.store_address?.address?productOrderDetail?.store_address?.address:''+' , '+productOrderDetail?.store_address?.city?productOrderDetail?.store_address?.city:''+' , '+productOrderDetail?.store_address?.state?productOrderDetail?.store_address?.state:''+' , '+productOrderDetail?.store_address?.country?productOrderDetail?.store_address?.country:''}}</p>
+                                                                <p><span>Pincode</span> : {{productOrderDetail?.store_address?.pincode?productOrderDetail?.store_address?.pincode:''}}</p>
                                                                 <p><span>Phone</span> : {{productOrderDetail?.store_address?.mobile_no}}</p>
                                                                 <p><span>Email</span> : {{productOrderDetail?.store_address?.email}}</p>
                                                             </div>
@@ -547,17 +498,13 @@
                                                         <div class="d-flex justify-content-between align-items-center top-div my-3"
                                                             style=" float: inline-end;">
                                                             <div class="right-top">
-                                                                <p>Status <span [ngClass]="{'bg-lightgreen': productOrderDetail?.status === 'Accepted',
-                                                                'bg-lightblue': productOrderDetail?.status === 'Dispatched', 
-                                                                'bg-lightorange': productOrderDetail?.status === 'Delivered',
-                                                                'bg-lightgray': productOrderDetail?.status === 'Assigned',
-                                                                'bg-lightred' : productOrderDetail?.status === 'Reject' || 'Cancelled','bg-lightyellow' : productOrderDetail?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{productOrderDetail?.status}}</span></p>
+                                                               
                                                                 <h1 class="pb-4">Order</h1>
                                                                 <p><span>Order Date</span> : {{productOrderDetail?.order_date| date: 'dd-MMMM-yyyy'}}</p>
-                                                                <p><span>Accepted Date</span> : {{productOrderDetail?.accepted_at | date: 'dd-MMMM-yyyy'}} </p>
-                                                                <p><span>Dispatched Date</span> : {{productOrderDetail?.dispatched_at | date: 'dd-MMMM-yyyy'}} </p>
-                                                                <p><span>Delivered Date</span> : {{productOrderDetail?.delivered_at | date: 'dd-MMMM-yyyy'}} </p>
-                                                                <p><span>Cancel Date</span> : {{productOrderDetail?.cancel_date | date: 'dd-MMMM-yyyy'}}</p>
+                                                                <p *ngIf="productOrderDetail?.accepted_at"><span>Accepted Date</span> : {{productOrderDetail?.accepted_at | date: 'dd-MMMM-yyyy'}} </p>
+                                                                <p *ngIf="productOrderDetail?.dispatched_at"><span>Dispatched Date</span> : {{productOrderDetail?.dispatched_at | date: 'dd-MMMM-yyyy'}} </p>
+                                                                <p *ngIf="productOrderDetail?.delivered_at"><span>Delivered Date</span> : {{productOrderDetail?.delivered_at | date: 'dd-MMMM-yyyy'}} </p>
+                                                                <p *ngIf="productOrderDetail?.cancel_date"><span>Cancel Date</span> : {{productOrderDetail?.cancel_date | date: 'dd-MMMM-yyyy'}}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -575,8 +522,8 @@
                                                <div *ngIf="productOrderDetail.billing_address">
                                                         <p class="heading" style="text-align: left;">Billing Address</p>
                                                         <p class="heading2">
-                                                            {{productOrderDetail?.billing_address?.line1==null?'':productOrderDetail?.billing_address?.line1 + ' , ' +
-                                                            productOrderDetail?.billing_address?.line2==null?'':productOrderDetail?.billing_address?.line2 + ' , ' +
+                                                            {{productOrderDetail?.billing_address?.line1?productOrderDetail?.billing_address?.line1:'' + ' , ' +
+                                                            productOrderDetail?.billing_address?.line2?productOrderDetail?.billing_address?.line2:'' + ' , ' +
                                                             productOrderDetail?.billing_address?.city}}
                                                             <br>
                                                             {{productOrderDetail?.billing_address?.state + ' , ' + productOrderDetail?.billing_address?.country}}
@@ -591,8 +538,8 @@
                                                     <div *ngIf="productOrderDetail?.shipping_address">
                                                         <p class="heading" style="text-align: left;">Shipping Address</p>
                                                         <p class="heading2">
-                                                            {{productOrderDetail?.shipping_address?.line1==null?'':productOrderDetail?.shipping_address?.line1 + ' , ' +
-                                                            productOrderDetail?.shipping_address?.line2==null?'':productOrderDetail?.shipping_address?.line2 + ' , ' +
+                                                            {{productOrderDetail?.shipping_address?.line1==null?productOrderDetail?.shipping_address?.line1:'' + ' , ' +
+                                                            productOrderDetail?.shipping_address?.line2==null?productOrderDetail?.shipping_address?.line2:'' + ' , ' +
                                                             productOrderDetail?.shipping_address?.city}}
                                                             <br>
                                                             {{productOrderDetail?.shipping_address?.state + ' , ' + productOrderDetail?.shipping_address?.country}}
@@ -618,21 +565,19 @@
                                                             <tr>
                                                                 <!-- <th class="thone" style="white-space: normal !important;">Sr.No.</th> -->
                                                                 <!-- <th class="thone" style="white-space: normal !important;">Status</th> -->
-                                                                <th class="thone" style="white-space: normal !important;">User</th>
-                                                                <th class="thone" style="white-space: normal !important;">Phone No.</th>
+                                                                <th class="thone" style="white-space: normal !important;">Title</th>
                                                                 <th class="thone" style="white-space: normal !important;">Order No.</th>
                                                                 <th class="thone" style="white-space: normal !important;">Shipment No.</th>
                                                                 <th class="thone" style="white-space: normal !important;">Payment Type</th>
                                                                 <th class="thone" style="white-space: normal !important;">Payment Satus</th>
-                                                                <th class="thone" style="white-space: normal !important;">Address Type</th>
+                                                                <th class="thone" style="white-space: normal !important;">Order Type</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
                                                                 <!-- <td>{{1}}</td> -->
                                                                 <!-- <td style="color:black">{{productOrderDetail?.status}}</td> upar deekhana hai -->
-                                                                <td style="color:black">{{productOrderDetail?.user?.username+ ' (' + productOrderDetail?.user?.user_type + ')'}}</td>
-                                                                <td style="color:black">{{productOrderDetail?.phone_number}}</td>
+                                                                <td style="color:black">{{productOrderDetail?.user?.username}}</td>
                                                                 <td style="color:black">{{productOrderDetail?.order_no?productOrderDetail?.order_no:''}}</td>
                                                                 <td style="color:black">{{productOrderDetail?.shipment_no?productOrderDetail?.shipment_no:''}}</td>
                                                                 <td style="color:black">{{productOrderDetail?.payment_type}}</td>
@@ -760,6 +705,69 @@
             </div>
             </mat-tab>
             </mat-tab-group>
+        </div>
+    </div>
+</div>
+
+<!-- modal -->
+<div class="modal fade " id="batchModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Accept Order</h1>
+                <button type="button" class="close" (click)="closeModalBatch()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="acceptForm" (ngSubmit)="acceptSubmit()">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Length</label>
+                                <input type="number" formControlName="length" placeholder="Enter Length" id="length" [ngClass]="{'is-invalid': f['length'].touched && f['length'].invalid}">
+                                <span class="text-danger" *ngIf="length && length.invalid && length.touched">Enter Length greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Breadth</label>
+                                <input type="number" formControlName="breadth" placeholder="Enter Breadth" id="breadth" [ngClass]="{'is-invalid': f['breadth'].touched && f['breadth'].invalid}">
+                                <span class="text-danger" *ngIf="breadth && breadth.invalid && breadth.touched">Enter Breadth greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Height</label>
+                                <input type="number" formControlName="height" placeholder="Enter Height" id="height" [ngClass]="{'is-invalid': f['height'].touched && f['height'].invalid}">
+                                <span class="text-danger" *ngIf="height && height.invalid && height.touched">Enter Height greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Weight*</label>
+                                <input type="number" formControlName="weight" placeholder="Enter Weight" id="weight" [ngClass]="{'is-invalid': f['weight'].touched && f['weight'].invalid}">
+                                <span class="text-danger" *ngIf="weight && weight.invalid && weight.touched">Enter Weight greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Select Branch*</label>
+                               <select formControlName="branch" id="branch" [ngClass]="{'is-invalid': f['branch'].touched && f['branch'].invalid}">
+                                    <option value="" disabled selected> Select Branch</option>
+                                    <option [value]="branch.title" *ngFor="let branch of branchList"> {{branch.title}}</option>
+                                </select>
+                                <span class="text-danger" *ngIf="branch && branch.invalid && branch.touched">Select Branch</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center">
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>
+                        </div>
+                        </div>
+                        </form>
+            </div>
         </div>
     </div>
 </div>

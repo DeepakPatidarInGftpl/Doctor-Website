@@ -5,7 +5,7 @@ import { ProductOrderRoutingModule } from './product-order-routing.module';
 import { ProductOrderComponent } from './product-order.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [ProductOrderComponent],
@@ -14,7 +14,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ProductOrderRoutingModule,
     SharedModuleModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatTabsModule
   ],
   providers:[DatePipe]
 })

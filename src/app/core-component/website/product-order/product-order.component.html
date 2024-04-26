@@ -1,4 +1,4 @@
-<div class="page-header">
+<div class="page-header" [ngClass]="{'blur-background':isModalOpen}">
     <div class="page-title">
         <h4 class="titl">Order list</h4>
         <h6>View/Search Order</h6>
@@ -6,153 +6,235 @@
 </div>
 
 <!-- /product list -->
-<div class="card">
-    <div class="card-body">
-        <div class="table-top">
-            <div class="search-set">
-                <div class="search-path">
-                    <a class="btn btn-filter" id="filter_search">
-                        <img src="assets/img/icons/filter.svg" alt="img">
-                        <span><img src="assets/img/icons/closes.svg" alt="img"></span>
-                    </a>
-                </div>
-                <div class="search-input">
-                    <a class="btn btn-searchset">
-                        <img src="assets/img/icons/search-white.svg" alt="img"></a>
-                    <div class="dataTables_filter"><label>
-                            <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
-                        </label>
+<mat-tab-group animationDuration="0ms" #tabGroup [ngClass]="{'blur-background':isModalOpen}" (selectedTabChange)="changeApiStatus($event)">
+    <mat-tab label="New">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="assets/img/icons/filter.svg" alt="img">
+                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset">
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                            <div class="dataTables_filter"><label>
+                                    <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-            <div class="wordset">
-                <ul>
-                    <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img
-                                src="assets/img/icons/pdf.svg" alt="img"></a>
-                    </li>
-                    <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img
-                                src="assets/img/icons/excel.svg" alt="img"></a>
-                    </li>
-                    <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img
-                                src="assets/img/icons/printer.svg" alt="img"></a>
-                    </li>
-                </ul>
+                <div class="table-responsive">
+                    <table class="table datanew" id="mytable">
+                        <thead>
+                            <tr>
+                                <th (click)="sort('id')" class="thone">
+                                    <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                    <i class="fa fa-sort"></i>
+                                </th>
+                                <th (click)="sort('id')" class="thone tdd">Sr. No.<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Status<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">User<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Order Type<i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone tdd">Title<i class="fa fa-sort"></i></th> -->
+                                <th (click)="sort('id')" class="thone tdd">Payment Type<i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone tdd">Payment Status<i class="fa fa-sort"></i></th> -->
+                                <!-- <th (click)="sort('id')" class="thone tdd">Sub Total Amount<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Total Discount %<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Total Amount<i class="fa fa-sort"></i></th> -->
+                                <th (click)="sort('id')" class="thone tdd">Order Id<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Shipment Id<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Order Date<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Final Amount <i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone tdd">Accepted At<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Cancel At <i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Dispatched At<i class="fa fa-sort"></i></th> -->
+                                <!-- <th (click)="sort('id')" class="thone tdd">Delivered At<i class="fa fa-sort"></i></th> -->
+                                <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="tableData?.length>=0">
+                            <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                            <ng-container *ngIf="products?.status === 'New'">
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox" [(ngModel)]="selectedRows[i]">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td>{{i+1}}</td>
+                                <td class="productimgname">
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreen': products?.status === 'Accepted','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Delivered', 'bg-lightgray': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' || 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                </td>
+                                <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;">{{products?.user?.username}}</a></td>
+                                <td>{{products?.address_type}}</td>
+                                <!-- <td>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 3;">{{products?.carts[0]?.product?.title}}</a>
+                                </td> -->
+                                <td>{{products?.payment_type}}</td>
+                                <!-- <td>{{products?.payment_status}}</td> 
+                                <td>{{products?.sub_total_amount}}</td>
+                                <td>{{products?.total_discount}}</td> -->
+                                <td>{{products?.shiprocket_order_id}}</td>
+                                <td>{{products?.shiprocket_shipment_id}}</td>
+                                <!-- <td>{{products?.total_amount}}</td> -->
+                               <td>{{products?.order_date |date}}</td>
+                               <td>{{products?.final_amount}}</td>
+                               <!-- <td>{{products?.accepted_at |date}}</td>
+                               <td>{{products?.cancel_date |date}}</td>
+                               <td>{{products?.dispatched_at |date}}</td> -->
+                                <!-- <td>
+                                    <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
+                                </td> -->
+                                <td>  
+                                    <button class="btn btn-submit me-2" (click)="openModalBatch(products)" style="background: green;padding: 2px 0px;min-width: 60px;">Accept</button>
+                                    <button class="btn btn-submit me-2" (click)="rejectOrder(products.id)" style="background: red;padding: 2px 0px;min-width: 60px;">Reject</button>
+                                    <!-- <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a> 
+                                     <a class="me-1" routerLink="//contacts/updateDealer/{{products.id}}" *ngIf="isEdit">
+                                        <img src="assets/img/icons/edit.svg" alt="img">
+                                    </a>
+                                    <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
+                                        *ngIf="isDelete">
+                                        <img src="assets/img/icons/delete.svg" alt="img">
+                                    </a> -->
+                                </td>
+                                </ng-container>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="tableData?.length==0">
+                            <tr>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="-1">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table datanew" id="mytable">
-                <thead>
-                    <tr>
-                        <th (click)="sort('id')" class="thone">
-                            <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
-                                <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
-                                <span class="checkmarks"></span>
-                            </label>
-                            <i class="fa fa-sort"></i>
-                        </th>
-                        <th (click)="sort('id')" class="thone tdd">Sr. No.<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Status<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">User<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Address Type<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Title<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Payment Type<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Payment Status<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Sub Total Amount<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Total Discount %<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Total Amount<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Final Amount <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Couopn Discount %<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Address Type<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Order Date<i class="fa fa-sort"></i></th>
-                        <!-- <th (click)="sort('id')" class="thone tdd">Accepted At<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Cancel At <i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone tdd">Dispatched At<i class="fa fa-sort"></i></th> -->
-                        <th (click)="sort('id')" class="thone tdd">Delivered At<i class="fa fa-sort"></i></th>
-                        <th (click)="sort('id')" class="thone">Action <i class="fa fa-sort"></i></th>
-                    </tr>
-                </thead>
-                <tbody *ngIf="tableData?.length>=0">
-                    <tr *ngFor="let products of tableData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
-                        <td>
-                            <label class="checkboxs">
-                                <input type="checkbox" [(ngModel)]="selectedRows[i]">
-                                <span class="checkmarks"></span>
-                            </label>
-                        </td>
-                        <td>{{i+1}}</td>
-                        <td class="productimgname">
-                            <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 3;"><span [ngClass]="{'bg-lightgreen': products?.status === 'Accepted','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Delivered', 'bg-lightgray': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' || 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
-                        </td>
-                        <td>{{products?.user?.username+''+products?.user?.user_type+''+products?.user?.phone_number}}</td>
-                        <td>{{products?.address_type}}</td>
-                        <td>
-                            <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 3;">{{products?.carts[0]?.product?.title}}</a>
-                        </td>
-                        <td>{{products?.payment_type}}</td>
-                        <td>{{products?.payment_status}}</td> 
-                        <td>{{products?.sub_total_amount}}</td>
-                        <td>{{products?.total_discount}}</td>
-                        <td>{{products?.final_amount}}</td>
-                        <td>{{products?.couopn_discount}}</td>
-                        <td>{{products?.total_amount}}</td>
-                        <td>{{products.address_type}}</td> 
-                       <td>{{products?.order_date |date}}</td>
-                       <!-- <td>{{products?.accepted_at |date}}</td>
-                       <td>{{products?.cancel_date |date}}</td>
-                       <td>{{products?.dispatched_at |date}}</td> -->
-                       <td>{{products?.delivered_at |date}}</td>
-                        <!-- <td>
-                            <mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle>
-                        </td> -->
-                        <td>
-                            <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
-                                <img src="assets/img/icons/eye.svg" alt="img">
-                            </a>
-                            <!-- <a class="me-1" routerLink="//contacts/updateDealer/{{products.id}}" *ngIf="isEdit">
-                                <img src="assets/img/icons/edit.svg" alt="img">
-                            </a>
-                            <a (click)="confirmText(i,products.id)" class="me-1 confirm-text" href="javascript:void(0);"
-                                *ngIf="isDelete">
-                                <img src="assets/img/icons/delete.svg" alt="img">
-                            </a> -->
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody *ngIf="tableData?.length==0">
-                    <tr>
-                        <td colspan="10">
-                            <p class="center-textt">Data not available</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="progressbar">
-                <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+    </mat-tab>
+    <mat-tab label="Accepted">
+    </mat-tab>
+    <mat-tab label="Assigned">
+    </mat-tab>
+    <mat-tab label="Dispatched">
+    </mat-tab>
+    <mat-tab label="Delivered">
+    </mat-tab>
+    <mat-tab label="Cancelled">
+    </mat-tab>
+    <mat-tab label="Rejected">
+    </mat-tab>
+    <mat-tab label="All">
+    </mat-tab>
+    </mat-tab-group>
+<!-- /product list -->
+
+
+<!-- modal -->
+<div class="modal fade " id="batchModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Accept Order</h1>
+                <button type="button" class="close" (click)="closeModalBatch()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="row">
-                <div class="col-lg-4 col-sm-4 col-12 mt-2">
-                    <div class="entries"> Show per page
-                        <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="-1">All</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-8 col-sm-8 col-12 mt-2">
-                    <div class="f-right">
-                        <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        <div class="entries f-right">Showing {{itemsPerPage}} to {{tableData?.length}} of {{p}} entries</div>  
-                    </div>
-                </div>
+            <div class="modal-body">
+                <form [formGroup]="acceptForm" (ngSubmit)="acceptSubmit()">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Length</label>
+                                <input type="number" formControlName="length" placeholder="Enter Length" id="length" [ngClass]="{'is-invalid': f['length'].touched && f['length'].invalid}">
+                                <span class="text-danger" *ngIf="length && length.invalid && length.touched">Enter Length greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Breadth</label>
+                                <input type="number" formControlName="breadth" placeholder="Enter Breadth" id="breadth" [ngClass]="{'is-invalid': f['breadth'].touched && f['breadth'].invalid}">
+                                <span class="text-danger" *ngIf="breadth && breadth.invalid && breadth.touched">Enter Breadth greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Height</label>
+                                <input type="number" formControlName="height" placeholder="Enter Height" id="height" [ngClass]="{'is-invalid': f['height'].touched && f['height'].invalid}">
+                                <span class="text-danger" *ngIf="height && height.invalid && height.touched">Enter Height greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Weight*</label>
+                                <input type="number" formControlName="weight" placeholder="Enter Weight" id="weight" [ngClass]="{'is-invalid': f['weight'].touched && f['weight'].invalid}">
+                                <span class="text-danger" *ngIf="weight && weight.invalid && weight.touched">Enter Weight greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Select Branch*</label>
+                               <select formControlName="branch" id="branch" [ngClass]="{'is-invalid': f['branch'].touched && f['branch'].invalid}">
+                                    <option value="" disabled selected> Select Branch</option>
+                                    <option [value]="branch.title" *ngFor="let branch of branchList"> {{branch.title}}</option>
+                                </select>
+                                <span class="text-danger" *ngIf="branch && branch.invalid && branch.touched">Select Branch</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center">
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>
+                        </div>
+                        </div>
+                        </form>
             </div>
         </div>
     </div>
 </div>
-<!-- /product list -->

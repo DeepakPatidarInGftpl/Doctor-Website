@@ -920,14 +920,102 @@ export class AddSaleBillComponent implements OnInit {
       formdata.append('sale_order', this.saleBillForm.get('sale_order')?.value);
       formdata.append('note', this.saleBillForm.get('note')?.value);
       formdata.append('total_qty',parseInt(this.saleBillForm.get('total_qty')?.value));
-      formdata.append('total_tax',parseFloat(this.saleBillForm.get('total_tax')?.value));
-      formdata.append('total_discount', this.saleBillForm.get('total_discount')?.value);
-      formdata.append('roundoff', this.saleBillForm.get('roundoff')?.value);
-      formdata.append('subtotal', parseFloat(this.saleBillForm.get('subtotal')?.value));
-      formdata.append('total',parseFloat(this.saleBillForm.get('total')?.value));
-      formdata.append('additional_charges', this.saleBillForm.get('additional_charges')?.value);
       //2-1
       formdata.append('sales_man',this.saleBillForm.get('sales_man')?.value);
+            //26-04
+            const roundOffString = this.saleBillForm.get('roundoff')?.value;
+            let roundOffFloat: number;
+            if (typeof roundOffString === 'string') {
+              // If the string matches the pattern "18.00.000", apply replacements and convert to float
+              const subtotalWithoutCommasAndZeros = roundOffString.replace(/,/g, '').replace(/(\.\d*?)0+$/, '$1');
+              roundOffFloat = parseFloat(subtotalWithoutCommasAndZeros);
+            } else {
+              // Otherwise, use the original value directly
+              roundOffFloat = parseFloat(roundOffString.toFixed(2));
+            }
+            console.warn(typeof(roundOffFloat),'roundoff');
+            formdata.append('roundoff', roundOffFloat);
+           // formdata.append('roundoff', parseFloat(this.saleBillForm.get('roundoff')?.value));
+         //end round off
+           //26-04
+
+         //26-04
+         const totalTaxString = this.saleBillForm.get('total_tax')?.value;
+         let totalTaxFloat: number;
+         if (typeof totalTaxString === 'string') {
+           // If the string matches the pattern "18.00.000", apply replacements and convert to float
+           const subtotalWithoutCommasAndZeros = totalTaxString.replace(/,/g, '').replace(/(\.\d*?)0+$/, '$1');
+           totalTaxFloat = parseFloat(subtotalWithoutCommasAndZeros);
+         } else {
+           // Otherwise, use the original value directly
+           totalTaxFloat = parseFloat(totalTaxString.toFixed(2));
+         }
+         console.warn(typeof(totalTaxFloat),'total_tax');
+         formdata.append('total_tax', totalTaxFloat);
+        //  formdata.append('total_tax',parseFloat(this.saleBillForm.get('total_tax')?.value));
+      //end total tax
+        //26-04
+        const totalDiscountString = this.saleBillForm.get('total_discount')?.value;
+        let totalDiscountFloat: number;
+        if (typeof totalDiscountString === 'string') {
+          // If the string matches the pattern "18.00.000", apply replacements and convert to float
+          const subtotalWithoutCommasAndZeros = totalDiscountString.replace(/,/g, '').replace(/(\.\d*?)0+$/, '$1');
+          totalDiscountFloat = parseFloat(subtotalWithoutCommasAndZeros);
+        } else {
+          // Otherwise, use the original value directly
+          totalDiscountFloat = parseFloat(totalDiscountString.toFixed(2));
+        }
+        console.warn(typeof(totalDiscountFloat),'total_discount');
+        formdata.append('total_discount', totalDiscountFloat);
+       //    formdata.append('total_discount', this.saleBillForm.get('total_discount')?.value);
+     //end total discount
+        //26-04
+        const subTotalString = this.saleBillForm.get('subtotal')?.value;  
+        let subTotalFloat: number;
+        if (typeof subTotalString === 'string') {
+          // If the string matches the pattern "18.00.000", apply replacements and convert to float
+          const subtotalWithoutCommasAndZeros = subTotalString.replace(/,/g, '').replace(/(\.\d*?)0+$/, '$1');
+          subTotalFloat = parseFloat(subtotalWithoutCommasAndZeros);
+        } else {
+          // Otherwise, use the original value directly
+          subTotalFloat = parseFloat(subTotalString.toFixed(2));
+        }
+        console.warn(typeof(subTotalFloat),'subtotal');
+        formdata.append('subtotal', subTotalFloat);
+       //  formdata.append('subtotal', parseFloat(this.saleBillForm.get('subtotal')?.value));
+     //end sub total
+        //26-04
+        const TotalString = this.saleBillForm.get('total')?.value;  
+        let TotalFloat: number;
+        if (typeof TotalString === 'string') {
+          // If the string matches the pattern "18.00.000", apply replacements and convert to float
+          const subtotalWithoutCommasAndZeros = TotalString.replace(/,/g, '').replace(/(\.\d*?)0+$/, '$1');
+          TotalFloat = parseFloat(subtotalWithoutCommasAndZeros);
+        } else {
+          // Otherwise, use the original value directly
+          TotalFloat = parseFloat(TotalString.toFixed(2));
+        }
+        console.warn(typeof(TotalFloat),'total');
+        formdata.append('total', TotalFloat);
+       //     formdata.append('total',parseFloat(this.saleBillForm.get('total')?.value));
+     //end total 
+
+      //26-04
+      const additionalChargerString = this.saleBillForm.get('additional_charges')?.value;  
+      let addiionalChargesFloat: number;
+      if (typeof additionalChargerString === 'string') {
+        // If the string matches the pattern "18.00.000", apply replacements and convert to float
+        const subtotalWithoutCommasAndZeros = additionalChargerString.replace(/,/g, '').replace(/(\.\d*?)0+$/, '$1');
+        addiionalChargesFloat = parseFloat(subtotalWithoutCommasAndZeros);
+      } else {
+        // Otherwise, use the original value directly
+        addiionalChargesFloat = parseFloat(additionalChargerString.toFixed(2));
+      }
+      console.warn(typeof(addiionalChargesFloat),'additional_charges');
+      formdata.append('additional_charges', addiionalChargesFloat);
+     // formdata.append('additional_charges', this.saleBillForm.get('additional_charges')?.value);
+   //end total 
+
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -941,6 +1029,8 @@ export class AddSaleBillComponent implements OnInit {
           // Convert the value to an integer if it's a number, but keep item_name as a string
           if (key !== 'item_name' && !isNaN(control.value)) {
             cartObject[key] = parseFloat(control.value);
+            console.warn(cartObject[key]);
+            
           } else {
             cartObject[key] = control.value;
           }
@@ -1284,7 +1374,7 @@ export class AddSaleBillComponent implements OnInit {
     const subtotal = this.TotalWithoutTax[index]
     const qty = +cartItem.get('qty').value || 0;
     const totalForItem = price * qty || 0
-    console.log(totalForItem);
+    // console.log(totalForItem);
     return totalForItem;
   }
 
