@@ -29,6 +29,20 @@ export class ProductOrderComponent implements OnInit {
   pageSize: number = 10;
   itemsPerPage: number = 10;
 
+  dateRangeOptions = [
+    { label: 'Today', value: 'today' },
+    { label: 'Yesterday', value: 'yesterday' },
+    { label: 'This Week', value: 'thisWeek' },
+    { label: 'This Month', value: 'thisMonth' },
+    { label: 'Last Month', value: 'lastMonth' },
+    { label: 'Last 15 Days', value: 'last15Days' },
+    { label: 'Last 30 Days', value: 'last30Days' },
+    { label: 'This Quarter', value: 'thisQuarter' },
+    { label: 'Last Quarter', value: 'lastQuarter' },
+    { label: 'This Financial Year', value: 'thisFinancialYear' },
+    { label: 'Last Financial Year', value: 'lastFinancialYear' },
+  ];
+
   constructor(private websiteService: WebsiteService, private QueryService: QueryService,
     private fb: FormBuilder, private toastr: ToastrService, private datePipe: DatePipe, private dashboardService: DashboardService) {
     this.QueryService.filterToggle()
@@ -43,6 +57,12 @@ export class ProductOrderComponent implements OnInit {
   get f() {
     return this.acceptForm.controls;
   }
+  awdForm: FormGroup;
+  get a() {
+    return this.awdForm.controls;
+  }
+  labelForm: FormGroup;
+  invoiceForm: FormGroup;
   ngOnInit(): void {
     this.getBranch();
     this.acceptForm = this.fb.group({
@@ -53,13 +73,27 @@ export class ProductOrderComponent implements OnInit {
       branch: new FormControl('', [Validators.required, Validators.min(1)]),
       id: new FormControl('', [Validators.required, Validators.min(1)]),
     });
-
+    //awd 
+    this.awdForm = this.fb.group({
+      shipment_id: new FormControl('', [Validators.required]),
+      courier_id: new FormControl('', [Validators.required])
+    });
+    //label form
+    this.labelForm = this.fb.group({
+      shipment_id: new FormControl('', [Validators.required]),
+      courier_id: new FormControl('', [Validators.required])
+    });
+    //invoice form
+    this.invoiceForm = this.fb.group({
+      shipment_id: new FormControl('', [Validators.required]),
+      courier_id: new FormControl('', [Validators.required])
+    });
     // filter api
     this.websiteService.getProductOrderByStatus('New').subscribe(res => {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
-    })
+    });
     //all list api
     // this.websiteService.getProductOrder().subscribe(res => {
     //   // console.log(res);
@@ -69,14 +103,22 @@ export class ProductOrderComponent implements OnInit {
     // })
     // console.log(this.tableData);  
   }
-  changeApiStatus(status:any){
+  changeApiStatus(status: any) {
     console.warn(status);
     console.warn(status.tab.textLabel);
+    if(status.tab.textLabel=='All'){
+      this.websiteService.getProductOrder().subscribe(res => {
+        this.tableData = res;
+        this.loader = false;
+        this.selectedRows = new Array(this.tableData.length).fill(false);
+      });
+    }else{
     this.websiteService.getProductOrderByStatus(status.tab.textLabel).subscribe(res => {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
     });
+  }
   }
   allSelected: boolean = false;
   selectedRows: boolean[]
@@ -254,7 +296,8 @@ export class ProductOrderComponent implements OnInit {
   p_id: any;
   openModalBatch(product: any) {
     this.p_id = product.id;
-    const modal = document.getElementById('batchModal');
+    this.acceptForm.get('id').patchValue(this.p_id);
+    const modal = document.getElementById('acceptModal');
     if (modal) {
       modal.classList.add('show');
       modal.style.display = 'block';
@@ -264,7 +307,7 @@ export class ProductOrderComponent implements OnInit {
     }
   }
   closeModalBatch() {
-    const modal = document.getElementById('batchModal');
+    const modal = document.getElementById('acceptModal');
     if (modal) {
       modal.classList.remove('show');
       modal.style.display = 'none';
@@ -304,7 +347,8 @@ export class ProductOrderComponent implements OnInit {
     formData.append('height', this.acceptForm.get('height')?.value);
     formData.append('weight', this.acceptForm.get('weight')?.value);
     formData.append('branch', this.acceptForm.get('branch')?.value);
-    formData.append('id', this.p_id);
+    formData.append('id', this.acceptForm.get('id')?.value);
+
     if (this.acceptForm.valid) {
       this.loaders = true
       this.websiteService.addAcceptOrder(formData).subscribe((res: any) => {
@@ -313,6 +357,7 @@ export class ProductOrderComponent implements OnInit {
         if (res.success) {
           this.toastr.success(res.msg);
           this.closeModalBatch();
+          this.ngOnInit();
         }
         if (res.status == false) {
           this.toastr.error(res.error?.message);
@@ -368,6 +413,150 @@ export class ProductOrderComponent implements OnInit {
         })
       }
     });
+  }
+
+
+  // courier modal
+  openModalCourier(product: any) {
+    this.getServiceAvility(product.shipping_address)
+    const modal = document.getElementById('courierModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blur bg
+      this.isModalOpen = true;
+      this.websiteService.setCheckBlur(true);
+    }
+  }
+  closeModalCourier() {
+    const modal = document.getElementById('courierModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      this.isModalOpen = false;
+      this.websiteService.setCheckBlur(false);
+    }
+  }
+
+  // assign awd
+  openModalAssignAWD(product: any) {
+    this.awdForm.patchValue({
+      courier_id: product?.shiprocket_order_id,
+      shipment_id: product?.shiprocket_shipment_id,
+    })
+    const modal = document.getElementById('awdModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blur bg
+      this.isModalOpen = true;
+      this.websiteService.setCheckBlur(true);
+      this.closeModalCourier();
+    }
+  }
+  closeModalAssignAWD() {
+    const modal = document.getElementById('awdModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      this.isModalOpen = false;
+      this.websiteService.setCheckBlur(false);
+    }
+  }
+
+  // courier service avility api
+  serviceAbilityList: any;
+  getServiceAvility(ShippingAdd: any) {
+    this.websiteService.getServiceAvility(ShippingAdd.pincode).subscribe((res: any) => {
+      this.serviceAbilityList = res;
+    })
+  }
+  // awd form
+  get courier_id() {
+    return this.awdForm.get('courier_id')
+  }
+  get shipment_id() {
+    return this.awdForm.get('shipment_id')
+  }
+  AWDSubmit() {
+    console.warn(this.awdForm.value);
+    let formData = new FormData();
+    formData.append('shipment_id', this.awdForm.get('shipment_id')?.value);
+    formData.append('courier_id', this.awdForm.get('courier_id')?.value);
+    if (this.awdForm.valid) {
+      this.loaders = true
+      this.websiteService.addAWD(formData).subscribe((res: any) => {
+        console.log(res);
+        this.loaders = false;
+        if (res.success) {
+          this.toastr.success(res.msg);
+          this.closeModalAssignAWD();
+          this.ngOnInit();
+        } else {
+          this.toastr.error(res.error);
+        }
+
+      }, err => {
+        this.loaders = false;
+        this.toastr.error()
+      });
+    } else {
+      this.loaders = false;
+      this.acceptForm.markAllAsTouched();
+    }
+  }
+ 
+  downloadLabel(product: any) {
+    console.log(product);
+    let p: number[] = [];
+    p.push(product.shiprocket_shipment_id)
+    let formData = new FormData();
+    formData.append('shipment_id', JSON.stringify(p))
+    this.websiteService.downloadLabel(formData).subscribe((res: any) => {
+      console.log(res);
+      if(res.success){
+        this.toastr.success(res.msg);
+        this.ngOnInit();
+      }else{
+        this.toastr.error(res.msg);
+      }
+    });
+  }
+  downloadInvoice(product: any) {
+    console.log(product);
+    let p: number[] = [];
+    p.push(product.shiprocket_order_id)
+    let formData = new FormData();
+    formData.append('ids', JSON.stringify(p))
+    this.websiteService.downloadInvoice(formData).subscribe((res: any) => {
+      console.log(res);
+      if(res.success){
+        this.toastr.success(res.msg);
+        this.ngOnInit();
+      }else{
+        this.toastr.error(res.msg);
+      }
+    });
+  }
+  cancelOrder(product: any) {
+    console.log(product);
+    let p: number[] = [];
+    p.push(product.shiprocket_order_id)
+    let formData = new FormData();
+    formData.append('ids', JSON.stringify(p))
+    this.websiteService.cancelOrder(formData).subscribe((res: any) => {
+      console.log(res);
+      if(res.success){
+        this.toastr.success(res.msg);
+        this.ngOnInit();
+      }else{
+        this.toastr.error(res.msg);
+      }
+    });
+  }
+  selectDateRange(dat:any){
+    console.log(dat);
+    
   }
 }
 
