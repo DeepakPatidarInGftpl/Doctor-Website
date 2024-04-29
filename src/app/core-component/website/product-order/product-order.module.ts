@@ -6,7 +6,8 @@ import { ProductOrderComponent } from './product-order.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatTabsModule} from '@angular/material/tabs';
-
+import {MatMenuModule} from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 @NgModule({
   declarations: [ProductOrderComponent],
   imports: [
@@ -15,7 +16,9 @@ import {MatTabsModule} from '@angular/material/tabs';
     SharedModuleModule,
     FormsModule,
     ReactiveFormsModule,
-    MatTabsModule
+    MatTabsModule,
+    MatMenuModule,
+    MatSelectModule
   ],
   providers:[DatePipe]
 })

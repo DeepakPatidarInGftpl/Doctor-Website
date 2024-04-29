@@ -344,4 +344,28 @@ export class WebsiteService {
     let url = this.apiUrl+'/pv-api/order_rejected/?id=';
     return this.http.post(`${url}${id}`,'')
   }
+  getServiceAvility(pincode:any){
+    let url = this.apiUrl+'/pv-api/serviceability/?delivery_postcode=';
+    return this.http.get(`${url}${pincode}`)
+  }
+  //awd 
+  addAWD(data:any){
+    let url = this.apiUrl+'/pv-api/assign_awd/';
+    return this.http.post(url,data);
+  }
+  //label download
+  downloadLabel(data:any){
+    let url = this.apiUrl+'/pv-api/generate_label/';
+    return this.http.post(url,data);
+  }
+  //invoice download
+  downloadInvoice(data:any){
+    let url = this.apiUrl+'/pv-api/generate_invoice/';
+    return this.http.post(url,data);
+  }
+  // cancel order
+  cancelOrder(data:any){
+    let url = this.apiUrl+'/pv-api/order_cancelled_shiprocket/';
+    return this.http.post(url,data);
+  }
 }
