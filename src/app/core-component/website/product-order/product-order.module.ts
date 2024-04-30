@@ -8,6 +8,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatMenuModule} from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
 @NgModule({
   declarations: [ProductOrderComponent],
   imports: [
@@ -18,8 +21,13 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     MatTabsModule,
     MatMenuModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatNativeDateModule
   ],
-  providers:[DatePipe]
+  providers: [
+    DatePipe,
+  ],
 })
 export class ProductOrderModule { }

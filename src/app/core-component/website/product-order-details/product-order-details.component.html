@@ -447,7 +447,7 @@
                 </ng-container>
             </div>
            
-            <h4 class="mb-2"><span>Order No.</span>{{productOrderDetail?.shiprocket_order_id}}</h4>
+            <h4 class="mb-2"><span>Order Id : </span>{{productOrderDetail?.shiprocket_order_id}}</h4>
             <p>Status : <span [ngClass]="{
                 'bg-lightgreen': productOrderDetail?.status === 'Accepted',
                 'bg-lightblue': productOrderDetail?.status === 'Dispatched', 
@@ -566,8 +566,9 @@
                                                                 <!-- <th class="thone" style="white-space: normal !important;">Sr.No.</th> -->
                                                                 <!-- <th class="thone" style="white-space: normal !important;">Status</th> -->
                                                                 <th class="thone" style="white-space: normal !important;">Title</th>
-                                                                <th class="thone" style="white-space: normal !important;">Order No.</th>
-                                                                <th class="thone" style="white-space: normal !important;">Shipment No.</th>
+                                                                <th class="thone" style="white-space: normal !important;">Online Order Id</th>
+                                                                <th class="thone" style="white-space: normal !important;">Order Id</th>
+                                                                <th class="thone" style="white-space: normal !important;">Shipment Id</th>
                                                                 <th class="thone" style="white-space: normal !important;">Payment Type</th>
                                                                 <th class="thone" style="white-space: normal !important;">Payment Satus</th>
                                                                 <th class="thone" style="white-space: normal !important;">Order Type</th>
