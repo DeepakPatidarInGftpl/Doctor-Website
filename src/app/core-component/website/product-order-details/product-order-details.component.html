@@ -447,7 +447,7 @@
                 </ng-container>
             </div>
            
-            <h4 class="mb-2"><span>Order No.</span>{{productOrderDetail?.order_no}}</h4>
+            <h4 class="mb-2"><span>Order No.</span>{{productOrderDetail?.shiprocket_order_id}}</h4>
             <p>Status : <span [ngClass]="{
                 'bg-lightgreen': productOrderDetail?.status === 'Accepted',
                 'bg-lightblue': productOrderDetail?.status === 'Dispatched', 
@@ -578,8 +578,9 @@
                                                                 <!-- <td>{{1}}</td> -->
                                                                 <!-- <td style="color:black">{{productOrderDetail?.status}}</td> upar deekhana hai -->
                                                                 <td style="color:black">{{productOrderDetail?.user?.username}}</td>
-                                                                <td style="color:black">{{productOrderDetail?.order_no?productOrderDetail?.order_no:''}}</td>
-                                                                <td style="color:black">{{productOrderDetail?.shipment_no?productOrderDetail?.shipment_no:''}}</td>
+                                                                <td>{{productOrderDetail?.online_order_id}}</td>
+                                                                <td style="color:black">{{productOrderDetail?.shiprocket_order_id?productOrderDetail?.shiprocket_order_id:''}}</td>
+                                                                <td style="color:black">{{productOrderDetail?.shiprocket_shipment_id?productOrderDetail?.shiprocket_shipment_id:''}}</td>
                                                                 <td style="color:black">{{productOrderDetail?.payment_type}}</td>
                                                                 <td style="color:black">{{productOrderDetail?.payment_status}}</td>
                                                                 <td style="color:black">{{productOrderDetail?.address_type}}</td>
