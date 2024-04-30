@@ -84,8 +84,8 @@
                                <td>{{products?.order_date |date}}</td>
                                <td>{{products?.final_amount}}</td>
                                 <td>  
-                                    <button class="btn btn-submit me-2" (click)="openModalBatch(products)" style="background: #04c159;padding: 2px 0px;min-width: 60px;">Accept</button>
-                                    <button class="btn btn-submit me-2" (click)="rejectOrder(products.id)" style="background: #EA5455;padding: 2px 0px;min-width: 60px;">Reject</button>
+                                    <button class="btn btn-submit me-2" (click)="openModalBatch(products)" style="background: #04c159;padding: 2px 0px;min-width: 60px; font-weight: 400;">Accept</button>
+                                    <button class="btn btn-submit me-2" (click)="rejectOrder(products.id)" style="background: #EA5455;padding: 2px 0px;min-width: 60px; font-weight: 400;">Reject</button>
                                 </td>
                                 </ng-container>
                             </tr>
@@ -204,7 +204,7 @@
                                 <td>{{products?.order_date |date}}</td>
                                 <td>{{products?.final_amount}}</td>
                                 <td>  
-                                    <button class="btn btn-submit me-2" (click)="openModalCourier(products)" style="background: #04c159;padding: 2px 0px;min-width: 60px;">Assign</button>
+                                    <button class="btn btn-submit me-2" (click)="openModalCourier(products)" style="background: #04c159;padding: 2px 0px;min-width: 60px;font-weight: 400;">Assign</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -1080,7 +1080,7 @@
                                 <td>{{courier?.freight_charge}}</td> 
                                 <td>{{courier?.cod_charges}}</td>
                                 <td>  
-                                    <button class="btn btn-submit me-2" (click)="openModalAssignAWD(courier)" style="background: #04c159;padding: 2px 0px;min-width: 60px;">Ship Now</button>
+                                    <button class="btn btn-submit me-2" (click)="openModalAssignAWD(courier)" style="background: #04c159;padding: 2px 0px;min-width: 60px;font-weight: 400;">Ship Now</button>
                                 </td>
                             </tr>
                         </tbody>
