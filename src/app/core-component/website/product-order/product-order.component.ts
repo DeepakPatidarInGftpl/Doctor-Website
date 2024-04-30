@@ -112,6 +112,7 @@ export class ProductOrderComponent implements OnInit {
     console.warn(status.tab.textLabel);
     this.tableData=null;
     this.filteredData=null;
+    this.titlee='';
     this.loader=true;
     if (status.tab.textLabel == 'All') {
       this.websiteService.getProductOrder().subscribe(res => {
@@ -144,11 +145,11 @@ export class ProductOrderComponent implements OnInit {
   select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
-      this.tableData.forEach((f: any) => {
+      this.filteredData.forEach((f: any) => {
         f.isSelected = true
       })
     } else {
-      this.tableData.forEach((f: any) => {
+      this.filteredData.forEach((f: any) => {
         f.isSelected = false
       })
     }
@@ -159,7 +160,7 @@ export class ProductOrderComponent implements OnInit {
       this.ngOnInit();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
-      this.tableData = this.tableData.filter(res => {
+      this.filteredData = this.filteredData.filter(res => {
         const nameLower = res?.user?.username.toString().toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
@@ -176,7 +177,7 @@ export class ProductOrderComponent implements OnInit {
   }
 
   generatePDFAgain() {
-    const doc = new jsPDF('landscape');
+    const doc = new jsPDF();
     const title = 'Product Order';
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
@@ -185,23 +186,20 @@ export class ProductOrderComponent implements OnInit {
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', ' Title', 'Payment Type', 'Payment Status', 'Sub Total Amount', 'Total Discount %', 'Total Amount', 'Final Amount', 'Couopn Discount %', 'Address Type', 'Status', 'Order Date', 'Delivered At']
+        ['#', ' Status','User','Order Type','Payment Type','Payment Status','Online Order Id','Order Id','Shipment Id','Order Date', 'Final Amount']
       ],
-      body: this.tableData.map((row: any, index: number) => [
-
+      body: this.filteredData.map((row: any, index: number) => [
         index + 1,
-        row.carts[0]?.product?.title,
+        row.status,
+        row.user?.username,
+        row.address_type,
         row.payment_type,
         row.payment_status,
-        row.sub_total_amount,
-        row.total_discount,
-        row.final_amount,
-        row.couopn_discount,
-        row.total_amount,
-        row.address_type,
-        row.status,
+        row.online_order_id,
+        row.shiprocket_order_id,
+        row.shiprocket_shipment_id,
         this.formatDate(row.order_date),
-        this.formatDate(row.delivered_at)
+        row.final_amount,
       ]),
       theme: 'grid',
       headStyles: {
