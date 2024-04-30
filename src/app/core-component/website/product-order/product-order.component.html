@@ -26,9 +26,24 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
-                            <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
-                        </mat-select>
+                    
+                        <mat-form-field class="example-form-field" style="width: 30%;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
+                                    (dateChange)="getSelectedDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input input_date" (dateChange)="getSelectedDates()">
+                            </mat-date-range-input>
+        
+                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
+                                <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                            </mat-select>
+                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                        </mat-form-field>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -183,7 +198,6 @@
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
                             <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
-                           
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -330,8 +344,9 @@
                                     <mat-menu #menu="matMenu" class="submenuitem">
                                         <button mat-menu-item (click)="downloadLabel(products)">Download Label</button>
                                         <button mat-menu-item (click)="downloadInvoice(products)">Download Invoice</button>
-                                        <button mat-menu-item >Reassign Courier</button>
-                                        <button mat-menu-item >Edit Order</button>
+                                        <button mat-menu-item (click)="openModalCourier(products)">Reassign Courier</button>
+                                        <!-- <button mat-menu-item >Edit Order</button> -->
+                                        <button mat-menu-item (click)="openModalAddress(products)">Update Address</button>
                                         <button mat-menu-item (click)="cancelOrder(products)">Cancel Order</button>
                                     </mat-menu>
                                 </td>
@@ -1135,6 +1150,59 @@
                         </div>
                         </div>
                         </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- address modal  -->
+<div class="modal fade " id="courierModal" tabindex="-1" role="dialog" aria-labelledby="courierModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="max-width: 70%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Courier Partner</h1>
+                <button type="button" class="close" (click)="closeModalCourier()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table datanew" id="mytable">
+                        <thead>
+                            <tr>
+                                <th (click)="sort('id')" class="thone tdd">Sr. No.<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Params<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Required<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Data Type<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Description<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Example<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="serviceAbilityList?.length>=0">
+                            <tr *ngFor="let courier of serviceAbilityList; let i = index">
+                                 <td>{{i+1}}</td>
+                                <td>{{courier?.courier_name}}</td>
+                                <td>{{courier?.courier_company_id}}</td>
+                                <td>{{courier?.city}}</td>
+                                <td>{{courier?.etd}}</td>
+                                <td>{{courier?.estimated_delivery_days}}</td>
+                                <td>  
+                                    <button class="btn btn-submit me-2" (click)="openModalAssignAWD(courier)" style="background: #04c159;padding: 2px 0px;min-width: 60px;font-weight: 400;">Ship Now</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="filteredData?.length==0">
+                            <tr>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loaderPincode"></mat-progress-bar>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
