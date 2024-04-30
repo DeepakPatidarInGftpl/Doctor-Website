@@ -75,8 +75,8 @@ export class ProductOrderComponent implements OnInit {
     });
     //awd 
     this.awdForm = this.fb.group({
-      shipment_id: new FormControl('', [Validators.required]),
-      courier_id: new FormControl('', [Validators.required])
+      shipment_id: new FormControl('', ),
+      courier_id: new FormControl('', )
     });
     //label form
     this.labelForm = this.fb.group({
@@ -93,6 +93,9 @@ export class ProductOrderComponent implements OnInit {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+      console.log(this.filteredData,' console.log(this.filteredData);');
+      this.filterData();
     });
     //all list api
     // this.websiteService.getProductOrder().subscribe(res => {
@@ -103,22 +106,34 @@ export class ProductOrderComponent implements OnInit {
     // })
     // console.log(this.tableData);  
   }
+
   changeApiStatus(status: any) {
     console.warn(status);
     console.warn(status.tab.textLabel);
-    if(status.tab.textLabel=='All'){
+    this.tableData=null;
+    this.filteredData=null;
+    this.loader=true;
+    if (status.tab.textLabel == 'All') {
       this.websiteService.getProductOrder().subscribe(res => {
         this.tableData = res;
         this.loader = false;
         this.selectedRows = new Array(this.tableData.length).fill(false);
+        this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+        console.log(this.filteredData,' console.log(this.filteredData);');
+        this.filterData();
       });
-    }else{
-    this.websiteService.getProductOrderByStatus(status.tab.textLabel).subscribe(res => {
-      this.tableData = res;
-      this.loader = false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-    });
-  }
+    } else {
+      this.websiteService.getProductOrderByStatus(status.tab.textLabel).subscribe((res:any) => {
+        this.tableData = res;
+        console.log(this.tableData);
+        this.loader = false;
+        this.selectedRows = new Array(this.tableData.length).fill(false);
+        this.selectedRows = new Array(this.tableData.length).fill(false);
+        console.log(this.filteredData,' console.log(this.filteredData);');
+        this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+        this.filterData();
+      });
+    }
   }
   allSelected: boolean = false;
   selectedRows: boolean[]
@@ -145,7 +160,7 @@ export class ProductOrderComponent implements OnInit {
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.tableData = this.tableData.filter(res => {
-        const nameLower = res?.carts[0]?.product?.title?.toString().toLocaleLowerCase();
+        const nameLower = res?.user?.username.toString().toLocaleLowerCase();
         return nameLower.includes(searchTerm);
       });
     }
@@ -311,6 +326,7 @@ export class ProductOrderComponent implements OnInit {
     if (modal) {
       modal.classList.remove('show');
       modal.style.display = 'none';
+      this.acceptForm.reset();
       this.isModalOpen = false;
       this.websiteService.setCheckBlur(false);
     }
@@ -418,6 +434,11 @@ export class ProductOrderComponent implements OnInit {
 
   // courier modal
   openModalCourier(product: any) {
+    console.log(product);
+    this.awdForm.patchValue({
+      shipment_id: parseInt(product?.shiprocket_shipment_id),
+    })
+    console.log(this.awdForm.value);
     this.getServiceAvility(product.shipping_address)
     const modal = document.getElementById('courierModal');
     if (modal) {
@@ -439,10 +460,9 @@ export class ProductOrderComponent implements OnInit {
   }
 
   // assign awd
-  openModalAssignAWD(product: any) {
+  openModalAssignAWD(courier: any) { 
     this.awdForm.patchValue({
-      courier_id: product?.shiprocket_order_id,
-      shipment_id: product?.shiprocket_shipment_id,
+      courier_id: parseInt(courier?.courier_company_id),
     })
     const modal = document.getElementById('awdModal');
     if (modal) {
@@ -466,9 +486,11 @@ export class ProductOrderComponent implements OnInit {
 
   // courier service avility api
   serviceAbilityList: any;
+  loaderPincode=true
   getServiceAvility(ShippingAdd: any) {
     this.websiteService.getServiceAvility(ShippingAdd.pincode).subscribe((res: any) => {
       this.serviceAbilityList = res;
+      this.loaderPincode=false
     })
   }
   // awd form
@@ -494,6 +516,9 @@ export class ProductOrderComponent implements OnInit {
           this.ngOnInit();
         } else {
           this.toastr.error(res.error);
+          if(res.json){
+            this.toastr.error(res.json.message);  
+          }
         }
 
       }, err => {
@@ -505,7 +530,7 @@ export class ProductOrderComponent implements OnInit {
       this.acceptForm.markAllAsTouched();
     }
   }
- 
+
   downloadLabel(product: any) {
     console.log(product);
     let p: number[] = [];
@@ -514,11 +539,11 @@ export class ProductOrderComponent implements OnInit {
     formData.append('shipment_id', JSON.stringify(p))
     this.websiteService.downloadLabel(formData).subscribe((res: any) => {
       console.log(res);
-      if(res.success){
+      if (res.success) {
         this.toastr.success(res.msg);
         this.ngOnInit();
-      }else{
-        this.toastr.error(res.msg);
+      } else {
+        this.toastr.error(res.error_msg);
       }
     });
   }
@@ -530,11 +555,11 @@ export class ProductOrderComponent implements OnInit {
     formData.append('ids', JSON.stringify(p))
     this.websiteService.downloadInvoice(formData).subscribe((res: any) => {
       console.log(res);
-      if(res.success){
+      if (res.success) {
         this.toastr.success(res.msg);
         this.ngOnInit();
-      }else{
-        this.toastr.error(res.msg);
+      } else {
+        this.toastr.error(res.error_msg);
       }
     });
   }
@@ -546,19 +571,143 @@ export class ProductOrderComponent implements OnInit {
     formData.append('ids', JSON.stringify(p))
     this.websiteService.cancelOrder(formData).subscribe((res: any) => {
       console.log(res);
-      if(res.success){
+      if (res.success) {
         this.toastr.success(res.msg);
         this.ngOnInit();
-      }else{
-        this.toastr.error(res.msg);
+      } else {
+        this.toastr.error(res.error_msg);
+        if(res.json){
+          this.toastr.error(res.json.message);  
+        }
       }
     });
   }
-  selectDateRange(dat:any){
+  selectDateRange(dat: any) {
     console.log(dat);
-    
+    this.selectCredit = dat;
+    this.filterData();
   }
+
+  selectCredit: any;
+  filteredData: any[];
+  filterData() {
+    let filteredData = this.tableData.slice();
+    if (this.selectCredit) {
+      const currentDate = new Date();
+
+      switch (this.selectCredit) {
+        case 'today':
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return this.formatDate(orderDate) === this.formatDate(currentDate);
+          });
+          break;
+
+        case 'yesterday':
+          const yesterday = new Date(currentDate);
+          yesterday.setDate(currentDate.getDate() - 1);
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return this.formatDate(orderDate) === this.formatDate(yesterday);
+          });
+          break;
+
+        case 'thisWeek':
+          const firstDayOfWeek = new Date(currentDate);
+          firstDayOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+          const lastDayOfWeek = new Date(currentDate);
+          lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return this.formatDate(orderDate) >= this.formatDate(firstDayOfWeek) &&
+              this.formatDate(orderDate) <= this.formatDate(lastDayOfWeek);
+          });
+          break;
+
+        case 'thisMonth':
+          const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+          const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return orderDate >= firstDayOfMonth && orderDate <= lastDayOfMonth;
+          });
+          break;
+
+        case 'lastMonth':
+          const firstDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+          const lastDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return orderDate >= firstDayOfLastMonth && orderDate <= lastDayOfLastMonth;
+          });
+          break;
+
+        case 'last15Days':
+          const last15DaysStart = new Date(currentDate);
+          last15DaysStart.setDate(currentDate.getDate() - 14);
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return orderDate >= last15DaysStart && orderDate <= currentDate;
+          });
+          break;
+
+        case 'last30Days':
+          const last30DaysStart = new Date(currentDate);
+          last30DaysStart.setDate(currentDate.getDate() - 29);
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return orderDate >= last30DaysStart && orderDate <= currentDate;
+          });
+          break;
+
+        case 'thisQuarter':
+          const currentMonth = currentDate.getMonth();
+          const thisQuarterStart = new Date(currentDate.getFullYear(), currentMonth - 2, 1);
+          const thisQuarterEnd = new Date(currentDate.getFullYear(), currentMonth + 1, 0);
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return orderDate >= thisQuarterStart && orderDate <= thisQuarterEnd;
+          });
+          break;
+
+        case 'lastQuarter':
+          const lastQuarterStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 5, 1);
+          const lastQuarterEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() - 2, 0);
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return orderDate >= lastQuarterStart && orderDate <= lastQuarterEnd;
+          });
+          break;
+
+        case 'thisFinancialYear':
+          const thisFinancialYearStart = new Date(currentDate.getFullYear(), 3, 1);
+          const thisFinancialYearEnd = new Date(currentDate.getFullYear() + 1, 2, 31);
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return orderDate >= thisFinancialYearStart && orderDate <= thisFinancialYearEnd;
+          });
+          break;
+
+        case 'lastFinancialYear':
+          const lastFinancialYearStart = new Date(currentDate.getFullYear() - 1, 3, 1);
+          const lastFinancialYearEnd = new Date(currentDate.getFullYear(), 2, 31);
+          filteredData = filteredData.filter(item => {
+            const orderDate = new Date(item.order_date);
+            return orderDate >= lastFinancialYearStart && orderDate <= lastFinancialYearEnd;
+          });
+          break;
+
+        default:
+          break;
+      }
+    }
+    this.filteredData = filteredData;
+    console.log(this.filteredData,' console.log(this.filteredData);');
+  }
+
+  clearFilter() {
+    this.selectCredit = null;
+    this.filterData();
+  }
+
 }
-
-
-
