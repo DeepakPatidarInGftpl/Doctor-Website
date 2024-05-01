@@ -159,9 +159,23 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
-                            <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
-                        </mat-select>
+                        <mat-form-field class="example-form-field" style="width: 30%;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
+                                    (dateChange)="getSelectedDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input input_date" (dateChange)="getSelectedDates()">
+                            </mat-date-range-input>
+        
+                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
+                                <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                            </mat-select>
+                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                        </mat-form-field>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -276,9 +290,23 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
-                            <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
-                        </mat-select>
+                        <mat-form-field class="example-form-field" style="width: 30%;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
+                                    (dateChange)="getSelectedDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input input_date" (dateChange)="getSelectedDates()">
+                            </mat-date-range-input>
+        
+                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
+                                <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                            </mat-select>
+                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                        </mat-form-field>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -407,9 +435,23 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
-                            <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
-                        </mat-select>
+                        <mat-form-field class="example-form-field" style="width: 30%;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
+                                    (dateChange)="getSelectedDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input input_date" (dateChange)="getSelectedDates()">
+                            </mat-date-range-input>
+        
+                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
+                                <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                            </mat-select>
+                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                        </mat-form-field>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -528,9 +570,23 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
-                            <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
-                        </mat-select>
+                        <mat-form-field class="example-form-field" style="width: 30%;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
+                                    (dateChange)="getSelectedDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input input_date" (dateChange)="getSelectedDates()">
+                            </mat-date-range-input>
+        
+                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
+                                <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                            </mat-select>
+                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                        </mat-form-field>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -649,9 +705,23 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
-                            <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
-                        </mat-select>
+                        <mat-form-field class="example-form-field" style="width: 30%;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
+                                    (dateChange)="getSelectedDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input input_date" (dateChange)="getSelectedDates()">
+                            </mat-date-range-input>
+        
+                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
+                                <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                            </mat-select>
+                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                        </mat-form-field>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -770,9 +840,23 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
-                            <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
-                        </mat-select>
+                        <mat-form-field class="example-form-field" style="width: 30%;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
+                                    (dateChange)="getSelectedDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input input_date" (dateChange)="getSelectedDates()">
+                            </mat-date-range-input>
+        
+                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
+                                <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                            </mat-select>
+                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                        </mat-form-field>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -891,9 +975,23 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
-                            <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
-                        </mat-select>
+                        <mat-form-field class="example-form-field" style="width: 30%;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
+                                    (dateChange)="getSelectedDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input input_date" (dateChange)="getSelectedDates()">
+                            </mat-date-range-input>
+        
+                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
+                                <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                            </mat-select>
+                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                        </mat-form-field>
                     </div>
                     <div class="wordset">
                         <ul>
@@ -1155,54 +1253,103 @@
     </div>
 </div>
 <!-- address modal  -->
-<div class="modal fade " id="courierModal" tabindex="-1" role="dialog" aria-labelledby="courierModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="max-width: 70%;">
+<div class="modal fade " id="addressModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Courier Partner</h1>
-                <button type="button" class="close" (click)="closeModalCourier()" aria-label="Close">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Update Address</h1>
+                <button type="button" class="close" (click)="closeModalAddress()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table datanew" id="mytable">
-                        <thead>
-                            <tr>
-                                <th (click)="sort('id')" class="thone tdd">Sr. No.<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone tdd">Params<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone tdd">Required<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone tdd">Data Type<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone tdd">Description<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone tdd">Example<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody *ngIf="serviceAbilityList?.length>=0">
-                            <tr *ngFor="let courier of serviceAbilityList; let i = index">
-                                 <td>{{i+1}}</td>
-                                <td>{{courier?.courier_name}}</td>
-                                <td>{{courier?.courier_company_id}}</td>
-                                <td>{{courier?.city}}</td>
-                                <td>{{courier?.etd}}</td>
-                                <td>{{courier?.estimated_delivery_days}}</td>
-                                <td>  
-                                    <button class="btn btn-submit me-2" (click)="openModalAssignAWD(courier)" style="background: #04c159;padding: 2px 0px;min-width: 60px;font-weight: 400;">Ship Now</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody *ngIf="filteredData?.length==0">
-                            <tr>
-                                <td colspan="10">
-                                    <p class="center-textt">Data not available</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="progressbar">
-                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loaderPincode"></mat-progress-bar>
-                    </div>
-                </div>
+                <form [formGroup]="addressForm" (ngSubmit)="addressSubmit()">
+                    <div class="row">
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Web Order Id</label>
+                                <input type="text" formControlName="web_order_id" placeholder="Enter Web Order Id" id="web_order_id" [ngClass]="{'is-invalid': u['web_order_id'].touched && u['web_order_id'].invalid}">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Order Id</label>
+                                <input type="text" formControlName="order_id" placeholder="Enter Order Id" id="order_id" [ngClass]="{'is-invalid': u['order_id'].touched && u['order_id'].invalid}">
+                          </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" formControlName="name" placeholder="Enter Name" id="name" [ngClass]="{'is-invalid': u['name'].touched && u['name'].invalid}">
+                           </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" formControlName="email" placeholder="Enter Email" id="email" [ngClass]="{'is-invalid': u['email'].touched && u['email'].invalid}">
+                           </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Mobile No.</label>
+                                <input type="text" formControlName="mobile_no" placeholder="Enter Mobile No" id="mobile_no" [ngClass]="{'is-invalid': u['mobile_no'].touched && u['mobile_no'].invalid}">
+                          </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Alternative Mobile No.</label>
+                                <input type="text" formControlName="alternative_mobile_no" placeholder="Enter alternative_mobile_no" id="alternative_mobile_no" [ngClass]="{'is-invalid': u['alternative_mobile_no'].touched && u['alternative_mobile_no'].invalid}">
+                           </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" formControlName="city" placeholder="Enter city" id="city" [ngClass]="{'is-invalid': u['city'].touched && u['city'].invalid}">
+                          </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>State</label>
+                                <input type="text" formControlName="state" placeholder="Enter State" id="state" [ngClass]="{'is-invalid': u['state'].touched && u['state'].invalid}">
+                           </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Country</label>
+                                <input type="text" formControlName="country" placeholder="Enter Country" id="country" [ngClass]="{'is-invalid': u['country'].touched && u['country'].invalid}">
+                           </div>
+                        </div>
+                        <!-- <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Address Type</label>
+                                <input type="text" formControlName="address_type" placeholder="Enter Address Type" id="address_type" [ngClass]="{'is-invalid': u['address_type'].touched && u['address_type'].invalid}">
+                           </div>
+                        </div> -->
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Line1</label>
+                                <input type="text" formControlName="line1" placeholder="Enter Line1" id="line1" [ngClass]="{'is-invalid': u['line1'].touched && u['line1'].invalid}">
+                           </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Line2</label>
+                                <input type="text" formControlName="line2" placeholder="Enter Line2" id="line2" [ngClass]="{'is-invalid': u['line2'].touched && u['line2'].invalid}">
+                           </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Address</label>
+                                <textarea formControlName="address" placeholder="Enter Address Type" id="address" [ngClass]="{'is-invalid': u['address'].touched && u['address'].invalid}" cols="30" rows="10"></textarea>
+                           </div>
+                        </div>
+                        <div class="col-lg-12 text-center">
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>
+                        </div>
+                        </div>
+                        </form>
             </div>
         </div>
     </div>
