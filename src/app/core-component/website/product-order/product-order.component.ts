@@ -61,6 +61,10 @@ export class ProductOrderComponent implements OnInit {
   get a() {
     return this.awdForm.controls;
   }
+  addressForm: FormGroup;
+  get u() {
+    return this.addressForm.controls;
+  }
   labelForm: FormGroup;
   invoiceForm: FormGroup;
   campaignOne: FormGroup;
@@ -104,6 +108,23 @@ export class ProductOrderComponent implements OnInit {
       shipment_id: new FormControl('', [Validators.required]),
       courier_id: new FormControl('', [Validators.required])
     });
+    // update address form
+    this.addressForm = this.fb.group({
+      web_order_id: new FormControl('', ),
+      order_id: new FormControl('', ),
+      name: new FormControl('', ),
+      email: new FormControl('', ),
+      mobile_no: new FormControl('', ),
+      alternative_mobile_no: new FormControl('', ),
+      city: new FormControl('', ),
+      state: new FormControl('', ),
+      country: new FormControl('', ),
+      address_type: new FormControl('Shipping', ),
+      line1: new FormControl('', ),
+      line2: new FormControl('', ),
+      address: new FormControl('', ),
+    });
+
     // filter api
     this.websiteService.getProductOrderByStatus('New').subscribe(res => {
       this.tableData = res;
@@ -742,6 +763,21 @@ export class ProductOrderComponent implements OnInit {
 //update address modal 
   openModalAddress(product: any) {
     console.log(product); 
+    this.addressForm.patchValue({
+      web_order_id: product.online_order_id,
+      order_id: product.shiprocket_order_id,
+      name: product.shipping_address.name,
+      email: product.shipping_address.email,
+      mobile_no: product.shipping_address.mobile_no,
+      alternative_mobile_no: product.shipping_address.alternative_mobile_no,
+      city: product.shipping_address.city,
+      state: product.shipping_address.state,
+      country: product.shipping_address.country,
+      // address_type: product.shipping_address.address_type,
+      line1: product.shipping_address.line1,
+      line2: product.shipping_address.line2,
+      address: product.shipping_address.address,
+    });
     const modal = document.getElementById('addressModal');
     if (modal) {
       modal.classList.add('show');
@@ -758,6 +794,48 @@ export class ProductOrderComponent implements OnInit {
       modal.style.display = 'none';
       this.isModalOpen = false;
       this.websiteService.setCheckBlur(false);
+    }
+  }
+
+  addressSubmit() {
+    console.warn(this.addressForm.value);
+    let formData = new FormData();
+    formData.append('web_order_id', this.addressForm.get('web_order_id')?.value);
+    formData.append('order_id', this.addressForm.get('order_id')?.value);
+    formData.append('name', this.addressForm.get('name')?.value);
+    formData.append('email', this.addressForm.get('email')?.value);
+    formData.append('mobile_no', this.addressForm.get('mobile_no')?.value);
+    formData.append('alternative_mobile_no', this.addressForm.get('alternative_mobile_no')?.value);
+    formData.append('city', this.addressForm.get('city')?.value);
+    formData.append('state', this.addressForm.get('state')?.value);
+    formData.append('country', this.addressForm.get('country')?.value);
+    formData.append('address_type', this.addressForm.get('address_type')?.value);
+    formData.append('line1', this.addressForm.get('line1')?.value);
+    formData.append('line2', this.addressForm.get('line2')?.value);
+    formData.append('address', this.addressForm.get('address')?.value);
+
+    if (this.addressForm.valid) {
+      this.loaders = true
+      this.websiteService.addAddress(formData).subscribe((res: any) => {
+        console.log(res);
+        this.loaders = false;
+        if (res.success) {
+          this.toastr.success(res.msg);
+          this.closeModalAddress();
+          this.ngOnInit();
+        } else {
+          this.toastr.error(res.error);
+          if(res.json){
+            this.toastr.error(res.json.message);  
+          }
+        }
+      }, err => {
+        this.loaders = false;
+        this.toastr.error()
+      });
+    } else {
+      this.loaders = false;
+      this.acceptForm.markAllAsTouched();
     }
   }
 }
