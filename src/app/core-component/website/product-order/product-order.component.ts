@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 @Component({
   selector: 'app-product-order',
   templateUrl: './product-order.component.html',
@@ -43,11 +44,10 @@ export class ProductOrderComponent implements OnInit {
     { label: 'Last Financial Year', value: 'lastFinancialYear' },
   ];
 
-  constructor(private websiteService: WebsiteService, private QueryService: QueryService,
+  constructor(private websiteService: WebsiteService, private QueryService: QueryService, private companyService: CompanyService,
     private fb: FormBuilder, private toastr: ToastrService, private datePipe: DatePipe, private dashboardService: DashboardService) {
     this.QueryService.filterToggle()
   }
-
 
   loader = true;
   isAdd: any;
@@ -68,7 +68,12 @@ export class ProductOrderComponent implements OnInit {
   labelForm: FormGroup;
   invoiceForm: FormGroup;
   campaignOne: FormGroup;
+  userDetail: any;
   ngOnInit(): void {
+    this.companyService.userDetails$.subscribe((res: any) => {
+      this.userDetail = res;
+    })
+
     //date range
     // const today = new Date();
     // const month = today.getMonth();
@@ -95,8 +100,8 @@ export class ProductOrderComponent implements OnInit {
     });
     //awd 
     this.awdForm = this.fb.group({
-      shipment_id: new FormControl('', ),
-      courier_id: new FormControl('', )
+      shipment_id: new FormControl('',),
+      courier_id: new FormControl('',)
     });
     //label form
     this.labelForm = this.fb.group({
@@ -110,19 +115,19 @@ export class ProductOrderComponent implements OnInit {
     });
     // update address form
     this.addressForm = this.fb.group({
-      web_order_id: new FormControl('', ),
-      order_id: new FormControl('', ),
-      name: new FormControl('', ),
-      email: new FormControl('', ),
-      mobile_no: new FormControl('', ),
-      alternative_mobile_no: new FormControl('', ),
-      city: new FormControl('', ),
-      state: new FormControl('', ),
-      country: new FormControl('', ),
-      address_type: new FormControl('Shipping', ),
-      line1: new FormControl('', ),
-      line2: new FormControl('', ),
-      address: new FormControl('', ),
+      web_order_id: new FormControl('',),
+      order_id: new FormControl('',),
+      name: new FormControl('',),
+      email: new FormControl('',),
+      mobile_no: new FormControl('',),
+      alternative_mobile_no: new FormControl('',),
+      city: new FormControl('',),
+      state: new FormControl('',),
+      country: new FormControl('',),
+      address_type: new FormControl('Shipping',),
+      line1: new FormControl('',),
+      line2: new FormControl('',),
+      address: new FormControl('',),
     });
 
     // filter api
@@ -131,10 +136,10 @@ export class ProductOrderComponent implements OnInit {
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-      console.log(this.filteredData,' console.log(this.filteredData);');
+      console.log(this.filteredData, ' console.log(this.filteredData);');
       this.filterData();
     });
-    
+
     //all list api
     // this.websiteService.getProductOrder().subscribe(res => {
     //   // console.log(res);
@@ -148,27 +153,30 @@ export class ProductOrderComponent implements OnInit {
   changeApiStatus(status: any) {
     console.warn(status);
     console.warn(status.tab.textLabel);
-    this.tableData=null;
-    this.filteredData=null;
-    this.titlee='';
-    this.loader=true;
+    this.tableData = null;
+    this.filteredData = null;
+    this.titlee = '';
+    this.loader = true;
+    this.p = 1;
+    this.pageSize = 10;
+    this.itemsPerPage = 10;
     if (status.tab.textLabel == 'All') {
       this.websiteService.getProductOrder().subscribe(res => {
         this.tableData = res;
         this.loader = false;
         this.selectedRows = new Array(this.tableData.length).fill(false);
         this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-        console.log(this.filteredData,' console.log(this.filteredData);');
+        console.log(this.filteredData, ' console.log(this.filteredData);');
         this.filterData();
       });
     } else {
-      this.websiteService.getProductOrderByStatus(status.tab.textLabel).subscribe((res:any) => {
+      this.websiteService.getProductOrderByStatus(status.tab.textLabel).subscribe((res: any) => {
         this.tableData = res;
         console.log(this.tableData);
         this.loader = false;
         this.selectedRows = new Array(this.tableData.length).fill(false);
         this.selectedRows = new Array(this.tableData.length).fill(false);
-        console.log(this.filteredData,' console.log(this.filteredData);');
+        console.log(this.filteredData, ' console.log(this.filteredData);');
         this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
         this.filterData();
       });
@@ -214,17 +222,54 @@ export class ProductOrderComponent implements OnInit {
     return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
   }
 
+  // generatePDFAgain() {
+  //   const doc = new jsPDF('landscape');
+  //   const title = 'Product Order';
+  //   doc.setFontSize(12);
+  //   doc.setTextColor(33, 43, 54);
+  //   doc.text(title, 82, 10);
+  //   doc.text('', 10, 15);
+  //   // Pass tableData to autoTable
+  //   autoTable(doc, {
+  //     head: [
+  //       ['#', ' Status','User','Order Type','Payment Type','Payment Status','Online Order Id','Order Id','Shipment Id','Order Date', 'Final Amount']
+  //     ],
+  //     body: this.filteredData.map((row: any, index: number) => [
+  //       index + 1,
+  //       row.status,
+  //       row.user?.username,
+  //       row.address_type,
+  //       row.payment_type,
+  //       row.payment_status,
+  //       row.online_order_id,
+  //       row.shiprocket_order_id,
+  //       row.shiprocket_shipment_id,
+  //       this.formatDate(row.order_date),
+  //       row.final_amount,
+  //     ]),
+  //     theme: 'grid',
+  //     headStyles: {
+  //       fillColor: [255, 159, 67]
+  //     },
+  //     startY: 15,
+  //   });
+  //   doc.save('Product _Order .pdf');
+  // }
+
   generatePDFAgain() {
-    const doc = new jsPDF();
+    const doc = new jsPDF('landscape');
     const title = 'Product Order';
+    const userName = this.userDetail.username;
+    const timestamp = new Date().toLocaleString();
+
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
     doc.text('', 10, 15);
-    // Pass tableData to autoTable
+
     autoTable(doc, {
       head: [
-        ['#', ' Status','User','Order Type','Payment Type','Payment Status','Online Order Id','Order Id','Shipment Id','Order Date', 'Final Amount']
+        ['#', 'Status', 'User', 'Order Type', 'Payment Type', 'Payment Status', 'Online Order Id', 'Order Id', 'Shipment Id', 'Order Date', 'Final Amount']
       ],
       body: this.filteredData.map((row: any, index: number) => [
         index + 1,
@@ -244,9 +289,22 @@ export class ProductOrderComponent implements OnInit {
         fillColor: [255, 159, 67]
       },
       startY: 15,
+      didDrawPage: (data: any) => {
+        // Add user name and timestamp at the bottom of each page
+        doc.setFontSize(10);
+        const margin = data.settings.margin;
+        const pageHeight = doc.internal.pageSize.height;
+        const userText = `User: ${userName}`;
+        const timestampText = `Timestamp: ${timestamp}`;
+        // Draw user name and timestamp
+        doc.text(userText, margin.left, pageHeight - 10);
+        doc.text(timestampText, margin.left + 10 + 20, pageHeight - 10);
+      }
     });
-    doc.save('Product _Order .pdf');
+
+    doc.save('Product_Order.pdf');
   }
+
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -338,7 +396,7 @@ export class ProductOrderComponent implements OnInit {
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
-      this.itemsPerPage = this.tableData.length;
+      this.itemsPerPage = this.filterData.length;
     }
   }
 
@@ -496,7 +554,7 @@ export class ProductOrderComponent implements OnInit {
   }
 
   // assign awd
-  openModalAssignAWD(courier: any) { 
+  openModalAssignAWD(courier: any) {
     this.awdForm.patchValue({
       courier_id: parseInt(courier?.courier_company_id),
     });
@@ -522,11 +580,11 @@ export class ProductOrderComponent implements OnInit {
 
   // courier service avility api
   serviceAbilityList: any;
-  loaderPincode=true
+  loaderPincode = true
   getServiceAvility(ShippingAdd: any) {
     this.websiteService.getServiceAvility(ShippingAdd.pincode).subscribe((res: any) => {
       this.serviceAbilityList = res;
-      this.loaderPincode=false;
+      this.loaderPincode = false;
     })
   }
   // awd form
@@ -552,8 +610,8 @@ export class ProductOrderComponent implements OnInit {
           this.ngOnInit();
         } else {
           this.toastr.error(res.error);
-          if(res.json){
-            this.toastr.error(res.json.message);  
+          if (res.json) {
+            this.toastr.error(res.json.message);
           }
         }
 
@@ -612,9 +670,25 @@ export class ProductOrderComponent implements OnInit {
         this.ngOnInit();
       } else {
         this.toastr.error(res.error_msg);
-        if(res.json){
-          this.toastr.error(res.json.message);  
+        if (res.json) {
+          this.toastr.error(res.json.message);
         }
+      }
+    });
+  }
+  downloadManifest(product: any) {
+    console.log(product);
+    let p: number[] = [];
+    p.push(product.shiprocket_shipment_id)
+    let formData = new FormData();
+    formData.append('shipment_id', JSON.stringify(p))
+    this.websiteService.downloadManifest(formData).subscribe((res: any) => {
+      console.log(res);
+      if (res.success) {
+        this.toastr.success(res.msg);
+        this.ngOnInit();
+      } else {
+        this.toastr.error(res.error_msg);
       }
     });
   }
@@ -623,15 +697,15 @@ export class ProductOrderComponent implements OnInit {
     this.selectCredit = dat;
     this.filterData();
   }
-  startDate:any;
-  endDate:any;
+  startDate: any;
+  endDate: any;
   getSelectedDates() {
     console.log(this.campaignOne.value);
     const start = this.datePipe.transform(this.campaignOne.value.start, 'yyyy-MM-dd');
     const end = this.datePipe.transform(this.campaignOne.value.end, 'yyyy-MM-dd');
-   this.startDate=start;
-   this.endDate=end;
-   this.filterData();
+    this.startDate = start;
+    this.endDate = end;
+    this.filterData();
   }
   selectCredit: any;
   filteredData: any[];
@@ -744,8 +818,8 @@ export class ProductOrderComponent implements OnInit {
         default:
           break;
       }
-    } 
-    if(this.endDate && this.startDate){
+    }
+    if (this.endDate && this.startDate) {
       filteredData = filteredData.filter(item => {
         const orderDate = new Date(item.order_date);
         return this.formatDate(orderDate) >= this.formatDate(this.startDate) &&
@@ -753,16 +827,16 @@ export class ProductOrderComponent implements OnInit {
       });
     }
     this.filteredData = filteredData;
-    console.log(this.filteredData,' console.log(this.filteredData);');
+    console.log(this.filteredData, ' console.log(this.filteredData);');
   }
 
   clearFilter() {
     this.selectCredit = null;
     this.filterData();
   }
-//update address modal 
+  //update address modal 
   openModalAddress(product: any) {
-    console.log(product); 
+    console.log(product);
     this.addressForm.patchValue({
       web_order_id: product.online_order_id,
       order_id: product.shiprocket_order_id,
@@ -825,8 +899,8 @@ export class ProductOrderComponent implements OnInit {
           this.ngOnInit();
         } else {
           this.toastr.error(res.error);
-          if(res.json){
-            this.toastr.error(res.json.message);  
+          if (res.json) {
+            this.toastr.error(res.json.message);
           }
         }
       }, err => {
