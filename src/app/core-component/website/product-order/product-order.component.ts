@@ -61,9 +61,29 @@ export class ProductOrderComponent implements OnInit {
   get a() {
     return this.awdForm.controls;
   }
+  addressForm: FormGroup;
+  get u() {
+    return this.addressForm.controls;
+  }
   labelForm: FormGroup;
   invoiceForm: FormGroup;
+  campaignOne: FormGroup;
   ngOnInit(): void {
+    //date range
+    // const today = new Date();
+    // const month = today.getMonth();
+    // const year = today.getFullYear();
+    // const startDate = new Date(today);
+    // startDate.setDate(today.getDate() - 29);
+
+    // const formattedStartDate = this.formatDate(startDate);
+    // const formattedToday = this.formatDate(today);
+    // campaignOne
+    this.campaignOne = new FormGroup({
+      start: new FormControl(''),
+      end: new FormControl(''),
+    });
+    //end
     this.getBranch();
     this.acceptForm = this.fb.group({
       length: new FormControl('', [Validators.min(1)]),
@@ -88,6 +108,23 @@ export class ProductOrderComponent implements OnInit {
       shipment_id: new FormControl('', [Validators.required]),
       courier_id: new FormControl('', [Validators.required])
     });
+    // update address form
+    this.addressForm = this.fb.group({
+      web_order_id: new FormControl('', ),
+      order_id: new FormControl('', ),
+      name: new FormControl('', ),
+      email: new FormControl('', ),
+      mobile_no: new FormControl('', ),
+      alternative_mobile_no: new FormControl('', ),
+      city: new FormControl('', ),
+      state: new FormControl('', ),
+      country: new FormControl('', ),
+      address_type: new FormControl('Shipping', ),
+      line1: new FormControl('', ),
+      line2: new FormControl('', ),
+      address: new FormControl('', ),
+    });
+
     // filter api
     this.websiteService.getProductOrderByStatus('New').subscribe(res => {
       this.tableData = res;
@@ -97,6 +134,7 @@ export class ProductOrderComponent implements OnInit {
       console.log(this.filteredData,' console.log(this.filteredData);');
       this.filterData();
     });
+    
     //all list api
     // this.websiteService.getProductOrder().subscribe(res => {
     //   // console.log(res);
@@ -461,7 +499,7 @@ export class ProductOrderComponent implements OnInit {
   openModalAssignAWD(courier: any) { 
     this.awdForm.patchValue({
       courier_id: parseInt(courier?.courier_company_id),
-    })
+    });
     const modal = document.getElementById('awdModal');
     if (modal) {
       modal.classList.add('show');
@@ -488,15 +526,15 @@ export class ProductOrderComponent implements OnInit {
   getServiceAvility(ShippingAdd: any) {
     this.websiteService.getServiceAvility(ShippingAdd.pincode).subscribe((res: any) => {
       this.serviceAbilityList = res;
-      this.loaderPincode=false
+      this.loaderPincode=false;
     })
   }
   // awd form
   get courier_id() {
-    return this.awdForm.get('courier_id')
+    return this.awdForm.get('courier_id');
   }
   get shipment_id() {
-    return this.awdForm.get('shipment_id')
+    return this.awdForm.get('shipment_id');
   }
   AWDSubmit() {
     console.warn(this.awdForm.value);
@@ -585,14 +623,22 @@ export class ProductOrderComponent implements OnInit {
     this.selectCredit = dat;
     this.filterData();
   }
-
+  startDate:any;
+  endDate:any;
+  getSelectedDates() {
+    console.log(this.campaignOne.value);
+    const start = this.datePipe.transform(this.campaignOne.value.start, 'yyyy-MM-dd');
+    const end = this.datePipe.transform(this.campaignOne.value.end, 'yyyy-MM-dd');
+   this.startDate=start;
+   this.endDate=end;
+   this.filterData();
+  }
   selectCredit: any;
   filteredData: any[];
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.selectCredit) {
       const currentDate = new Date();
-
       switch (this.selectCredit) {
         case 'today':
           filteredData = filteredData.filter(item => {
@@ -698,6 +744,13 @@ export class ProductOrderComponent implements OnInit {
         default:
           break;
       }
+    } 
+    if(this.endDate && this.startDate){
+      filteredData = filteredData.filter(item => {
+        const orderDate = new Date(item.order_date);
+        return this.formatDate(orderDate) >= this.formatDate(this.startDate) &&
+          this.formatDate(orderDate) <= this.formatDate(this.endDate);
+      });
     }
     this.filteredData = filteredData;
     console.log(this.filteredData,' console.log(this.filteredData);');
@@ -707,5 +760,82 @@ export class ProductOrderComponent implements OnInit {
     this.selectCredit = null;
     this.filterData();
   }
+//update address modal 
+  openModalAddress(product: any) {
+    console.log(product); 
+    this.addressForm.patchValue({
+      web_order_id: product.online_order_id,
+      order_id: product.shiprocket_order_id,
+      name: product.shipping_address.name,
+      email: product.shipping_address.email,
+      mobile_no: product.shipping_address.mobile_no,
+      alternative_mobile_no: product.shipping_address.alternative_mobile_no,
+      city: product.shipping_address.city,
+      state: product.shipping_address.state,
+      country: product.shipping_address.country,
+      // address_type: product.shipping_address.address_type,
+      line1: product.shipping_address.line1,
+      line2: product.shipping_address.line2,
+      address: product.shipping_address.address,
+    });
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blur bg
+      this.isModalOpen = true;
+      this.websiteService.setCheckBlur(true);
+    }
+  }
+  closeModalAddress() {
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      this.isModalOpen = false;
+      this.websiteService.setCheckBlur(false);
+    }
+  }
 
+  addressSubmit() {
+    console.warn(this.addressForm.value);
+    let formData = new FormData();
+    formData.append('web_order_id', this.addressForm.get('web_order_id')?.value);
+    formData.append('order_id', this.addressForm.get('order_id')?.value);
+    formData.append('name', this.addressForm.get('name')?.value);
+    formData.append('email', this.addressForm.get('email')?.value);
+    formData.append('mobile_no', this.addressForm.get('mobile_no')?.value);
+    formData.append('alternative_mobile_no', this.addressForm.get('alternative_mobile_no')?.value);
+    formData.append('city', this.addressForm.get('city')?.value);
+    formData.append('state', this.addressForm.get('state')?.value);
+    formData.append('country', this.addressForm.get('country')?.value);
+    formData.append('address_type', this.addressForm.get('address_type')?.value);
+    formData.append('line1', this.addressForm.get('line1')?.value);
+    formData.append('line2', this.addressForm.get('line2')?.value);
+    formData.append('address', this.addressForm.get('address')?.value);
+
+    if (this.addressForm.valid) {
+      this.loaders = true
+      this.websiteService.addAddress(formData).subscribe((res: any) => {
+        console.log(res);
+        this.loaders = false;
+        if (res.success) {
+          this.toastr.success(res.msg);
+          this.closeModalAddress();
+          this.ngOnInit();
+        } else {
+          this.toastr.error(res.error);
+          if(res.json){
+            this.toastr.error(res.json.message);  
+          }
+        }
+      }, err => {
+        this.loaders = false;
+        this.toastr.error()
+      });
+    } else {
+      this.loaders = false;
+      this.acceptForm.markAllAsTouched();
+    }
+  }
 }

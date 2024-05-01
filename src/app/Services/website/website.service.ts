@@ -368,4 +368,9 @@ export class WebsiteService {
     let url = this.apiUrl+'/pv-api/order_cancelled_shiprocket/';
     return this.http.post(url,data);
   }
+  //update address
+  addAddress(data:any){
+    let url = this.apiUrl+'/pv-api/update_customer_address/';
+    return this.http.post(url,data);
+  }
 }
