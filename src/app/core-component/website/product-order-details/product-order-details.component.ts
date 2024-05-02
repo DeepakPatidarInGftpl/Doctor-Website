@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -8,6 +9,7 @@ import Swal from 'sweetalert2';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-product-order-details',
@@ -165,12 +167,25 @@ export class ProductOrderDetailsComponent implements OnInit {
   ]
   tableData: any
   constructor(private Arout: ActivatedRoute, private dashboardService: DashboardService, private fb: FormBuilder,
-    private toastr: ToastrService, private websiteService: WebsiteService) { }
+    private toastr: ToastrService, private websiteService: WebsiteService, private location:Location) { }
   id: any;
   acceptForm: FormGroup;
   get f() {
     return this.acceptForm.controls;
   }
+  awdForm: FormGroup;
+  get a() {
+    return this.awdForm.controls;
+  }
+  addressForm: FormGroup;
+  get u() {
+    return this.addressForm.controls;
+  }
+  updateOrderForm: FormGroup;
+  get o() {
+    return this.updateOrderForm.controls;
+  }
+
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.getdata();
@@ -180,8 +195,38 @@ export class ProductOrderDetailsComponent implements OnInit {
       breadth: new FormControl('',[Validators.min(1)]),
       height: new FormControl('',[Validators.min(1)]),
       weight: new FormControl('',[Validators.required,Validators.min(1)]),
-      branch: new FormControl('',[Validators.required,Validators.min(1)]),
+      branch: new FormControl('',[Validators.required]),
       id: new FormControl(this.id,[Validators.required,Validators.min(1)]),
+    });
+    //update order 
+    this.updateOrderForm = this.fb.group({
+      length: new FormControl('',[Validators.min(1)]),
+      breadth: new FormControl('',[Validators.min(1)]),
+      height: new FormControl('',[Validators.min(1)]),
+      weight: new FormControl('',[Validators.required,Validators.min(1)]),
+      branch: new FormControl('',[Validators.required]),
+      order_id: new FormControl('',[Validators.required]),
+    });
+   //awd 
+    this.awdForm = this.fb.group({
+      shipment_id: new FormControl('',),
+      courier_id: new FormControl('',)
+    });
+    //address form
+    this.addressForm = this.fb.group({
+      web_order_id: new FormControl('',),
+      order_id: new FormControl('',),
+      name: new FormControl('',),
+      email: new FormControl('',),
+      mobile_no: new FormControl('',),
+      alternative_mobile_no: new FormControl('',),
+      city: new FormControl('',),
+      state: new FormControl('',),
+      country: new FormControl('',),
+      address_type: new FormControl('Shipping',),
+      line1: new FormControl('',),
+      line2: new FormControl('',),
+      address: new FormControl('',),
     });
 
     this.tableDatas.map((res) => {
@@ -472,5 +517,334 @@ export class ProductOrderDetailsComponent implements OnInit {
     doc.save('Abc_Analysis.pdf');
   }
   
+  goBack() {
+    this.location.back();
+  }
+
+  // awd form
+
+  
+  // courier modal
+  openModalCourier(product: any) {
+    console.log(product);
+    this.awdForm.patchValue({
+      shipment_id: parseInt(product?.shiprocket_shipment_id),
+    })
+    console.log(this.awdForm.value);
+    this.getServiceAvility(product.shipping_address)
+    const modal = document.getElementById('courierModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blur bg
+      this.isModalOpen = true;
+      this.websiteService.setCheckBlur(true);
+    }
+  }
+  closeModalCourier() {
+    const modal = document.getElementById('courierModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      this.isModalOpen = false;
+      this.websiteService.setCheckBlur(false);
+    }
+  }
+  // assign awd
+  openModalAssignAWD(courier: any) {
+    this.awdForm.patchValue({
+      courier_id: parseInt(courier?.courier_company_id),
+    });
+    const modal = document.getElementById('awdModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blur bg
+      this.isModalOpen = true;
+      this.websiteService.setCheckBlur(true);
+      this.closeModalCourier();
+    }
+  }
+  closeModalAssignAWD() {
+    const modal = document.getElementById('awdModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      this.isModalOpen = false;
+      this.websiteService.setCheckBlur(false);
+    }
+  }
+
+  // courier service avility api
+  serviceAbilityList: any;
+  loaderPincode = true
+  getServiceAvility(ShippingAdd: any) {
+    this.websiteService.getServiceAvility(ShippingAdd.pincode).subscribe((res: any) => {
+      this.serviceAbilityList = res;
+      this.loaderPincode = false;
+    })
+  }
+  // awd form
+  get courier_id() {
+    return this.awdForm.get('courier_id');
+  }
+  get shipment_id() {
+    return this.awdForm.get('shipment_id');
+  }
+  AWDSubmit() {
+    console.warn(this.awdForm.value);
+    let formData = new FormData();
+    formData.append('shipment_id', this.awdForm.get('shipment_id')?.value);
+    formData.append('courier_id', this.awdForm.get('courier_id')?.value);
+    if (this.awdForm.valid) {
+      this.loaders = true
+      this.websiteService.addAWD(formData).subscribe((res: any) => {
+        console.log(res);
+        this.loaders = false;
+        if (res.success) {
+          this.toastr.success(res.msg);
+          this.closeModalAssignAWD();
+          this.ngOnInit();
+        } else {
+          this.toastr.error(res.error);
+          if (res.json) {
+            this.toastr.error(res.json.message);
+          }
+        }
+
+      }, err => {
+        this.loaders = false;
+        this.toastr.error()
+      });
+    } else {
+      this.loaders = false;
+      this.acceptForm.markAllAsTouched();
+    }
+  }
+  downloadLabel(product: any) {
+    console.log(product);
+    let p: number[] = [];
+    p.push(product.shiprocket_shipment_id)
+    let formData = new FormData();
+    formData.append('shipment_id', JSON.stringify(p))
+    this.websiteService.downloadLabel(formData).subscribe((res: any) => {
+      console.log(res);
+      if (res.success) {
+        this.toastr.success(res.msg);
+        this.ngOnInit();
+      } else {
+        this.toastr.error(res.error_msg);
+      }
+    });
+  }
+  downloadInvoice(product: any) {
+    console.log(product);
+    let p: number[] = [];
+    p.push(product.shiprocket_order_id)
+    let formData = new FormData();
+    formData.append('ids', JSON.stringify(p))
+    this.websiteService.downloadInvoice(formData).subscribe((res: any) => {
+      console.log(res);
+      if (res.success) {
+        this.toastr.success(res.msg);
+        this.ngOnInit();
+      } else {
+        this.toastr.error(res.error_msg);
+      }
+    });
+  }
+  cancelOrder(product: any) {
+    console.log(product);
+    let p: number[] = [];
+    p.push(product.shiprocket_order_id)
+    let formData = new FormData();
+    formData.append('ids', JSON.stringify(p))
+    this.websiteService.cancelOrder(formData).subscribe((res: any) => {
+      console.log(res);
+      if (res.success) {
+        this.toastr.success(res.msg);
+        this.ngOnInit();
+      } else {
+        this.toastr.error(res.error_msg);
+        if (res.json) {
+          this.toastr.error(res.json.message);
+        }
+      }
+    });
+  }
+  downloadManifest(product: any) {
+    console.log(product);
+    let p: number[] = [];
+    p.push(product.shiprocket_shipment_id)
+    let formData = new FormData();
+    formData.append('shipment_id', JSON.stringify(p))
+    this.websiteService.downloadManifest(formData).subscribe((res: any) => {
+      console.log(res);
+      if (res.success) {
+        this.toastr.success(res.msg);
+        this.ngOnInit();
+      } else {
+        this.toastr.error(res.error_msg);
+      }
+    });
+  }
+
+  // address modal
+
+  openModalAddress(product: any) {
+    console.log(product);
+    this.addressForm.patchValue({
+      web_order_id: product.online_order_id,
+      order_id: product.shiprocket_order_id,
+      name: product.shipping_address.name,
+      email: product.shipping_address.email,
+      mobile_no: product.shipping_address.mobile_no,
+      alternative_mobile_no: product.shipping_address.alternative_mobile_no,
+      city: product.shipping_address.city,
+      state: product.shipping_address.state,
+      country: product.shipping_address.country,
+      // address_type: product.shipping_address.address_type,
+      line1: product.shipping_address.line1,
+      line2: product.shipping_address.line2,
+      address: product.shipping_address.address,
+    });
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blur bg
+      this.isModalOpen = true;
+      this.websiteService.setCheckBlur(true);
+    }
+  }
+  closeModalAddress() {
+    const modal = document.getElementById('addressModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      this.isModalOpen = false;
+      this.websiteService.setCheckBlur(false);
+    }
+  }
+
+  addressSubmit() {
+    console.warn(this.addressForm.value);
+    let formData = new FormData();
+    formData.append('web_order_id', this.addressForm.get('web_order_id')?.value);
+    formData.append('order_id', this.addressForm.get('order_id')?.value);
+    formData.append('name', this.addressForm.get('name')?.value);
+    formData.append('email', this.addressForm.get('email')?.value);
+    formData.append('mobile_no', this.addressForm.get('mobile_no')?.value);
+    formData.append('alternative_mobile_no', this.addressForm.get('alternative_mobile_no')?.value);
+    formData.append('city', this.addressForm.get('city')?.value);
+    formData.append('state', this.addressForm.get('state')?.value);
+    formData.append('country', this.addressForm.get('country')?.value);
+    formData.append('address_type', this.addressForm.get('address_type')?.value);
+    formData.append('line1', this.addressForm.get('line1')?.value);
+    formData.append('line2', this.addressForm.get('line2')?.value);
+    formData.append('address', this.addressForm.get('address')?.value);
+
+    if (this.addressForm.valid) {
+      this.loaders = true
+      this.websiteService.addAddress(formData).subscribe((res: any) => {
+        console.log(res);
+        this.loaders = false;
+        if (res.success) {
+          this.toastr.success(res.msg);
+          this.closeModalAddress();
+          this.ngOnInit();
+        } else {
+          this.toastr.error(res.error);
+          if (res.json) {
+            this.toastr.error(res.json.message);
+          }
+        }
+      }, err => {
+        this.loaders = false;
+        this.toastr.error()
+      });
+    } else {
+      this.loaders = false;
+      this.acceptForm.markAllAsTouched();
+    }
+  }
+
+  //update order form
+  openModalOrder(product: any) {
+    console.log(product);
+    const modal = document.getElementById('orderModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blur bg
+      this.isModalOpen = true;
+      this.websiteService.setCheckBlur(true);
+    }
+  }
+  closeModalOrder() {
+    const modal = document.getElementById('orderModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      this.isModalOpen = false;
+      this.websiteService.setCheckBlur(false);
+    }
+  }
+  get length1() {
+    return this.updateOrderForm.get('length');
+  }
+  get breadth1() {
+    return this.updateOrderForm.get('breadth');
+  }
+  get height1() {
+    return this.updateOrderForm.get('height');
+  }
+  get weight1() {
+    return this.updateOrderForm.get('weight');
+  }
+  get branch1() {
+    return this.updateOrderForm.get('branch');
+  }
+  get order_id() {
+    return this.updateOrderForm.get('order_id');
+  }
+  orderSubmit() {
+    console.warn(this.updateOrderForm.value);
+    let formData = new FormData();
+    formData.append('length', this.updateOrderForm.get('length')?.value);
+    formData.append('breadth', this.updateOrderForm.get('breadth')?.value);
+    formData.append('height', this.updateOrderForm.get('height')?.value);
+    formData.append('weight', this.updateOrderForm.get('weight')?.value);
+    formData.append('branch', this.updateOrderForm.get('branch')?.value);
+    formData.append('order_id', this.updateOrderForm.get('order_id')?.value);
+    if (this.updateOrderForm.valid) {
+      this.loaders = true
+      this.websiteService.updateOrder(this.id,formData).subscribe((res: any) => {
+        console.log(res); 
+        this.loaders = false;
+        if(res.success){
+          this.toastr.success(res.msg); 
+          this.closeModalBatch();
+        }
+        if (res.status == false) {
+          this.toastr.error(res.error?.message);
+          this.loaders = false;
+          if(res.error.order_date){
+            this.loaders = false;
+            this.toastr.error(res.error?.order_date[0]);  
+          }
+          if(res.json){
+          this.toastr.error(res.message);  
+          }
+        }
+      }, err => {
+        this.loaders = false;
+        this.toastr.error()
+      });
+    } else {
+      this.loaders = false;
+      this.updateOrderForm.markAllAsTouched();
+    }
+  }
 }
 
