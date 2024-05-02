@@ -375,7 +375,7 @@
                                         <button mat-menu-item (click)="downloadLabel(products)">Download Label</button>
                                         <button mat-menu-item (click)="downloadInvoice(products)">Download Invoice</button>
                                         <button mat-menu-item (click)="openModalCourier(products)">Reassign Courier</button>
-                                        <!-- <button mat-menu-item >Edit Order</button> -->
+                                        <button mat-menu-item (click)="openModalOrder(products)">Edit Order</button>
                                         <button mat-menu-item (click)="openModalAddress(products)">Update Address</button>
                                         <button mat-menu-item (click)="cancelOrder(products)">Cancel Order</button>
                                     </mat-menu>
@@ -486,7 +486,7 @@
                                 <th (click)="sort('id')" class="thone tdd">Shipment Id<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone tdd">Order Date<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone tdd">Final Amount<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th> -->
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
@@ -511,11 +511,11 @@
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
                                 <td>{{products?.final_amount}}</td>
-                                <td>  
+                                <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a> 
-                                </td>
+                                </td> -->
                                 </ng-container>
                             </tr>
                         </tbody>
@@ -622,7 +622,7 @@
                                 <th (click)="sort('id')" class="thone tdd">Shipment Id<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone tdd">Order Date<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone tdd">Final Amount<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th> -->
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
@@ -647,11 +647,11 @@
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
                                 <td>{{products?.final_amount}}</td>
-                                <td>  
+                                <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a> 
-                                </td>
+                                </td> -->
                                 </ng-container>
                             </tr>
                         </tbody>
@@ -758,7 +758,7 @@
                                 <th (click)="sort('id')" class="thone tdd">Shipment Id<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone tdd">Order Date<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone tdd">Final Amount<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th> -->
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
@@ -783,11 +783,11 @@
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
                                 <td>{{products?.final_amount}}</td>
-                                <td>  
+                                <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a> 
-                                </td>
+                                </td> -->
                                 </ng-container>
                             </tr>
                         </tbody>
@@ -894,7 +894,7 @@
                                 <th (click)="sort('id')" class="thone tdd">Shipment Id<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone tdd">Order Date<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone tdd">Final Amount<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th> -->
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
@@ -919,11 +919,11 @@
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
                                 <td>{{products?.final_amount}}</td>
-                                <td>  
+                                <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a> 
-                                </td>
+                                </td> -->
                                 </ng-container>
                             </tr>
                         </tbody>
@@ -1028,7 +1028,7 @@
                                 <th (click)="sort('id')" class="thone tdd">Shipment Id<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone tdd">Order Date<i class="fa fa-sort"></i></th>
                                 <th (click)="sort('id')" class="thone tdd">Final Amount<i class="fa fa-sort"></i></th>
-                                <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th> -->
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
@@ -1052,11 +1052,11 @@
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
                                 <td>{{products?.final_amount}}</td>
-                                <td>  
+                                <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
                                     </a> 
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                         <tbody *ngIf="filteredData?.length==0">
@@ -1201,7 +1201,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tbody *ngIf="filteredData?.length==0">
+                        <tbody *ngIf="serviceAbilityList?.length==0">
                             <tr>
                                 <td colspan="10">
                                     <p class="center-textt">Data not available</p>
@@ -1346,6 +1346,75 @@
                                 <label>Address</label>
                                 <textarea formControlName="address" placeholder="Enter Address Type" id="address" [ngClass]="{'is-invalid': u['address'].touched && u['address'].invalid}" cols="30" rows="10"></textarea>
                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center">
+                            <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
+                            <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> &nbsp; Submit</button>
+                        </div>
+                        </div>
+                        </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- update order -->
+<div class="modal fade " id="orderModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Update Order</h1>
+                <button type="button" class="close" (click)="closeModalOrder()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="updateOrderForm" (ngSubmit)="orderSubmit()">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Length</label>
+                                <input type="number" formControlName="length" placeholder="Enter Length" id="length" [ngClass]="{'is-invalid': o['length'].touched && o['length'].invalid}">
+                                <span class="text-danger" *ngIf="length1 && length1.invalid && length1.touched">Enter Length greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Breadth</label>
+                                <input type="number" formControlName="breadth" placeholder="Enter Breadth" id="breadth" [ngClass]="{'is-invalid': o['breadth'].touched && o['breadth'].invalid}">
+                                <span class="text-danger" *ngIf="breadth1 && breadth1.invalid && breadth1.touched">Enter Breadth greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Height</label>
+                                <input type="number" formControlName="height" placeholder="Enter Height" id="height" [ngClass]="{'is-invalid': o['height'].touched && o['height'].invalid}">
+                                <span class="text-danger" *ngIf="height1 && height1.invalid && height1.touched">Enter Height greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Weight*</label>
+                                <input type="number" formControlName="weight" placeholder="Enter Weight" id="weight" [ngClass]="{'is-invalid': o['weight'].touched && o['weight'].invalid}">
+                                <span class="text-danger" *ngIf="weight1 && weight1.invalid && weight1.touched">Enter Weight greater than or equal to 1</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Select Branch*</label>
+                               <select formControlName="branch" id="branch" [ngClass]="{'is-invalid': o['branch'].touched && o['branch'].invalid}">
+                                    <option value="" disabled selected> Select Branch</option>
+                                    <option [value]="branch.title" *ngFor="let branch of branchList"> {{branch.title}}</option>
+                                </select>
+                                <span class="text-danger" *ngIf="branch1 && branch1.invalid && branch1.touched">Select Branch</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label>Order Id</label>
+                                <input type="number" formControlName="order_id" placeholder="Enter order_id" id="order_id" [ngClass]="{'is-invalid': o['order_id'].touched && o['order_id'].invalid}">
+                                <span class="text-danger" *ngIf="order_id && order_id.invalid && order_id.touched">Enter order Id</span>
+                            </div>
                         </div>
                         <div class="col-lg-12 text-center">
                             <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
