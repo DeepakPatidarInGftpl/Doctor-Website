@@ -537,7 +537,7 @@
                                                 </div>
                                                 <div class="modal fade " id="productModal-{{i}}" tabindex="-1" role="dialog"
                                                 aria-labelledby="addressModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="max-width: 60%;">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h1 class="modal-title fs-5" id="staticBackdropLabel">Selected Variants</h1>
@@ -551,13 +551,13 @@
                                                                     <div class="table-responsive">
                                                                         <table class="table datanew">
                                                                             <thead>
-                                                                                <tr>
+                                                                                <tr style="background: #FF9F43">
                                                                                     <th class="boder space-text">Sr.No.</th>
-                                                                                    <th class="boder space-text">Barcode</th>
-                                                                                    <th class="boder space-text">Product</th>
-                                                                                    <th class="boder space-text">Variant Name</th>
-                                                                                    <th class="boder space-text">Date</th>
-                                                                                    <th class="boder space-text">MRP</th>
+                                                                                    <th class="boder space-text">Product Name</th>
+                                                                                    <th class="boder space-text">MRP Range</th>
+                                                                                    <th class="boder space-text">Article</th>
+                                                                                    <th class="boder space-text">Subcategory</th>
+                                                                                    <th class="boder space-text">Brand</th>
                                                                                     <th class="boder space-text">Action</th>
                                                                                 </tr>
                                                                             </thead>
@@ -565,11 +565,11 @@
                                                                                 <tr
                                                                                     *ngFor="let prod of variantList[indexCartValue];let ind=index;">
                                                                                     <td class="boder">{{ ind+1+'.'}}</td>
-                                                                                    <td class="boder">{{ prod?.sku}}</td>
-                                                                                    <td class="boder">{{ prod?.product_title }}</td>
-                                                                                    <td class="boder">{{prod?.variant_name}}</td>
-                                                                                    <td class="boder">{{ prod?.created_date}}</td>
-                                                                                    <td class="boder">{{ prod?.batch[0]?.mrp}}</td>
+                                                                                    <td class="boder" style="white-space: pre-wrap;">{{ prod?.product_title }}</td>
+                                                                                    <td class="boder">{{ prod?.minumum_mrp_batch+ '-' +prod?.maximum_mrp_batch}}</td>
+                                                                                    <td class="boder">{{ prod?.article_no}}</td>
+                                                                                    <td class="boder">{{ prod?.product?.subcategory?.title}}</td>
+                                                                                    <td class="boder" style="white-space: pre-wrap;">{{ prod?.product?.brand?.title}}</td>
                                                                                     <td><button type="button" (click)="oncheckVariant(prod,indexCartValue)" (click)="variantChanged(prod, indexCartValue)" class="btn btn-primary btn-sm" style="float: right;">Select </button> </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -606,7 +606,7 @@
                                                                                         <th class="boder space-text">Sr.No.</th>
                                                                                         <th class="boder space-text">MRP</th>
                                                                                         <th class="boder space-text">Purchase Price</th>
-                                                                                        <th class="boder space-text">Discount %</th>
+                                                                                        <!-- <th class="boder space-text">Discount %</th> -->
                                                                                         <th class="boder space-text">Additional Discount %</th>
                                                                                         <th class="boder space-text">Action</th>
                                                                                     </tr>
@@ -617,7 +617,7 @@
                                                                                         <td class="boder">{{ ind+1+'.'}}</td>
                                                                                         <td class="boder">{{ batch?.mrp }}</td>
                                                                                         <td class="boder">{{ batch?.cost_price }}</td>
-                                                                                        <td class="boder">{{ batch?.discount + '%'}}</td>
+                                                                                        <!-- <td class="boder">{{ batch?.discount + '%'}}</td> -->
                                                                                         <td class="boder">{{ batch?.additional_discount + '%'}}</td>
                                                                                         <td>
                                                                                             <button type="button"
