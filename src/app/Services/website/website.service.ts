@@ -373,4 +373,9 @@ export class WebsiteService {
     let url = this.apiUrl+'/pv-api/update_customer_address/';
     return this.http.post(url,data);
   }
+  //download manifest
+  downloadManifest(data:any){
+    let url = this.apiUrl+'/pv-api/generate_manifest/';
+    return this.http.post(url,data);
+  }
 }

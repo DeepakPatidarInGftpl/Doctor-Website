@@ -27,7 +27,7 @@
                             </div>
                         </div>
                     
-                        <mat-form-field class="example-form-field" style="width: 30%;">
+                        <mat-form-field class="example-form-field" style="width: 30%; height: 100px;">
                             <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
                                     (dateChange)="getSelectedDates()">
@@ -159,8 +159,9 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-form-field class="example-form-field" style="width: 30%;">
-                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                    
+                        <mat-form-field class="example-form-field" style="width: 30%;height: 100px;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignTwoPicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
                                     (dateChange)="getSelectedDates()">
                                 <span class="mat-input-placeholder-wrapper">
@@ -172,9 +173,9 @@
                             <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
                                 <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
                             </mat-select>
-                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                            <mat-datepicker-toggle matSuffix [for]="campaignTwoPicker"
                                 style=" font-size: x-large;"></mat-datepicker-toggle>
-                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                            <mat-date-range-picker #campaignTwoPicker></mat-date-range-picker>
                         </mat-form-field>
                     </div>
                     <div class="wordset">
@@ -290,8 +291,9 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-form-field class="example-form-field" style="width: 30%;">
-                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                    
+                        <mat-form-field class="example-form-field" style="width: 30%;height: 100px;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignThreePicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
                                     (dateChange)="getSelectedDates()">
                                 <span class="mat-input-placeholder-wrapper">
@@ -303,9 +305,9 @@
                             <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
                                 <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
                             </mat-select>
-                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                            <mat-datepicker-toggle matSuffix [for]="campaignThreePicker"
                                 style=" font-size: x-large;"></mat-datepicker-toggle>
-                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                            <mat-date-range-picker #campaignThreePicker></mat-date-range-picker>
                         </mat-form-field>
                     </div>
                     <div class="wordset">
@@ -364,7 +366,7 @@
                                 <td>{{products?.order_date |date}}</td>
                                 <td>{{products?.final_amount}}</td>
                                 <td>  
-                                    <button class="btn btn-submit me-2" style="padding: 2px 4px;min-width: 60px;">Download Manifest</button>
+                                    <button class="btn btn-submit me-2" style="padding: 2px 4px;min-width: 60px;" (click)="downloadManifest(products)">Download Manifest</button>
                                     <!-- <button><i data-bs-toggle="tooltip" title="fa fa-ellipsis-h" class="fa fa-ellipsis-h"></i></button> -->
                                     <button [matMenuTriggerFor]="menu" aria-label="Toggle menu" style="border-radius: 12px; border: 1px solid gray;">
                                         <i class="fa fa-ellipsis-h"></i>
@@ -435,8 +437,9 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-form-field class="example-form-field" style="width: 30%;">
-                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                    
+                        <mat-form-field class="example-form-field" style="width: 30%;height: 100px;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignFourPicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
                                     (dateChange)="getSelectedDates()">
                                 <span class="mat-input-placeholder-wrapper">
@@ -448,9 +451,9 @@
                             <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
                                 <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
                             </mat-select>
-                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                            <mat-datepicker-toggle matSuffix [for]="campaignFourPicker"
                                 style=" font-size: x-large;"></mat-datepicker-toggle>
-                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                            <mat-date-range-picker #campaignFourPicker></mat-date-range-picker>
                         </mat-form-field>
                     </div>
                     <div class="wordset">
@@ -570,8 +573,9 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-form-field class="example-form-field" style="width: 30%;">
-                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                    
+                        <mat-form-field class="example-form-field" style="width: 30%;height: 100px;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignFivePicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
                                     (dateChange)="getSelectedDates()">
                                 <span class="mat-input-placeholder-wrapper">
@@ -583,9 +587,9 @@
                             <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
                                 <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
                             </mat-select>
-                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                            <mat-datepicker-toggle matSuffix [for]="campaignFivePicker"
                                 style=" font-size: x-large;"></mat-datepicker-toggle>
-                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                            <mat-date-range-picker #campaignFivePicker></mat-date-range-picker>
                         </mat-form-field>
                     </div>
                     <div class="wordset">
@@ -705,8 +709,9 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-form-field class="example-form-field" style="width: 30%;">
-                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                    
+                        <mat-form-field class="example-form-field" style="width: 30%;height: 100px;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignSixPicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
                                     (dateChange)="getSelectedDates()">
                                 <span class="mat-input-placeholder-wrapper">
@@ -718,9 +723,9 @@
                             <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
                                 <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
                             </mat-select>
-                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                            <mat-datepicker-toggle matSuffix [for]="campaignSixPicker"
                                 style=" font-size: x-large;"></mat-datepicker-toggle>
-                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                            <mat-date-range-picker #campaignSixPicker></mat-date-range-picker>
                         </mat-form-field>
                     </div>
                     <div class="wordset">
@@ -840,8 +845,9 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-form-field class="example-form-field" style="width: 30%;">
-                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
+                    
+                        <mat-form-field class="example-form-field" style="width: 30%;height: 100px;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignSevenPicker">
                                 <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
                                     (dateChange)="getSelectedDates()">
                                 <span class="mat-input-placeholder-wrapper">
@@ -853,9 +859,9 @@
                             <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
                                 <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
                             </mat-select>
-                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                            <mat-datepicker-toggle matSuffix [for]="campaignSevenPicker"
                                 style=" font-size: x-large;"></mat-datepicker-toggle>
-                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                            <mat-date-range-picker #campaignSevenPicker></mat-date-range-picker>
                         </mat-form-field>
                     </div>
                     <div class="wordset">
@@ -975,10 +981,9 @@
                                 </label>
                             </div>
                         </div>
-                        <mat-form-field class="example-form-field" style="width: 30%;">
-                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignOnePicker">
-                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
-                                    (dateChange)="getSelectedDates()">
+                        <mat-form-field class="example-form-field" style="width: 30%;height: 100px;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignEightPicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date" (dateChange)="getSelectedDates()">
                                 <span class="mat-input-placeholder-wrapper">
                                     <span class="mat-input-placeholder">to</span>
                                 </span>
@@ -988,9 +993,9 @@
                             <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
                                 <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
                             </mat-select>
-                            <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"
+                            <mat-datepicker-toggle matSuffix [for]="campaignEightPicker"
                                 style=" font-size: x-large;"></mat-datepicker-toggle>
-                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                            <mat-date-range-picker #campaignEightPicker></mat-date-range-picker>
                         </mat-form-field>
                     </div>
                     <div class="wordset">
@@ -1027,8 +1032,7 @@
                             </tr>
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
-                            <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
-                           
+                            <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">  
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
