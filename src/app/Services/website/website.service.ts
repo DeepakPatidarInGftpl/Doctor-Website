@@ -378,4 +378,9 @@ export class WebsiteService {
     let url = this.apiUrl+'/pv-api/generate_manifest/';
     return this.http.post(url,data);
   }
+  //update order
+  updateOrder(id:any,data:any){
+    let url = this.apiUrl+'/pv-api/order_update_shiprocket/?id=';
+    return this.http.post(`${url}${id}`,data);
+  }
 }

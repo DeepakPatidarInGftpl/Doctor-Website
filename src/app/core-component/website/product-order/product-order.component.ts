@@ -65,6 +65,11 @@ export class ProductOrderComponent implements OnInit {
   get u() {
     return this.addressForm.controls;
   }
+  updateOrderForm: FormGroup;
+  get o() {
+    return this.updateOrderForm.controls;
+  }
+
   labelForm: FormGroup;
   invoiceForm: FormGroup;
   campaignOne: FormGroup;
@@ -95,10 +100,19 @@ export class ProductOrderComponent implements OnInit {
       breadth: new FormControl('', [Validators.min(1)]),
       height: new FormControl('', [Validators.min(1)]),
       weight: new FormControl('', [Validators.required, Validators.min(1)]),
-      branch: new FormControl('', [Validators.required, Validators.min(1)]),
-      id: new FormControl('', [Validators.required, Validators.min(1)]),
+      branch: new FormControl('', [Validators.required,]),
+      id: new FormControl('', [Validators.required,]),
     });
     //awd 
+     //update order 
+     this.updateOrderForm = this.fb.group({
+      length: new FormControl('',[Validators.min(1)]),
+      breadth: new FormControl('',[Validators.min(1)]),
+      height: new FormControl('',[Validators.min(1)]),
+      weight: new FormControl('',[Validators.required,Validators.min(1)]),
+      branch: new FormControl('',[Validators.required]),
+      order_id: new FormControl('',[Validators.required]),
+    });
     this.awdForm = this.fb.group({
       shipment_id: new FormControl('',),
       courier_id: new FormControl('',)
@@ -912,4 +926,87 @@ export class ProductOrderComponent implements OnInit {
       this.acceptForm.markAllAsTouched();
     }
   }
+
+    //update order form
+    orderId:any;
+    openModalOrder(product: any) {
+      console.log(product);
+      this.orderId=product.id;
+      this.updateOrderForm.patchValue({
+        order_id:product.shiprocket_order_id
+      });
+      const modal = document.getElementById('orderModal');
+      if (modal) {
+        modal.classList.add('show');
+        modal.style.display = 'block';
+        //blur bg
+        this.isModalOpen = true;
+        this.websiteService.setCheckBlur(true);
+      }
+    }
+    closeModalOrder() {
+      const modal = document.getElementById('orderModal');
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        this.isModalOpen = false;
+        this.websiteService.setCheckBlur(false);
+      }
+    }
+    get length1() {
+      return this.updateOrderForm.get('length');
+    }
+    get breadth1() {
+      return this.updateOrderForm.get('breadth');
+    }
+    get height1() {
+      return this.updateOrderForm.get('height');
+    }
+    get weight1() {
+      return this.updateOrderForm.get('weight');
+    }
+    get branch1() {
+      return this.updateOrderForm.get('branch');
+    }
+    get order_id() {
+      return this.updateOrderForm.get('order_id');
+    }
+    orderSubmit() {
+      console.warn(this.updateOrderForm.value);
+      let formData = new FormData();
+      formData.append('length', this.updateOrderForm.get('length')?.value);
+      formData.append('breadth', this.updateOrderForm.get('breadth')?.value);
+      formData.append('height', this.updateOrderForm.get('height')?.value);
+      formData.append('weight', this.updateOrderForm.get('weight')?.value);
+      formData.append('branch', this.updateOrderForm.get('branch')?.value);
+      formData.append('order_id', this.updateOrderForm.get('order_id')?.value);
+      if (this.updateOrderForm.valid) {
+        this.loaders = true
+        this.websiteService.updateOrder(this.orderId,formData).subscribe((res: any) => {
+          console.log(res); 
+          this.loaders = false;
+          if(res.success){
+            this.toastr.success(res.msg); 
+            this.closeModalBatch();
+          }
+          if (res.status == false) {
+            this.toastr.error(res.error?.message);
+            this.loaders = false;
+            if(res.error.order_date){
+              this.loaders = false;
+              this.toastr.error(res.error?.order_date[0]);  
+            }
+          
+          }  if(res.json){
+            this.toastr.error(res.json.message);  
+            }
+        }, err => {
+          this.loaders = false;
+          this.toastr.error()
+        });
+      } else {
+        this.loaders = false;
+        this.updateOrderForm.markAllAsTouched();
+      }
+    }
 }
