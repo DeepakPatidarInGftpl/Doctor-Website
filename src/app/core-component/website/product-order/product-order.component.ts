@@ -96,9 +96,9 @@ export class ProductOrderComponent implements OnInit {
     //end
     this.getBranch();
     this.acceptForm = this.fb.group({
-      length: new FormControl('', [Validators.min(1)]),
-      breadth: new FormControl('', [Validators.min(1)]),
-      height: new FormControl('', [Validators.min(1)]),
+      length: new FormControl('', [Validators.required,Validators.min(1)]),
+      breadth: new FormControl('', [Validators.required,Validators.min(1)]),
+      height: new FormControl('', [Validators.required,Validators.min(1)]),
       weight: new FormControl('', [Validators.required, Validators.min(1)]),
       branch: new FormControl('', [Validators.required,]),
       id: new FormControl('', [Validators.required,]),
@@ -106,9 +106,9 @@ export class ProductOrderComponent implements OnInit {
     //awd 
      //update order 
      this.updateOrderForm = this.fb.group({
-      length: new FormControl('',[Validators.min(1)]),
-      breadth: new FormControl('',[Validators.min(1)]),
-      height: new FormControl('',[Validators.min(1)]),
+      length: new FormControl('',[Validators.required,Validators.min(1)]),
+      breadth: new FormControl('',[Validators.required,Validators.min(1)]),
+      height: new FormControl('',[Validators.required,Validators.min(1)]),
       weight: new FormControl('',[Validators.required,Validators.min(1)]),
       branch: new FormControl('',[Validators.required]),
       order_id: new FormControl('',[Validators.required]),
@@ -482,6 +482,8 @@ export class ProductOrderComponent implements OnInit {
           this.toastr.success(res.msg);
           this.closeModalBatch();
           this.ngOnInit();
+        }else{
+          this.toastr.error(res.error);
         }
         if (res.status == false) {
           this.toastr.error(res.error?.message);

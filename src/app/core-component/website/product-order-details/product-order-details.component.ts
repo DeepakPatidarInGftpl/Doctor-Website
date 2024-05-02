@@ -191,18 +191,18 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.getdata();
     this.getBranch();
     this.acceptForm = this.fb.group({
-      length: new FormControl('',[Validators.min(1)]),
-      breadth: new FormControl('',[Validators.min(1)]),
-      height: new FormControl('',[Validators.min(1)]),
+      length: new FormControl('',[Validators.required,Validators.min(1)]),
+      breadth: new FormControl('',[Validators.required,Validators.min(1)]),
+      height: new FormControl('',[Validators.required,Validators.min(1)]),
       weight: new FormControl('',[Validators.required,Validators.min(1)]),
       branch: new FormControl('',[Validators.required]),
       id: new FormControl(this.id,[Validators.required,Validators.min(1)]),
     });
     //update order 
     this.updateOrderForm = this.fb.group({
-      length: new FormControl('',[Validators.min(1)]),
-      breadth: new FormControl('',[Validators.min(1)]),
-      height: new FormControl('',[Validators.min(1)]),
+      length: new FormControl('',[Validators.required,Validators.min(1)]),
+      breadth: new FormControl('',[Validators.required,Validators.min(1)]),
+      height: new FormControl('',[Validators.required,Validators.min(1)]),
       weight: new FormControl('',[Validators.required,Validators.min(1)]),
       branch: new FormControl('',[Validators.required]),
       order_id: new FormControl('',[Validators.required]),

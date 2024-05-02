@@ -475,7 +475,7 @@
            
             <h4 class="mb-2"><span>Order Id : </span>{{productOrderDetail?.shiprocket_order_id}}</h4>
             <p>Status : <span [ngClass]="{
-                'bg-lightgreens': productOrderDetail?.status === 'Accepted' || productOrderDetail?.status ==='Delivered',
+                'bg-lightgreens': productOrderDetail?.status === 'Accepted' || productOrderDetail?.status ==='Delivered' || productOrderDetail?.status==='Completed',
                 'bg-lightblue': productOrderDetail?.status === 'Dispatched',
                 'bg-lightorange': productOrderDetail?.status === 'Assigned',
                 'bg-lightred' : productOrderDetail?.status === 'Reject' ||productOrderDetail?.status === 'Cancelled',
@@ -516,8 +516,8 @@
                                                                 <!-- <p><span>Date</span> :{{productOrderDetail?.store_address?.datetime | date: 'dd-MMMM-yyyy'}}</p> -->
                                                                 <p>{{productOrderDetail?.store_address?.address?productOrderDetail?.store_address?.address:''+' , '+productOrderDetail?.store_address?.city?productOrderDetail?.store_address?.city:''+' , '+productOrderDetail?.store_address?.state?productOrderDetail?.store_address?.state:''+' , '+productOrderDetail?.store_address?.country?productOrderDetail?.store_address?.country:''}}</p>
                                                                 <p>{{productOrderDetail?.store_address?.pincode?productOrderDetail?.store_address?.pincode:''}}</p>
-                                                                <p><span>Phone</span> : {{productOrderDetail?.store_address?.mobile_no}}</p>
-                                                                <p><span>Email</span> : {{productOrderDetail?.store_address?.email}}</p>
+                                                                <p><i data-bs-toggle="tooltip" title="fa fa-phone" class="fa fa-phone"></i> {{productOrderDetail?.store_address?.mobile_no}}</p>
+                                                                <p><i data-bs-toggle="tooltip" title="fa fa-envelope" class="fa fa-envelope"></i> {{productOrderDetail?.store_address?.email}}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -549,33 +549,29 @@
                                                <div *ngIf="productOrderDetail.billing_address">
                                                         <p class="heading" style="text-align: left;">Billing Address</p>
                                                         <p class="heading2">
-                                                            {{productOrderDetail?.billing_address?.line1?productOrderDetail?.billing_address?.line1:'' + ' , ' +
-                                                            productOrderDetail?.billing_address?.line2?productOrderDetail?.billing_address?.line2:'' + ' , ' +
-                                                            productOrderDetail?.billing_address?.city}}
+                                                            {{ (productOrderDetail?.billing_address?.line1 == null ? '' : productOrderDetail?.billing_address?.line1) + ', ' + (productOrderDetail?.billing_address?.line2 == null ? '' : productOrderDetail?.billing_address?.line2) }} 
                                                             <br>
-                                                            {{productOrderDetail?.billing_address?.state + ' , ' + productOrderDetail?.billing_address?.country}}
+                                                            {{productOrderDetail?.billing_address?.city+ ' , '+productOrderDetail?.billing_address?.state + ' , ' + productOrderDetail?.billing_address?.country}}
                                                             <br />
                                                             Name: {{productOrderDetail?.billing_address?.name}}
                                                             <br/>
-                                                            Phone: {{productOrderDetail?.billing_address?.mobile_no}}
+                                                            <i data-bs-toggle="tooltip" title="fa fa-phone" class="fa fa-phone"></i> {{productOrderDetail?.billing_address?.mobile_no}}
                                                             <br />
-                                                            {{productOrderDetail?.billing_address?.email}}
+                                                            <i data-bs-toggle="tooltip" title="fa fa-envelope" class="fa fa-envelope"></i> {{productOrderDetail?.billing_address?.email}}
                                                         </p>
                                                     </div>
                                                     <div *ngIf="productOrderDetail?.shipping_address">
                                                         <p class="heading" style="text-align: left;">Shipping Address</p>
                                                         <p class="heading2">
-                                                            {{productOrderDetail?.shipping_address?.line1==null?productOrderDetail?.shipping_address?.line1:'' + ' , ' +
-                                                            productOrderDetail?.shipping_address?.line2==null?productOrderDetail?.shipping_address?.line2:'' + ' , ' +
-                                                            productOrderDetail?.shipping_address?.city}}
-                                                            <br>
-                                                            {{productOrderDetail?.shipping_address?.state + ' , ' + productOrderDetail?.shipping_address?.country}}
+                                                            {{ (productOrderDetail?.shipping_address?.line1 == null ? '' : productOrderDetail?.shipping_address?.line1) + ', ' + (productOrderDetail?.shipping_address?.line2 == null ? '' : productOrderDetail?.shipping_address?.line2) }}
+                                                          <br>
+                                                            {{productOrderDetail?.shipping_address?.city+' , '+productOrderDetail?.shipping_address?.state + ' , ' + productOrderDetail?.shipping_address?.country}}
                                                             <br />
                                                             Name: {{productOrderDetail?.billing_address?.name}}
                                                             <br/>
-                                                            Phone: {{productOrderDetail?.shipping_address?.mobile_no}}
+                                                            <i data-bs-toggle="tooltip" title="fa fa-phone" class="fa fa-phone"></i> {{productOrderDetail?.shipping_address?.mobile_no}}
                                                             <br />
-                                                            {{productOrderDetail?.shipping_address?.email}}
+                                                            <i data-bs-toggle="tooltip" title="fa fa-envelope" class="fa fa-envelope"></i> {{productOrderDetail?.shipping_address?.email}}
                                                         </p>
                                                     </div> 
 
@@ -753,21 +749,21 @@
                     <div class="row">
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Length</label>
+                                <label>Length*</label>
                                 <input type="number" formControlName="length" placeholder="Enter Length" id="length" [ngClass]="{'is-invalid': f['length'].touched && f['length'].invalid}">
                                 <span class="text-danger" *ngIf="length && length.invalid && length.touched">Enter Length greater than or equal to 1</span>
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Breadth</label>
+                                <label>Breadth*</label>
                                 <input type="number" formControlName="breadth" placeholder="Enter Breadth" id="breadth" [ngClass]="{'is-invalid': f['breadth'].touched && f['breadth'].invalid}">
                                 <span class="text-danger" *ngIf="breadth && breadth.invalid && breadth.touched">Enter Breadth greater than or equal to 1</span>
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Height</label>
+                                <label>Height*</label>
                                 <input type="number" formControlName="height" placeholder="Enter Height" id="height" [ngClass]="{'is-invalid': f['height'].touched && f['height'].invalid}">
                                 <span class="text-danger" *ngIf="height && height.invalid && height.touched">Enter Height greater than or equal to 1</span>
                             </div>
@@ -1013,21 +1009,21 @@
                     <div class="row">
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Length</label>
+                                <label>Length*</label>
                                 <input type="number" formControlName="length" placeholder="Enter Length" id="length" [ngClass]="{'is-invalid': o['length'].touched && o['length'].invalid}">
                                 <span class="text-danger" *ngIf="length1 && length1.invalid && length1.touched">Enter Length greater than or equal to 1</span>
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Breadth</label>
+                                <label>Breadth*</label>
                                 <input type="number" formControlName="breadth" placeholder="Enter Breadth" id="breadth" [ngClass]="{'is-invalid': o['breadth'].touched && o['breadth'].invalid}">
                                 <span class="text-danger" *ngIf="breadth1 && breadth1.invalid && breadth1.touched">Enter Breadth greater than or equal to 1</span>
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Height</label>
+                                <label>Height*</label>
                                 <input type="number" formControlName="height" placeholder="Enter Height" id="height" [ngClass]="{'is-invalid': o['height'].touched && o['height'].invalid}">
                                 <span class="text-danger" *ngIf="height1 && height1.invalid && height1.touched">Enter Height greater than or equal to 1</span>
                             </div>
