@@ -88,7 +88,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
                                 </td>
                                 <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;">{{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
                                 <td>{{products?.address_type}}</td>
@@ -100,7 +100,7 @@
                                <td>{{products?.final_amount}}</td>
                                 <td>  
                                     <button class="btn btn-submit me-2" (click)="openModalBatch(products)" style="background: #04c159;padding: 2px 0px;min-width: 60px; font-weight: 400;">Accept</button>
-                                    <button class="btn btn-submit me-2" (click)="rejectOrder(products.id)" style="background: #EA5455;padding: 2px 0px;min-width: 60px; font-weight: 400;">Reject</button>
+                                    <button class="btn btn-submit me-2" (click)="RejectedOrder(products.id)" style="background: #EA5455;padding: 2px 0px;min-width: 60px; font-weight: 400;">Rejected</button>
                                 </td>
                                 </ng-container>
                             </tr>
@@ -221,7 +221,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
                                 </td>
                                 <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"> {{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
                                 <td>{{products?.address_type}}</td>
@@ -354,7 +354,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
                                 </td>
                                 <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"> {{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
                                 <td>{{products?.address_type}}</td>
@@ -500,7 +500,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
                                 </td>
                                 <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"> {{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
                                 <td>{{products?.address_type}}</td>
@@ -636,7 +636,143 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                </td>
+                                <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"> {{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
+                                <td>{{products?.address_type}}</td>
+                                <td>{{products?.payment_type}}</td>
+                                <td>{{products?.payment_status}}</td> 
+                                <td>{{products?.online_order_id}}</td>
+                                <td>{{products?.shiprocket_order_id}}</td>
+                                <td>{{products?.shiprocket_shipment_id}}</td>
+                                <td>{{products?.order_date |date}}</td>
+                                <td>{{products?.final_amount}}</td>
+                                <!-- <td>  
+                                    <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
+                                        <img src="assets/img/icons/eye.svg" alt="img">
+                                    </a> 
+                                </td> -->
+                                </ng-container>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="filteredData?.length==0">
+                            <tr>
+                                <td colspan="10">
+                                    <p class="center-textt">Data not available</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="progressbar">
+                        <mat-progress-bar mode="indeterminate" class="progressbar" *ngIf="loader"></mat-progress-bar>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4 col-12 mt-2">
+                            <div class="entries"> Show per page
+                                <select [(ngModel)]="itemsPerPage" class="pagination" #v (change)="changePg(v.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="-1">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-sm-8 col-12 mt-2">
+                            <div class="f-right">
+                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                <div class="entries f-right">Showing {{itemsPerPage}} to {{filteredData?.length}} of {{p}} entries</div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Completed">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="assets/img/icons/filter.svg" alt="img">
+                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                            </a>
+                        </div>
+                        <div class="search-input" style="padding-right: 10px;">
+                            <a class="btn btn-searchset">
+                                <img src="assets/img/icons/search-white.svg" alt="img"></a>
+                            <div class="dataTables_filter"><label>
+                                    <input type="search" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="titlee" (ngModelChange)="search()" placeholder="search">
+                                </label>
+                            </div>
+                        </div>
+                    
+                        <mat-form-field class="example-form-field" style="width: 30%;height: 100px;">
+                            <mat-date-range-input [formGroup]="campaignOne" [rangePicker]="campaignFivePicker">
+                                <input matStartDate placeholder="Start date" formControlName="start" class="mat-input input_date"
+                                    (dateChange)="getSelectedDates()">
+                                <span class="mat-input-placeholder-wrapper">
+                                    <span class="mat-input-placeholder">to</span>
+                                </span>
+                                <input matEndDate placeholder="End date" formControlName="end" class="mat-input input_date" (dateChange)="getSelectedDates()">
+                            </mat-date-range-input>
+        
+                            <mat-select placeholder="Select Date Range" (selectionChange)="selectDateRange($event.value)">
+                                <mat-option *ngFor="let option of dateRangeOptions" [value]="option.value">{{ option.label }}</mat-option>
+                            </mat-select>
+                            <mat-datepicker-toggle matSuffix [for]="campaignFivePicker"
+                                style=" font-size: x-large;"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignFivePicker></mat-date-range-picker>
+                        </mat-form-field>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf" (click)="generatePDFAgain()"><img src="assets/img/icons/pdf.svg" alt="img"></a></li>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="excel" (click)="exportToExcel()"><img src="assets/img/icons/excel.svg" alt="img"></a></li>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="print" (click)="printTable()"><img src="assets/img/icons/printer.svg" alt="img"></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table datanew" id="mytable">
+                        <thead>
+                            <tr>
+                                <th (click)="sort('id')" class="thone">
+                                    <label class="checkboxs mb-0 d-inline" (click)="selectAll(initChecked)">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="selectAlll()">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                    <i class="fa fa-sort"></i>
+                                </th>
+                                <th (click)="sort('id')" class="thone tdd">Sr. No.<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Status<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">User<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Order Type<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Payment Type<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Payment Status<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Online Order Id<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Order Id<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Shipment Id<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Order Date<i class="fa fa-sort"></i></th>
+                                <th (click)="sort('id')" class="thone tdd">Final Amount<i class="fa fa-sort"></i></th>
+                                <!-- <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th> -->
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="filteredData?.length>=0">
+                            <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
+                            <ng-container *ngIf="products?.status === 'Delivered'">
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox" [(ngModel)]="selectedRows[i]">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td>{{i+1}}</td>
+                                <td>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
                                 </td>
                                 <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"> {{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
                                 <td>{{products?.address_type}}</td>
@@ -772,7 +908,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
                                 </td>
                                 <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"> {{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
                                 <td>{{products?.address_type}}</td>
@@ -826,7 +962,7 @@
             </div>
         </div>
     </mat-tab>
-    <mat-tab label="Reject">
+    <mat-tab label="Rejected">
         <div class="card">
             <div class="card-body">
                 <div class="table-top">
@@ -899,7 +1035,7 @@
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
                             <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
-                            <ng-container *ngIf="products?.status === 'Reject'">
+                            <ng-container *ngIf="products?.status === 'Rejected'">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -908,7 +1044,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
                                 </td>
                                 <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"> {{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
                                 <td>{{products?.address_type}}</td>
@@ -1041,7 +1177,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Reject' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
                                 </td>
                                 <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"> {{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
                                 <td>{{products?.address_type}}</td>
@@ -1113,21 +1249,21 @@
                     <div class="row">
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Length</label>
+                                <label>Length*</label>
                                 <input type="number" formControlName="length" placeholder="Enter Length" id="length" [ngClass]="{'is-invalid': f['length'].touched && f['length'].invalid}">
                                 <span class="text-danger" *ngIf="length && length.invalid && length.touched">Enter Length greater than or equal to 1</span>
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Breadth</label>
+                                <label>Breadth*</label>
                                 <input type="number" formControlName="breadth" placeholder="Enter Breadth" id="breadth" [ngClass]="{'is-invalid': f['breadth'].touched && f['breadth'].invalid}">
                                 <span class="text-danger" *ngIf="breadth && breadth.invalid && breadth.touched">Enter Breadth greater than or equal to 1</span>
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Height</label>
+                                <label>Height*</label>
                                 <input type="number" formControlName="height" placeholder="Enter Height" id="height" [ngClass]="{'is-invalid': f['height'].touched && f['height'].invalid}">
                                 <span class="text-danger" *ngIf="height && height.invalid && height.touched">Enter Height greater than or equal to 1</span>
                             </div>
@@ -1373,21 +1509,21 @@
                     <div class="row">
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Length</label>
+                                <label>Length*</label>
                                 <input type="number" formControlName="length" placeholder="Enter Length" id="length" [ngClass]="{'is-invalid': o['length'].touched && o['length'].invalid}">
                                 <span class="text-danger" *ngIf="length1 && length1.invalid && length1.touched">Enter Length greater than or equal to 1</span>
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Breadth</label>
+                                <label>Breadth*</label>
                                 <input type="number" formControlName="breadth" placeholder="Enter Breadth" id="breadth" [ngClass]="{'is-invalid': o['breadth'].touched && o['breadth'].invalid}">
                                 <span class="text-danger" *ngIf="breadth1 && breadth1.invalid && breadth1.touched">Enter Breadth greater than or equal to 1</span>
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label>Height</label>
+                                <label>Height*</label>
                                 <input type="number" formControlName="height" placeholder="Enter Height" id="height" [ngClass]="{'is-invalid': o['height'].touched && o['height'].invalid}">
                                 <span class="text-danger" *ngIf="height1 && height1.invalid && height1.touched">Enter Height greater than or equal to 1</span>
                             </div>

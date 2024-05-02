@@ -276,8 +276,8 @@ this.getLabel();
     } else {
       const searchTerm = this.titlee.toLocaleLowerCase();
       this.filteredData = this.filteredData.filter(res => {
-        const nameLower = res?.title.toLocaleLowerCase();
-        const label = res?.product_label?.title.toLocaleLowerCase();
+        const nameLower = res?.title?.toLocaleLowerCase()||'';
+        const label = res?.product_label?.title?.toLocaleLowerCase() ||'';
         if (nameLower.match(searchTerm)) {
           return true;
         } else if (label.match(searchTerm)) {

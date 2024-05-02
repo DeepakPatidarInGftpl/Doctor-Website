@@ -337,11 +337,11 @@ export class WebsiteService {
 
   // get branch
   addAcceptOrder(data:any){
-    let url = this.apiUrl+'/pv-api/order_accepted/';
+    let url = this.apiUrl+'/pv-api/order_accept/';
     return this.http.post(url,data)
   }
   rejectOrder(id:any){
-    let url = this.apiUrl+'/pv-api/order_rejected/?id=';
+    let url = this.apiUrl+'/pv-api/order_reject/?id=';
     return this.http.post(`${url}${id}`,'')
   }
   getServiceAvility(pincode:any){
@@ -365,7 +365,7 @@ export class WebsiteService {
   }
   // cancel order
   cancelOrder(data:any){
-    let url = this.apiUrl+'/pv-api/order_cancelled_shiprocket/';
+    let url = this.apiUrl+'/pv-api/order_cancel_shiprocket/';
     return this.http.post(url,data);
   }
   //update address

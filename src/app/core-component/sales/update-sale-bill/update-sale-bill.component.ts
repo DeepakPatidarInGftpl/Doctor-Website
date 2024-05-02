@@ -185,7 +185,7 @@ export class UpdateSaleBillComponent implements OnInit {
         console.log(res);
         this.isSearch=false;
        this.variantList[index]=res
-  this.variantList2 = res;
+        this.variantList2 = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
