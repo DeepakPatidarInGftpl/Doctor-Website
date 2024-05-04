@@ -1,4 +1,4 @@
-<div class="container-fluid d-flex flex-column pos-container">
+<div class="container-fluid d-flex flex-column pos-container" [ngClass]="{'blur-background': isModalOpen}">
 
 
 <!-- <button (click)="addPer('add')">addd per</button>
@@ -88,7 +88,7 @@
         </div>
         <div class="col-6 border" style="overflow-y: scroll;">Article content </div>
     </div> -->
-    <div class="row flex-fill" style="min-height: 0">
+    <div class="row flex-fill" style="min-height: 0" [ngClass]="{'blur-background': isModalOpen}">
         <!-- <div class="col-lg-9 col-sm-12 mh-100 tabs_wrapper pos-left-wrapper" style="overflow-y: hidden; width: 81%"> -->
             <div class="col-lg-9 col-sm-12 final-left" style="width: 81%">
             <div class="final-test">

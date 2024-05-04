@@ -4,7 +4,7 @@
     'header-two': changeLayout == '3',
     'header-three': changeLayout == '4',
     'header-four': changeLayout == '5'
-  }">
+  }" [ngClass]="{'blur-background': isModalOpen}">
   <div [class.container]="changeLayout == '3' || changeLayout == '4'">
     <!-- Logo -->
     <div class="header-left active" *ngIf="activePath != 'pos'">
@@ -57,6 +57,7 @@
           <a href="javascript:void(0);" class="responsive-search">
             <i class="fa fa-search"></i>
           </a>
+         
           <form action="#">
             <div class="searchinputs" [ngClass]="{ show: showSearch == true }">
               <input type="text" placeholder="Search Here ..." />
@@ -93,8 +94,13 @@
           </a>
         </div> -->
       </li>
-      <!-- /Flag -->
-
+     
+      <li class="nav-item dropdown has-arrow flag-nav">
+        <!-- 4-5 -->
+        <a href="javascript:void(0);" class="dropdown-toggle nav-link userset blue_link me-0" data-bs-toggle="dropdown" (click)="openModalDayClose()" *ngIf="isCloseDay">
+        <i data-bs-toggle="tooltip" title="ion-arrow-return-left" class="ion-arrow-return-left" style="color: #9c9c9c;"></i>
+      </a>
+     </li>
 
       <!-- Notifications -->
       <li class="nav-item dropdown">
@@ -259,3 +265,195 @@
   </div>
 </div>
 <!-- Header -->
+
+
+
+<!-- modal day open -->
+
+<div class="modal fade " id="dayModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel" style="margin: 0 auto;">Open Registered</h1>
+        <button type="button" class="close" (click)="closeModalDay()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container" style="height: auto !important;">
+          <div class="card">
+            <div class="card-body">
+              <form [formGroup]="dayOpenForm" (ngSubmit)="submit()" class="text-center">
+                <div class="form-group" style="margin-bottom: 10px;">
+                  <label class="text_18">Opening Amount<span class="red_star">*</span></label>
+                  <input type="text" formControlName="opening_amount"
+                    [ngClass]="{'is-invalid': f['opening_amount']?.touched && f['opening_amount']?.invalid}"
+                    [ngStyle]="{'border': modalError ? '1px solid red' : ''}" style="width: 40%;">
+                  <br>
+                  <span class="text-danger"
+                    *ngIf="opening_amount && opening_amount?.invalid && opening_amount?.touched">Enter Opening Amount
+                  </span>
+                </div>
+                <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;
+                  Submit</button>
+                <br>
+                <span class="text-danger" *ngIf="modalError"
+                  style="font-size: 15px;font-weight: 500;">{{modalError}}</span>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end modal -->
+<!-- modal day close -->
+<div class="modal fade " id="dayCloseModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="max-width: 65%;">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel" style="margin: 0 auto;">Close Registered</h1>
+        <button type="button" class="close" (click)="closeModalDayClose()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 1%;">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4 col-sm-12 col-sm-12">
+                <div class="card">
+                  <div class="card-body" style="padding: 0px;">
+                    <div class="productdetails">
+                      <ul class="product-bar">
+                        <li>
+                          <h4 class="th">Start Date</h4>
+                          <h6 class="td">{{dayList?.['Start Date']}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Start Time</h4>
+                          <h6 class="td">{{dayList?.['Start Time']}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Bills</h4>
+                          <h6 class="td">{{dayList?.no_of_bill| number:'1.2-2'}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Items</h4>
+                          <h6 class="td">{{dayList?.no_of_item| number:'1.2-2'}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Pending Amount</h4>
+                          <h6 class="td">{{dayList?.pending_amount| number:'1.2-2'}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Total Cash</h4>
+                          <h6 class="td">{{dayList?.total_cash| number:'1.2-2'}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Total Discount</h4>
+                          <h6 class="td">{{dayList?.total_discount| number:'1.2-2'}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Total Payment Given</h4>
+                          <h6 class="td">{{dayList?.total_payment| number:'1.2-2'}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Total Sale</h4>
+                          <h6 class="td">{{dayList?.total_sale| number:'1.2-2'}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Total Payment Recieved</h4>
+                          <h6 class="td">{{dayList?.total_sale_amount| number:'1.2-2'}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Total Sale Return</h4>
+                          <h6 class="td">{{dayList?.total_sale_return| number:'1.2-2'}}</h6>
+                        </li>
+                        <li>
+                          <h4 class="th">Total Tax</h4>
+                          <h6 class="td">{{dayList?.total_tax| number:'1.2-2'}}</h6>
+                        </li>
+                     
+                      </ul>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-12 col-sm-12">
+                <div class="card">
+                  <div class="card-body" style="padding: 0px;">
+                    <div class="productdetails">
+                      <ul class="product-bar">
+                        <li>
+                          <h4 class="th">Opening Cash</h4>
+                          <h6 class="td">{{dayList?.opening_amount| number:'1.2-2'}}</h6>
+                        </li>
+                        <ng-container *ngFor="let dayClose of dayList?.sale_bill_payment">
+                          <li>
+                            <h4 class="th" *ngIf="dayClose.bank_payment=='Online'">{{dayClose?.bank_payment}}</h4>
+                            <h4 class="th" *ngIf="dayClose.receipt_type=='Bank'">{{dayClose?.receipt_type}}</h4>
+                            <h6 class="td">{{dayClose?.total_amount| number:'1.2-2'}}</h6>
+                          </li>
+                        </ng-container>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-4 col-sm-12 col-sm-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="productdetails">
+                      <ul class="product-bar">
+                        <li>
+                          <h4 class="th">Total Cash Left in Drawer</h4>
+                          <h6 class="td">{{dayList?.final_cash| number:'1.2-2'}}</h6>
+                        </li>
+                  </ul>
+                    <form [formGroup]="dayCloseForm" (ngSubmit)="submitDayClose()">
+                      <div class="row">
+                        <div class="col-lg-12 col-sm-12 col-sm-12">
+                          <div class="form-group">
+                            <label class="text_18">Closing Amount<span class="red_star">*</span></label>
+                            <input type="text" formControlName="closing_amount"
+                              [ngClass]="{'is-invalid': d['closing_amount']?.touched && d['closing_amount']?.invalid}">
+                            <span class="text-danger"
+                              *ngIf="closing_amount && closing_amount?.invalid && closing_amount?.touched">Enter
+                              Closing Amount </span>
+                          </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-sm-12">
+                          <div class="form-group">
+                            <label class="text_18">Closing Notes</label>
+                            <input type="text" formControlName="remarks" placeholder="Closing Notes"
+                              [ngClass]="{'is-invalid': d['remarks']?.touched && d['remarks']?.invalid}">
+                            <span class="text-danger" *ngIf="remarks && remarks?.invalid && remarks?.touched">Enter
+                              Closing Notes</span>
+                          </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-sm-12">
+                          <button class="btn btn-submit me-2" *ngIf="!loader">Submit</button>
+                          <button class="btn btn-submit me-2" type="submit" *ngIf="loader" disabled>
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end modal -->

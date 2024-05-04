@@ -1,5 +1,5 @@
 
-<div class="row mx-2" id="fixedElement">
+<div class="row mx-2" id="fixedElement" [ngClass]="{'blur-background': isModalOpen}">
     <div class="col-lg-6 col-sm-6 col-12 d-flex align-items-center">
         <span style="font-size: 30px;font-weight: 600;">Forcasting  & Salesman</span>
     </div>
@@ -7,7 +7,7 @@
     <div class="col-lg-4 col-sm-4 col-12"> 
     </div>
 </div>
-<div class="row">
+<div class="row" [ngClass]="{'blur-background': isModalOpen}">
     <div class="col-lg-9 col-sm-6 col-12 d-flex"></div>
     <div class="col-lg-3 col-sm-6 col-12 d-flex">
         <div class="form-group w-100" *ngIf="isAdmin">
@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" [ngClass]="{'blur-background': isModalOpen}">
     <div class="col-lg-6 col-sm-12 col-12 d-flex">
         <div class="card flex-fill">
             <div class="card-header pb-0  d-flex justify-content-between align-items-center">
@@ -101,7 +101,7 @@
 
 <!-- employee target-top 10 employee-->
     
-    <div class="row">
+    <div class="row" [ngClass]="{'blur-background': isModalOpen}">
         <div class="col-lg-12 col-sm-12 col-12 d-flex">
             <div class="card flex-fill">
                 <div class="card-header pb-0  d-flex justify-content-between align-items-center">

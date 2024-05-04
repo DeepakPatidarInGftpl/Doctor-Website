@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
@@ -19,7 +20,7 @@ export class HeaderComponent implements OnInit {
   public logoPath: string = '';
 
   constructor(private Router: Router, private settings: SettingsService, private authServ: AuthServiceService, private toastr: ToastrService,
-    private coreService: CoreService, private profileService:CompanyService
+    private coreService: CoreService, private profileService:CompanyService, private companyService:CompanyService, private fb :FormBuilder
   ) {
     this.activePath = this.Router.url.split('/')[2];
     this.Router.events.subscribe((data: any) => {
@@ -45,9 +46,46 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  dayCloseForm!: FormGroup;
+  get d() {
+    return this.dayCloseForm.controls;
+  }
+  dayOpenForm!: FormGroup;
+  get f() {
+    return this.dayOpenForm.controls;
+  }
+
   ngOnInit(): void {
     this.LoadScript('assets/js/header.js');
-    this.profile()
+    this.profile();
+      //open day
+      this.dayOpenForm = this.fb.group({
+        opening_amount: new FormControl(0, [Validators.required,])
+      });
+      //close day
+      this.dayCloseForm = this.fb.group({
+        closing_amount: new FormControl(0, [Validators.required, ]),
+        remarks: new FormControl('')
+      });
+      this.checkDayClose();
+      this.getDayClose();
+  
+       // blur bg when modal open
+   if(this.companyService.CheckBlur$){
+    this.companyService.CheckBlur$.subscribe((res:any)=>{
+      console.log(res);
+      if(res !== null){
+      if(res){
+        this.isModalOpen = res;
+        console.log(this.isModalOpen);
+      }else if(res==false){
+        this.isModalOpen = res;
+        console.log(this.isModalOpen);
+      }
+    }
+      
+    })
+  }
   }
 
 
@@ -102,4 +140,158 @@ export class HeaderComponent implements OnInit {
     script.async = false;
     document.body.appendChild(script);
   }
+
+  // day open day close 
+  
+  // day close or day open
+  closeModalDayClose() {
+    const modal = document.getElementById('dayCloseModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      //remove blurbg send data to service
+      this.isModalOpen=false;
+      this.companyService.setCheckBlur(false);
+    }
+  }
+  openModalDayClose() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('dayCloseModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blurbg send data to service
+      this.isModalOpen=true;
+      this.companyService.setCheckBlur(true);
+    }
+  }
+  dayList: any;
+  loader = false;
+  getDayClose() {
+    this.companyService.getDayClose().subscribe((res) => {
+      this.dayList = res;
+      console.log(res);
+      console.warn(this.dayList?.sale_bill_payment[0]?.total_amount);
+    })
+  }
+  get remarks() {
+    return this.dayCloseForm.get('remarks');
+  }
+  get closing_amount() {
+    return this.dayCloseForm.get('closing_amount');
+  }
+  // condition for day close or not
+
+  isCloseDay = false;
+  checkDayClose() {
+    this.companyService.getDayCheck().subscribe((res: any) => {
+      console.log(res);
+      this.companyService.setCheckDay(res);  // send data to service
+      if (res.isSuccess) {
+        if (res?.close_day && res?.old_day) {
+          this.isCloseDay = true;
+          this.toastr.info(res?.msg);
+          this.openModalDayClose();
+        } else if (res?.open_day && res?.today) {
+          this.isCloseDay = false;
+          this.toastr.info(res?.msg);
+          this.openModalDay();
+        } else if (res?.close_day) {
+          this.isCloseDay = true;
+        }
+      }else{
+        this.toastr.error(res.msg);
+      }
+    },err=>{
+      this.toastr.error(err.message);
+    })
+  }
+  submitDayClose() {
+    if (this.dayCloseForm.valid) {
+      this.loader = true;
+      console.warn(this.dayCloseForm.value);
+      let formData = new FormData();
+      formData.append('closing_amount', this.dayCloseForm.get('closing_amount')?.value);
+      formData.append('remarks', this.dayCloseForm.get('remarks')?.value);
+      this.companyService.addDayClose(formData).subscribe((res: any) => {
+        console.log(res);
+        if (res.isSuccess) {
+          this.loader = false;
+          this.closeModalDayClose();
+          this.toastr.success(res.msg);
+          this.getDayClose();
+          this.checkDayClose();
+        } else {
+          this.loader = false;
+          this.toastr.error(res.msg)
+        }
+      }, err => {
+        this.loader = false;
+        this.toastr.error(err.message)
+      })
+    } else {
+      this.toastr.error('Please Enter Valid Data')
+    }
+  }
+
+  //open dashboard
+modalError:any;
+  closeModalDay() {
+    const modal = document.getElementById('dayModal');
+    if (this.isCloseDay) {
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        // remove blurbg send data to service
+        this.isModalOpen=false;
+      this.companyService.setCheckBlur(false);
+      }
+    }else{
+      this.modalError='Please Submit Opening Amount';
+      if (modal) {
+        setTimeout(() => {
+          modal.classList.add('vibrate');
+        }, 10);
+      }
+    }
+  }
+  isModalOpen = false;
+  openModalDay() {
+    // Trigger Bootstrap modal using JavaScript
+    const modal = document.getElementById('dayModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blurbg send data to service
+      this.isModalOpen=true;
+      this.companyService.setCheckBlur(true);
+    }
+  }
+  get opening_amount() {
+    return this.dayOpenForm.get('opening_amount')
+  }
+  submit() {
+    if (this.dayOpenForm.valid) {
+      this.loader = true;
+      console.warn(this.dayOpenForm.value);
+      let formData = new FormData();
+      formData.append('opening_amount', this.dayOpenForm.get('opening_amount')?.value);
+      this.companyService.addDayOpen(formData).subscribe((res: any) => {
+        console.log(res);
+        if (res.isSuccess) {
+          this.loader = false;
+          this.isCloseDay=true;
+          this.closeModalDay();
+          this.toastr.success(res.msg)
+        } else {
+          this.loader = false;
+          this.toastr.error(res.msg)
+        }
+      }, err => {
+        this.loader = false;
+        this.toastr.error(err.message)
+      })
+    }
+  }
+
 }

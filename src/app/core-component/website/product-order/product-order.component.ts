@@ -635,7 +635,8 @@ export class ProductOrderComponent implements OnInit {
         this.loaders = false;
         if (res.success) {
           this.toastr.success(res.msg);
-          this.closeModalBatch();
+          this.closeModalAssignAWD();
+          this.closeModalCourier();
           window.location.reload();
         } else if (res.success == false) {
           this.toastr.error(res.error);
@@ -643,6 +644,8 @@ export class ProductOrderComponent implements OnInit {
         if (res.json.status_code == 200) {
           this.toastr.success(res.json.message);
           this.closeModalAssignAWD();
+          this.closeModalCourier();
+          window.location.reload();
         }
         if (res.json.status_code == 400) {
           this.toastr.error(res.json.message);
@@ -652,6 +655,9 @@ export class ProductOrderComponent implements OnInit {
         }
         if (res.json.awb_assign_status == 1) {
           this.toastr.success('Order Assign Successfully');
+          this.closeModalAssignAWD();
+          this.closeModalCourier();
+          window.location.reload();
         }
 
       }, err => {
@@ -978,9 +984,12 @@ export class ProductOrderComponent implements OnInit {
         // }
         if (res.msg == "Updated Customer Delivery Address") {
           this.toastr.success(res.msg);
+          this.closeModalAddress();
+          window.location.reload();
         }
         if (res.json_response.status_code == 200) {
           this.toastr.success(res.json_response.message);
+          this.closeModalAddress();
           window.location.reload();
         } if (res.json_response.status_code == 400) {
           this.toastr.error(res.json_response.message);
@@ -995,7 +1004,7 @@ export class ProductOrderComponent implements OnInit {
       });
     } else {
       this.loaders = false;
-      this.acceptForm.markAllAsTouched();
+      this.addressForm.markAllAsTouched();
     }
   }
 
@@ -1005,7 +1014,7 @@ export class ProductOrderComponent implements OnInit {
     console.log(product);
     this.orderId = product.id;
     this.updateOrderForm.patchValue({
-      order_id: product.shiprocket_order_id,
+      order_id: product.id,
       length: product.length ? product.length : '',
       breadth: product.breadth ? product.breadth : '',
       height: product.height ? product.height : '',
@@ -1059,24 +1068,29 @@ export class ProductOrderComponent implements OnInit {
     formData.append('order_id', this.updateOrderForm.get('order_id')?.value);
     if (this.updateOrderForm.valid) {
       this.loaders = true
-      this.websiteService.updateOrder(this.orderId, formData).subscribe((res: any) => {
+      this.websiteService.updateOrder(formData).subscribe((res: any) => {
         console.log(res);
         this.loaders = false;
         if (res.success) {
           this.toastr.success(res.msg);
-          this.closeModalBatch();
+          this.closeModalOrder();
+          window.location.reload()
+        }else if(res.success==false){
+          this.toastr.error(res.error)
         }
         if (res.status == false) {
           this.toastr.error(res.error?.message);
           this.loaders = false;
-          if (res.error.order_date) {
-            this.loaders = false;
-            this.toastr.error(res.error?.order_date[0]);
-          }
-
+        }
+        if (res.error.order_date) {
+          this.loaders = false;
+          this.toastr.error(res.error?.order_date[0]);
         }
         if (res.json) {
           this.toastr.error(res.json.message);
+        }
+        else if (res.error.status_code == 400) {
+          this.toastr.error(res.error.message)
         }
       }, err => {
         this.loaders = false;
@@ -1163,7 +1177,7 @@ export class ProductOrderComponent implements OnInit {
               title: 'Completed!',
               text: this.completeRes.msg,
             });
-            // window.location.reload();
+            window.location.reload();
           } else {
             Swal.fire({
               icon: 'error',

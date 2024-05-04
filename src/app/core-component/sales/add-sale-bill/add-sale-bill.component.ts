@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
@@ -30,7 +31,8 @@ export class AddSaleBillComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private purchaseService: PurchaseServiceService,
-    private coreService: CoreService) {
+    private coreService: CoreService,
+  private companyService:CompanyService) {
   }
 
   customerControlName = 'customer';
@@ -52,8 +54,26 @@ export class AddSaleBillComponent implements OnInit {
   }
   searchForm!: FormGroup;
   subcategoryList;
-
+  isModalOpen:any;
   ngOnInit(): void {
+
+    // blur bg when modal open
+if(this.companyService.CheckBlur$){
+  this.companyService.CheckBlur$.subscribe((res:any)=>{
+    console.log(res);
+    if(res !== null){
+    if(res){
+      this.isModalOpen = res;
+      console.log(this.isModalOpen);
+    }else if(res==false){
+      this.isModalOpen = res;
+      console.log(this.isModalOpen);
+    }
+  }
+    
+  })
+}
+//end
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     const today = new Date();
     const sevenDaysFromToday = new Date(today);
