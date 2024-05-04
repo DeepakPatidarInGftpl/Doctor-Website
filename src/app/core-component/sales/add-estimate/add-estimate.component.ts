@@ -266,7 +266,8 @@ export class AddEstimateComponent implements OnInit {
       qty: (1),
       price: (0),
       // amount: (0),
-      discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
+      discount: new FormControl(''),
+      discount_type: (''),
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       total: (0),
     })
@@ -499,26 +500,19 @@ export class AddEstimateComponent implements OnInit {
   landingCost: any;
   batchCostPrice: any[] = [];
   selecteProduct:any;
-//12-04
-discountArray: any[] = [];
+
   oncheckVariant(event: any, index) {
     console.log(index,'index');
     const selectedItemId = event.id;
     console.log(event);
     this.selecteProduct=event?.product;
     console.log(this.selecteProduct);
-    
-     //12-04
-     event?.batch.forEach((batch:any)=>{
-      this.discountArray.push(batch);
-    });
-    this.allDiscount();
-    //end
 
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
-    this.batchDiscount = event.batch[0]?.discount || 0;
+    // this.batchDiscount = event.batch[0]?.discount || 0;
+    this.batchDiscount = 0;
     this.isTaxAvailable[index] = event?.product?.sale_tax_including;
     this.batchCostPrice[index] = event?.batch[0]?.cost_price || 0;
     if (event?.product?.sale_tax_including) {
@@ -588,7 +582,7 @@ discountArray: any[] = [];
           amount: event.batch[0]?.mrp,
           qty: event.batch[0]?.stock,
           tax: this.apiPurchaseTax,
-          discount: event.batch[0]?.discount || 0,
+          discount: 0,
           price: this.originalCoastPrice.toFixed(2),
         });
 
@@ -599,8 +593,8 @@ discountArray: any[] = [];
           item_name: event?.product_title,
           qty: event.batch[0]?.stock,
           tax: 18,
-          discount: event.batch[0]?.discount || 0,
-          price: this.originalCoastPrice,
+          discount: 0,
+          price: this.originalCoastPrice.toFixed(2),
           // landing_cost: this.landingCost || 0
         });
       }
@@ -621,147 +615,6 @@ discountArray: any[] = [];
       const prodd = this.getCart().controls[i].value; 
   }
 
-  
-// 12-04
-discountTyp: any[] = [];
-selectedValue:any;
-priceRange: any[] = [];
-isPriceRange:boolean[]=[];
-qtyPerQty: any[] = [];
-isQPQ:boolean[]=[];
-qtyPerPercentage: any[] = [];
-isQPP:boolean[]=[];
-priceRangeFreeItem: any[] = [];
-isPriceRangeFreeItem:boolean[]=[];
-freeItemOnInvoice: any[] = [];
-isFreeItemInvoice:boolean[]=[];
-discountOnInvoice: any[] = [];
-isDiscountInvoice:boolean[]=[];
-
-allDiscount() {
-  console.log(this.discountArray);
-  this.discountTyp = [];
-  this.priceRange=[];
-  this.qtyPerQty=[];
-  this.qtyPerPercentage=[];
-  this.priceRangeFreeItem=[];
-  this.freeItemOnInvoice=[];
-  this.discountOnInvoice=[];
-  this.discountArray?.forEach((batch: any, i: number) => {
-    console.warn(batch);
-    batch?.discount?.forEach((discount: any) => {
-      console.log(discount);
-
-  if (!this.discountTyp[i]) {
-    this.discountTyp[i] = [];
-  }
-  this.discountTyp[i].push(discount);
-  console.warn(this.discountTyp[i]);
-
-  if (discount?.is_compulsory === "True") {
-    this.selectedValue = discount;
-  } else {
-    if (batch?.is_active) { // Add your condition here
-      if (discount.discount_offer_type === 'Price-range-free-item') {
-        if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
-          // this.priceRangeFreeItem.push(discount);
-          this.isPriceRangeFreeItem[i]=true;
-          this.isPriceRange[i]=false;
-          this.isFreeItemInvoice[i]=false;
-          this.isDiscountInvoice[i]=false;
-          this.isQPQ[i]=false;
-          this.isQPP[i]=false;
-          if (!this.priceRangeFreeItem[i]) {
-            this.priceRangeFreeItem[i] = [];
-          }
-          this.priceRangeFreeItem[i].push(discount);
-          console.warn(this.priceRangeFreeItem, 'price range free item');
-        }
-      } else if (discount.discount_offer_type === 'Price-range-discount') {
-        if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
-          this.isPriceRange[i]=true;
-          this.isPriceRangeFreeItem[i]=false;
-          this.isFreeItemInvoice[i]=false;
-          this.isDiscountInvoice[i]=false;
-          this.isQPQ[i]=false;
-          this.isQPP[i]=false;
-          // this.priceRange.push(discount);
-          if (!this.priceRange[i]) {
-            this.priceRange[i] = [];
-          }
-          this.priceRange[i].push(discount);
-          console.warn(this.priceRange, 'price range discount');
-        }
-      } else if (discount.discount_offer_type === 'Free-item-on-invoice') {
-        if (batch?.mrp >= discount.invoice_amount) {
-          // this.freeItemOnInvoice.push(discount);
-          this.isFreeItemInvoice[i]=true;
-          this.isPriceRangeFreeItem[i]=false;
-          this.isPriceRange[i]=false;
-          this.isDiscountInvoice[i]=false;
-          this.isQPQ[i]=false;
-          this.isQPP[i]=false;
-          if (!this.freeItemOnInvoice[i]) {
-            this.freeItemOnInvoice[i] = [];
-          }
-          this.freeItemOnInvoice[i].push(discount);
-          console.warn(this.freeItemOnInvoice, 'free item on invoice');
-        }
-      } else if (discount.discount_offer_type === 'Discount-on-Invoice') {
-        if (batch?.mrp >= discount.invoice_amount) {
-          this.isDiscountInvoice[i]=true;
-          this.isPriceRangeFreeItem[i]=false;
-          this.isPriceRange[i]=false;
-          this.isFreeItemInvoice[i]=false;
-          this.isQPQ[i]=false;
-          this.isQPP[i]=false;
-          if (!this.discountOnInvoice[i]) {
-            this.discountOnInvoice[i] = [];
-          }
-          this.discountOnInvoice[i].push(discount);
-          // this.discountOnInvoice.push(discount);
-          console.warn(this.discountOnInvoice, 'discount on invoice');
-        }
-      } else if (discount.discount_offer_type === 'Quantity-per-percentag') {
-        if (this.totalQty() >= discount.purchase_qty) {
-          // this.qtyPerPercentage.push(discount);
-          this.isQPP[i]=true;
-          this.isDiscountInvoice[i]=false;
-          this.isPriceRangeFreeItem[i]=false;
-          this.isPriceRange[i]=false;
-          this.isFreeItemInvoice[i]=false;
-          this.isQPQ[i]=false;
-          if (!this.qtyPerPercentage[i]) {
-            this.qtyPerPercentage[i] = [];
-          }
-          this.qtyPerPercentage[i].push(discount);
-          console.warn(this.qtyPerPercentage, 'qty per %');
-        }
-      } else if (discount.discount_offer_type === 'Quantity-per-quantity') {
-        if (this.totalQty() >= discount.purchase_qty) {
-          this.isQPQ[i]=true;
-          this.isDiscountInvoice[i]=false;
-          this.isPriceRangeFreeItem[i]=false;
-          this.isPriceRange[i]=false;
-          this.isFreeItemInvoice[i]=false;
-          this.isQPP[i]=false;
-          // this.qtyPerQty.push(discount);
-          if (!this.qtyPerQty[i]) {
-            this.qtyPerQty[i] = [];
-          }
-          this.qtyPerQty[i].push(discount);
-          console.warn(this.qtyPerQty, 'qty per qty');
-        }
-      }
-    }
-  } 
-    });
-  });
-}
-
-selectDiscount(val){
-  console.warn(val,'selected discount'); 
-}
 //end
   coastprice: any[] = []
   landingPrice: any[] = []
@@ -869,7 +722,6 @@ selectDiscount(val){
     const result = this.calculationDiscountCostPrice(index);
     this.coastprice[index] = result.toFixed(2);
     console.log(this.coastprice[index], 'this.coastprice[index]');
-
     setTimeout(() => {
       this.calculateRoundoffValue()
     }, 2000);
@@ -1160,8 +1012,12 @@ selectDiscount(val){
 
   barcode: any[] = [];
   v_id: any;
+  //4-5
+  selectedProduct:any[]=[];
   variantChanged(value: any, index) {
     console.log(value);
+    //4-5
+    this.selectedProduct.push(value);
     // console.log(index);
     // console.log(value?.sku);
     this.barcode[index] = value.sku;
@@ -1174,8 +1030,606 @@ selectDiscount(val){
         modal.style.display = 'none';
       }
     this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
+
+    this.allDiscount(value, index);//4-5
   };
 
+  // discount filter many 
+
+  // discount batch 
+  selectedBatchDiscount: any[] = []
+  selectBtch: any[] = [];
+  // filter used
+  discountTyp: any[] = [];
+  isDiscountSelect: boolean[] = [];
+  isInvoiceFree: boolean[] = [];
+  isFreePriceRange: boolean[] = [];
+  isQtyPerQty: boolean[] = [];
+  isQtyPerPercentage: boolean[] = [];
+  compulsoryDiscounts: any;
+  flatDiscount: any[] = [];
+  selectedDiscount: any[] = [];
+  discountTypeSelect: any[] = [];
+  //end
+
+  //working
+  invoiceFlatDiscount: any;
+  allDiscount(product, index) {
+    console.log(this.selectedBatchDiscount, 'selectedBatchDiscount');
+    // this.selectedBatchDiscount.forEach((batch: any, i: number) => {
+      // if (batch.discount.length > 0) {
+        product?.batch[0]?.discount.forEach((discount: any) => {
+          if (!this.discountTyp[index]) {
+            this.discountTyp[index] = [];
+          }
+          this.discountTyp[index].push(discount);
+          console.warn(this.discountTyp[index], 'discount selected based on index');
+          console.log(this.discountTyp);
+          // auto selected data of isComuplsory
+          this.compulsoryDiscounts = this.discountTyp[index].filter(element => element.is_compulsory);
+          console.log(this.compulsoryDiscounts);
+        });
+   
+     
+      if (this.discountTyp[index]) {
+        if (this.compulsoryDiscounts) {
+          // if (this.selectedBatchDiscount.length - 1 == index) {
+            const lastCompulsoryDiscount = this.compulsoryDiscounts[this.compulsoryDiscounts.length - 1];
+            // const lastCompulsoryDiscount = this.compulsoryDiscounts[0];
+            console.log(lastCompulsoryDiscount);
+            if (lastCompulsoryDiscount?.is_compulsory) {
+              // console.log(lastCompulsoryDiscount, 'lastCompulsoryDiscount');
+              if (lastCompulsoryDiscount?.discount_offer_type == 'Price-range-free-item') {
+                if (product?.batch[0]?.selling_price_online >= parseInt(lastCompulsoryDiscount.start_price) && product?.batch[0]?.selling_price_online <= parseInt(lastCompulsoryDiscount.end_price)) {
+                  this.addCart(index+1);
+                  const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+                  previousCart.patchValue({
+                    discount: 'Free Item',
+                  })
+                  const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index + 1) as FormGroup;
+                  barcode.patchValue({
+                    barcode: lastCompulsoryDiscount?.free_items?.sku,
+                    item_name: lastCompulsoryDiscount?.free_items?.product_name,
+                    qty: 1,
+                    tax: 0,
+                    discount: '',
+                    additional_discount: 0,
+                    price: lastCompulsoryDiscount?.free_items?.mrp,
+                  });
+                  this.barcode[index + 1] = lastCompulsoryDiscount?.free_items?.sku;
+                  console.log(this.barcode);
+                  // this.myControl.push(new FormControl(lastCompulsoryDiscount?.free_items?.product_name));
+                  console.log(this.selectedBatchDiscount, 'selecteDiscount');
+                }
+              } else if (lastCompulsoryDiscount?.discount_offer_type == 'Price-range-discount') {
+                if (product?.batch[0]?.selling_price_online >= parseInt(lastCompulsoryDiscount.start_price) && product?.batch[0]?.selling_price_online <= parseInt(lastCompulsoryDiscount.end_price)) {
+                  if (lastCompulsoryDiscount?.discount_type == '%') {
+                    let flatDisc = product?.batch[0]?.selling_price_online * parseInt(lastCompulsoryDiscount?.flat_discount) / 100;
+                    console.log(flatDisc);
+                    const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+                    previousCart.patchValue({
+                      discount: lastCompulsoryDiscount?.flat_discount,
+                      discount_type: '%'
+                    });
+                    console.log(this.userType);
+                    if (product?.product?.sale_tax_including) {
+                      if (this.userType == 'Employee') {
+                        this.costPrice = product?.batch[0]?.selling_price_employee || 0;
+                      } else if (this.userType == 'Dealer') {
+                        this.costPrice = product?.batch[0]?.selling_price_dealer || 0;
+                      } else {
+                        this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                      }
+                    } else {
+                      this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                    }
+                    console.warn(this.costPrice);
+                    this.purchase4(index)
+                  } else {
+                    const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+                    previousCart.patchValue({
+                      discount: lastCompulsoryDiscount?.flat_discount,
+                      discount_type: 'Rs'
+                    });
+                    if (product?.product?.sale_tax_including) {
+                      if (this.userType == 'Employee') {
+                        this.costPrice = product?.batch[0]?.selling_price_employee || 0;
+                      } else if (this.userType == 'Dealer') {
+                        this.costPrice = product?.batch[0]?.selling_price_dealer || 0;
+                      } else {
+                        this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                      }
+                    } else {
+                      this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                    }
+                    console.warn(this.costPrice);
+                    this.purchase4(index)
+                  }
+                }
+              } else if (lastCompulsoryDiscount?.discount_offer_type == 'Free-item-on-invoice') {
+                setTimeout(() => {
+                  if (this.calculateTotal() >= parseInt(lastCompulsoryDiscount?.invoice_amount)) {
+                    console.warn(lastCompulsoryDiscount);
+                    this.addCart(index+1);
+                    const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+                    previousCart.patchValue({
+                      discount: 'Free Item Invoice',
+                    })
+                    const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index + 1) as FormGroup;
+                    barcode.patchValue({
+                      barcode: lastCompulsoryDiscount?.free_items?.sku,
+                      item_name: lastCompulsoryDiscount?.free_items?.product_name,
+                      qty: 1,
+                      tax: 0,
+                      discount: '',
+                      additional_discount: 0,
+                      price: lastCompulsoryDiscount?.free_items?.mrp,
+                    });
+                    this.barcode[index + 1] = lastCompulsoryDiscount?.free_items?.sku;
+                    console.log(this.barcode);
+                    // this.myControl.push(new FormControl(lastCompulsoryDiscount?.free_items?.product_name));
+                    console.log(this.selectedBatchDiscount, 'selecteDiscount');
+                  }
+                }, 3000);
+
+              } else if (lastCompulsoryDiscount?.discount_offer_type == 'Discount-on-Invoice') {
+                if (lastCompulsoryDiscount?.discount_type == '%') {
+                  this.invoiceFlatDiscount = parseInt(lastCompulsoryDiscount?.flat_discount);
+                  const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+                  previousCart.patchValue({
+                    discount: 'Discount Invoice',
+                    discount_type: '%'
+                  });
+                } else {
+                  const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+                  previousCart.patchValue({
+                    discount: 'Discount Invoice',
+                    discount_type: 'Rs'
+                  });
+                  this.invoiceFlatDiscount = parseInt(lastCompulsoryDiscount?.flat_discount);
+                }
+              } else if (lastCompulsoryDiscount?.discount_offer_type == 'Quantity-per-percentage') {
+                this.isDiscountSelect[index] = true;
+                this.selectedDiscount[index] = 'Qty % Discount';
+                this.discountTypeSelect.push(lastCompulsoryDiscount);
+                const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+                if (previousCart.get('qty').value >= parseInt(lastCompulsoryDiscount?.purchase_qty)) {
+                  if (lastCompulsoryDiscount?.discount_type == '%') {
+                    let flatDisc = product?.batch[0]?.selling_price_online * parseInt(lastCompulsoryDiscount?.flat_discount) / 100;
+                    console.log(flatDisc);
+                    previousCart.patchValue({
+                      discount: lastCompulsoryDiscount?.flat_discount,
+                      discount_type: '%'
+                    });
+                    console.log(this.userType);
+                    if (product?.product?.sale_tax_including) {
+                      if (this.userType == 'Employee') {
+                        this.costPrice = product?.batch[0]?.selling_price_employee || 0;
+                      } else if (this.userType == 'Dealer') {
+                        this.costPrice = product?.batch[0]?.selling_price_dealer || 0;
+                      } else {
+                        this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                      }
+                    } else {
+                      this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                    }
+                    console.warn(this.costPrice);
+                    this.purchase4(index)
+                  } else {
+                    let totalFlatDiscount = product?.batch[0]?.selling_price_online - parseInt(lastCompulsoryDiscount?.flat_discount);
+                    const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+                    previousCart.patchValue({
+                      discount: lastCompulsoryDiscount?.flat_discount,
+                      discount_type: 'Rs'
+                    });
+                    console.log(this.userType);
+                    if (product?.product?.sale_tax_including) {
+                      if (this.userType == 'Employee') {
+                        this.costPrice = product?.batch[0]?.selling_price_employee || 0;
+                      } else if (this.userType == 'Dealer') {
+                        this.costPrice = product?.batch[0]?.selling_price_dealer || 0;
+                      } else {
+                        this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                      }
+                    } else {
+                      this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                    }
+                    console.warn(this.costPrice);
+                    this.purchase4(index)
+                    console.warn(totalFlatDiscount);
+                  }
+                }
+              } else if (lastCompulsoryDiscount?.discount_offer_type == 'Quantity-per-quantity') {
+                this.isDiscountSelect[index] = true;
+                this.selectedDiscount[index] = 'Qty Per Qty';
+                this.discountTypeSelect.push(lastCompulsoryDiscount);
+                const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+                console.log(previousCart.get('qty').value);
+                // if (previousCart.get('qty').value >= parseInt(lastCompulsoryDiscount?.purchase_qty)) {
+                  const currentQty = previousCart.get('qty').value; // Get current quantity value
+                  const newQty = currentQty + 1;
+                  this.isQtyPerQty[index] = true;
+                  previousCart.patchValue({
+                    qty: newQty,
+                    discount: 'Qty Per Qty'
+                  });
+                  console.log(parseInt(lastCompulsoryDiscount?.purchase_qty));
+                // }
+              }
+            }
+          // }
+        }
+      }
+    // });
+
+  }
+  selectDiscount(val, i) {
+  let product=this.selectedProduct[i];
+  console.log(product); 
+    this.closeModalDiscount(i);
+    console.warn(val, 'selected discount' + i);
+    if (val?.discount_offer_type == 'Price-range-free-item') {
+       //remove
+       const removeCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+       console.log(removeCart.get('discount').value);
+       let dis=removeCart.get('discount').value;
+       const currentQty = removeCart.get('qty').value; 
+       const newQty = currentQty - 1;
+       if(dis=='Qty Per Qty'){
+         removeCart.patchValue({
+          qty:newQty
+         })
+       } if(dis>0){
+        removeCart.patchValue({
+          discount:'',
+          discount_type:''
+         })
+       }if(dis=='Free Item'){
+        this.removeCart(i+1);
+        this.discountTyp.splice(i+1, 1);
+        console.warn(this.discountTyp);
+      } if(dis=='Free Item Invoice'){
+        this.removeCart(i+1);
+        this.discountTyp.splice(i+1, 1);
+        console.warn(this.discountTyp);
+      }
+      
+     //end
+     //add 
+    //  if (product?.batch[0]?.selling_price_online >= parseInt(lastCompulsoryDiscount.start_price) && product?.batch[0]?.selling_price_online <= parseInt(lastCompulsoryDiscount.end_price)) {
+      this.addCart(i+1);
+      const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+      previousCart.patchValue({
+        discount: 'Free Item',
+      })
+      const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i + 1) as FormGroup;
+      barcode.patchValue({
+        barcode: val?.free_items?.sku,
+        item_name: val?.free_items?.product_name,
+        qty: 1,
+        tax: 0,
+        discount: '',
+        additional_discount: 0,
+        price: val?.free_items?.mrp,
+      });
+      this.barcode[i + 1] = val?.free_items?.sku;
+      console.log(this.barcode);
+      // this.myControl.push(new FormControl(val?.free_items?.product_name));
+      console.log(this.selectedBatchDiscount, 'selecteDiscount');
+    // }
+     //and
+    } else if (val?.discount_offer_type == 'Price-range-discount') {
+        //remove
+        const removeCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+        console.log(removeCart.get('discount').value);
+        let dis=removeCart.get('discount').value;
+        const currentQty = removeCart.get('qty').value; 
+        const newQty = currentQty - 1;
+        if(dis=='Qty Per Qty'){
+          removeCart.patchValue({
+           qty:newQty
+          })
+        } if(dis>0){
+         removeCart.patchValue({
+           discount:'',
+           discount_type:''
+          })
+        }if(dis=='Free Item'){
+          this.removeCart(i+1);
+          this.discountTyp.splice(i+1, 1);
+          console.warn(this.discountTyp);
+        } if(dis=='Free Item Invoice'){
+          this.removeCart(i+1);
+          this.discountTyp.splice(i+1, 1);
+          console.warn(this.discountTyp);
+        }
+      //end
+      //add
+      if (product?.batch[0]?.selling_price_online >= parseInt(val.start_price) && product?.batch[0]?.selling_price_online <= parseInt(val.end_price)) {
+        if (val?.discount_type == '%') {
+          let flatDisc = product?.batch[0]?.selling_price_online * parseInt(val?.flat_discount) / 100;
+          console.log(flatDisc);
+          const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+          previousCart.patchValue({
+            discount: val?.flat_discount,
+            discount_type: '%'
+          });
+          console.log(this.userType);
+          if (product?.product?.sale_tax_including) {
+            if (this.userType == 'Employee') {
+              this.costPrice = product?.batch[0]?.selling_price_employee || 0;
+            } else if (this.userType == 'Dealer') {
+              this.costPrice = product?.batch[0]?.selling_price_dealer || 0;
+            } else {
+              this.costPrice = product?.batch[0]?.selling_price_online || 0;
+            }
+          } else {
+            this.costPrice = product?.batch[0]?.selling_price_online || 0;
+          }
+          console.warn(this.costPrice);
+          this.purchase4(i)
+        } else {
+          const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+          previousCart.patchValue({
+            discount: val?.flat_discount,
+            discount_type: 'Rs'
+          });
+          if (product?.product?.sale_tax_including) {
+            if (this.userType == 'Employee') {
+              this.costPrice = product?.batch[0]?.selling_price_employee || 0;
+            } else if (this.userType == 'Dealer') {
+              this.costPrice = product?.batch[0]?.selling_price_dealer || 0;
+            } else {
+              this.costPrice = product?.batch[0]?.selling_price_online || 0;
+            }
+          } else {
+            this.costPrice = product?.batch[0]?.selling_price_online || 0;
+          }
+          console.warn(this.costPrice);
+          this.purchase4(i)
+        }
+      }
+      //end
+    } else if (val?.discount_offer_type == 'Free-item-on-invoice') {
+      // setTimeout(() => {
+      //   if (this.calculateTotal() >= parseInt(val?.invoice_amount)) {
+          //remove
+        const removeCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+        console.log(removeCart.get('discount').value);
+        let dis=removeCart.get('discount').value;
+        const currentQty = removeCart.get('qty').value; 
+        const newQty = currentQty - 1;
+        if(dis=='Qty Per Qty'){
+          removeCart.patchValue({
+           qty:newQty
+          })
+        } if(dis>0){
+         removeCart.patchValue({
+           discount:'',
+           discount_type:''
+          })
+        }if(dis=='Free Item'){
+          this.removeCart(i+1);
+          this.discountTyp.splice(i+1, 1);
+          console.warn(this.discountTyp);
+        } if(dis=='Free Item Invoice'){
+          this.removeCart(i+1);
+          this.discountTyp.splice(i+1, 1);
+          console.warn(this.discountTyp);
+        }
+      //end
+          console.warn(val);
+          this.addCart(i+1);
+          const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+          previousCart.patchValue({
+            discount: 'Free Item Invoice',
+          })
+          const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i + 1) as FormGroup;
+          barcode.patchValue({
+            barcode: val?.free_items?.sku,
+            item_name: val?.free_items?.product_name,
+            qty: 1,
+            tax: 0,
+            discount: '',
+            additional_discount: 0,
+            price: val?.free_items?.mrp,
+          });
+          this.barcode[i + 1] = val?.free_items?.sku;
+          console.log(this.barcode);
+          // this.myControl.push(new FormControl(val?.free_items?.product_name));
+          console.log(this.selectedBatchDiscount, 'selecteDiscount');
+      //   }
+      // }, 3000);
+
+    } else if (val?.discount_offer_type == 'Discount-on-Invoice') {
+      //remove
+      const removeCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+      console.log(removeCart.get('discount').value);
+      let dis=removeCart.get('discount').value;
+      const currentQty = removeCart.get('qty').value; 
+      const newQty = currentQty - 1;
+      if(dis=='Qty Per Qty'){
+        removeCart.patchValue({
+         qty:newQty
+        })
+      } if(dis>0){
+       removeCart.patchValue({
+         discount:'',
+         discount_type:''
+        })
+      }if(dis=='Free Item'){
+        this.removeCart(i+1);
+        this.discountTyp.splice(i+1, 1);
+        console.warn(this.discountTyp);
+      } if(dis=='Free Item Invoice'){
+        this.removeCart(i+1);
+        this.discountTyp.splice(i+1, 1);
+        console.warn(this.discountTyp);
+      }
+    //end
+    //add
+    if (val?.discount_type == '%') {
+      this.invoiceFlatDiscount = parseInt(val?.flat_discount);
+      const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+      previousCart.patchValue({
+        discount: 'Discount Invoice',
+        discount_type: '%'
+      });
+    } else {
+      const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+      previousCart.patchValue({
+        discount: 'Discount Invoice',
+        discount_type: 'Rs'
+      });
+      this.invoiceFlatDiscount = parseInt(val?.flat_discount);
+    }
+    //end
+    } else if (val?.discount_offer_type == 'Quantity-per-percentage') {
+      //remove
+      const removeCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+      console.log(removeCart.get('discount').value);
+      let dis=removeCart.get('discount').value;
+      const currentQty = removeCart.get('qty').value; 
+      const newQty = currentQty - 1;
+      if(dis=='Qty Per Qty'){
+        removeCart.patchValue({
+         qty:newQty
+        })
+      } if(dis>0){
+       removeCart.patchValue({
+         discount:'',
+         discount_type:''
+        })
+      }if(dis=='Free Item'){
+        this.removeCart(i+1);
+        this.discountTyp.splice(i+1, 1);
+        console.warn(this.discountTyp);
+      } if(dis=='Free Item Invoice'){
+        this.removeCart(i+1);
+        this.discountTyp.splice(i+1, 1);
+        console.warn(this.discountTyp);
+      }
+    //end
+    //add
+    this.isDiscountSelect[i] = true;
+                this.selectedDiscount[i] = 'Qty % Discount';
+                this.discountTypeSelect.push(val);
+                const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+                if (previousCart.get('qty').value >= parseInt(val?.purchase_qty)) {
+                  if (val?.discount_type == '%') {
+                    let flatDisc = product?.batch[0]?.selling_price_online * parseInt(val?.flat_discount) / 100;
+                    console.log(flatDisc);
+                    previousCart.patchValue({
+                      discount: val?.flat_discount,
+                      discount_type: '%'
+                    });
+                    console.log(this.userType);
+                    if (product?.product?.sale_tax_including) {
+                      if (this.userType == 'Employee') {
+                        this.costPrice = product?.batch[0]?.selling_price_employee || 0;
+                      } else if (this.userType == 'Dealer') {
+                        this.costPrice = product?.batch[0]?.selling_price_dealer || 0;
+                      } else {
+                        this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                      }
+                    } else {
+                      this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                    }
+                    console.warn(this.costPrice);
+                    this.purchase4(i)
+                  } else {
+                    let totalFlatDiscount = product?.batch[0]?.selling_price_online - parseInt(val?.flat_discount);
+                    const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+                    previousCart.patchValue({
+                      discount: val?.flat_discount,
+                      discount_type: 'Rs'
+                    });
+                    console.log(this.userType);
+                    if (product?.product?.sale_tax_including) {
+                      if (this.userType == 'Employee') {
+                        this.costPrice = product?.batch[0]?.selling_price_employee || 0;
+                      } else if (this.userType == 'Dealer') {
+                        this.costPrice = product?.batch[0]?.selling_price_dealer || 0;
+                      } else {
+                        this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                      }
+                    } else {
+                      this.costPrice = product?.batch[0]?.selling_price_online || 0;
+                    }
+                    console.warn(this.costPrice);
+                    this.purchase4(i)
+                    console.warn(totalFlatDiscount);
+                  }
+                }
+    //end
+    } else if (val?.discount_offer_type == 'Quantity-per-quantity') {
+       //remove
+       const removeCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+       console.log(removeCart.get('discount').value);
+       console.log(i,'index');
+       console.warn(i+1);
+       
+       let dis=removeCart.get('discount').value;
+       const currentQty = removeCart.get('qty').value; 
+       const newQty = currentQty - 1;
+       if(dis=='Qty Per Qty'){
+         removeCart.patchValue({
+          qty:newQty
+         })
+       } if(dis>0){
+        removeCart.patchValue({
+          discount:'',
+          discount_type:''
+         });
+       }if(dis=='Free Item'){
+         this.removeCart(i+1);
+         this.discountTyp.splice(i+1, 1);
+         console.warn(this.discountTyp);
+       } if(dis=='Free Item Invoice'){
+         this.removeCart(i+1);
+         this.discountTyp.splice(i+1, 1);
+         console.warn(this.discountTyp);
+       }
+       
+     //end
+     //add
+     this.isDiscountSelect[i] = true;
+     this.selectedDiscount[i] = 'Qty Per Qty';
+     this.discountTypeSelect.push(val);
+     const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
+     console.log(previousCart.get('qty').value);
+     if (previousCart.get('qty').value >= parseInt(val?.purchase_qty)) {
+       const currentQty = previousCart.get('qty').value; // Get current quantity value
+       const newQty = currentQty + 1;
+       this.isQtyPerQty[i] = true;
+       previousCart.patchValue({
+         qty: newQty,
+         discount: 'Qty Per Qty'
+       });
+       console.log(parseInt(val?.purchase_qty));
+     }
+     //end
+    }
+  }
+  closeModalDiscount(i: number) {
+    console.log(i, 'index');
+    const modal = document.getElementById(`discountModal-${i}`);
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
+  }
+  discountCartIndex: any;
+  openModalDiscount(index: number) {
+    this.discountCartIndex = index;
+    const modalId = `discountModal-${index}`;
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+    }
+  }
+  // end
   searchs: any[] = [];
   productName: any[] = [];
   isProduct = true;
@@ -1276,8 +1730,23 @@ selectDiscount(val){
     let total = 0;
     for (let i = 0; i < this.getCart().controls.length; i++) {
       const taxControl = this.getCart().controls[i].get('total');
+      //4-5
+      const discountControl = this.getCart().controls[i].get('discount');
+      const discountTypeControl = this.getCart().controls[i].get('discount_type');
       if (taxControl) {
         total += +taxControl.value || 0;
+        if (discountTypeControl && discountControl) {
+          let discountType = discountTypeControl.value;
+          let discountValue = discountControl.value;
+          if (discountValue == 'Discount Invoice' && this.invoiceFlatDiscount) {
+            if (discountType == '%') {
+              let flatDis = total * this.invoiceFlatDiscount / 100;
+              total = total - flatDis;
+            } else {
+              total = total - this.invoiceFlatDiscount;
+            }
+          }
+        }
       }
     }
     this.totalAmount = total

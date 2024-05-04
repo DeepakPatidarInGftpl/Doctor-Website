@@ -14,6 +14,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-product-order',
   templateUrl: './product-order.component.html',
@@ -45,7 +46,8 @@ export class ProductOrderComponent implements OnInit {
   ];
 
   constructor(private websiteService: WebsiteService, private QueryService: QueryService, private companyService: CompanyService,
-    private fb: FormBuilder, private toastr: ToastrService, private datePipe: DatePipe, private dashboardService: DashboardService) {
+    private fb: FormBuilder, private toastr: ToastrService, private datePipe: DatePipe, private dashboardService: DashboardService,
+    private router: Router) {
     this.QueryService.filterToggle()
   }
 
@@ -96,22 +98,22 @@ export class ProductOrderComponent implements OnInit {
     //end
     this.getBranch();
     this.acceptForm = this.fb.group({
-      length: new FormControl('', [Validators.required,Validators.min(1)]),
-      breadth: new FormControl('', [Validators.required,Validators.min(1)]),
-      height: new FormControl('', [Validators.required,Validators.min(1)]),
+      length: new FormControl('', [Validators.required, Validators.min(1)]),
+      breadth: new FormControl('', [Validators.required, Validators.min(1)]),
+      height: new FormControl('', [Validators.required, Validators.min(1)]),
       weight: new FormControl('', [Validators.required, Validators.min(1)]),
       branch: new FormControl('', [Validators.required,]),
       id: new FormControl('', [Validators.required,]),
     });
     //awd 
-     //update order 
-     this.updateOrderForm = this.fb.group({
-      length: new FormControl('',[Validators.required,Validators.min(1)]),
-      breadth: new FormControl('',[Validators.required,Validators.min(1)]),
-      height: new FormControl('',[Validators.required,Validators.min(1)]),
-      weight: new FormControl('',[Validators.required,Validators.min(1)]),
-      branch: new FormControl('',[Validators.required]),
-      order_id: new FormControl('',[Validators.required]),
+    //update order 
+    this.updateOrderForm = this.fb.group({
+      length: new FormControl('', [Validators.required, Validators.min(1)]),
+      breadth: new FormControl('', [Validators.required, Validators.min(1)]),
+      height: new FormControl('', [Validators.required, Validators.min(1)]),
+      weight: new FormControl('', [Validators.required, Validators.min(1)]),
+      branch: new FormControl('', [Validators.required]),
+      order_id: new FormControl('', [Validators.required]),
     });
     this.awdForm = this.fb.group({
       shipment_id: new FormControl('',),
@@ -130,7 +132,7 @@ export class ProductOrderComponent implements OnInit {
     // update address form
     this.addressForm = this.fb.group({
       web_order_id: new FormControl('',),
-      order_id: new FormControl('',),
+      shiprocket_order_id: new FormControl('',),
       name: new FormControl('',),
       email: new FormControl('',),
       mobile_no: new FormControl('',),
@@ -142,6 +144,7 @@ export class ProductOrderComponent implements OnInit {
       line1: new FormControl('',),
       line2: new FormControl('',),
       address: new FormControl('',),
+      shipping_pincode: new FormControl('')
     });
 
     // filter api
@@ -181,6 +184,17 @@ export class ProductOrderComponent implements OnInit {
         this.selectedRows = new Array(this.tableData.length).fill(false);
         this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
         console.log(this.filteredData, ' console.log(this.filteredData);');
+        this.filterData();
+      });
+    } else if (status.tab.textLabel == 'Ready To Ship') {
+      this.websiteService.getProductOrderByStatus('Assigned').subscribe((res: any) => {
+        this.tableData = res;
+        console.log(this.tableData);
+        this.loader = false;
+        this.selectedRows = new Array(this.tableData.length).fill(false);
+        this.selectedRows = new Array(this.tableData.length).fill(false);
+        console.log(this.filteredData, ' console.log(this.filteredData);');
+        this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
         this.filterData();
       });
     } else {
@@ -227,7 +241,7 @@ export class ProductOrderComponent implements OnInit {
     }
   }
   key = 'id'
-  reverse: boolean = false;
+  reverse: boolean = true;
   sort(key) {
     this.key = key;
     this.reverse = !this.reverse
@@ -481,8 +495,8 @@ export class ProductOrderComponent implements OnInit {
         if (res.success) {
           this.toastr.success(res.msg);
           this.closeModalBatch();
-          this.ngOnInit();
-        }else{
+          window.location.reload();
+        } else {
           this.toastr.error(res.error);
         }
         if (res.status == false) {
@@ -528,7 +542,7 @@ export class ProductOrderComponent implements OnInit {
               title: 'Rejected!',
               text: this.delRes.msg,
             });
-            this.ngOnInit();
+            window.location.reload();
           } else {
             Swal.fire({
               icon: 'error',
@@ -540,7 +554,6 @@ export class ProductOrderComponent implements OnInit {
       }
     });
   }
-
 
   // courier modal
   openModalCourier(product: any) {
@@ -568,21 +581,21 @@ export class ProductOrderComponent implements OnInit {
       this.websiteService.setCheckBlur(false);
     }
   }
-
   // assign awd
   openModalAssignAWD(courier: any) {
     this.awdForm.patchValue({
       courier_id: parseInt(courier?.courier_company_id),
     });
-    const modal = document.getElementById('awdModal');
-    if (modal) {
-      modal.classList.add('show');
-      modal.style.display = 'block';
-      //blur bg
-      this.isModalOpen = true;
-      this.websiteService.setCheckBlur(true);
-      this.closeModalCourier();
-    }
+    this.AWDSubmit();
+    // const modal = document.getElementById('awdModal');
+    // if (modal) {
+    //   modal.classList.add('show');
+    //   modal.style.display = 'block';
+    //   //blur bg
+    //   this.isModalOpen = true;
+    //   this.websiteService.setCheckBlur(true);
+    //   this.closeModalCourier();
+    // }
   }
   closeModalAssignAWD() {
     const modal = document.getElementById('awdModal');
@@ -622,13 +635,23 @@ export class ProductOrderComponent implements OnInit {
         this.loaders = false;
         if (res.success) {
           this.toastr.success(res.msg);
-          this.closeModalAssignAWD();
-          this.ngOnInit();
-        } else {
+          this.closeModalBatch();
+          window.location.reload();
+        } else if (res.success == false) {
           this.toastr.error(res.error);
-          if (res.json) {
-            this.toastr.error(res.json.message);
-          }
+        }
+        if (res.json.status_code == 200) {
+          this.toastr.success(res.json.message);
+          this.closeModalAssignAWD();
+        }
+        if (res.json.status_code == 400) {
+          this.toastr.error(res.json.message);
+        }
+        if (res.json.awb_assign_status == 0) {
+          this.toastr.error(res.json.response.data.awb_assign_error);
+        }
+        if (res.json.awb_assign_status == 1) {
+          this.toastr.success('Order Assign Successfully');
         }
 
       }, err => {
@@ -649,11 +672,18 @@ export class ProductOrderComponent implements OnInit {
     formData.append('shipment_id', JSON.stringify(p))
     this.websiteService.downloadLabel(formData).subscribe((res: any) => {
       console.log(res);
-      if (res.success) {
-        this.toastr.success(res.msg);
-        this.ngOnInit();
-      } else {
-        this.toastr.error(res.error_msg);
+      // if (res.success) {
+      //   this.toastr.success(res.msg);
+      // } else {
+      //   this.toastr.error(res.error_msg);
+      // }
+      if (res.json.label_created == 1 && res.json.label_url) {
+        window.open(res.json.label_url, '_blank');
+        // this.router.navigateByUrl(res.json.label_url);
+        this.toastr.success(res.json.response);
+      }
+      if (res.json.status_code == 400) {
+        this.toastr.error(res.json.message);
       }
     });
   }
@@ -665,11 +695,19 @@ export class ProductOrderComponent implements OnInit {
     formData.append('ids', JSON.stringify(p))
     this.websiteService.downloadInvoice(formData).subscribe((res: any) => {
       console.log(res);
-      if (res.success) {
-        this.toastr.success(res.msg);
-        this.ngOnInit();
-      } else {
-        this.toastr.error(res.error_msg);
+      // if (res.success) {
+      //   this.toastr.success(res.msg);
+      //   this.ngOnInit();
+      // } else {
+      //   this.toastr.error(res.error_msg);
+      // }
+      if (res.json.is_invoice_created) {
+        window.open(res.json.invoice_url, '_blank');
+        // this.router.navigateByUrl(res.json.invoice_url);
+        this.toastr.success('Invoice Download Successfully');
+      }
+      if (res.json.status_code == 400) {
+        this.toastr.error(res.json.message);
       }
     });
   }
@@ -681,17 +719,25 @@ export class ProductOrderComponent implements OnInit {
     formData.append('ids', JSON.stringify(p))
     this.websiteService.cancelOrder(formData).subscribe((res: any) => {
       console.log(res);
-      if (res.success) {
-        this.toastr.success(res.msg);
-        this.ngOnInit();
-      } else {
-        this.toastr.error(res.error_msg);
-        if (res.json) {
-          this.toastr.error(res.json.message);
-        }
+      // if (res.success) {
+      //   this.toastr.success(res.msg);
+      //   this.ngOnInit();
+      // } else {
+      //   this.toastr.error(res.error_msg);
+      //   if (res.json) {
+      //     this.toastr.error(res.json.message);
+      //   }
+      // }
+      if (res.json.status == 200) {
+        this.toastr.success(res.json.message);
+        // this.ngOnInit();
+        window.location.reload();
+      } if (res.json.status_code == 400) {
+        this.toastr.error(res.json.message);
       }
     });
   }
+
   downloadManifest(product: any) {
     console.log(product);
     let p: number[] = [];
@@ -700,10 +746,20 @@ export class ProductOrderComponent implements OnInit {
     formData.append('shipment_id', JSON.stringify(p))
     this.websiteService.downloadManifest(formData).subscribe((res: any) => {
       console.log(res);
-      if (res.success) {
-        this.toastr.success(res.msg);
-        this.ngOnInit();
-      } else {
+      // if (res.success) {
+      //   this.toastr.success(res.msg);
+      //   this.ngOnInit();
+      // } else {
+      //   this.toastr.error(res.error_msg);
+      // }
+      if (res.json.status == 1 && res.json.manifest_url) {
+        window.open(res.json.manifest_url, '_blank');
+        this.toastr.success('Manifest Download Successfully');
+      }
+      if (res.json.status_code == 400) {
+        this.toastr.error(res.json.message);
+      }
+      if (res.success == false) {
         this.toastr.error(res.error_msg);
       }
     });
@@ -854,12 +910,12 @@ export class ProductOrderComponent implements OnInit {
   openModalAddress(product: any) {
     console.log(product);
     this.addressForm.patchValue({
-      web_order_id: product.online_order_id,
-      order_id: product.shiprocket_order_id,
+      web_order_id: product.id,
+      shiprocket_order_id: parseInt(product.shiprocket_order_id),
       name: product.shipping_address.name,
       email: product.shipping_address.email,
-      mobile_no: product.shipping_address.mobile_no,
-      alternative_mobile_no: product.shipping_address.alternative_mobile_no,
+      mobile_no: parseInt(product.shipping_address.mobile_no),
+      alternative_mobile_no: parseInt(product.shipping_address.alternative_mobile_no),
       city: product.shipping_address.city,
       state: product.shipping_address.state,
       country: product.shipping_address.country,
@@ -867,6 +923,7 @@ export class ProductOrderComponent implements OnInit {
       line1: product.shipping_address.line1,
       line2: product.shipping_address.line2,
       address: product.shipping_address.address,
+      shipping_pincode: parseInt(product.shipping_address.pincode)
     });
     const modal = document.getElementById('addressModal');
     if (modal) {
@@ -891,34 +948,47 @@ export class ProductOrderComponent implements OnInit {
     console.warn(this.addressForm.value);
     let formData = new FormData();
     formData.append('web_order_id', this.addressForm.get('web_order_id')?.value);
-    formData.append('order_id', this.addressForm.get('order_id')?.value);
-    formData.append('name', this.addressForm.get('name')?.value);
-    formData.append('email', this.addressForm.get('email')?.value);
-    formData.append('mobile_no', this.addressForm.get('mobile_no')?.value);
-    formData.append('alternative_mobile_no', this.addressForm.get('alternative_mobile_no')?.value);
-    formData.append('city', this.addressForm.get('city')?.value);
-    formData.append('state', this.addressForm.get('state')?.value);
-    formData.append('country', this.addressForm.get('country')?.value);
-    formData.append('address_type', this.addressForm.get('address_type')?.value);
-    formData.append('line1', this.addressForm.get('line1')?.value);
-    formData.append('line2', this.addressForm.get('line2')?.value);
-    formData.append('address', this.addressForm.get('address')?.value);
-
+    formData.append('shiprocket_order_id', this.addressForm.get('shiprocket_order_id')?.value);
+    formData.append('shipping_customer_name', this.addressForm.get('name')?.value);
+    // formData.append('email', this.addressForm.get('email')?.value);
+    formData.append('shipping_phone', this.addressForm.get('mobile_no')?.value);
+    // formData.append('alternative_mobile_no', this.addressForm.get('alternative_mobile_no')?.value);
+    formData.append('shipping_city', this.addressForm.get('city')?.value);
+    formData.append('shipping_state', this.addressForm.get('state')?.value);
+    formData.append('shipping_country', this.addressForm.get('country')?.value);
+    // formData.append('address_type', this.addressForm.get('address_type')?.value);
+    // formData.append('line1', this.addressForm.get('line1')?.value);
+    // formData.append('line2', this.addressForm.get('line2')?.value);
+    formData.append('shipping_address', this.addressForm.get('address')?.value);
+    formData.append('shipping_pincode', this.addressForm.get('shipping_pincode')?.value);
     if (this.addressForm.valid) {
       this.loaders = true
       this.websiteService.addAddress(formData).subscribe((res: any) => {
         console.log(res);
         this.loaders = false;
-        if (res.success) {
+        // if (res.success) {
+        //   this.toastr.success(res.msg);
+        //   this.closeModalAddress();
+        //   this.ngOnInit();
+        // } else {
+        //   this.toastr.error(res.error);
+        //   if (res.json) {
+        //     this.toastr.error(res.json.message);
+        //   }
+        // }
+        if (res.msg == "Updated Customer Delivery Address") {
           this.toastr.success(res.msg);
-          this.closeModalAddress();
-          this.ngOnInit();
-        } else {
-          this.toastr.error(res.error);
-          if (res.json) {
-            this.toastr.error(res.json.message);
-          }
         }
+        if (res.json_response.status_code == 200) {
+          this.toastr.success(res.json_response.message);
+          window.location.reload();
+        } if (res.json_response.status_code == 400) {
+          this.toastr.error(res.json_response.message);
+        } if (res.json_response.status_code == 422) {
+          this.toastr.error(res.json_response.message);
+          this.toastr.error(res.json_response.errors.shipping_phone[0]);
+        }
+
       }, err => {
         this.loaders = false;
         this.toastr.error()
@@ -929,86 +999,221 @@ export class ProductOrderComponent implements OnInit {
     }
   }
 
-    //update order form
-    orderId:any;
-    openModalOrder(product: any) {
-      console.log(product);
-      this.orderId=product.id;
-      this.updateOrderForm.patchValue({
-        order_id:product.shiprocket_order_id
-      });
-      const modal = document.getElementById('orderModal');
-      if (modal) {
-        modal.classList.add('show');
-        modal.style.display = 'block';
-        //blur bg
-        this.isModalOpen = true;
-        this.websiteService.setCheckBlur(true);
-      }
+  //update order form
+  orderId: any;
+  openModalOrder(product: any) {
+    console.log(product);
+    this.orderId = product.id;
+    this.updateOrderForm.patchValue({
+      order_id: product.shiprocket_order_id,
+      length: product.length ? product.length : '',
+      breadth: product.breadth ? product.breadth : '',
+      height: product.height ? product.height : '',
+      weight: product.weight ? product.weight : '',
+      branch: product.branch ? product.branch : ''
+    });
+    const modal = document.getElementById('orderModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blur bg
+      this.isModalOpen = true;
+      this.websiteService.setCheckBlur(true);
     }
-    closeModalOrder() {
-      const modal = document.getElementById('orderModal');
-      if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
-        this.isModalOpen = false;
-        this.websiteService.setCheckBlur(false);
-      }
+  }
+  closeModalOrder() {
+    const modal = document.getElementById('orderModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      this.isModalOpen = false;
+      this.websiteService.setCheckBlur(false);
     }
-    get length1() {
-      return this.updateOrderForm.get('length');
-    }
-    get breadth1() {
-      return this.updateOrderForm.get('breadth');
-    }
-    get height1() {
-      return this.updateOrderForm.get('height');
-    }
-    get weight1() {
-      return this.updateOrderForm.get('weight');
-    }
-    get branch1() {
-      return this.updateOrderForm.get('branch');
-    }
-    get order_id() {
-      return this.updateOrderForm.get('order_id');
-    }
-    orderSubmit() {
-      console.warn(this.updateOrderForm.value);
-      let formData = new FormData();
-      formData.append('length', this.updateOrderForm.get('length')?.value);
-      formData.append('breadth', this.updateOrderForm.get('breadth')?.value);
-      formData.append('height', this.updateOrderForm.get('height')?.value);
-      formData.append('weight', this.updateOrderForm.get('weight')?.value);
-      formData.append('branch', this.updateOrderForm.get('branch')?.value);
-      formData.append('order_id', this.updateOrderForm.get('order_id')?.value);
-      if (this.updateOrderForm.valid) {
-        this.loaders = true
-        this.websiteService.updateOrder(this.orderId,formData).subscribe((res: any) => {
-          console.log(res); 
-          this.loaders = false;
-          if(res.success){
-            this.toastr.success(res.msg); 
-            this.closeModalBatch();
-          }
-          if (res.status == false) {
-            this.toastr.error(res.error?.message);
-            this.loaders = false;
-            if(res.error.order_date){
-              this.loaders = false;
-              this.toastr.error(res.error?.order_date[0]);  
-            }
-          
-          }  if(res.json){
-            this.toastr.error(res.json.message);  
-            }
-        }, err => {
-          this.loaders = false;
-          this.toastr.error()
-        });
-      } else {
+  }
+  get length1() {
+    return this.updateOrderForm.get('length');
+  }
+  get breadth1() {
+    return this.updateOrderForm.get('breadth');
+  }
+  get height1() {
+    return this.updateOrderForm.get('height');
+  }
+  get weight1() {
+    return this.updateOrderForm.get('weight');
+  }
+  get branch1() {
+    return this.updateOrderForm.get('branch');
+  }
+  get order_id() {
+    return this.updateOrderForm.get('order_id');
+  }
+  orderSubmit() {
+    console.warn(this.updateOrderForm.value);
+    let formData = new FormData();
+    formData.append('length', this.updateOrderForm.get('length')?.value);
+    formData.append('breadth', this.updateOrderForm.get('breadth')?.value);
+    formData.append('height', this.updateOrderForm.get('height')?.value);
+    formData.append('weight', this.updateOrderForm.get('weight')?.value);
+    formData.append('branch', this.updateOrderForm.get('branch')?.value);
+    formData.append('order_id', this.updateOrderForm.get('order_id')?.value);
+    if (this.updateOrderForm.valid) {
+      this.loaders = true
+      this.websiteService.updateOrder(this.orderId, formData).subscribe((res: any) => {
+        console.log(res);
         this.loaders = false;
-        this.updateOrderForm.markAllAsTouched();
-      }
+        if (res.success) {
+          this.toastr.success(res.msg);
+          this.closeModalBatch();
+        }
+        if (res.status == false) {
+          this.toastr.error(res.error?.message);
+          this.loaders = false;
+          if (res.error.order_date) {
+            this.loaders = false;
+            this.toastr.error(res.error?.order_date[0]);
+          }
+
+        }
+        if (res.json) {
+          this.toastr.error(res.json.message);
+        }
+      }, err => {
+        this.loaders = false;
+        this.toastr.error()
+      });
+    } else {
+      this.loaders = false;
+      this.updateOrderForm.markAllAsTouched();
     }
+  }
+
+  completeRes: any;
+  // completeOrder(id: any) {
+  //   console.log(id);
+  //   Swal.fire({
+  //     title: 'Are you sure?',
+  //     text: "Do You Want To Complete Order!",
+  //     allowEnterKey: false,
+  //     showCancelButton: true,
+  //     confirmButtonColor: '#3085d6',
+  //     cancelButtonColor: '#d33',
+  //     confirmButtonText: 'Yes, Complete it!',
+  //     buttonsStyling: true,
+  //     customClass: {
+  //       confirmButton: 'btn btn-primary',
+  //       cancelButton: 'btn btn-danger ml-1',
+  //     },
+  //   }).then((t) => {
+  //     if (t.isConfirmed) {
+  //       this.websiteService.completeOrder(id).subscribe(res => {
+  //         this.completeRes = res
+  //         if (this.completeRes.success) {
+  //           Swal.fire({
+  //             icon: 'success',
+  //             title: 'Completed!',
+  //             text: this.completeRes.msg,
+  //           });
+  //           window.location.reload();
+  //         } else {
+  //           Swal.fire({
+  //             icon: 'error',
+  //             title: 'Not Completed!',
+  //             text: this.completeRes.error,
+  //           });
+  //         }
+  //       })
+  //     }
+  //   });
+  // }
+  completeOrder(id: any) {
+    console.log(id);
+    Swal.fire({
+      title: 'Are you sure?',
+      html: `
+          <p>Do You Want To Complete Order?</p>
+          <input id="swal-input" class="swal2-input" placeholder="Enter Recipient Name">
+        `,
+      allowEnterKey: false,
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Complete it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+      preConfirm: () => {
+        return {
+          userInput: (document.getElementById('swal-input') as HTMLInputElement).value
+        };
+      }
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        console.log(result.value.userInput); // Access the input value here
+        // Proceed with completing the order
+        let formData = new FormData();
+        formData.append('receiver_name', result.value.userInput);
+        this.websiteService.completeOrder(id, formData).subscribe(res => {
+          this.completeRes = res;
+          if (this.completeRes.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Completed!',
+              text: this.completeRes.msg,
+            });
+            // window.location.reload();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Completed!',
+              text: this.completeRes.error,
+            });
+          }
+        });
+      }
+    });
+  }
+
+
+  acceptRes: any;
+  acceptOrder(id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do You Want To Accept Order!",
+      allowEnterKey: false,
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Accept it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        let formData = new FormData();
+        formData.append('id', id);
+        this.websiteService.addAcceptOrder(formData).subscribe(res => {
+          this.acceptRes = res
+          if (this.acceptRes.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Accepted!',
+              text: this.acceptRes.msg,
+            });
+            window.location.reload();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Accepted!',
+              text: this.acceptRes.error,
+            });
+          }
+        })
+      }
+    });
+  }
 }
