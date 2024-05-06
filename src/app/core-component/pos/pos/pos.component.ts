@@ -13,6 +13,7 @@ import { BillHoldService } from 'src/app/Services/BillHold/bill-hold.service';
 import { Router } from '@angular/router';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { OfferService } from 'src/app/Services/offer/offer.service';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
 @Component({
   selector: 'app-pos',
@@ -158,7 +159,7 @@ export class PosComponent implements OnInit {
 
 
   constructor(private transactionService: TransactionService, private router: Router, private billHoldService: BillHoldService, public fb: FormBuilder, private toastr: ToastrService, private syncService: SyncServiceService, private http: HttpClient, private cartService: PosCartService,
-    private offerService: OfferService, private coreService: CoreService) {
+    private offerService: OfferService, private coreService: CoreService,private companyService:CompanyService) {
     // this.cartItems = this.cartService.getCartItems();
     this.currentItems = this.cartService.getCurrentItems();
     this.customerForm = this.fb.group({
@@ -223,9 +224,25 @@ export class PosComponent implements OnInit {
     }
   }
 
-
+  isModalOpen:any;
   ngOnInit(): void {
-
+// blur bg when modal open
+if(this.companyService.CheckBlur$){
+  this.companyService.CheckBlur$.subscribe((res:any)=>{
+    console.log(res);
+    if(res !== null){
+    if(res){
+      this.isModalOpen = res;
+      console.log(this.isModalOpen);
+    }else if(res==false){
+      this.isModalOpen = res;
+      console.log(this.isModalOpen);
+    }
+  }
+    
+  })
+}
+//end
     this.isQPQ[0] = false;
     this.isQPP[0] = false;
     this.isDiscountSelect[0] = false;

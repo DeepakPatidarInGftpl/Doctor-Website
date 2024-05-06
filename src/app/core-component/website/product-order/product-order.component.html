@@ -97,7 +97,7 @@
                                 <td>{{products?.id}}</td>
                                 <td>{{products?.shiprocket_order_id}}</td>
                                <td>{{products?.order_date |date}}</td>
-                               <td>{{products?.final_amount}}</td>
+                               <td>{{products?.final_amount.toFixed(2)}}</td>
                                 <td>  
                                     <ng-container *ngIf="products?.address_type=='Deliver'">
                                         <button class="btn btn-submit me-2" (click)="openModalBatch(products)" style="background: #04c159;padding: 2px 0px;min-width: 60px; font-weight: 400;">Accept</button>
@@ -105,7 +105,7 @@
                                     <ng-container *ngIf="products?.address_type=='Pickup'">
                                         <button class="btn btn-submit me-2" (click)="acceptOrder(products.id)" style="background: #04c159;padding: 2px 0px;min-width: 60px; font-weight: 400;">Accept</button>
                                     </ng-container>
-                                  <button class="btn btn-submit me-2" (click)="RejectedOrder(products.id)" style="background: #EA5455;padding: 2px 0px;min-width: 60px; font-weight: 400;">Rejected</button>
+                                  <button class="btn btn-submit me-2" (click)="rejectOrder(products.id)" style="background: #EA5455;padding: 2px 0px;min-width: 60px; font-weight: 400;">Reject</button>
                                 </td>
                                 </ng-container>
                             </tr>
@@ -236,13 +236,13 @@
                                 <td>{{products?.shiprocket_order_id}}</td>
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
-                                <td>{{products?.final_amount}}</td>
+                                <td>{{products?.final_amount.toFixed(2)}}</td>
                                 <td>  
                                    <ng-container *ngIf="products?.address_type!=='Pickup'">
                                     <button class="btn btn-submit me-2" (click)="openModalCourier(products)" style="background: #04c159;padding: 2px 0px;min-width: 60px;font-weight: 400;">Assign</button>
                                     </ng-container>
                                     <ng-container *ngIf="products?.address_type=='Pickup'">
-                                        <button class="btn btn-submit me-2" (click)="completeOrder(products.id)" style="background: #04c159;padding: 2px 0px;min-width: 60px; font-weight: 400;">Complete</button>
+                                        <button class="btn btn-submit me-2" (click)="completeOrder(products.id)" style="background: #04c159;padding: 2px 3px;min-width: 60px; font-weight: 400;">Complete</button>
                                     </ng-container>
                                 </td>
                             </tr>
@@ -374,7 +374,7 @@
                                 <td>{{products?.shiprocket_order_id}}</td>
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
-                                <td>{{products?.final_amount}}</td>
+                                <td>{{products?.final_amount.toFixed(2)}}</td>
                                 
                                 <td>  
                                     <button class="btn btn-submit me-2" style="padding: 2px 4px;min-width: 60px; font-weight: 400;" (click)="downloadManifest(products)">Download Manifest</button>
@@ -521,7 +521,7 @@
                                 <td>{{products?.shiprocket_order_id}}</td>
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
-                                <td>{{products?.final_amount}}</td>
+                                <td>{{products?.final_amount.toFixed(2)}}</td>
                                 <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
@@ -657,7 +657,7 @@
                                 <td>{{products?.shiprocket_order_id}}</td>
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
-                                <td>{{products?.final_amount}}</td>
+                                <td>{{products?.final_amount.toFixed(2)}}</td>
                                 <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
@@ -793,7 +793,7 @@
                                 <td>{{products?.shiprocket_order_id}}</td>
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
-                                <td>{{products?.final_amount}}</td>
+                                <td>{{products?.final_amount.toFixed(2)}}</td>
                                 <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
@@ -929,7 +929,7 @@
                                 <td>{{products?.shiprocket_order_id}}</td>
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
-                                <td>{{products?.final_amount}}</td>
+                                <td>{{products?.final_amount.toFixed(2)}}</td>
                                 <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
@@ -1065,7 +1065,7 @@
                                 <td>{{products?.shiprocket_order_id}}</td>
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
-                                <td>{{products?.final_amount}}</td>
+                                <td>{{products?.final_amount.toFixed(2)}}</td>
                                 <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">
@@ -1198,7 +1198,7 @@
                                 <td>{{products?.shiprocket_order_id}}</td>
                                 <td>{{products?.shiprocket_shipment_id}}</td>
                                 <td>{{products?.order_date |date}}</td>
-                                <td>{{products?.final_amount}}</td>
+                                <td>{{products?.final_amount.toFixed(2)}}</td>
                                 <!-- <td>  
                                     <a class="me-1" routerLink="//website/order-detail/{{products.id}}">
                                         <img src="assets/img/icons/eye.svg" alt="img">

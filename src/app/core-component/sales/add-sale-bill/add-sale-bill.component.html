@@ -1,11 +1,11 @@
-<div class="page-header">
+<div class="page-header" [ngClass]="{'blur-background': isModalOpen}">
     <div class="page-title">
         <h4>Sales Bill Add</h4>
         <h6>Create New Sales Bill</h6>
     </div>
 </div>
 
-<div class="card" id="purchaseForm">
+<div class="card" id="purchaseForm" [ngClass]="{'blur-background': isModalOpen}">
     <div class="card-body">
         <form [formGroup]="saleBillForm">   
             <div class="row">

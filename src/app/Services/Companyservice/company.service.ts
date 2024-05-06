@@ -14,7 +14,7 @@ export class CompanyService {
   getUserDetails(): any {
     const userDetailsStr = localStorage.getItem(this.userDetailsKey);
     // console.log('userDetailsStr',userDetailsStr);
-    return JSON.parse(userDetailsStr); 
+    return JSON.parse(userDetailsStr);
   }
   setUserPermission(userDetails: any): void {
     // console.log('userDetails',userDetails);
@@ -28,6 +28,21 @@ export class CompanyService {
   public userDetails$: Observable<any> = this.userDetailsSubject.asObservable();
   setUserDetails(userDetails: any) {
     this.userDetailsSubject.next(userDetails);
+  }
+  //end
+
+  //4-5
+  // blur bg when modal open & transfer data to another components
+  public checkBlurSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  public CheckBlur$: Observable<any> = this.checkBlurSubject.asObservable();
+  setCheckBlur(CheckBlur: any) {
+    this.checkBlurSubject.next(CheckBlur);
+  }
+  // data transfer from one component to another components
+  public checkDaySubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  public CheckDay$: Observable<any> = this.checkDaySubject.asObservable();
+  setCheckDay(CheckDay: any) {
+    this.checkDaySubject.next(CheckDay);
   }
   //end
   constructor(private http: HttpClient, private HttpService: HttpClientService) { }
@@ -122,7 +137,25 @@ export class CompanyService {
         'Authorization': 'token ' + `${localStorage.getItem('token')}`
       })
     };
-
     return this.http.request('delete', `${this.apiUrl}${route}`, options)
+  }
+
+  // day open
+  addDayOpen(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/day_open/';
+    return this.http.post(url, data)
+  }
+  // day close
+  addDayClose(data: any): Observable<any> {
+    let url = this.apiUrl + '/pv-api/day_closing/';
+    return this.http.post(url, data)
+  }
+  getDayClose(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/day_closing/';
+    return this.http.get(url)
+  }
+  getDayCheck(): Observable<any> {
+    let url = this.apiUrl + '/pv-api/day_closing_check/';
+    return this.http.get(url)
   }
 }

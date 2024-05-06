@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { CoreComponentRoutingModule } from './core-component-routing.module';
 import { CoreComponentComponent } from './core-component.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { SidebarOneComponent } from '../common-component/sidebar-one/sidebar-one.component';
 import { SidebarTwoComponent } from '../common-component/sidebar-two/sidebar-two.component';
 import { SidebarThreeComponent } from '../common-component/sidebar-three/sidebar-three.component';
@@ -39,10 +39,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CommonModule,
     CoreComponentRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     PerfectScrollbarModule,
     Ng2SearchPipeModule,
     NgxPaginationModule,
-    OrderModule
+    OrderModule,
+    
   ],
   providers: [
     {

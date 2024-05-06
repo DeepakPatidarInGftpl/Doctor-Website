@@ -379,9 +379,9 @@ export class WebsiteService {
     return this.http.post(url,data);
   }
   //update order
-  updateOrder(id:any,data:any){
-    let url = this.apiUrl+'/pv-api/order_update_shiprocket/?id=';
-    return this.http.post(`${url}${id}`,data);
+  updateOrder(data:any){
+    let url = this.apiUrl+'/pv-api/order_update_shiprocket/';
+    return this.http.post(`${url}`,data);
   }
   // complete status
   completeOrder(id:any,data:any){

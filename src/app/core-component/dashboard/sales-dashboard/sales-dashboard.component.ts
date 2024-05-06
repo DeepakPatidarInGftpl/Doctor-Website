@@ -76,7 +76,25 @@ export class SalesDashboardComponent implements OnInit {
   leastSellingProductForm: FormGroup;
 
   isAdmin=false;
+  isModalOpen:any;
   ngOnInit(): void {
+// blur bg when modal open
+if(this.companyService.CheckBlur$){
+  this.companyService.CheckBlur$.subscribe((res:any)=>{
+    console.log(res);
+    if(res !== null){
+    if(res){
+      this.isModalOpen = res;
+      console.log(this.isModalOpen);
+    }else if(res==false){
+      this.isModalOpen = res;
+      console.log(this.isModalOpen);
+    }
+  }
+    
+  })
+}
+//end
     this.companyService.userDetails$.subscribe((res: any) => {
       if (res.role=='admin'){
 this.isAdmin=true;

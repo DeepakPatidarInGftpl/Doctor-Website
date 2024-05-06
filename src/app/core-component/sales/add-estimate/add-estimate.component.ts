@@ -1154,7 +1154,9 @@ export class AddEstimateComponent implements OnInit {
                     const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
                     previousCart.patchValue({
                       discount: 'Free Item Invoice',
-                    })
+                    });
+                    console.log(previousCart);
+                    
                     const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index + 1) as FormGroup;
                     barcode.patchValue({
                       barcode: lastCompulsoryDiscount?.free_items?.sku,
@@ -1599,11 +1601,12 @@ export class AddEstimateComponent implements OnInit {
      const previousCart = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(i) as FormGroup;
      console.log(previousCart.get('qty').value);
      if (previousCart.get('qty').value >= parseInt(val?.purchase_qty)) {
-       const currentQty = previousCart.get('qty').value; // Get current quantity value
-       const newQty = currentQty + 1;
+
+       const currentQty1 = previousCart.get('qty').value; // Get current quantity value
+       const newQty1 = currentQty1 + 1;
        this.isQtyPerQty[i] = true;
        previousCart.patchValue({
-         qty: newQty,
+         qty: newQty1,
          discount: 'Qty Per Qty'
        });
        console.log(parseInt(val?.purchase_qty));
