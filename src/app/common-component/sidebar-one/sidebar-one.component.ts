@@ -149,7 +149,7 @@ isBrandOffer:any;
 isBrandSubcategoryOffer:any;
   isScarpEntry:any;
   isAdvanceBooking:any;
-  isModalOpen=false;
+  isModalOpen:any;
   ngOnInit(): void {
     this.LoadScript("assets/js/sidebar.js");
 
@@ -168,7 +168,23 @@ isBrandSubcategoryOffer:any;
         
       })
     }
-
+// blur bg when modal open
+if(this.profileService.CheckBlur$){
+  this.profileService.CheckBlur$.subscribe((res:any)=>{
+    console.log(res);
+    if(res !== null){
+    if(res){
+      this.isModalOpen = res;
+      console.log(this.isModalOpen);
+    }else if(res==false){
+      this.isModalOpen = res;
+      console.log(this.isModalOpen);
+    }
+  }
+    
+  })
+}
+//end
     const localStorageData = JSON.parse(localStorage.getItem('auth'));
     if (localStorageData) {
       const permission = localStorageData;

@@ -1,0 +1,47 @@
+
+.ng-invalid.ng-dirty.is-invalid.ng-touched{
+    border: 1px solid red;
+  }
+  
+  // close modal
+  .th {
+    background: #EEF0F8;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    color: #3B3B3B;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+    margin: 0 auto;
+    width: 55%;
+  }
+  
+  .td {
+    background-color: #F2F4F3;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    color: #3B3B3B;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+    margin: 0 auto;
+    width: 45%;
+  }
+
+  
+  // vibrate modal
+  .vibrate {
+    animation: vibrate 0.2s alternate;
+  }
+  
+  @keyframes vibrate {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(2px);
+    }
+  }
+  

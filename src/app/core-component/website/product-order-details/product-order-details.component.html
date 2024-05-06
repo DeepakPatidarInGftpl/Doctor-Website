@@ -611,6 +611,7 @@
                                                                 <!-- <th class="thone" style="white-space: normal !important;">Sr.No.</th> -->
                                                                 <!-- <th class="thone" style="white-space: normal !important;">Status</th> -->
                                                                 <th class="thone" style="white-space: normal !important;">Title</th>
+                                                                <th class="thone" style="white-space: normal !important;" *ngIf="productOrderDetail?.status==='Completed'">Reciever Name</th>
                                                                 <th class="thone" style="white-space: normal !important;">Online Order Id</th>
                                                                 <th class="thone" style="white-space: normal !important;">Order Id</th>
                                                                 <th class="thone" style="white-space: normal !important;">Shipment Id</th>
@@ -624,6 +625,7 @@
                                                                 <!-- <td>{{1}}</td> -->
                                                                 <!-- <td style="color:black">{{productOrderDetail?.status}}</td> upar deekhana hai -->
                                                                 <td style="color:black">{{productOrderDetail?.user?.username}}</td>
+                                                                <td style="color:black" *ngIf="productOrderDetail?.status==='Completed'">{{productOrderDetail?.receiver_name}}</td>
                                                                 <td style="color:black">{{productOrderDetail?.online_order_id}}</td>
                                                                 <td style="color:black">{{productOrderDetail?.shiprocket_order_id?productOrderDetail?.shiprocket_order_id:''}}</td>
                                                                 <td style="color:black">{{productOrderDetail?.shiprocket_shipment_id?productOrderDetail?.shiprocket_shipment_id:''}}</td>

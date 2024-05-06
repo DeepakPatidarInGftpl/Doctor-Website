@@ -167,7 +167,7 @@ export class ProductOrderDetailsComponent implements OnInit {
   ]
   tableData: any
   constructor(private Arout: ActivatedRoute, private dashboardService: DashboardService, private fb: FormBuilder,
-    private toastr: ToastrService, private websiteService: WebsiteService, private location:Location) { }
+    private toastr: ToastrService, private websiteService: WebsiteService, private location: Location) { }
   id: any;
   acceptForm: FormGroup;
   get f() {
@@ -191,23 +191,23 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.getdata();
     this.getBranch();
     this.acceptForm = this.fb.group({
-      length: new FormControl('',[Validators.required,Validators.min(1)]),
-      breadth: new FormControl('',[Validators.required,Validators.min(1)]),
-      height: new FormControl('',[Validators.required,Validators.min(1)]),
-      weight: new FormControl('',[Validators.required,Validators.min(1)]),
-      branch: new FormControl('',[Validators.required]),
-      id: new FormControl(this.id,[Validators.required,Validators.min(1)]),
+      length: new FormControl('', [Validators.required, Validators.min(1)]),
+      breadth: new FormControl('', [Validators.required, Validators.min(1)]),
+      height: new FormControl('', [Validators.required, Validators.min(1)]),
+      weight: new FormControl('', [Validators.required, Validators.min(1)]),
+      branch: new FormControl('', [Validators.required]),
+      id: new FormControl(this.id, [Validators.required, Validators.min(1)]),
     });
     //update order 
     this.updateOrderForm = this.fb.group({
-      length: new FormControl('',[Validators.required,Validators.min(1)]),
-      breadth: new FormControl('',[Validators.required,Validators.min(1)]),
-      height: new FormControl('',[Validators.required,Validators.min(1)]),
-      weight: new FormControl('',[Validators.required,Validators.min(1)]),
-      branch: new FormControl('',[Validators.required]),
-      order_id: new FormControl('',[Validators.required]),
+      length: new FormControl('', [Validators.required, Validators.min(1)]),
+      breadth: new FormControl('', [Validators.required, Validators.min(1)]),
+      height: new FormControl('', [Validators.required, Validators.min(1)]),
+      weight: new FormControl('', [Validators.required, Validators.min(1)]),
+      branch: new FormControl('', [Validators.required]),
+      order_id: new FormControl('', [Validators.required]),
     });
-   //awd 
+    //awd 
     this.awdForm = this.fb.group({
       shipment_id: new FormControl('',),
       courier_id: new FormControl('',)
@@ -227,7 +227,7 @@ export class ProductOrderDetailsComponent implements OnInit {
       line1: new FormControl('',),
       line2: new FormControl('',),
       address: new FormControl('',),
-      shipping_pincode:new FormControl('')
+      shipping_pincode: new FormControl('')
     });
 
     this.tableDatas.map((res) => {
@@ -352,9 +352,9 @@ export class ProductOrderDetailsComponent implements OnInit {
     if (modal) {
       modal.classList.add('show');
       modal.style.display = 'block';
-         //blur bg
-         this.isModalOpen = true;
-         this.websiteService.setCheckBlur(true);
+      //blur bg
+      this.isModalOpen = true;
+      this.websiteService.setCheckBlur(true);
     }
   }
   closeModalBatch() {
@@ -395,13 +395,13 @@ export class ProductOrderDetailsComponent implements OnInit {
     if (this.acceptForm.valid) {
       this.loaders = true
       this.websiteService.addAcceptOrder(formData).subscribe((res: any) => {
-        console.log(res); 
+        console.log(res);
         this.loaders = false;
         if (res.success) {
           this.toastr.success(res.msg);
+          this.closeModalBatch()
           this.ngOnInit();
-          window.location.reload();
-        }else{
+        } else {
           this.toastr.error(res.error);
         }
         if (res.status == false) {
@@ -421,13 +421,13 @@ export class ProductOrderDetailsComponent implements OnInit {
       this.acceptForm.markAllAsTouched();
     }
   }
-  delRes:any;
+  delRes: any;
   rejectOrder(id: any) {
     console.log(id);
     Swal.fire({
       title: 'Are you sure?',
       text: "Do You Want To Reject Order!",
-      allowEnterKey:false,
+      allowEnterKey: false,
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -448,7 +448,7 @@ export class ProductOrderDetailsComponent implements OnInit {
               text: this.delRes.msg,
             });
             this.ngOnInit();
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Rejected!',
@@ -476,7 +476,7 @@ export class ProductOrderDetailsComponent implements OnInit {
       });
     }
   }
-  
+
   generatePDFAgain() {
     const doc = new jsPDF();
     const subtitle = 'PV';
@@ -497,11 +497,11 @@ export class ProductOrderDetailsComponent implements OnInit {
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', 'Product', 'QTY', 'MRP', 'Selling Price', 'Extra Discount', 'Total Discount','Tax','Sub Total','Total Amount']
+        ['#', 'Product', 'QTY', 'MRP', 'Selling Price', 'Extra Discount', 'Total Discount', 'Tax', 'Sub Total', 'Total Amount']
       ],
       body: this.productOrderDetail?.carts.map((row: any, index: number) => [
         index + 1,
-        row?.product?.title+','+row?.variant?.variant_name+','+row?.brand?.title,
+        row?.product?.title + ',' + row?.variant?.variant_name + ',' + row?.brand?.title,
         row.qty,
         row.mrp,
         row.selling_price,
@@ -517,17 +517,17 @@ export class ProductOrderDetailsComponent implements OnInit {
       },
       startY: 35, // Margin top after image
     });
-  
+
     doc.save('Abc_Analysis.pdf');
   }
-  
+
   goBack() {
     this.location.back();
   }
 
   // awd form
 
-  
+
   // courier modal
   openModalCourier(product: any) {
     console.log(product);
@@ -608,23 +608,29 @@ export class ProductOrderDetailsComponent implements OnInit {
         this.loaders = false;
         if (res.success) {
           this.toastr.success(res.msg);
-          this.closeModalBatch();
-          window.location.reload();
-        }else if(res.success==false){
+          this.closeModalAssignAWD();
+          this.closeModalCourier();
+          this.ngOnInit()
+        } else if (res.success == false) {
           this.toastr.error(res.error);
         }
-        if(res.json.status_code==200){
+        if (res.json.status_code == 200) {
           this.toastr.success(res.json.message);
           this.closeModalAssignAWD();
+          this.closeModalCourier();
+          this.ngOnInit();
         }
-        if (res.json.status_code==400) {
+        if (res.json.status_code == 400) {
           this.toastr.error(res.json.message);
         }
-        if (res.json.awb_assign_status==0) {
+        if (res.json.awb_assign_status == 0) {
           this.toastr.error(res.json.response.data.awb_assign_error);
-        }  
-        if (res.json.awb_assign_status==1) {
+        }
+        if (res.json.awb_assign_status == 1) {
           this.toastr.success('Order Assign Successfully');
+          this.closeModalAssignAWD();
+          this.closeModalCourier();
+          this.ngOnInit();
         }
 
       }, err => {
@@ -633,7 +639,7 @@ export class ProductOrderDetailsComponent implements OnInit {
       });
     } else {
       this.loaders = false;
-      this.acceptForm.markAllAsTouched();
+      this.awdForm.markAllAsTouched();
     }
   }
   downloadLabel(product: any) {
@@ -655,7 +661,7 @@ export class ProductOrderDetailsComponent implements OnInit {
         // this.router.navigateByUrl(res.json.label_url);
         this.toastr.success(res.json.response);
       }
-      if(res.json.status_code==400){
+      if (res.json.status_code == 400) {
         this.toastr.error(res.json.message);
       }
     });
@@ -679,7 +685,7 @@ export class ProductOrderDetailsComponent implements OnInit {
         // this.router.navigateByUrl(res.json.invoice_url);
         this.toastr.success('Invoice Download Successfully');
       }
-      if(res.json.status_code==400){
+      if (res.json.status_code == 400) {
         this.toastr.error(res.json.message);
       }
     });
@@ -701,11 +707,11 @@ export class ProductOrderDetailsComponent implements OnInit {
       //     this.toastr.error(res.json.message);
       //   }
       // }
-      if(res.json.status==200){
+      if (res.json.status == 200) {
         this.toastr.success(res.json.message);
         // this.ngOnInit();
         window.location.reload();
-      }  if(res.json.status_code==400){
+      } if (res.json.status_code == 400) {
         this.toastr.error(res.json.message);
       }
     });
@@ -728,10 +734,10 @@ export class ProductOrderDetailsComponent implements OnInit {
         window.open(res.json.manifest_url, '_blank');
         this.toastr.success('Manifest Download Successfully');
       }
-      if(res.json.status_code==400){
+      if (res.json.status_code == 400) {
         this.toastr.error(res.json.message);
       }
-      if(res.success==false){
+      if (res.success == false) {
         this.toastr.error(res.error_msg);
       }
     });
@@ -755,7 +761,7 @@ export class ProductOrderDetailsComponent implements OnInit {
       line1: product.shipping_address.line1,
       line2: product.shipping_address.line2,
       address: product.shipping_address.address,
-      shipping_pincode:parseInt(product.shipping_address.pincode)
+      shipping_pincode: parseInt(product.shipping_address.pincode)
     });
     const modal = document.getElementById('addressModal');
     if (modal) {
@@ -808,19 +814,22 @@ export class ProductOrderDetailsComponent implements OnInit {
         //     this.toastr.error(res.json.message);
         //   }
         // }
-        if(res.msg== "Updated Customer Delivery Address"){
+        if (res.msg == "Updated Customer Delivery Address") {
           this.toastr.success(res.msg);
+          this.closeModalAddress();
+          this.ngOnInit();
         }
-        if(res.json_response.status_code==200){
+        if (res.json_response.status_code == 200) {
           this.toastr.success(res.json_response.message);
+          this.closeModalAddress();
           window.location.reload();
-        }  if(res.json_response.status_code==400){
+        } if (res.json_response.status_code == 400) {
           this.toastr.error(res.json_response.message);
-        }if(res.json_response.status_code==422){
+        } if (res.json_response.status_code == 422) {
           this.toastr.error(res.json_response.message);
           this.toastr.error(res.json_response.errors.shipping_phone[0]);
         }
-       
+
       }, err => {
         this.loaders = false;
         this.toastr.error()
@@ -835,7 +844,7 @@ export class ProductOrderDetailsComponent implements OnInit {
   openModalOrder(product: any) {
     console.log(product);
     this.updateOrderForm.patchValue({
-      order_id: product.shiprocket_order_id,
+      order_id: product.id,
       length: product.length ? product.length : '',
       breadth: product.breadth ? product.breadth : '',
       height: product.height ? product.height : '',
@@ -889,23 +898,26 @@ export class ProductOrderDetailsComponent implements OnInit {
     formData.append('order_id', this.updateOrderForm.get('order_id')?.value);
     if (this.updateOrderForm.valid) {
       this.loaders = true
-      this.websiteService.updateOrder(this.id,formData).subscribe((res: any) => {
-        console.log(res); 
+      this.websiteService.updateOrder(formData).subscribe((res: any) => {
+        console.log(res);
         this.loaders = false;
-        if(res.success){
-          this.toastr.success(res.msg); 
-          this.closeModalBatch();
-        }
-        if (res.status == false) {
+        if (res.success) {
+          this.toastr.success(res.msg);
+          this.closeModalOrder();
+          this.ngOnInit();
+        }if (res.status == false) {
           this.toastr.error(res.error?.message);
           this.loaders = false;
-          if(res.error.order_date){
-            this.loaders = false;
-            this.toastr.error(res.error?.order_date[0]);  
-          }
-          if(res.json){
-          this.toastr.error(res.message);  
-          }
+        }
+        if (res.error.order_date) {
+          this.loaders = false;
+          this.toastr.error(res.error?.order_date[0]);
+        }
+        if (res.json) {
+          this.toastr.error(res.message);
+        }
+        if (res.error.status_code == 400) {
+          this.toastr.error(res.error.message)
         }
       }, err => {
         this.loaders = false;
@@ -986,7 +998,7 @@ export class ProductOrderDetailsComponent implements OnInit {
         console.log(result.value.userInput); // Access the input value here
         // Proceed with completing the order
         let formData = new FormData();
-        formData.append('receiver_name', result.value.userInput); 
+        formData.append('receiver_name', result.value.userInput);
         this.websiteService.completeOrder(id, formData).subscribe(res => {
           this.completeRes = res;
           if (this.completeRes.success) {
