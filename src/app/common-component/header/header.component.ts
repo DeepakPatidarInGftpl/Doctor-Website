@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
   public changeLayout: string = '1';
   public darkTheme: boolean = false;
   public logoPath: string = '';
+  financialYearForm: FormGroup;
 
   constructor(private Router: Router, private settings: SettingsService, private authServ: AuthServiceService, private toastr: ToastrService,
     private coreService: CoreService, private profileService:CompanyService, private companyService:CompanyService, private fb :FormBuilder
@@ -56,6 +57,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.LoadScript('assets/js/header.js');
     this.profile();
       //open day
@@ -86,6 +88,10 @@ export class HeaderComponent implements OnInit {
       
     })
   }
+  this.getFinancialYear();
+  this.financialYearForm = this.fb.group({
+    financial_year: new FormControl('')
+  })
   }
 
 
@@ -294,4 +300,39 @@ modalError:any;
     }
   }
 
+ 
+financialYearList: any[] = [];
+startDate: string = '';
+endDate: string = '';
+getFinancialYear() {
+  this.coreService.getFinancialYear().subscribe((res: any) => {
+    console.log(res); // Log res to check if data is received correctly
+    this.financialYearList = res;
+    const currentYear = new Date().getFullYear();
+    const currentYearFinancialYear = this.financialYearList.find(year => {
+      const startYear = new Date(year.start_year).getFullYear();
+      return startYear === currentYear;
+    });
+    console.log(currentYearFinancialYear, 'currentYearFinancialYear');
+    if (currentYearFinancialYear) {
+    localStorage.setItem('financialYear',JSON.stringify(currentYearFinancialYear));
+    }
+    if (currentYearFinancialYear) {
+      this.financialYearForm.patchValue({
+        financial_year: currentYearFinancialYear.id
+      });
+    }
+  })
+}
+
+selectYear(val:any){
+  console.log(val);
+  this.financialYearList.forEach((res:any)=>{
+    if(res.id==val){
+      console.log(res);
+      localStorage.setItem('financialYear',JSON.stringify(res));
+      // window.location.reload();
+    }
+  })
+}
 }
