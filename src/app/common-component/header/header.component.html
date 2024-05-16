@@ -76,7 +76,7 @@
   <form [formGroup]="financialYearForm">
     <select formControlName="financial_year" #yearVal (change)="selectYear(yearVal.value)">
       <option value="" selected disabled>select date</option>
-      <option [value]="year.id" *ngFor="let year of financialYearList">{{year?.start_year}} - {{year?.close_year}}</option>
+      <option [value]="year.id" *ngFor="let year of financialYearList">{{year?.title}}</option>
     </select>
   </form>
 

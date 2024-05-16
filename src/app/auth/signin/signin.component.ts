@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { Auth } from 'src/app/interfaces/auth';
 import { AuthServiceService } from 'src/app/Services/auth-service.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { WebstorgeService } from 'src/app/shared/webstorge.service';
 
 @Component({
@@ -26,7 +27,7 @@ export class SigninComponent implements OnInit {
 
   //SIDEBAR SETTINGS.SCSS -> sidebar open karne ke liye uncomment karna hoga
 
-  constructor(private storage: WebstorgeService, private authService: AuthServiceService,
+  constructor(private storage: WebstorgeService, private authService: AuthServiceService, private coreService:CoreService,
     private toastr: ToastrService, private router: Router) {
     this.subscription = this.storage.Loginvalue.subscribe((data: any) => {
       if (data != 0) {
@@ -65,12 +66,20 @@ export class SigninComponent implements OnInit {
         if (this.loginRes.token) {
           this.loaders=false;
           this.toastr.success('Login Successfull');
+
           // this.router.navigate(['//dashboard']).then(() => {
           //   window.location.reload();
           // })
-          window.location.reload();
+          // window.location.reload();
           localStorage.setItem('token', this.loginRes.token)
           localStorage.setItem('auth', JSON.stringify(this.loginRes?.permission));
+            //16-5
+            this.coreService.getFinancialYearHeader().subscribe((res:any)=>{
+              console.warn(res);
+              localStorage.setItem('financialYear',JSON.stringify(res.id)); 
+              window.location.reload();
+            });
+            //end 16-5
           // console.log(this.loginRes.token);
         }else{
           this.loaders=false;
