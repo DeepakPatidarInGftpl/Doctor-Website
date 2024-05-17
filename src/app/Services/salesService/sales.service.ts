@@ -44,13 +44,18 @@ export class SalesService {
 
   //  sales Estimates
    getSalesEstimatefy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
     let url = this.apiUrl + '/pv-api/estimate/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch?.length > 0) {
-      queryParams.push(`branch=${branch}`);
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
     }
 
     if (queryParams.length > 0) {

@@ -298,7 +298,8 @@ export class AddEstimateComponent implements OnInit {
   paymentTermsList: any
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
-      this.paymentTermsList = res
+      this.paymentTermsList = res;
+      this.saleEstimateForm.get('payment_terms').patchValue(this.paymentTermsList[0]?.id)
     })
   }
 

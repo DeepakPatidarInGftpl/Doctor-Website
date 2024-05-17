@@ -74,8 +74,8 @@
 <!-- 6-5 -->
 <li class="nav-item dropdown has-arrow flag-nav" style="padding-top: 10px;">
   <form [formGroup]="financialYearForm">
-    <select formControlName="financial_year" #yearVal (change)="selectYear(yearVal.value)">
-      <option value="" selected disabled>select date</option>
+    <select formControlName="financial_year" #yearVal (change)="selectYear(yearVal.value)" class="select">
+      <option value="" selected disabled>select fy</option>
       <option [value]="year.id" *ngFor="let year of financialYearList">{{year?.title}}</option>
     </select>
   </form>

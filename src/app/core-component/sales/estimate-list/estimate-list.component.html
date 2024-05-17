@@ -20,7 +20,9 @@
                             </a></li>
                         </ul>
                     </div>
-                    <p *ngIf="selectData.length>0">{{selectData.length + ' Branch Selected'}}</p>
+                    <div class="d-flex">
+                    <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
+                    </div>
                 </div>
             </div>
         </div>

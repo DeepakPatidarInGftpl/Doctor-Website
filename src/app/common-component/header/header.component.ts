@@ -88,10 +88,17 @@ export class HeaderComponent implements OnInit {
       })
     }
     this.getFinancialYear();
-    this.getActiveFinancialYear();
+    // this.getActiveFinancialYear();
     this.financialYearForm = this.fb.group({
       financial_year: new FormControl('')
-    })
+    });
+    //17-5
+    if(localStorage.getItem('financialYear')){
+      let fy = localStorage.getItem('financialYear');
+      this.financialYearForm.patchValue({
+        financial_year: JSON.parse(fy)
+      });
+    }
   }
 
 
@@ -327,11 +334,9 @@ export class HeaderComponent implements OnInit {
   }
   getActiveFinancialYear() {
     this.coreService.getFinancialYearHeader().subscribe((res: any) => {
-
       this.financialYearForm.patchValue({
         financial_year: res.id
       });
-
     })
   }
 

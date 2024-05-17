@@ -145,6 +145,7 @@ export class EstimateListComponent implements OnInit {
     //   this.filterData();
     // })
     //16-5
+   
     this.cs.userDetails$.subscribe((res: any) => {
       if (res.role == 'admin') {
         this.isAdmin = true;
@@ -186,7 +187,9 @@ export class EstimateListComponent implements OnInit {
 getEstimate(fy:any){
   const idString = JSON.stringify(this.selectData);
   console.log(idString);
-  this.saleService.getSalesEstimatefy(fy,idString).subscribe(res => {
+  console.log(idString?.length);
+  
+  this.saleService.getSalesEstimatefy(fy,this.selectData).subscribe(res => {
     this.tableData = res;
     this.loader = false;
     this.selectedRows = new Array(this.tableData.length).fill(false);
