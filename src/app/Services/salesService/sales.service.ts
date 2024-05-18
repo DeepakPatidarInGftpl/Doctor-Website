@@ -13,9 +13,29 @@ export class SalesService {
 
   
   //sales order
-  getSalesOrderfy(fy:any) {
-    let url = this.apiUrl + '/pv-api/sale_order/?financial_year=';
-    return this.http.get(`${url}${fy}`);
+  // getSalesOrderfy(fy:any) {
+  //   let url = this.apiUrl + '/pv-api/sale_order/?financial_year=';
+  //   return this.http.get(`${url}${fy}`);
+  // }
+  getSalesOrderfy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/sale_order/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
   }
   getSalesOrder() {
     let url = this.apiUrl + '/pv-api/sale_order/';
@@ -111,9 +131,29 @@ export class SalesService {
   }
 
   // sales bill
-  getSalesBillfy(fy:any) {
-    let url = this.apiUrl + '/pv-api/sale_bill/?financial_year=';
-    return this.http.get(`${url}${fy}`)
+  // getSalesBillfy(fy:any) {
+  //   let url = this.apiUrl + '/pv-api/sale_bill/?financial_year=';
+  //   return this.http.get(`${url}${fy}`)
+  // }
+  getSalesBillfy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/sale_bill/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
   }
    getSalesBill() {
     let url = this.apiUrl + '/pv-api/sale_bill/';
@@ -144,9 +184,29 @@ export class SalesService {
 
   
   // sales bill
-  getSalesMaterialOutwardfy(fy:any) {
-    let url = this.apiUrl + '/pv-api/material_outward/?financial_year=';
-    return this.http.get(`${url}${fy}`)
+  // getSalesMaterialOutwardfy(fy:any) {
+  //   let url = this.apiUrl + '/pv-api/material_outward/?financial_year=';
+  //   return this.http.get(`${url}${fy}`)
+  // }
+  getSalesMaterialOutwardfy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/material_outward/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
   }
   getSalesMaterialOutward() {
     let url = this.apiUrl + '/pv-api/material_outward/';
@@ -174,9 +234,29 @@ export class SalesService {
   }
 
   // sales Return
-  getSaleReturnfy(fy:any) {
-    let url = this.apiUrl + '/pv-api/sale_return/?financial_year=';
-    return this.http.get(`${url}${fy}`)
+  // getSaleReturnfy(fy:any) {
+  //   let url = this.apiUrl + '/pv-api/sale_return/?financial_year=';
+  //   return this.http.get(`${url}${fy}`)
+  // }
+  getSaleReturnfy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/sale_return/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
   }
   getSaleReturn() {
     let url = this.apiUrl + '/pv-api/sale_return/';
@@ -265,9 +345,29 @@ export class SalesService {
   // advance booking 
   
    //sales Estimates
-   getAdvanceBookingfy(fy:any) {
-    let url = this.apiUrl + '/pv-api/advance_booking/?financial_year=';
-    return this.http.get(url)
+  //  getAdvanceBookingfy(fy:any) {
+  //   let url = this.apiUrl + '/pv-api/advance_booking/?financial_year=';
+  //   return this.http.get(url)
+  // }
+  getAdvanceBookingfy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/advance_booking/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
   }
    getAdvanceBooking() {
     let url = this.apiUrl + '/pv-api/advance_booking/';
@@ -295,7 +395,26 @@ export class SalesService {
   }
 
   // delivery challan
-  
+  getDelivryChallanFY(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/delivery_challan/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
    getDelivryChallan() {
     let url = this.apiUrl + '/pv-api/delivery_challan/';
     return this.http.get(url)

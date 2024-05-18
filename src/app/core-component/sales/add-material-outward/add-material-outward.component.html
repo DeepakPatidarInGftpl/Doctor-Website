@@ -67,8 +67,14 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Voucher Number</label>
-                        <input type="text" formControlName="voucher_number" placeholder="Enter Voucher Number " [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['voucher_number'].touched && f['voucher_number'].invalid}">
+                        <label>Voucher Series</label>
+                        <!-- <input type="text" formControlName="voucher_number" placeholder="Enter Voucher Number " [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['voucher_number'].touched && f['voucher_number'].invalid}"> -->
+                         <!-- 18-5 -->
+                         <select formControlName="voucher_number">
+                            <option value="" selected disabled>Select Voucher Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <!-- end 18-5 -->
                         <span class="text-danger" *ngIf="voucher_number && voucher_number.invalid && voucher_number.touched">Enter Voucher Number </span>
                     </div>
                 </div>

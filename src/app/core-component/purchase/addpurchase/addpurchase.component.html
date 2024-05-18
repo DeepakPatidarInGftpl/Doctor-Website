@@ -42,10 +42,15 @@
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Purchase No.* </label>
-                        <input type="text" formControlName="order_no" placeholder="Enter Order No." [ngModel]="prefixNo" [ngClass]="{
-                            'is-invalid': f['order_no'].touched && f['order_no'].invalid}">
-                        <span class="text-danger" *ngIf="order_no && order_no.invalid && order_no.touched">Enter Order No.
+                        <label>Purchase Series* </label>
+                        <!-- <input type="text" formControlName="order_no" placeholder="Enter Order No." [ngModel]="prefixNo" [ngClass]="{ 'is-invalid': f['order_no'].touched && f['order_no'].invalid}"> -->
+                        <!-- 16-5 -->
+                        <select formControlName="order_no">
+                            <option value="" selected disabled>Select Purchase Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <!-- end 16-5 -->
+                        <span class="text-danger" *ngIf="order_no && order_no.invalid && order_no.touched">Enter Purchase Series
                         </span>
                     </div>
                 </div>

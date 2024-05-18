@@ -8,6 +8,7 @@ import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { DatePipe } from '@angular/common';
+import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 @Component({
   selector: 'app-sale-bill-list',
   templateUrl: './sale-bill-list.component.html',
@@ -28,7 +29,7 @@ export class SaleBillListComponent implements OnInit {
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService,private datePipe:DatePipe) {}
+  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService,private datePipe:DatePipe, private dashboardservice : DashboardService) {}
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -131,17 +132,33 @@ isAdd:any;
 isEdit:any;
 isDelete:any;
 userDetails:any;
+isAdmin = false;
+
 
   ngOnInit(): void {
-    this.saleService.getSalesBill().subscribe(res => {
-      this.tableData = res;
+    // this.saleService.getSalesBill().subscribe(res => {
+    //   this.tableData = res;
    
-      this.loader=false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-      this.filterData();
-    })
-
+    //   this.loader=false;
+    //   this.selectedRows = new Array(this.tableData.length).fill(false);
+    //   this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+    //   this.filterData();
+    // })
+   //18-5
+   if (localStorage.getItem('financialYear')) {
+    let fy = localStorage.getItem('financialYear');
+    console.warn(JSON.parse(fy));
+    let fyId = JSON.parse(fy);
+    this.getSaleBill(fyId);
+  }
+  this.cs.userDetails$.subscribe((res: any) => {
+    if (res.role == 'admin') {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+    }
+  });
+//18-5
     //permission from profile api
   
     this.cs.userDetails$.subscribe((userDetails) => {
@@ -162,8 +179,25 @@ userDetails:any;
   })
   this.getPaymentTerms();
   this.getEstimate();
+  this.getBranch();
+
+
   }
 
+  //18-5
+  getSaleBill(fy:any){
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    console.log(idString?.length);
+    this.saleService.getSalesBillfy(fy,this.selectData).subscribe(res => {
+      this.tableData = res;
+      this.loader = false;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+      this.filterData();
+    })
+  }
+  //18-5 end
   paymentList: any;
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
@@ -412,5 +446,49 @@ row.total
       this.itemsPerPage = this.filteredData.length;
     }
   }
+  //18-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.dashboardservice.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
 }
+
+
+
 

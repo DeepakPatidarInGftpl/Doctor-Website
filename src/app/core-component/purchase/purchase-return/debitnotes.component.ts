@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { DatePipe } from '@angular/common';
+import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 
 @Component({
   selector: 'app-debitnotes',
@@ -29,7 +30,7 @@ export class DebitnotesComponent implements OnInit {
   selectedpaymentTerms: string = '';
   date: any
 
-  constructor(private purchaseService: PurchaseServiceService, private cs: CompanyService, private contactService: ContactService,private datePipe:DatePipe) { }
+  constructor(private purchaseService: PurchaseServiceService,private dashboardService:DashboardService, private cs: CompanyService, private contactService: ContactService,private datePipe:DatePipe) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -150,6 +151,7 @@ export class DebitnotesComponent implements OnInit {
   isEdit: any;
   isDelete: any;
   userDetails: any;
+  isAdmin = false;
   ngOnInit(): void {
     // this.purchaseService.getPurchaseReturn().subscribe(res => {
     //   // console.log(res);
@@ -159,20 +161,22 @@ export class DebitnotesComponent implements OnInit {
     //   this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
     //   this.filterData();
     // })
-    //  /16-5
-    if(localStorage.getItem('financialYear')){
-      let fy= localStorage.getItem('financialYear');
+    //18-5
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
       console.warn(JSON.parse(fy));
-      let fyId=JSON.parse(fy)
-      this.purchaseService.getPurchaseReturnfy(fyId).subscribe(res => {
-        // console.log(res);
-        this.tableData = res;
-        this.loader = false;
-        this.selectedRows = new Array(this.tableData.length).fill(false);
-        this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-        this.filterData();
-      })
-     }
+      let fyId = JSON.parse(fy);
+      this.getPurchaseReturn(fyId);
+    }
+    this.cs.userDetails$.subscribe((res: any) => {
+      if (res.role == 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+    });
+    this.getBranch();
+  //18-5
     //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {
@@ -210,7 +214,20 @@ export class DebitnotesComponent implements OnInit {
     });
     this.getPaymentTerms()
   }
-
+  getPurchaseReturn(fy:any){
+    console.log(fy);
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    console.log(idString?.length);
+    this.purchaseService.getPurchaseReturnfy(fy,this.selectData).subscribe(res => {
+      // console.log(res);get
+      this.tableData = res;
+      this.loader=false;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+      this.filterData();
+    })
+  }
   paymentList: any;
   getPaymentTerms() {
     this.purchaseService.getPurchaseBill().subscribe(res => {
@@ -482,5 +499,45 @@ export class DebitnotesComponent implements OnInit {
       this.itemsPerPage = this.tableData.length;
     }
   }
-
+  //18-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.dashboardService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
 }

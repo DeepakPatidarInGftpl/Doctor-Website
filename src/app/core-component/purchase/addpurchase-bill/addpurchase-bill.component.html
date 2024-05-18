@@ -51,11 +51,15 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Supplier Bill No*</label>
-                        <input type="text" formControlName="supplier_bill_no" placeholder="Enter Supplier Bill No" [ngModel]="prefixNo"
-                            [ngClass]="{'is-invalid': f['supplier_bill_no'].touched && f['supplier_bill_no'].invalid}">
-                        <span class="text-danger"
-                            *ngIf="supplier_bill_no && supplier_bill_no.invalid && supplier_bill_no.touched">Enter
+                        <label>Supplier Bill Series*</label>
+                        <!-- <input type="text" formControlName="supplier_bill_no" placeholder="Enter Supplier Bill No" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['supplier_bill_no'].touched && f['supplier_bill_no'].invalid}"> -->
+                        <!-- 18-5 -->
+                     <select formControlName="supplier_bill_no">
+                        <option value="" selected disabled>Select Purchase BillSeries</option>
+                        <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                    </select>
+                    <!-- end 18-5 -->
+                        <span class="text-danger" *ngIf="supplier_bill_no && supplier_bill_no.invalid && supplier_bill_no.touched">Enter
                             Supplier Bill No.
                         </span>
                     </div>
@@ -63,7 +67,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Refrence Bill No.</label>
-                        <input type="text" formControlName="refrence_bill_no" placeholder="Enter Refrence Bill No." [ngModel]="prefixNo"
+                        <input type="text" formControlName="refrence_bill_no" placeholder="Enter Refrence Bill No." 
                             [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}">
                     </div>
                 </div>
