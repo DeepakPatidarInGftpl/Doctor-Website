@@ -134,7 +134,12 @@ export class PurchaselistComponent implements OnInit {
   isDelete:any;
   userDetails:any
   ngOnInit(): void {
-   this.getPurchase();
+   if(localStorage.getItem('financialYear')){
+    let fy= localStorage.getItem('financialYear');
+    console.warn(JSON.parse(fy));
+    this.getPurchase(JSON.parse(fy));
+   }
+  
 
    // permission from localstoarg 
   //  const localStorageData = JSON.parse(localStorage.getItem('auth'));
@@ -173,8 +178,9 @@ export class PurchaselistComponent implements OnInit {
     });
   }
   loader=true;
-  getPurchase(){
-    this.purchaseService.getPurchase().subscribe(res => {
+getPurchase(fy:any){
+    console.log(fy);
+    this.purchaseService.getPurchaseFY(fy).subscribe(res => {
       // console.log(res);
       this.tableData = res;
       this.loader=false;

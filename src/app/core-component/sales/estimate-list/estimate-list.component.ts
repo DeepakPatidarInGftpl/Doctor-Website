@@ -8,6 +8,7 @@ import { saveAs } from 'file-saver';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { DatePipe } from '@angular/common';
+import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 
 @Component({
   selector: 'app-estimate-list',
@@ -22,14 +23,14 @@ export class EstimateListComponent implements OnInit {
   public tableData: any;
 
   titlee: any;
-  p:number=1
+  p: number = 1
   pageSize: number = 10;
-  itemsPerPage:number=10;
+  itemsPerPage: number = 10;
   filteredData: any[]; // The filtered data
   supplierType: string = '';
   selectedCompany: string = '';
 
-  constructor(private saleService: SalesService, private cs:CompanyService,private contactService:ContactService,private datePipe:DatePipe) {}
+  constructor(private saleService: SalesService, private cs: CompanyService, private contactService: ContactService, private dashboardService: DashboardService, private datePipe: DatePipe) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -50,14 +51,14 @@ export class EstimateListComponent implements OnInit {
         this.saleService.deleteSalesEstimate(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
-           this.ngOnInit();
-           Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: this.delRes.msg,
-          });
-          this.tableData.splice(index, 1);
-          }else {
+            this.ngOnInit();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: this.delRes.msg,
+            });
+            this.tableData.splice(index, 1);
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Not Deleted!',
@@ -84,7 +85,7 @@ export class EstimateListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.saleService.SalesEstimateIsActive(id,'').subscribe(res => {
+        this.saleService.SalesEstimateIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -95,7 +96,7 @@ export class EstimateListComponent implements OnInit {
             this.ngOnInit()
           }
         })
-       
+
       }
     });
   }
@@ -114,7 +115,7 @@ export class EstimateListComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.saleService.SalesEstimateIsActive(id,'').subscribe(res => {
+        this.saleService.SalesEstimateIsActive(id, '').subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -125,46 +126,77 @@ export class EstimateListComponent implements OnInit {
             this.ngOnInit()
           }
         })
-      
+
       }
     });
   }
-loader=true;
-isAdd:any;
-isEdit:any;
-isDelete:any;
-userDetails:any;
+  loader = true;
+  isAdd: any;
+  isEdit: any;
+  isDelete: any;
+  userDetails: any;
+  isAdmin = false;
   ngOnInit(): void {
-    this.saleService.getSalesEstimate().subscribe(res => {
-      this.tableData = res;
-      this.loader=false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-      this.filterData();
-    })
+    // this.saleService.getSalesEstimate().subscribe(res => {
+    //   this.tableData = res;
+    //   this.loader=false;
+    //   this.selectedRows = new Array(this.tableData.length).fill(false);
+    //   this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+    //   this.filterData();
+    // })
+    //16-5
+   
+    this.cs.userDetails$.subscribe((res: any) => {
+      if (res.role == 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+    });
+
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.getEstimate(fyId);
+    
+    }
 
     //permission from profile api
-  
+
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       const permission = this.userDetails?.permission;
       permission?.map((res: any) => {
-        if (res.content_type.app_label === 'sale'  && res.content_type.model === 'estimate' && res.codename=='add_estimate') {
+        if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename == 'add_estimate') {
           this.isAdd = res.codename;
           // console.log(this.isAdd);
-        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename=='change_estimate') {
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename == 'change_estimate') {
           this.isEdit = res.codename;
           // console.log(this.isEdit);
-        }else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename=='delete_estimate') {
+        } else if (res.content_type.app_label === 'sale' && res.content_type.model === 'estimate' && res.codename == 'delete_estimate') {
           this.isDelete = res.codename;
           // console.log(this.isDelete);
         }
-    });
-  })
-  this.getPaymentTerms();
+      });
+    })
+    this.getPaymentTerms();
+    this.getBranch(); //16-5
   }
-
+//16-5
+getEstimate(fy:any){
+  const idString = JSON.stringify(this.selectData);
+  console.log(idString);
+  console.log(idString?.length);
   
+  this.saleService.getSalesEstimatefy(fy,this.selectData).subscribe(res => {
+    this.tableData = res;
+    this.loader = false;
+    this.selectedRows = new Array(this.tableData.length).fill(false);
+    this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+    this.filterData();
+  })
+}
   paymentList: any;
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
@@ -174,12 +206,12 @@ userDetails:any;
   }
 
   allSelected: boolean = false;
-  selectedRows:boolean[]
+  selectedRows: boolean[]
   selectAlll() {
     this.selectedRows.fill(this.allSelected);
   }
 
-select=false
+  select = false
   selectAll(initChecked: boolean) {
     if (!initChecked) {
       this.tableData.forEach((f: any) => {
@@ -191,7 +223,7 @@ select=false
       })
     }
   }
-  
+
   search() {
     if (this.titlee === "") {
       this.ngOnInit();
@@ -210,7 +242,7 @@ select=false
       });
     }
   }
-  
+
 
   key = 'id'
   reverse: boolean = true;
@@ -221,8 +253,8 @@ select=false
   private formatDate(date: Date): string {
     return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
   }
-   // convert to pdf
-   generatePDF() {
+  // convert to pdf
+  generatePDF() {
     const doc = new jsPDF();
     const title = 'Estimate List';
     doc.setFontSize(15);
@@ -249,39 +281,39 @@ select=false
         ],
       })
     doc.save('estimate.pdf');
- }
- generatePDFAgain() {
-  const doc = new jsPDF();
-  const title = 'Estimate List';
-  doc.setFontSize(12);
-  doc.setTextColor(33, 43, 54);
-  doc.text(title, 82, 10);
-  doc.text('', 10, 15); 
-  // Pass tableData to autoTable
-  autoTable(doc, {
-    head: [
-          ['#','User Name ','Estimate Date', 'Estimate no','Payment Terms','Expire Date','Sub Total','Total','Status']
-    ],
-    body: this.tableData.map((row:any, index:number ) => [
-  
-      index + 1,
-      row?.customer?.name + ' (' + row?.customer?.username + ')',
-     this.formatDate( row?.estimate_date),
-      row.estimate_no,
-      row.payment_terms.title,
-      this.formatDate(row?.estimate_expiry_date),
-      row.subtotal,
-      row.total,
-  row?.status,
-    ]),
-    theme: 'grid',
-    headStyles: {
-      fillColor: [255, 159, 67]
-    },
-    startY: 15, 
-  });
-  doc.save('Estimate List.pdf');
-}
+  }
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const title = 'Estimate List';
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(title, 82, 10);
+    doc.text('', 10, 15);
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'User Name ', 'Estimate Date', 'Estimate no', 'Payment Terms', 'Expire Date', 'Sub Total', 'Total', 'Status']
+      ],
+      body: this.tableData.map((row: any, index: number) => [
+
+        index + 1,
+        row?.customer?.name + ' (' + row?.customer?.username + ')',
+        this.formatDate(row?.estimate_date),
+        row.estimate_no,
+        row.payment_terms.title,
+        this.formatDate(row?.estimate_expiry_date),
+        row.subtotal,
+        row.total,
+        row?.status,
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 15,
+    });
+    doc.save('Estimate List.pdf');
+  }
   // excel export only filtered data
   getVisibleDataFromTable(): any[] {
     const visibleData = [];
@@ -355,7 +387,7 @@ select=false
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     document.body.innerHTML = combinedContent;
     window.print();
@@ -364,10 +396,10 @@ select=false
 
 
   date: any
-  espireDate:any;
-  filterPaymentTerms:any
-  selectedAmount:any
-  statusFilter:any;
+  espireDate: any;
+  filterPaymentTerms: any
+  selectedAmount: any
+  statusFilter: any;
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.date) {
@@ -385,28 +417,71 @@ select=false
       });
     }
     if (this.filterPaymentTerms) {
-      filteredData = filteredData.filter((item) => item?.payment_terms?.title=== this.filterPaymentTerms);
+      filteredData = filteredData.filter((item) => item?.payment_terms?.title === this.filterPaymentTerms);
     }
     if (this.selectedAmount) {
       filteredData = filteredData.filter((item) => item?.total <= this.selectedAmount);
     }
     if (this.statusFilter) {
-      filteredData = filteredData.filter((item) => item?.status=== this.statusFilter);
+      filteredData = filteredData.filter((item) => item?.status === this.statusFilter);
     }
     this.filteredData = filteredData;
   }
   clearFilter() {
     this.date = null;
     this.espireDate = null;
-    this.filterPaymentTerms=null
-    this.selectedAmount=null;
-    this.statusFilter=null;
+    this.filterPaymentTerms = null
+    this.selectedAmount = null;
+    this.statusFilter = null;
     this.filterData();
   }
   changePg(val: any) {
     console.log(val);
     if (val == -1) {
       this.itemsPerPage = this.filteredData?.length;
+    }
+  }
+
+  //16-5
+  //get branch
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.dashboardService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
     }
   }
 }

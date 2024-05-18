@@ -17,7 +17,10 @@ export class PurchaseServiceService {
   }
 
   // purchase 
-
+  getPurchaseFY(fy:any){
+    let url =this.apiUrl+'/pv-api/purchase_order/?financial_year=';
+    return this.http.get(`${url}${fy}`);
+  }
   getPurchase(){
     let url =this.apiUrl+'/pv-api/purchase_order/';
     return this.http.get(url);
@@ -52,6 +55,10 @@ export class PurchaseServiceService {
   }
   
   //material-inward
+  getMaterialFY(fy:any){
+    let url =this.apiUrl+'/pv-api/material_inward/?financial_year=';
+    return this.http.get(`${url}${fy}`);
+  }
   getMaterial(){
     let url =this.apiUrl+'/pv-api/material_inward/';
     return this.http.get(url);
@@ -78,7 +85,10 @@ export class PurchaseServiceService {
   }
   
   // purchase-bill
-    
+  getPurchaseBillFY(fy:any){
+    let url =this.apiUrl+'/pv-api/purchase_bill/?financial_year=';
+    return this.http.get(`${url}${fy}`);
+  }
   getPurchaseBill(){
     let url =this.apiUrl+'/pv-api/purchase_bill/';
     return this.http.get(url);
@@ -175,7 +185,10 @@ export class PurchaseServiceService {
   }
 
   //purchaseReturn
-
+  getPurchaseReturnfy(fy:any){
+    let url =this.apiUrl+'/pv-api/purchase_return/?financial_year=';
+    return this.http.get(`${url}${fy}`);
+  }
   getPurchaseReturn(){
     let url =this.apiUrl+'/pv-api/purchase_return/';
     return this.http.get(url);

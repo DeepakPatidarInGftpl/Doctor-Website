@@ -310,6 +310,21 @@ const routes: Routes = [
   loadChildren: () =>
     import('./scrap-entry/scrap-entry-routing.module').then((m) => m.ScrapEntryRoutingModule),
 },
+{
+  path: 'balance-sheet',
+  loadChildren: () =>
+    import('./balance-sheeet/balance-sheeet.module').then((m) => m.BalanceSheeetModule),
+},
+{
+  path: 'trial-balance',
+  loadChildren: () =>
+    import('./trial-balance/trial-balance.module').then((m) => m.TrialBalanceModule),
+},
+{
+  path: 'profit-loss',
+  loadChildren: () =>
+    import('./profit-loss/profit-loss.module').then((m) => m.ProfitLossModule),
+},
 ];
 
 @NgModule({
