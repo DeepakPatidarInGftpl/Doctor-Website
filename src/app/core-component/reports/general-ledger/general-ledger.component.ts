@@ -37,17 +37,22 @@ export class GeneralLedgerComponent implements OnInit {
 
   filteredSuppliers: Observable<any[]> | undefined;
   supplierControl: FormControl = new FormControl('');
+  filteredusers: Observable<any[]>;
+
+  userControl = new FormControl();
+
   
   filteredProduct: Observable<any[]> | undefined;
   productControl: FormControl = new FormControl('');
   userName: any;
-  
   constructor(private router: Router, private fb: FormBuilder, private toastr: ToastrService, private transactionService:TransactionService, private coreService:CoreService, private cs:CompanyService, private datepipe: DatePipe, private reportService:ReportService) {
   }
     //product Day Book form
     productDayBookform!: FormGroup;
     startDate: any;
     endDate: any;
+    UserId: any;
+
     userDetails: any;
     ngOnInit(): void {
       this.cs.userDetails$.subscribe((userDetails) => {
@@ -69,20 +74,46 @@ export class GeneralLedgerComponent implements OnInit {
       this.productDayBookform = new FormGroup({
         start: new FormControl(formattedStartDate),
         end: new FormControl(formattedToday),
+        user_id: new FormControl(),
+
         
       });
       this.startDate = this.productDayBookform.value?.start;
       this.endDate = this.productDayBookform.value?.end;
+      this.UserId = this.productDayBookform.value?.user_id;
+
       this.getproductDayBook();
-     
+      this.getUser()
+      this.filteredusers = this.userControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter1(value, true))
+      );
     }
+    
     // getproductDayBook() {
     //   throw new Error('Method not implemented.');
     // }
     private formatDate(date: Date): string {
       return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
     }
-  
+    private _filter1(value: string | number, include: boolean): any[] {
+      // console.log(value);
+      const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
+      const filteredUsers = include
+        ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue))
+        : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue));
+      if (!include && filteredUsers.length === 0) {
+        // console.log("No results found");
+        filteredUsers.push({ name: "No data found" }); 
+      }
+      return filteredUsers;
+    }
+    users:any[]=[];
+  getUser() {
+    this.reportService.getUser().subscribe((res: any) => {
+      this.users = res?.data;
+    })
+  }
     key = 'id'
     reverse: boolean = false;
     sort(key: any) {
@@ -103,7 +134,7 @@ export class GeneralLedgerComponent implements OnInit {
     }
   productDayBookList:any
     getproductDayBook() {
-      this.reportService.getGeneralLedger(this.startDate, this.endDate).subscribe((res:any) => {
+      this.reportService.getGeneralLedger(this.startDate, this.endDate,  this.UserId).subscribe((res:any) => {
         console.log(res);
         this.productDayBookList = res;
       })
@@ -111,6 +142,23 @@ export class GeneralLedgerComponent implements OnInit {
     }
   
     // api call
+    dataId: any;
+    oncheckAccount(data: any) {
+      console.log(data);
+      this.userName=data?.detail?.company_name
+      this.dataId = data?.id;
+     this.productDayBookform.patchValue({user_id:this.dataId});
+     console.warn(this.productDayBookform.value);
+     this.UserId = this.productDayBookform.value?.user_id;
+     this?.getproductDayBook();
+    }
+    selectUser(data: any) {
+      this.dataId = data;
+     this. productDayBookform.patchValue({user_id:this.dataId});
+     console.warn(this. productDayBookform.value);
+     this.UserId = this. productDayBookform.value?.user_id;
+     this?.getproductDayBook();
+    }
     getSelectedProductDayBookDates() {
       console.log(this.productDayBookform.value);
       const start = this.datepipe.transform(this.productDayBookform.value.start, 'yyyy-MM-dd');

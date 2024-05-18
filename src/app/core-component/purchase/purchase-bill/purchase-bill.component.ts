@@ -137,15 +137,29 @@ export class PurchaseBillComponent implements OnInit {
   isDelete:any;
   userDetails:any
   ngOnInit(): void {
-    this.purchaseService.getPurchaseBill().subscribe(res => {
-      // console.log(res);
-      this.tableData = res;
-      this.loader=false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-      this.filterData();
-    })
-    
+    // this.purchaseService.getPurchaseBill().subscribe(res => {
+    //   // console.log(res);
+    //   this.tableData = res;
+    //   this.loader=false;
+    //   this.selectedRows = new Array(this.tableData.length).fill(false);
+    //   this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+    //   this.filterData();
+    // })
+
+  //  /16-5
+    if(localStorage.getItem('financialYear')){
+      let fy= localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId=JSON.parse(fy)
+      this.purchaseService.getPurchaseBillFY(fyId).subscribe(res => {
+        // console.log(res);
+        this.tableData = res;
+        this.loader=false;
+        this.selectedRows = new Array(this.tableData.length).fill(false);
+        this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+        this.filterData();
+      })
+     }
     //from localstorage permision
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {

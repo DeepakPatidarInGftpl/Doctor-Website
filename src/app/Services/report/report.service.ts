@@ -871,7 +871,7 @@ export class ReportService {
     }
     return this.http.get<any>(url);
   }
-  getGeneralLedger(start_date: any, end_date: any): Observable<any> {
+  getGeneralLedger(start_date: any, end_date: any, user_id: any ): Observable<any> {
     let url = this.apiUrl + '/api/reports/general/ledger/';
     const queryParams: any[] = [];
     if (start_date) {
@@ -880,7 +880,9 @@ export class ReportService {
     if (end_date) {
       queryParams.push(`end_date=${end_date}`);
     }
-
+    if(user_id){
+      queryParams.push(`user_id=${user_id}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
@@ -1046,6 +1048,99 @@ export class ReportService {
   }
   getScrapEntry(start_date: any, end_date: any): Observable<any> {
     let url = this.apiUrl + '/api/reports/scrap-entry/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+
+  //15-5
+  getBalanceSheet(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/balance_sheet/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  exportToExcelBalanceSheet(start_date: any, end_date: any): string {
+    const url = this.apiUrl + '/api/reports/balance_sheet/';
+    const queryParams: string[] = [];
+  
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+  
+    const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+    return url + queryString;
+  }
+  exportToExcelTrial(start_date: any, end_date: any): string {
+    const url = this.apiUrl + '/api/reports/trail_balance/';
+    const queryParams: string[] = [];
+  
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+  
+    const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+    return url + queryString;
+  }
+  exportToExcelProfitLoss(start_date: any, end_date: any): string {
+    const url = this.apiUrl + '/api/reports/profit_and_loss/';
+    const queryParams: string[] = [];
+  
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+  
+    const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+    return url + queryString;
+  }
+  
+  getTrailBalance(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/trail_balance/';
+    const queryParams: any[] = [];
+    if (start_date) {
+      queryParams.push(`start_date=${start_date}`);
+    }
+    if (end_date) {
+      queryParams.push(`end_date=${end_date}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get<any>(url);
+  }
+  getProfitLoss(start_date: any, end_date: any): Observable<any> {
+    let url = this.apiUrl + '/api/reports/profit_and_loss/';
     const queryParams: any[] = [];
     if (start_date) {
       queryParams.push(`start_date=${start_date}`);

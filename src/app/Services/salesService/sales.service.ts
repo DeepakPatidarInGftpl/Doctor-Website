@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -13,6 +13,10 @@ export class SalesService {
 
   
   //sales order
+  getSalesOrderfy(fy:any) {
+    let url = this.apiUrl + '/pv-api/sale_order/?financial_year=';
+    return this.http.get(`${url}${fy}`);
+  }
   getSalesOrder() {
     let url = this.apiUrl + '/pv-api/sale_order/';
     return this.http.get(url)
@@ -38,7 +42,49 @@ export class SalesService {
     return this.http.delete(`${url}${id}`)
   }
 
-   //sales Estimates
+  //  sales Estimates
+   getSalesEstimatefy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/estimate/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
+
+  // getSalesEstimatefy(fy: any, branch?: any) {
+  //   const params = new URLSearchParams(); // Use URLSearchParams for cleaner URL construction
+  //   if (fy) {
+  //     params.append('financial_year', fy);
+  //   }
+
+  //   if (branch && branch.length > 0) {
+  //     params.append('branch', branch);
+  //   }
+
+  //   const url = `${this.apiUrl}/pv-api/estimate/`; // Use template literals for cleaner string concatenation
+
+  //   return this.http.get(url, { params }) // Use pipe operator for optional chaining
+  //     .pipe(
+  //       map((response: any) => {
+  //         // Process the response data here (optional)
+  //         return response;
+  //       })
+  //     );
+  // }
+
    getSalesEstimate() {
     let url = this.apiUrl + '/pv-api/estimate/';
     return this.http.get(url)
@@ -65,6 +111,10 @@ export class SalesService {
   }
 
   // sales bill
+  getSalesBillfy(fy:any) {
+    let url = this.apiUrl + '/pv-api/sale_bill/?financial_year=';
+    return this.http.get(`${url}${fy}`)
+  }
    getSalesBill() {
     let url = this.apiUrl + '/pv-api/sale_bill/';
     return this.http.get(url)
@@ -94,6 +144,10 @@ export class SalesService {
 
   
   // sales bill
+  getSalesMaterialOutwardfy(fy:any) {
+    let url = this.apiUrl + '/pv-api/material_outward/?financial_year=';
+    return this.http.get(`${url}${fy}`)
+  }
   getSalesMaterialOutward() {
     let url = this.apiUrl + '/pv-api/material_outward/';
     return this.http.get(url)
@@ -120,6 +174,10 @@ export class SalesService {
   }
 
   // sales Return
+  getSaleReturnfy(fy:any) {
+    let url = this.apiUrl + '/pv-api/sale_return/?financial_year=';
+    return this.http.get(`${url}${fy}`)
+  }
   getSaleReturn() {
     let url = this.apiUrl + '/pv-api/sale_return/';
     return this.http.get(url)
@@ -207,6 +265,10 @@ export class SalesService {
   // advance booking 
   
    //sales Estimates
+   getAdvanceBookingfy(fy:any) {
+    let url = this.apiUrl + '/pv-api/advance_booking/?financial_year=';
+    return this.http.get(url)
+  }
    getAdvanceBooking() {
     let url = this.apiUrl + '/pv-api/advance_booking/';
     return this.http.get(url)

@@ -133,14 +133,29 @@ export class MaterialInwardComponent implements OnInit {
   loader=true;
   userDetails:any;
   ngOnInit(): void {
-    this.purchaseService.getMaterial().subscribe(res => {
-      // console.log(res);
-      this.tableData = res;
-      this.loader=false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-      this.filterData();
-    })
+    // this.purchaseService.getMaterial().subscribe(res => {
+    //   // console.log(res);
+    //   this.tableData = res;
+    //   this.loader=false;
+    //   this.selectedRows = new Array(this.tableData.length).fill(false);
+    //   this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+    //   this.filterData();
+    // })
+//16-5
+    if(localStorage.getItem('financialYear')){
+      let fy= localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId=JSON.parse(fy)
+      this.purchaseService.getMaterialFY(fyId).subscribe(res => {
+        // console.log(res);
+        this.tableData = res;
+        this.loader=false;
+        this.selectedRows = new Array(this.tableData.length).fill(false);
+        this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+        this.filterData();
+      })
+     }
+    
 //permission from localstorage
     // const localStorageData = JSON.parse(localStorage.getItem('auth'));
     // if (localStorageData && localStorageData.permission) {

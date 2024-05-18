@@ -18,9 +18,10 @@ export class HeaderComponent implements OnInit {
   public changeLayout: string = '1';
   public darkTheme: boolean = false;
   public logoPath: string = '';
+  financialYearForm: FormGroup;
 
   constructor(private Router: Router, private settings: SettingsService, private authServ: AuthServiceService, private toastr: ToastrService,
-    private coreService: CoreService, private profileService:CompanyService, private companyService:CompanyService, private fb :FormBuilder
+    private coreService: CoreService, private profileService: CompanyService, private companyService: CompanyService, private fb: FormBuilder
   ) {
     this.activePath = this.Router.url.split('/')[2];
     this.Router.events.subscribe((data: any) => {
@@ -58,34 +59,46 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.LoadScript('assets/js/header.js');
     this.profile();
-      //open day
-      this.dayOpenForm = this.fb.group({
-        opening_amount: new FormControl(0, [Validators.required,])
-      });
-      //close day
-      this.dayCloseForm = this.fb.group({
-        closing_amount: new FormControl(0, [Validators.required, ]),
-        remarks: new FormControl('')
-      });
-      this.checkDayClose();
-      this.getDayClose();
-  
-       // blur bg when modal open
-   if(this.companyService.CheckBlur$){
-    this.companyService.CheckBlur$.subscribe((res:any)=>{
-      console.log(res);
-      if(res !== null){
-      if(res){
-        this.isModalOpen = res;
-        console.log(this.isModalOpen);
-      }else if(res==false){
-        this.isModalOpen = res;
-        console.log(this.isModalOpen);
-      }
+    //open day
+    this.dayOpenForm = this.fb.group({
+      opening_amount: new FormControl(0, [Validators.required,])
+    });
+    //close day
+    this.dayCloseForm = this.fb.group({
+      closing_amount: new FormControl(0, [Validators.required,]),
+      remarks: new FormControl('')
+    });
+    this.checkDayClose();
+    this.getDayClose();
+
+    // blur bg when modal open
+    if (this.companyService.CheckBlur$) {
+      this.companyService.CheckBlur$.subscribe((res: any) => {
+        console.log(res);
+        if (res !== null) {
+          if (res) {
+            this.isModalOpen = res;
+            console.log(this.isModalOpen);
+          } else if (res == false) {
+            this.isModalOpen = res;
+            console.log(this.isModalOpen);
+          }
+        }
+
+      })
     }
-      
-    })
-  }
+    this.getFinancialYear();
+    // this.getActiveFinancialYear();
+    this.financialYearForm = this.fb.group({
+      financial_year: new FormControl('')
+    });
+    //17-5
+    if(localStorage.getItem('financialYear')){
+      let fy = localStorage.getItem('financialYear');
+      this.financialYearForm.patchValue({
+        financial_year: JSON.parse(fy)
+      });
+    }
   }
 
 
@@ -117,18 +130,18 @@ export class HeaderComponent implements OnInit {
   }
   userDetails: any
   profile() {
-    this.coreService.getProfile().subscribe((res:any) => {
+    this.coreService.getProfile().subscribe((res: any) => {
       this.userDetails = res;
-      this.profileService.setUserDetails(this.userDetails); 
+      this.profileService.setUserDetails(this.userDetails);
       const userDetails = res?.permission;
-        const storedUserDetails = this.profileService.getUserDetails();
-        if (!storedUserDetails || storedUserDetails.length !== userDetails.length) {
-          this.profileService.setUserPermission(userDetails);
-          window.location.reload();
-        }
-    },err=>{
+      const storedUserDetails = this.profileService.getUserDetails();
+      if (!storedUserDetails || storedUserDetails.length !== userDetails.length) {
+        this.profileService.setUserPermission(userDetails);
+        window.location.reload();
+      }
+    }, err => {
       // console.log(err.error.detail=='Invalid token.');
-      if(err.error.detail=='Invalid token.'){
+      if (err.error.detail == 'Invalid token.') {
         localStorage.clear();
         window.location.reload();
       }
@@ -142,7 +155,7 @@ export class HeaderComponent implements OnInit {
   }
 
   // day open day close 
-  
+
   // day close or day open
   closeModalDayClose() {
     const modal = document.getElementById('dayCloseModal');
@@ -150,7 +163,7 @@ export class HeaderComponent implements OnInit {
       modal.classList.remove('show');
       modal.style.display = 'none';
       //remove blurbg send data to service
-      this.isModalOpen=false;
+      this.isModalOpen = false;
       this.companyService.setCheckBlur(false);
     }
   }
@@ -161,7 +174,7 @@ export class HeaderComponent implements OnInit {
       modal.classList.add('show');
       modal.style.display = 'block';
       //blurbg send data to service
-      this.isModalOpen=true;
+      this.isModalOpen = true;
       this.companyService.setCheckBlur(true);
     }
   }
@@ -199,10 +212,10 @@ export class HeaderComponent implements OnInit {
         } else if (res?.close_day) {
           this.isCloseDay = true;
         }
-      }else{
+      } else {
         this.toastr.error(res.msg);
       }
-    },err=>{
+    }, err => {
       this.toastr.error(err.message);
     })
   }
@@ -235,7 +248,7 @@ export class HeaderComponent implements OnInit {
   }
 
   //open dashboard
-modalError:any;
+  modalError: any;
   closeModalDay() {
     const modal = document.getElementById('dayModal');
     if (this.isCloseDay) {
@@ -243,11 +256,11 @@ modalError:any;
         modal.classList.remove('show');
         modal.style.display = 'none';
         // remove blurbg send data to service
-        this.isModalOpen=false;
-      this.companyService.setCheckBlur(false);
+        this.isModalOpen = false;
+        this.companyService.setCheckBlur(false);
       }
-    }else{
-      this.modalError='Please Submit Opening Amount';
+    } else {
+      this.modalError = 'Please Submit Opening Amount';
       if (modal) {
         setTimeout(() => {
           modal.classList.add('vibrate');
@@ -263,7 +276,7 @@ modalError:any;
       modal.classList.add('show');
       modal.style.display = 'block';
       //blurbg send data to service
-      this.isModalOpen=true;
+      this.isModalOpen = true;
       this.companyService.setCheckBlur(true);
     }
   }
@@ -280,7 +293,7 @@ modalError:any;
         console.log(res);
         if (res.isSuccess) {
           this.loader = false;
-          this.isCloseDay=true;
+          this.isCloseDay = true;
           this.closeModalDay();
           this.toastr.success(res.msg)
         } else {
@@ -294,4 +307,47 @@ modalError:any;
     }
   }
 
+
+  financialYearList: any[] = [];
+  startDate: string = '';
+  endDate: string = '';
+  getFinancialYear() {
+    this.coreService.getFinancialYear().subscribe((res: any) => {
+      console.log(res); // Log res to check if data is received correctly
+      this.financialYearList = res;
+
+      // const currentYear = new Date().getFullYear();
+      // const currentYearFinancialYear = this.financialYearList.find(year => {
+      //   const startYear = new Date(year.start_year).getFullYear();
+      //   return startYear === currentYear;
+      // });
+      // console.log(currentYearFinancialYear, 'currentYearFinancialYear');
+      // if (currentYearFinancialYear) {
+      // localStorage.setItem('financialYear',JSON.stringify(currentYearFinancialYear));
+      // }
+      // if (currentYearFinancialYear) {
+      //   this.financialYearForm.patchValue({
+      //     financial_year: currentYearFinancialYear.id
+      //   });
+      // }
+    })
+  }
+  getActiveFinancialYear() {
+    this.coreService.getFinancialYearHeader().subscribe((res: any) => {
+      this.financialYearForm.patchValue({
+        financial_year: res.id
+      });
+    })
+  }
+
+  selectYear(val: any) {
+    console.log(val);
+    this.financialYearList.forEach((res: any) => {
+      if (res.id == val) {
+        console.log(res);
+        localStorage.setItem('financialYear', JSON.stringify(res?.id));
+        window.location.reload();
+      }
+    })
+  }
 }

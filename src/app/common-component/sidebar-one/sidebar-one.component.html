@@ -213,12 +213,13 @@
                   </ul>
                   </li> 
       
-                  <li class="submenu" *ngIf="isInvoiceOffer">
-                        <a [ngClass]="{'active': activePath === 'offer'}"><img src="assets/img/icons/product.svg" alt="img"><span>Offer</span> <span class="menu-arrow"></span></a>
+                  <li class="submenu" *ngIf="isInvoiceOffer && isMembership">
+                        <a [ngClass]="{'active': activePath === 'offer'}"><img src="assets/img/icons/product.svg" alt="img"><span>Promotion</span> <span class="menu-arrow"></span></a>
                         <ul>
                         <li *ngIf="isInvoiceOffer"><a routerLink="/offer/invoice-amount" routerLinkActive="active">Invoice Amount</a></li>
                         <li *ngIf="isInvoiceOffer"><a routerLink="/offer/brand-offer" routerLinkActive="active">Brand Offer</a></li>
                         <li *ngIf="isInvoiceOffer"><a routerLink="/offer/brand-subcategory-offer" routerLinkActive="active">Brand Subcategory Offer</a></li>
+                        <li *ngIf="isMembership"><a routerLink="/settings/membership" routerLinkActive="active">Membership</a></li>  
                     </ul>
                     </li>
 
@@ -243,7 +244,7 @@
                     </ul>
                   </li>  
                   
-                    <li class="submenu" *ngIf="isUser || isFinancialYear || isPaymentTerms || isGroup || isAdditional || isMembership || isCompanyDrive">
+                    <li class="submenu" *ngIf="isUser || isFinancialYear || isPaymentTerms || isGroup || isAdditional || isCompanyDrive">
                         <a [ngClass]="{'active': activePath === 'settings'}"><img src="assets/img/icons/settings.svg" alt="img"><span> Settings</span> <span
                                 class="menu-arrow"></span></a>
                         <ul [ngClass]="{'block': sideBarControls[18].value === true}">
@@ -253,8 +254,7 @@
                               <li *ngIf="isGroup"><a routerLink="/settings/permissionGroup" routerLinkActive="active">Permission Group</a></li>
                               <li *ngIf="isAdditional"><a routerLink="/settings/additionalCharge" routerLinkActive="active">Additional Charges</a></li>            
                               <li *ngIf="isAdditional"><a routerLink="/settings/terms" routerLinkActive="active">Terms</a></li>  
-                              <li *ngIf="isMembership"><a routerLink="/settings/membership" routerLinkActive="active">Membership</a></li>  
-                              <li *ngIf="isCompanyDrive"><a routerLink="/settings/company-drive" routerLinkActive="active">Company Drive</a></li>  
+                         <li *ngIf="isCompanyDrive"><a routerLink="/settings/company-drive" routerLinkActive="active">Company Drive</a></li>  
       
                        <!-- <li><a routerLink="/settings/generalsettings" routerLinkActive="active">General Settings</a></li>
                             <li><a routerLink="/settings/emailsettings" routerLinkActive="active">Email Settings</a></li>

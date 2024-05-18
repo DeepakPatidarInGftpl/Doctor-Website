@@ -699,7 +699,24 @@ export class CommonServiceService {
       "url": "/report/cash-book",
       "is_Favorite": false
     },
-  
+    {
+      "reportname": "Balance Sheet",
+      "group": "accounts",
+      "url": "/report/balance-sheet",
+      "is_Favorite": false
+    },
+    {
+      "reportname": "Trial Balance",
+      "group": "accounts",
+      "url": "/report/trial-balance",
+      "is_Favorite": false
+    },
+    {
+      "reportname": "Profit & Loss",
+      "group": "accounts",
+      "url": "/report/profit-loss",
+      "is_Favorite": false
+    },
   
   ]
 }
