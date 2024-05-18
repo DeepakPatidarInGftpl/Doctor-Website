@@ -7,6 +7,9 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class PurchaseServiceService {
+  getBranch() {
+    throw new Error('Method not implemented.');
+  }
   constructor(private http: HttpClient) { }
   apiUrl = `${environment.api}`;
 
@@ -17,9 +20,29 @@ export class PurchaseServiceService {
   }
 
   // purchase 
-  getPurchaseFY(fy:any){
-    let url =this.apiUrl+'/pv-api/purchase_order/?financial_year=';
-    return this.http.get(`${url}${fy}`);
+  // getPurchaseFY(fy:any){
+  //   let url =this.apiUrl+'/pv-api/purchase_order/?financial_year=';
+  //   return this.http.get(`${url}${fy}`);
+  // }
+  getPurchaseFY(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/purchase_order/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
   }
   getPurchase(){
     let url =this.apiUrl+'/pv-api/purchase_order/';
@@ -55,9 +78,29 @@ export class PurchaseServiceService {
   }
   
   //material-inward
-  getMaterialFY(fy:any){
-    let url =this.apiUrl+'/pv-api/material_inward/?financial_year=';
-    return this.http.get(`${url}${fy}`);
+  // getMaterialFY(fy:any){
+  //   let url =this.apiUrl+'/pv-api/material_inward/?financial_year=';
+  //   return this.http.get(`${url}${fy}`);
+  // }
+  getMaterialFY(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/material_inward/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
   }
   getMaterial(){
     let url =this.apiUrl+'/pv-api/material_inward/';
@@ -85,9 +128,29 @@ export class PurchaseServiceService {
   }
   
   // purchase-bill
-  getPurchaseBillFY(fy:any){
-    let url =this.apiUrl+'/pv-api/purchase_bill/?financial_year=';
-    return this.http.get(`${url}${fy}`);
+  // getPurchaseBillFY(fy:any){
+  //   let url =this.apiUrl+'/pv-api/purchase_bill/?financial_year=';
+  //   return this.http.get(`${url}${fy}`);
+  // }
+  getPurchaseBillFY(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/purchase_bill/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
   }
   getPurchaseBill(){
     let url =this.apiUrl+'/pv-api/purchase_bill/';
@@ -116,8 +179,28 @@ export class PurchaseServiceService {
 
 
   // debit notes
-  getDebitNotes(){
-    let url =this.apiUrl+'/pv-api/debit_note/';
+  // getDebitNotes(){
+  //   let url =this.apiUrl+'/pv-api/debit_note/';
+  //   return this.http.get(url);
+  // }
+  getDebitNotes(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/debit_note/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
     return this.http.get(url);
   }
   addDebitNotes(data:any){
@@ -185,9 +268,29 @@ export class PurchaseServiceService {
   }
 
   //purchaseReturn
-  getPurchaseReturnfy(fy:any){
-    let url =this.apiUrl+'/pv-api/purchase_return/?financial_year=';
-    return this.http.get(`${url}${fy}`);
+  // getPurchaseReturnfy(fy:any){
+  //   let url =this.apiUrl+'/pv-api/purchase_return/?financial_year=';
+  //   return this.http.get(`${url}${fy}`);
+  // }
+  getPurchaseReturnfy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/purchase_return/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
   }
   getPurchaseReturn(){
     let url =this.apiUrl+'/pv-api/purchase_return/';

@@ -128,10 +128,12 @@ if(this.companyService.CheckBlur$){
   getprefix() {
     this.saleService.getSaleBillPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.prefix
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo=res?.data;
+        this.saleBillForm.get('customer_bill_no').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastrService.error(res.msg)
+        this.toastrService.error(res.msg);
       }
     }, err => {
       this.toastrService.error(err.error.msg)

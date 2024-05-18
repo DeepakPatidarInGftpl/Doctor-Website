@@ -87,10 +87,12 @@ export class AddMaterialOutwardComponent implements OnInit {
   getprefix() {
     this.saleService.getMaterialOutwardPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.prefix
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo=res?.data;
+        this.saleMaterialOutwardForm.get('voucher_number').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastrService.error(res.msg)
+        this.toastrService.error(res.msg);
       }
     }, err => {
       this.toastrService.error(err.error.msg)
@@ -281,7 +283,8 @@ export class AddMaterialOutwardComponent implements OnInit {
   paymentTermsList: any
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
-      this.paymentTermsList = res
+      this.paymentTermsList = res;
+      this.saleMaterialOutwardForm.get('payment_terms').patchValue(this.paymentTermsList[0]?.id)
     })
   }
 

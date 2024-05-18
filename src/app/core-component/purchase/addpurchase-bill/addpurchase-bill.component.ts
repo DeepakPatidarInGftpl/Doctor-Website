@@ -114,10 +114,12 @@ export class AddpurchaseBillComponent implements OnInit {
   getprefix() {
     this.purchaseService.getPurchaseBillPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.prefix
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo=res?.data;
+        this.purchaseBillForm.get('supplier_bill_no').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastrService.error(res.msg)
+        this.toastrService.error(res.msg);
       }
     }, err => {
       this.toastrService.error(err.error.msg)
@@ -282,6 +284,7 @@ export class AddpurchaseBillComponent implements OnInit {
     this.contactService.getPaymentTerms().subscribe(res => {
       // console.log(res);
       this.paymentList = res;
+      this.purchaseBillForm.get('payment_terms').patchValue(this.paymentList[0]?.id)
            // select auto due date with time from days fields
            const today = new Date();
            const sevenDaysFromToday = new Date(today);

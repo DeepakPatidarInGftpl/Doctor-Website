@@ -116,10 +116,12 @@ export class AddmaterialInwardComponent implements OnInit {
   getprefix() {
     this.purchaseService.getMaterialInwardPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.prefix
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo=res?.data;
+        this.materialForm.get('material_inward_no').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastrService.error(res.msg)
+        this.toastrService.error(res.msg);
       }
     }, err => {
       this.toastrService.error(err.error.msg)
