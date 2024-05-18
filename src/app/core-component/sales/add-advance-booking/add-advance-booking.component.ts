@@ -97,10 +97,12 @@ export class AddAdvanceBookingComponent implements OnInit {
   getprefix() {
     this.saleService.getAdvanceBookingPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.prefix
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo=res?.data;
+        this.saleEstimateForm.get('booking_no').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastrService.error(res.msg)
+        this.toastrService.error(res.msg);
       }
     }, err => {
       this.toastrService.error(err.error.msg)
@@ -269,7 +271,8 @@ export class AddAdvanceBookingComponent implements OnInit {
   paymentTermsList: any
   getPaymentTerms() {
     this.contactService.getPaymentTerms().subscribe(res => {
-      this.paymentTermsList = res
+      this.paymentTermsList = res;
+      this.saleEstimateForm.get('payment_terms').patchValue(this.paymentTermsList[0]?.id)
     })
   }
 
