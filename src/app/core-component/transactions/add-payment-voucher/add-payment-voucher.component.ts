@@ -88,10 +88,13 @@ export class AddPaymentVoucherComponent implements OnInit {
   getprefix() {
     this.transactionService.getPaymentVoucherPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.prefix
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo=res?.data;
+        this.paymentVoucherForm.get('payment_voucher_no').patchValue(this.prefixNo[0]?.id);
+        this.paymentVoucherBankForm.get('payment_voucher_no').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastr.error(res.msg)
+        this.toastr.error(res.msg);
       }
     }, err => {
       this.toastr.error(err.error.msg)

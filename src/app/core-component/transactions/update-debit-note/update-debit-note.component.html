@@ -49,9 +49,14 @@
 
           <div class="col-lg-4 col-sm-4 col-12">
             <div class="form-group">
-              <label>Debit Note No.</label>
-              <input type="text" formControlName="debit_note_no" id="debit_note_no" [ngClass]="{ 'is-invalid': f['debit_note_no'].touched && f['debit_note_no'].invalid}">
-              <span class="text-danger" *ngIf="debit_note_no && debit_note_no.invalid && debit_note_no.touched">Enter Debit Note no</span>
+              <label>Debit Note Series</label>
+              <!-- <input type="text" formControlName="debit_note_no" id="debit_note_no" [ngClass]="{ 'is-invalid': f['debit_note_no'].touched && f['debit_note_no'].invalid}"> -->
+              <select formControlName="debit_note_no">
+                <option value="" selected disabled>Select Debit Note Series
+                </option>
+                <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+            </select>
+              <span class="text-danger" *ngIf="debit_note_no && debit_note_no.invalid && debit_note_no.touched">Enter Debit Note Series</span>
             </div>
           </div>
 

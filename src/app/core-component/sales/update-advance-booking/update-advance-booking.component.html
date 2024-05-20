@@ -62,10 +62,14 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Advance Booking No.* </label>
-                        <input type="text" formControlName="booking_no" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['booking_no'].touched && f['booking_no'].invalid}">
+                        <label>Advance Booking Series* </label>
+                        <!-- <input type="text" formControlName="booking_no" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['booking_no'].touched && f['booking_no'].invalid}"> -->
+                        <select formControlName="booking_no">
+                            <option value="" selected disabled>Select Booking Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
                         <span class="text-danger" *ngIf="booking_no && booking_no.invalid && booking_no.touched">Enter
-                            Advance Booking no.
+                            Advance Booking Series
                         </span>
                     </div>
                 </div>

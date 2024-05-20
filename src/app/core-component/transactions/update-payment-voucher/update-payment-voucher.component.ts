@@ -98,6 +98,8 @@ editRes:any;
         this.paymentVoucherBankForm.patchValue(this.editRes)
         this.paymentVoucherBankForm.get('supplier').patchValue(this.editRes?.supplier?.id);
         this.paymentVoucherBankForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
+        
+      this.paymentVoucherBankForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
         if(this.editRes?.payment_cart.length>0){
           this.paymentVoucherBankForm.setControl('payment_voucher_cart', this.udateCartBank(this.editRes?.payment_cart));
         }else{
@@ -110,6 +112,9 @@ editRes:any;
         this.paymentVoucherForm.patchValue(this.editRes);
         this.paymentVoucherForm.get('supplier').patchValue(this.editRes?.supplier?.id);
         this.paymentVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
+        
+      this.paymentVoucherForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
+
         if(this.editRes?.payment_cart.length>0){
           this.paymentVoucherForm.setControl('payment_voucher_cart', this.udateCart(this.editRes?.payment_cart));
         }else{
@@ -127,7 +132,7 @@ editRes:any;
     this.transactionService.getPaymentVoucherPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastr.error(res.msg)
       }

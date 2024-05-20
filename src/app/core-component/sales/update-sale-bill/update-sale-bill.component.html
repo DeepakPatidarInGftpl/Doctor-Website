@@ -65,10 +65,14 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Sale Bill No.* </label>
-                        <input type="text" formControlName="customer_bill_no" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['customer_bill_no'].touched && f['customer_bill_no'].invalid}">
+                        <label>Sale Bill Series* </label>
+                        <select formControlName="customer_bill_no"> // 20-5
+                            <option value="" selected disabled>Select Bill Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <!-- <input type="text" formControlName="customer_bill_no" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['customer_bill_no'].touched && f['customer_bill_no'].invalid}"> -->
                         <span class="text-danger" *ngIf="customer_bill_no && customer_bill_no.invalid && customer_bill_no.touched">Enter
-                            Bill no.
+                            Bill Series
                         </span>
                     </div>
                 </div>

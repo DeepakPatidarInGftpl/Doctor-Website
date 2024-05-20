@@ -13,6 +13,27 @@ export class TransactionService {
 
   
   //debit
+  //20-5
+  getDebitNoteFy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/debit_note/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
   getDebitNote() {
     let url = this.apiUrl + '/pv-api/debit_note/';
     return this.http.get(url)
@@ -39,6 +60,27 @@ export class TransactionService {
   }
 
   // /pv-api/credit_note/
+  //20-5
+  getCreditNoteFy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/credit_note/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
   getCreditNote() {
     let url = this.apiUrl + '/pv-api/credit_note/';
     return this.http.get(url)
@@ -65,6 +107,27 @@ export class TransactionService {
   }
 
   // Journal voucher
+  //20-5
+  getJournalVoucherFy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/jounal_voucher/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
   getJournalVoucher() {
     let url = this.apiUrl + '/pv-api/jounal_voucher/';
     return this.http.get(url)
@@ -91,6 +154,27 @@ export class TransactionService {
   }
 
    // Countra voucher
+   //20-5
+   getCountraVoucherFy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/countra_voucher/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
   getCountraVoucher() {
     let url = this.apiUrl + '/pv-api/countra_voucher/';
     return this.http.get(url)
@@ -117,6 +201,28 @@ export class TransactionService {
   }
 
   // Reciept voucher
+  //20-5
+  getRecieptVoucherFy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/receipt_voucher/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
+
   getRecieptVoucher() {
     let url = this.apiUrl + '/pv-api/receipt_voucher/';
     return this.http.get(url)
@@ -143,6 +249,26 @@ export class TransactionService {
   }
 
   // payment voucher
+  getPaymentVoucherFy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/payment_voucher/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
    getPaymentVoucher() {
     let url = this.apiUrl + '/pv-api/payment_voucher/';
     return this.http.get(url)
@@ -222,6 +348,27 @@ export class TransactionService {
   }
 
   // expense voucher 11-1
+  //20-5
+  getExpensVoucherFy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/expense_voucher/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
   getExpensVoucher() {
     let url = this.apiUrl + '/pv-api/expense_voucher/';
     return this.http.get(url)
@@ -248,6 +395,27 @@ export class TransactionService {
   }
 
   //material consumption
+  //20-5
+  getMaterialConsuptionFy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/material_consumption/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
   getMaterialConsuption() {
     let url = this.apiUrl + '/pv-api/material_consumption/';
     return this.http.get(url)
@@ -280,7 +448,26 @@ export class TransactionService {
     let url =this.apiUrl+'/pv-api/prefix/?id=ScarpEntry';
     return this.http.get(url)
   }
+  getScrapEntryFy(fy:any,branch:any) {
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    let url = this.apiUrl + '/pv-api/scarp_entry/';
+    const queryParams: any[] = [];
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
 
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url);
+  }
   getScrapEntry() {
     let url = this.apiUrl + '/pv-api/scarp_entry/';
     return this.http.get(url);

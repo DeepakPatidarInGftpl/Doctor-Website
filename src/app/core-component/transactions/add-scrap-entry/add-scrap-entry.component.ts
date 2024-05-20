@@ -14,6 +14,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
   styleUrls: ['./add-scrap-entry.component.scss']
 })
 export class AddScrapEntryComponent implements OnInit {
+  toaster: any;
 
   constructor(private fb: FormBuilder, private saleService:SalesService,
     private coreService:CoreService, private toastrService: ToastrService, private purchaseService: PurchaseServiceService, private transactionService: TransactionService,private router:Router) { }
@@ -45,9 +46,11 @@ export class AddScrapEntryComponent implements OnInit {
     this.transactionService.getScrapEntryVoucherPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success) {
-        this.prefixNo = res.prefix
+        // this.prefixNo = res.prefix;
+        this.prefixNo=res?.data;
+        this.scrapEntryForm.get('voucher_no').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastrService.error(res.msg)
+        this.toaster.error(res.msg);
       }
     }, err => {
       this.toastrService.error(err.error.msg)
