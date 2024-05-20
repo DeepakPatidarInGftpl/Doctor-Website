@@ -11,6 +11,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
   styleUrls: ['./add-journal-voucher.component.scss']
 })
 export class AddJournalVoucherComponent implements OnInit {
+  toaster: any;
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -47,10 +48,12 @@ export class AddJournalVoucherComponent implements OnInit {
   getprefix() {
     this.transactionService.getJournalVoucherPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.prefix
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo=res?.data;
+        this.journalvoucherForm.get('journal_voucher_no').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastrService.error(res.msg)
+        this.toaster.error(res.msg);
       }
     }, err => {
       this.toastrService.error(err.error.msg)

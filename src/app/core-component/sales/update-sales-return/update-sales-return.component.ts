@@ -83,7 +83,9 @@ export class UpdateSalesReturnComponent implements OnInit {
     this.saleService.getSaleReturnById(this.id).subscribe(res => {
       this.editRes = res;
       this.saleReturnForm.patchValue(this.editRes);
+      this.saleReturnForm.get('sale_return_bill_no').patchValue(this.editRes?.sale_return_bill_no?.id) // 20-5
       this.saleReturnForm.get('sale_bill').patchValue(this.editRes?.sale_bill?.id)
+
 
       if (this.editRes?.cart.length > 0) {
         this.saleReturnForm.setControl('sale_return_cart', this.udateCart(this.editRes?.cart));
@@ -113,7 +115,7 @@ export class UpdateSalesReturnComponent implements OnInit {
     this.saleService.getSaleReturnPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastrService.error(res.msg)
       }

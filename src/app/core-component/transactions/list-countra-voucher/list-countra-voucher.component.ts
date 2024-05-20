@@ -6,6 +6,8 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
+import { ContactService } from 'src/app/Services/ContactService/contact.service';
 
 @Component({
   selector: 'app-list-countra-voucher',
@@ -26,7 +28,7 @@ export class ListCountraVoucherComponent implements OnInit {
   selectedpaymentTerms: string = '';
   date: any
 
-  constructor( private transactionService: TransactionService,private cs: CompanyService,) { }
+  constructor( private transactionService: TransactionService,private cs: CompanyService, private dashboardservice : DashboardService, private contactservice : ContactService) { }
 
   delRes: any
   confirmText(index: any, id: any) {
@@ -147,6 +149,8 @@ export class ListCountraVoucherComponent implements OnInit {
   isEdit: any;
   isDelete: any;
   userDetails: any;
+  isAdmin = false;
+
   ngOnInit(): void {
     this.transactionService.getCountraVoucher().subscribe(res => {
       // console.log(res);
@@ -156,6 +160,22 @@ export class ListCountraVoucherComponent implements OnInit {
       this.filteredData = this.tableData.slice(); 
       this.filterData();
     })
+    //20-5
+    this.cs.userDetails$.subscribe((res: any) => {
+      if (res.role == 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+    });
+
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.getEstimate(fyId);
+    
+    }
 
     // permissin from api profile
     this.cs.userDetails$.subscribe((userDetails) => {
@@ -171,8 +191,18 @@ export class ListCountraVoucherComponent implements OnInit {
         }
       });
     });
+    this.getPaymentTerms();
+    this.getBranch();
   }
 
+  paymentList: any;
+  getPaymentTerms() {
+    this.contactservice.getPaymentTerms().subscribe(res => {
+      // console.log(res);
+      this.paymentList = res;
+    })
+  }
+ 
   allSelected: boolean = false;
   selectedRows: boolean[]
   selectAlll() {
@@ -390,4 +420,61 @@ export class ListCountraVoucherComponent implements OnInit {
       this.itemsPerPage = this.tableData.length;
     }
   }
+  //20-5
+  getEstimate(fy:any){
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    console.log(idString?.length);
+    
+    this.transactionService.getCountraVoucherFy(fy,this.selectData).subscribe(res => {
+      this.tableData = res;
+      this.loader = false;
+      this.selectedRows = new Array(this.tableData.length).fill(false);
+      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+      this.filterData();
+    })
+  }
+   //16-5
+  //get branch
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.dashboardservice.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
 }
+

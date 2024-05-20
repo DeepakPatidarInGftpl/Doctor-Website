@@ -90,6 +90,8 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.debitNotesForm.get('reverse_charge')?.patchValue(res?.reverse_charge);
       // this.debitNotesForm.get('payment_term')?.patchValue(res?.payment_term.id);
       this.debitNotesForm.get('purchase_bill')?.patchValue(res?.purchase_bill?.id);
+      this.debitNotesForm.get('purchase_return_no')?.patchValue(res?.purchase_return_no?.id); //20-5
+
    
       if(res?.cart.length>0){
         this.debitNotesForm.setControl('cart', this.udateCart(res?.cart));
@@ -140,7 +142,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     this.purchaseService.getPurchaseBillPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastrService.error(res.msg)
       }

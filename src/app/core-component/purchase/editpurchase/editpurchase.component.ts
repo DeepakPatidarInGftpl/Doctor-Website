@@ -79,6 +79,8 @@ export class EditpurchaseComponent implements OnInit {
       this.getresbyId = res;
       this.purchaseForm.patchValue(res);
       this.purchaseForm.get('party')?.patchValue(res.party.id)
+      this.purchaseForm.get('order_no')?.patchValue(res.party.id) //20-5
+
       
       if(res?.cart.length>0){
         this.purchaseForm.setControl('purchase_cart', this.udateCart(res?.cart));
@@ -197,7 +199,7 @@ export class EditpurchaseComponent implements OnInit {
     this.purchaseService.getPurchaseOrderPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastrService.error(res.msg)
       }

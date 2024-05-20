@@ -4,11 +4,36 @@
         <h4 class="titl">Reciept Voucher LIST</h4>
         <h6>Manage your Reciept Voucher</h6>
     </div>
-    <div class="page-btn" *ngIf="isAdd">
+    <div class="page-btn">
+    <div class="row">
+        <div class="col-lg-3 col-sm-6 col-12 d-flex">
+            <div class="form-group w-100" *ngIf="isAdmin">
+                <div class="dropdown">
+                    <button type="button" class="dropdown-toggle button" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">Select Branch</button>
+                    <ul class="dropdown-menu" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                        <li> <input type="text" placeholder="search category" class="form-control" [(ngModel)]="searchBranch" (ngModelChange)="filterBranch()" [ngModelOptions]="{standalone: true}">
+                        </li>
+                        <li><a class="dropdown-item" *ngFor="let branch of filteredBranchList let i=index;">
+                                <input type="checkbox" [value]="branch.id" [checked]="selectData.includes(branch.id)" (change)="SelectedBranch(branch.id,$event.target.checked)" style="margin-right: 5px;" #categoryValue [id]="'checkboxCat-' + i">
+                                <label [for]="'checkboxCat-' + i" style="margin-bottom: 0;" (click)="onLabelClick($event)">{{branch.title}}</label>
+                        </a></li>
+                    </ul>
+                </div>
+                <div class="d-flex">
+                <span *ngIf="selectData.length>0">{{selectData.length + ' Selected'}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   <ng-container *ngIf="isAdd">
         <a routerLink="//transaction/addrecieptVoucher" class="btn btn-added">
             <img src="assets/img/icons/plus.svg" alt="img">Add New Reciept Voucher
         </a>
+       </ng-container>
     </div>
+    
 </div>
 
 <!-- /product list -->
@@ -117,6 +142,7 @@
                         <th (click)="sort('id')" class="thone">Transaction Date<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Transaction Id<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Amount<i class="fa fa-sort"></i></th>
+                        <th (click)="sort('id')" class="thone">Status <i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Is Active<i class="fa fa-sort"></i></th>
                         <th (click)="sort('id')" class="thone">Action<i class="fa fa-sort"></i></th>
                     </tr>
@@ -140,6 +166,9 @@
                         <td>{{products?.transaction_date}}</td>
                         <td class="text-center">{{products?.transaction_id}}</td>
                         <td>{{products?.amount}}</td>
+                        <td>
+                            <span [ngClass]="{'bg-lightgreen': products.status === 'Complete', 'bg-lightred' : products.status === 'Pending','bg-lightyellow' : products.status === 'Ordered'}" class="badges">{{products.status}}</span>
+                        </td>
                         <td><mat-slide-toggle (click)="products.is_active ? isActive(i,products.id):Active(i,products.id)" [(ngModel)]="products.is_active"></mat-slide-toggle></td>
                         <td>
                             <a class="me-1" routerLink="//transaction/detailsrecieptVoucher/{{products?.id}}">

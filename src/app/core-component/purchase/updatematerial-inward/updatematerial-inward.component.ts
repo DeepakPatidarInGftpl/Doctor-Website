@@ -80,7 +80,9 @@ export class UpdatematerialInwardComponent implements OnInit {
       // console.log(res);
       this.getresbyId = res;
       this.materialForm.patchValue(res);
+      this.materialForm.get('material_inward_no')?.patchValue(res?.party?.id);
       this.materialForm.get('party')?.patchValue(res?.party?.id);
+
       this.materialForm.get('purchase_order')?.patchValue(res?.purchase_order?.id === undefined ? '' : res?.purchase_order?.id);
       this.materialForm.get('product_type')?.patchValue(res?.product_type==null?'':res?.product_type)
       if (res?.cart?.length > 0) {
@@ -135,7 +137,7 @@ export class UpdatematerialInwardComponent implements OnInit {
     this.purchaseService.getPurchaseOrderPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data // 20-5
       } else {
         this.toastrService.error(res.msg)
       }

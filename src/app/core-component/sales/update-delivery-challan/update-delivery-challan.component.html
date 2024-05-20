@@ -106,9 +106,13 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Delivery Challan Bill Number *</label>
-                        <input type="text" formControlName="delivery_challan_bill_no" readonly placeholder="Enter Voucher Number " [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['delivery_challan_bill_no'].touched && f['delivery_challan_bill_no'].invalid}">
-                        <span class="text-danger" *ngIf="delivery_challan_bill_no && delivery_challan_bill_no.invalid && delivery_challan_bill_no.touched">Enter Voucher Number </span>
+                        <label>Delivery Challan Bill Series *</label>
+                        <!-- <input type="text" formControlName="delivery_challan_bill_no" readonly placeholder="Enter Voucher Number " [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['delivery_challan_bill_no'].touched && f['delivery_challan_bill_no'].invalid}"> -->
+                        <select formControlName="delivery_challan_bill_no">
+                            <option value="" selected disabled>Select Delivery Challan Bill Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <span class="text-danger" *ngIf="delivery_challan_bill_no && delivery_challan_bill_no.invalid && delivery_challan_bill_no.touched">Enter Delivery Challan Bill Series </span>
                     </div>
                 </div>
 

@@ -90,6 +90,8 @@ export class UpdateSaleBillComponent implements OnInit {
       this.saleBillForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id);
       this.saleBillForm.get('sale_order').patchValue(this.editRes?.sale_order==null?'':this.editRes?.sale_order.id);
       this.saleBillForm.get('sales_man').patchValue(this.editRes?.sales_man==null?'':this.editRes?.sales_man?.id);
+      this.saleBillForm.get('customer_bill_no').patchValue(this.editRes?.sales_man==null?'':this.editRes?.customer_bill_no?.id);
+
       if(this.editRes?.cart.length>0){
         this.saleBillForm.setControl('sale_bill_cart', this.udateCart(this.editRes?.cart));
       }else{
@@ -129,7 +131,7 @@ export class UpdateSaleBillComponent implements OnInit {
     this.saleService.getSaleBillPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastrService.error(res.msg)
       }

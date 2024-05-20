@@ -46,8 +46,12 @@
 
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Purchase No. </label>
-                        <input type="text" formControlName="order_no" readonly >
+                        <label>Purchase Series</label>
+                        <!-- <input type="text" formControlName="order_no" readonly > -->
+                        <select formControlName="order_no">
+                            <option value="" selected disabled>Select Purchase Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
                     </div>
                 </div>
 

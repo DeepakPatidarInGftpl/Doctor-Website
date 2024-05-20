@@ -85,6 +85,8 @@ editRes:any;
         this.deliveryChallanForm.patchValue(this.editRes);
         this.deliveryChallanForm.get('account')?.patchValue(this.editRes?.account?.id);
         this.deliveryChallanForm.get('sale_bill').patchValue(this.editRes?.sale_bill.id);
+        this.deliveryChallanForm.get('delivery_challan_bill_no').patchValue(this.editRes?.delivery_challan_bill_no.id); //20-5
+
         this.deliveryChallanForm.get('transporter_account').patchValue(this.editRes?.transporter_account?.id);
         if(this.editRes?.cart.length>0){
           this.deliveryChallanForm.setControl('cart', this.udateCart(this.editRes?.cart));
@@ -129,7 +131,7 @@ editRes:any;
     this.saleService.getMaterialOutwardPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastrService.error(res.msg)
       }
