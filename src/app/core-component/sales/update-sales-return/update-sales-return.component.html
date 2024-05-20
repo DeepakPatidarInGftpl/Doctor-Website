@@ -61,10 +61,14 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Sale Return Bill No.* </label>
-                        <input type="text" formControlName="sale_return_bill_no" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['sale_return_bill_no'].touched && f['sale_return_bill_no'].invalid}">
+                        <label>Sale Return Bill Series* </label>
+                        <!-- <input type="text" formControlName="sale_return_bill_no" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['sale_return_bill_no'].touched && f['sale_return_bill_no'].invalid}"> -->
+                        <select formControlName="sale_return_bill_no">
+                            <option value="" selected disabled>Select Return Bill Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
                         <span class="text-danger" *ngIf="sale_return_bill_no && sale_return_bill_no.invalid && sale_return_bill_no.touched">Enter
-                            Return no.
+                            Return Series
                         </span>
                     </div>
                 </div>

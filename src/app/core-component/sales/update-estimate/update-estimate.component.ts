@@ -82,7 +82,9 @@ export class UpdateEstimateComponent implements OnInit {
     this.saleService.getSalesEstimateById(this.id).subscribe(res => {
       this.editRes = res;
       this.saleEstimateForm.patchValue(this.editRes);
+      this.saleEstimateForm.get('estimate_no').patchValue(this.editRes?.estimate_no.id) // 20-5
       this.saleEstimateForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
+
       if(this.editRes?.cart.length>0){
         this.saleEstimateForm.setControl('estimate_cart', this.udateCart(this.editRes?.cart));
       }else{
@@ -112,7 +114,7 @@ export class UpdateEstimateComponent implements OnInit {
     this.saleService.getEstimatePrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastrService.error(res.msg)
       }

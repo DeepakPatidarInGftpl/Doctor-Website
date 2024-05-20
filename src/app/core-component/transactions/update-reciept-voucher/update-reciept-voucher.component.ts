@@ -96,6 +96,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.recieptVoucherBankForm.patchValue(this.editRes)
         this.recieptVoucherBankForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
         this.recieptVoucherBankForm.get('payer').patchValue(this.editRes?.payer?.id);
+        this.recieptVoucherBankForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
         if(this.editRes?.bill_cart.length>0){
           this.recieptVoucherBankForm.setControl('receipt_voucher_cart', this.udateCartBank(this.editRes?.bill_cart));
         }else{
@@ -109,6 +110,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.recieptVoucherForm.patchValue(this.editRes);
         this.recieptVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
         this.recieptVoucherForm.get('payer').patchValue(this.editRes?.payer?.id);
+        this.recieptVoucherForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
         if(this.editRes?.bill_cart.length>0){
           this.recieptVoucherForm.setControl('receipt_voucher_cart', this.udateCart(this.editRes?.bill_cart));
         }else{
@@ -126,7 +128,7 @@ export class UpdateRecieptVoucherComponent implements OnInit {
     this.transactionService.getReceiptVoucherPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastr.error(res.msg)
       }

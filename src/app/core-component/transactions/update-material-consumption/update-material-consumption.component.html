@@ -50,16 +50,26 @@
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
             <label>Prefix</label>
-            <input type="text" formControlName="prefix" placeholder="Enter Prefix" [ngModel]="prefixNo" readonly id="prefix" [ngClass]="{ 'is-invalid': f['prefix'].touched && f['prefix'].invalid}">
+            <!-- <input type="text" formControlName="prefix" placeholder="Enter Prefix" [ngModel]="prefixNo" readonly id="prefix" [ngClass]="{ 'is-invalid': f['prefix'].touched && f['prefix'].invalid}"> -->
+            <select formControlName="prefix">
+              <option value="" selected disabled>Select Prefix
+              </option>
+              <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+          </select>
             <span class="text-danger" *ngIf="prefix && prefix.invalid && prefix.touched">Enter Prefix</span>
           </div>
         </div>
 
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
-            <label>Consumtion No.</label>
-            <input type="text" formControlName="consumption_no" placeholder="Enter Consumtion No." id="consumption_no" [ngClass]="{ 'is-invalid': f['consumption_no'].touched && f['consumption_no'].invalid}">
-            <span class="text-danger" *ngIf="consumption_no && consumption_no.invalid && consumption_no.touched">Enter Consumtion No.</span>
+            <label>Consumtion Series</label>
+            <!-- <input type="text" formControlName="consumption_no" placeholder="Enter Consumtion No." id="consumption_no" [ngClass]="{ 'is-invalid': f['consumption_no'].touched && f['consumption_no'].invalid}"> -->
+            <select formControlName="consumption_no">
+              <option value="" selected disabled>Select Consumtion Series
+              </option>
+              <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+          </select>
+            <span class="text-danger" *ngIf="consumption_no && consumption_no.invalid && consumption_no.touched">Enter Consumtion Series</span>
           </div>
         </div>
         <div class="col-lg-4 col-sm-4 col-12">

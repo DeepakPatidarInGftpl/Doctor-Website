@@ -21,12 +21,17 @@
                
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Contra Voucher No.</label>
-                        <input type="text" formControlName="countra_voucher_no" [ngModel]="prefixNo" readonly
-                            [ngClass]="{'is-invalid': f['countra_voucher_no'].touched && f['countra_voucher_no'].invalid}">
+                        <label>Contra Voucher Series</label>
+                        <!-- <input type="text" formControlName="countra_voucher_no" [ngModel]="prefixNo" readonly
+                            [ngClass]="{'is-invalid': f['countra_voucher_no'].touched && f['countra_voucher_no'].invalid}"> -->
+                            <select formControlName="countra_voucher_no">
+                                <option value="" selected disabled>Select Contra Voucher Series
+                                </option>
+                                <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                            </select>
                         <span class="text-danger"
                             *ngIf="countra_voucher_no && countra_voucher_no.invalid && countra_voucher_no.touched">Enter
-                            Contra Voucher No.</span>
+                            Contra Voucher Series</span>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-4 col-12">

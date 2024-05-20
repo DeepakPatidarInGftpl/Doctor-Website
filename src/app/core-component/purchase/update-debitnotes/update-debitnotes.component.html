@@ -47,8 +47,12 @@
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Purchase Return No.</label>
-                        <input type="text" formControlName="purchase_return_no" placeholder="Enter Purchase Return No." [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['purchase_return_no'].touched && f['purchase_return_no'].invalid}">
+                        <label>Purchase Return Series</label>
+                        <!-- <input type="text" formControlName="purchase_return_no" placeholder="Enter Purchase Return No." [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['purchase_return_no'].touched && f['purchase_return_no'].invalid}"> -->
+                        <select formControlName="purchase_return_no">
+                            <option value="" selected disabled>Select Purchase Return Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">

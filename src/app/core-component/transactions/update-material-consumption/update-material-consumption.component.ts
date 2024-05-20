@@ -51,6 +51,9 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
       this.materialConsumptionForm.patchValue(res);
       this.materialConsumptionForm.get('user')?.patchValue(res.user?.id);
       this.materialConsumptionForm.get('barcode')?.patchValue(res.barcode?.id);
+      
+      this.materialConsumptionForm.get('prefix')?.patchValue(res?.prefix?.id) // 20-5
+      this.materialConsumptionForm.get('consumption_no')?.patchValue(res?.consumption_no?.id) // 20-5
       this.supplierControl.setValue(res.user.username);
       this.barcodeControl.setValue(res.barcode.product_title + '-'+res.barcode.variant_name)
     })
@@ -68,7 +71,8 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
     this.transactionService.getMaterialConsuptionPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
+
       } else {
         this.toastr.error(res.msg)
       }

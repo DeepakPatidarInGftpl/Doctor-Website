@@ -83,7 +83,9 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       }else{
         this.isCart=true;
       }
+      this.saleMaterialOutwardForm.get('voucher_number')?.patchValue(this.editRes?.voucher_number?.id); // 20-5
       this.saleMaterialOutwardForm.get('customer')?.patchValue(this.editRes?.customer?.id);
+
       this.userControl.setValue(this.editRes?.customer?.name+ ' '+ this.editRes?.customer?.user_type);
     })
 
@@ -106,7 +108,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     this.saleService.getMaterialOutwardPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastrService.error(res.msg)
       }

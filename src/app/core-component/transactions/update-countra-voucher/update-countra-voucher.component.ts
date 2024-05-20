@@ -54,7 +54,7 @@ export class UpdateCountraVoucherComponent implements OnInit {
       console.log(res);
       this.countraVoucherForm.patchValue({
         date: res?.date,
-        countra_voucher_no: res?.countra_voucher_no,
+        countra_voucher_no: res?.countra_voucher_no?.id,
         from_account: res?.from_account?.id,
         to_account: res?.to_account?.id,
         amount: res?.amount,
@@ -72,7 +72,7 @@ export class UpdateCountraVoucherComponent implements OnInit {
     this.transactionService.getCountraVoucherPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastr.error(res.msg)
       }

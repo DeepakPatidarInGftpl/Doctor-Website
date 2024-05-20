@@ -61,10 +61,13 @@ export class AddMaterialConsumptionComponent implements OnInit {
   getprefix() {
     this.transactionService.getMaterialConsuptionPrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.prefix
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo=res?.data;
+        this.materialConsumptionForm.get('consumption_no').patchValue(this.prefixNo[0]?.id);
+        this.materialConsumptionForm.get('prefix').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastr.error(res.msg)
+        this.toastr.error(res.msg);
       }
     }, err => {
       this.toastr.error(err.error.msg)

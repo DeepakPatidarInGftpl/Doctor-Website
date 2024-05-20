@@ -46,9 +46,14 @@
 
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Credit Note No.</label>
-                        <input type="text" formControlName="credit_note_no" placeholder="Enter Credit Note No." id="credit_note_no" [ngModel]="prefixNo"[ngClass]="{ 'is-invalid': f['credit_note_no'].touched && f['credit_note_no'].invalid}">
-                        <span class="text-danger" *ngIf="credit_note_no && credit_note_no.invalid && credit_note_no.touched">Enter Credit Note No.</span>
+                        <label>Credit Note Series</label>
+                        <!-- <input type="text" formControlName="credit_note_no" placeholder="Enter Credit Note No." id="credit_note_no" [ngModel]="prefixNo"[ngClass]="{ 'is-invalid': f['credit_note_no'].touched && f['credit_note_no'].invalid}"> -->
+                        <select formControlName="credit_note_no">
+                            <option value="" selected disabled>Select Credit Note Series
+                            </option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <span class="text-danger" *ngIf="credit_note_no && credit_note_no.invalid && credit_note_no.touched">Enter Credit Note Series</span>
                     </div>
                 </div>
 

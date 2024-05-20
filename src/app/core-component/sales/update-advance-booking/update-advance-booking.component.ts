@@ -81,6 +81,8 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       this.editRes = res;
       this.saleEstimateForm.patchValue(this.editRes);
       this.saleEstimateForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
+      this.saleEstimateForm.get('booking_no').patchValue(this.editRes?.booking_no.id) // 20-5
+
       if(this.editRes?.cart.length>0){
         this.saleEstimateForm.setControl('cart', this.udateCart(this.editRes?.cart));
       }else{
@@ -110,7 +112,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     this.saleService.getEstimatePrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastrService.error(res.msg)
       }

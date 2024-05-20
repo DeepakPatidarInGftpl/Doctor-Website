@@ -20,9 +20,13 @@
           
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
-                        <label>Voucher Number*</label>
-                        <input type="text" formControlName="voucher_no" [ngModel]="prefixNo"  placeholder="Enter Voucher Number " [ngClass]="{'is-invalid': f['voucher_no'].touched && f['voucher_no'].invalid}">
-                        <span class="text-danger" *ngIf="voucher_no && voucher_no.invalid && voucher_no.touched">Enter Voucher Number </span>
+                        <label>Voucher Series*</label>
+                        <!-- <input type="text" formControlName="voucher_no" [ngModel]="prefixNo"  placeholder="Enter Voucher Number " [ngClass]="{'is-invalid': f['voucher_no'].touched && f['voucher_no'].invalid}"> -->
+                        <select formControlName="voucher_no">
+                            <option value="" selected disabled>Select Voucher Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select>
+                        <span class="text-danger" *ngIf="voucher_no && voucher_no.invalid && voucher_no.touched">Enter Voucher Series </span>
                     </div>
                 </div>
                 

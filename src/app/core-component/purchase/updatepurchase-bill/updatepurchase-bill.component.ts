@@ -95,6 +95,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.puchaseBillForm.get('party')?.patchValue(res?.party?.id);
       this.puchaseBillForm.get('payment_term')?.patchValue(res?.payment_term?.id);
       this.puchaseBillForm.get('material_inward_no')?.patchValue(res?.material_inward_no?.id);
+      this.puchaseBillForm.get('supplier_bill_no')?.patchValue(res?.supplier_bill_no?.id);
+
       
       if(res?.cart.length>0){
         this.puchaseBillForm.setControl('purchase_bill', this.udateCart(res?.cart));
@@ -172,7 +174,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.purchaseService.getPurchaseBillPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.data
       } else {
         this.toastrService.error(res.msg)
       }

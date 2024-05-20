@@ -61,10 +61,12 @@ export class AddDebitNoteComponent implements OnInit {
   getprefix() {
     this.transactionService.getDebitNotePrefix().subscribe((res: any) => {
       console.log(res);
-      if (res.success == true) {
-        this.prefixNo = res.prefix
+      if (res.success) {
+        // this.prefixNo = res.prefix;
+        this.prefixNo=res?.data;
+        this.debitNoteForm.get('debit_note_no').patchValue(this.prefixNo[0]?.id);
       } else {
-        this.toastr.error(res.msg)
+        this.toastr.error(res.msg);
       }
     }, err => {
       this.toastr.error(err.error.msg)
