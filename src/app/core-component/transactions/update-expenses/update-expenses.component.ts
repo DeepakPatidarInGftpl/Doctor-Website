@@ -59,7 +59,7 @@ export class UpdateExpensesComponent implements OnInit {
       this.fromPartyControl.setValue(res?.party?.name);
       this.roundOff=res.round_off;
       this.expensevoucherForm.get('party')?.patchValue(res?.party?.id)
-      this.expensevoucherForm.get('expense_no')?.patchValue(res?.expense_no?.id) // 20-5
+      // this.expensevoucherForm.get('expense_no')?.patchValue(res?.expense_no?.id) // 20-5
       if(this.editRes?.cart?.length>0){
         this.expensevoucherForm.setControl('expenses_voucher_cart', this.udateCart(this.editRes?.cart));
       }else{

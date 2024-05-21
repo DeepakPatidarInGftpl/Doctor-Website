@@ -51,6 +51,8 @@ export class UpdateAdvanceBookingComponent implements OnInit {
   myControl: FormArray;
   id: any;
   editRes: any;
+  isStatusDraft=false; //21-5
+
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
@@ -81,8 +83,15 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       this.editRes = res;
       this.saleEstimateForm.patchValue(this.editRes);
       this.saleEstimateForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
-      this.saleEstimateForm.get('booking_no').patchValue(this.editRes?.booking_no.id) // 20-5
-
+      // this.saleEstimateForm.get('booking_no').patchValue(this.editRes) // 20-5
+     // 21-5
+     if(this.editRes.status=='Draft' || this.editRes.status==null){
+      this.isStatusDraft=true;
+      this.getprefix();
+    }else{
+      this.saleEstimateForm.get('booking_no').patchValue(this.editRes?.booking_no) // 21-5
+    }
+//end 21-5
       if(this.editRes?.cart.length>0){
         this.saleEstimateForm.setControl('cart', this.udateCart(this.editRes?.cart));
       }else{
@@ -103,7 +112,6 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     this.getUser();
     this.getCategory();
     this.getPaymentTerms();
-    this.getprefix();
 
   }
 
@@ -112,7 +120,8 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     this.saleService.getEstimatePrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.data
+        this.prefixNo = res.data;
+        this.saleEstimateForm.get('booking_no').patchValue(this.prefixNo[0]?.id) // 21-5
       } else {
         this.toastrService.error(res.msg)
       }
@@ -806,10 +815,16 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
+        
       let formdata: any = new FormData();
       formdata.append('account', this.saleEstimateForm.get('account')?.value);
       formdata.append('booking_date', this.saleEstimateForm.get('booking_date')?.value);
-      formdata.append('booking_no', this.saleEstimateForm.get('booking_no')?.value);
+      // formdata.append('booking_no', this.saleEstimateForm.get('booking_no')?.value);
+       // 21-5
+       if(this.isStatusDraft){
+        formdata.append('booking_no', this.saleEstimateForm.get('booking_no')?.value);
+      }
+      // end
       formdata.append('due_date', this.saleEstimateForm.get('due_date')?.value);
       formdata.append('payment_terms', this.saleEstimateForm.get('payment_terms')?.value);
       formdata.append('note', this.saleEstimateForm.get('note')?.value);

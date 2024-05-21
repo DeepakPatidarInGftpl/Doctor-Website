@@ -51,14 +51,14 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Expence Voucher Series <span style="color:red">*</span></label>
-                        <!-- <input type="text" formControlName="expense_no" placeholder="Enter Expence Voucher No."
-                            [ngModel]="prefixNo" readonly
-                            [ngClass]="{'is-invalid': f['expense_no'].touched && f['expense_no'].invalid}"> -->
-                            <select formControlName="expense_no">
+                        <input type="text" formControlName="expense_no" placeholder="Enter Expence Voucher No."
+                           readonly
+                            [ngClass]="{'is-invalid': f['expense_no'].touched && f['expense_no'].invalid}">
+                            <!-- <select formControlName="expense_no">
                                 <option value="" selected disabled>Select Expence Voucher Series
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
-                            </select>
+                            </select> -->
                         <span class="text-danger" *ngIf="expense_no && expense_no.invalid && expense_no.touched">Enter
                             Expence Voucher Series</span>
                     </div>
@@ -67,7 +67,7 @@
                     <div class="form-group">
                         <label>Refrence Bill No.</label>
                         <input type="text" formControlName="refrence_bill_no" placeholder="Enter Refrence Bill No."
-                            [ngModel]="prefixNo" 
+                           
                             [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}">
                         <span class="text-danger"
                             *ngIf="refrence_bill_no && refrence_bill_no.invalid && refrence_bill_no.touched">Enter

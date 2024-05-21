@@ -56,7 +56,10 @@ export class UpdateSaleBillComponent implements OnInit {
   editRes: any;
   id: any;
   totalAdditionalCharges: any;
+  
+  isStatusDraft=false; //21-5
   ngOnInit(): void {
+
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.userControl.setValue('Loading...');
@@ -90,8 +93,15 @@ export class UpdateSaleBillComponent implements OnInit {
       this.saleBillForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id);
       this.saleBillForm.get('sale_order').patchValue(this.editRes?.sale_order==null?'':this.editRes?.sale_order.id);
       this.saleBillForm.get('sales_man').patchValue(this.editRes?.sales_man==null?'':this.editRes?.sales_man?.id);
-      this.saleBillForm.get('customer_bill_no').patchValue(this.editRes?.sales_man==null?'':this.editRes?.customer_bill_no?.id);
-
+      // this.saleBillForm.get('customer_bill_no').patchValue(this.editRes);
+     // 21-5
+     if(this.editRes.status=='Draft' || this.editRes.status==null){
+      this.isStatusDraft=true;
+      this.getprefix();
+    }else{
+      this.saleBillForm.get('customer_bill_no').patchValue(this.editRes?.customer_bill_no) // 21-5
+    }
+//end 21-5
       if(this.editRes?.cart.length>0){
         this.saleBillForm.setControl('sale_bill_cart', this.udateCart(this.editRes?.cart));
       }else{
@@ -120,7 +130,7 @@ export class UpdateSaleBillComponent implements OnInit {
     this.getPaymentTerms();
     this.getSaleOrder();
     this.getEmployee();
-    this.getprefix();
+    
     this.addAdditionalCharge();
     this.getAdditionalDiscount();
     this.getTax();
@@ -131,7 +141,8 @@ export class UpdateSaleBillComponent implements OnInit {
     this.saleService.getSaleBillPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.data
+        this.prefixNo = res.data;
+        this.saleBillForm.get('customer_bill_no').patchValue(this.prefixNo[0]?.id) 
       } else {
         this.toastrService.error(res.msg)
       }
@@ -968,10 +979,16 @@ export class UpdateSaleBillComponent implements OnInit {
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
+      
       let formdata: any = new FormData();
       formdata.append('customer', this.saleBillForm.get('customer')?.value);
       formdata.append('bill_date', this.saleBillForm.get('bill_date')?.value);
-      formdata.append('customer_bill_no', this.saleBillForm.get('customer_bill_no')?.value);
+      // formdata.append('customer_bill_no', this.saleBillForm.get('customer_bill_no')?.value);
+         // 21-5
+         if(this.isStatusDraft){
+          formdata.append('customer_bill_no', this.saleBillForm.get('customer_bill_no')?.value);
+        }
+        // end
       formdata.append('due_date', this.saleBillForm.get('due_date')?.value);
       formdata.append('payment_terms', this.saleBillForm.get('payment_terms')?.value);
       formdata.append('sale_order', this.saleBillForm.get('sale_order')?.value);

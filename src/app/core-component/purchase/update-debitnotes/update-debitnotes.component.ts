@@ -55,6 +55,8 @@ export class UpdateDebitnotesComponent implements OnInit {
   getresbyId: any;
   supplierAddress: any;
   selectedAddress: string = ''
+  isStatusDraft=false; //21-5
+
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
@@ -90,7 +92,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.debitNotesForm.get('reverse_charge')?.patchValue(res?.reverse_charge);
       // this.debitNotesForm.get('payment_term')?.patchValue(res?.payment_term.id);
       this.debitNotesForm.get('purchase_bill')?.patchValue(res?.purchase_bill?.id);
-      this.debitNotesForm.get('purchase_return_no')?.patchValue(res?.purchase_return_no?.id); //20-5
+      // this.debitNotesForm.get('purchase_return_no')?.patchValue(res?.purchase_return_no); //20-5
 
    
       if(res?.cart.length>0){
@@ -98,6 +100,14 @@ export class UpdateDebitnotesComponent implements OnInit {
       }else{
         this.isCart=true;
       }
+       // 21-5
+     if(res.status=='Draft' || res.status==null){
+      this.isStatusDraft=true;
+      this.getprefix();
+    }else{
+      this.debitNotesForm.get('purchase_return_no').patchValue(res?.purchase_return_no) // 21-5
+    }
+//end 21-5
       this.displaySupplierName(res?.party?.id);
       this.supplierId = res?.party?.id
       this.getVariant('', '','')
@@ -108,7 +118,6 @@ export class UpdateDebitnotesComponent implements OnInit {
         // console.log(res);
         this.supplierAddress = res;
         this.supplierControl.setValue(res?.company_name);
-        this.getprefix()
         this.supplierAddress.address.map((res: any) => {
           if (res.address_type == 'Billing') {
             this.selectedAddressBilling = res
@@ -142,7 +151,8 @@ export class UpdateDebitnotesComponent implements OnInit {
     this.purchaseService.getPurchaseBillPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.data
+        this.prefixNo = res.data;
+        this.debitNotesForm.get('purchase_return_no').patchValue(this.prefixNo[0]?.id) 
       } else {
         this.toastrService.error(res.msg)
       }
@@ -849,10 +859,16 @@ export class UpdateDebitnotesComponent implements OnInit {
       }else if(type=='draft'){
         this.loaderDraft=true;
       }
+          
       let formdata: any = new FormData();
       formdata.append('party', this.debitNotesForm.get('party')?.value);
       formdata.append('purchase_return_date', this.debitNotesForm.get('purchase_return_date')?.value);
-      formdata.append('purchase_return_no', this.debitNotesForm.get('purchase_return_no')?.value);
+      // formdata.append('purchase_return_no', this.debitNotesForm.get('purchase_return_no')?.value);
+         // 21-5
+         if(this.isStatusDraft){
+          formdata.append('purchase_return_no', this.debitNotesForm.get('purchase_return_no')?.value);
+        }
+        // end
       formdata.append('refrence_bill_no', this.debitNotesForm.get('refrence_bill_no')?.value);
       // formdata.append('related_name', this.debitNotesForm.get('related_name')?.value);
       formdata.append('reverse_charge', this.debitNotesForm.get('reverse_charge')?.value);

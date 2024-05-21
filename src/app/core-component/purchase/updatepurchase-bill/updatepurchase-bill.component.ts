@@ -53,6 +53,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
   getresbyId: any;
   supplierAddress: any;
   selectedAddress: string = ''
+  isStatusDraft=false; //21-5
+
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
@@ -95,7 +97,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       this.puchaseBillForm.get('party')?.patchValue(res?.party?.id);
       this.puchaseBillForm.get('payment_term')?.patchValue(res?.payment_term?.id);
       this.puchaseBillForm.get('material_inward_no')?.patchValue(res?.material_inward_no?.id);
-      this.puchaseBillForm.get('supplier_bill_no')?.patchValue(res?.supplier_bill_no?.id);
+      // this.puchaseBillForm.get('supplier_bill_no')?.patchValue(res?.supplier_bill_no);
 
       
       if(res?.cart.length>0){
@@ -103,6 +105,14 @@ export class UpdatepurchaseBillComponent implements OnInit {
       }else{
         this.isCart=true;
       }
+       // 21-5
+     if(res.status=='Draft' || res.status==null){
+      this.isStatusDraft=true;
+      this.getprefix();
+    }else{
+      this.puchaseBillForm.get('supplier_bill_no').patchValue(res?.supplier_bill_no) // 21-5
+    }
+//end 21-5
       this.puchaseBillForm.setControl('tax_rate', this.udateTaxRate(res?.tax_rate));   
       this.displaySupplierName(res?.party?.id);
       this.supplierId = res?.party?.id;
@@ -123,7 +133,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         // console.log(res);
         this.supplierAddress = res;
         this.supplierControl.setValue(res.company_name);
-        this.getprefix()
+        
         this.supplierAddress.address.map((res: any) => {
           this.selectedAddressBilling = res
           // if (res.address_type == 'Billing') {
@@ -174,7 +184,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.purchaseService.getPurchaseBillPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.data
+        this.prefixNo = res.data;
+        this.puchaseBillForm.get('supplier_bill_no').patchValue(this.prefixNo[0]?.id) 
       } else {
         this.toastrService.error(res.msg)
       }
@@ -1004,11 +1015,17 @@ export class UpdatepurchaseBillComponent implements OnInit {
       }else if(type=='draft'){
         this.loaderDraft=true;
       }
+            
       let formdata: any = new FormData();
       formdata.append('party', this.puchaseBillForm.get('party')?.value);
       formdata.append('supplier_bill_date', this.puchaseBillForm.get('supplier_bill_date')?.value);
       formdata.append('refrence_bill_no', this.puchaseBillForm.get('refrence_bill_no')?.value);
-      formdata.append('supplier_bill_no', this.puchaseBillForm.get('supplier_bill_no')?.value);
+      // formdata.append('supplier_bill_no', this.puchaseBillForm.get('supplier_bill_no')?.value);
+       // 21-5
+       if(this.isStatusDraft){
+        formdata.append('supplier_bill_no', this.puchaseBillForm.get('supplier_bill_no')?.value);
+      }
+      // end
       formdata.append('material_inward_no', this.puchaseBillForm.get('material_inward_no')?.value);
       formdata.append('payment_term', this.puchaseBillForm.get('payment_term')?.value);
       formdata.append('due_date', this.puchaseBillForm.get('due_date')?.value);

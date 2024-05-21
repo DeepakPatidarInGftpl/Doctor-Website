@@ -51,6 +51,8 @@ export class EditpurchaseComponent implements OnInit {
   variants: any[] = [];
   filteredVariants: Observable<any[]>;
   getresbyId: any;
+  isStatusDraft=false; //21-5
+
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
@@ -79,7 +81,7 @@ export class EditpurchaseComponent implements OnInit {
       this.getresbyId = res;
       this.purchaseForm.patchValue(res);
       this.purchaseForm.get('party')?.patchValue(res.party.id)
-      this.purchaseForm.get('order_no')?.patchValue(res.party.id) //20-5
+      // this.purchaseForm.get('order_no')?.patchValue(res.party) //20-5
 
       
       if(res?.cart.length>0){
@@ -87,6 +89,14 @@ export class EditpurchaseComponent implements OnInit {
       }else{
         this.isCart=true;
       }
+      //21-5
+      if(res.status=='Draft' || res.status==null){
+        this.isStatusDraft=true;
+        this.getprefix();
+      }else{
+        this.purchaseForm.get('order_no').patchValue(res?.order_no) // 21-5
+      }
+      //21-5
       this.displaySupplierName(res.party.id);
       this.totalAmount = res?.total;
       this.subTotal = res?.sub_total;
@@ -109,7 +119,6 @@ export class EditpurchaseComponent implements OnInit {
         this.supplierControl.setValue(res?.company_name);
         console.log(this.supplierControl);
 
-        this.getprefix()
         this.supplierAddress.address.map((res: any) => {
           if (res.address_type == 'Billing') {
             this.selectedAddressBilling = res
@@ -199,7 +208,8 @@ export class EditpurchaseComponent implements OnInit {
     this.purchaseService.getPurchaseOrderPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.data
+        this.prefixNo = res.data;
+        this.purchaseForm.get('order_no').patchValue(this.prefixNo[0]?.id)
       } else {
         this.toastrService.error(res.msg)
       }
@@ -745,10 +755,17 @@ export class EditpurchaseComponent implements OnInit {
       }else if(type=='draft'){
         this.loaderDraft=true;
       }
+      
+      
       let formdata: any = new FormData();
       formdata.append('party', this.purchaseForm.get('party')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
-      formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
+      // formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
+      // 21-5
+      if(this.isStatusDraft){
+        formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
+      }
+      // end
       formdata.append('shipping_date', this.purchaseForm.get('shipping_date')?.value);
       formdata.append('shipping_note', this.purchaseForm.get('shipping_note')?.value);
       formdata.append('note', this.purchaseForm.get('note')?.value);

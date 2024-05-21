@@ -53,6 +53,8 @@ export class UpdateEstimateComponent implements OnInit {
   myControl: FormArray;
   id: any;
   editRes: any;
+  isStatusDraft=false; //21-5
+
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
@@ -82,7 +84,15 @@ export class UpdateEstimateComponent implements OnInit {
     this.saleService.getSalesEstimateById(this.id).subscribe(res => {
       this.editRes = res;
       this.saleEstimateForm.patchValue(this.editRes);
-      this.saleEstimateForm.get('estimate_no').patchValue(this.editRes?.estimate_no.id) // 20-5
+      // 21-5
+      if(this.editRes.status=='Draft' || this.editRes.status==null){
+        this.isStatusDraft=true;
+        this.getprefix();
+      }else{
+        this.saleEstimateForm.get('estimate_no').patchValue(this.editRes?.estimate_no) // 21-5
+      }
+//end 21-5
+
       this.saleEstimateForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
 
       if(this.editRes?.cart.length>0){
@@ -105,8 +115,6 @@ export class UpdateEstimateComponent implements OnInit {
     this.getUser();
     this.getCategory();
     this.getPaymentTerms();
-    this.getprefix();
-
   }
 
   prefixNo: any;
@@ -114,7 +122,8 @@ export class UpdateEstimateComponent implements OnInit {
     this.saleService.getEstimatePrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.data
+        this.prefixNo = res.data;
+        this.saleEstimateForm.get('estimate_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toastrService.error(res.msg)
       }
@@ -867,7 +876,11 @@ export class UpdateEstimateComponent implements OnInit {
       let formdata: any = new FormData();
       formdata.append('customer', this.saleEstimateForm.get('customer')?.value);
       formdata.append('estimate_date', this.saleEstimateForm.get('estimate_date')?.value);
-      formdata.append('estimate_no', this.saleEstimateForm.get('estimate_no')?.value);
+      // 21-5
+      if(this.isStatusDraft){
+        formdata.append('estimate_no', this.saleEstimateForm.get('estimate_no')?.value);
+      }
+      // end
       formdata.append('estimate_expiry_date', this.saleEstimateForm.get('estimate_expiry_date')?.value);
       formdata.append('payment_terms', this.saleEstimateForm.get('payment_terms')?.value);
       formdata.append('note', this.saleEstimateForm.get('note')?.value);

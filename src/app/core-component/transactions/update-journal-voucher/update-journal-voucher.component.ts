@@ -43,7 +43,7 @@ export class UpdateJournalVoucherComponent implements OnInit {
     this.transactionService.getJournalVoucherById(this.id).subscribe(res => {
       this.editRes = res;
       this.journalvoucherForm.patchValue(this.editRes);
-      this.journalvoucherForm.get('journal_voucher_no')?.patchValue(res?.journal_voucher_no?.id) // 20-5
+      // this.journalvoucherForm.get('journal_voucher_no')?.patchValue(res?.journal_voucher_no?.id) // 20-5
       if(this.editRes?.cart?.length>0){
         this.journalvoucherForm.setControl('journal_voucher_cart', this.udateCart(this.editRes?.cart));
       }else{
