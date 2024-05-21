@@ -53,6 +53,8 @@ export class UpdateSalesReturnComponent implements OnInit {
   subcategoryList;
   id: any;
   editRes: any;
+  isStatusDraft=false; //21-5
+
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     this.userControl.setValue('Loading...');
@@ -83,15 +85,22 @@ export class UpdateSalesReturnComponent implements OnInit {
     this.saleService.getSaleReturnById(this.id).subscribe(res => {
       this.editRes = res;
       this.saleReturnForm.patchValue(this.editRes);
-      this.saleReturnForm.get('sale_return_bill_no').patchValue(this.editRes?.sale_return_bill_no?.id) // 20-5
+      // this.saleReturnForm.get('sale_return_bill_no').patchValue(this.editRes) // 20-5
       this.saleReturnForm.get('sale_bill').patchValue(this.editRes?.sale_bill?.id)
-
-
+     // 21-5
+     if(this.editRes.status=='Draft' || this.editRes.status==null){
+      this.isStatusDraft=true;
+      this.getprefix();
+    }else{
+      this.saleReturnForm.get('sale_return_bill_no').patchValue(this.editRes?.sale_return_bill_no) // 21-5
+    }
+//end 21-5
       if (this.editRes?.cart.length > 0) {
         this.saleReturnForm.setControl('sale_return_cart', this.udateCart(this.editRes?.cart));
       } else {
         this.isCart = true;
       }
+
       this.saleReturnForm.get('customer')?.patchValue(this.editRes?.customer?.id);
       this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.user_type);
     })
@@ -106,7 +115,6 @@ export class UpdateSalesReturnComponent implements OnInit {
     this.getUser();
     this.getCategory();
     this.getsalesBill();
-    this.getprefix();
 
   }
 
@@ -115,7 +123,8 @@ export class UpdateSalesReturnComponent implements OnInit {
     this.saleService.getSaleReturnPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.data
+        this.prefixNo = res.data;
+        this.saleReturnForm.get('sale_return_bill_no').patchValue(this.prefixNo[0]?.id) // 21-5
       } else {
         this.toastrService.error(res.msg)
       }
@@ -947,10 +956,16 @@ export class UpdateSalesReturnComponent implements OnInit {
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
+       
       let formdata: any = new FormData();
       formdata.append('customer', this.saleReturnForm.get('customer')?.value);
       formdata.append('bill_date', this.saleReturnForm.get('bill_date')?.value);
-      formdata.append('sale_return_bill_no', this.saleReturnForm.get('sale_return_bill_no')?.value);
+      // formdata.append('sale_return_bill_no', this.saleReturnForm.get('sale_return_bill_no')?.value);
+        // 21-5
+        if(this.isStatusDraft){
+          formdata.append('sale_return_bill_no', this.saleReturnForm.get('sale_return_bill_no')?.value);
+        }
+        // end
       formdata.append('sale_bill', this.saleReturnForm.get('sale_bill')?.value);
       formdata.append('note', this.saleReturnForm.get('note')?.value);
       formdata.append('total_qty', this.saleReturnForm.get('total_qty')?.value);

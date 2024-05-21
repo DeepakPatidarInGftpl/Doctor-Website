@@ -58,6 +58,8 @@ export class UpdateDeliveryChallanComponent implements OnInit {
   subcategoryList;
 id:any;
 editRes:any;
+isStatusDraft=false; //21-5
+
   ngOnInit(): void {
   this.id=this.Arout.snapshot.paramMap.get('id');
 
@@ -85,9 +87,17 @@ editRes:any;
         this.deliveryChallanForm.patchValue(this.editRes);
         this.deliveryChallanForm.get('account')?.patchValue(this.editRes?.account?.id);
         this.deliveryChallanForm.get('sale_bill').patchValue(this.editRes?.sale_bill.id);
-        this.deliveryChallanForm.get('delivery_challan_bill_no').patchValue(this.editRes?.delivery_challan_bill_no.id); //20-5
+        // this.deliveryChallanForm.get('delivery_challan_bill_no').patchValue(this.editRes); //20-5
 
         this.deliveryChallanForm.get('transporter_account').patchValue(this.editRes?.transporter_account?.id);
+             // 21-5
+      if(this.editRes.status=='Draft' || this.editRes.status==null){
+        this.isStatusDraft=true;
+        this.getprefix();
+      }else{
+        this.deliveryChallanForm.get('delivery_challan_bill_no').patchValue(this.editRes?.delivery_challan_bill_no) // 21-5
+      }
+//end 21-5
         if(this.editRes?.cart.length>0){
           this.deliveryChallanForm.setControl('cart', this.udateCart(this.editRes?.cart));
         }else{
@@ -122,7 +132,6 @@ editRes:any;
     this.getAccount();
     this.getCategory();
     this.getSaleBill();
-    this.getprefix();
 
   }
 
@@ -131,7 +140,8 @@ editRes:any;
     this.saleService.getMaterialOutwardPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.data
+        this.prefixNo = res.data;
+        this.deliveryChallanForm.get('delivery_challan_bill_no').patchValue(this.prefixNo[0]?.id)
       } else {
         this.toastrService.error(res.msg)
       }
@@ -530,12 +540,18 @@ editRes:any;
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
+        
       let formdata: any = new FormData();
       formdata.append('account', this.deliveryChallanForm.get('account')?.value);
       formdata.append('bill_date', this.deliveryChallanForm.get('bill_date')?.value);
       formdata.append('note', this.deliveryChallanForm.get('note')?.value);
       formdata.append('total_qty', this.deliveryChallanForm.get('total_qty')?.value);
-      formdata.append('delivery_challan_bill_no', this.deliveryChallanForm.get('delivery_challan_bill_no')?.value);
+      // formdata.append('delivery_challan_bill_no', this.deliveryChallanForm.get('delivery_challan_bill_no')?.value);
+       // 21-5
+       if(this.isStatusDraft){
+        formdata.append('delivery_challan_bill_no', this.deliveryChallanForm.get('delivery_challan_bill_no')?.value);
+      }
+      // end
       formdata.append('transporter_account', this.deliveryChallanForm.get('transporter_account')?.value);
       formdata.append('sale_bill', this.deliveryChallanForm.get('sale_bill')?.value);
 

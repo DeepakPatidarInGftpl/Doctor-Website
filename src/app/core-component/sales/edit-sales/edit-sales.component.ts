@@ -53,6 +53,7 @@ export class EditSalesComponent implements OnInit {
   subcategoryList;
   id: any;
   editRes: any;
+  isStatusDraft=false;
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
 
@@ -89,7 +90,17 @@ export class EditSalesComponent implements OnInit {
         this.isCart=true;
       }
       this.saleForm.get('customer')?.patchValue(this.editRes?.customer?.id);
-      this.saleForm.get('estimate')?.patchValue(this?.editRes?.estimate?.id)
+      this.saleForm.get('estimate')?.patchValue(this?.editRes?.estimate?.id);
+      // this.saleForm.get('sale_order_no')?.patchValue(this?.editRes?.sale_order_no?.id); //20-5
+       // 21-5
+     if(this.editRes.status=='Draft' || this.editRes.status==null){
+      this.isStatusDraft=true;
+      this.getprefix();
+    }else{
+      this.saleForm.get('sale_order_no').patchValue(this.editRes?.sale_order_no) // 21-5
+    }
+//end 21-5
+      
       this.userControl.setValue(this.editRes?.customer?.name+ ' '+ this.editRes?.customer?.user_type);
     })
     this.searchForm = this.fb.group({
@@ -115,7 +126,8 @@ export class EditSalesComponent implements OnInit {
     this.saleService.getSaleOrderPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.prefix
+        this.prefixNo = res.prefix;
+        this.saleForm.get('sale_order_no').patchValue(this.prefixNo[0]?.id) // 21-5
       } else {
         this.toastrService.error(res.msg)
       }
@@ -886,7 +898,12 @@ export class EditSalesComponent implements OnInit {
 
       formdata.append('customer', this.saleForm.get('customer')?.value);
       formdata.append('sale_order_date', this.saleForm.get('sale_order_date')?.value);
-      formdata.append('sale_order_no', this.saleForm.get('sale_order_no')?.value);
+      // formdata.append('sale_order_no', this.saleForm.get('sale_order_no')?.value);
+       // 21-5
+       if(this.isStatusDraft){
+        formdata.append('sale_order_no', this.saleForm.get('sale_order_no')?.value);
+      }
+      // end
       formdata.append('payment_terms', this.saleForm.get('payment_terms')?.value);
 
       formdata.append('due_date', this.saleForm.get('due_date')?.value);

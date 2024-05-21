@@ -94,9 +94,9 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.isBank = true;
         this.isCash = false;
         this.recieptVoucherBankForm.patchValue(this.editRes)
-        this.recieptVoucherBankForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
+        this.recieptVoucherBankForm.get('payment_account')?.patchValue(this.editRes?.payment_account?.id);
         this.recieptVoucherBankForm.get('payer').patchValue(this.editRes?.payer?.id);
-        this.recieptVoucherBankForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
+        // this.recieptVoucherBankForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
         if(this.editRes?.bill_cart.length>0){
           this.recieptVoucherBankForm.setControl('receipt_voucher_cart', this.udateCartBank(this.editRes?.bill_cart));
         }else{
@@ -110,15 +110,16 @@ export class UpdateRecieptVoucherComponent implements OnInit {
         this.recieptVoucherForm.patchValue(this.editRes);
         this.recieptVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
         this.recieptVoucherForm.get('payer').patchValue(this.editRes?.payer?.id);
-        this.recieptVoucherForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
+        // this.recieptVoucherForm.get('receipt_voucher_no').patchValue(this.editRes?.receipt_voucher_no?.id);
         if(this.editRes?.bill_cart.length>0){
           this.recieptVoucherForm.setControl('receipt_voucher_cart', this.udateCart(this.editRes?.bill_cart));
         }else{
           this.isCart=true;
           this.isAgainstBill=true;
         }
-        this.customerControl.setValue(this.editRes?.customer?.account_id);
         this.payerControl.setValue(this.editRes?.payer?.account_id);
+        this.customerControl.setValue(this.editRes?.customer?.account_id);
+       
       }
 
     })

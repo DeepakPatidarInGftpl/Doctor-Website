@@ -53,7 +53,13 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Sale No.* </label>
-                        <input type="text" formControlName="sale_order_no" [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['sale_order_no'].touched && f['sale_order_no'].invalid}">
+                        <input type="text" *ngIf="!isStatusDraft" formControlName="sale_order_no" [ngClass]="{'is-invalid': f['sale_order_no'].touched && f['sale_order_no'].invalid}">
+                       <!-- 18-5 -->
+                       <select formControlName="sale_order_no" *ngIf="isStatusDraft">
+                        <option value="" selected disabled>Select Sale Series</option>
+                        <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                    </select>
+                    <!-- end 18-5 -->
                         <span class="text-danger" *ngIf="sale_order_no && sale_order_no.invalid && sale_order_no.touched">Enter
                             Order no.
                         </span>
@@ -720,9 +726,11 @@
                         <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save & Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Print</button>
+                        <ng-container *ngIf="isStatusDraft">
                         <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save as Draft</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save as Draft</button>
+                        </ng-container>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>

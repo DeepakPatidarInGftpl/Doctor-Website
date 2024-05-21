@@ -374,10 +374,16 @@
                     <div class="form-group">
                         <label>Material Inward Series</label>
                         <!-- <input type="text" formControlName="material_inward_no" readonly> -->
-                        <select formControlName="material_inward_no">
+                        <!-- <select formControlName="material_inward_no">
                             <option value="" selected disabled>Select Material Inward Series</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select> -->
+                        <select formControlName="material_inward_no" *ngIf="isStatusDraft">
+                            <option value="" selected disabled>Select Material Inward  Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
+                        <input *ngIf="!isStatusDraft" type="text" formControlName="material_inward_no" readonly [ngClass]="{'is-invalid': f['material_inward_no'].touched && f['material_inward_no'].invalid}">
+                  
                     </div>
                 </div>
 
@@ -879,9 +885,11 @@
                         <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save & Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Print</button>
+                        <ng-container *ngIf="isStatusDraft">
                         <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save as Draft</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save as Draft</button>
+                        </ng-container>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>

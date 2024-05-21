@@ -54,7 +54,7 @@ export class UpdateCountraVoucherComponent implements OnInit {
       console.log(res);
       this.countraVoucherForm.patchValue({
         date: res?.date,
-        countra_voucher_no: res?.countra_voucher_no?.id,
+        countra_voucher_no: res?.countra_voucher_no,
         from_account: res?.from_account?.id,
         to_account: res?.to_account?.id,
         amount: res?.amount,
