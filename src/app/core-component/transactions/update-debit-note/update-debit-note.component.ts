@@ -60,7 +60,7 @@ export class UpdateDebitNoteComponent implements OnInit {
       this.debitNoteForm.patchValue(this.getRes);
       this.debitNoteForm.get('party')?.patchValue(res.party.id);
       this.debitNoteForm.get('purchase_bill')?.patchValue(res?.purchase_bill?.id);
-      this.debitNoteForm.get('debit_note_no')?.patchValue(res?.debit_note_no?.id); //20-5
+      // this.debitNoteForm.get('debit_note_no')?.patchValue(res?.debit_note_no?.id); //20-5
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
 
         this.supplierControl.setValue(res.company_name);

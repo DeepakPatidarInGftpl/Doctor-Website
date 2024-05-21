@@ -53,7 +53,10 @@ export class UpdateMaterialOutwardComponent implements OnInit {
   subcategoryList;
   id: any
   editRes: any;
+  
+  isStatusDraft=false; //21-5
   ngOnInit(): void {
+
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.userControl.setValue('Loading...');
@@ -78,12 +81,20 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     this.saleService.getSalesMaterialOutwardById(this.id).subscribe(res => {
       this.editRes = res;
       this.saleMaterialOutwardForm.patchValue(this.editRes);
+           // 21-5
+           if(this.editRes.status=='Draft' || this.editRes.status==null){
+            this.isStatusDraft=true;
+            this.getprefix();
+          }else{
+            this.saleMaterialOutwardForm.get('voucher_number').patchValue(this.editRes?.voucher_number) // 21-5
+          }
+    //end 21-5
       if(this.editRes?.cart.length>0){
         this.saleMaterialOutwardForm.setControl('material_outward_cart', this.udateCart(this.editRes?.cart));
       }else{
         this.isCart=true;
       }
-      this.saleMaterialOutwardForm.get('voucher_number')?.patchValue(this.editRes?.voucher_number?.id); // 20-5
+      // this.saleMaterialOutwardForm.get('voucher_number')?.patchValue(this.editRes); // 20-5
       this.saleMaterialOutwardForm.get('customer')?.patchValue(this.editRes?.customer?.id);
 
       this.userControl.setValue(this.editRes?.customer?.name+ ' '+ this.editRes?.customer?.user_type);
@@ -99,7 +110,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     )
     this.getUser();
     this.getCategory();
-    this.getprefix();
+    
 
   }
 
@@ -108,7 +119,8 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     this.saleService.getMaterialOutwardPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.data
+        this.prefixNo = res.data;
+        this.saleMaterialOutwardForm.get('voucher_number').patchValue(this.prefixNo[0]?.id) 
       } else {
         this.toastrService.error(res.msg)
       }
@@ -567,13 +579,19 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
+       
       let formdata: any = new FormData();
       formdata.append('customer', this.saleMaterialOutwardForm.get('customer')?.value);
       formdata.append('mo_date', this.saleMaterialOutwardForm.get('mo_date')?.value);
       formdata.append('refund_status', this.saleMaterialOutwardForm.get('refund_status')?.value);
       formdata.append('note', this.saleMaterialOutwardForm.get('note')?.value);
       formdata.append('total_qty', this.saleMaterialOutwardForm.get('total_qty')?.value);
-      formdata.append('voucher_number', this.saleMaterialOutwardForm.get('voucher_number')?.value);
+      // formdata.append('voucher_number', this.saleMaterialOutwardForm.get('voucher_number')?.value);
+        // 21-5
+        if(this.isStatusDraft){
+          formdata.append('voucher_number', this.saleMaterialOutwardForm.get('voucher_number')?.value);
+        }
+        // end
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }

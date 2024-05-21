@@ -99,7 +99,7 @@ editRes:any;
         this.paymentVoucherBankForm.get('supplier').patchValue(this.editRes?.supplier?.id);
         this.paymentVoucherBankForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
         
-      this.paymentVoucherBankForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
+      // this.paymentVoucherBankForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
         if(this.editRes?.payment_cart.length>0){
           this.paymentVoucherBankForm.setControl('payment_voucher_cart', this.udateCartBank(this.editRes?.payment_cart));
         }else{
@@ -113,7 +113,7 @@ editRes:any;
         this.paymentVoucherForm.get('supplier').patchValue(this.editRes?.supplier?.id);
         this.paymentVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
         
-      this.paymentVoucherForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
+      // this.paymentVoucherForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
 
         if(this.editRes?.payment_cart.length>0){
           this.paymentVoucherForm.setControl('payment_voucher_cart', this.udateCart(this.editRes?.payment_cart));

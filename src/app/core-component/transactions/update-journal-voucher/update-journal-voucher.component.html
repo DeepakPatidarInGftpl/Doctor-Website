@@ -20,13 +20,13 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Journal Voucher Series</label>
-                        <!-- <input type="text" formControlName="journal_voucher_no" [ngModel]="prefixNo" readonly
-                            [ngClass]="{'is-invalid': f['journal_voucher_no'].touched && f['journal_voucher_no'].invalid}"> -->
-                            <select formControlName="journal_voucher_no">
+                        <input type="text" formControlName="journal_voucher_no" readonly
+                            [ngClass]="{'is-invalid': f['journal_voucher_no'].touched && f['journal_voucher_no'].invalid}">
+                            <!-- <select formControlName="journal_voucher_no">
                                 <option value="" selected disabled>Select Journal Voucher Series
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
-                            </select>
+                            </select> -->
                         <span class="text-danger"
                             *ngIf="journal_voucher_no && journal_voucher_no.invalid && journal_voucher_no.touched">Enter
                             Journal Voucher Series</span>

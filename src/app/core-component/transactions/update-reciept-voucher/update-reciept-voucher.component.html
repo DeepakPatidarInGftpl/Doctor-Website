@@ -29,8 +29,7 @@
                                     width: 100%;
                                     min-width: 100%;border-top: none;">
                             <input type="text" placeholder="Search Payment Account" aria-label="Payment Account" matInput
-                                [formControl]="customerControl" [matAutocomplete]="auto" style="box-sizing: border-box;"
-                                [ngClass]="{'is-invalid': h['payment_account'].touched && h['payment_account'].invalid}">
+                                [formControl]="customerControl" [matAutocomplete]="auto" style="box-sizing: border-box;">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let customer of filteredCustomer | async"
                                     [value]="customer.account_id" (onSelectionChange)="oncheck(customer)"
@@ -103,14 +102,13 @@
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Receipt Voucher Series*</label>
-                        <!-- <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
-                            [ngModel]="prefixNo" readonly
-                            [ngClass]="{'is-invalid': h['receipt_voucher_no'].touched && h['receipt_voucher_no'].invalid}"> -->
-                            <select formControlName="receipt_voucher_no">
+                        <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no" readonly
+                            [ngClass]="{'is-invalid': h['receipt_voucher_no'].touched && h['receipt_voucher_no'].invalid}">
+                            <!-- <select formControlName="receipt_voucher_no">
                                 <option value="" selected disabled>Select Receipt Voucher Series
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
-                            </select>
+                            </select> -->
                         <span class="text-danger"
                             *ngIf="receipt_voucher_no && receipt_voucher_no.invalid && receipt_voucher_no.touched">Enter
                             Receipt Voucher Series</span>
@@ -320,8 +318,7 @@
                         <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
                             <input type="text" placeholder="Search Payment Account" aria-label="Payment Account" matInput
                                 [formControl]="customerControl" [matAutocomplete]="autobank"
-                                style="box-sizing: border-box;"
-                                [ngClass]="{'is-invalid': g['payment_account'].touched && g['payment_account'].invalid}">
+                                style="box-sizing: border-box;">
                             <mat-autocomplete #autobank="matAutocomplete">
                                 <mat-option *ngFor="let customer of filteredCustomer | async"
                                     [value]="customer.account_id" (onSelectionChange)="oncheckBank(customer)"
@@ -413,14 +410,13 @@
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Receipt Voucher Series</label>
-                        <!-- <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
-                            [ngModel]="prefixNo" readonly
-                            [ngClass]="{'is-invalid': g['receipt_voucher_no'].touched && g['receipt_voucher_no'].invalid}"> -->
-                            <select formControlName="receipt_voucher_no1">
+                        <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
+                          readonly  [ngClass]="{'is-invalid': g['receipt_voucher_no'].touched && g['receipt_voucher_no'].invalid}">
+                            <!-- <select formControlName="receipt_voucher_no1">
                                 <option value="" selected disabled>Select Receipt Voucher Series
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
-                            </select>
+                            </select> -->
                         <span class="text-danger"
                             *ngIf="receipt_voucher_no1 && receipt_voucher_no1.invalid && receipt_voucher_no1.touched">Enter
                             Receipt Voucher Series</span>

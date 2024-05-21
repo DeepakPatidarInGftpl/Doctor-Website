@@ -55,6 +55,8 @@ export class UpdatematerialInwardComponent implements OnInit {
   subcategoryList;
   id: any;
   getresbyId: any;
+  isStatusDraft=false; //21-5
+
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
@@ -80,7 +82,7 @@ export class UpdatematerialInwardComponent implements OnInit {
       // console.log(res);
       this.getresbyId = res;
       this.materialForm.patchValue(res);
-      this.materialForm.get('material_inward_no')?.patchValue(res?.party?.id);
+      // this.materialForm.get('material_inward_no')?.patchValue(res?.party);
       this.materialForm.get('party')?.patchValue(res?.party?.id);
 
       this.materialForm.get('purchase_order')?.patchValue(res?.purchase_order?.id === undefined ? '' : res?.purchase_order?.id);
@@ -90,6 +92,14 @@ export class UpdatematerialInwardComponent implements OnInit {
       } else {
         this.isCart = true;
       }
+       // 21-5
+     if(res.status=='Draft' || res.status==null){
+      this.isStatusDraft=true;
+      this.getprefix();
+    }else{
+      this.materialForm.get('material_inward_no').patchValue(res?.material_inward_no) // 21-5
+    }
+//end 21-5
       this.displaySupplierName(res?.party?.id);
       this.supplierId = res?.party?.id
       this.getVariant('', '', '')
@@ -106,7 +116,7 @@ export class UpdatematerialInwardComponent implements OnInit {
         // console.log(res);
         this.supplierAddress = res;
         this.supplierControl.setValue(res?.company_name);
-        this.getprefix()
+        
         this.supplierAddress.address.map((res: any) => {
           if (res?.address_type == 'Billing') {
             this.selectedAddressBilling = res
@@ -137,7 +147,8 @@ export class UpdatematerialInwardComponent implements OnInit {
     this.purchaseService.getPurchaseOrderPrefix().subscribe((res: any) => {
       console.log(res);
       if (res.success == true) {
-        this.prefixNo = res.data // 20-5
+        this.prefixNo = res.data; // 21-5
+        this.materialForm.get('material_inward_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toastrService.error(res.msg)
       }
@@ -415,12 +426,18 @@ export class UpdatematerialInwardComponent implements OnInit {
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
+            
       let formdata: any = new FormData();
       formdata.append('party', this.materialForm.get('party')?.value);
       formdata.append('purchase_order', this.materialForm.get('purchase_order')?.value);
       formdata.append('po_date', this.materialForm.get('po_date')?.value);
       formdata.append('material_inward_date', this.materialForm.get('material_inward_date')?.value);
-      formdata.append('material_inward_no', this.materialForm.get('material_inward_no')?.value);
+      // formdata.append('material_inward_no', this.materialForm.get('material_inward_no')?.value);
+       // 21-5
+       if(this.isStatusDraft){
+        formdata.append('material_inward_no', this.materialForm.get('material_inward_no')?.value);
+      }
+      // end
       formdata.append('shipping_note', this.materialForm.get('shipping_note')?.value);
       formdata.append('recieved_by', this.materialForm.get('recieved_by')?.value);
       formdata.append('note', this.materialForm.get('note')?.value);

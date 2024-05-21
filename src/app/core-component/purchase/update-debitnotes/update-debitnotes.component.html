@@ -49,10 +49,16 @@
                     <div class="form-group">
                         <label>Purchase Return Series</label>
                         <!-- <input type="text" formControlName="purchase_return_no" placeholder="Enter Purchase Return No." [ngModel]="prefixNo" [ngClass]="{'is-invalid': f['purchase_return_no'].touched && f['purchase_return_no'].invalid}"> -->
-                        <select formControlName="purchase_return_no">
+                        <!-- <select formControlName="purchase_return_no">
+                            <option value="" selected disabled>Select Purchase Return Series</option>
+                            <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
+                        </select> -->
+                        <select formControlName="purchase_return_no" *ngIf="isStatusDraft">
                             <option value="" selected disabled>Select Purchase Return Series</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
+                        <input *ngIf="!isStatusDraft" type="text" formControlName="purchase_return_no" readonly [ngClass]="{'is-invalid': f['purchase_return_no'].touched && f['purchase_return_no'].invalid}">
+                  
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">
@@ -699,9 +705,11 @@
                         <button class="btn btn-submit me-2 mb-1" (click)="submit('print')" *ngIf="!loaderPrint">Save & Print</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderPrint" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save & Print</button>
+                        <ng-container *ngIf="isStatusDraft">
                         <button class="btn btn-submit me-2 mb-1" (click)="submit('draft')" *ngIf="!loaderDraft">Save as Draft</button>
                         <button class="btn btn-submit me-2 mb-1" type="submit" *ngIf="loaderDraft" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Save as Draft</button>
+                        </ng-container>
                     </div>
                     <div class="col-lg-4 col-sm-4 col-12">
                         <button class="btn btn-submit me-2 mb-1" *ngIf="!loader" (click)="submit('save')">Save</button>
