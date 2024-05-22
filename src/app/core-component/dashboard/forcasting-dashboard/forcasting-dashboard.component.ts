@@ -45,6 +45,7 @@ export class ForcastingDashboardComponent implements OnInit {
   targetEmployee: FormGroup;
   isAdmin=false;
   isModalOpen:any;
+  fyID:any;
   ngOnInit(): void {
    // blur bg when modal open
    if(this.companyService.CheckBlur$){
@@ -70,6 +71,14 @@ this.isAdmin=true;
         this.isAdmin=false;
       }
     });
+     //22-5
+     if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.fyID=fyId;
+    }
+    //22-5
     this.getBranch();
     const today = new Date();
     const month = today.getMonth();
@@ -134,7 +143,7 @@ this.isAdmin=true;
   getDepartmentWiseTarget() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getDepartmentWiseTarget(this.departmentStartDate, this.departmentEndDate,idString).subscribe((res: any) => {
+    this.dashboardService.getDepartmentWiseTarget(this.departmentStartDate, this.departmentEndDate,idString,this.fyID).subscribe((res: any) => {
       this.departMentList = res;
       // apexchart    
       // this.departmentChartOptions = {
@@ -294,7 +303,7 @@ this.isAdmin=true;
   getEmployeeTarget() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getEmployeeTargetGraph(this.employeeStartDate, this.employeeEndDate,idString).subscribe((res: any) => {
+    this.dashboardService.getEmployeeTargetGraph(this.employeeStartDate, this.employeeEndDate,idString,this.fyID).subscribe((res: any) => {
       this.employeeList = res?.data;
       // apexchart    
       this.employeeChartOptions = {
@@ -371,7 +380,7 @@ this.isAdmin=true;
   getAchieveTarget() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getEployeeTargetAchieved(this.achieveStartDate, this.achieveEndDate,idString).subscribe((res: any) => {
+    this.dashboardService.getEployeeTargetAchieved(this.achieveStartDate, this.achieveEndDate,idString,this.fyID).subscribe((res: any) => {
       this.achieveList = res?.data;
     },err=>{
       //this.toastr.error(err.message);
@@ -395,7 +404,7 @@ this.isAdmin=true;
   getTop10Target() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getEmployeeTop10(this.top10StartDate, this.top10EndDate,idString).subscribe((res: any) => {
+    this.dashboardService.getEmployeeTop10(this.top10StartDate, this.top10EndDate,idString,this.fyID).subscribe((res: any) => {
       this.top10List = res?.data;
     },err=>{
       //this.toastr.error(err.message);
@@ -413,6 +422,8 @@ this.isAdmin=true;
     const date = new Date(formattedDate);
     return this.datePipe.transform(date, 'dd MMM') || '';
   }
+ 
+  //end
    //get branch
    branchList: any[] = [];
    filteredBranchList: any[] = [];

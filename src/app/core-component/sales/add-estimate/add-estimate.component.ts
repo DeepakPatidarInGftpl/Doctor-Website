@@ -268,7 +268,7 @@ export class AddEstimateComponent implements OnInit {
       price: (0),
       // amount: (0),
       discount: new FormControl(''),
-      discount_type: (''),
+      // discount_type: (''),
       tax: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       total: (0),
     })
