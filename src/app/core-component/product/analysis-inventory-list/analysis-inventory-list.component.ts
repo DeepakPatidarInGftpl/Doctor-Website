@@ -33,6 +33,7 @@ export class AnalysisInventoryListComponent implements OnInit {
     endDate: any;
     userDetails: any;
     query:any;
+    fyID:any;
     ngOnInit(): void {
      this.query= this.Arout.snapshot.paramMap.get('query');
       console.log(this.query);
@@ -52,12 +53,17 @@ export class AnalysisInventoryListComponent implements OnInit {
       this.analysisForm = new FormGroup({
         start: new FormControl(formattedStartDate),
         end: new FormControl(formattedToday),
-        
       });
       this.startDate = this.analysisForm.value?.start;
       this.endDate = this.analysisForm.value?.end;
       this.getproductDayBook();
-     
+      //22-5
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.fyID = fyId;
+    }
     }
     // getproductDayBook() {
     //   throw new Error('Method not implemented.');
@@ -86,7 +92,7 @@ export class AnalysisInventoryListComponent implements OnInit {
     }
   productInventoryList:any
     getproductDayBook() {
-      this.dashboardService.getAnalysisInventoryList(this.startDate, this.endDate).subscribe((res:any) => {
+      this.dashboardService.getAnalysisInventoryList(this.startDate, this.endDate,this.fyID).subscribe((res:any) => {
         if(this.query=='slow'){
           this.productInventoryList = res?.slow_product;
         } else if(this.query=='fast'){

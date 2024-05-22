@@ -30,9 +30,9 @@ export class FinancialDashboardComponent implements OnInit {
   public grossChartOptions: Partial<any>;
   public netChartOptions: Partial<any>;
   public netOptions: Partial<any>;
-  public optionsLine:Partial<any>;
-  public currentChart:Partial<any>;
-  public quickChart:Partial<any>;
+  public optionsLine: Partial<any>;
+  public currentChart: Partial<any>;
+  public quickChart: Partial<any>;
   dateRangeOptions = [
     { label: 'Today', value: 'today' },
     { label: 'Yesterday', value: 'yesterday' },
@@ -46,7 +46,7 @@ export class FinancialDashboardComponent implements OnInit {
     { label: 'This Financial Year', value: 'thisFinancialYear' },
     { label: 'Last Financial Year', value: 'lastFinancialYear' },
   ];
-constructor(private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService,private companyService: CompanyService) {
+  constructor(private dashboardService: DashboardService, private datePipe: DatePipe, private toastr: ToastrService, private companyService: CompanyService) {
     this.currentChart = {
       series: [
         {
@@ -58,7 +58,7 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
           data: [50] // Overdue Receivable value
         }
       ],
-   
+
       chart: {
         type: 'bar',
         height: 40,
@@ -81,7 +81,7 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
         categories: ['Current Receivable', 'Overdue Receivable'] // Set category labels
       },
       yaxis: {
-        max:50 + 50, 
+        max: 50 + 50,
         labels: {
           show: false // Hide y-axis labels
         }
@@ -104,11 +104,11 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
       series: [
         {
           name: 'Quick Ration',
-          data: [50] 
+          data: [50]
         },
         {
           name: 'Quick Ratio',
-          data: [50] 
+          data: [50]
         }
       ],
       chart: {
@@ -117,7 +117,7 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
         sparkline: {
           enabled: true // Display as sparkline (compact chart)
         },
-        stacked: true 
+        stacked: true
       },
       plotOptions: {
         bar: {
@@ -130,12 +130,12 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
       },
       xaxis: {
         type: 'category',
-        categories: ['Quick Receivable', 'Quick Receivable'] 
+        categories: ['Quick Receivable', 'Quick Receivable']
       },
       yaxis: {
-        max:50 + 50, 
+        max: 50 + 50,
         labels: {
-          show: false 
+          show: false
         }
       },
       title: {
@@ -149,47 +149,53 @@ constructor(private dashboardService: DashboardService, private datePipe: DatePi
         }
       },
       fill: {
-        colors: ['#F96F03', '#EBEDF2'] 
+        colors: ['#F96F03', '#EBEDF2']
       }
     };
   }
   campaignOne: FormGroup;
-  recvsPayForm:FormGroup;
-  growthForm:FormGroup;
-  grossNetProfitForm:FormGroup;
-  unpaidForm:FormGroup;
-  recievableForm:FormGroup;
-  payableForm:FormGroup;
-  expenseForm:FormGroup;
-  isAdmin=false;
-  isModalOpen:any
+  recvsPayForm: FormGroup;
+  growthForm: FormGroup;
+  grossNetProfitForm: FormGroup;
+  unpaidForm: FormGroup;
+  recievableForm: FormGroup;
+  payableForm: FormGroup;
+  expenseForm: FormGroup;
+  isAdmin = false;
+  isModalOpen: any;
+  fyID: any;
   ngOnInit(): void {
-        // blur bg when modal open
- if(this.companyService.CheckBlur$){
-  this.companyService.CheckBlur$.subscribe((res:any)=>{
-    console.log(res);
-    if(res !== null){
-    if(res){
-      this.isModalOpen = res;
-      console.log(this.isModalOpen);
-    }else if(res==false){
-      this.isModalOpen = res;
-      console.log(this.isModalOpen);
+    // blur bg when modal open
+    if (this.companyService.CheckBlur$) {
+      this.companyService.CheckBlur$.subscribe((res: any) => {
+        console.log(res);
+        if (res !== null) {
+          if (res) {
+            this.isModalOpen = res;
+            console.log(this.isModalOpen);
+          } else if (res == false) {
+            this.isModalOpen = res;
+            console.log(this.isModalOpen);
+          }
+        }
+      });
     }
-  }
-    
-  })
-}
-//end
-
+    //end
 
     this.companyService.userDetails$.subscribe((res: any) => {
-      if (res.role=='admin'){
-this.isAdmin=true;
-      }else{
-        this.isAdmin=false;
+      if (res.role == 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
       }
     });
+    //22-5
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.fyID = fyId;
+    }
     this.getBranch();
     const today = new Date();
     const startDate = new Date(today);
@@ -221,10 +227,10 @@ this.isAdmin=true;
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
     });
-      console.log(this.recvsPayForm.value);
-      this.recPaystartDate = this.recvsPayForm.value?.start;
-      this.recPayEndDate = this.recvsPayForm.value?.end;
-      this.getResPayDates();
+    console.log(this.recvsPayForm.value);
+    this.recPaystartDate = this.recvsPayForm.value?.start;
+    this.recPayEndDate = this.recvsPayForm.value?.end;
+    this.getResPayDates();
     // growth
     this.growthForm = new FormGroup({
       start: new FormControl(formattedStartDate),
@@ -234,96 +240,96 @@ this.isAdmin=true;
     this.growthstartDate = this.growthForm.value?.start;
     this.growthEndDate = this.growthForm.value?.end;
     this.getGrowth();
-       // unpaid 
-       this.unpaidForm = new FormGroup({
-        start: new FormControl(formattedStartDate),
-        end: new FormControl(formattedToday),
-      });
-        console.log(this.unpaidForm.value);
-        this.unpaidstartDate = this.unpaidForm.value?.start;
-        this.unpaidEndDate = this.unpaidForm.value?.end;
-        this.getUnpaid();
-     // recivable 
-     this.recievableForm = new FormGroup({
+    // unpaid 
+    this.unpaidForm = new FormGroup({
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
     });
-      console.log(this.recievableForm.value);
-      this.recievableStartDate = this.recievableForm.value?.start;
-      this.recivableEndDate = this.recievableForm.value?.end;
-      this.getRecivable();
-     // payable 
-     this.payableForm = new FormGroup({
+    console.log(this.unpaidForm.value);
+    this.unpaidstartDate = this.unpaidForm.value?.start;
+    this.unpaidEndDate = this.unpaidForm.value?.end;
+    this.getUnpaid();
+    // recivable 
+    this.recievableForm = new FormGroup({
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
     });
-      console.log(this.payableForm.value);
-      this.payablebleStartDate = this.payableForm.value?.start;
-      this.payableEndDate = this.payableForm.value?.end;
-      this.getPayable();
-     // expense 
-     this.expenseForm = new FormGroup({
+    console.log(this.recievableForm.value);
+    this.recievableStartDate = this.recievableForm.value?.start;
+    this.recivableEndDate = this.recievableForm.value?.end;
+    this.getRecivable();
+    // payable 
+    this.payableForm = new FormGroup({
       start: new FormControl(formattedStartDate),
       end: new FormControl(formattedToday),
     });
-      console.log(this.expenseForm.value);
-      this.expenseStartDate = this.expenseForm.value?.start;
-      this.expenseEndDate = this.expenseForm.value?.end;
-      this.getExpense();
+    console.log(this.payableForm.value);
+    this.payablebleStartDate = this.payableForm.value?.start;
+    this.payableEndDate = this.payableForm.value?.end;
+    this.getPayable();
+    // expense 
+    this.expenseForm = new FormGroup({
+      start: new FormControl(formattedStartDate),
+      end: new FormControl(formattedToday),
+    });
+    console.log(this.expenseForm.value);
+    this.expenseStartDate = this.expenseForm.value?.start;
+    this.expenseEndDate = this.expenseForm.value?.end;
+    this.getExpense();
   }
 
-   //sale
-   startDate: any;
-   endDate: any;
-   getSelectedDates() {
-     console.log(this.campaignOne.value);
-     const start = this.datePipe.transform(this.campaignOne.value.start, 'yyyy-MM-dd');
-     const end = this.datePipe.transform(this.campaignOne.value.end, 'yyyy-MM-dd');
-     console.log(start);
-     console.log(end);
-     this.startDate = start;
-     this.endDate = end;
-     this.getSaleTotalDashboard();
-     this.grossNetProfitForm.patchValue({
-      start:this.startDate,
-      end:this.endDate
-     })
-     this.getSelectedGrossDates();
-   }
-   saleTotalList: any;
-   getSaleTotalDashboard() {
+  //sale
+  startDate: any;
+  endDate: any;
+  getSelectedDates() {
+    console.log(this.campaignOne.value);
+    const start = this.datePipe.transform(this.campaignOne.value.start, 'yyyy-MM-dd');
+    const end = this.datePipe.transform(this.campaignOne.value.end, 'yyyy-MM-dd');
+    console.log(start);
+    console.log(end);
+    this.startDate = start;
+    this.endDate = end;
+    this.getSaleTotalDashboard();
+    this.grossNetProfitForm.patchValue({
+      start: this.startDate,
+      end: this.endDate
+    })
+    this.getSelectedGrossDates();
+  }
+  saleTotalList: any;
+  getSaleTotalDashboard() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-     this.dashboardService.getSalesNumber(this.startDate, this.endDate,idString).subscribe((res: any) => {
-       console.log(res);
-       this.saleTotalList = res;
-     },err=>{
+    this.dashboardService.getSalesNumber(this.startDate, this.endDate, idString,this.fyID).subscribe((res: any) => {
+      console.log(res);
+      this.saleTotalList = res;
+    }, err => {
       //this.toastr.error(err.message);
     })
-   }
-   //end
-   //gross net profit
-   grossStartDate: any;
-   grossEndDate: any;
-   getSelectedGrossDates() {
-     console.log(this.grossNetProfitForm.value);
-     const start = this.datePipe.transform(this.grossNetProfitForm.value.start, 'yyyy-MM-dd');
-     const end = this.datePipe.transform(this.grossNetProfitForm.value.end, 'yyyy-MM-dd');
-     this.grossStartDate = start;
-     this.grossEndDate = end;
-     this.getGross();
-   }
-   grossList: any;
-   getGross() {
+  }
+  //end
+  //gross net profit
+  grossStartDate: any;
+  grossEndDate: any;
+  getSelectedGrossDates() {
+    console.log(this.grossNetProfitForm.value);
+    const start = this.datePipe.transform(this.grossNetProfitForm.value.start, 'yyyy-MM-dd');
+    const end = this.datePipe.transform(this.grossNetProfitForm.value.end, 'yyyy-MM-dd');
+    this.grossStartDate = start;
+    this.grossEndDate = end;
+    this.getGross();
+  }
+  grossList: any;
+  getGross() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getGrossNetProfit(this.grossStartDate, this.grossEndDate,idString).subscribe((res: any) => {
+    this.dashboardService.getGrossNetProfit(this.grossStartDate, this.grossEndDate, idString,this.fyID).subscribe((res: any) => {
       console.log(res);
-      this.grossList=res
+      this.grossList = res
       const grossProfitPercentage = res?.gross_profit_percentage || 0;
 
       this.grossChartOptions = {
-        series: [this.grossList?.gross_profit_percentage],   
+        series: [this.grossList?.gross_profit_percentage],
         chart: {
           height: 180,
           type: "radialBar"
@@ -342,7 +348,7 @@ this.isAdmin=true;
                 offsetY: 10, // Adjust the vertical position of the value
                 fontSize: '26px', // Set the font size of the value
                 color: '#000', // Set the color of the value
-                fontWeight:700,
+                fontWeight: 700,
                 formatter: function (val: any) {
                   return val + '%'; // Format the value with a percentage symbol
                 }
@@ -351,12 +357,12 @@ this.isAdmin=true;
           }
         },
         fill: {
-              colors: ['#808080'] 
-            }
+          colors: ['#808080']
+        }
       };
       //net chart
       const netProfitPercentage = res?.net_profit_percentage || 0;
-     
+
       this.netChartOptions = {
         series: [this.grossList?.net_profit_percentage],
         chart: {
@@ -377,12 +383,12 @@ this.isAdmin=true;
                 offsetY: 10, // Adjust the vertical position of the value
                 fontSize: '26px', // Set the font size of the value
                 color: '#000', // Set the color of the value
-                fontWeight:700,
+                fontWeight: 700,
                 formatter: function (val: any) {
                   return val + '%'; // Format the value with a percentage symbol
                 }
               }
-            
+
             }
           }
         },
@@ -391,12 +397,12 @@ this.isAdmin=true;
           colors: ['#808080']
         }
       };
-      
-    },err=>{
+
+    }, err => {
       // //this.toastr.error(err.message);
     });
   }
-   //end
+  //end
   //payablevsrecvble
   recPaystartDate: any;
   recPayEndDate: any;
@@ -414,7 +420,7 @@ this.isAdmin=true;
   getResvsPay() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getTotalRecvsPay(this.recPaystartDate, this.recPayEndDate,idString).subscribe((res: any) => {
+    this.dashboardService.getTotalRecvsPay(this.recPaystartDate, this.recPayEndDate, idString,this.fyID).subscribe((res: any) => {
       console.log(res);
       this.resPayList = res;
       this.chartOptions = {
@@ -450,7 +456,7 @@ this.isAdmin=true;
           categories: ['Current Receivable', 'Overdue Receivable'] // Set category labels
         },
         yaxis: {
-          max: this.resPayList?.current_receivable + this.resPayList?.overdue_receivable, 
+          max: this.resPayList?.current_receivable + this.resPayList?.overdue_receivable,
           labels: {
             show: false // Hide y-axis labels
           }
@@ -469,7 +475,7 @@ this.isAdmin=true;
           colors: ['#F96F03', '#EBEDF2'] // Assign colors to the bars
         }
       };
-      
+
       this.PayablechartOptions = {
         series: [
           {
@@ -478,7 +484,7 @@ this.isAdmin=true;
           },
           {
             name: 'Overdue Payables',
-            data: [this.resPayList?.overdue_payables] 
+            data: [this.resPayList?.overdue_payables]
           }
         ],
         chart: {
@@ -503,7 +509,7 @@ this.isAdmin=true;
           categories: ['Current Payables', 'Overdue Payables'] // Set category labels
         },
         yaxis: {
-          max: this.resPayList?.current_payables + this.resPayList?.overdue_payables, 
+          max: this.resPayList?.current_payables + this.resPayList?.overdue_payables,
           labels: {
             show: false // Hide y-axis labels
           }
@@ -522,12 +528,12 @@ this.isAdmin=true;
           colors: ['#F96F03', '#EBEDF2'] // Assign colors to the bars
         }
       };
-    },err=>{
+    }, err => {
       //this.toastr.error(err.message);
     });
   }
   //end
-//growth 
+  //growth 
   growthstartDate: any;
   growthEndDate: any;
   getGrowthDates() {
@@ -544,14 +550,14 @@ this.isAdmin=true;
   getGrowth() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getGrowth(this.growthstartDate, this.growthEndDate,idString).subscribe((res: any) => {
+    this.dashboardService.getGrowth(this.growthstartDate, this.growthEndDate, idString,this.fyID).subscribe((res: any) => {
       console.log(res);
       const achievedAndForecasted = res?.["achieved and forcasted"] || [];
       const growthData = res?.growth_data || [];
       const categories = achievedAndForecasted.map(entry => `${this.getMonthName(entry.month)} ${entry.year}`);
       const series = [
-        { name: 'Achieved', data: achievedAndForecasted.map(entry => entry.achieved) ,color: '#00ff00'},
-        { name: 'Forecasted', data: achievedAndForecasted.map(entry => entry.forcasted) ,color: '#0000ff'},
+        { name: 'Achieved', data: achievedAndForecasted.map(entry => entry.achieved), color: '#00ff00' },
+        { name: 'Forecasted', data: achievedAndForecasted.map(entry => entry.forcasted), color: '#0000ff' },
         { name: 'Growth Achieved', data: growthData.map(entry => entry.forcasted) },
       ];
       this.GrowthchartOptions = {
@@ -576,7 +582,7 @@ this.isAdmin=true;
         stroke: {
           // curve: "straight"
           curve: "smooth",
-           width: 2
+          width: 2
         },
         title: {
           // text: "Product Trends by Month",
@@ -607,8 +613,8 @@ this.isAdmin=true;
           offsetY: -20
         }
       };
-    
-    },err=>{
+
+    }, err => {
       //this.toastr.error(err.message);
     });
   }
@@ -620,105 +626,105 @@ this.isAdmin=true;
     return months[monthNumber - 1];
   }
   //end
-//unpaid invoice
-   unpaidstartDate: any;
-   unpaidEndDate: any;
-   getUnpaidDates() {
-     console.log(this.unpaidForm.value);
-     const start = this.datePipe.transform(this.unpaidForm.value.start, 'yyyy-MM-dd');
-     const end = this.datePipe.transform(this.unpaidForm.value.end, 'yyyy-MM-dd');
-     console.log(start);
-     console.log(end);
-     this.unpaidstartDate = start;
-     this.unpaidEndDate = end;
-     this.getUnpaid();
-   }
-   unPaidList: any;
-   getUnpaid() {
+  //unpaid invoice
+  unpaidstartDate: any;
+  unpaidEndDate: any;
+  getUnpaidDates() {
+    console.log(this.unpaidForm.value);
+    const start = this.datePipe.transform(this.unpaidForm.value.start, 'yyyy-MM-dd');
+    const end = this.datePipe.transform(this.unpaidForm.value.end, 'yyyy-MM-dd');
+    console.log(start);
+    console.log(end);
+    this.unpaidstartDate = start;
+    this.unpaidEndDate = end;
+    this.getUnpaid();
+  }
+  unPaidList: any;
+  getUnpaid() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-     this.dashboardService.getUnpaidInvoices(this.unpaidstartDate, this.unpaidEndDate,idString).subscribe((res: any) => {
-       console.log(res);
-       this.unPaidList = res;
-     });
-   }
-   //end
-   //reciavable start
-   recievableStartDate: any;
-   recivableEndDate: any;
-   getRecivableDates() {
-     console.log(this.recievableForm.value);
-     const start = this.datePipe.transform(this.recievableForm.value.start, 'yyyy-MM-dd');
-     const end = this.datePipe.transform(this.recievableForm.value.end, 'yyyy-MM-dd');
-     console.log(start);
-     console.log(end);
-     this.recievableStartDate = start;
-     this.recivableEndDate = end;
-     this.getRecivable();
-   }
-   recievableList: any;
-   getRecivable() {
+    this.dashboardService.getUnpaidInvoices(this.unpaidstartDate, this.unpaidEndDate, idString,this.fyID).subscribe((res: any) => {
+      console.log(res);
+      this.unPaidList = res;
+    });
+  }
+  //end
+  //reciavable start
+  recievableStartDate: any;
+  recivableEndDate: any;
+  getRecivableDates() {
+    console.log(this.recievableForm.value);
+    const start = this.datePipe.transform(this.recievableForm.value.start, 'yyyy-MM-dd');
+    const end = this.datePipe.transform(this.recievableForm.value.end, 'yyyy-MM-dd');
+    console.log(start);
+    console.log(end);
+    this.recievableStartDate = start;
+    this.recivableEndDate = end;
+    this.getRecivable();
+  }
+  recievableList: any;
+  getRecivable() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-     this.dashboardService.getTotalReceivables(this.recievableStartDate, this.recivableEndDate,idString).subscribe((res: any) => {
-       console.log(res);
-       this.recievableList = res;
-     },err=>{
+    this.dashboardService.getTotalReceivables(this.recievableStartDate, this.recivableEndDate, idString,this.fyID).subscribe((res: any) => {
+      console.log(res);
+      this.recievableList = res;
+    }, err => {
       //this.toastr.error(err.message);
     });
-   }
-   //end
-    //payable
-    payablebleStartDate: any;
-    payableEndDate: any;
-    getPayableDates() {
-      console.log(this.payableForm.value);
-      const start = this.datePipe.transform(this.payableForm.value.start, 'yyyy-MM-dd');
-      const end = this.datePipe.transform(this.payableForm.value.end, 'yyyy-MM-dd');
-      console.log(start);
-      console.log(end);
-      this.payablebleStartDate = start;
-      this.payableEndDate = end;
-      this.getPayable();
-    }
-    payableList: any;
-    getPayable() {
-      const idString = JSON.stringify(this.selectData);
-      console.log(idString);
-      this.dashboardService.getTodayPayables(this.payablebleStartDate, this.payableEndDate,idString).subscribe((res: any) => {
-        console.log(res);
-        this.payableList = res;
-      },err=>{
-        //this.toastr.error(err.message);
-      });
-    }
-    //end
-      //expense
-      expenseStartDate: any;
-      expenseEndDate: any;
-      getExpenseDates() {
-        console.log(this.expenseForm.value);
-        const start = this.datePipe.transform(this.expenseForm.value.start, 'yyyy-MM-dd');
-        const end = this.datePipe.transform(this.expenseForm.value.end, 'yyyy-MM-dd');
-        console.log(start);
-        console.log(end);
-        this.expenseStartDate = start;
-        this.expenseEndDate = end;
-        this.getExpense();
-      }
-      expenseList: any;
-      getExpense() {
-        const idString = JSON.stringify(this.selectData);
-        console.log(idString);
-        this.dashboardService.getTodayExpense(this.expenseStartDate, this.expenseEndDate,idString).subscribe((res: any) => {
-          console.log(res);
-          this.expenseList = res?.data;
-        },err=>{
-          //this.toastr.error(err.message);
-        });
-      }
-      //end
-   private formatDate(date: Date): string {
+  }
+  //end
+  //payable
+  payablebleStartDate: any;
+  payableEndDate: any;
+  getPayableDates() {
+    console.log(this.payableForm.value);
+    const start = this.datePipe.transform(this.payableForm.value.start, 'yyyy-MM-dd');
+    const end = this.datePipe.transform(this.payableForm.value.end, 'yyyy-MM-dd');
+    console.log(start);
+    console.log(end);
+    this.payablebleStartDate = start;
+    this.payableEndDate = end;
+    this.getPayable();
+  }
+  payableList: any;
+  getPayable() {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getTodayPayables(this.payablebleStartDate, this.payableEndDate, idString,this.fyID).subscribe((res: any) => {
+      console.log(res);
+      this.payableList = res;
+    }, err => {
+      //this.toastr.error(err.message);
+    });
+  }
+  //end
+  //expense
+  expenseStartDate: any;
+  expenseEndDate: any;
+  getExpenseDates() {
+    console.log(this.expenseForm.value);
+    const start = this.datePipe.transform(this.expenseForm.value.start, 'yyyy-MM-dd');
+    const end = this.datePipe.transform(this.expenseForm.value.end, 'yyyy-MM-dd');
+    console.log(start);
+    console.log(end);
+    this.expenseStartDate = start;
+    this.expenseEndDate = end;
+    this.getExpense();
+  }
+  expenseList: any;
+  getExpense() {
+    const idString = JSON.stringify(this.selectData);
+    console.log(idString);
+    this.dashboardService.getTodayExpense(this.expenseStartDate, this.expenseEndDate, idString,this.fyID).subscribe((res: any) => {
+      console.log(res);
+      this.expenseList = res?.data;
+    }, err => {
+      //this.toastr.error(err.message);
+    });
+  }
+  //end
+  private formatDate(date: Date): string {
     return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
   }
   formatDateMonth(dateString: string): string {
@@ -777,7 +783,7 @@ this.isAdmin=true;
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
-        } 
+        }
         break;
 
       case 'thisMonth':
@@ -792,7 +798,7 @@ this.isAdmin=true;
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
-        } 
+        }
         break;
 
       case 'lastMonth':
@@ -853,7 +859,7 @@ this.isAdmin=true;
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
-        } 
+        }
         break;
       case 'lastQuarter':
         const lastQuarterStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 5, 1);
@@ -882,7 +888,7 @@ this.isAdmin=true;
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
-        } 
+        }
         break;
 
       case 'lastFinancialYear':
@@ -897,71 +903,71 @@ this.isAdmin=true;
           this.startDate = this.campaignOne.value?.start;
           this.endDate = this.campaignOne.value?.end;
           this.getSaleTotalDashboard();
-        } 
+        }
         break;
       default:
         break;
     }
   }
 
-   //get branch
-   branchList: any[] = [];
-   filteredBranchList: any[] = [];
-   searchBranch: string = '';
-   getBranch() {
-     this.dashboardService.getBranch().subscribe((res: any) => {
-       this.branchList = res;
-       this.filteredBranchList = [...this.branchList];
-     });
-   }
-   filterBranch() {
-     if (this.searchBranch.trim() === '') {
-       this.filteredBranchList = [...this.branchList];
-     } else {
-       this.filteredBranchList = this.branchList.filter(feature =>
-         feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
-       );
-     }
-   }
-   // add remove branch 
-   searchVariant = ''
-   selectData: any[] = [];
-   selectedCategoryIds: any[] = []
-   SelectedBranch(variant: any,event:any) {
-     if(event){
-       console.log(variant);
-       this.selectData.push(variant)
-       console.log(this.selectData, 'selected data');
-       //close dropdown 
-       this.searchVariant = '';
-       this.getSaleTotalDashboard();
-       this.getGross();
-       this.getResvsPay();
-       this.getGrowth();
-       this.getUnpaid();
-       this.getRecivable();
-       this.getPayable();
-       this.getExpense();
-     }else{
-       const selectedIndex = this.selectData.findIndex(item => item == variant);
-       console.log(selectedIndex);
-       if (selectedIndex !== -1) {
-         this.selectData.splice(selectedIndex, 1);
-         this.getSaleTotalDashboard();
-         this.getGross();
-         this.getResvsPay();
-         this.getGrowth();
-         this.getUnpaid();
-         this.getRecivable();
-         this.getPayable();
-         this.getExpense();
-       }
-       console.log(this.selectData);
-     }
-   }
-     //dropdown auto close stop
-     onLabelClick(event: Event) {
-       // Prevent the event from propagating to the dropdown menu
-       event.stopPropagation();
-     }
+  //get branch
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.dashboardService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.getSaleTotalDashboard();
+      this.getGross();
+      this.getResvsPay();
+      this.getGrowth();
+      this.getUnpaid();
+      this.getRecivable();
+      this.getPayable();
+      this.getExpense();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+        this.getSaleTotalDashboard();
+        this.getGross();
+        this.getResvsPay();
+        this.getGrowth();
+        this.getUnpaid();
+        this.getRecivable();
+        this.getPayable();
+        this.getExpense();
+      }
+      console.log(this.selectData);
+    }
+  }
+  //dropdown auto close stop
+  onLabelClick(event: Event) {
+    // Prevent the event from propagating to the dropdown menu
+    event.stopPropagation();
+  }
 }

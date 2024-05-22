@@ -10,7 +10,7 @@ export class DashboardService {
   constructor(private http: HttpClient) { }
   apiUrl = `${environment.api}`;
 
-  getSalesNumber(from_date: any, to_date: any,branch:any): Observable<any> {
+  getSalesNumber(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/numbers/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -22,6 +22,9 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
@@ -29,7 +32,7 @@ export class DashboardService {
   }
   // /pv-api/customer-retention-rate/?start_date=2024-02-01&end_date=2024-02-20
 
-  getCutomerRetention(start_date: any, end_date: any,branch:any): Observable<any> {
+  getCutomerRetention(start_date: any, end_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/customer-retention-rate/';
     const queryParams: any[] = [];
     if (start_date) {
@@ -41,13 +44,16 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
 
-  getTotalSalePurchase(from_date: any, to_date: any,branch:any): Observable<any> {
+  getTotalSalePurchase(from_date: any, to_date: any,branch:any, fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/total-sale-vs-total-purchase/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -59,13 +65,16 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
   
-  getDailySales(from_date: any, to_date: any,branch:any): Observable<any> {
+  getDailySales(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/daily-sales/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -77,13 +86,16 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
 
-  getSalevsPurchase(from_date: any, to_date: any,branch:any): Observable<any> {
+  getSalevsPurchase(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/sale_vs_purchase/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -95,13 +107,16 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
 
-  getCategoryWiseSale(from_date: any, to_date: any,branch:any): Observable<any> {
+  getCategoryWiseSale(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/category-wise-sale/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -113,12 +128,15 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
-  getSubCatWiseSale(from_date: any, to_date: any,branch:any): Observable<any> {
+  getSubCatWiseSale(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/subcategory-wise-sale/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -130,12 +148,15 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
-  getInventory(start_date: any, end_date: any,branch:any): Observable<any> {
+  getInventory(start_date: any, end_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/fsn-analysis/';
     const queryParams: any[] = [];
     if (start_date) {
@@ -147,6 +168,9 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
@@ -156,7 +180,7 @@ export class DashboardService {
     let url=this.apiUrl+'/pv-api/dashboard/customers-activity/';
     return this.http.get(url);
   }
-  getTopCustomer(from_date: any, to_date: any,branch:any): Observable<any> {
+  getTopCustomer(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/top-20-customers/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -168,12 +192,15 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
-  getRecentlySales(from_date: any, to_date: any,branch:any): Observable<any> {
+  getRecentlySales(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/recently-sale/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -185,12 +212,15 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
-  getRecentlyAddedProduct(from_date: any, to_date: any,branch:any): Observable<any> {
+  getRecentlyAddedProduct(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/recently-added-products/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -202,12 +232,15 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
-  getBestSellingProduct(from_date: any, to_date: any,branch:any): Observable<any> {
+  getBestSellingProduct(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/best-selling-products/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -219,12 +252,15 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
-  getLeastSellingProduct(from_date: any, to_date: any,branch:any): Observable<any> {
+  getLeastSellingProduct(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/least-selling-products/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -236,6 +272,9 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
@@ -243,7 +282,7 @@ export class DashboardService {
   }
   // -> financial 
 // totalrecievavle vs total payable
-  getTotalRecvsPay(from_date: any, to_date: any,branch:any): Observable<any> {
+  getTotalRecvsPay(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/total-receivables-vs-total-payables/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -255,13 +294,16 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
 
-  getGrowth(from_date: any, to_date: any,branch:any): Observable<any> {
+  getGrowth(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/growth-graph/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -273,13 +315,16 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
 
-  getGrossNetProfit(start_date: any, end_date: any,branch:any): Observable<any> {
+  getGrossNetProfit(start_date: any, end_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/gross-profit-net-profit/';
     const queryParams: any[] = [];
     if (start_date) {
@@ -291,13 +336,16 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
  
-  getUnpaidInvoices(from_date: any, to_date: any,branch:any): Observable<any> {
+  getUnpaidInvoices(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/unpaid-invoices/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -309,12 +357,15 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
-  getTotalReceivables(from_date: any, to_date: any,branch:any): Observable<any> {
+  getTotalReceivables(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/total-receivable/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -326,12 +377,16 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
+    
     return this.http.get<any>(url);
   }
-  getTodayPayables(from_date: any, to_date: any,branch:any): Observable<any> {
+  getTodayPayables(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/total-payable/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -343,12 +398,15 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
-  getTodayExpense(from_date: any, to_date: any,branch:any): Observable<any> {
+  getTodayExpense(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/expenses/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -360,6 +418,9 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
@@ -367,7 +428,7 @@ export class DashboardService {
   }
   // forcasting & sales man 
 
-  getDepartmentWiseTarget(from_date: any, to_date: any,branch:any): Observable<any> {
+  getDepartmentWiseTarget(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/departments_wise_targets/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -379,13 +440,16 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
   
-  getEployeeTargetAchieved(from_date: any, to_date: any,branch:any): Observable<any> {
+  getEployeeTargetAchieved(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/employee-target-achievement/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -397,13 +461,16 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     
     return this.http.get<any>(url);
   }
-  getEmployeeTop10(from_date: any, to_date: any,branch:any): Observable<any> {
+  getEmployeeTop10(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/top-10-employess/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -415,12 +482,15 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
     return this.http.get<any>(url);
   }
-  getEmployeeTargetGraph(from_date: any, to_date: any,branch:any): Observable<any> {
+  getEmployeeTargetGraph(from_date: any, to_date: any,branch:any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/employee-target-graph/';
     const queryParams: any[] = [];
     if (from_date) {
@@ -432,6 +502,9 @@ export class DashboardService {
     if (branch) {
       queryParams.push(`branch=${branch}`);
     }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
@@ -439,7 +512,7 @@ export class DashboardService {
   }
 
   // analysyx inventory management list
-  getAnalysisInventoryList(start_date: any, end_date: any,): Observable<any> {
+  getAnalysisInventoryList(start_date: any, end_date: any,fy:any): Observable<any> {
     let url = this.apiUrl + '/pv-api/dashboard/fsn-analysis-product-list/';
     const queryParams: any[] = [];
     if (start_date) {
@@ -451,6 +524,9 @@ export class DashboardService {
     // if (branch) {
     //   queryParams.push(`branch=${branch}`);
     // }
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
     if (queryParams.length > 0) {
       url += '?' + queryParams.join('&');
     }
@@ -466,7 +542,7 @@ export class DashboardService {
 // daybook day close
 //- /api/reports/profit_and_loss/?start_date=2023-01-01&end_date=2024-01-01
 
-getDayBook(start_date: any, end_date: any,): Observable<any> {
+getDayBook(start_date: any, end_date: any,fy:any): Observable<any> {
   let url = this.apiUrl + '/api/reports/profit_and_loss/';
   const queryParams: any[] = [];
   if (start_date) {
@@ -477,6 +553,9 @@ getDayBook(start_date: any, end_date: any,): Observable<any> {
   }
   if (queryParams.length > 0) {
     url += '?' + queryParams.join('&');
+  }
+  if (fy) {
+    queryParams.push(`financial_year=${fy}`);
   }
   return this.http.get<any>(url);
 }
