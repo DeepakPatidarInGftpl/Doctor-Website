@@ -314,7 +314,7 @@ if(this.companyService.CheckBlur$){
       item_name: (''),
       qty: (1),
       price: (0),
-      discount_type: (''),
+      // discount_type: (''),
       // discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
       discount: new FormControl(''),
       additional_discount: new FormControl(0, [Validators.pattern(/^(100|[0-9]{1,2})$/)]),

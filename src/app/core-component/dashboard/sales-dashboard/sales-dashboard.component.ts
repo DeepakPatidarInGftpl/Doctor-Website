@@ -77,6 +77,7 @@ export class SalesDashboardComponent implements OnInit {
 
   isAdmin=false;
   isModalOpen:any;
+  fyID:any;
   ngOnInit(): void {
 // blur bg when modal open
 if(this.companyService.CheckBlur$){
@@ -91,8 +92,7 @@ if(this.companyService.CheckBlur$){
       console.log(this.isModalOpen);
     }
   }
-    
-  })
+  });
 }
 //end
     this.companyService.userDetails$.subscribe((res: any) => {
@@ -102,6 +102,14 @@ this.isAdmin=true;
         this.isAdmin=false;
       }
     });
+     //22-5
+     if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.fyID=fyId;
+    }
+    //22-5
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
@@ -240,7 +248,7 @@ this.isAdmin=true;
   getSaleTotalDashboard() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getSalesNumber(this.startDate, this.endDate, idString).subscribe((res: any) => {
+    this.dashboardService.getSalesNumber(this.startDate, this.endDate, idString,this.fyID).subscribe((res: any) => {
       console.log(res);
       this.saleTotalList = res;
       // },err=>{
@@ -252,7 +260,7 @@ this.isAdmin=true;
   getCustomerRetention() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getCutomerRetention(this.startDate, this.endDate, idString).subscribe((res: any) => {
+    this.dashboardService.getCutomerRetention(this.startDate, this.endDate, idString,this.fyID).subscribe((res: any) => {
       console.log(res);
       this.customerRetentionList = res;
     }, err => {
@@ -264,7 +272,7 @@ this.isAdmin=true;
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
 
-    this.dashboardService.getTotalSalePurchase(this.startDate, this.endDate, idString).subscribe((res: any) => {
+    this.dashboardService.getTotalSalePurchase(this.startDate, this.endDate, idString,this.fyID).subscribe((res: any) => {
       console.log(res);
       this.salePurchaseList = res;
       this.saleTotalChartOption = {
@@ -322,7 +330,7 @@ this.isAdmin=true;
   getDailySales() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getDailySales(this.dailySalesStartDate, this.dailySalesEndDate, idString).subscribe((res: any) => {
+    this.dashboardService.getDailySales(this.dailySalesStartDate, this.dailySalesEndDate, idString,this.fyID).subscribe((res: any) => {
       if (res?.success) {
         this.dailySalesList = res?.data;
         // apexchart    
@@ -405,7 +413,7 @@ this.isAdmin=true;
   getSalePurchaseTotalDashboard() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getSalevsPurchase(this.salePurchaseStartDate, this.salePurchaseEndDate, idString).subscribe((res: any) => {
+    this.dashboardService.getSalevsPurchase(this.salePurchaseStartDate, this.salePurchaseEndDate, idString,this.fyID).subscribe((res: any) => {
       if (res.success) {
         this.salevsPurchaseList = res?.data;
         // apexchart    
@@ -479,7 +487,7 @@ this.isAdmin=true;
   getcategoryWiseSale() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getSubCatWiseSale(this.categoryWiseSaleStartDate, this.categoryWiseSaleEndDate, idString).subscribe((res: any) => {
+    this.dashboardService.getSubCatWiseSale(this.categoryWiseSaleStartDate, this.categoryWiseSaleEndDate, idString,this.fyID).subscribe((res: any) => {
       if (res?.success) {
         this.categoryWiseSaleList = res?.data;
         // apexchart    
@@ -567,7 +575,7 @@ this.isAdmin=true;
   getsubCatSale() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getCategoryWiseSale(this.subCatSaleStartDate, this.subCatSaleEndDate, idString).subscribe((res: any) => {
+    this.dashboardService.getCategoryWiseSale(this.subCatSaleStartDate, this.subCatSaleEndDate, idString,this.fyID).subscribe((res: any) => {
       if (res?.success) {
         this.subCatSaleList = res?.data;
         // apexchart    
@@ -623,7 +631,7 @@ this.isAdmin=true;
   getInventory() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getInventory(this.inventoryStartDate, this.inventoryEndDate, idString).subscribe((res: any) => {
+    this.dashboardService.getInventory(this.inventoryStartDate, this.inventoryEndDate, idString,this.fyID).subscribe((res: any) => {
       const inventoryData = res?.inventory_category_percentage || {};
       const categories = Object.keys(inventoryData);
       const values = Object.values(inventoryData);
@@ -703,7 +711,7 @@ this.isAdmin=true;
   getcustomer() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getTopCustomer(this.customerStartDate, this.customerEndDate, idString).subscribe((res: any) => {
+    this.dashboardService.getTopCustomer(this.customerStartDate, this.customerEndDate, idString,this.fyID).subscribe((res: any) => {
       this.customerList = res?.data;
     }, err => {
       //this.toastr.error(err.message);
@@ -728,7 +736,7 @@ this.isAdmin=true;
   getRecentSale() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getRecentlySales(this.customerStartDate, this.customerEndDate, idString).subscribe((res: any) => {
+    this.dashboardService.getRecentlySales(this.customerStartDate, this.customerEndDate, idString,this.fyID).subscribe((res: any) => {
       this.recentSalesList = res?.data;
     }, err => {
       //this.toastr.error(err.message);
@@ -752,7 +760,7 @@ this.isAdmin=true;
   getRecentProduct() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getRecentlyAddedProduct(this.recentProductStartDate, this.recentProductEndDate, idString).subscribe((res: any) => {
+    this.dashboardService.getRecentlyAddedProduct(this.recentProductStartDate, this.recentProductEndDate, idString,this.fyID).subscribe((res: any) => {
       this.recentProductList = res?.data;
       this.recentProductList.forEach((res: any, index: any) => {
         this.sho[index] = true;
@@ -785,7 +793,7 @@ this.isAdmin=true;
   getbestProduct() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getBestSellingProduct(this.bestProductStartDate, this.bestProductEndDate, idString).subscribe((res: any) => {
+    this.dashboardService.getBestSellingProduct(this.bestProductStartDate, this.bestProductEndDate, idString,this.fyID).subscribe((res: any) => {
       this.bestProductList = res?.data;
     }, err => {
       //this.toastr.error(err.message);
@@ -809,7 +817,7 @@ this.isAdmin=true;
   getleastProduct() {
     const idString = JSON.stringify(this.selectData);
     console.log(idString);
-    this.dashboardService.getLeastSellingProduct(this.leastProductStartDate, this.leastProductEndDate, idString).subscribe((res: any) => {
+    this.dashboardService.getLeastSellingProduct(this.leastProductStartDate, this.leastProductEndDate, idString,this.fyID).subscribe((res: any) => {
       this.leastProductList = res?.data;
     }, err => {
       //this.toastr.error(err.message);
@@ -1295,7 +1303,8 @@ this.isAdmin=true;
     this.sho[i] = true;
     this.sho1[i] = false;
   }
-
+  
+  //end
   //get branch
   branchList: any[] = [];
   filteredBranchList: any[] = [];
