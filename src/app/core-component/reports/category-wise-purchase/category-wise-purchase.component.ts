@@ -50,8 +50,27 @@ export class CategoryWisePurchaseComponent implements OnInit {
   
   
     userDetails: any;
-    ngOnInit(): void {
-      this.cs.userDetails$.subscribe((userDetails:any) => {
+   //23-5
+   isAdmin=false;
+   fyID:any;
+ ngOnInit(): void {
+     //23-5
+     if (localStorage.getItem('financialYear')) {
+       let fy = localStorage.getItem('financialYear');
+       console.warn(JSON.parse(fy));
+       let fyId = JSON.parse(fy);
+       this.fyID=fyId;
+     }
+     this.cs.userDetails$.subscribe((res: any) => {
+       if (res.role == 'admin') {
+         this.isAdmin = true;
+       } else {
+         this.isAdmin = false;
+       }
+       this.getBranch();
+     });
+ //23 
+    this.cs.userDetails$.subscribe((userDetails:any) => {
         this.userDetails = userDetails;
         console.log(userDetails);
         this.userName=userDetails?.username
@@ -175,7 +194,7 @@ export class CategoryWisePurchaseComponent implements OnInit {
     categoryWisePurchaseList: any
     getCategoryWisePurchase() {
       
-      this.reportService.getCategoryWisePurchase(this.startDate, this.endDate, this.category).subscribe((res) => {
+      this.reportService.getCategoryWisePurchase(this.startDate, this.endDate, this.category,this.fyID,this.selectData).subscribe((res) => {
         console.log(res);
         this.categoryWisePurchaseList = res;
       })
@@ -397,6 +416,48 @@ this.formatDate(isFirstInvoice ? bill_date : '',),
       this.itemsPerPage = this.categoryWisePurchaseList?.length;
     }
   }
+        //23-5
+        branchList: any[] = [];
+        filteredBranchList: any[] = [];
+        searchBranch: string = '';
+        getBranch() {
+          this.reportService.getBranch().subscribe((res: any) => {
+            this.branchList = res;
+            this.filteredBranchList = [...this.branchList];
+          });
+        }
+        filterBranch() {
+          if (this.searchBranch.trim() === '') {
+            this.filteredBranchList = [...this.branchList];
+          } else {
+            this.filteredBranchList = this.branchList.filter(feature =>
+              feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+            );
+          }
+        }
+        // add remove branch 
+        searchVariant = ''
+        selectData: any[] = [];
+        selectedCategoryIds: any[] = []
+        SelectedBranch(variant: any, event: any) {
+          if (event) {
+            console.log(variant);
+            this.selectData.push(variant)
+            console.log(this.selectData, 'selected data');
+            //close dropdown 
+            this.searchVariant = '';
+            this.ngOnInit();
+          } else {
+            const selectedIndex = this.selectData.findIndex(item => item == variant);
+            console.log(selectedIndex);
+            if (selectedIndex !== -1) {
+              this.selectData.splice(selectedIndex, 1);
+            }
+            this.ngOnInit();
+            console.log(this.selectData);
+          }
+        }
+      //23-5
   }
   
   
