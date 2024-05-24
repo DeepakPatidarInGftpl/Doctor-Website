@@ -62,27 +62,27 @@
 
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
-            <label>Consumtion Series</label>
-            <input type="text" formControlName="consumption_no" placeholder="Enter Consumtion No." id="consumption_no" [ngClass]="{ 'is-invalid': f['consumption_no'].touched && f['consumption_no'].invalid}">
+            <label>Consumption Series</label>
+            <input type="text" formControlName="consumption_no" placeholder="Enter Consumption No." id="consumption_no" [ngClass]="{ 'is-invalid': f['consumption_no'].touched && f['consumption_no'].invalid}">
             <!-- <select formControlName="consumption_no">
               <option value="" selected disabled>Select Consumtion Series
               </option>
               <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
           </select> -->
-            <span class="text-danger" *ngIf="consumption_no && consumption_no.invalid && consumption_no.touched">Enter Consumtion Series</span>
+            <span class="text-danger" *ngIf="consumption_no && consumption_no.invalid && consumption_no.touched">Enter Consumption Series</span>
           </div>
         </div>
         <div class="col-lg-4 col-sm-4 col-12">
           <div class="form-group">
-            <label>Consumtion Type</label>
+            <label>Consumption Type</label>
             <select formControlName="consumption_type" id="consumption_type"
             [ngClass]="{'is-invalid': f['consumption_type'].touched && f['consumption_type'].invalid}">
-                <option value="" selected disabled>Select Consumtion Type</option>
+                <option value="" selected disabled>Select Consumption Type</option>
                 <option value="Sample">Sample</option>
                 <option value="Production">Production</option>
                 <option value="Scrap/Wastage">Scrap/Wastage</option>
             </select>
-            <span class="text-danger" *ngIf="consumption_type && consumption_type.invalid && consumption_type.touched">Enter Consumtion Type</span>
+            <span class="text-danger" *ngIf="consumption_type && consumption_type.invalid && consumption_type.touched">Enter Consumption Type</span>
           </div>
         </div>
       
