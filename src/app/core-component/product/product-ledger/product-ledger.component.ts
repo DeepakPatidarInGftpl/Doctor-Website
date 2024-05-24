@@ -5,6 +5,9 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
+import { Observable, map, startWith } from 'rxjs';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-product-ledger',
   templateUrl: './product-ledger.component.html',
@@ -15,34 +18,85 @@ export class ProductLedgerComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   initChecked: boolean = false;
 
-  constructor(private coreService: CoreService, private contactService:ContactService) { }
+  constructor(private coreService: CoreService, private contactService:ContactService,private cs:CompanyService) { }
 
   titlee: any;
   p: number = 1
   pageSize: number = 10;
   itemsPerPage: number = 10;
   filteredData: any[];
-
   loader = true;
-  ngOnInit(): void {
-    this.coreService.getProductLedger().subscribe(res => {
-      this.tableData = res;
-      this.loader = false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice();
-      this.filterData();
-    })
+  productId: any;
+//24-5
+isAdmin = false;
+fyID: any;
 
-    this.getVoucher();
+//
+ngOnInit(): void {
+  //24-5
+  if (localStorage.getItem('financialYear')) {
+    let fy = localStorage.getItem('financialYear');
+    console.warn(JSON.parse(fy));
+    let fyId = JSON.parse(fy);
+    this.fyID = fyId;
   }
-  voucherList:any
+  this.cs.userDetails$.subscribe((res: any) => {
+    if (res.role == 'admin') {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+    }
+  });
+ 
+this.getProductLedger();
+    this.getVoucher();
+    this.getProduct();
+    
+    this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+      startWith(''),
+      map((value: any) => {
+        const title = typeof value === 'string' ? value : value?.title;
+        return title ? this._filter(title as string) : this.suppliers.slice();
+      }),
+    );
+  }
+  getProductLedger(){
+    console.log(this.productId);
+    
+  this.coreService.getProductLedgerFy(this.productId,this.fyID, this.selectData).subscribe(res => {
+    this.tableData = res;
+    this.loader = false;
+    this.selectedRows = new Array(this.tableData.length).fill(false);
+    this.filteredData = this.tableData.slice();
+    this.filterData();
+  })
+}
+  voucherList:any;
   getVoucher(){
     this.contactService.getVoucherType().subscribe(res=>{
       console.log(res);
       this.voucherList=res;
     })
   }
-
+  private _filter(title: string): any[] {
+    const filterValue = title ? title.toLowerCase() : '';
+    console.log(filterValue);
+    return this.suppliers.filter((option: any) => 
+    (option?.title && option.title.toLowerCase().includes(filterValue)) || 
+    (option?.name && option.name.toLowerCase().includes(filterValue))
+  );
+  }
+  displayFn(user: any): string {
+    return user && user?.title || user?.name ? user?.title || user?.name  : '';
+  }
+  suppliers: any[] = [];
+  getProduct() {
+    this.coreService.getProducts().subscribe((res: any) => {
+      console.log(res, 'user');
+      this.suppliers = res;
+      // this.variants=res;
+    })
+  }
   allSelected: boolean = false;
   selectedRows: boolean[]
   selectAlll() {
@@ -265,4 +319,56 @@ export class ProductLedgerComponent implements OnInit {
       this.itemsPerPage = this.filteredData.length;
     }
   }
+  
+  //24-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.coreService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
+  //24-5
+   // api call
+   dataId: any;
+   filteredSuppliers: Observable<any[]> | undefined;
+   supplierControl: FormControl = new FormControl('');
+   oncheckAccount(data: any) {
+    console.warn(data);
+    this.productId = data;
+    this?.getProductLedger();
+   }
 }

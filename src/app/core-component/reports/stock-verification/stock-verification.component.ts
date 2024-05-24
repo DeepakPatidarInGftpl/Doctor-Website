@@ -82,6 +82,7 @@ export class StockVerificationComponent implements OnInit {
       } else {
         this.isAdmin = false;
       }
+      this.getBranch();
     });
     //23 
     this.cs.userDetails$.subscribe((userDetails:any) => {
