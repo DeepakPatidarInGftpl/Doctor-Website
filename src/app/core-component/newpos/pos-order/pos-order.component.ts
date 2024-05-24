@@ -7,6 +7,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 
 @Component({
   selector: 'app-pos-order',
@@ -30,11 +31,12 @@ export class PosOrderComponent implements OnInit {
   selectedAccountSubType: string = '';
   selectedAccountId: string = '';
 
-  constructor(private coreService: CoreService, private QueryService: QueryService,) {
+  constructor(private coreService: CoreService, private QueryService: QueryService, private cs: CompanyService) {
     this.QueryService.filterToggle()
   }
 
   delRes: any
+
   confirmText(index: any, id: any) {
     Swal.fire({
       title: 'Are you sure?',
@@ -135,16 +137,35 @@ export class PosOrderComponent implements OnInit {
   isAdd: any;
   isEdit: any;
   isDelete: any;
+  //24-5
+  isAdmin = false;
+  fyID: any;
+  //
   ngOnInit(): void {
-    this.coreService.getPosOrder().subscribe(res => {
+    //24-5
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.fyID = fyId;
+    }
+    this.cs.userDetails$.subscribe((res: any) => {
+      if (res.role == 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+    });
+    this.coreService.getPosOrder(this.fyID, this.selectData).subscribe(res => {
       // console.log(res);
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
       this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
       this.filterData();
-    })
-
+    });
+    this.getBranch();
+    //24-5
   }
 
   allSelected: boolean = false;
@@ -243,32 +264,32 @@ export class PosOrderComponent implements OnInit {
     doc.setFontSize(12);
     doc.setTextColor(33, 43, 54);
     doc.text(title, 82, 10);
-    doc.text('', 10, 15); 
+    doc.text('', 10, 15);
     // Pass tableData to autoTable
     autoTable(doc, {
       head: [
-        ['#', 'User Id','Customer', 'Payment Mode','Due Amount','GST','SCFST','Supply GST','Supply State','Total Tax ','Total Amount']
+        ['#', 'User Id', 'Customer', 'Payment Mode', 'Due Amount', 'GST', 'SCFST', 'Supply GST', 'Supply State', 'Total Tax ', 'Total Amount']
       ],
-      body: this.tableData.map((row:any, index:number ) => [
-    
+      body: this.tableData.map((row: any, index: number) => [
+
         index + 1,
-        row.id ,
+        row.id,
         row.customer.name,
-       row.payment_mode,
+        row.payment_mode,
         row.dueAmount,
-       row.get_gst,
+        row.get_gst,
         row.get_scgst,
         row.place_of_supply_gst_code,
-    row.place_of_supply_state,
-    row.total_tax,
-    row.total_amount
+        row.place_of_supply_state,
+        row.total_tax,
+        row.total_amount
 
       ]),
       theme: 'grid',
       headStyles: {
         fillColor: [255, 159, 67]
       },
-      startY: 15, 
+      startY: 15,
     });
     doc.save('Pos Order .pdf');
   }
@@ -352,7 +373,7 @@ export class PosOrderComponent implements OnInit {
     const originalContents = document.body.innerHTML;
     window.addEventListener('afterprint', () => {
       console.log('afterprint');
-     window.location.reload();
+      window.location.reload();
     });
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
@@ -361,13 +382,13 @@ export class PosOrderComponent implements OnInit {
     document.body.innerHTML = originalContents;
   }
 
-    // filter data
+  // filter data
   filterData() {
     let filteredData = this.tableData.slice();
     if (this.selectedAccountType) {
       filteredData = filteredData.filter((item) => item?.payment_mode === this.selectedAccountType);
     }
-    
+
     this.filteredData = filteredData;
   }
   clearFilter() {
@@ -380,5 +401,94 @@ export class PosOrderComponent implements OnInit {
       this.itemsPerPage = this.filteredData.length;
     }
   }
+  //24-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.coreService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
+  //24-5
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

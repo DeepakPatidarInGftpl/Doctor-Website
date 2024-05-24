@@ -1677,8 +1677,26 @@ export class CoreService {
   }
 
   //pos order
-  getPosOrder() {
+  getPosOrder(fy:any,branch:any) {
     let url = this.apiUrl + '/pv-api/pos/pos_orders/';
+    //24-5
+    console.log(branch,'branch');
+    console.log(branch.length,'branch');
+    const queryParams: any[] = [];
+    // 24-5 nd// 22-5
+    if (fy) {
+      queryParams.push(`financial_year=${fy}`);
+    }
+    if (branch && branch.length> 0) {
+      const idString = JSON.stringify(branch);
+      console.log(idString);
+      console.log(idString?.length);
+      queryParams.push(`branch=${idString}`);
+    }
+//end
+if (queryParams.length > 0) {
+  url += '?' + queryParams.join('&');
+}
     return this.http.get(url)
   }
   getPosOrderById(id: number): Observable<any> {
@@ -1717,6 +1735,31 @@ export class CoreService {
     return this.http.get<any>(`${url}${id}`);
   }
   //product ledger
+  getProductLedgerFy(product_id:any, fy:any,branch:any){
+    let url = this.apiUrl + '/pv-api/product_ledger/';
+      //24-5
+      console.log(branch,'branch');
+      console.log(branch.length,'branch');
+      const queryParams: any[] = [];
+      // 24-5 nd// 22-5
+      if (product_id) {
+        queryParams.push(`product_id=${product_id}`);
+      }
+      if (fy) {
+        queryParams.push(`financial_year=${fy}`);
+      }
+      if (branch && branch.length> 0) {
+        const idString = JSON.stringify(branch);
+        console.log(idString);
+        console.log(idString?.length);
+        queryParams.push(`branch=${idString}`);
+      }
+  //end
+  if (queryParams.length > 0) {
+    url += '?' + queryParams.join('&');
+  }
+  return this.http.get(url)
+  }
   getProductLedger() {
     let url = this.apiUrl + '/pv-api/product_ledger/';
     return this.http.get(url)
