@@ -154,7 +154,6 @@ if (branch && branch.length> 0) {
     }
     if (product_id) {
       queryParams.push(`product_id=${product_id}`);
-
     }
     // 22-5
     if (fy) {
@@ -167,9 +166,9 @@ if (branch && branch.length> 0) {
       queryParams.push(`branch=${idString}`);
     }
 //end
-    if (queryParams.length > 0) {
-      url += '?' + queryParams.join('&');
-    }
+    // if (queryParams.length > 0) {
+    //   url += '?' + queryParams.join('&');
+    // }
     return this.http.get<any>(url);
   }
   getProductDaybook(start_date: any, end_date: any,fy:any,branch:any): Observable<any> {

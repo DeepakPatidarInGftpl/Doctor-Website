@@ -388,4 +388,36 @@ export class WebsiteService {
     let url = this.apiUrl+'/pv-api/complete_status/?id=';
     return this.http.post(`${url}${id}`,data);
   }
+
+  //order Return ->   27-5
+  getorderReturn(status:any,from_date:any,to_date:any, ){
+    let url = this.apiUrl+'/pv-api/website_return_orders_dashboard/';
+    const queryParams: any[] = [];
+    if (status) {
+      queryParams.push(`status=${status}`);
+    }
+    if (from_date) {
+      queryParams.push(`from_date=${from_date}`);
+    }
+    if (to_date) {
+      queryParams.push(`to_date=${to_date}`);
+    }
+    // if (queryParams.length > 0) {
+    //   url += '?' + queryParams.join('&');
+    // }
+    return this.http.get(url);
+  }
+  getwebsiteReturnOrder(){
+    let url =this.apiUrl+'/pv-api/website_return_orders_dashboard/';
+    return this.http.get(url)
+  }
+  getwebsiteReturnOrderById(id:any){
+    let url =this.apiUrl+'/pv-api/website_return_orders/?id=';
+    return this.http.get(`${url}${id}`)
+  }
+  getwebsiteReturnOrderByStatus(status:any){
+    let url =this.apiUrl+'/pv-api/website_return_orders/?status=';
+    return this.http.get(`${url}${status}`)
+  }
+
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { WebsiteService } from 'src/app/Services/website/website.service';
+import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { QueryService } from 'src/app/shared/query.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import jsPDF from 'jspdf';
@@ -13,12 +13,14 @@ import { ToastrService } from 'ngx-toastr';
 import { DashboardService } from 'src/app/Services/DashboardService/dashboard.service';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { Router } from '@angular/router';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+
 @Component({
-  selector: 'app-product-order',
-  templateUrl: './product-order.component.html',
-  styleUrls: ['./product-order.component.scss']
+  selector: 'app-order-return',
+  templateUrl: './order-return.component.html',
+  styleUrls: ['./order-return.component.scss']
 })
-export class ProductOrderComponent implements OnInit {
+export class OrderReturnComponent implements OnInit {
 
   public tableData: any
   dtOptions: DataTables.Settings = {};
@@ -146,7 +148,7 @@ export class ProductOrderComponent implements OnInit {
     });
 
     // filter api
-    this.websiteService.getProductOrderByStatus('New').subscribe(res => {
+    this.websiteService.getorderReturn('New',this.fromDate,this.toDate).subscribe(res => {
       this.tableData = res;
       this.loader = false;
       this.selectedRows = new Array(this.tableData.length).fill(false);
@@ -165,6 +167,7 @@ export class ProductOrderComponent implements OnInit {
     // console.log(this.tableData);  
   }
 
+
   changeApiStatus(status: any) {
     console.warn(status);
     console.warn(status.tab.textLabel);
@@ -176,7 +179,7 @@ export class ProductOrderComponent implements OnInit {
     this.pageSize = 10;
     this.itemsPerPage = 10;
     if (status.tab.textLabel == 'All') {
-      this.websiteService.getProductOrder().subscribe(res => {
+      this.websiteService.getwebsiteReturnOrder().subscribe(res => {
         this.tableData = res;
         this.loader = false;
         this.selectedRows = new Array(this.tableData.length).fill(false);
@@ -185,7 +188,7 @@ export class ProductOrderComponent implements OnInit {
         this.filterData();
       });
     } else if (status.tab.textLabel == 'Ready To Ship') {
-      this.websiteService.getProductOrderByStatus('Assigned').subscribe((res: any) => {
+      this.websiteService.getorderReturn('Assigned',this.fromDate,this.toDate).subscribe((res: any) => {
         this.tableData = res;
         console.log(this.tableData);
         this.loader = false;
@@ -196,7 +199,9 @@ export class ProductOrderComponent implements OnInit {
         this.filterData();
       });
     } else {
-      this.websiteService.getProductOrderByStatus(status.tab.textLabel).subscribe((res: any) => {
+      console.log(status.tab.textLabel);
+      
+      this.websiteService.getorderReturn(status.tab.textLabel,this.fromDate,this.toDate).subscribe((res: any) => {
         this.tableData = res;
         console.log(this.tableData);
         this.loader = false;
@@ -768,8 +773,14 @@ export class ProductOrderComponent implements OnInit {
       }
     });
   }
+  fromDate:any;
+  toDate:any;
   selectDateRange(dat: any) {
     console.log(dat);
+    const start = this.datePipe.transform(this.campaignOne.value.start, 'yyyy-MM-dd');
+    const end = this.datePipe.transform(this.campaignOne.value.end, 'yyyy-MM-dd');
+    this.fromDate=start;
+    this.toDate=this.toDate;
     this.selectCredit = dat;
     this.filterData();
   }
@@ -1101,43 +1112,7 @@ export class ProductOrderComponent implements OnInit {
   }
 
   completeRes: any;
-  // completeOrder(id: any) {
-  //   console.log(id);
-  //   Swal.fire({
-  //     title: 'Are you sure?',
-  //     text: "Do You Want To Complete Order!",
-  //     allowEnterKey: false,
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     confirmButtonText: 'Yes, Complete it!',
-  //     buttonsStyling: true,
-  //     customClass: {
-  //       confirmButton: 'btn btn-primary',
-  //       cancelButton: 'btn btn-danger ml-1',
-  //     },
-  //   }).then((t) => {
-  //     if (t.isConfirmed) {
-  //       this.websiteService.completeOrder(id).subscribe(res => {
-  //         this.completeRes = res
-  //         if (this.completeRes.success) {
-  //           Swal.fire({
-  //             icon: 'success',
-  //             title: 'Completed!',
-  //             text: this.completeRes.msg,
-  //           });
-  //           window.location.reload();
-  //         } else {
-  //           Swal.fire({
-  //             icon: 'error',
-  //             title: 'Not Completed!',
-  //             text: this.completeRes.error,
-  //           });
-  //         }
-  //       })
-  //     }
-  //   });
-  // }
+
   completeOrder(id: any) {
     console.log(id);
     Swal.fire({

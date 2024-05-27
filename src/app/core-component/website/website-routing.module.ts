@@ -39,6 +39,7 @@ const routes: Routes = [
       { path: 'addressStoreDetails/:id', loadChildren: () => import('./address-store-details/address-store-details.module').then((m) => m.AddressStoreDetailsModule) },
       { path: 'aboutBannerDetails/:id', loadChildren: () => import('./about-banner-details/about-banner-details.module').then((m) => m.AboutBannerDetailsModule) },
       { path: 'aboutFooterBannerDetails/:id', loadChildren: () => import('./about-footer-banner-details/about-footer-banner-details.module').then((m) => m.AboutFooterBannerDetailsModule) },
+      {path:'orderReturn',loadChildren:()=> import('./order-return/order-return.module').then((m) =>m.OrderReturnModule)}
 
     ]
   }
