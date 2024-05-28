@@ -85,10 +85,10 @@ export class OrderReturnComponent implements OnInit {
     // const today = new Date();
     // const month = today.getMonth();
     // const year = today.getFullYear();
-    // const startDate = new Date(today);
-    // startDate.setDate(today.getDate() - 29);
+    // const fromDate = new Date(today);
+    // fromDate.setDate(today.getDate() - 29);
 
-    // const formattedStartDate = this.formatDate(startDate);
+    // const formattedStartDate = this.formatDate(fromDate);
     // const formattedToday = this.formatDate(today);
     // campaignOne
     this.campaignOne = new FormGroup({
@@ -104,6 +104,7 @@ export class OrderReturnComponent implements OnInit {
       weight: new FormControl('', [Validators.required, Validators.min(1)]),
       branch: new FormControl('', [Validators.required,]),
       id: new FormControl('', [Validators.required,]),
+      qc_enable: new FormControl('', [Validators.required,]),
     });
     //awd 
     //update order 
@@ -148,14 +149,7 @@ export class OrderReturnComponent implements OnInit {
     });
 
     // filter api
-    this.websiteService.getorderReturn('New',this.fromDate,this.toDate).subscribe(res => {
-      this.tableData = res;
-      this.loader = false;
-      this.selectedRows = new Array(this.tableData.length).fill(false);
-      this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-      console.log(this.filteredData, ' console.log(this.filteredData);');
-      this.filterData();
-    });
+   this.getReturnOrder();
 
     //all list api
     // this.websiteService.getProductOrder().subscribe(res => {
@@ -166,26 +160,39 @@ export class OrderReturnComponent implements OnInit {
     // })
     // console.log(this.tableData);  
   }
-
-
+status='New';
+getReturnOrder(){
+  this.websiteService.getorderReturn(this.status,this.fromDate,this.toDate).subscribe(res => {
+    this.tableData = res;
+    this.loader = false;
+    this.selectedRows = new Array(this.tableData.length).fill(false);
+    this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
+    console.log(this.filteredData, ' console.log(this.filteredData);');
+    // this.filterData();
+  });
+}
   changeApiStatus(status: any) {
     console.warn(status);
     console.warn(status.tab.textLabel);
     this.tableData = null;
     this.filteredData = null;
     this.titlee = '';
+    this.fromDate='';
+    this.toDate='';
+    this.campaignOne.reset();
     this.loader = true;
     this.p = 1;
     this.pageSize = 10;
     this.itemsPerPage = 10;
     if (status.tab.textLabel == 'All') {
+      this.status=status.tab.textLabel;
       this.websiteService.getwebsiteReturnOrder().subscribe(res => {
         this.tableData = res;
         this.loader = false;
         this.selectedRows = new Array(this.tableData.length).fill(false);
         this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
         console.log(this.filteredData, ' console.log(this.filteredData);');
-        this.filterData();
+        // this.filterData();
       });
     } else if (status.tab.textLabel == 'Ready To Ship') {
       this.websiteService.getorderReturn('Assigned',this.fromDate,this.toDate).subscribe((res: any) => {
@@ -196,11 +203,11 @@ export class OrderReturnComponent implements OnInit {
         this.selectedRows = new Array(this.tableData.length).fill(false);
         console.log(this.filteredData, ' console.log(this.filteredData);');
         this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-        this.filterData();
+        // this.filterData();
       });
     } else {
       console.log(status.tab.textLabel);
-      
+      this.status=status.tab.textLabel;
       this.websiteService.getorderReturn(status.tab.textLabel,this.fromDate,this.toDate).subscribe((res: any) => {
         this.tableData = res;
         console.log(this.tableData);
@@ -209,7 +216,7 @@ export class OrderReturnComponent implements OnInit {
         this.selectedRows = new Array(this.tableData.length).fill(false);
         console.log(this.filteredData, ' console.log(this.filteredData);');
         this.filteredData = this.tableData.slice(); // Initialize filteredData with the original data
-        this.filterData();
+        // this.filterData();
       });
     }
   }
@@ -253,39 +260,6 @@ export class OrderReturnComponent implements OnInit {
     return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
   }
 
-  // generatePDFAgain() {
-  //   const doc = new jsPDF('landscape');
-  //   const title = 'Product Order';
-  //   doc.setFontSize(12);
-  //   doc.setTextColor(33, 43, 54);
-  //   doc.text(title, 82, 10);
-  //   doc.text('', 10, 15);
-  //   // Pass tableData to autoTable
-  //   autoTable(doc, {
-  //     head: [
-  //       ['#', ' Status','User','Order Type','Payment Type','Payment Status','Online Order Id','Order Id','Shipment Id','Order Date', 'Final Amount']
-  //     ],
-  //     body: this.filteredData.map((row: any, index: number) => [
-  //       index + 1,
-  //       row.status,
-  //       row.user?.username,
-  //       row.address_type,
-  //       row.payment_type,
-  //       row.payment_status,
-  //       row.online_order_id,
-  //       row.shiprocket_order_id,
-  //       row.shiprocket_shipment_id,
-  //       this.formatDate(row.order_date),
-  //       row.final_amount,
-  //     ]),
-  //     theme: 'grid',
-  //     headStyles: {
-  //       fillColor: [255, 159, 67]
-  //     },
-  //     startY: 15,
-  //   });
-  //   doc.save('Product _Order .pdf');
-  // }
 
   generatePDFAgain() {
     const doc = new jsPDF('landscape');
@@ -489,10 +463,16 @@ export class OrderReturnComponent implements OnInit {
     formData.append('weight', this.acceptForm.get('weight')?.value);
     formData.append('branch', this.acceptForm.get('branch')?.value);
     formData.append('id', this.acceptForm.get('id')?.value);
+    if(this.acceptForm.get('qc_enable')?.value==true){
+      formData.append('qc_enable', 'True');
+    }else{
+      formData.append('qc_enable', 'False');
+    }
 
+    
     if (this.acceptForm.valid) {
       this.loaders = true
-      this.websiteService.addAcceptOrder(formData).subscribe((res: any) => {
+      this.websiteService.addacceptreturn(formData).subscribe((res: any) => {
         console.log(res);
         this.loaders = false;
         if (res.success) {
@@ -537,7 +517,9 @@ export class OrderReturnComponent implements OnInit {
       },
     }).then((t) => {
       if (t.isConfirmed) {
-        this.websiteService.rejectOrder(id).subscribe(res => {
+        let formData = new FormData();
+        // formData.append('shipment_id',id)
+        this.websiteService.rejectreturn(id).subscribe(res => {
           this.delRes = res
           if (this.delRes.success) {
             Swal.fire({
@@ -782,144 +764,268 @@ export class OrderReturnComponent implements OnInit {
     this.fromDate=start;
     this.toDate=this.toDate;
     this.selectCredit = dat;
-    this.filterData();
+// date range
+
+    const currentDate = new Date();
+    const today = new Date(currentDate);
+    today.setDate(currentDate.getDate());
+    switch (this.selectCredit) {
+      case 'today':
+        this.campaignOne.patchValue({
+          start: this.formatDate(today),
+          end: this.formatDate(today)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+        break;
+      case 'yesterday':
+        const yesterday = new Date(currentDate);
+        yesterday.setDate(currentDate.getDate() - 1);
+        this.campaignOne.patchValue({
+          start: this.formatDate(yesterday),
+          end: this.formatDate(yesterday)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+      
+        break;
+
+      case 'thisWeek':
+        const firstDayOfWeek = new Date(currentDate);
+        firstDayOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+        const lastDayOfWeek = new Date(currentDate);
+        lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+        this.campaignOne.patchValue({
+          start: this.formatDate(firstDayOfWeek),
+          end: this.formatDate(lastDayOfWeek)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+        break;
+
+      case 'thisMonth':
+        const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        this.campaignOne.patchValue({
+          start: this.formatDate(firstDayOfMonth),
+          end: this.formatDate(lastDayOfMonth)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+        break;
+
+      case 'lastMonth':
+        const firstDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        const lastDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        this.campaignOne.patchValue({
+          start: this.formatDate(firstDayOfLastMonth),
+          end: this.formatDate(lastDayOfLastMonth)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+        break;
+
+      case 'last15Days':
+        const last15DaysStart = new Date(currentDate);
+        last15DaysStart.setDate(currentDate.getDate() - 14);
+        this.campaignOne.patchValue({
+          start: this.formatDate(last15DaysStart),
+          end: this.formatDate(currentDate)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+        break;
+
+      case 'last30Days':
+        const last30DaysStart = new Date(currentDate);
+        last30DaysStart.setDate(currentDate.getDate() - 29);
+        this.campaignOne.patchValue({
+          start: this.formatDate(last30DaysStart),
+          end: this.formatDate(currentDate)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+        break;
+
+      case 'thisQuarter':
+        const currentMonth = currentDate.getMonth();
+        const thisQuarterStart = new Date(currentDate.getFullYear(), currentMonth - 2, 1);
+        const thisQuarterEnd = new Date(currentDate.getFullYear(), currentMonth + 1, 0);
+        this.campaignOne.patchValue({
+          start: this.formatDate(thisQuarterStart),
+          end: this.formatDate(thisQuarterEnd)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+        break;
+
+      case 'lastQuarter':
+        const lastQuarterStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 5, 1);
+        const lastQuarterEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() - 2, 0);
+        this.campaignOne.patchValue({
+          start: this.formatDate(lastQuarterStart),
+          end: this.formatDate(lastQuarterEnd)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+        break;
+
+      case 'thisFinancialYear':
+        const thisFinancialYearStart = new Date(currentDate.getFullYear(), 3, 1);
+        const thisFinancialYearEnd = new Date(currentDate.getFullYear() + 1, 2, 31);
+        this.campaignOne.patchValue({
+          start: this.formatDate(thisFinancialYearStart),
+          end: this.formatDate(thisFinancialYearEnd)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+        break;
+
+      case 'lastFinancialYear':
+        const lastFinancialYearStart = new Date(currentDate.getFullYear() - 1, 3, 1);
+        const lastFinancialYearEnd = new Date(currentDate.getFullYear(), 2, 31);
+        this.campaignOne.patchValue({
+          start: this.formatDate(lastFinancialYearStart),
+          end: this.formatDate(lastFinancialYearEnd)
+        });
+        this.fromDate = this.campaignOne.value?.start;
+        this.toDate = this.campaignOne.value?.end;
+        break;
+
+      default:
+        break;
+    }
+  
+    this.getReturnOrder();
   }
-  startDate: any;
-  endDate: any;
   getSelectedDates() {
     console.log(this.campaignOne.value);
     const start = this.datePipe.transform(this.campaignOne.value.start, 'yyyy-MM-dd');
     const end = this.datePipe.transform(this.campaignOne.value.end, 'yyyy-MM-dd');
-    this.startDate = start;
-    this.endDate = end;
-    this.filterData();
+    this.fromDate = start;
+    this.toDate = end;
+    this.getReturnOrder();
   }
   selectCredit: any;
   filteredData: any[];
-  filterData() {
-    let filteredData = this.tableData.slice();
-    if (this.selectCredit) {
-      const currentDate = new Date();
+  filterData(value: string) {
+    const currentDate = new Date();
+      const today = new Date(currentDate);
+      today.setDate(currentDate.getDate());
       switch (this.selectCredit) {
         case 'today':
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return this.formatDate(orderDate) === this.formatDate(currentDate);
+          this.campaignOne.patchValue({
+            start: this.formatDate(today),
+            end: this.formatDate(today)
           });
+          this.fromDate = this.campaignOne.value?.start;
+          this.toDate = this.campaignOne.value?.end;
+            this.getReturnOrder();
           break;
+        // case 'yesterday':
+        //   const yesterday = new Date(currentDate);
+        //   yesterday.setDate(currentDate.getDate() - 1);
+        //   filteredData = filteredData.filter(item => {
+        //     const orderDate = new Date(item.order_date);
+        //     return this.formatDate(orderDate) === this.formatDate(yesterday);
+        //   });
+        //   break;
 
-        case 'yesterday':
-          const yesterday = new Date(currentDate);
-          yesterday.setDate(currentDate.getDate() - 1);
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return this.formatDate(orderDate) === this.formatDate(yesterday);
-          });
-          break;
+        // case 'thisWeek':
+        //   const firstDayOfWeek = new Date(currentDate);
+        //   firstDayOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+        //   const lastDayOfWeek = new Date(currentDate);
+        //   lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+        //   filteredData = filteredData.filter(item => {
+        //     const orderDate = new Date(item.order_date);
+        //     return this.formatDate(orderDate) >= this.formatDate(firstDayOfWeek) &&
+        //       this.formatDate(orderDate) <= this.formatDate(lastDayOfWeek);
+        //   });
+        //   break;
 
-        case 'thisWeek':
-          const firstDayOfWeek = new Date(currentDate);
-          firstDayOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
-          const lastDayOfWeek = new Date(currentDate);
-          lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return this.formatDate(orderDate) >= this.formatDate(firstDayOfWeek) &&
-              this.formatDate(orderDate) <= this.formatDate(lastDayOfWeek);
-          });
-          break;
+        // case 'thisMonth':
+        //   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        //   const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        //   filteredData = filteredData.filter(item => {
+        //     const orderDate = new Date(item.order_date);
+        //     return orderDate >= firstDayOfMonth && orderDate <= lastDayOfMonth;
+        //   });
+        //   break;
 
-        case 'thisMonth':
-          const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-          const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return orderDate >= firstDayOfMonth && orderDate <= lastDayOfMonth;
-          });
-          break;
+        // case 'lastMonth':
+        //   const firstDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        //   const lastDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        //   filteredData = filteredData.filter(item => {
+        //     const orderDate = new Date(item.order_date);
+        //     return orderDate >= firstDayOfLastMonth && orderDate <= lastDayOfLastMonth;
+        //   });
+        //   break;
 
-        case 'lastMonth':
-          const firstDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-          const lastDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return orderDate >= firstDayOfLastMonth && orderDate <= lastDayOfLastMonth;
-          });
-          break;
+        // case 'last15Days':
+        //   const last15DaysStart = new Date(currentDate);
+        //   last15DaysStart.setDate(currentDate.getDate() - 14);
+        //   filteredData = filteredData.filter(item => {
+        //     const orderDate = new Date(item.order_date);
+        //     return orderDate >= last15DaysStart && orderDate <= currentDate;
+        //   });
+        //   break;
 
-        case 'last15Days':
-          const last15DaysStart = new Date(currentDate);
-          last15DaysStart.setDate(currentDate.getDate() - 14);
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return orderDate >= last15DaysStart && orderDate <= currentDate;
-          });
-          break;
+        // case 'last30Days':
+        //   const last30DaysStart = new Date(currentDate);
+        //   last30DaysStart.setDate(currentDate.getDate() - 29);
+        //   filteredData = filteredData.filter(item => {
+        //     const orderDate = new Date(item.order_date);
+        //     return orderDate >= last30DaysStart && orderDate <= currentDate;
+        //   });
+        //   break;
 
-        case 'last30Days':
-          const last30DaysStart = new Date(currentDate);
-          last30DaysStart.setDate(currentDate.getDate() - 29);
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return orderDate >= last30DaysStart && orderDate <= currentDate;
-          });
-          break;
+        // case 'thisQuarter':
+        //   const currentMonth = currentDate.getMonth();
+        //   const thisQuarterStart = new Date(currentDate.getFullYear(), currentMonth - 2, 1);
+        //   const thisQuarterEnd = new Date(currentDate.getFullYear(), currentMonth + 1, 0);
+        //   filteredData = filteredData.filter(item => {
+        //     const orderDate = new Date(item.order_date);
+        //     return orderDate >= thisQuarterStart && orderDate <= thisQuarterEnd;
+        //   });
+        //   break;
 
-        case 'thisQuarter':
-          const currentMonth = currentDate.getMonth();
-          const thisQuarterStart = new Date(currentDate.getFullYear(), currentMonth - 2, 1);
-          const thisQuarterEnd = new Date(currentDate.getFullYear(), currentMonth + 1, 0);
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return orderDate >= thisQuarterStart && orderDate <= thisQuarterEnd;
-          });
-          break;
+        // case 'lastQuarter':
+        //   const lastQuarterStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 5, 1);
+        //   const lastQuarterEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() - 2, 0);
+        //   filteredData = filteredData.filter(item => {
+        //     const orderDate = new Date(item.order_date);
+        //     return orderDate >= lastQuarterStart && orderDate <= lastQuarterEnd;
+        //   });
+        //   break;
 
-        case 'lastQuarter':
-          const lastQuarterStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 5, 1);
-          const lastQuarterEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() - 2, 0);
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return orderDate >= lastQuarterStart && orderDate <= lastQuarterEnd;
-          });
-          break;
+        // case 'thisFinancialYear':
+        //   const thisFinancialYearStart = new Date(currentDate.getFullYear(), 3, 1);
+        //   const thisFinancialYearEnd = new Date(currentDate.getFullYear() + 1, 2, 31);
+        //   filteredData = filteredData.filter(item => {
+        //     const orderDate = new Date(item.order_date);
+        //     return orderDate >= thisFinancialYearStart && orderDate <= thisFinancialYearEnd;
+        //   });
+        //   break;
 
-        case 'thisFinancialYear':
-          const thisFinancialYearStart = new Date(currentDate.getFullYear(), 3, 1);
-          const thisFinancialYearEnd = new Date(currentDate.getFullYear() + 1, 2, 31);
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return orderDate >= thisFinancialYearStart && orderDate <= thisFinancialYearEnd;
-          });
-          break;
-
-        case 'lastFinancialYear':
-          const lastFinancialYearStart = new Date(currentDate.getFullYear() - 1, 3, 1);
-          const lastFinancialYearEnd = new Date(currentDate.getFullYear(), 2, 31);
-          filteredData = filteredData.filter(item => {
-            const orderDate = new Date(item.order_date);
-            return orderDate >= lastFinancialYearStart && orderDate <= lastFinancialYearEnd;
-          });
-          break;
+        // case 'lastFinancialYear':
+          // const lastFinancialYearStart = new Date(currentDate.getFullYear() - 1, 3, 1);
+          // const lastFinancialYearEnd = new Date(currentDate.getFullYear(), 2, 31);
+          // filteredData = filteredData.filter(item => {
+          //   const orderDate = new Date(item.order_date);
+          //   return orderDate >= lastFinancialYearStart && orderDate <= lastFinancialYearEnd;
+          // });
+          // break;
 
         default:
           break;
       }
-    }
-    if (this.endDate && this.startDate) {
-      filteredData = filteredData.filter(item => {
-        const orderDate = new Date(item.order_date);
-        return this.formatDate(orderDate) >= this.formatDate(this.startDate) &&
-          this.formatDate(orderDate) <= this.formatDate(this.endDate);
-      });
-    }
-    this.filteredData = filteredData;
-    console.log(this.filteredData, ' console.log(this.filteredData);');
+    
+ 
   }
 
   clearFilter() {
     this.selectCredit = null;
-    this.filterData();
+    // this.filterData();
   }
   //update address modal 
   openModalAddress(product: any) {

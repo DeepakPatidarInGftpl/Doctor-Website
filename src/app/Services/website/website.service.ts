@@ -402,9 +402,9 @@ export class WebsiteService {
     if (to_date) {
       queryParams.push(`to_date=${to_date}`);
     }
-    // if (queryParams.length > 0) {
-    //   url += '?' + queryParams.join('&');
-    // }
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
     return this.http.get(url);
   }
   getwebsiteReturnOrder(){
@@ -418,6 +418,14 @@ export class WebsiteService {
   getwebsiteReturnOrderByStatus(status:any){
     let url =this.apiUrl+'/pv-api/website_return_orders/?status=';
     return this.http.get(`${url}${status}`)
+  }
+  addacceptreturn (data:any){
+    let url = this.apiUrl+'/pv-api/return_order_accept/';
+    return this.http.post(url,data)
+  }
+  rejectreturn(id:any){
+    let url = this.apiUrl+'/pv-api/return_order_reject/?id=';
+    return this.http.post(`${url}${id}`,'')
   }
 
 }
