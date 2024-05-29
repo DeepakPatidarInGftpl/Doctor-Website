@@ -350,7 +350,7 @@
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
                             <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
-                            <ng-container *ngIf="products?.status === 'Assigned'">
+                            <ng-container *ngIf="products?.status === 'Pick-Up'">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -371,19 +371,9 @@
                                 <td>{{products?.total_amount}}</td>
                                 
                                 <td>  
-                                    <button class="btn btn-submit me-2" style="padding: 2px 4px;min-width: 60px; font-weight: 400;" (click)="downloadManifest(products)">Download Manifest</button>
+                                    <button class="btn btn-submit me-2" style="padding: 2px 4px;min-width: 60px; font-weight: 400;" (click)="materialRecieved(products?.id)">Material Recieved</button>
                                     <!-- <button><i data-bs-toggle="tooltip" title="fa fa-ellipsis-h" class="fa fa-ellipsis-h"></i></button> -->
-                                    <button [matMenuTriggerFor]="menu" aria-label="Toggle menu" style="border-radius: 12px; border: 1px solid gray;">
-                                        <i class="fa fa-ellipsis-h"></i>
-                                    </button>
-                                    <mat-menu #menu="matMenu" class="submenuitem">
-                                        <button mat-menu-item (click)="downloadLabel(products)">Download Label</button>
-                                        <button mat-menu-item (click)="downloadInvoice(products)">Download Invoice</button>
-                                        <button mat-menu-item (click)="openModalCourier(products)">Reassign Courier</button>
-                                        <button mat-menu-item (click)="openModalOrder(products)">Edit Order</button>
-                                        <button mat-menu-item (click)="openModalAddress(products)">Update Address</button>
-                                        <button mat-menu-item (click)="cancelOrder(products)">Cancel Order</button>
-                                    </mat-menu>
+                                   
                                 </td>
                                 </ng-container>
                             </tr>
@@ -628,7 +618,7 @@
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
                             <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
-                            <ng-container *ngIf="products?.status === 'Rejected'">
+                            <ng-container *ngIf="products?.status === 'Material-Received'">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">
@@ -761,7 +751,7 @@
                         </thead>
                         <tbody *ngIf="filteredData?.length>=0">
                             <tr *ngFor="let products of filteredData | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
-                            <ng-container *ngIf="products?.status === 'Rejected'">
+                            <ng-container *ngIf="products?.status === 'Completed'">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox" [(ngModel)]="selectedRows[i]">

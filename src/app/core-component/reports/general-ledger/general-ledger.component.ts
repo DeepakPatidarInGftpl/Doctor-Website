@@ -101,7 +101,7 @@ export class GeneralLedgerComponent implements OnInit {
       this.endDate = this.productDayBookform.value?.end;
       this.UserId = this.productDayBookform.value?.user_id;
 
-      this.getproductDayBook();
+      // this.getGeneralLedger();
       this.getUser()
       this.filteredusers = this.userControl.valueChanges.pipe(
         startWith(''),
@@ -109,7 +109,7 @@ export class GeneralLedgerComponent implements OnInit {
       );
     }
     
-    // getproductDayBook() {
+    // getGeneralLedger() {
     //   throw new Error('Method not implemented.');
     // }
     private formatDate(date: Date): string {
@@ -151,8 +151,8 @@ export class GeneralLedgerComponent implements OnInit {
       const endIndex = Math.min(startIndex + productsPerPage - 1, totalProducts - 1);
       return `Showing ${startIndex + 1}–${endIndex + 1} of ${totalProducts} results`;
     }
-  productDayBookList:any
-    getproductDayBook() {
+  productDayBookList:any[]=[];
+    getGeneralLedger() {
       this.reportService.getGeneralLedger(this.startDate, this.endDate,  this.UserId,this.fyID,this.selectData).subscribe((res:any) => {
         console.log(res);
         this.productDayBookList = res;
@@ -169,14 +169,14 @@ export class GeneralLedgerComponent implements OnInit {
      this.productDayBookform.patchValue({user_id:this.dataId});
      console.warn(this.productDayBookform.value);
      this.UserId = this.productDayBookform.value?.user_id;
-     this?.getproductDayBook();
+     this?.getGeneralLedger();
     }
     selectUser(data: any) {
       this.dataId = data;
      this. productDayBookform.patchValue({user_id:this.dataId});
      console.warn(this. productDayBookform.value);
      this.UserId = this. productDayBookform.value?.user_id;
-     this?.getproductDayBook();
+     this?.getGeneralLedger();
     }
     getSelectedProductDayBookDates() {
       console.log(this.productDayBookform.value);
@@ -186,7 +186,7 @@ export class GeneralLedgerComponent implements OnInit {
       console.log(end);
       this.startDate = start;
       this.endDate = end;
-      this?.getproductDayBook();
+      this?.getGeneralLedger();
     }
     // convert to pdf
     UserName: any;

@@ -547,7 +547,7 @@ getReturnOrder(){
       shipment_id: parseInt(product?.shiprocket_shipment_id),
     })
     console.log(this.awdForm.value);
-    this.getServiceAvility(product.shipping_address)
+    this.getServiceAvility(product.order_id.shipping_address) //29-5-24
     const modal = document.getElementById('courierModal');
     if (modal) {
       modal.classList.add('show');
@@ -615,7 +615,7 @@ getReturnOrder(){
     formData.append('courier_id', this.awdForm.get('courier_id')?.value);
     if (this.awdForm.valid) {
       this.loaders = true
-      this.websiteService.addAWD(formData).subscribe((res: any) => {
+      this.websiteService.addAWDReturn(formData).subscribe((res: any) => {
         console.log(res);
         this.loaders = false;
         if (res.success) {
@@ -1303,6 +1303,46 @@ getReturnOrder(){
               icon: 'error',
               title: 'Not Accepted!',
               text: this.acceptRes.error,
+            });
+          }
+        })
+      }
+    });
+  }
+
+  materialRecieved(id: any) {
+    console.log(id);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do You Want To Material Recieved!",
+      allowEnterKey: false,
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Material Recieved it!',
+      buttonsStyling: true,
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1',
+      },
+    }).then((t) => {
+      if (t.isConfirmed) {
+        let formData = new FormData();
+        // formData.append('shipment_id',id)
+        this.websiteService.getMaterialRecievedById(id).subscribe(res => {
+          this.delRes = res
+          if (this.delRes.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Material Recieved!',
+              text: this.delRes.msg,
+            });
+            window.location.reload();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Material Recieved!',
+              text: this.delRes.error,
             });
           }
         })
