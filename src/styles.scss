@@ -245,3 +245,9 @@ mat-form-field {
 .blur-background:not(.modal-container) {
   filter: blur(3px);
 }
+
+.mat-date-range-input-start-wrapper {
+  position: static !important;
+  overflow: hidden;
+  max-width: calc(50% - 4px);
+}
