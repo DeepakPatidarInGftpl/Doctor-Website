@@ -427,5 +427,14 @@ export class WebsiteService {
     let url = this.apiUrl+'/pv-api/return_order_reject/?id=';
     return this.http.post(`${url}${id}`,'')
   }
-
+// 
+addAWDReturn(data:any){
+  let url = this.apiUrl+'/pv-api/return_order_awd/';
+  return this.http.post(url,data);
+}
+// material recieved
+getMaterialRecievedById(id:any){
+  let url =this.apiUrl+'/pv-api/return_order_material_received/?id=';
+  return this.http.post(`${url}${id}`,'')
+}
 }
