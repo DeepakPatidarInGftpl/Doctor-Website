@@ -627,7 +627,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Material-Received','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
                                 </td>
                                 <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"> {{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
                                 <td>{{products?.variant?.variant_name}}</td>
@@ -1023,7 +1023,7 @@
                                 </td>
                                 <td>{{i+1}}</td>
                                 <td>
-                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Dispatched','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
+                                    <a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;"><span [ngClass]="{'bg-lightgreens': products?.status === 'Accepted' || products?.status ==='Delivered' || products?.status==='Completed','bg-lightblue': products?.status === 'Material-Received','bg-lightorange': products?.status === 'Assigned','bg-lightred' : products?.status === 'Rejected' ||products?.status === 'Cancelled','bg-lightyellow' : products?.status === 'New'}" class="badges" style="padding: 2px 10px;">{{products?.status}}</span></a>
                                 </td>
                                 <td><a routerLink="//website/order-detail/{{products.id}}" style="line-height: 2;">{{products?.user?.name}}<br> {{products?.user?.username}}</a></td>
                                 <td>{{products?.variant?.variant_name}}</td>
