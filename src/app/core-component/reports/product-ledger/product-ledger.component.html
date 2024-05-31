@@ -176,7 +176,7 @@
                                 *ngFor="let list of stockAlertList | orderBy:key:reverse | paginate:{itemsPerPage:itemsPerPage,currentPage:p} let i = index">
                                 <td style="vertical-align: top !important;">{{i+1+'.'}}</td>
                                 <td style="vertical-align: top !important;">{{list.variant_name}}</td>
-                                <td style="vertical-align: top !important;">{{list.product}}</td>
+                                <td style="vertical-align: top !important; white-space: pre-wrap;">{{list.product}}</td>
 
                                 <td colspan="7">
                                     <tr *ngFor="let data of list?.data">
