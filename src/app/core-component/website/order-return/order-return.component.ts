@@ -71,6 +71,10 @@ export class OrderReturnComponent implements OnInit {
   get o() {
     return this.updateOrderForm.controls;
   }
+  orderInitiateForm:FormGroup;
+  get i() {
+    return this.orderInitiateForm.controls; //31-5
+  }
 
   labelForm: FormGroup;
   invoiceForm: FormGroup;
@@ -95,6 +99,11 @@ export class OrderReturnComponent implements OnInit {
       start: new FormControl(''),
       end: new FormControl(''),
     });
+
+    this.orderInitiateForm = new FormGroup({  //31-5
+      return_order_id: new FormControl(''),
+      amount: new FormControl(''),
+    });
     //end
     this.getBranch();
     this.acceptForm = this.fb.group({
@@ -106,6 +115,7 @@ export class OrderReturnComponent implements OnInit {
       id: new FormControl('', [Validators.required,]),
       qc_enable: new FormControl('', [Validators.required,]),
     });
+   
     //awd 
     //update order 
     this.updateOrderForm = this.fb.group({
@@ -540,6 +550,74 @@ getReturnOrder(){
     });
   }
 
+// 31-5
+get return_order_id(){
+return this.orderInitiateForm.get('return_order_id')
+}
+get amount(){
+  return this.orderInitiateForm.get('amount')
+  }
+  initiateSubmit() { 
+    console.warn(this.orderInitiateForm.value);
+    let formData = new FormData();
+    formData.append('return_order_id', this.orderInitiateForm.get('return_order_id')?.value);
+    formData.append('amount', this.orderInitiateForm.get('amount')?.value);
+    if (this.orderInitiateForm.valid) {
+      this.loaders = true
+      this.websiteService.addReturnOrderInitiate(formData).subscribe((res: any) => {
+        console.log(res);
+        this.loaders = false;
+        if (res.isSuccess) {
+          this.toastr.success(res.msg);
+          this.closeModalInitate();
+          window.location.reload();
+        } else {
+          this.toastr.error(res.msg);
+        }
+        if (res.status == false) {
+          this.toastr.error(res.error?.message);
+          this.loaders = false;
+          if (res.error.order_date) {
+            this.loaders = false;
+            this.toastr.error(res.error?.order_date[0]);
+          }
+        }
+      }, err => {
+        console.warn(err);
+        this.loaders = false;
+        if(err.error.isSuccess==false) {
+          this.toastr.error(err.error.msg);
+        }
+      });
+    } else {
+      this.loaders = false;
+      this.orderInitiateForm.markAllAsTouched();
+    }
+  }
+  isModalOpenOrder = false; //31-5
+  r_id: any;
+  openModalInitiate(product: any) {
+    this.r_id = product.id;
+    this.orderInitiateForm.get('return_order_id').patchValue(this.r_id);
+    const modal = document.getElementById('initateModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      //blur bg
+      this.isModalOpen = true;
+      this.websiteService.setCheckBlur(true);
+    }
+  }
+  closeModalInitate() {
+    const modal = document.getElementById('initateModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      this.orderInitiateForm.reset();
+      this.isModalOpen = false;
+      this.websiteService.setCheckBlur(false);
+    }
+  }
   // courier modal
   openModalCourier(product: any) {
     console.log(product);
