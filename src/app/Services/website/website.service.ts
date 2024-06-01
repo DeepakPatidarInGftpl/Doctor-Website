@@ -442,4 +442,9 @@ addReturnOrderInitiate(data:any){
   let url = this.apiUrl+'/pv-api/return_order_initiate/';
   return this.http.post(url,data);
 }
+
+getServiceAvilityCourier(id:any){
+  let url = this.apiUrl+'/pv-api/return_order_courier_serviceability/?id=';
+  return this.http.get(`${url}${id}`)
+}
 }
