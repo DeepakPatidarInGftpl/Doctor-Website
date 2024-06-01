@@ -625,7 +625,8 @@ get amount(){
       shipment_id: parseInt(product?.shiprocket_shipment_id),
     })
     console.log(this.awdForm.value);
-    this.getServiceAvility(product.order_id.shipping_address) //29-5-24
+    // this.getServiceAvility(product.order_id.shipping_address) //29-5-24
+    this.getServiceAvility(product?.id);
     const modal = document.getElementById('courierModal');
     if (modal) {
       modal.classList.add('show');
@@ -673,8 +674,8 @@ get amount(){
   // courier service avility api
   serviceAbilityList: any;
   loaderPincode = true
-  getServiceAvility(ShippingAdd: any) {
-    this.websiteService.getServiceAvility(ShippingAdd.pincode).subscribe((res: any) => {
+  getServiceAvility(return_id: any) {
+    this.websiteService.getServiceAvilityCourier(return_id).subscribe((res: any) => {
       this.serviceAbilityList = res;
       this.loaderPincode = false;
     })
