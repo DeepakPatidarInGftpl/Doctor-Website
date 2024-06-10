@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { StockService } from 'src/app/Services/stockService/stock.service';
@@ -51,19 +51,30 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
       this.materialConsumptionForm.patchValue(res);
       this.materialConsumptionForm.get('user')?.patchValue(res.user?.id);
       this.materialConsumptionForm.get('barcode')?.patchValue(res.barcode?.id);
-      
+
       // this.materialConsumptionForm.get('prefix')?.patchValue(res?.prefix?.id) // 20-5
       // this.materialConsumptionForm.get('consumption_no')?.patchValue(res?.consumption_no?.id) // 20-5
       this.supplierControl.setValue(res.user.username);
-      this.barcodeControl.setValue(res.barcode.product_title + '-'+res.barcode.variant_name)
+      this.barcodeControl.setValue(res.barcode.product_title + '-' + res.barcode.variant_name)
     })
-    this.getUser();
     this.getprefix()
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getUser(res);
+      } else {
+        this.userList = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
   }
 
   prefixNo: any;
@@ -97,10 +108,13 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
   }
 
   userList: any[] = [];
-  getUser() {
-    this.transactionService.getUser().subscribe((res: any) => {
-      console.log(res);
-      this.userList = res?.data
+  getUser(query) {
+    this.transactionService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
+      this.userList = res?.data;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
 
@@ -143,7 +157,7 @@ export class UpdateMaterialConsumptionComponent implements OnInit {
       formdata.append('qty', this.materialConsumptionForm.get('qty')?.value);
       formdata.append('price', this.materialConsumptionForm.get('price')?.value);
       formdata.append('total_action', this.materialConsumptionForm.get('total_action')?.value);
-      this.transactionService.updateMaterialConsuption(formdata,this.id).subscribe(res => {
+      this.transactionService.updateMaterialConsuption(formdata, this.id).subscribe(res => {
         // console.log(res);
         this.loaders = false;
         this.addRes = res
