@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
@@ -27,7 +27,7 @@ export class AddSalesComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private contactService: ContactService,
-    private coreService:CoreService) {
+    private coreService: CoreService) {
   }
 
   userControlName = 'customer';
@@ -83,7 +83,18 @@ export class AddSalesComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getUser();
+
+    this.userControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getUser(res);
+      } else {
+        this.users = [];
+        this.filteredusers = this.userControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
     this.getEstimate();
     this.getPaymentTerms()
     this.getprefix();
@@ -96,7 +107,7 @@ export class AddSalesComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.saleForm.get('sale_order_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toastrService.error(res.msg);
@@ -113,79 +124,79 @@ export class AddSalesComponent implements OnInit {
   variantList: any[] = [];
   variantList2: any[] = [];
   isSearch = false;
-  searchLength:any;
+  searchLength: any;
   getVariant(search: any, index: any, barcode: any) {
-    this.searchLength=search
-    this.isSearch=true;
-    if(search.toString().length>=3){
-    if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
-      if (this.selectData.length > 0) {
-        this.category = JSON.stringify(this.selectData);
-        console.log(this.category);
-      } else {
-        this.category = undefined
-        console.log(this.category, 'else part');
-      }
-      if (this.selectSubCate.length > 0) {
-        this.subcategory = JSON.stringify(this.selectSubCate)
-      } else {
-        this.subcategory = undefined
-      }
-      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
-        console.log(res);
-        this.isSearch = false;
-        this.variantList[index]=res
-         this.variantList2 = res;
-        console.log(this.variantList);
-        if (barcode === 'barcode') {
-          this.oncheckVariant(res[0], index);
-          this.myControl.setValue(res[0].product_title)
+    this.searchLength = search
+    this.isSearch = true;
+    if (search.toString().length >= 3) {
+      if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
+        if (this.selectData.length > 0) {
+          this.category = JSON.stringify(this.selectData);
+          console.log(this.category);
+        } else {
+          this.category = undefined
+          console.log(this.category, 'else part');
         }
-        if (search) {
-          //barcode patch
-          this.searchs = res;
-          this.productOption = res;
-          // console.log(this.searchs);
-          this.productName[index] = this.searchs[0]?.product_title;
-          // console.log(this.productName);
-          this.check = true;
-          const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
-          barcode.patchValue({
-            // barcode: this.searchs[0].id,
-            // item_name: this.searchs[0]?.variant_name
-          });
+        if (this.selectSubCate.length > 0) {
+          this.subcategory = JSON.stringify(this.selectSubCate)
+        } else {
+          this.subcategory = undefined
         }
+        this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
+          console.log(res);
+          this.isSearch = false;
+          this.variantList[index] = res
+          this.variantList2 = res;
+          console.log(this.variantList);
+          if (barcode === 'barcode') {
+            this.oncheckVariant(res[0], index);
+            this.myControl.setValue(res[0].product_title)
+          }
+          if (search) {
+            //barcode patch
+            this.searchs = res;
+            this.productOption = res;
+            // console.log(this.searchs);
+            this.productName[index] = this.searchs[0]?.product_title;
+            // console.log(this.productName);
+            this.check = true;
+            const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
+            barcode.patchValue({
+              // barcode: this.searchs[0].id,
+              // item_name: this.searchs[0]?.variant_name
+            });
+          }
 
-      });
+        });
+      }
+      else {
+        this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
+          console.log(res);
+          this.isSearch = false;
+          this.variantList[index] = res
+          this.variantList2 = res;
+          console.log(this.variantList);
+          if (barcode === 'barcode') {
+            this.oncheckVariant(res[0], index);
+            this.myControl.setValue(res[0].product_title)
+          }
+          if (search) {
+            //barcode patch
+            this.searchs = res;
+            this.productOption = res;
+            // console.log(this.searchs);
+            this.productName[index] = this.searchs[0]?.product_title;
+            // console.log(this.productName);
+            this.check = true;
+            const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
+            barcode.patchValue({
+              // barcode: this.searchs[0]?.id,
+              // item_name: this.searchs[0]?.variant_name
+            });
+          }
+        });
+      }
     }
-    else {
-      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
-        console.log(res);
-        this.isSearch = false;
-        this.variantList[index]=res
-               this.variantList2 = res;
-        console.log(this.variantList);
-        if (barcode === 'barcode') {
-          this.oncheckVariant(res[0], index);
-          this.myControl.setValue(res[0].product_title)
-        }
-        if (search) {
-          //barcode patch
-          this.searchs = res;
-          this.productOption = res;
-          // console.log(this.searchs);
-          this.productName[index] = this.searchs[0]?.product_title;
-          // console.log(this.productName);
-          this.check = true;
-          const barcode = (this.saleForm.get('sale_order_cart') as FormArray).at(index) as FormGroup;
-          barcode.patchValue({
-            // barcode: this.searchs[0]?.id,
-            // item_name: this.searchs[0]?.variant_name
-          });
-        }
-      });
-    }
-  }
   }
 
   categoryList: any[] = [];
@@ -200,7 +211,7 @@ export class AddSalesComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -277,9 +288,13 @@ export class AddSalesComponent implements OnInit {
       this.isCart = true
     }
   }
-  getUser() {
-    this.saleService.getUser().subscribe((res: any) => {
+  getUser(query) {
+    this.saleService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.users = res?.data;
+      this.filteredusers = this.userControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
   paymentTermsList: any
@@ -291,7 +306,7 @@ export class AddSalesComponent implements OnInit {
   }
   selectDueDate(val) {
     console.log(val);
-    
+
     this.paymentTermsList.map((res: any) => {
       if (res.id == val) {
         const today = new Date();
@@ -340,7 +355,7 @@ export class AddSalesComponent implements OnInit {
     //   })
     // })
 
-    this.supplierAddress=data?.detail;
+    this.supplierAddress = data?.detail;
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {
         this.selectedAddressBilling = res
@@ -376,9 +391,9 @@ export class AddSalesComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -386,18 +401,18 @@ export class AddSalesComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-   indexCartValue:any;
+  indexCartValue: any;
   openModalProduct(index: number) {
-    console.log(index,'index');
+    console.log(index, 'index');
     // this.cartIndex.findIndex(index)
-    this.indexCartValue=index
-    const modalId = `productModal-${index}`; 
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.add('show');
-        modal.style.display = 'block';
+      modal.classList.add('show');
+      modal.style.display = 'block';
     }
-}
+  }
 
   selectAddressBilling(address: string) {
     this.selectedAddressBilling = address;
@@ -417,14 +432,14 @@ export class AddSalesComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-  selecBatchtModel(address: any, index: any,type:string) {
-    if(type=='productModal'){
+  selecBatchtModel(address: any, index: any, type: string) {
+    if (type == 'productModal') {
       const modal = document.getElementById('productModal');
       if (modal) {
         modal.classList.remove('show');
         modal.style.display = 'none';
       }
-    }else{
+    } else {
       const modal = document.getElementById('batchModal');
       if (modal) {
         modal.classList.remove('show');
@@ -465,14 +480,14 @@ export class AddSalesComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-    closeModalProduct(i: number) {
-    console.log(i, 'index');  
+  closeModalProduct(i: number) {
+    console.log(i, 'index');
     const modal = document.getElementById(`productModal-${i}`);
     if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
+      modal.classList.remove('show');
+      modal.style.display = 'none';
     }
-}
+  }
   closeModalShipping() {
     const modal = document.getElementById('addressModalShipping');
     if (modal) {
@@ -509,21 +524,21 @@ export class AddSalesComponent implements OnInit {
   batchDiscount: any;
   landingCost: any;
   batchCostPrice: any[] = [];
-selecteProduct:any;
+  selecteProduct: any;
 
-//12-04
-discountArray: any[] = []
+  //12-04
+  discountArray: any[] = []
 
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
     //12-04
-    event?.batch.forEach((batch:any)=>{
+    event?.batch.forEach((batch: any) => {
       this.discountArray.push(batch);
     });
     this.allDiscount();
     //end
-    this.selecteProduct=event?.product;
+    this.selecteProduct = event?.product;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
@@ -625,147 +640,147 @@ discountArray: any[] = []
     }
   }
 
-// 12-04
-discountTyp: any[] = [];
-selectedValue:any;
-priceRange: any[] = [];
-isPriceRange:boolean[]=[];
-qtyPerQty: any[] = [];
-isQPQ:boolean[]=[];
-qtyPerPercentage: any[] = [];
-isQPP:boolean[]=[];
-priceRangeFreeItem: any[] = [];
-isPriceRangeFreeItem:boolean[]=[];
-freeItemOnInvoice: any[] = [];
-isFreeItemInvoice:boolean[]=[];
-discountOnInvoice: any[] = [];
-isDiscountInvoice:boolean[]=[];
+  // 12-04
+  discountTyp: any[] = [];
+  selectedValue: any;
+  priceRange: any[] = [];
+  isPriceRange: boolean[] = [];
+  qtyPerQty: any[] = [];
+  isQPQ: boolean[] = [];
+  qtyPerPercentage: any[] = [];
+  isQPP: boolean[] = [];
+  priceRangeFreeItem: any[] = [];
+  isPriceRangeFreeItem: boolean[] = [];
+  freeItemOnInvoice: any[] = [];
+  isFreeItemInvoice: boolean[] = [];
+  discountOnInvoice: any[] = [];
+  isDiscountInvoice: boolean[] = [];
 
-allDiscount() {
-  console.log(this.discountArray);
-  this.discountTyp = [];
-  this.priceRange=[];
-  this.qtyPerQty=[];
-  this.qtyPerPercentage=[];
-  this.priceRangeFreeItem=[];
-  this.freeItemOnInvoice=[];
-  this.discountOnInvoice=[];
-  this.discountArray?.forEach((batch: any, i: number) => {
-    console.warn(batch);
-    batch?.discount?.forEach((discount: any) => {
-      console.log(discount);
+  allDiscount() {
+    console.log(this.discountArray);
+    this.discountTyp = [];
+    this.priceRange = [];
+    this.qtyPerQty = [];
+    this.qtyPerPercentage = [];
+    this.priceRangeFreeItem = [];
+    this.freeItemOnInvoice = [];
+    this.discountOnInvoice = [];
+    this.discountArray?.forEach((batch: any, i: number) => {
+      console.warn(batch);
+      batch?.discount?.forEach((discount: any) => {
+        console.log(discount);
 
-  if (!this.discountTyp[i]) {
-    this.discountTyp[i] = [];
-  }
-  this.discountTyp[i].push(discount);
-  console.warn(this.discountTyp[i]);
+        if (!this.discountTyp[i]) {
+          this.discountTyp[i] = [];
+        }
+        this.discountTyp[i].push(discount);
+        console.warn(this.discountTyp[i]);
 
-  if (discount?.is_compulsory === "True") {
-    this.selectedValue = discount;
-  } else {
-    if (batch?.is_active) { // Add your condition here
-      if (discount.discount_offer_type === 'Price-range-free-item') {
-        if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
-          // this.priceRangeFreeItem.push(discount);
-          this.isPriceRangeFreeItem[i]=true;
-          this.isPriceRange[i]=false;
-          this.isFreeItemInvoice[i]=false;
-          this.isDiscountInvoice[i]=false;
-          this.isQPQ[i]=false;
-          this.isQPP[i]=false;
-          if (!this.priceRangeFreeItem[i]) {
-            this.priceRangeFreeItem[i] = [];
+        if (discount?.is_compulsory === "True") {
+          this.selectedValue = discount;
+        } else {
+          if (batch?.is_active) { // Add your condition here
+            if (discount.discount_offer_type === 'Price-range-free-item') {
+              if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
+                // this.priceRangeFreeItem.push(discount);
+                this.isPriceRangeFreeItem[i] = true;
+                this.isPriceRange[i] = false;
+                this.isFreeItemInvoice[i] = false;
+                this.isDiscountInvoice[i] = false;
+                this.isQPQ[i] = false;
+                this.isQPP[i] = false;
+                if (!this.priceRangeFreeItem[i]) {
+                  this.priceRangeFreeItem[i] = [];
+                }
+                this.priceRangeFreeItem[i].push(discount);
+                console.warn(this.priceRangeFreeItem, 'price range free item');
+              }
+            } else if (discount.discount_offer_type === 'Price-range-discount') {
+              if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
+                this.isPriceRange[i] = true;
+                this.isPriceRangeFreeItem[i] = false;
+                this.isFreeItemInvoice[i] = false;
+                this.isDiscountInvoice[i] = false;
+                this.isQPQ[i] = false;
+                this.isQPP[i] = false;
+                // this.priceRange.push(discount);
+                if (!this.priceRange[i]) {
+                  this.priceRange[i] = [];
+                }
+                this.priceRange[i].push(discount);
+                console.warn(this.priceRange, 'price range discount');
+              }
+            } else if (discount.discount_offer_type === 'Free-item-on-invoice') {
+              if (batch?.mrp >= discount.invoice_amount) {
+                // this.freeItemOnInvoice.push(discount);
+                this.isFreeItemInvoice[i] = true;
+                this.isPriceRangeFreeItem[i] = false;
+                this.isPriceRange[i] = false;
+                this.isDiscountInvoice[i] = false;
+                this.isQPQ[i] = false;
+                this.isQPP[i] = false;
+                if (!this.freeItemOnInvoice[i]) {
+                  this.freeItemOnInvoice[i] = [];
+                }
+                this.freeItemOnInvoice[i].push(discount);
+                console.warn(this.freeItemOnInvoice, 'free item on invoice');
+              }
+            } else if (discount.discount_offer_type === 'Discount-on-Invoice') {
+              if (batch?.mrp >= discount.invoice_amount) {
+                this.isDiscountInvoice[i] = true;
+                this.isPriceRangeFreeItem[i] = false;
+                this.isPriceRange[i] = false;
+                this.isFreeItemInvoice[i] = false;
+                this.isQPQ[i] = false;
+                this.isQPP[i] = false;
+                if (!this.discountOnInvoice[i]) {
+                  this.discountOnInvoice[i] = [];
+                }
+                this.discountOnInvoice[i].push(discount);
+                // this.discountOnInvoice.push(discount);
+                console.warn(this.discountOnInvoice, 'discount on invoice');
+              }
+            } else if (discount.discount_offer_type === 'Quantity-per-percentag') {
+              if (this.totalQty() >= discount.purchase_qty) {
+                // this.qtyPerPercentage.push(discount);
+                this.isQPP[i] = true;
+                this.isDiscountInvoice[i] = false;
+                this.isPriceRangeFreeItem[i] = false;
+                this.isPriceRange[i] = false;
+                this.isFreeItemInvoice[i] = false;
+                this.isQPQ[i] = false;
+                if (!this.qtyPerPercentage[i]) {
+                  this.qtyPerPercentage[i] = [];
+                }
+                this.qtyPerPercentage[i].push(discount);
+                console.warn(this.qtyPerPercentage, 'qty per %');
+              }
+            } else if (discount.discount_offer_type === 'Quantity-per-quantity') {
+              if (this.totalQty() >= discount.purchase_qty) {
+                this.isQPQ[i] = true;
+                this.isDiscountInvoice[i] = false;
+                this.isPriceRangeFreeItem[i] = false;
+                this.isPriceRange[i] = false;
+                this.isFreeItemInvoice[i] = false;
+                this.isQPP[i] = false;
+                // this.qtyPerQty.push(discount);
+                if (!this.qtyPerQty[i]) {
+                  this.qtyPerQty[i] = [];
+                }
+                this.qtyPerQty[i].push(discount);
+                console.warn(this.qtyPerQty, 'qty per qty');
+              }
+            }
           }
-          this.priceRangeFreeItem[i].push(discount);
-          console.warn(this.priceRangeFreeItem, 'price range free item');
         }
-      } else if (discount.discount_offer_type === 'Price-range-discount') {
-        if (batch?.mrp >= discount.start_price && batch?.mrp <= discount.end_price) {
-          this.isPriceRange[i]=true;
-          this.isPriceRangeFreeItem[i]=false;
-          this.isFreeItemInvoice[i]=false;
-          this.isDiscountInvoice[i]=false;
-          this.isQPQ[i]=false;
-          this.isQPP[i]=false;
-          // this.priceRange.push(discount);
-          if (!this.priceRange[i]) {
-            this.priceRange[i] = [];
-          }
-          this.priceRange[i].push(discount);
-          console.warn(this.priceRange, 'price range discount');
-        }
-      } else if (discount.discount_offer_type === 'Free-item-on-invoice') {
-        if (batch?.mrp >= discount.invoice_amount) {
-          // this.freeItemOnInvoice.push(discount);
-          this.isFreeItemInvoice[i]=true;
-          this.isPriceRangeFreeItem[i]=false;
-          this.isPriceRange[i]=false;
-          this.isDiscountInvoice[i]=false;
-          this.isQPQ[i]=false;
-          this.isQPP[i]=false;
-          if (!this.freeItemOnInvoice[i]) {
-            this.freeItemOnInvoice[i] = [];
-          }
-          this.freeItemOnInvoice[i].push(discount);
-          console.warn(this.freeItemOnInvoice, 'free item on invoice');
-        }
-      } else if (discount.discount_offer_type === 'Discount-on-Invoice') {
-        if (batch?.mrp >= discount.invoice_amount) {
-          this.isDiscountInvoice[i]=true;
-          this.isPriceRangeFreeItem[i]=false;
-          this.isPriceRange[i]=false;
-          this.isFreeItemInvoice[i]=false;
-          this.isQPQ[i]=false;
-          this.isQPP[i]=false;
-          if (!this.discountOnInvoice[i]) {
-            this.discountOnInvoice[i] = [];
-          }
-          this.discountOnInvoice[i].push(discount);
-          // this.discountOnInvoice.push(discount);
-          console.warn(this.discountOnInvoice, 'discount on invoice');
-        }
-      } else if (discount.discount_offer_type === 'Quantity-per-percentag') {
-        if (this.totalQty() >= discount.purchase_qty) {
-          // this.qtyPerPercentage.push(discount);
-          this.isQPP[i]=true;
-          this.isDiscountInvoice[i]=false;
-          this.isPriceRangeFreeItem[i]=false;
-          this.isPriceRange[i]=false;
-          this.isFreeItemInvoice[i]=false;
-          this.isQPQ[i]=false;
-          if (!this.qtyPerPercentage[i]) {
-            this.qtyPerPercentage[i] = [];
-          }
-          this.qtyPerPercentage[i].push(discount);
-          console.warn(this.qtyPerPercentage, 'qty per %');
-        }
-      } else if (discount.discount_offer_type === 'Quantity-per-quantity') {
-        if (this.totalQty() >= discount.purchase_qty) {
-          this.isQPQ[i]=true;
-          this.isDiscountInvoice[i]=false;
-          this.isPriceRangeFreeItem[i]=false;
-          this.isPriceRange[i]=false;
-          this.isFreeItemInvoice[i]=false;
-          this.isQPP[i]=false;
-          // this.qtyPerQty.push(discount);
-          if (!this.qtyPerQty[i]) {
-            this.qtyPerQty[i] = [];
-          }
-          this.qtyPerQty[i].push(discount);
-          console.warn(this.qtyPerQty, 'qty per qty');
-        }
-      }
-    }
-  } 
+      });
     });
-  });
-}
+  }
 
-selectDiscount(val){
-  console.warn(val,'selected discount'); 
-}
-//end
+  selectDiscount(val) {
+    console.warn(val, 'selected discount');
+  }
+  //end
 
 
 
@@ -1108,8 +1123,8 @@ selectDiscount(val){
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredUsers = include
-      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue))
-      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue));
+      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue))
+      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue));
     if (!include && filteredUsers.length === 0) {
       // console.log("No results found");
       filteredUsers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
@@ -1173,7 +1188,7 @@ selectDiscount(val){
       modal.classList.remove('show');
       modal.style.display = 'none';
     }
-  this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
+    this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
     console.log(value);
     // console.log(index);
     // console.log(value?.sku);

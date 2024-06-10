@@ -6,7 +6,7 @@ import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
@@ -45,7 +45,7 @@ export class SaleSummaryComponent implements OnInit {
   startDate: any;
   endDate: any;
   saleSummaryUserId: any;
-   saleSummaryList: any;
+  saleSummaryList: any;
 
 
   userDetails: any;
@@ -72,7 +72,7 @@ export class SaleSummaryComponent implements OnInit {
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       console.log(userDetails);
-      this.userName=userDetails?.username
+      this.userName = userDetails?.username
     });
     const today = new Date();
     const month = today.getMonth();
@@ -96,11 +96,23 @@ export class SaleSummaryComponent implements OnInit {
     this.saleSummaryPaymentType = this.saleSummaryform.value?.payment_type;
 
     this.getSaleSummary();
-    this.getUser();
     this.filteredusers = this.userControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter1(value, true))
     );
+
+    this.userControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getUser(res);
+      } else {
+        this.users = [];
+        this.filteredusers = this.userControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter1(value, true))
+        );
+      }
+    })
+
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
@@ -109,7 +121,7 @@ export class SaleSummaryComponent implements OnInit {
       }),
     );
   }
-  
+
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
   }
@@ -118,18 +130,22 @@ export class SaleSummaryComponent implements OnInit {
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredUsers = include
       ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue))
-      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue));
+      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue));
     if (!include && filteredUsers.length === 0) {
       // console.log("No results found");
-      filteredUsers.push({ name: "No data found" }); 
+      filteredUsers.push({ name: "No data found" });
     }
     return filteredUsers;
   }
 
-  users:any[]=[];
-  getUser() {
-    this.reportService.getUser().subscribe((res: any) => {
+  users: any[] = [];
+  getUser(query) {
+    this.reportService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.users = res?.data;
+      this.filteredusers = this.userControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter1(value, true))
+      );
     })
   }
   private _filter(item_code: string): any[] {
@@ -190,34 +206,34 @@ export class SaleSummaryComponent implements OnInit {
     const endIndex = Math.min(startIndex + productsPerPage - 1, totalProducts - 1);
     return `Showing ${startIndex + 1}–${endIndex + 1} of ${totalProducts} results`;
   }
-saleSummary:any
+  saleSummary: any
   getSaleSummary() {
-    this.reportService.getSaleSummaryList(this.startDate, this.endDate, this.saleSummaryUserId,this.fyID, this.selectData).subscribe((res) => {
+    this.reportService.getSaleSummaryList(this.startDate, this.endDate, this.saleSummaryUserId, this.fyID, this.selectData).subscribe((res) => {
       console.log(res);
       this.saleSummaryList = res?.data;
-      this.saleSummary=res
+      this.saleSummary = res
     })
 
   }
 
   // api call
   dataId: any;
-  userName:any;
+  userName: any;
   oncheckAccount(data: any) {
     console.log(data);
-    this.userName=data?.detail?.company_name
+    this.userName = data?.detail?.company_name
     this.dataId = data?.id;
-   this.saleSummaryform.patchValue({user_id:this.dataId});
-   console.warn(this.saleSummaryform.value);
-   this.saleSummaryUserId = this.saleSummaryform.value?.user_id;
-   this?.getSaleSummary();
+    this.saleSummaryform.patchValue({ user_id: this.dataId });
+    console.warn(this.saleSummaryform.value);
+    this.saleSummaryUserId = this.saleSummaryform.value?.user_id;
+    this?.getSaleSummary();
   }
   selectUser(data: any) {
     this.dataId = data;
-   this. saleSummaryform.patchValue({user_id:this.dataId});
-   console.warn(this. saleSummaryform.value);
-   this.saleSummaryUserId = this. saleSummaryform.value?.user_id;
-   this?.getSaleSummary();
+    this.saleSummaryform.patchValue({ user_id: this.dataId });
+    console.warn(this.saleSummaryform.value);
+    this.saleSummaryUserId = this.saleSummaryform.value?.user_id;
+    this?.getSaleSummary();
   }
   getSelectedSaleSummaryDates() {
     console.log(this.saleSummaryform.value);
@@ -230,255 +246,254 @@ saleSummary:any
     this?.getSaleSummary();
   }
 
-     // convert to pdf
-UserName: any;
+  // convert to pdf
+  UserName: any;
 
 
-     generatePDFAgain() {
-      const doc = new jsPDF();
-      const subtitle = 'PV';
-      const title = 'Sale Summary Report';
-      const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
-      const heading = `User: ${this.userName}`;
-    
-      doc.setFontSize(12);
-      doc.setTextColor(33, 43, 54);
-      doc.text(subtitle, 86, 5);
-      doc.text(title, 82, 10);
-      doc.text(heading, 10, 18);
-      doc.text(heading2, 10, 22)
-    
-      doc.text('', 10, 25); //,argin x, y
-    
-      // Pass tableData to autoTable
-      autoTable(doc, {
-        head: [
-          ['#',  'Date', 'Reciept Method', 'Reciept Voucher No. ','Note']
-        ],
-        body: this.saleSummaryList.map((row:any, index:number ) => [
-          index + 1,
-          row.date,
-          row.receipt_type,
-          row.receipt_voucher_no,
-          row.note
-        ]),
-        theme: 'grid',
-        headStyles: {
-          fillColor: [255, 159, 67]
-        },
-        startY: 25
+  generatePDFAgain() {
+    const doc = new jsPDF();
+    const subtitle = 'PV';
+    const title = 'Sale Summary Report';
+    const heading2 = `Date Range From: ${this.startDate} - ${this.endDate}`
+    const heading = `User: ${this.userName}`;
+
+    doc.setFontSize(12);
+    doc.setTextColor(33, 43, 54);
+    doc.text(subtitle, 86, 5);
+    doc.text(title, 82, 10);
+    doc.text(heading, 10, 18);
+    doc.text(heading2, 10, 22)
+
+    doc.text('', 10, 25); //,argin x, y
+
+    // Pass tableData to autoTable
+    autoTable(doc, {
+      head: [
+        ['#', 'Date', 'Reciept Method', 'Reciept Voucher No. ', 'Note']
+      ],
+      body: this.saleSummaryList.map((row: any, index: number) => [
+        index + 1,
+        row.date,
+        row.receipt_type,
+        row.receipt_voucher_no,
+        row.note
+      ]),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 159, 67]
+      },
+      startY: 25
+    });
+
+    doc.save('saleSummary.pdf');
+  }
+
+
+
+
+
+  // excel export only filtered data
+  getVisibleDataFromTable(): any[] {
+    const visibleData = [];
+    const table = document.getElementById('mytable');
+    if (table) {
+      const headerRow = table.querySelector('thead tr');
+      if (headerRow) {
+        const headerData: string[] = [];
+        headerRow.querySelectorAll('th').forEach(cell => {
+          const columnHeader = cell.textContent?.trim(); // Add null check here
+          if (columnHeader && columnHeader !== 'Is Active' && columnHeader !== 'Action') {
+            headerData.push(columnHeader);
+          }
+        });
+        visibleData.push(headerData);
+      }
+
+      // Include visible data rows
+      const dataRows = table.querySelectorAll('tbody tr');
+      dataRows.forEach(row => {
+        const rowData: string[] = [];
+        row.querySelectorAll('td').forEach(cell => {
+          const cellData = cell.textContent?.trim(); // Add null check here
+          if (cellData) {
+            rowData.push(cellData);
+          }
+        });
+        visibleData.push(rowData);
       });
+    }
+    return visibleData;
+  }
 
-      doc.save('saleSummary.pdf');
+  // Modify your exportToExcel() function
+  exportToExcel(): void {
+    const visibleDataToExport = this.getVisibleDataFromTable();
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Create a Blob from the workbook and initiate a download
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = 'saleSummary.xlsx';
+    saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
+  }
+
+  printTable(): void {
+    // Get the table element and its HTML content
+    const tableElement = document.getElementById('mytable');
+    if (!tableElement) {
+      console.error("Table element with ID 'mytable' not found.");
+      return;
     }
 
+    const tableHTML = tableElement.outerHTML;
 
-
- 
-
-    // excel export only filtered data
-    getVisibleDataFromTable(): any[] {
-      const visibleData = [];
-      const table = document.getElementById('mytable');
-      if (table) {
-        const headerRow = table.querySelector('thead tr');
-        if (headerRow) {
-          const headerData: string[] = [];
-          headerRow.querySelectorAll('th').forEach(cell => {
-            const columnHeader = cell.textContent?.trim(); // Add null check here
-            if (columnHeader && columnHeader !== 'Is Active' && columnHeader !== 'Action') {
-              headerData.push(columnHeader);
-            }
-          });
-          visibleData.push(headerData);
-        }
-    
-        // Include visible data rows
-        const dataRows = table.querySelectorAll('tbody tr');
-        dataRows.forEach(row => {
-          const rowData: string[] = [];
-          row.querySelectorAll('td').forEach(cell => {
-            const cellData = cell.textContent?.trim(); // Add null check here
-            if (cellData) {
-              rowData.push(cellData);
-            }
-          });
-          visibleData.push(rowData);
-        });
-      }
-      return visibleData;
-    }
-    
-        // Modify your exportToExcel() function
-    exportToExcel(): void {
-      const visibleDataToExport = this.getVisibleDataFromTable();
-      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(visibleDataToExport);
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-      // Create a Blob from the workbook and initiate a download
-      const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const fileName = 'saleSummary.xlsx';
-      saveAs(blob, fileName); // Use the FileSaver.js library to initiate download
-    }
-  
-    printTable(): void {
-      // Get the table element and its HTML content
-      const tableElement = document.getElementById('mytable');
-      if (!tableElement) {
-        console.error("Table element with ID 'mytable' not found.");
-        return;
-      }
-    
-      const tableHTML = tableElement.outerHTML;
-    
-      // Get the title element and its HTML content
-      const titleElement = document.querySelector('.titl');
-      if (!titleElement) {
-        console.error("Title element with class 'titl' not found.");
-        return;
-      }
-    
-      const titleHTML = titleElement.outerHTML;
-    
-      // Clone the table element to manipulate
-      const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
-  
-    
-      // Get the modified table's HTML content
-      const modifiedTableHTML = clonedTable.outerHTML;
-    
-      // Apply styles to add some space from the top after the title
-      const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
-    
-      // Combine the title and table content
-      const combinedContent = styledTitleHTML + modifiedTableHTML;
-    
-      // Store the original contents
-      const originalContents = document.body.innerHTML;
-      //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
-      // Replace the content of the body with the combined content
-      document.body.innerHTML = combinedContent;
-      window.print();
-    
-      // Restore the original content of the body
-      document.body.innerHTML = originalContents;
+    // Get the title element and its HTML content
+    const titleElement = document.querySelector('.titl');
+    if (!titleElement) {
+      console.error("Title element with class 'titl' not found.");
+      return;
     }
 
-    loaderPdf = false;
-    generatePdf() {
-      this.loaderPdf = true;
-      const elementToCapture = document.getElementById('debitNote');
-      if (elementToCapture) {
-        html2canvas(elementToCapture).then((canvas:any) => {
-          this.loaderPdf = false;
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF('p', 'mm', 'a4');
-          const width = pdf.internal.pageSize.getWidth();
-          const height = pdf.internal.pageSize.getHeight();
-          pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-          pdf.save('saleSummary.pdf');
-        });
-      }
-    }
+    const titleHTML = titleElement.outerHTML;
 
-    changePg(val: any) {
-      console.log(val);
-      if (val == -1) {
-        this.itemsPerPage = this.saleSummaryList?.length;
-      }
+    // Clone the table element to manipulate
+    const clonedTable = tableElement.cloneNode(true) as HTMLTableElement;
+
+
+    // Get the modified table's HTML content
+    const modifiedTableHTML = clonedTable.outerHTML;
+
+    // Apply styles to add some space from the top after the title
+    const styledTitleHTML = `<style>.spaced-title { margin-top: 80px; }</style>` + titleHTML.replace('titl', 'spaced-title');
+
+    // Combine the title and table content
+    const combinedContent = styledTitleHTML + modifiedTableHTML;
+
+    // Store the original contents
+    const originalContents = document.body.innerHTML;
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
+    // Replace the content of the body with the combined content
+    document.body.innerHTML = combinedContent;
+    window.print();
+
+    // Restore the original content of the body
+    document.body.innerHTML = originalContents;
+  }
+
+  loaderPdf = false;
+  generatePdf() {
+    this.loaderPdf = true;
+    const elementToCapture = document.getElementById('debitNote');
+    if (elementToCapture) {
+      html2canvas(elementToCapture).then((canvas: any) => {
+        this.loaderPdf = false;
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+        pdf.save('saleSummary.pdf');
+      });
     }
-        //23-5
-        branchList: any[] = [];
-        filteredBranchList: any[] = [];
-        searchBranch: string = '';
-        getBranch() {
-          this.reportService.getBranch().subscribe((res: any) => {
-            this.branchList = res;
-            this.filteredBranchList = [...this.branchList];
-          });
-        }
-        filterBranch() {
-          if (this.searchBranch.trim() === '') {
-            this.filteredBranchList = [...this.branchList];
-          } else {
-            this.filteredBranchList = this.branchList.filter(feature =>
-              feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
-            );
-          }
-        }
-        // add remove branch 
-        searchVariant = ''
-        selectData: any[] = [];
-        selectedCategoryIds: any[] = []
-        SelectedBranch(variant: any, event: any) {
-          if (event) {
-            console.log(variant);
-            this.selectData.push(variant)
-            console.log(this.selectData, 'selected data');
-            //close dropdown 
-            this.searchVariant = '';
-            this.ngOnInit();
-          } else {
-            const selectedIndex = this.selectData.findIndex(item => item == variant);
-            console.log(selectedIndex);
-            if (selectedIndex !== -1) {
-              this.selectData.splice(selectedIndex, 1);
-            }
-            this.ngOnInit();
-            console.log(this.selectData);
-          }
-        }
-      //23-5
+  }
+
+  changePg(val: any) {
+    console.log(val);
+    if (val == -1) {
+      this.itemsPerPage = this.saleSummaryList?.length;
+    }
+  }
+  //23-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.reportService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
       }
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-          
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            
-          
-            
-          
-          
-        
-        
-        
-        
-      
-          
-        
-          
-        
-        
-      
-      
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
+  //23-5
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

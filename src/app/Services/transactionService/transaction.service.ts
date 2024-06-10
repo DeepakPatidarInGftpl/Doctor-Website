@@ -11,18 +11,18 @@ export class TransactionService {
   constructor(private http: HttpClient) { }
   apiUrl = `${environment.api}`;
 
-  
+
   //debit
   //20-5
-  getDebitNoteFy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getDebitNoteFy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/debit_note/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -61,15 +61,15 @@ export class TransactionService {
 
   // /pv-api/credit_note/
   //20-5
-  getCreditNoteFy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getCreditNoteFy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/credit_note/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -108,15 +108,15 @@ export class TransactionService {
 
   // Journal voucher
   //20-5
-  getJournalVoucherFy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getJournalVoucherFy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/jounal_voucher/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -153,17 +153,17 @@ export class TransactionService {
     return this.http.delete(`${url}${id}`)
   }
 
-   // Countra voucher
-   //20-5
-   getCountraVoucherFy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  // Countra voucher
+  //20-5
+  getCountraVoucherFy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/countra_voucher/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -202,15 +202,15 @@ export class TransactionService {
 
   // Reciept voucher
   //20-5
-  getRecieptVoucherFy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getRecieptVoucherFy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/receipt_voucher/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -249,15 +249,15 @@ export class TransactionService {
   }
 
   // payment voucher
-  getPaymentVoucherFy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getPaymentVoucherFy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/payment_voucher/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -269,7 +269,7 @@ export class TransactionService {
     }
     return this.http.get(url);
   }
-   getPaymentVoucher() {
+  getPaymentVoucher() {
     let url = this.apiUrl + '/pv-api/payment_voucher/';
     return this.http.get(url)
   }
@@ -294,36 +294,36 @@ export class TransactionService {
     return this.http.delete(`${url}${id}`)
   }
   //prefix
-  getJournalVoucherPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=JournalVoucher';
+  getJournalVoucherPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=JournalVoucher';
     return this.http.get(url)
   }
-  getDebitNotePrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=DebitNote';
+  getDebitNotePrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=DebitNote';
     return this.http.get(url)
   }
-  getCreditNotePrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=CreditNote';
+  getCreditNotePrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=CreditNote';
     return this.http.get(url)
   }
-  getCountraVoucherPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=CountraVoucher';
+  getCountraVoucherPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=CountraVoucher';
     return this.http.get(url)
-  }  
-  getReceiptVoucherPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=ReceiptVoucher';
+  }
+  getReceiptVoucherPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=ReceiptVoucher';
     return this.http.get(url)
-  } 
-  getPaymentVoucherPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=PaymentVoucher';
+  }
+  getPaymentVoucherPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=PaymentVoucher';
     return this.http.get(url)
-  } 
-  getExpenceVoucherPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=ExpensesVoucher';
+  }
+  getExpenceVoucherPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=ExpensesVoucher';
     return this.http.get(url)
-  } 
-  getMaterialConsuptionPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=MaterialConsumption';
+  }
+  getMaterialConsuptionPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=MaterialConsumption';
     return this.http.get(url)
   }
   // account service
@@ -337,11 +337,11 @@ export class TransactionService {
     return this.http.get(url)
   }
   // purchase bill
-  getPurchaseBill(){
-    let url =this.apiUrl+'/pv-api/purchase_bill/';
+  getPurchaseBill() {
+    let url = this.apiUrl + '/pv-api/purchase_bill/';
     return this.http.get(url);
   }
- // supplier 
+  // supplier 
   getSupplier() {
     let url = this.apiUrl + '/pv-api/supplier/';
     return this.http.get(url)
@@ -349,15 +349,15 @@ export class TransactionService {
 
   // expense voucher 11-1
   //20-5
-  getExpensVoucherFy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getExpensVoucherFy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/expense_voucher/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -396,15 +396,15 @@ export class TransactionService {
 
   //material consumption
   //20-5
-  getMaterialConsuptionFy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getMaterialConsuptionFy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/material_consumption/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -440,23 +440,24 @@ export class TransactionService {
     let url = this.apiUrl + '/pv-api/receipt_voucher/?id=';
     return this.http.delete(`${url}${id}`)
   }
-  getUser() {
-    let url = this.apiUrl + '/pv-api/contact-user/';
+
+  getUser(value) {
+    let url = this.apiUrl + '/pv-api/contact-user/?search=' + value;
     return this.http.get(url)
   }
-  getScrapEntryVoucherPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=ScarpEntry';
+  getScrapEntryVoucherPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=ScarpEntry';
     return this.http.get(url)
   }
-  getScrapEntryFy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getScrapEntryFy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/scarp_entry/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -472,18 +473,18 @@ export class TransactionService {
     let url = this.apiUrl + '/pv-api/scarp_entry/';
     return this.http.get(url);
   }
-  getScrapEntryById(id:number) {
+  getScrapEntryById(id: number) {
     let url = this.apiUrl + '/pv-api/scarp_entry/?id=';
     return this.http.get(`${url}${id}`);
   }
-  
+
   addScrapEntry(data: any) {
     let url = this.apiUrl + '/pv-api/scarp_entry/';
     return this.http.post<any>(url, data,)
   }
-     // variant search
-     searchProduct(query: any) {
-      let url = this.apiUrl + '/pv-api/variant-search/?search=';
-      return this.http.get(url + query);
-    }
+  // variant search
+  searchProduct(query: any) {
+    let url = this.apiUrl + '/pv-api/variant-search/?search=';
+    return this.http.get(url + query);
+  }
 }

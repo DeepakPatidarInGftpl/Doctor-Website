@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { StockService } from 'src/app/Services/stockService/stock.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
@@ -13,8 +13,8 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
   styleUrls: ['./add-material-consumption.component.scss']
 })
 export class AddMaterialConsumptionComponent implements OnInit {
-  constructor(private fb: FormBuilder, private inventoryService:StockService,
-     private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private toastr: ToastrService, private router: Router) { }
+  constructor(private fb: FormBuilder, private inventoryService: StockService,
+    private transactionService: TransactionService, private purchaseService: PurchaseServiceService, private toastr: ToastrService, private router: Router) { }
   materialConsumptionForm!: FormGroup;
 
   get f() {
@@ -31,13 +31,13 @@ export class AddMaterialConsumptionComponent implements OnInit {
     const year = now.getFullYear();
     const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are zero-indexed
     const day = now.getDate().toString().padStart(2, '0');
-  
+
     const defaultDateTime = `${year}-${month}-${day}`;
 
     this.materialConsumptionForm = this.fb.group({
       user: new FormControl('', [Validators.required]),
       consumption_date: new FormControl(defaultDateTime, [Validators.required]),
-      prefix: new FormControl('',[Validators.required]),
+      prefix: new FormControl('', [Validators.required]),
       consumption_no: new FormControl('',),
       consumption_type: new FormControl('', [Validators.required]),
       remarks: new FormControl(''),
@@ -47,7 +47,6 @@ export class AddMaterialConsumptionComponent implements OnInit {
       total_action: new FormControl(0),
     })
 
-    this.getSupplier();
     this.getprefix()
 
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
@@ -55,6 +54,17 @@ export class AddMaterialConsumptionComponent implements OnInit {
       map(value => this._filter(value, true))
     );
 
+    this.supplierControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getSupplier(res);
+      } else {
+        this.userList = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
   }
 
   prefixNo: any;
@@ -63,7 +73,7 @@ export class AddMaterialConsumptionComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.materialConsumptionForm.get('consumption_no').patchValue(this.prefixNo[0]?.id);
         this.materialConsumptionForm.get('prefix').patchValue(this.prefixNo[0]?.id);
       } else {
@@ -73,9 +83,9 @@ export class AddMaterialConsumptionComponent implements OnInit {
       this.toastr.error(err.error.msg)
     })
   }
-  amounts:any=0;
-  taxs: any=0;
-  totals: any=0;
+  amounts: any = 0;
+  taxs: any = 0;
+  totals: any = 0;
   calculateTax() {
     if (this.taxs) {
       // let taxAmount = (this.amounts * this.taxs) / 100;
@@ -90,10 +100,13 @@ export class AddMaterialConsumptionComponent implements OnInit {
   }
 
   userList: any[] = [];
-  getSupplier() {
-    this.transactionService.getUser().subscribe((res: any) => {
-      console.log(res);
-      this.userList = res?.data
+  getSupplier(query) {
+    this.transactionService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
+      this.userList = res?.data;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
 
@@ -186,7 +199,7 @@ export class AddMaterialConsumptionComponent implements OnInit {
   get total_action() {
     return this.materialConsumptionForm.get('total_action')
   }
-  variantList:any[]=[];
+  variantList: any[] = [];
   barcodeControl = new FormControl('');
   getVariant(search: any) {
     this.inventoryService.filterVariant('', '', search).subscribe((res: any) => {
@@ -194,11 +207,11 @@ export class AddMaterialConsumptionComponent implements OnInit {
       this.variantList = res;
       console.log(this.variantList);
     });
-}
-oncheckProduct(product:any){
-  console.log(product);
-  
-this.materialConsumptionForm.get('barcode')?.patchValue(product?.id)
-}
+  }
+  oncheckProduct(product: any) {
+    console.log(product);
+
+    this.materialConsumptionForm.get('barcode')?.patchValue(product?.id)
+  }
 }
 
