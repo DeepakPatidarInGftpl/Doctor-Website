@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
@@ -29,7 +29,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private Arout: ActivatedRoute,
-    private coreService:CoreService) {
+    private coreService: CoreService) {
   }
 
   customerControlName = 'customer';
@@ -53,8 +53,8 @@ export class UpdateMaterialOutwardComponent implements OnInit {
   subcategoryList;
   id: any
   editRes: any;
-  
-  isStatusDraft=false; //21-5
+
+  isStatusDraft = false; //21-5
   ngOnInit(): void {
 
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
@@ -81,23 +81,23 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     this.saleService.getSalesMaterialOutwardById(this.id).subscribe(res => {
       this.editRes = res;
       this.saleMaterialOutwardForm.patchValue(this.editRes);
-           // 21-5
-           if(this.editRes.status=='Draft' || this.editRes.status==null){
-            this.isStatusDraft=true;
-            this.getprefix();
-          }else{
-            this.saleMaterialOutwardForm.get('voucher_number').patchValue(this.editRes?.voucher_number) // 21-5
-          }
-    //end 21-5
-      if(this.editRes?.cart.length>0){
+      // 21-5
+      if (this.editRes.status == 'Draft' || this.editRes.status == null) {
+        this.isStatusDraft = true;
+        this.getprefix();
+      } else {
+        this.saleMaterialOutwardForm.get('voucher_number').patchValue(this.editRes?.voucher_number) // 21-5
+      }
+      //end 21-5
+      if (this.editRes?.cart.length > 0) {
         this.saleMaterialOutwardForm.setControl('material_outward_cart', this.udateCart(this.editRes?.cart));
-      }else{
-        this.isCart=true;
+      } else {
+        this.isCart = true;
       }
       // this.saleMaterialOutwardForm.get('voucher_number')?.patchValue(this.editRes); // 20-5
       this.saleMaterialOutwardForm.get('customer')?.patchValue(this.editRes?.customer?.id);
 
-      this.userControl.setValue(this.editRes?.customer?.name+ ' '+ this.editRes?.customer?.user_type);
+      this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.user_type);
     })
 
     this.filteredusers = this.userControl.valueChanges.pipe(
@@ -108,9 +108,20 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getUser();
+
+    this.userControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getUser(res);
+      } else {
+        this.users = [];
+        this.filteredusers = this.userControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
     this.getCategory();
-    
+
 
   }
 
@@ -120,7 +131,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       console.log(res);
       if (res.success == true) {
         this.prefixNo = res.data;
-        this.saleMaterialOutwardForm.get('voucher_number').patchValue(this.prefixNo[0]?.id) 
+        this.saleMaterialOutwardForm.get('voucher_number').patchValue(this.prefixNo[0]?.id)
       } else {
         this.toastrService.error(res.msg)
       }
@@ -135,9 +146,9 @@ export class UpdateMaterialOutwardComponent implements OnInit {
   myControl: FormArray;
   variantList2: any[] = [];
   variantList: any[] = [];
-  isSearch=false;
+  isSearch = false;
   getVariant(search: any, index: any, barcode: any) {
-    this.isSearch=true;
+    this.isSearch = true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -153,9 +164,9 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       }
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
-       this.variantList[index]=res
-  this.variantList2 = res;
+        this.isSearch = false;
+        this.variantList[index] = res
+        this.variantList2 = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
@@ -186,9 +197,9 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     else {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
-       this.variantList[index]=res
-  this.variantList2 = res;
+        this.isSearch = false;
+        this.variantList[index] = res
+        this.variantList2 = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
           this.oncheckVariant(res[0], index);
@@ -226,13 +237,13 @@ export class UpdateMaterialOutwardComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
     })
   }
-  
+
   filterCategory() {
     if (this.searchCategory.trim() === '') {
       this.filteredCategoryList = [...this.categoryList];
@@ -317,9 +328,13 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       this.isCart = true
     }
   }
-  getUser() {
-    this.saleService.getUser().subscribe((res: any) => {
+  getUser(query) {
+    this.saleService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.users = res?.data;
+      this.filteredusers = this.userControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
   paymentTermsList: any
@@ -358,7 +373,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     //   })
     // });
 
-    this.supplierAddress=data?.detail;
+    this.supplierAddress = data?.detail;
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {
         this.selectedAddressBilling = res
@@ -368,7 +383,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
         console.log(this.selectedAddressShipping);
       }
     })
-    
+
     const variants = this.saleMaterialOutwardForm.get('material_outward_cart') as FormArray;
     variants.clear();
     this.addCart();
@@ -395,9 +410,9 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -405,18 +420,18 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-   indexCartValue:any;
+  indexCartValue: any;
   openModalProduct(index: number) {
-    console.log(index,'index');
+    console.log(index, 'index');
     // this.cartIndex.findIndex(index)
-    this.indexCartValue=index
-    const modalId = `productModal-${index}`; 
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.add('show');
-        modal.style.display = 'block';
+      modal.classList.add('show');
+      modal.style.display = 'block';
     }
-}
+  }
   selectAddressBilling(address: string) {
     this.selectedAddressBilling = address;
     // Close Bootstrap modal using JavaScript
@@ -435,14 +450,14 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-  selecBatchtModel(address: any, index: any,type:string) {
-    if(type=='productModal'){
+  selecBatchtModel(address: any, index: any, type: string) {
+    if (type == 'productModal') {
       const modal = document.getElementById('productModal');
       if (modal) {
         modal.classList.remove('show');
         modal.style.display = 'none';
       }
-    }else{
+    } else {
       const modal = document.getElementById('batchModal');
       if (modal) {
         modal.classList.remove('show');
@@ -476,14 +491,14 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-    closeModalProduct(i: number) {
-    console.log(i, 'index');  
+  closeModalProduct(i: number) {
+    console.log(i, 'index');
     const modal = document.getElementById(`productModal-${i}`);
     if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
+      modal.classList.remove('show');
+      modal.style.display = 'none';
     }
-}
+  }
   closeModalShipping() {
     const modal = document.getElementById('addressModalShipping');
     if (modal) {
@@ -520,11 +535,11 @@ export class UpdateMaterialOutwardComponent implements OnInit {
   batchDiscount: any;
   landingCost: any;
   batchCostPrice: any[] = [];
-  selecteProduct:any;
+  selecteProduct: any;
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
-    this.selecteProduct=event?.product;
+    this.selecteProduct = event?.product;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
@@ -579,7 +594,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
-       
+
       let formdata: any = new FormData();
       formdata.append('customer', this.saleMaterialOutwardForm.get('customer')?.value);
       formdata.append('mo_date', this.saleMaterialOutwardForm.get('mo_date')?.value);
@@ -587,11 +602,11 @@ export class UpdateMaterialOutwardComponent implements OnInit {
       formdata.append('note', this.saleMaterialOutwardForm.get('note')?.value);
       formdata.append('total_qty', this.saleMaterialOutwardForm.get('total_qty')?.value);
       // formdata.append('voucher_number', this.saleMaterialOutwardForm.get('voucher_number')?.value);
-        // 21-5
-        if(this.isStatusDraft){
-          formdata.append('voucher_number', this.saleMaterialOutwardForm.get('voucher_number')?.value);
-        }
-        // end
+      // 21-5
+      if (this.isStatusDraft) {
+        formdata.append('voucher_number', this.saleMaterialOutwardForm.get('voucher_number')?.value);
+      }
+      // end
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -623,8 +638,8 @@ export class UpdateMaterialOutwardComponent implements OnInit {
             this.userControl.reset()
           } else if (type == 'print') {
             this.toastrService.success(this.getRes.msg);
-            this.loaderPrint=false;
-            this.router.navigate(['//sales/salesMaterialOutwardDetails/'+this?.id]);
+            this.loaderPrint = false;
+            this.router.navigate(['//sales/salesMaterialOutwardDetails/' + this?.id]);
           } else if (type == 'draft') {
             this.toastrService.success(this.getRes.msg);
             this.loaderDraft = false;
@@ -668,7 +683,7 @@ export class UpdateMaterialOutwardComponent implements OnInit {
         this.loaderDraft = false;
       }
       this.saleMaterialOutwardForm.markAllAsTouched()
-            this.toastrService.error('Please Fill All The Required Fields')
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 
@@ -689,8 +704,8 @@ export class UpdateMaterialOutwardComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredUsers = include
-      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue))
-      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue));
+      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue))
+      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue));
     if (!include && filteredUsers.length === 0) {
       // console.log("No results found");
       filteredUsers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
@@ -750,10 +765,10 @@ export class UpdateMaterialOutwardComponent implements OnInit {
   v_id: any;
   variantChanged(value: any, index) {
     const modal = document.getElementById(`productModal-${index}`);
-      if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
-      }
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
     this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
     // console.log(index);
     // console.log(value?.sku);

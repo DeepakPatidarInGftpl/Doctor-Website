@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
@@ -53,7 +53,7 @@ export class UpdateSalesReturnComponent implements OnInit {
   subcategoryList;
   id: any;
   editRes: any;
-  isStatusDraft=false; //21-5
+  isStatusDraft = false; //21-5
 
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
@@ -87,14 +87,14 @@ export class UpdateSalesReturnComponent implements OnInit {
       this.saleReturnForm.patchValue(this.editRes);
       // this.saleReturnForm.get('sale_return_bill_no').patchValue(this.editRes) // 20-5
       this.saleReturnForm.get('sale_bill').patchValue(this.editRes?.sale_bill?.id)
-     // 21-5
-     if(this.editRes.status=='Draft' || this.editRes.status==null){
-      this.isStatusDraft=true;
-      this.getprefix();
-    }else{
-      this.saleReturnForm.get('sale_return_bill_no').patchValue(this.editRes?.sale_return_bill_no) // 21-5
-    }
-//end 21-5
+      // 21-5
+      if (this.editRes.status == 'Draft' || this.editRes.status == null) {
+        this.isStatusDraft = true;
+        this.getprefix();
+      } else {
+        this.saleReturnForm.get('sale_return_bill_no').patchValue(this.editRes?.sale_return_bill_no) // 21-5
+      }
+      //end 21-5
       if (this.editRes?.cart.length > 0) {
         this.saleReturnForm.setControl('sale_return_cart', this.udateCart(this.editRes?.cart));
       } else {
@@ -112,7 +112,18 @@ export class UpdateSalesReturnComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getUser();
+
+    this.userControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getUser(res);
+      } else {
+        this.users = [];
+        this.filteredusers = this.userControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
     this.getCategory();
     this.getsalesBill();
 
@@ -140,82 +151,82 @@ export class UpdateSalesReturnComponent implements OnInit {
   variantList: any[] = [];
   variantList2: any[] = [];
   isSearch = false;
-  searchLength:any;
+  searchLength: any;
   getVariant(search: any, index: any, barcode: any) {
-    this.searchLength=search
-    this.isSearch=true;
-    if(search.toString().length>=3){
-    if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
+    this.searchLength = search
+    this.isSearch = true;
+    if (search.toString().length >= 3) {
+      if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
 
-      if (this.selectData.length > 0) {
-        this.category = JSON.stringify(this.selectData);
-        console.log(this.category);
-      } else {
-        this.category = undefined
-        console.log(this.category, 'else part');
+        if (this.selectData.length > 0) {
+          this.category = JSON.stringify(this.selectData);
+          console.log(this.category);
+        } else {
+          this.category = undefined
+          console.log(this.category, 'else part');
+        }
+        if (this.selectSubCate.length > 0) {
+          this.subcategory = JSON.stringify(this.selectSubCate)
+        } else {
+          this.subcategory = undefined
+        }
+        this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
+          console.log(res);
+          this.isSearch = false;
+          this.variantList[index] = res
+          this.variantList2 = res;
+          console.log(this.variantList);
+          if (barcode === 'barcode') {
+            this.oncheckVariant(res[0], index);
+            this.myControl.push(new FormControl(res[0]?.product_title));
+          }
+          if (search) {
+            //barcode patch
+            this.searchs = res;
+            this.productOption = res;
+            // console.log(this.searchs);
+            this.productName[index] = this.searchs[0]?.product_title;
+            // console.log(this.productName);
+            this.check = true;
+            console.log(this.searchs[0]?.variant_name);
+            const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
+            barcode.patchValue({
+              // barcode: this.searchs[0].id,
+              // item_name: this.searchs[0]?.variant_name
+            });
+          }
+          console.log(this.saleReturnForm.value);
+        });
       }
-      if (this.selectSubCate.length > 0) {
-        this.subcategory = JSON.stringify(this.selectSubCate)
-      } else {
-        this.subcategory = undefined
-      }
-      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
-        console.log(res);
-        this.isSearch = false;
-       this.variantList[index]=res
-  this.variantList2 = res;
-        console.log(this.variantList);
-        if (barcode === 'barcode') {
-          this.oncheckVariant(res[0], index);
-          this.myControl.push(new FormControl(res[0]?.product_title));
-        }
-        if (search) {
-          //barcode patch
-          this.searchs = res;
-          this.productOption = res;
-          // console.log(this.searchs);
-          this.productName[index] = this.searchs[0]?.product_title;
-          // console.log(this.productName);
-          this.check = true;
-          console.log(this.searchs[0]?.variant_name);
-          const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray).at(index) as FormGroup;
-          barcode.patchValue({
-            // barcode: this.searchs[0].id,
-            // item_name: this.searchs[0]?.variant_name
-          });
-        }
-        console.log(this.saleReturnForm.value);
-      });
-    }
-    else {
-      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
-       this.variantList[index]=res
-  this.variantList2 = res;
-        this.isSearch = false;
-        console.log(this.variantList);
-        if (barcode === 'barcode') {
-          this.oncheckVariant(res[0], index);
-          this.myControl.push(new FormControl(res[0]?.product_title));
-        }
-        if (search) {
-          //barcode patch
-          this.searchs = res;
-          this.productOption = res;
-          // console.log(this.searchs);
-          this.productName[index] = this.searchs[0]?.product_title;
-          // console.log(this.productName);
-          this.check = true;
-          const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray)?.at(index) as FormGroup;
-          barcode.patchValue({
-            // barcode: this.searchs[0]?.id,
-            // item_name: this.searchs[0]?.variant_name
-          });
-        }
-        console.log(this.saleReturnForm.value);
+      else {
+        this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
+          this.variantList[index] = res
+          this.variantList2 = res;
+          this.isSearch = false;
+          console.log(this.variantList);
+          if (barcode === 'barcode') {
+            this.oncheckVariant(res[0], index);
+            this.myControl.push(new FormControl(res[0]?.product_title));
+          }
+          if (search) {
+            //barcode patch
+            this.searchs = res;
+            this.productOption = res;
+            // console.log(this.searchs);
+            this.productName[index] = this.searchs[0]?.product_title;
+            // console.log(this.productName);
+            this.check = true;
+            const barcode = (this.saleReturnForm.get('sale_return_cart') as FormArray)?.at(index) as FormGroup;
+            barcode.patchValue({
+              // barcode: this.searchs[0]?.id,
+              // item_name: this.searchs[0]?.variant_name
+            });
+          }
+          console.log(this.saleReturnForm.value);
 
-      });
+        });
+      }
     }
-  }
   }
 
   categoryList: any[] = [];
@@ -230,7 +241,7 @@ export class UpdateSalesReturnComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -357,9 +368,13 @@ export class UpdateSalesReturnComponent implements OnInit {
       this.isCart = true;
     }
   }
-  getUser() {
-    this.saleService.getUser().subscribe((res: any) => {
+  getUser(query) {
+    this.saleService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.users = res?.data;
+      this.filteredusers = this.userControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
   salesBillList: any
@@ -435,9 +450,9 @@ export class UpdateSalesReturnComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -445,18 +460,18 @@ export class UpdateSalesReturnComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-   indexCartValue:any;
+  indexCartValue: any;
   openModalProduct(index: number) {
-    console.log(index,'index');
+    console.log(index, 'index');
     // this.cartIndex.findIndex(index)
-    this.indexCartValue=index
-    const modalId = `productModal-${index}`; 
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.add('show');
-        modal.style.display = 'block';
+      modal.classList.add('show');
+      modal.style.display = 'block';
     }
-}
+  }
   selectAddressBilling(address: string) {
     this.selectedAddressBilling = address;
     // Close Bootstrap modal using JavaScript
@@ -475,14 +490,14 @@ export class UpdateSalesReturnComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-  selecBatchtModel(address: any, index: any,type:string) {
-    if(type=='productModal'){
+  selecBatchtModel(address: any, index: any, type: string) {
+    if (type == 'productModal') {
       const modal = document.getElementById('productModal');
       if (modal) {
         modal.classList.remove('show');
         modal.style.display = 'none';
       }
-    }else{
+    } else {
       const modal = document.getElementById('batchModal');
       if (modal) {
         modal.classList.remove('show');
@@ -523,14 +538,14 @@ export class UpdateSalesReturnComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-    closeModalProduct(i: number) {
-    console.log(i, 'index');  
+  closeModalProduct(i: number) {
+    console.log(i, 'index');
     const modal = document.getElementById(`productModal-${i}`);
     if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
+      modal.classList.remove('show');
+      modal.style.display = 'none';
     }
-}
+  }
   closeModalShipping() {
     const modal = document.getElementById('addressModalShipping');
     if (modal) {
@@ -566,11 +581,11 @@ export class UpdateSalesReturnComponent implements OnInit {
   tax: any[] = [];
   landingCost: any;
   batchCostPrice: any[] = [];
-  selecteProduct:any;
+  selecteProduct: any;
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
-    this.selecteProduct=event?.product;
+    this.selecteProduct = event?.product;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
@@ -956,16 +971,16 @@ export class UpdateSalesReturnComponent implements OnInit {
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
-       
+
       let formdata: any = new FormData();
       formdata.append('customer', this.saleReturnForm.get('customer')?.value);
       formdata.append('bill_date', this.saleReturnForm.get('bill_date')?.value);
       // formdata.append('sale_return_bill_no', this.saleReturnForm.get('sale_return_bill_no')?.value);
-        // 21-5
-        if(this.isStatusDraft){
-          formdata.append('sale_return_bill_no', this.saleReturnForm.get('sale_return_bill_no')?.value);
-        }
-        // end
+      // 21-5
+      if (this.isStatusDraft) {
+        formdata.append('sale_return_bill_no', this.saleReturnForm.get('sale_return_bill_no')?.value);
+      }
+      // end
       formdata.append('sale_bill', this.saleReturnForm.get('sale_bill')?.value);
       formdata.append('note', this.saleReturnForm.get('note')?.value);
       formdata.append('total_qty', this.saleReturnForm.get('total_qty')?.value);
@@ -1149,10 +1164,10 @@ export class UpdateSalesReturnComponent implements OnInit {
   v_id: any;
   variantChanged(value: any, index) {
     const modal = document.getElementById(`productModal-${index}`);
-      if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
-      }
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
     this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
     // console.log(index);
     // console.log(value?.sku);

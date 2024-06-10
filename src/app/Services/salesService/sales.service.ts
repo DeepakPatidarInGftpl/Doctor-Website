@@ -11,21 +11,21 @@ export class SalesService {
   constructor(private http: HttpClient) { }
   apiUrl = `${environment.api}`;
 
-  
+
   //sales order
   // getSalesOrderfy(fy:any) {
   //   let url = this.apiUrl + '/pv-api/sale_order/?financial_year=';
   //   return this.http.get(`${url}${fy}`);
   // }
-  getSalesOrderfy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getSalesOrderfy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/sale_order/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -63,15 +63,15 @@ export class SalesService {
   }
 
   //  sales Estimates
-   getSalesEstimatefy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getSalesEstimatefy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/estimate/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -105,7 +105,7 @@ export class SalesService {
   //     );
   // }
 
-   getSalesEstimate() {
+  getSalesEstimate() {
     let url = this.apiUrl + '/pv-api/estimate/';
     return this.http.get(url)
   }
@@ -135,15 +135,15 @@ export class SalesService {
   //   let url = this.apiUrl + '/pv-api/sale_bill/?financial_year=';
   //   return this.http.get(`${url}${fy}`)
   // }
-  getSalesBillfy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getSalesBillfy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/sale_bill/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -155,7 +155,7 @@ export class SalesService {
     }
     return this.http.get(url);
   }
-   getSalesBill() {
+  getSalesBill() {
     let url = this.apiUrl + '/pv-api/sale_bill/';
     return this.http.get(url)
   }
@@ -182,21 +182,21 @@ export class SalesService {
 
   // material outward
 
-  
+
   // sales bill
   // getSalesMaterialOutwardfy(fy:any) {
   //   let url = this.apiUrl + '/pv-api/material_outward/?financial_year=';
   //   return this.http.get(`${url}${fy}`)
   // }
-  getSalesMaterialOutwardfy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getSalesMaterialOutwardfy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/material_outward/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -238,15 +238,15 @@ export class SalesService {
   //   let url = this.apiUrl + '/pv-api/sale_return/?financial_year=';
   //   return this.http.get(`${url}${fy}`)
   // }
-  getSaleReturnfy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getSaleReturnfy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/sale_return/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -281,18 +281,18 @@ export class SalesService {
   deleteSaleReturn(id: number) {
     let url = this.apiUrl + '/pv-api/sale_return/?id=';
     return this.http.delete(`${url}${id}`)
-  }  
+  }
 
   // search product
-  getSearchProductById(id:any){
-    let url =this.apiUrl+'/pv-api/variant-search/?search='
+  getSearchProductById(id: any) {
+    let url = this.apiUrl + '/pv-api/variant-search/?search='
     return this.http.get(`${url}${id}`)
   }
-  getSearchProduct(){
-    let url =this.apiUrl+'/pv-api/variant-search/'
+  getSearchProduct() {
+    let url = this.apiUrl + '/pv-api/variant-search/'
     return this.http.get(url)
   }
-  filterVariant( category: any, subcategory: any, search: any): Observable<any> {
+  filterVariant(category: any, subcategory: any, search: any): Observable<any> {
     let url = this.apiUrl + '/pv-api/sales_product_filter/';
     const queryParams: any[] = [];
     if (category) {
@@ -312,52 +312,52 @@ export class SalesService {
 
 
   // sale prefix
-  getSaleOrderPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=SaleOrder';
+  getSaleOrderPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=SaleOrder';
     return this.http.get(url)
   }
-  getSaleBillPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=SaleBill';
+  getSaleBillPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=SaleBill';
     return this.http.get(url)
   }
-  getSaleReturnPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=SaleReturn';
+  getSaleReturnPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=SaleReturn';
     return this.http.get(url)
   }
-  getEstimatePrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=Estimate';
+  getEstimatePrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=Estimate';
     return this.http.get(url)
-  }  
-  getMaterialOutwardPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=MaterialOutward';
+  }
+  getMaterialOutwardPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=MaterialOutward';
     return this.http.get(url)
-  } 
-  getAdvanceBookingPrefix(){
-    let url =this.apiUrl+'/pv-api/prefix/?id=AdvanceBooking';
+  }
+  getAdvanceBookingPrefix() {
+    let url = this.apiUrl + '/pv-api/prefix/?id=AdvanceBooking';
     return this.http.get(url)
-  }  
+  }
 
-  getUser() {
-    let url = this.apiUrl + '/pv-api/contact-user/';
+  getUser(value) {
+    let url = this.apiUrl + '/pv-api/contact-user/?search=' + value;
     return this.http.get(url)
   }
 
   // advance booking 
-  
-   //sales Estimates
+
+  //sales Estimates
   //  getAdvanceBookingfy(fy:any) {
   //   let url = this.apiUrl + '/pv-api/advance_booking/?financial_year=';
   //   return this.http.get(url)
   // }
-  getAdvanceBookingfy(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getAdvanceBookingfy(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/advance_booking/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -369,7 +369,7 @@ export class SalesService {
     }
     return this.http.get(url);
   }
-   getAdvanceBooking() {
+  getAdvanceBooking() {
     let url = this.apiUrl + '/pv-api/advance_booking/';
     return this.http.get(url)
   }
@@ -395,15 +395,15 @@ export class SalesService {
   }
 
   // delivery challan
-  getDelivryChallanFY(fy:any,branch:any) {
-    console.log(branch,'branch');
-    console.log(branch.length,'branch');
+  getDelivryChallanFY(fy: any, branch: any) {
+    console.log(branch, 'branch');
+    console.log(branch.length, 'branch');
     let url = this.apiUrl + '/pv-api/delivery_challan/';
     const queryParams: any[] = [];
     if (fy) {
       queryParams.push(`financial_year=${fy}`);
     }
-    if (branch && branch.length> 0) {
+    if (branch && branch.length > 0) {
       const idString = JSON.stringify(branch);
       console.log(idString);
       console.log(idString?.length);
@@ -415,7 +415,7 @@ export class SalesService {
     }
     return this.http.get(url);
   }
-   getDelivryChallan() {
+  getDelivryChallan() {
     let url = this.apiUrl + '/pv-api/delivery_challan/';
     return this.http.get(url)
   }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
@@ -27,7 +27,7 @@ export class UpdateEstimateComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private Arout: ActivatedRoute,
-    private coreService:CoreService
+    private coreService: CoreService
   ) {
   }
 
@@ -53,7 +53,7 @@ export class UpdateEstimateComponent implements OnInit {
   myControl: FormArray;
   id: any;
   editRes: any;
-  isStatusDraft=false; //21-5
+  isStatusDraft = false; //21-5
 
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -85,23 +85,23 @@ export class UpdateEstimateComponent implements OnInit {
       this.editRes = res;
       this.saleEstimateForm.patchValue(this.editRes);
       // 21-5
-      if(this.editRes.status=='Draft' || this.editRes.status==null){
-        this.isStatusDraft=true;
+      if (this.editRes.status == 'Draft' || this.editRes.status == null) {
+        this.isStatusDraft = true;
         this.getprefix();
-      }else{
+      } else {
         this.saleEstimateForm.get('estimate_no').patchValue(this.editRes?.estimate_no) // 21-5
       }
-//end 21-5
+      //end 21-5
 
       this.saleEstimateForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
 
-      if(this.editRes?.cart.length>0){
+      if (this.editRes?.cart.length > 0) {
         this.saleEstimateForm.setControl('estimate_cart', this.udateCart(this.editRes?.cart));
-      }else{
-        this.isCart=true;
+      } else {
+        this.isCart = true;
       }
       this.saleEstimateForm.get('customer')?.patchValue(this.editRes?.customer?.id);
-      this.userControl.setValue(this.editRes?.customer?.name + ' '+ this.editRes?.customer?.user_type);
+      this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.user_type);
     })
 
     this.filteredusers = this.userControl.valueChanges.pipe(
@@ -112,7 +112,18 @@ export class UpdateEstimateComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getUser();
+
+    this.userControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getUser(res);
+      } else {
+        this.users = [];
+        this.filteredusers = this.userControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
     this.getCategory();
     this.getPaymentTerms();
   }
@@ -137,81 +148,81 @@ export class UpdateEstimateComponent implements OnInit {
   searc: any;
   variantList2: any[] = [];
   variantList: any[] = [];
-  isSearch=false;
-  searchLength:any;
+  isSearch = false;
+  searchLength: any;
   getVariant(search: any, index: any, barcode: any) {
-    this.searchLength=search
-    this.isSearch=true;
-    if(search.toString().length>=3){
-    if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
-      if (this.selectData.length > 0) {
-        this.category = JSON.stringify(this.selectData);
-        console.log(this.category);
-      } else {
-        this.category = undefined
-        console.log(this.category, 'else part');
-      }
-      if (this.selectSubCate.length > 0) {
-        this.subcategory = JSON.stringify(this.selectSubCate)
-      } else {
-        this.subcategory = undefined
-      }
-      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
-        console.log(res);
-        this.isSearch=false;
-       this.variantList[index]=res
-  this.variantList2 = res;
-        console.log(this.variantList);
-        if (barcode === 'barcode') {
-          this.oncheckVariant(res[0], index);
-          this.myControl.push(new FormControl(res[0]?.product_title));
+    this.searchLength = search
+    this.isSearch = true;
+    if (search.toString().length >= 3) {
+      if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
+        if (this.selectData.length > 0) {
+          this.category = JSON.stringify(this.selectData);
+          console.log(this.category);
+        } else {
+          this.category = undefined
+          console.log(this.category, 'else part');
         }
-        if (search) {
-          //barcode patch
-          this.searchs = res;
-          this.productOption = res;
-          // console.log(this.searchs);
-          this.productName[index] = this.searchs[0]?.product_title;
-          // console.log(this.productName);
-          this.check = true;
-          const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
-          barcode.patchValue({
-            // barcode: this.searchs[0].id,
-            // item_name: this.searchs[0]?.variant_name
-          });
+        if (this.selectSubCate.length > 0) {
+          this.subcategory = JSON.stringify(this.selectSubCate)
+        } else {
+          this.subcategory = undefined
         }
+        this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
+          console.log(res);
+          this.isSearch = false;
+          this.variantList[index] = res
+          this.variantList2 = res;
+          console.log(this.variantList);
+          if (barcode === 'barcode') {
+            this.oncheckVariant(res[0], index);
+            this.myControl.push(new FormControl(res[0]?.product_title));
+          }
+          if (search) {
+            //barcode patch
+            this.searchs = res;
+            this.productOption = res;
+            // console.log(this.searchs);
+            this.productName[index] = this.searchs[0]?.product_title;
+            // console.log(this.productName);
+            this.check = true;
+            const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray).at(index) as FormGroup;
+            barcode.patchValue({
+              // barcode: this.searchs[0].id,
+              // item_name: this.searchs[0]?.variant_name
+            });
+          }
 
-      });
-    }
-    else {
-      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
-        console.log(res);
-        this.isSearch=false;
-       this.variantList[index]=res
-  this.variantList2 = res;
-        console.log(this.variantList);
-        if (barcode === 'barcode') {
-          this.oncheckVariant(res[0], index);
-          this.myControl.push(new FormControl(res[0]?.product_title));
-        }
-        if (search) {
-          //barcode patch
-          this.searchs = res;
-          this.productOption = res;
-          // console.log(this.searchs);
-          this.productName[index] = this.searchs[0]?.product_title;
-          // console.log(this.productName);
-          this.check = true;
-          const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray)?.at(index) as FormGroup;
-          barcode.patchValue({
-            // barcode: this.searchs[0]?.id,
-            // item_name: this.searchs[0]?.variant_name
-          });
-        }
+        });
+      }
+      else {
+        this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
+          console.log(res);
+          this.isSearch = false;
+          this.variantList[index] = res
+          this.variantList2 = res;
+          console.log(this.variantList);
+          if (barcode === 'barcode') {
+            this.oncheckVariant(res[0], index);
+            this.myControl.push(new FormControl(res[0]?.product_title));
+          }
+          if (search) {
+            //barcode patch
+            this.searchs = res;
+            this.productOption = res;
+            // console.log(this.searchs);
+            this.productName[index] = this.searchs[0]?.product_title;
+            // console.log(this.productName);
+            this.check = true;
+            const barcode = (this.saleEstimateForm.get('estimate_cart') as FormArray)?.at(index) as FormGroup;
+            barcode.patchValue({
+              // barcode: this.searchs[0]?.id,
+              // item_name: this.searchs[0]?.variant_name
+            });
+          }
 
-      });
+        });
+      }
     }
-  }
   }
 
   categoryList: any[] = [];
@@ -226,7 +237,7 @@ export class UpdateEstimateComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -344,9 +355,13 @@ export class UpdateEstimateComponent implements OnInit {
     }
 
   }
-  getUser() {
-    this.saleService.getUser().subscribe((res: any) => {
+  getUser(query) {
+    this.saleService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.users = res?.data;
+      this.filteredusers = this.userControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
   paymentTermsList: any
@@ -384,7 +399,7 @@ export class UpdateEstimateComponent implements OnInit {
     //     }
     //   })
     // });
-    this.supplierAddress=data?.detail;
+    this.supplierAddress = data?.detail;
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {
         this.selectedAddressBilling = res
@@ -420,9 +435,9 @@ export class UpdateEstimateComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -430,18 +445,18 @@ export class UpdateEstimateComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-   indexCartValue:any;
+  indexCartValue: any;
   openModalProduct(index: number) {
-    console.log(index,'index');
+    console.log(index, 'index');
     // this.cartIndex.findIndex(index)
-    this.indexCartValue=index
-    const modalId = `productModal-${index}`; 
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.add('show');
-        modal.style.display = 'block';
+      modal.classList.add('show');
+      modal.style.display = 'block';
     }
-}
+  }
   selectAddressBilling(address: string) {
     this.selectedAddressBilling = address;
     // Close Bootstrap modal using JavaScript
@@ -460,14 +475,14 @@ export class UpdateEstimateComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-  selecBatchtModel(address: any, index: any,type:string) {
-    if(type=='productModal'){
+  selecBatchtModel(address: any, index: any, type: string) {
+    if (type == 'productModal') {
       const modal = document.getElementById('productModal');
       if (modal) {
         modal.classList.remove('show');
         modal.style.display = 'none';
       }
-    }else{
+    } else {
       const modal = document.getElementById('batchModal');
       if (modal) {
         modal.classList.remove('show');
@@ -508,14 +523,14 @@ export class UpdateEstimateComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-    closeModalProduct(i: number) {
-    console.log(i, 'index');  
+  closeModalProduct(i: number) {
+    console.log(i, 'index');
     const modal = document.getElementById(`productModal-${i}`);
     if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
+      modal.classList.remove('show');
+      modal.style.display = 'none';
     }
-}
+  }
   closeModalShipping() {
     const modal = document.getElementById('addressModalShipping');
     if (modal) {
@@ -552,11 +567,11 @@ export class UpdateEstimateComponent implements OnInit {
   batchDiscount: any;
   landingCost: any;
   batchCostPrice: any[] = [];
-  selecteProduct:any;
+  selecteProduct: any;
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
-    this.selecteProduct=event?.product;
+    this.selecteProduct = event?.product;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
@@ -877,7 +892,7 @@ export class UpdateEstimateComponent implements OnInit {
       formdata.append('customer', this.saleEstimateForm.get('customer')?.value);
       formdata.append('estimate_date', this.saleEstimateForm.get('estimate_date')?.value);
       // 21-5
-      if(this.isStatusDraft){
+      if (this.isStatusDraft) {
         formdata.append('estimate_no', this.saleEstimateForm.get('estimate_no')?.value);
       }
       // end
@@ -919,10 +934,10 @@ export class UpdateEstimateComponent implements OnInit {
             this.saleEstimateForm.reset()
             this.ngOnInit()
             this.userControl.reset()
-          } else if (type == 'print') { 
+          } else if (type == 'print') {
             this.toastrService.success(this.getRes.msg);
             this.loaderPrint = false;
-            this.router.navigate(['//sales/salesEstimatedetails/'+this.id])
+            this.router.navigate(['//sales/salesEstimatedetails/' + this.id])
           } else if (type == 'draft') {
             this.loaderDraft = false;
             this.toastrService.success(this.getRes.msg);
@@ -966,7 +981,7 @@ export class UpdateEstimateComponent implements OnInit {
         this.loaderDraft = false;
       }
       this.saleEstimateForm.markAllAsTouched()
-            this.toastrService.error('Please Fill All The Required Fields')
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 
@@ -1000,8 +1015,8 @@ export class UpdateEstimateComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredUsers = include
-      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue))
-      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue));
+      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue))
+      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue));
     if (!include && filteredUsers.length === 0) {
       // console.log("No results found");
       filteredUsers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
@@ -1061,10 +1076,10 @@ export class UpdateEstimateComponent implements OnInit {
   v_id: any;
   variantChanged(value: any, index) {
     const modal = document.getElementById(`productModal-${index}`);
-      if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
-      }
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
     this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
     // console.log(index);
     // console.log(value?.sku);

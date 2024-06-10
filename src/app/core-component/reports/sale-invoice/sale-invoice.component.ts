@@ -7,7 +7,7 @@ import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { ReportService } from 'src/app/Services/report/report.service';
@@ -46,26 +46,26 @@ export class SaleInvoiceComponent implements OnInit {
   endDate: any;
   saleInvoiceListUserId: any;
   userDetails: any;
-    //23-5
-    isAdmin=false;
-    fyID:any;
+  //23-5
+  isAdmin = false;
+  fyID: any;
   ngOnInit(): void {
-      //23-5
-      if (localStorage.getItem('financialYear')) {
-        let fy = localStorage.getItem('financialYear');
-        console.warn(JSON.parse(fy));
-        let fyId = JSON.parse(fy);
-        this.fyID=fyId;
+    //23-5
+    if (localStorage.getItem('financialYear')) {
+      let fy = localStorage.getItem('financialYear');
+      console.warn(JSON.parse(fy));
+      let fyId = JSON.parse(fy);
+      this.fyID = fyId;
+    }
+    this.cs.userDetails$.subscribe((res: any) => {
+      if (res.role == 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
       }
-      this.cs.userDetails$.subscribe((res: any) => {
-        if (res.role == 'admin') {
-          this.isAdmin = true;
-        } else {
-          this.isAdmin = false;
-        }
-      });
-      this.getBranch()
-  //23
+    });
+    this.getBranch()
+    //23
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       console.log(userDetails);
@@ -91,11 +91,23 @@ export class SaleInvoiceComponent implements OnInit {
 
 
     this.getSaleInvoiceList();
-    this.getUser();
     this.filteredusers = this.userControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter1(value, true))
     );
+
+    this.userControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getUser(res);
+      } else {
+        this.users = [];
+        this.filteredusers = this.userControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter1(value, true))
+        );
+      }
+    })
+
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map((value: any) => {
@@ -121,9 +133,13 @@ export class SaleInvoiceComponent implements OnInit {
   }
 
   users: any[] = [];
-  getUser() {
-    this.reportService.getUser().subscribe((res: any) => {
+  getUser(query) {
+    this.reportService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.users = res?.data;
+      this.filteredusers = this.userControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter1(value, true))
+      );
     })
   }
 
@@ -189,7 +205,7 @@ export class SaleInvoiceComponent implements OnInit {
   saleInvoiceList: any
   saleInvoice: any;
   getSaleInvoiceList() {
-    this.reportService.getSaleInvoiceList(this.startDate, this.endDate, this.saleInvoiceListUserId,this.fyID, this.selectData).subscribe((res) => {
+    this.reportService.getSaleInvoiceList(this.startDate, this.endDate, this.saleInvoiceListUserId, this.fyID, this.selectData).subscribe((res) => {
       console.log(res);
       this.saleInvoiceList = res?.data;
       this.saleInvoice = res;
@@ -413,7 +429,7 @@ export class SaleInvoiceComponent implements OnInit {
       console.log(this.selectData);
     }
   }
-//23-5
+  //23-5
 }
 
 

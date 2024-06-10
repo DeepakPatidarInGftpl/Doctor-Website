@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
@@ -31,7 +31,7 @@ export class UpdateSaleBillComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private purchaseService: PurchaseServiceService,
-    private coreService:CoreService) {
+    private coreService: CoreService) {
   }
 
   customerControlName = 'customer';
@@ -56,8 +56,8 @@ export class UpdateSaleBillComponent implements OnInit {
   editRes: any;
   id: any;
   totalAdditionalCharges: any;
-  
-  isStatusDraft=false; //21-5
+
+  isStatusDraft = false; //21-5
   ngOnInit(): void {
 
     const defaultDate = new Date().toISOString().split('T')[0]; // Get yyyy-MM-dd part
@@ -68,7 +68,7 @@ export class UpdateSaleBillComponent implements OnInit {
       customer: new FormControl('', [Validators.required]),
       bill_date: new FormControl(defaultDate, [Validators.required]),
       customer_bill_no: new FormControl('', [Validators.required]),
-      due_date: new FormControl('',[Validators.required]),
+      due_date: new FormControl('', [Validators.required]),
       payment_terms: new FormControl(''),
       sale_order: new FormControl(''),
       sale_bill_cart: this.fb.array([]),
@@ -82,8 +82,8 @@ export class UpdateSaleBillComponent implements OnInit {
       note: new FormControl(''),
       additional_charges: new FormControl(0),
       additional_charge: this.fb.array([]),
-        // 2-1
-      sales_man:new FormControl('',[Validators.required])
+      // 2-1
+      sales_man: new FormControl('', [Validators.required])
     });
 
     //patch value
@@ -91,21 +91,21 @@ export class UpdateSaleBillComponent implements OnInit {
       this.editRes = res;
       this.saleBillForm.patchValue(this.editRes);
       this.saleBillForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id);
-      this.saleBillForm.get('sale_order').patchValue(this.editRes?.sale_order==null?'':this.editRes?.sale_order.id);
-      this.saleBillForm.get('sales_man').patchValue(this.editRes?.sales_man==null?'':this.editRes?.sales_man?.id);
+      this.saleBillForm.get('sale_order').patchValue(this.editRes?.sale_order == null ? '' : this.editRes?.sale_order.id);
+      this.saleBillForm.get('sales_man').patchValue(this.editRes?.sales_man == null ? '' : this.editRes?.sales_man?.id);
       // this.saleBillForm.get('customer_bill_no').patchValue(this.editRes);
-     // 21-5
-     if(this.editRes.status=='Draft' || this.editRes.status==null){
-      this.isStatusDraft=true;
-      this.getprefix();
-    }else{
-      this.saleBillForm.get('customer_bill_no').patchValue(this.editRes?.customer_bill_no) // 21-5
-    }
-//end 21-5
-      if(this.editRes?.cart.length>0){
+      // 21-5
+      if (this.editRes.status == 'Draft' || this.editRes.status == null) {
+        this.isStatusDraft = true;
+        this.getprefix();
+      } else {
+        this.saleBillForm.get('customer_bill_no').patchValue(this.editRes?.customer_bill_no) // 21-5
+      }
+      //end 21-5
+      if (this.editRes?.cart.length > 0) {
         this.saleBillForm.setControl('sale_bill_cart', this.udateCart(this.editRes?.cart));
-      }else{
-        this.isCart=true;
+      } else {
+        this.isCart = true;
       }
       this.saleBillForm.get('customer')?.patchValue(this.editRes?.customer?.id);
       this.userControl.setValue(this.editRes?.customer?.name + ' ' + this.editRes?.customer?.user_type);
@@ -125,12 +125,22 @@ export class UpdateSaleBillComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getUser();
+    this.userControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getUser(res);
+      } else {
+        this.users = [];
+        this.filteredusers = this.userControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
     this.getCategory();
     this.getPaymentTerms();
     this.getSaleOrder();
     this.getEmployee();
-    
+
     this.addAdditionalCharge();
     this.getAdditionalDiscount();
     this.getTax();
@@ -142,7 +152,7 @@ export class UpdateSaleBillComponent implements OnInit {
       console.log(res);
       if (res.success == true) {
         this.prefixNo = res.data;
-        this.saleBillForm.get('customer_bill_no').patchValue(this.prefixNo[0]?.id) 
+        this.saleBillForm.get('customer_bill_no').patchValue(this.prefixNo[0]?.id)
       } else {
         this.toastrService.error(res.msg)
       }
@@ -175,80 +185,80 @@ export class UpdateSaleBillComponent implements OnInit {
   myControl: FormArray;
   variantList2: any[] = [];
   variantList: any[] = [];
-  isSearch=false;
-  searchLength:any;
+  isSearch = false;
+  searchLength: any;
   getVariant(search: any, index: any, barcode: any) {
-    this.searchLength=search
-    this.isSearch=true;
-    if(search.toString().length>=3){
-    if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
-      if (this.selectData.length > 0) {
-        this.category = JSON.stringify(this.selectData);
-        console.log(this.category);
-      } else {
-        this.category = undefined
-        console.log(this.category, 'else part');
+    this.searchLength = search
+    this.isSearch = true;
+    if (search.toString().length >= 3) {
+      if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
+        if (this.selectData.length > 0) {
+          this.category = JSON.stringify(this.selectData);
+          console.log(this.category);
+        } else {
+          this.category = undefined
+          console.log(this.category, 'else part');
+        }
+        if (this.selectSubCate.length > 0) {
+          this.subcategory = JSON.stringify(this.selectSubCate)
+        } else {
+          this.subcategory = undefined
+        }
+        this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
+          console.log(res);
+          this.isSearch = false;
+          this.variantList[index] = res
+          this.variantList2 = res;
+          console.log(this.variantList);
+          if (barcode === 'barcode') {
+            this.oncheckVariant(res[0], index);
+            this.myControl.push(new FormControl(res[0]?.product_title));
+          }
+          if (search) {
+            //barcode patch
+            this.searchs = res;
+            this.productOption = res;
+            // console.log(this.searchs);
+            this.productName[index] = this.searchs[0]?.product_title;
+            // console.log(this.productName);
+            this.check = true;
+            const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
+            barcode.patchValue({
+              // barcode: this.searchs[0].id,
+              // item_name: this.searchs[0]?.variant_name
+            });
+          }
+        });
       }
-      if (this.selectSubCate.length > 0) {
-        this.subcategory = JSON.stringify(this.selectSubCate)
-      } else {
-        this.subcategory = undefined
-      }
-      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
-        console.log(res);
-        this.isSearch=false;
-       this.variantList[index]=res
-        this.variantList2 = res;
-        console.log(this.variantList);
-        if (barcode === 'barcode') {
-          this.oncheckVariant(res[0], index);
-          this.myControl.push(new FormControl(res[0]?.product_title));
-        }
-        if (search) {
-          //barcode patch
-          this.searchs = res;
-          this.productOption = res;
-          // console.log(this.searchs);
-          this.productName[index] = this.searchs[0]?.product_title;
-          // console.log(this.productName);
-          this.check = true;
-          const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray).at(index) as FormGroup;
-          barcode.patchValue({
-            // barcode: this.searchs[0].id,
-            // item_name: this.searchs[0]?.variant_name
-          });
-        }
-      });
-    }
-    else {
-      this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
-        console.log(res);
-        this.isSearch=false;
-       this.variantList[index]=res
-  this.variantList2 = res;
-        console.log(this.variantList);
-        if (barcode === 'barcode') {
-          this.oncheckVariant(res[0], index);
-          this.myControl.push(new FormControl(res[0]?.product_title));
-        }
-        if (search) {
-          //barcode patch
-          this.searchs = res;
-          this.productOption = res;
-          // console.log(this.searchs);
-          this.productName[index] = this.searchs[0]?.product_title;
-          // console.log(this.productName);
-          this.check = true;
-          const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray)?.at(index) as FormGroup;
-          barcode.patchValue({
-            // barcode: this.searchs[0]?.id,
-            // item_name: this.searchs[0]?.variant_name
-          });
-        }
+      else {
+        this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
+          console.log(res);
+          this.isSearch = false;
+          this.variantList[index] = res
+          this.variantList2 = res;
+          console.log(this.variantList);
+          if (barcode === 'barcode') {
+            this.oncheckVariant(res[0], index);
+            this.myControl.push(new FormControl(res[0]?.product_title));
+          }
+          if (search) {
+            //barcode patch
+            this.searchs = res;
+            this.productOption = res;
+            // console.log(this.searchs);
+            this.productName[index] = this.searchs[0]?.product_title;
+            // console.log(this.productName);
+            this.check = true;
+            const barcode = (this.saleBillForm.get('sale_bill_cart') as FormArray)?.at(index) as FormGroup;
+            barcode.patchValue({
+              // barcode: this.searchs[0]?.id,
+              // item_name: this.searchs[0]?.variant_name
+            });
+          }
 
-      });
+        });
+      }
     }
-  }
   }
 
   categoryList: any[] = [];
@@ -263,7 +273,7 @@ export class UpdateSaleBillComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -424,9 +434,13 @@ export class UpdateSaleBillComponent implements OnInit {
       })
     })
   }
-  getUser() {
-    this.saleService.getUser().subscribe((res: any) => {
+  getUser(query) {
+    this.saleService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.users = res?.data;
+      this.filteredusers = this.userControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
   paymentTermsList: any
@@ -476,7 +490,7 @@ export class UpdateSaleBillComponent implements OnInit {
     //   })
     // });
 
-    this.supplierAddress=data?.detail;
+    this.supplierAddress = data?.detail;
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {
         this.selectedAddressBilling = res
@@ -486,7 +500,7 @@ export class UpdateSaleBillComponent implements OnInit {
         console.log(this.selectedAddressShipping);
       }
     });
-    
+
     const variants = this.saleBillForm.get('sale_bill_cart') as FormArray;
     variants.clear();
     this.addCart();
@@ -513,9 +527,9 @@ export class UpdateSaleBillComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -523,18 +537,18 @@ export class UpdateSaleBillComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-   indexCartValue:any;
+  indexCartValue: any;
   openModalProduct(index: number) {
-    console.log(index,'index');
+    console.log(index, 'index');
     // this.cartIndex.findIndex(index)
-    this.indexCartValue=index
-    const modalId = `productModal-${index}`; 
+    this.indexCartValue = index
+    const modalId = `productModal-${index}`;
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.add('show');
-        modal.style.display = 'block';
+      modal.classList.add('show');
+      modal.style.display = 'block';
     }
-}
+  }
   selectAddressBilling(address: string) {
     this.selectedAddressBilling = address;
     // Close Bootstrap modal using JavaScript
@@ -553,14 +567,14 @@ export class UpdateSaleBillComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-  selecBatchtModel(address: any, index: any,type:string) {
-    if(type=='productModal'){
+  selecBatchtModel(address: any, index: any, type: string) {
+    if (type == 'productModal') {
       const modal = document.getElementById('productModal');
       if (modal) {
         modal.classList.remove('show');
         modal.style.display = 'none';
       }
-    }else{
+    } else {
       const modal = document.getElementById('batchModal');
       if (modal) {
         modal.classList.remove('show');
@@ -601,14 +615,14 @@ export class UpdateSaleBillComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
-    closeModalProduct(i: number) {
-    console.log(i, 'index');  
+  closeModalProduct(i: number) {
+    console.log(i, 'index');
     const modal = document.getElementById(`productModal-${i}`);
     if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
+      modal.classList.remove('show');
+      modal.style.display = 'none';
     }
-}
+  }
   closeModalShipping() {
     const modal = document.getElementById('addressModalShipping');
     if (modal) {
@@ -647,11 +661,11 @@ export class UpdateSaleBillComponent implements OnInit {
   totalDiscount: any;
   landingCost: any;
   batchCostPrice: any[] = [];
-  selecteProduct:any;
+  selecteProduct: any;
   oncheckVariant(event: any, index) {
     const selectedItemId = event.id;
     console.log(event);
-    this.selecteProduct=event?.product;
+    this.selecteProduct = event?.product;
     this.selectedProductName = event.product_title;
     this.selectBatch = event.batch;
     this.apiPurchaseTax = event?.product?.sale_tax?.amount_tax_slabs[0]?.tax?.tax_percentage || 0;
@@ -979,16 +993,16 @@ export class UpdateSaleBillComponent implements OnInit {
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
-      
+
       let formdata: any = new FormData();
       formdata.append('customer', this.saleBillForm.get('customer')?.value);
       formdata.append('bill_date', this.saleBillForm.get('bill_date')?.value);
       // formdata.append('customer_bill_no', this.saleBillForm.get('customer_bill_no')?.value);
-         // 21-5
-         if(this.isStatusDraft){
-          formdata.append('customer_bill_no', this.saleBillForm.get('customer_bill_no')?.value);
-        }
-        // end
+      // 21-5
+      if (this.isStatusDraft) {
+        formdata.append('customer_bill_no', this.saleBillForm.get('customer_bill_no')?.value);
+      }
+      // end
       formdata.append('due_date', this.saleBillForm.get('due_date')?.value);
       formdata.append('payment_terms', this.saleBillForm.get('payment_terms')?.value);
       formdata.append('sale_order', this.saleBillForm.get('sale_order')?.value);
@@ -1000,8 +1014,8 @@ export class UpdateSaleBillComponent implements OnInit {
       formdata.append('subtotal', this.saleBillForm.get('subtotal')?.value);
       formdata.append('total', this.saleBillForm.get('total')?.value);
       formdata.append('additional_charges', this.saleBillForm.get('additional_charges')?.value);
-          //2-1
-      formdata.append('sales_man',this.saleBillForm.get('sales_man')?.value);
+      //2-1
+      formdata.append('sales_man', this.saleBillForm.get('sales_man')?.value);
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -1079,7 +1093,7 @@ export class UpdateSaleBillComponent implements OnInit {
         this.loaderDraft = false;
       }
       this.saleBillForm.markAllAsTouched()
-            this.toastrService.error('Please Fill All The Required Fields')
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 
@@ -1104,17 +1118,17 @@ export class UpdateSaleBillComponent implements OnInit {
   get sale_order() {
     return this.saleBillForm.get('sale_order')
   }
-  get sales_man(){
+  get sales_man() {
     return this.saleBillForm.get('sales_man')
   }
   discountt(index: number) {
     console.log(this.getCart().controls[index].get('discount'));
-    
+
     return this.getCart().controls[index].get('discount');
   }
   additionaldiscountt(index: number) {
     console.log(this.getCart().controls[index].get('additional_discount'));
-    
+
     return this.getCart().controls[index].get('additional_discount');
   }
   taxx(index: number) {
@@ -1126,7 +1140,7 @@ export class UpdateSaleBillComponent implements OnInit {
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredUsers = include
       ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue))
-      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue));
+      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue));
     if (!include && filteredUsers.length === 0) {
       // console.log("No results found");
       filteredUsers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
@@ -1194,7 +1208,7 @@ export class UpdateSaleBillComponent implements OnInit {
       modal.classList.remove('show');
       modal.style.display = 'none';
     }
-  this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
+    this.myControl.push(new FormControl(value?.product_title + ' ' + value?.variant_name));
     // console.log(index);
     // console.log(value?.sku);
     this.barcode[index] = value.sku;

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 
@@ -51,7 +51,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
   myControl: FormArray;
   id: any;
   editRes: any;
-  isStatusDraft=false; //21-5
+  isStatusDraft = false; //21-5
 
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -84,21 +84,21 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       this.saleEstimateForm.patchValue(this.editRes);
       this.saleEstimateForm.get('payment_terms').patchValue(this.editRes?.payment_terms.id)
       // this.saleEstimateForm.get('booking_no').patchValue(this.editRes) // 20-5
-     // 21-5
-     if(this.editRes.status=='Draft' || this.editRes.status==null){
-      this.isStatusDraft=true;
-      this.getprefix();
-    }else{
-      this.saleEstimateForm.get('booking_no').patchValue(this.editRes?.booking_no) // 21-5
-    }
-//end 21-5
-      if(this.editRes?.cart.length>0){
+      // 21-5
+      if (this.editRes.status == 'Draft' || this.editRes.status == null) {
+        this.isStatusDraft = true;
+        this.getprefix();
+      } else {
+        this.saleEstimateForm.get('booking_no').patchValue(this.editRes?.booking_no) // 21-5
+      }
+      //end 21-5
+      if (this.editRes?.cart.length > 0) {
         this.saleEstimateForm.setControl('cart', this.udateCart(this.editRes?.cart));
-      }else{
-        this.isCart=true;
+      } else {
+        this.isCart = true;
       }
       this.saleEstimateForm.get('account')?.patchValue(this.editRes?.account?.id);
-      this.userControl.setValue(this.editRes?.account?.name + ' '+ this.editRes?.account?.user_type);
+      this.userControl.setValue(this.editRes?.account?.name + ' ' + this.editRes?.account?.user_type);
     })
 
     this.filteredusers = this.userControl.valueChanges.pipe(
@@ -109,7 +109,18 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getUser();
+
+    this.userControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getUser(res);
+      } else {
+        this.users = [];
+        this.filteredusers = this.userControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
     this.getCategory();
     this.getPaymentTerms();
 
@@ -134,9 +145,9 @@ export class UpdateAdvanceBookingComponent implements OnInit {
   subcategory: any;
   searc: any;
   variantList: any[] = [];
-  isSearch=false;
+  isSearch = false;
   getVariant(search: any, index: any, barcode: any) {
-    this.isSearch=true;
+    this.isSearch = true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -152,7 +163,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       }
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -179,7 +190,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     else {
       this.saleService.filterVariant(this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -315,11 +326,15 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     if (this.saleEstimateForm?.value?.advance_booking_cart?.length == 0) {
       this.isCart = true;
     }
-
   }
-  getUser() {
-    this.saleService.getUser().subscribe((res: any) => {
+
+  getUser(query) {
+    this.saleService.getUser(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.users = res?.data;
+      this.filteredusers = this.userControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
   paymentTermsList: any
@@ -357,7 +372,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     //     }
     //   })
     // });
-    this.supplierAddress=data?.detail;
+    this.supplierAddress = data?.detail;
     this.supplierAddress?.address?.map((res: any) => {
       if (res?.address_type == 'Billing') {
         this.selectedAddressBilling = res
@@ -815,13 +830,13 @@ export class UpdateAdvanceBookingComponent implements OnInit {
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
-        
+
       let formdata: any = new FormData();
       formdata.append('account', this.saleEstimateForm.get('account')?.value);
       formdata.append('booking_date', this.saleEstimateForm.get('booking_date')?.value);
       // formdata.append('booking_no', this.saleEstimateForm.get('booking_no')?.value);
-       // 21-5
-       if(this.isStatusDraft){
+      // 21-5
+      if (this.isStatusDraft) {
         formdata.append('booking_no', this.saleEstimateForm.get('booking_no')?.value);
       }
       // end
@@ -863,10 +878,10 @@ export class UpdateAdvanceBookingComponent implements OnInit {
             this.saleEstimateForm.reset()
             this.ngOnInit()
             this.userControl.reset()
-          } else if (type == 'print') { 
+          } else if (type == 'print') {
             this.toastrService.success(this.getRes.msg);
             this.loaderPrint = false;
-            this.router.navigate(['//sales/detail-advance-booking/'+this.id])
+            this.router.navigate(['//sales/detail-advance-booking/' + this.id])
           } else if (type == 'draft') {
             this.loaderDraft = false;
             this.toastrService.success(this.getRes.msg);
@@ -911,7 +926,7 @@ export class UpdateAdvanceBookingComponent implements OnInit {
         this.loaderDraft = false;
       }
       this.saleEstimateForm.markAllAsTouched()
-            this.toastrService.error('Please Fill All The Required Fields')
+      this.toastrService.error('Please Fill All The Required Fields')
     }
   }
 
@@ -945,8 +960,8 @@ export class UpdateAdvanceBookingComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredUsers = include
-      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue))
-      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue)|| users.username.toLowerCase().includes(filterValue));
+      ? this.users.filter(users => users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue))
+      : this.users.filter(users => !users?.name?.toLowerCase().includes(filterValue) || users.username.toLowerCase().includes(filterValue));
     if (!include && filteredUsers.length === 0) {
       // console.log("No results found");
       filteredUsers.push({ name: "No data found" }); // Add a dummy entry for displaying "No data found"
