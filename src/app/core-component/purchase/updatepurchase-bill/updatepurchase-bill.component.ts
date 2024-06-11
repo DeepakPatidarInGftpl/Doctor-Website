@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
@@ -27,7 +27,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private Arout: ActivatedRoute,
-    private coreService:CoreService) {
+    private coreService: CoreService) {
   }
 
   supplierControlName = 'party';
@@ -53,7 +53,8 @@ export class UpdatepurchaseBillComponent implements OnInit {
   getresbyId: any;
   supplierAddress: any;
   selectedAddress: string = ''
-  isStatusDraft=false; //21-5
+  isStatusDraft = false; //21-5
+  companyName!: string;
 
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -79,7 +80,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       additional_charges: this.fb.array([]),
       tax_rate: this.fb.array([]),
       // total_tax: new FormControl('', ),
-      total_discount: new FormControl('', ), //17-02
+      total_discount: new FormControl('',), //17-02
       // sub_total: new FormControl('', ),
       round_off: new FormControl(''),
       note: new FormControl(''),
@@ -87,45 +88,46 @@ export class UpdatepurchaseBillComponent implements OnInit {
       additional_charge: new FormControl(''),
       // additional_discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)])
       //2-1
-      total_qty:new FormControl('',[Validators.required])
+      total_qty: new FormControl('', [Validators.required])
     });
 
     this.purchaseService.getPurchaseBillById(this.id).subscribe(res => {
       // console.log(res);
       this.getresbyId = res;
+      this.companyName = res.party?.company_name;
       this.puchaseBillForm.patchValue(res);
       this.puchaseBillForm.get('party')?.patchValue(res?.party?.id);
       this.puchaseBillForm.get('payment_term')?.patchValue(res?.payment_term?.id);
       this.puchaseBillForm.get('material_inward_no')?.patchValue(res?.material_inward_no?.id);
       // this.puchaseBillForm.get('supplier_bill_no')?.patchValue(res?.supplier_bill_no);
 
-      
-      if(res?.cart.length>0){
+
+      if (res?.cart.length > 0) {
         this.puchaseBillForm.setControl('purchase_bill', this.udateCart(res?.cart));
-      }else{
-        this.isCart=true;
+      } else {
+        this.isCart = true;
       }
-       // 21-5
-     if(res.status=='Draft' || res.status==null){
-      this.isStatusDraft=true;
-      this.getprefix();
-    }else{
-      this.puchaseBillForm.get('supplier_bill_no').patchValue(res?.supplier_bill_no) // 21-5
-    }
-//end 21-5
-      this.puchaseBillForm.setControl('tax_rate', this.udateTaxRate(res?.tax_rate));   
+      // 21-5
+      if (res.status == 'Draft' || res.status == null) {
+        this.isStatusDraft = true;
+        this.getprefix();
+      } else {
+        this.puchaseBillForm.get('supplier_bill_no').patchValue(res?.supplier_bill_no) // 21-5
+      }
+      //end 21-5
+      this.puchaseBillForm.setControl('tax_rate', this.udateTaxRate(res?.tax_rate));
       this.displaySupplierName(res?.party?.id);
       this.supplierId = res?.party?.id;
-      this.getVariant('', '','')
+      this.getVariant('', '', '')
       this.totaladditionalCharge = res.additional_charge
       //patch local-date
       const formatteddue_date = new Date(this.getresbyId?.due_date).toISOString().slice(0, 16);
       this.puchaseBillForm.get('due_date')?.patchValue(formatteddue_date);
       this.puchaseBillForm.get('round_off')?.patchValue(this.getresbyId?.round_off)
-      
+
       // const formattedshipping_date = new Date(this.getresbyId?.shipping_date).toISOString().slice(0, 16);
       // this.puchaseBillForm.get('shipping_date')?.patchValue(formattedshipping_date);
-      
+
       const formattedsupplier_bill_date = new Date(this.getresbyId?.supplier_bill_date).toISOString().slice(0, 16);
       this.puchaseBillForm.get('supplier_bill_date')?.patchValue(formattedsupplier_bill_date);
       //call detail api
@@ -133,7 +135,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
         // console.log(res);
         this.supplierAddress = res;
         this.supplierControl.setValue(res.company_name);
-        
+
         this.supplierAddress.address.map((res: any) => {
           this.selectedAddressBilling = res
           // if (res.address_type == 'Billing') {
@@ -151,11 +153,25 @@ export class UpdatepurchaseBillComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      const isFieldChanged = res !== this.companyName;
+      if (res.length >= 3 && isFieldChanged) {
+        this.getSuuplier(res);
+      } else {
+        this.suppliers = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
+
     this.filteredVariants = this.variantControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getSuuplier();
+
     // this.getVariants();
     this.getPurchase();
     this.getMaterialInward();
@@ -185,7 +201,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
       console.log(res);
       if (res.success == true) {
         this.prefixNo = res.data;
-        this.puchaseBillForm.get('supplier_bill_no').patchValue(this.prefixNo[0]?.id) 
+        this.puchaseBillForm.get('supplier_bill_no').patchValue(this.prefixNo[0]?.id)
       } else {
         this.toastrService.error(res.msg)
       }
@@ -225,7 +241,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
     add.forEach((j: any, i) => {
       const purchaseRate = j.unit_cost || 0;
       const taxPercentage = j.tax || 0;
-      const landingCost= j.landing_cost || 0;
+      const landingCost = j.landing_cost || 0;
       // tax including & excluding
       if (j.tax == 18) {
         this.TotalWithoutTax[i] = j.unit_cost * j.qty;
@@ -312,15 +328,15 @@ export class UpdatepurchaseBillComponent implements OnInit {
   getCart(): FormArray {
     return this.puchaseBillForm.get('purchase_bill') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.puchaseBillForm.value?.purchase_bill?.length==0){
-      this.isCart=true
+    if (this.puchaseBillForm.value?.purchase_bill?.length == 0) {
+      this.isCart = true
     }
   }
 
@@ -360,16 +376,21 @@ export class UpdatepurchaseBillComponent implements OnInit {
   }
   removeTax(i: any) {
     console.log('ghs');
-    
+
     this.getTaxRate().removeAt(i)
   }
   supplierList: any;
-  getSuuplier() {
-    this.purchaseService.getSupplier().subscribe((res: any) => {
-      // console.log(res);
+
+  getSuuplier(query) {
+    this.purchaseService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.suppliers = res;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
+
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
       // console.log(res);
@@ -396,17 +417,17 @@ export class UpdatepurchaseBillComponent implements OnInit {
       // console.log(res);
       this.paymentList = res;
 
-       // select auto due date with time from days fields
-       const today = new Date();
-       const sevenDaysFromToday = new Date(today);
-       sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
-       const year = sevenDaysFromToday.getFullYear();
-       const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
-       const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
-       const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
-       const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
-       const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
-       this.puchaseBillForm.get('due_date').patchValue(defaultDateago7);
+      // select auto due date with time from days fields
+      const today = new Date();
+      const sevenDaysFromToday = new Date(today);
+      sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
+      const year = sevenDaysFromToday.getFullYear();
+      const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
+      const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
+      const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+      const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
+      const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+      this.puchaseBillForm.get('due_date').patchValue(defaultDateago7);
     })
   }
   selectedAddressBilling: any;
@@ -419,7 +440,7 @@ export class UpdatepurchaseBillComponent implements OnInit {
     // console.log(selectedItemId);
     this.supplierId = event;
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
     if (this.getresbyId.cart.length >= 0) {
       const variants = this.puchaseBillForm.get('purchase_bill') as FormArray;
       variants.clear();
@@ -432,17 +453,17 @@ export class UpdatepurchaseBillComponent implements OnInit {
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
 
-       // select auto due date with time from days fields
-       const today = new Date();
-       const sevenDaysFromToday = new Date(today);
-       sevenDaysFromToday.setDate(today.getDate() + res?.payment_terms?.days);
-       const year = sevenDaysFromToday.getFullYear();
-       const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
-       const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
-       const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
-       const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
-       const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
-       this.puchaseBillForm.get('due_date').patchValue(defaultDateago7);
+      // select auto due date with time from days fields
+      const today = new Date();
+      const sevenDaysFromToday = new Date(today);
+      sevenDaysFromToday.setDate(today.getDate() + res?.payment_terms?.days);
+      const year = sevenDaysFromToday.getFullYear();
+      const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
+      const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
+      const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+      const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
+      const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+      this.puchaseBillForm.get('due_date').patchValue(defaultDateago7);
 
       this.supplierAddress = res;
       this.supplierAddress.address.map((res: any) => {
@@ -476,9 +497,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -999,30 +1020,30 @@ export class UpdatepurchaseBillComponent implements OnInit {
 
   getRes: any;
   loader = false;
-  loaderCreate=false;
-  loaderDraft=false;
-  loaderPrint=false;
-  formId:any;
+  loaderCreate = false;
+  loaderDraft = false;
+  loaderPrint = false;
+  formId: any;
   submit(type: any) {
     console.log(this.puchaseBillForm.value);
     if (this.puchaseBillForm.valid) {
       if (type == 'new') {
-        this.loaderCreate=true;
-      }else if(type=='save'){
+        this.loaderCreate = true;
+      } else if (type == 'save') {
         this.loader = true;
-      }else if(type=='print'){
-        this.loaderPrint=true;
-      }else if(type=='draft'){
-        this.loaderDraft=true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
-            
+
       let formdata: any = new FormData();
       formdata.append('party', this.puchaseBillForm.get('party')?.value);
       formdata.append('supplier_bill_date', this.puchaseBillForm.get('supplier_bill_date')?.value);
       formdata.append('refrence_bill_no', this.puchaseBillForm.get('refrence_bill_no')?.value);
       // formdata.append('supplier_bill_no', this.puchaseBillForm.get('supplier_bill_no')?.value);
-       // 21-5
-       if(this.isStatusDraft){
+      // 21-5
+      if (this.isStatusDraft) {
         formdata.append('supplier_bill_no', this.puchaseBillForm.get('supplier_bill_no')?.value);
       }
       // end
@@ -1043,9 +1064,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
       formdata.append('round_off', this.puchaseBillForm.get('round_off')?.value);
       formdata.append('additional_charge', this.puchaseBillForm.get('additional_charge')?.value);
       //2-1
-      formdata.append('total_qty',this.puchaseBillForm.get('total_qty')?.value);
-       //17-02
-       formdata.append('total_discount',this.puchaseBillForm.get('total_discount')?.value)
+      formdata.append('total_qty', this.puchaseBillForm.get('total_qty')?.value);
+      //17-02
+      formdata.append('total_discount', this.puchaseBillForm.get('total_discount')?.value)
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -1107,23 +1128,23 @@ export class UpdatepurchaseBillComponent implements OnInit {
         if (this.getRes.success) {
           // this.router.navigate(['//purchase/goodsReceivedNote-list'])
           if (type == 'new') {
-            this.loaderCreate=false;
+            this.loaderCreate = false;
             this.puchaseBillForm.reset()
             this.supplierControl.reset()
             this.ngOnInit()
-          } 
+          }
           else if (type == 'print') {
             this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
-            this.loaderPrint=false;
-                 this.router.navigate(['//purchase/purchase-billDetails/'+this.id])
+            this.loaderPrint = false;
+            this.router.navigate(['//purchase/purchase-billDetails/' + this.id])
             // setTimeout(() => {
             //   // this.materialForm.reset()
             //   // this.ngOnInit()
             //   this.supplierControl.reset();
             // }, 3000);
-          } 
-          else if(type=='draft'){
-            this.loaderDraft=false;
+          }
+          else if (type == 'draft') {
+            this.loaderDraft = false;
             this.toastrService.success(this.getRes.msg, '', { timeOut: 1000, });
             this.router.navigate(['//purchase/goodsReceivedNote-list'])
           }
@@ -1133,26 +1154,26 @@ export class UpdatepurchaseBillComponent implements OnInit {
             this.router.navigate(['//purchase/goodsReceivedNote-list'])
           }
         }
-        else{
+        else {
           if (type == 'new') {
-            this.loaderCreate=false;
-          }else if(type=='save'){
+            this.loaderCreate = false;
+          } else if (type == 'save') {
             this.loader = false;
-          }else if(type=='print'){
-            this.loaderPrint=false;
-          }else if(type=='draft'){
-            this.loaderDraft=false;
+          } else if (type == 'print') {
+            this.loaderPrint = false;
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
           }
         }
-      },err=>{
+      }, err => {
         if (type == 'new') {
-          this.loaderCreate=false;
-        }else if(type=='save'){
+          this.loaderCreate = false;
+        } else if (type == 'save') {
           this.loader = false;
-        }else if(type=='print'){
-          this.loaderPrint=false;
-        }else if(type=='draft'){
-          this.loaderDraft=false;
+        } else if (type == 'print') {
+          this.loaderPrint = false;
+        } else if (type == 'draft') {
+          this.loaderDraft = false;
         }
       })
     } else {
@@ -1179,11 +1200,11 @@ export class UpdatepurchaseBillComponent implements OnInit {
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
       ? this.suppliers.filter(supplier =>
-          supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue)
-        )
+        supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue)
+      )
       : this.suppliers.filter(supplier =>
-          !(supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
-        );
+        !(supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
+      );
     if (!include && filteredSuppliers.length === 0) {
       filteredSuppliers.push({ name: "No data found" });
     }
@@ -1255,22 +1276,22 @@ export class UpdatepurchaseBillComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
   productName: any[] = [];
   isProduct = true;
-  isSearch=false;
+  isSearch = false;
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
-    this.isSearch=true;
+    this.isSearch = true;
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
-        this.isSearch=false;
+        this.isSearch = false;
         // this.productOption = res;
         // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
@@ -1509,9 +1530,9 @@ export class UpdatepurchaseBillComponent implements OnInit {
     const total = value + ctax;
     return total;
   }
-isAdditionalDiscount=false;
+  isAdditionalDiscount = false;
   additionalcharg() {
-    this.isAdditionalDiscount=true;
+    this.isAdditionalDiscount = true;
     this.calculateTotalAdditionalCharge()
   }
   totaladditionalCharge: any;
@@ -1521,16 +1542,16 @@ isAdditionalDiscount=false;
       const mrpControl = this.getAdditionalCharge().controls[i]?.get('total');
       if (mrpControl) {
         totaladditionalCharge += +mrpControl?.value;
-        if(this.isAdditionalDiscount){
-        this.puchaseBillForm.get('additional_charge').patchValue(totaladditionalCharge.toFixed(2))
+        if (this.isAdditionalDiscount) {
+          this.puchaseBillForm.get('additional_charge').patchValue(totaladditionalCharge.toFixed(2))
         }
       }
     }
     return totaladditionalCharge;
   }
 
-   //calculate otal tax rates
-   calculateTotalTaxrate(): any {
+  //calculate otal tax rates
+  calculateTotalTaxrate(): any {
     let totalTax = 0;
     for (let i = 0; i < this.getTaxRate().controls.length; i++) {
       const taxControl = this.getTaxRate().controls[i].get('tax_rate') || 0;
@@ -1540,7 +1561,7 @@ isAdditionalDiscount=false;
     }
     return totalTax;
   }
-   calculateTotalTaxAmount(): any {
+  calculateTotalTaxAmount(): any {
     let totalTax = 0;
     for (let i = 0; i < this.getTaxRate().controls.length; i++) {
       const taxControl = this.getTaxRate().controls[i].get('taxable_amount') || 0;
@@ -1650,8 +1671,8 @@ isAdditionalDiscount=false;
   searc: any;
   myControls: FormArray;
   variantList: any[] = [];
-  getVariant(search: any, index: any,barcode:any) {
-    this.isSearch=true;
+  getVariant(search: any, index: any, barcode: any) {
+    this.isSearch = true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -1667,7 +1688,7 @@ isAdditionalDiscount=false;
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1692,7 +1713,7 @@ isAdditionalDiscount=false;
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1732,7 +1753,7 @@ isAdditionalDiscount=false;
     this.gstTaxRate[index] = barcode.get('tax').value || 0;
     taxRate.patchValue({
       tax_rate: this.gstTaxRate[index],
-      taxable_amount:this.coastprice[index]
+      taxable_amount: this.coastprice[index]
     });
     this.costAmount[index] = barcode.get('unit_cost').value || 0;
     this.discountValue[index] = barcode.get('discount').value || 0;
@@ -1744,17 +1765,17 @@ isAdditionalDiscount=false;
       let getDiscountPrice = (this.batchCostPrice[index] * totaldiscount) / 100
       let getCoastPrice = this.batchCostPrice[index] - getDiscountPrice;
       // cost price
-      this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])));    
-      if(this.supplierAddress?.check_sgst_cgst){
+      this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])));
+      if (this.supplierAddress?.check_sgst_cgst) {
         taxRate.patchValue({
-          cgst_amount:(this.getcgst[index].toFixed(2)/2),
-          sgst_amount:(this.getcgst[index].toFixed(2)/2),
-          total_tax:this.getcgst[index].toFixed(2)
+          cgst_amount: (this.getcgst[index].toFixed(2) / 2),
+          sgst_amount: (this.getcgst[index].toFixed(2) / 2),
+          total_tax: this.getcgst[index].toFixed(2)
         });
-      }else{
+      } else {
         taxRate.patchValue({
           igst_amount: this.gstTaxRate[index],
-          total_tax:this.getcgst[index].toFixed(2)
+          total_tax: this.getcgst[index].toFixed(2)
         });
       }
     } else {
@@ -1762,16 +1783,16 @@ isAdditionalDiscount=false;
       let getCoastPrice = this.costPrice - getDiscountPrice;
       // cost price
       this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])))
-      if(this.supplierAddress?.check_sgst_cgst){
+      if (this.supplierAddress?.check_sgst_cgst) {
         taxRate.patchValue({
-          cgst_amount:(this.getcgst[index].toFixed(2)/2),
-          sgst_amount:(this.getcgst[index].toFixed(2)/2),
-          total_tax:this.getcgst[index].toFixed(2)
+          cgst_amount: (this.getcgst[index].toFixed(2) / 2),
+          sgst_amount: (this.getcgst[index].toFixed(2) / 2),
+          total_tax: this.getcgst[index].toFixed(2)
         });
-      }else{
+      } else {
         taxRate.patchValue({
           igst_amount: this.getcgst[index].toFixed(2),
-          total_tax:this.getcgst[index].toFixed(2)
+          total_tax: this.getcgst[index].toFixed(2)
         });
       }
     }
@@ -1785,7 +1806,7 @@ isAdditionalDiscount=false;
     this.gstTaxRate[index] = barcode.get('tax').value || 0;
     taxRate.patchValue({
       tax_rate: this.gstTaxRate[index],
-      taxable_amount:this.coastprice[index]
+      taxable_amount: this.coastprice[index]
     });
     this.costAmount[index] = barcode.get('unit_cost').value || 0;
     this.discountValue[index] = barcode.get('discount').value || 0;
@@ -1799,16 +1820,16 @@ isAdditionalDiscount=false;
         // this.costAmount[index]=getCoastPrice
         // cost price
         this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])))
-        if(this.supplierAddress?.check_sgst_cgst){
+        if (this.supplierAddress?.check_sgst_cgst) {
           taxRate.patchValue({
-            cgst_amount:(this.getcgst[index].toFixed(2)/2),
-            sgst_amount:(this.getcgst[index].toFixed(2)/2),
-            total_tax:this.getcgst[index].toFixed(2)
+            cgst_amount: (this.getcgst[index].toFixed(2) / 2),
+            sgst_amount: (this.getcgst[index].toFixed(2) / 2),
+            total_tax: this.getcgst[index].toFixed(2)
           });
-        }else{
+        } else {
           taxRate.patchValue({
             igst_amount: this.gstTaxRate[index],
-            total_tax:this.getcgst[index].toFixed(2)
+            total_tax: this.getcgst[index].toFixed(2)
           });
         }
       } else {
@@ -1817,16 +1838,16 @@ isAdditionalDiscount=false;
         // this.costAmount[index]=getCoastPrice
         // cost price
         this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])))
-        if(this.supplierAddress?.check_sgst_cgst){
+        if (this.supplierAddress?.check_sgst_cgst) {
           taxRate.patchValue({
-            cgst_amount:(this.getcgst[index].toFixed(2)/2),
-            sgst_amount:(this.getcgst[index].toFixed(2)/2),
-            total_tax:this.getcgst[index].toFixed(2)
+            cgst_amount: (this.getcgst[index].toFixed(2) / 2),
+            sgst_amount: (this.getcgst[index].toFixed(2) / 2),
+            total_tax: this.getcgst[index].toFixed(2)
           });
-        }else{
+        } else {
           taxRate.patchValue({
             igst_amount: this.getcgst[index].toFixed(2),
-            total_tax:this.getcgst[index].toFixed(2)
+            total_tax: this.getcgst[index].toFixed(2)
           });
         }
       }
@@ -1838,16 +1859,16 @@ isAdditionalDiscount=false;
       // cost price
       this.getcgst[index] = getCoastPrice - (getCoastPrice * (100 / (100 + this.gstTaxRate[index])))
 
-      if(this.supplierAddress?.check_sgst_cgst){
+      if (this.supplierAddress?.check_sgst_cgst) {
         taxRate.patchValue({
-          cgst_amount:(this.getcgst[index].toFixed(2)/2),
-          sgst_amount:(this.getcgst[index].toFixed(2)/2),
-          total_tax:this.getcgst[index].toFixed(2)
+          cgst_amount: (this.getcgst[index].toFixed(2) / 2),
+          sgst_amount: (this.getcgst[index].toFixed(2) / 2),
+          total_tax: this.getcgst[index].toFixed(2)
         });
-      }else{
+      } else {
         taxRate.patchValue({
           igst_amount: this.getcgst[index].toFixed(2),
-          total_tax:this.getcgst[index].toFixed(2)
+          total_tax: this.getcgst[index].toFixed(2)
         });
       }
     }
@@ -1877,7 +1898,7 @@ isAdditionalDiscount=false;
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -1903,7 +1924,7 @@ isAdditionalDiscount=false;
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -1915,7 +1936,7 @@ isAdditionalDiscount=false;
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   //dropdown auto close stop
   onLabelClick(event: Event) {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
 
@@ -13,7 +13,7 @@ import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
 })
 export class PurchaseComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private posService: PosDashboardService, private toastr: ToastrService,private purchaseService:PurchaseServiceService,private router:Router) { }
+  constructor(private fb: FormBuilder, private posService: PosDashboardService, private toastr: ToastrService, private purchaseService: PurchaseServiceService, private router: Router) { }
   recieptAdvanceForm!: FormGroup
   get f() {
     return this.recieptAdvanceForm.controls;
@@ -82,8 +82,19 @@ export class PurchaseComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getSuuplier(res);
+      } else {
+        this.suppliers = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
     this.getBank();
-    this.getSuuplier()
   }
 
   bankList: any
@@ -109,18 +120,21 @@ export class PurchaseComponent implements OnInit {
     return this.recieptAdvanceForm.get('party') as FormControl;
   }
   supplierList: any;
-  getSuuplier() {
-    this.purchaseService.getSupplier().subscribe((res: any) => {
-      // console.log(res);
+
+  getSuuplier(query) {
+    this.purchaseService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.suppliers = res;
       // this.variants=res;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
 
-
   oncheck(event: any) {
     // console.log(event);
-    const selectedItemId = event; 
+    const selectedItemId = event;
     // console.log(selectedItemId);
     this.getSles(selectedItemId)
     this.recieptAdvanceForm.patchValue({
@@ -128,9 +142,9 @@ export class PurchaseComponent implements OnInit {
     });
   }
   salesList: any;
-  getSles(id:any){
-    this.posService.getReceiptOrder(id).subscribe(res=>{
-      this.salesList=res;
+  getSles(id: any) {
+    this.posService.getReceiptOrder(id).subscribe(res => {
+      this.salesList = res;
     })
   }
   loaders = false
@@ -252,10 +266,10 @@ export class PurchaseComponent implements OnInit {
   get bill_no() {
     return this.recieptAdvanceForm.get('bill_no')
   }
-  get account(){
+  get account() {
     return this.recieptAdvanceForm.get('account_no')
   }
-  get accountAgainst(){
+  get accountAgainst() {
     return this.recieptAgainstForm.get('account_no')
   }
 }

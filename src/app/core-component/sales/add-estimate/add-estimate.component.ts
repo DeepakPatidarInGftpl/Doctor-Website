@@ -42,8 +42,9 @@ export class AddEstimateComponent implements OnInit {
   variantControl = new FormControl();
   variants: any[] = [];
   filteredVariants: Observable<any[]>;
-
   saleEstimateForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
 
   get f() {
     return this.saleEstimateForm.controls;
@@ -84,6 +85,25 @@ export class AddEstimateComponent implements OnInit {
       map(value => this._filter(value, true))
     );
 
+    const financialYear = localStorage.getItem('financialYear');
+
+    switch (financialYear) {
+      case '12':
+        const minDate12 = new Date(2024, 3, 1, 10, 0, 0);
+        const maxDate12 = new Date(2025, 2, 31, 23, 59, 59);
+        this.setMinMaxDates(minDate12, maxDate12);
+        break;
+      case '6':
+        const minDate6 = new Date(2023, 3, 1, 10, 0, 0);
+        const maxDate6 = new Date(2024, 2, 31, 23, 59, 59);
+        this.setMinMaxDates(minDate6, maxDate6);
+        break;
+      case '14':
+        const minDate14 = new Date(2025, 3, 1, 10, 0, 0);
+        const maxDate14 = new Date(2026, 2, 31, 23, 59, 59);
+        this.setMinMaxDates(minDate14, maxDate14);
+        break;
+    }
 
     this.userControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
@@ -103,6 +123,40 @@ export class AddEstimateComponent implements OnInit {
     this.getCategory();
     this.getPaymentTerms();
     this.getprefix();
+  }
+
+  minDateValidator(minDate: Date) {
+    return (control: { value: string | number | Date }) => {
+      const inputDate = new Date(control.value);
+      const inputDateUTC = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth(), inputDate.getDate()));
+      return inputDateUTC >= minDate ? null : { minDate: true };
+    };
+  }
+
+  maxDateValidator(maxDate: Date) {
+    return (control: { value: string | number | Date }) => {
+      const inputDate = new Date(control.value);
+      const inputDateUTC = new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth(), inputDate.getDate()));
+      return inputDateUTC <= maxDate ? null : { maxDate: true };
+    };
+  }
+
+  formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
+  setMinMaxDates(minDate: Date, maxDate: Date) {
+    this.minDate = this.formatDate(minDate);
+    this.maxDate = this.formatDate(maxDate);
+    const dateControl = this.saleEstimateForm.get('estimate_expiry_date');
+    dateControl.setValidators([Validators.required, this.minDateValidator(minDate), this.maxDateValidator(maxDate)]);
+    dateControl.updateValueAndValidity();
+    if (this.saleEstimateForm.get('estimate_expiry_date').value) {
+      const selectedDate = new Date(this.saleEstimateForm.get('estimate_expiry_date').value);
+      if (selectedDate < minDate || selectedDate > maxDate) {
+        dateControl.reset('');
+      }
+    }
   }
 
   prefixNo: any;

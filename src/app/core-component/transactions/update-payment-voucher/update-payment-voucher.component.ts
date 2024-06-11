@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
 export class UpdatePaymentVoucherComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private toastr: ToastrService, private router: Router, private transactionService: TransactionService,
-    private Arout:ActivatedRoute) { }
+    private Arout: ActivatedRoute) { }
 
   supplierControl = new FormControl();
   filteredsupplier: Observable<any[]>;
@@ -34,8 +34,8 @@ export class UpdatePaymentVoucherComponent implements OnInit {
   }
   myControls: FormArray;
   debitNoteControl: FormArray;
-id:any
-editRes:any;
+  id: any
+  editRes: any;
   ngOnInit(): void {
     const defaultDate = new Date().toISOString().split('T')[0];
     this.myControls = new FormArray([]);
@@ -48,7 +48,7 @@ editRes:any;
     this.paymentVoucherForm = this.fb.group({
       payment_type: new FormControl('Cash'),
       supplier: new FormControl('', [Validators.required]),
-      payment_account: new FormControl('',[Validators.required]),
+      payment_account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
@@ -60,7 +60,7 @@ editRes:any;
     this.paymentVoucherBankForm = this.fb.group({
       payment_type: new FormControl('Bank'),
       supplier: new FormControl('', [Validators.required]),
-      payment_account: new FormControl('',[Validators.required]),
+      payment_account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       payment_voucher_no: new FormControl(''),
       mode_type: new FormControl(''),
@@ -77,12 +77,24 @@ editRes:any;
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getSupplier(res);
+      } else {
+        this.supplierList = [];
+        this.filteredsupplier = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
+
     //payer
     this.filteredPayer = this.payerControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filterr(value, true))
     );
-    this.getSupplier();
     this.getAccount();
     this.getPurchaseBill();
     this.getDebitNote()
@@ -98,13 +110,13 @@ editRes:any;
         this.paymentVoucherBankForm.patchValue(this.editRes)
         this.paymentVoucherBankForm.get('supplier').patchValue(this.editRes?.supplier?.id);
         this.paymentVoucherBankForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
-        
-      // this.paymentVoucherBankForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
-        if(this.editRes?.payment_cart.length>0){
+
+        // this.paymentVoucherBankForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
+        if (this.editRes?.payment_cart.length > 0) {
           this.paymentVoucherBankForm.setControl('payment_voucher_cart', this.udateCartBank(this.editRes?.payment_cart));
-        }else{
-          this.isCartBank=true;
-          this.isAgainstBillBank=true;
+        } else {
+          this.isCartBank = true;
+          this.isAgainstBillBank = true;
         }
         this.supplierControl.setValue(this.editRes?.supplier?.company_name);
         this.payerControl.setValue(this.editRes?.payment_account?.account_id);
@@ -112,14 +124,14 @@ editRes:any;
         this.paymentVoucherForm.patchValue(this.editRes);
         this.paymentVoucherForm.get('supplier').patchValue(this.editRes?.supplier?.id);
         this.paymentVoucherForm.get('payment_account').patchValue(this.editRes?.payment_account?.id);
-        
-      // this.paymentVoucherForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
 
-        if(this.editRes?.payment_cart.length>0){
+        // this.paymentVoucherForm.get('payment_voucher_no')?.patchValue(res?.payment_voucher_no?.id) // 20-5.
+
+        if (this.editRes?.payment_cart.length > 0) {
           this.paymentVoucherForm.setControl('payment_voucher_cart', this.udateCart(this.editRes?.payment_cart));
-        }else{
-          this.isCart=true;
-          this.isAgainstBill=true;
+        } else {
+          this.isCart = true;
+          this.isAgainstBill = true;
         }
         this.supplierControl.setValue(this.editRes?.supplier?.company_name);
         this.payerControl.setValue(this.editRes?.payment_account?.account_id);
@@ -143,7 +155,7 @@ editRes:any;
 
   udateCart(add: any): FormArray {
     let formarr = new FormArray([]);
-   add.forEach((j: any, i) => {
+    add.forEach((j: any, i) => {
       this.isAgainstBill = true;
       formarr.push(this.fb.group({
         purchase_bill: j.purchase_bill?.id,
@@ -151,33 +163,33 @@ editRes:any;
         paid_amount: j?.paid_amount,
         pending_amount: j?.pending_amount,
         payment: j?.payment,
-        debit_note_cart: this.updateDebitNoteCart(j.debit_note_cart,i),
+        debit_note_cart: this.updateDebitNoteCart(j.debit_note_cart, i),
       }))
       this.myControls.push(new FormControl(j?.purchase_bill?.refrence_bill_no));
     })
     return formarr;
   }
   //update cart
-  updateDebitNoteCart(debit_Cart:any,i:any): FormArray {
+  updateDebitNoteCart(debit_Cart: any, i: any): FormArray {
     console.log(debit_Cart);
-    if(debit_Cart.length>0){
+    if (debit_Cart.length > 0) {
       this.isDebitNoteCart1[i] = true;
     }
     // this.isDebitNoteCart1[i] = true;
-    console.log(this.isDebitNoteCart1); 
+    console.log(this.isDebitNoteCart1);
     let formarr = new FormArray([]);
     debit_Cart.forEach((j: any, i) => {
-       this.isAgainstBill = true;
-       formarr.push(this.fb.group({
+      this.isAgainstBill = true;
+      formarr.push(this.fb.group({
         debit_note: j.debit_note?.id,
-         original_amount: j?.original_amount,
-         redeem_amount: j?.redeem_amount,
-         pending_amount: j?.pending_amount,
-         amount: j?.amount,
-       })) 
-       this.debitNoteControl.push(new FormControl(j?.debit_note?.debit_note_no));
-     })
-     return formarr;
+        original_amount: j?.original_amount,
+        redeem_amount: j?.redeem_amount,
+        pending_amount: j?.pending_amount,
+        amount: j?.amount,
+      }))
+      this.debitNoteControl.push(new FormControl(j?.debit_note?.debit_note_no));
+    })
+    return formarr;
   }
 
   udateCartBank(add: any): FormArray {
@@ -190,34 +202,34 @@ editRes:any;
         paid_amount: j?.paid_amount,
         pending_amount: j?.pending_amount,
         payment: j?.payment,
-        debit_note_cart: this.updateDebitNoteCartBank(j.debit_note_cart,i),
+        debit_note_cart: this.updateDebitNoteCartBank(j.debit_note_cart, i),
       }))
       this.myControls.push(new FormControl(j?.purchase_bill?.refrence_bill_no));
     })
     return formarr;
   }
- //update cart
- updateDebitNoteCartBank(debit_Cart:any,i:any): FormArray {
-  console.log(debit_Cart);
-  if(debit_Cart.length>0){
-    this.isDebitNoteCart[i] = true;
+  //update cart
+  updateDebitNoteCartBank(debit_Cart: any, i: any): FormArray {
+    console.log(debit_Cart);
+    if (debit_Cart.length > 0) {
+      this.isDebitNoteCart[i] = true;
+    }
+
+    console.log(this.isDebitNoteCart);
+    let formarr = new FormArray([]);
+    debit_Cart.forEach((j: any, i) => {
+      this.isAgainstBill = true;
+      formarr.push(this.fb.group({
+        debit_note: j.debit_note?.id,
+        original_amount: j?.original_amount,
+        redeem_amount: j?.redeem_amount,
+        pending_amount: j?.pending_amount,
+        amount: j?.amount,
+      }))
+      this.debitNoteControl.push(new FormControl(j?.debit_note?.debit_note_no));
+    })
+    return formarr;
   }
- 
-  console.log(this.isDebitNoteCart); 
-  let formarr = new FormArray([]);
-  debit_Cart.forEach((j: any, i) => {
-     this.isAgainstBill = true;
-     formarr.push(this.fb.group({
-      debit_note: j.debit_note?.id,
-       original_amount: j?.original_amount,
-       redeem_amount: j?.redeem_amount,
-       pending_amount: j?.pending_amount,
-       amount: j?.amount,
-     })) 
-     this.debitNoteControl.push(new FormControl(j?.debit_note?.debit_note_no));
-   })
-   return formarr;
-}
 
   cart(): FormGroup {
     return this.fb.group({
@@ -235,13 +247,13 @@ editRes:any;
   addCart() {
     this.getCart().push(this.cart());
     this.myControls.push(new FormControl(''));
-    this.isCart=false;
+    this.isCart = false;
   }
-  isCart=false;
+  isCart = false;
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if (this.paymentVoucherForm?.value?.payment_voucher_cart?.length==0) {
-     this.isCart=true;
+    if (this.paymentVoucherForm?.value?.payment_voucher_cart?.length == 0) {
+      this.isCart = true;
     }
   }
 
@@ -265,8 +277,8 @@ editRes:any;
   }
   removeDebitNoteForm1(e: any, i: any) {
     this.getDebitNoteCartForm1(e).removeAt(i);
-    if (this.paymentVoucherForm?.value?.payment_voucher_cart[e]?.debit_note_cart?.length==0) {
-      this.isDebitNoteCart1[e] = false;  
+    if (this.paymentVoucherForm?.value?.payment_voucher_cart[e]?.debit_note_cart?.length == 0) {
+      this.isDebitNoteCart1[e] = false;
     }
   }
   // bank
@@ -276,14 +288,14 @@ editRes:any;
   addCartBank() {
     this.getCartBank().push(this.cart());
     this.myControls.push(new FormControl(''));
-    this.isCartBank=false;
+    this.isCartBank = false;
   }
-  isCartBank=false;
+  isCartBank = false;
   removeCartBank(i: any) {
     this.getCartBank().removeAt(i);
-    if (this.paymentVoucherBankForm?.value?.payment_voucher_cart?.length==0) {
-      this.isCartBank=true;
-     }
+    if (this.paymentVoucherBankForm?.value?.payment_voucher_cart?.length == 0) {
+      this.isCartBank = true;
+    }
   }
   // debit not cart
   getDebitNoteCartForm(i: any): FormArray {
@@ -295,8 +307,8 @@ editRes:any;
   }
   removeDebitNoteForm(e: any, i: any) {
     this.getDebitNoteCartForm(e).removeAt(i);
-    if(this.paymentVoucherBankForm?.value?.payment_voucher_cart[e]?.debit_note_cart?.length==0){
-      this.isDebitNoteCart[e]=false;
+    if (this.paymentVoucherBankForm?.value?.payment_voucher_cart[e]?.debit_note_cart?.length == 0) {
+      this.isDebitNoteCart[e] = false;
     }
   }
 
@@ -355,11 +367,17 @@ editRes:any;
   }
   // end
   supplierList: any[] = [];
-  getSupplier() {
-    this.transactionService.getSupplier().subscribe((res: any) => {
+
+  getSupplier(query) {
+    this.transactionService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.supplierList = res;
+      this.filteredsupplier = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
+
   accountList: any[] = [];
   getAccount() {
     this.transactionService.getAccount().subscribe((res: any) => {
@@ -488,9 +506,9 @@ editRes:any;
     const debitNoteCart = cart.get('debit_note_cart') as FormArray;
     debitNoteCart.at(debitNoteIndex).patchValue({
       debit_note: data?.id,
-      original_amount: data?.total||0,
-      redeem_amount: data?.redeem_amount ||0,
-      pending_amount: data?.pending_amount ||0,
+      original_amount: data?.total || 0,
+      redeem_amount: data?.redeem_amount || 0,
+      pending_amount: data?.pending_amount || 0,
     });
   }
 
@@ -568,7 +586,7 @@ editRes:any;
       formdata.append('payment_voucher_cart', JSON.stringify(cartData));
 
       this.loaders = true;
-      this.transactionService.updatePaymentVoucher(formdata,this.id).subscribe(
+      this.transactionService.updatePaymentVoucher(formdata, this.id).subscribe(
         (res: any) => {
           this.loaders = false;
           if (res.success) {
@@ -589,7 +607,7 @@ editRes:any;
       this.toastr.error('Please Fill All The Required Fields')
     }
   }
-  modeError:any;
+  modeError: any;
   onBankSubmit() {
     console.log(this.paymentVoucherBankForm.value);
     if (this.paymentVoucherBankForm.valid) {
@@ -644,7 +662,7 @@ editRes:any;
 
       formdata.append('payment_voucher_cart', JSON.stringify(cartData));
       this.loaders = true;
-      this.transactionService.updatePaymentVoucher(formdata,this.id).subscribe(
+      this.transactionService.updatePaymentVoucher(formdata, this.id).subscribe(
         (res: any) => {
           this.loaders = false;
           if (res.success) {
@@ -657,10 +675,10 @@ editRes:any;
         },
         (err) => {
           this.loaders = false;
-          this.toastr.error('Select Mode Type',err.error.error?.mode_type[0])
-          this.modeError=err.error.error?.mode_type[0]
+          this.toastr.error('Select Mode Type', err.error.error?.mode_type[0])
+          this.modeError = err.error.error?.mode_type[0]
           setTimeout(() => {
-            this.modeError=''
+            this.modeError = ''
           }, 3000);
         }
       );
