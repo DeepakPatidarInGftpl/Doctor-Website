@@ -7,7 +7,7 @@ import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { CompanyService } from 'src/app/Services/Companyservice/company.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
@@ -52,15 +52,15 @@ export class PurchaseOutstandingComponent implements OnInit {
 
   userDetails: any;
   //23-5
-  isAdmin=false;
-  fyID:any;
-ngOnInit(): void {
+  isAdmin = false;
+  fyID: any;
+  ngOnInit(): void {
     //23-5
     if (localStorage.getItem('financialYear')) {
       let fy = localStorage.getItem('financialYear');
       console.warn(JSON.parse(fy));
       let fyId = JSON.parse(fy);
-      this.fyID=fyId;
+      this.fyID = fyId;
     }
     this.cs.userDetails$.subscribe((res: any) => {
       if (res.role == 'admin') {
@@ -70,7 +70,7 @@ ngOnInit(): void {
       }
       this.getBranch();
     });
-//23  
+    //23  
     this.cs.userDetails$.subscribe((userDetails) => {
       this.userDetails = userDetails;
       console.log(userDetails);
@@ -104,7 +104,18 @@ ngOnInit(): void {
         return name ? this._filter(name as string) : this.suppliers.slice();
       }),
     );
-    this.getSupplier();
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getSupplier(res);
+      } else {
+        this.supplierList = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value))
+        );
+      }
+    })
   }
   private formatDate(date: Date): string {
     return this.datepipe.transform(date, 'yyyy-MM-dd') || '';
@@ -113,7 +124,7 @@ ngOnInit(): void {
   private _filter(name: string): any[] {
     const filterValue = name ? name.toLowerCase() : '';
     console.log(filterValue);
-    return this.supplierList.filter((option: any) => (option?.name.toLowerCase().includes(filterValue)) || (option?.company_name?.toLowerCase().includes(filterValue)) );
+    return this.supplierList.filter((option: any) => (option?.name.toLowerCase().includes(filterValue)) || (option?.company_name?.toLowerCase().includes(filterValue)));
   }
 
 
@@ -170,14 +181,14 @@ ngOnInit(): void {
   }
   purchaseOutstanding: any
   getPurchaseOutstanding() {
-    this.reportService.getPurchaseOutstanding(this.startDate, this.endDate, this.supplierId,this.fyID,this.selectData).subscribe((res) => { 
-   
-        console.warn(res);
+    this.reportService.getPurchaseOutstanding(this.startDate, this.endDate, this.supplierId, this.fyID, this.selectData).subscribe((res) => {
+
+      console.warn(res);
       this.purchaseOutstanding = res;
       this.purchaseOutstandingList = res?.purchasepill;
       console.log(this.purchaseOutstandingList);
-     
-    },err=>{
+
+    }, err => {
       this.toastr.error(err.message)
     })
 
@@ -204,11 +215,17 @@ ngOnInit(): void {
     this?.getPurchaseOutstanding();
   }
   supplierList: any[] = [];
-  getSupplier() {
-    this.contactService.getSupplier().subscribe((res: any) => {
+
+  getSupplier(query) {
+    this.reportService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.supplierList = res;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
     })
   }
+
   // convert to pdf
   UserName: any;
 
@@ -334,12 +351,12 @@ ngOnInit(): void {
 
     // Store the original contents
     const originalContents = document.body.innerHTML;
-  //refresh
-  window.addEventListener('afterprint', () => {
-    console.log('afterprint');
-   window.location.reload();
-  });
-  //end
+    //refresh
+    window.addEventListener('afterprint', () => {
+      console.log('afterprint');
+      window.location.reload();
+    });
+    //end
     // Replace the content of the body with the combined content
     document.body.innerHTML = combinedContent;
     window.print();
@@ -354,48 +371,48 @@ ngOnInit(): void {
       this.itemsPerPage = this.purchaseOutstandingList?.length;
     }
   }
-     //23-5
-     branchList: any[] = [];
-     filteredBranchList: any[] = [];
-     searchBranch: string = '';
-     getBranch() {
-       this.reportService.getBranch().subscribe((res: any) => {
-         this.branchList = res;
-         this.filteredBranchList = [...this.branchList];
-       });
-     }
-     filterBranch() {
-       if (this.searchBranch.trim() === '') {
-         this.filteredBranchList = [...this.branchList];
-       } else {
-         this.filteredBranchList = this.branchList.filter(feature =>
-           feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
-         );
-       }
-     }
-     // add remove branch 
-     searchVariant = ''
-     selectData: any[] = [];
-     selectedCategoryIds: any[] = []
-     SelectedBranch(variant: any, event: any) {
-       if (event) {
-         console.log(variant);
-         this.selectData.push(variant)
-         console.log(this.selectData, 'selected data');
-         //close dropdown 
-         this.searchVariant = '';
-         this.ngOnInit();
-       } else {
-         const selectedIndex = this.selectData.findIndex(item => item == variant);
-         console.log(selectedIndex);
-         if (selectedIndex !== -1) {
-           this.selectData.splice(selectedIndex, 1);
-         }
-         this.ngOnInit();
-         console.log(this.selectData);
-       }
-     }
-   //23-5
+  //23-5
+  branchList: any[] = [];
+  filteredBranchList: any[] = [];
+  searchBranch: string = '';
+  getBranch() {
+    this.reportService.getBranch().subscribe((res: any) => {
+      this.branchList = res;
+      this.filteredBranchList = [...this.branchList];
+    });
+  }
+  filterBranch() {
+    if (this.searchBranch.trim() === '') {
+      this.filteredBranchList = [...this.branchList];
+    } else {
+      this.filteredBranchList = this.branchList.filter(feature =>
+        feature.title.toLowerCase().includes(this.searchBranch.toLowerCase())
+      );
+    }
+  }
+  // add remove branch 
+  searchVariant = ''
+  selectData: any[] = [];
+  selectedCategoryIds: any[] = []
+  SelectedBranch(variant: any, event: any) {
+    if (event) {
+      console.log(variant);
+      this.selectData.push(variant)
+      console.log(this.selectData, 'selected data');
+      //close dropdown 
+      this.searchVariant = '';
+      this.ngOnInit();
+    } else {
+      const selectedIndex = this.selectData.findIndex(item => item == variant);
+      console.log(selectedIndex);
+      if (selectedIndex !== -1) {
+        this.selectData.splice(selectedIndex, 1);
+      }
+      this.ngOnInit();
+      console.log(this.selectData);
+    }
+  }
+  //23-5
 }
 
 

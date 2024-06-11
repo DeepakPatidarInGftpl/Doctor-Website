@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
@@ -87,11 +87,22 @@ export class AddpurchaseComponent implements OnInit {
       map(value => this._filter(value, true))
     );
 
+    this.supplierControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getSuuplier(res);
+      } else {
+        this.suppliers = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
+
     this.filteredVariants = this.variantControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getSuuplier();
     this.getprefix();
     this.getCategory();
     // this.getSubCategory();
@@ -111,7 +122,7 @@ export class AddpurchaseComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.purchaseForm.get('order_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toastrService.error(res.msg);
@@ -128,8 +139,8 @@ export class AddpurchaseComponent implements OnInit {
   myControl = new FormControl('');
   variantList: any[] = [];
 
-  getVariant(search: any, index: any,barcode:any) {
-    this.isSearch=true;
+  getVariant(search: any, index: any, barcode: any) {
+    this.isSearch = true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -145,7 +156,7 @@ export class AddpurchaseComponent implements OnInit {
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -170,7 +181,7 @@ export class AddpurchaseComponent implements OnInit {
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -229,22 +240,27 @@ export class AddpurchaseComponent implements OnInit {
   getCart(): FormArray {
     return this.purchaseForm.get('purchase_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.purchase_cart());
     this.taxIntoRupees = new Array(this.getCart().controls.length).fill(0);
-    this.isCart=false
+    this.isCart = false
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.purchaseForm?.value?.purchase_cart?.length==0){
-      this.isCart=true;
+    if (this.purchaseForm?.value?.purchase_cart?.length == 0) {
+      this.isCart = true;
     }
   }
   supplierList: any;
-  getSuuplier() {
-    this.purchaseService.getSupplier().subscribe((res: any) => {
+
+  getSuuplier(query) {
+    this.purchaseService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.suppliers = res;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
 
@@ -262,7 +278,7 @@ export class AddpurchaseComponent implements OnInit {
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
       this.supplierAddress = res;
-      this.getVariant('', '','')
+      this.getVariant('', '', '')
       console.log(this.selectedAddressBilling);
       this.supplierAddress.address.map((res: any) => {
         if (res.address_type == 'Billing') {
@@ -299,9 +315,9 @@ export class AddpurchaseComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -500,7 +516,7 @@ export class AddpurchaseComponent implements OnInit {
       this.calculateRoundoffValue()
     }, 2000);
   }
-  
+
   calculatePurchaseEveryIndex(index: number): number {
     const cartItem = this.getCart().controls[index];
     const purchaseRateControl = cartItem.get('purchase_rate');
@@ -595,23 +611,23 @@ export class AddpurchaseComponent implements OnInit {
 
   getRes: any;
   loader = false;
-  loaderCreate=false;
-  formId:any;
-  loaderPrint=false;
-  loaderDraft=false
+  loaderCreate = false;
+  formId: any;
+  loaderPrint = false;
+  loaderDraft = false
   submit(type: any) {
     console.log(this.purchaseForm.value);
     if (this.purchaseForm.valid) {
       if (type == 'new') {
-        this.loaderCreate=true;
-      }else if(type=='save'){
+        this.loaderCreate = true;
+      } else if (type == 'save') {
         this.loader = true;
-      }else if(type=='print'){
-        this.loaderPrint=true;
-      }else if(type=='draft'){
-        this.loaderDraft=true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
-     
+
       let formdata: any = new FormData();
       formdata.append('party', this.purchaseForm.get('party')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
@@ -666,55 +682,55 @@ export class AddpurchaseComponent implements OnInit {
         if (this.getRes.success) {
           if (type == 'new') {
             this.purchaseForm.reset();
-            this.loaderCreate=false;
+            this.loaderCreate = false;
             this.ngOnInit()
             this.supplierControl.reset()
-          }else if (type == 'print') {
+          } else if (type == 'print') {
             this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
-            this.loaderPrint=false;
-            this.router.navigate(['//purchase/purchaseDetails/'+this.getRes.id])
+            this.loaderPrint = false;
+            this.router.navigate(['//purchase/purchaseDetails/' + this.getRes.id])
             // setTimeout(() => {
             //   // this.materialForm.reset()
             //   // this.ngOnInit()
             //   this.supplierControl.reset();
             // }, 3000);
-          } 
-          else if(type=='draft'){
-            this.loaderDraft=false;
+          }
+          else if (type == 'draft') {
+            this.loaderDraft = false;
             this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
             this.router.navigate(['//purchase/purchaselist'])
           }
           else {
             this.loader = false;
-            this.toastrService.success(this.getRes.msg, '', {timeOut: 1000,})
+            this.toastrService.success(this.getRes.msg, '', { timeOut: 1000, })
             this.router.navigate(['//purchase/purchaselist'])
           }
         } else {
           if (type == 'new') {
-            this.loaderCreate=true;
-          }else if(type=='save'){
+            this.loaderCreate = true;
+          } else if (type == 'save') {
             this.loader = true;
-          }else if(type=='print'){
-            this.loaderPrint=false;
-          }else if(type=='draft'){
-            this.loaderDraft=false;
+          } else if (type == 'print') {
+            this.loaderPrint = false;
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
           }
         }
       }, err => {
-         if (type == 'new') {
-        this.loaderCreate=true;
-      }else if(type=='save'){
-        this.loader = true;
-      }else if(type=='print'){
-        this.loaderPrint=false;
-      }else if(type=='draft'){
-        this.loaderDraft=false;
-      }     
-    })
+        if (type == 'new') {
+          this.loaderCreate = true;
+        } else if (type == 'save') {
+          this.loader = true;
+        } else if (type == 'print') {
+          this.loaderPrint = false;
+        } else if (type == 'draft') {
+          this.loaderDraft = false;
+        }
+      })
     } else {
-       if (type == 'new') {
-        this.loaderCreate=false;
-      }else if(type=='save'){
+      if (type == 'new') {
+        this.loaderCreate = false;
+      } else if (type == 'save') {
         this.loader = false;
       }
       this.purchaseForm.markAllAsTouched()
@@ -751,12 +767,12 @@ export class AddpurchaseComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
-    ? this.suppliers.filter(supplier =>
-      supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue)
-    )
-  : this.suppliers.filter(supplier =>
-      !(supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
-    );
+      ? this.suppliers.filter(supplier =>
+        supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue)
+      )
+      : this.suppliers.filter(supplier =>
+        !(supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
+      );
     if (!include && filteredSuppliers.length === 0) {
       // console.log("No results found");
       filteredSuppliers.push({ company_name: "No data found" }); // Add a dummy entry for displaying "No data found"
@@ -827,23 +843,23 @@ export class AddpurchaseComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   staticValue: string = 'Static Value';
   searchs: any[] = [];
   productName: any[] = [];
   isProduct = true;
-  isSearch=false;
+  isSearch = false;
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
-    this.isSearch=true;
+    this.isSearch = true;
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
-        this.isSearch=false;
+        this.isSearch = false;
         this.productOption = res;
         // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
@@ -1108,7 +1124,7 @@ export class AddpurchaseComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -1134,7 +1150,7 @@ export class AddpurchaseComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -1146,7 +1162,7 @@ export class AddpurchaseComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   //dropdown auto close stop
   onLabelClick(event: Event) {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
@@ -46,7 +46,6 @@ export class AddDebitNoteComponent implements OnInit {
       total: new FormControl(0),
     })
 
-    this.getSupplier();
     this.getPurchaseBill();
     this.getprefix()
 
@@ -55,6 +54,17 @@ export class AddDebitNoteComponent implements OnInit {
       map(value => this._filter(value, true))
     );
 
+    this.supplierControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getSuuplier(res);
+      } else {
+        this.suppliers = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
   }
 
   prefixNo: any;
@@ -63,7 +73,7 @@ export class AddDebitNoteComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.debitNoteForm.get('debit_note_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toastr.error(res.msg);
@@ -72,9 +82,9 @@ export class AddDebitNoteComponent implements OnInit {
       this.toastr.error(err.error.msg)
     })
   }
-  amounts:any=0;
-  taxs: any=0;
-  totals: any=0;
+  amounts: any = 0;
+  taxs: any = 0;
+  totals: any = 0;
   calculateTax() {
     if (this.taxs) {
       // let taxAmount = (this.amounts * this.taxs) / 100;
@@ -89,12 +99,17 @@ export class AddDebitNoteComponent implements OnInit {
   }
 
   suppliers: any[] = [];
-  getSupplier() {
-    this.purchaseService.getSupplier().subscribe((res: any) => {
-      console.log(res);
-      this.suppliers = res
+
+  getSuuplier(query) {
+    this.purchaseService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
+      this.suppliers = res;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
+
   purchaseList: any[] = []
   filterPurchaseBill: any[] = []
   getPurchaseBill() {

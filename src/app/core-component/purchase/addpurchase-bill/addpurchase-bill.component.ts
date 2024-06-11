@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
@@ -28,7 +28,7 @@ export class AddpurchaseBillComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private contactService: ContactService,
-    private coreService:CoreService,) {
+    private coreService: CoreService,) {
   }
 
   supplierControlName = 'party';
@@ -81,7 +81,7 @@ export class AddpurchaseBillComponent implements OnInit {
       additional_charges: this.fb.array([]),
       tax_rate: this.fb.array([]),
       // total_tax: new FormControl('', ),
-      total_discount: new FormControl('', ), // 17-02
+      total_discount: new FormControl('',), // 17-02
       // sub_total: new FormControl('', ),
       round_off: new FormControl('',),
       note: new FormControl(''),
@@ -89,17 +89,29 @@ export class AddpurchaseBillComponent implements OnInit {
       additional_charge: new FormControl(''),
       // additional_discount: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)])
       //2-1
-      total_qty:new FormControl('',[Validators.required])
+      total_qty: new FormControl('', [Validators.required])
     });
     this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getSuuplier(res);
+      } else {
+        this.suppliers = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
+
     this.filteredVariants = this.variantControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getSuuplier();
     // this.getVariants();
     this.getPurchase();
     this.getMaterialInward();
@@ -116,7 +128,7 @@ export class AddpurchaseBillComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.purchaseBillForm.get('supplier_bill_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toastrService.error(res.msg);
@@ -196,15 +208,15 @@ export class AddpurchaseBillComponent implements OnInit {
   getCart(): FormArray {
     return this.purchaseBillForm.get('purchase_bill') as FormArray;
   }
-  isCart=false
+  isCart = false
   addCart() {
     this.getCart().push(this.cart());
-    this.isCart=false
+    this.isCart = false
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.purchaseBillForm.value?.purchase_bill?.length==0){
-      this.isCart=true
+    if (this.purchaseBillForm.value?.purchase_bill?.length == 0) {
+      this.isCart = true
     }
   }
   additional_charges(): FormGroup {
@@ -246,12 +258,17 @@ export class AddpurchaseBillComponent implements OnInit {
     this.getTaxRate().removeAt(i)
   }
   supplierList: any;
-  getSuuplier() {
-    this.purchaseService.getSupplier().subscribe((res: any) => {
-      // console.log(res);
+
+  getSuuplier(query) {
+    this.purchaseService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.suppliers = res;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
+
   discountt(index: number) {
     return this.getCart().controls[index].get('discount');
   }
@@ -285,17 +302,17 @@ export class AddpurchaseBillComponent implements OnInit {
       // console.log(res);
       this.paymentList = res;
       this.purchaseBillForm.get('payment_terms').patchValue(this.paymentList[0]?.id)
-           // select auto due date with time from days fields
-           const today = new Date();
-           const sevenDaysFromToday = new Date(today);
-           sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
-           const year = sevenDaysFromToday.getFullYear();
-           const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
-           const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
-           const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
-           const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
-           const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
-           this.purchaseBillForm.get('due_date').patchValue(defaultDateago7);
+      // select auto due date with time from days fields
+      const today = new Date();
+      const sevenDaysFromToday = new Date(today);
+      sevenDaysFromToday.setDate(today.getDate() + this.paymentList?.days);
+      const year = sevenDaysFromToday.getFullYear();
+      const month = (sevenDaysFromToday.getMonth() + 1).toString().padStart(2, '0');
+      const day = sevenDaysFromToday.getDate().toString().padStart(2, '0');
+      const hours = sevenDaysFromToday.getHours().toString().padStart(2, '0');
+      const minutes = sevenDaysFromToday.getMinutes().toString().padStart(2, '0');
+      const defaultDateago7 = `${year}-${month}-${day}T${hours}:${minutes}`;
+      this.purchaseBillForm.get('due_date').patchValue(defaultDateago7);
     })
   }
   supplierAddress: any;
@@ -310,7 +327,7 @@ export class AddpurchaseBillComponent implements OnInit {
     // console.log(selectedItemId);
     this.supplierId = event
     //call detail api
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
       console.log(res?.payment_terms?.days);
@@ -373,9 +390,9 @@ export class AddpurchaseBillComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -919,21 +936,21 @@ export class AddpurchaseBillComponent implements OnInit {
 
   getRes: any;
   loader = false;
-  loaderCreate=false;
-  formId:any;
-  loaderPrint=false;
-  loaderDraft=false;
+  loaderCreate = false;
+  formId: any;
+  loaderPrint = false;
+  loaderDraft = false;
   submit(type: any) {
     console.log(this.purchaseBillForm.value);
     if (this.purchaseBillForm.valid) {
       if (type == 'new') {
-        this.loaderCreate=true;
-      }else if(type=='save'){
+        this.loaderCreate = true;
+      } else if (type == 'save') {
         this.loader = true;
-      }else if(type=='print'){
-        this.loaderPrint=true;
-      }else if(type=='draft'){
-        this.loaderDraft=true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
       let formdata: any = new FormData();
       formdata.append('party', this.purchaseBillForm.get('party')?.value);
@@ -941,7 +958,7 @@ export class AddpurchaseBillComponent implements OnInit {
       formdata.append('refrence_bill_no', this.purchaseBillForm.get('refrence_bill_no')?.value);
       formdata.append('supplier_bill_no', this.purchaseBillForm.get('supplier_bill_no')?.value);
       formdata.append('material_inward_no', this.purchaseBillForm.get('material_inward_no')?.value);
-      formdata.append('payment_term', this.purchaseBillForm.get('payment_term')?.value==undefined?'':this.purchaseBillForm.get('payment_term')?.value);
+      formdata.append('payment_term', this.purchaseBillForm.get('payment_term')?.value == undefined ? '' : this.purchaseBillForm.get('payment_term')?.value);
       formdata.append('due_date', this.purchaseBillForm.get('due_date')?.value);
       formdata.append('reverse_charge', this.purchaseBillForm.get('reverse_charge')?.value);
       formdata.append('shipping_date', this.purchaseBillForm.get('shipping_date')?.value);
@@ -957,9 +974,9 @@ export class AddpurchaseBillComponent implements OnInit {
       formdata.append('round_off', this.purchaseBillForm.get('round_off')?.value);
       formdata.append('additional_charge', this.purchaseBillForm.get('additional_charge')?.value);
       //2-1
-      formdata.append('total_qty',this.purchaseBillForm.get('total_qty')?.value);
+      formdata.append('total_qty', this.purchaseBillForm.get('total_qty')?.value);
       //17-02
-      formdata.append('total_discount',this.purchaseBillForm.get('total_discount')?.value)
+      formdata.append('total_discount', this.purchaseBillForm.get('total_discount')?.value)
       if (type == 'draft') {
         formdata.append('status', 'Draft');
       }
@@ -1021,22 +1038,22 @@ export class AddpurchaseBillComponent implements OnInit {
         if (this.getRes.success == true) {
           // this.router.navigate(['//purchase/goodsReceivedNote-list'])
           if (type == 'new') {
-            this.loaderCreate=false;
+            this.loaderCreate = false;
             this.purchaseBillForm.reset()
             this.supplierControl.reset()
             this.ngOnInit()
           } else if (type == 'print') {
             this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
-            this.loaderPrint=false;
-            this.router.navigate(['//purchase/purchase-billDetails/'+this.getRes.id])
+            this.loaderPrint = false;
+            this.router.navigate(['//purchase/purchase-billDetails/' + this.getRes.id])
             // setTimeout(() => {
             //   // this.materialForm.reset()
             //   // this.ngOnInit()
             //   this.supplierControl.reset();
             // }, 3000);
-          } 
-          else if(type=='draft'){
-            this.loaderDraft=false;
+          }
+          else if (type == 'draft') {
+            this.loaderDraft = false;
             this.toastrService.success(this.getRes.msg, '', { timeOut: 1000, });
             this.router.navigate(['//purchase/goodsReceivedNote-list'])
           }
@@ -1047,24 +1064,24 @@ export class AddpurchaseBillComponent implements OnInit {
           }
         } else {
           if (type == 'new') {
-            this.loaderCreate=false;
-          }else if(type=='save'){
+            this.loaderCreate = false;
+          } else if (type == 'save') {
             this.loader = false;
-          }else if(type=='print'){
-            this.loaderPrint=true;
-          }else if(type=='draft'){
-            this.loaderDraft=true;
+          } else if (type == 'print') {
+            this.loaderPrint = true;
+          } else if (type == 'draft') {
+            this.loaderDraft = true;
           }
         }
       }, err => {
         if (type == 'new') {
-          this.loaderCreate=false;
-        }else if(type=='save'){
+          this.loaderCreate = false;
+        } else if (type == 'save') {
           this.loader = false;
-        }else if(type=='print'){
-          this.loaderPrint=true;
-        }else if(type=='draft'){
-          this.loaderDraft=true;
+        } else if (type == 'print') {
+          this.loaderPrint = true;
+        } else if (type == 'draft') {
+          this.loaderDraft = true;
         }
       })
     } else {
@@ -1085,22 +1102,22 @@ export class AddpurchaseBillComponent implements OnInit {
   //   }
   //   return filteredSuppliers;
   // }
-// search with name & companyname 
+  // search with name & companyname 
   private _filter(value: string | number, include: boolean): any[] {
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
       ? this.suppliers.filter(supplier =>
-          supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue)
-        )
+        supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue)
+      )
       : this.suppliers.filter(supplier =>
-          !(supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
-        );
+        !(supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
+      );
     if (!include && filteredSuppliers.length === 0) {
       filteredSuppliers.push({ name: "No data found" });
     }
     return filteredSuppliers;
   }
-  
+
   private _filtr(value: string | number, include: boolean): any[] {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value?.toLowerCase() : value?.toString().toLowerCase();
@@ -1166,21 +1183,21 @@ export class AddpurchaseBillComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = [];
   productName: any[] = [];
   isProduct = true;
-  isSearch=false;
+  isSearch = false;
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
-    this.isSearch=true;
+    this.isSearch = true;
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
-        this.isSearch=false;
+        this.isSearch = false;
         this.productOption = res;
         // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
@@ -1476,8 +1493,8 @@ export class AddpurchaseBillComponent implements OnInit {
     //     totalTax += +taxControl.value || 0; 
     //   }  
     // }
-    this.getcgst.forEach((res:any)=>{
-      totalTax +=+res
+    this.getcgst.forEach((res: any) => {
+      totalTax += +res
     })
     return totalTax;
 
@@ -1541,8 +1558,8 @@ export class AddpurchaseBillComponent implements OnInit {
   searc: any;
   myControl = new FormControl('');
   variantList: any[] = [];
-  getVariant(search: any, index: any,barcode:any) {
-    this.isSearch=true;
+  getVariant(search: any, index: any, barcode: any) {
+    this.isSearch = true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -1558,7 +1575,7 @@ export class AddpurchaseBillComponent implements OnInit {
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1583,7 +1600,7 @@ export class AddpurchaseBillComponent implements OnInit {
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1615,7 +1632,7 @@ export class AddpurchaseBillComponent implements OnInit {
   additionalValue: any[] = []
   getgst(index) {
     console.log('tetsjhjhjhjhjhjh');
-    
+
     // const variants = this.purchaseBillForm.get('tax_rate') as FormArray;
     // variants.clear();
     this.addTaxRate();
@@ -1675,7 +1692,7 @@ export class AddpurchaseBillComponent implements OnInit {
     // this.getcgst[index] = this.batchCostPrice[index] - (this.batchCostPrice[index] * (100 / (100 + this.gstTaxRate[index])))
     // console.log(this.getcgst[index]);
   }
-  
+
   categoryList: any[] = [];
   filteredCategoryList: any[] = [];
   searchCategory: string = '';
@@ -1698,7 +1715,7 @@ export class AddpurchaseBillComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -1724,7 +1741,7 @@ export class AddpurchaseBillComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -1736,7 +1753,7 @@ export class AddpurchaseBillComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   //dropdown auto close stop
   onLabelClick(event: Event) {

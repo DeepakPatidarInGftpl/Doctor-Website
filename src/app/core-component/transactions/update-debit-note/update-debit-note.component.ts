@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
@@ -21,7 +21,7 @@ export class UpdateDebitNoteComponent implements OnInit {
   get f() {
     return this.debitNoteForm.controls;
   }
- 
+
   supplierControl = new FormControl();
   filteredSuppliers: Observable<any[]>;
   //
@@ -29,6 +29,7 @@ export class UpdateDebitNoteComponent implements OnInit {
 
   id: any
   getRes: any;
+  companyName!: string;
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
     this.supplierControl.setValue('Loading...');
@@ -57,6 +58,7 @@ export class UpdateDebitNoteComponent implements OnInit {
 
     this.transactionService.getDebitNoteById(this.id).subscribe(res => {
       this.getRes = res;
+      this.companyName = res.party?.company_name;
       this.debitNoteForm.patchValue(this.getRes);
       this.debitNoteForm.get('party')?.patchValue(res.party.id);
       this.debitNoteForm.get('purchase_bill')?.patchValue(res?.purchase_bill?.id);
@@ -64,16 +66,15 @@ export class UpdateDebitNoteComponent implements OnInit {
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
 
         this.supplierControl.setValue(res.company_name);
-       this.billControl.setValue(this.getRes?.purchase_bill?.refrence_bill_no);
-     
-       
+        this.billControl.setValue(this.getRes?.purchase_bill?.refrence_bill_no);
+
+
         //patch local-date
         const formattedDate = new Date(this.getRes.date).toISOString().slice(0, 16);
         this.debitNoteForm.get('date')?.patchValue(formattedDate);
       })
     })
 
-    this.getSupplier();
     this.getPurchaseBill();
     this.getprefix();
 
@@ -81,6 +82,19 @@ export class UpdateDebitNoteComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      const isFieldChanged = res !== this.companyName;
+      if (res.length >= 3 && isFieldChanged) {
+        this.getSuuplier(res);
+      } else {
+        this.suppliers = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
   }
 
   prefixNo: any;
@@ -103,27 +117,32 @@ export class UpdateDebitNoteComponent implements OnInit {
     if (this.taxs) {
       // let taxAmount = (this.amounts * this.taxs) / 100;
       let taxAmount = this.amounts - (this.amounts * (100 / (100 + this.taxs)))
-      let total =this.amounts + taxAmount;
+      let total = this.amounts + taxAmount;
       this.totals = total.toFixed(2);
     } else {
       this.totals = this.amounts.toFixed(2)
-     
+
     }
 
   }
   suppliers: any[] = [];
-  getSupplier() {
-    this.purchaseService.getSupplier().subscribe((res: any) => {
-      console.log(res);
-      this.suppliers = res
+
+  getSuuplier(query) {
+    this.purchaseService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
+      this.suppliers = res;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
-  purchaseList: any[]=[]
-  filterPurchaseBill:any[]=[]
+
+  purchaseList: any[] = []
+  filterPurchaseBill: any[] = []
   getPurchaseBill() {
-    this.purchaseService.getPurchaseBill().subscribe((res:any) => {
+    this.purchaseService.getPurchaseBill().subscribe((res: any) => {
       this.purchaseList = res;
-      this.filterPurchaseBill=res;
+      this.filterPurchaseBill = res;
     })
   }
 
@@ -146,7 +165,7 @@ export class UpdateDebitNoteComponent implements OnInit {
       ? this.suppliers.filter(supplier => supplier.company_name.toLowerCase().includes(filterValue))
       : this.suppliers.filter(supplier => !supplier.company_name.toLowerCase().includes(filterValue));
     if (!include && filteredSuppliers.length === 0) {
-      filteredSuppliers.push({ company_name: "No data found" }); 
+      filteredSuppliers.push({ company_name: "No data found" });
     }
     return filteredSuppliers;
   }

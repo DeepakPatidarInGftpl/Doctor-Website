@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
 @Component({
@@ -73,12 +73,24 @@ export class AddPaymentVoucherComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getSupplier(res);
+      } else {
+        this.supplierList = [];
+        this.filteredsupplier = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
+
     //payer
     this.filteredPayer = this.payerControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filterr(value, true))
     );
-    this.getSupplier();
     this.getAccount();
     this.getPurchaseBill();
     this.getDebitNote()
@@ -90,7 +102,7 @@ export class AddPaymentVoucherComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.paymentVoucherForm.get('payment_voucher_no').patchValue(this.prefixNo[0]?.id);
         this.paymentVoucherBankForm.get('payment_voucher_no').patchValue(this.prefixNo[0]?.id);
       } else {
@@ -237,9 +249,14 @@ export class AddPaymentVoucherComponent implements OnInit {
   }
   // end
   supplierList: any[] = [];
-  getSupplier() {
-    this.transactionService.getSupplier().subscribe((res: any) => {
+
+  getSupplier(query) {
+    this.transactionService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.supplierList = res;
+      this.filteredsupplier = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
   accountList: any[] = [];
