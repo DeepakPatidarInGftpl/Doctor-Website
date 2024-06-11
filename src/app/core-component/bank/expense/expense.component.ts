@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
 import { PosDashboardService } from 'src/app/Services/pos-dashboard.service';
@@ -18,7 +18,7 @@ export class ExpenseComponent implements OnInit {
     return this.expenceForm.controls;
   }
 
-  constructor(private fb: FormBuilder, private purchaseService: PurchaseServiceService, private coreService: CoreService, private posService: PosDashboardService, private toastr: ToastrService,private router:Router) { }
+  constructor(private fb: FormBuilder, private purchaseService: PurchaseServiceService, private coreService: CoreService, private posService: PosDashboardService, private toastr: ToastrService, private router: Router) { }
   supplierControlName = 'party';
   supplierControl = new FormControl();
   productOption: any[] = [];
@@ -40,8 +40,18 @@ export class ExpenseComponent implements OnInit {
       map(value => this._filter(value, true))
     );
 
+    this.supplierControl.valueChanges.subscribe((res) => {
+      if (res.length >= 3) {
+        this.getSuuplier(res);
+      } else {
+        this.suppliers = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
     this.getBank();
-    this.getSuuplier()
   }
 
   bankList: any
@@ -67,13 +77,18 @@ export class ExpenseComponent implements OnInit {
     return this.expenceForm.get('party') as FormControl;
   }
   supplierList: any;
-  getSuuplier() {
-    this.purchaseService.getSupplier().subscribe((res: any) => {
-      // console.log(res);
+
+  getSuuplier(query) {
+    this.purchaseService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.suppliers = res;
       // this.variants=res;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
+
   oncheck(event: any) {
     // console.log(event);
     const selectedItemId = event; // Assuming the ID field is 'item_id'
@@ -84,7 +99,7 @@ export class ExpenseComponent implements OnInit {
     });
   }
   loaders = false
-  addRes:any;
+  addRes: any;
   submit() {
     let formData = new FormData();
     formData.append('party', this.expenceForm.get('party')?.value);
@@ -96,18 +111,18 @@ export class ExpenseComponent implements OnInit {
       this.loaders = true;
       this.posService.expensePayment(formData).subscribe(res => {
         // console.log(res);
-        this.addRes=res;
-        if(this.addRes.isSuccess){
+        this.addRes = res;
+        if (this.addRes.isSuccess) {
           this.toastr.success(this.addRes.msg)
           this.loaders = false;
           this.expenceForm.reset();
           this.router.navigate(['//bank/expense'])
-        }else{
+        } else {
           this.loaders = false;
         }
-        
-      },err=>{
-        this.loaders=false;
+
+      }, err => {
+        this.loaders = false;
       })
     } else {
       this.expenceForm.markAllAsTouched();

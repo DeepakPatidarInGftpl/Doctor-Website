@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
-import { tap } from 'rxjs/operators';
+import { debounceTime, tap } from 'rxjs/operators';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PrintMaterialInwardComponent } from '../print-material-inward/print-material-inward.component';
@@ -40,6 +40,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   filteredOptions: Observable<any>;
   suppliers: any[] = [];
   filteredSuppliers: Observable<any[]>;
+  companyName!: string;
 
   variantControlName = 'barcode';
   variantControl = new FormControl();
@@ -55,7 +56,7 @@ export class UpdatematerialInwardComponent implements OnInit {
   subcategoryList;
   id: any;
   getresbyId: any;
-  isStatusDraft=false; //21-5
+  isStatusDraft = false; //21-5
 
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -80,26 +81,27 @@ export class UpdatematerialInwardComponent implements OnInit {
 
     this.purchaseService.getMaterialById(this.id).subscribe(res => {
       // console.log(res);
+      this.companyName = res.party?.company_name;
       this.getresbyId = res;
       this.materialForm.patchValue(res);
       // this.materialForm.get('material_inward_no')?.patchValue(res?.party);
       this.materialForm.get('party')?.patchValue(res?.party?.id);
 
       this.materialForm.get('purchase_order')?.patchValue(res?.purchase_order?.id === undefined ? '' : res?.purchase_order?.id);
-      this.materialForm.get('product_type')?.patchValue(res?.product_type==null?'':res?.product_type)
+      this.materialForm.get('product_type')?.patchValue(res?.product_type == null ? '' : res?.product_type)
       if (res?.cart?.length > 0) {
         this.materialForm.setControl('material_inward_cart', this.udateCart(res?.cart));
       } else {
         this.isCart = true;
       }
-       // 21-5
-     if(res.status=='Draft' || res.status==null){
-      this.isStatusDraft=true;
-      this.getprefix();
-    }else{
-      this.materialForm.get('material_inward_no').patchValue(res?.material_inward_no) // 21-5
-    }
-//end 21-5
+      // 21-5
+      if (res.status == 'Draft' || res.status == null) {
+        this.isStatusDraft = true;
+        this.getprefix();
+      } else {
+        this.materialForm.get('material_inward_no').patchValue(res?.material_inward_no) // 21-5
+      }
+      //end 21-5
       this.displaySupplierName(res?.party?.id);
       this.supplierId = res?.party?.id
       this.getVariant('', '', '')
@@ -116,7 +118,6 @@ export class UpdatematerialInwardComponent implements OnInit {
         // console.log(res);
         this.supplierAddress = res;
         this.supplierControl.setValue(res?.company_name);
-        
         this.supplierAddress.address.map((res: any) => {
           if (res?.address_type == 'Billing') {
             this.selectedAddressBilling = res
@@ -133,11 +134,24 @@ export class UpdatematerialInwardComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      const isFieldChanged = res !== this.companyName;
+      if (res.length >= 3 && isFieldChanged) {
+        this.getSuuplier(res);
+      } else {
+        this.suppliers = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
+
     this.filteredVariants = this.variantControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getSuuplier();
     this.getPurchase();
     this.getCategory();
   }
@@ -223,12 +237,17 @@ export class UpdatematerialInwardComponent implements OnInit {
     }
   }
   supplierList: any;
-  getSuuplier() {
-    this.purchaseService.getSupplier().subscribe((res: any) => {
-      // console.log(res);
+
+  getSuuplier(query) {
+    this.purchaseService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.suppliers = res;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
+
   purchaseList: any;
   getPurchase() {
     this.purchaseService.getPurchase().subscribe(res => {
@@ -337,9 +356,9 @@ export class UpdatematerialInwardComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -426,15 +445,15 @@ export class UpdatematerialInwardComponent implements OnInit {
       } else if (type == 'draft') {
         this.loaderDraft = true;
       }
-            
+
       let formdata: any = new FormData();
       formdata.append('party', this.materialForm.get('party')?.value);
       formdata.append('purchase_order', this.materialForm.get('purchase_order')?.value);
       formdata.append('po_date', this.materialForm.get('po_date')?.value);
       formdata.append('material_inward_date', this.materialForm.get('material_inward_date')?.value);
       // formdata.append('material_inward_no', this.materialForm.get('material_inward_no')?.value);
-       // 21-5
-       if(this.isStatusDraft){
+      // 21-5
+      if (this.isStatusDraft) {
         formdata.append('material_inward_no', this.materialForm.get('material_inward_no')?.value);
       }
       // end

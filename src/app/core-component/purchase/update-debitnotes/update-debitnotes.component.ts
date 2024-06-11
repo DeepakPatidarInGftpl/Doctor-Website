@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
@@ -55,7 +55,8 @@ export class UpdateDebitnotesComponent implements OnInit {
   getresbyId: any;
   supplierAddress: any;
   selectedAddress: string = ''
-  isStatusDraft=false; //21-5
+  isStatusDraft = false; //21-5
+  companyName!: string;
 
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -65,7 +66,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       party: new FormControl('', [Validators.required]),
       // related_name: new FormControl(''),
       purchase_return_no: new FormControl(''),
-      purchase_return_date: new FormControl('',[Validators.required]),
+      purchase_return_date: new FormControl('', [Validators.required]),
       refrence_bill_no: new FormControl(''),
       purchase_bill: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       reason: new FormControl('',),
@@ -87,6 +88,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     this.purchaseService.getPurchaseReturnById(this.id).subscribe((res: any) => {
       // console.log(res);
       this.getresbyId = res;
+      this.companyName = res.party?.company_name;
       this.debitNotesForm.patchValue(res);
       this.debitNotesForm.get('party')?.patchValue(res?.party.id);
       this.debitNotesForm.get('reverse_charge')?.patchValue(res?.reverse_charge);
@@ -94,23 +96,23 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.debitNotesForm.get('purchase_bill')?.patchValue(res?.purchase_bill?.id);
       // this.debitNotesForm.get('purchase_return_no')?.patchValue(res?.purchase_return_no); //20-5
 
-   
-      if(res?.cart.length>0){
+
+      if (res?.cart.length > 0) {
         this.debitNotesForm.setControl('cart', this.udateCart(res?.cart));
-      }else{
-        this.isCart=true;
+      } else {
+        this.isCart = true;
       }
-       // 21-5
-     if(res.status=='Draft' || res.status==null){
-      this.isStatusDraft=true;
-      this.getprefix();
-    }else{
-      this.debitNotesForm.get('purchase_return_no').patchValue(res?.purchase_return_no) // 21-5
-    }
-//end 21-5
+      // 21-5
+      if (res.status == 'Draft' || res.status == null) {
+        this.isStatusDraft = true;
+        this.getprefix();
+      } else {
+        this.debitNotesForm.get('purchase_return_no').patchValue(res?.purchase_return_no) // 21-5
+      }
+      //end 21-5
       this.displaySupplierName(res?.party?.id);
       this.supplierId = res?.party?.id
-      this.getVariant('', '','')
+      this.getVariant('', '', '')
       const formattedOrderDate = new Date(this.getresbyId?.purchase_return_date).toISOString().slice(0, 16);
       this.debitNotesForm.get('purchase_return_date')?.patchValue(formattedOrderDate);
       //call detail api
@@ -134,11 +136,24 @@ export class UpdateDebitnotesComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      const isFieldChanged = res !== this.companyName;
+      if (res.length >= 3 && isFieldChanged) {
+        this.getSuuplier(res);
+      } else {
+        this.suppliers = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
+
     this.filteredVariants = this.variantControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filtr(value, true))
     )
-    this.getSuuplier();
     // this.getVariants();
     // this.getBatchComplete()
     this.getPurchaseBill();
@@ -152,7 +167,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       console.log(res);
       if (res.success == true) {
         this.prefixNo = res.data;
-        this.debitNotesForm.get('purchase_return_no').patchValue(this.prefixNo[0]?.id) 
+        this.debitNotesForm.get('purchase_return_no').patchValue(this.prefixNo[0]?.id)
       } else {
         this.toastrService.error(res.msg)
       }
@@ -190,7 +205,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     add.forEach((j: any, i) => {
       const purchaseRate = j.unit_cost || 0;
       const taxPercentage = j.tax || 0;
-      const landingCost=j.landing_cost||0;
+      const landingCost = j.landing_cost || 0;
       if (j.tax == 18) {
         this.TotalWithoutTax[i] = j.unit_cost * j.qty;
         const calculatedTax = purchaseRate - (purchaseRate * (100 / (100 + taxPercentage)))
@@ -202,7 +217,7 @@ export class UpdateDebitnotesComponent implements OnInit {
         this.taxIntoRupees[i] = taxPrice;
       }
       this.isPercentage[i] = true;
-      if(j.deduction>100){
+      if (j.deduction > 100) {
         this.isAmount[i] = true;
       }
       formarr.push(this.fb.group({
@@ -243,14 +258,14 @@ export class UpdateDebitnotesComponent implements OnInit {
   getCart(): FormArray {
     return this.debitNotesForm.get('cart') as FormArray;
   }
-  isCart=false;
-  addCart(i:any) {
+  isCart = false;
+  addCart(i: any) {
     this.getCart().push(this.cart())
-    if(i>0){
+    if (i > 0) {
       this.isPercentage[i] = true;
       this.isAmount[i] = false;
     }
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
@@ -259,12 +274,17 @@ export class UpdateDebitnotesComponent implements OnInit {
     }
   }
   supplierList: any;
-  getSuuplier() {
-    this.purchaseService.getSupplier().subscribe((res: any) => {
-      // console.log(res);
+
+  getSuuplier(query) {
+    this.purchaseService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.suppliers = res;
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
+
   getVariants() {
     this.purchaseService.productVariant().subscribe((res: any) => {
       // console.log(res);
@@ -307,7 +327,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     //call detail api
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       this.getPaymentTerms = res?.payment_terms?.id;
-      this.getVariant('', '','')
+      this.getVariant('', '', '')
       // this.debitNotesForm.get('payment_term').patchValue(this.getPaymentTerms)
       this.supplierAddress = res;
       this.supplierAddress.address.map((res: any) => {
@@ -344,9 +364,9 @@ export class UpdateDebitnotesComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -417,7 +437,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     }
   }
 
- 
+
   originalCoastPrice: any;
   apiPurchaseTax: number;
   isTaxAvailable: any[] = [];
@@ -546,7 +566,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     }
   }
 
- 
+
   isPercentage: boolean[] = [];
   isAmount: boolean[] = [];
   percentage(index) {
@@ -582,7 +602,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     setTimeout(() => {
       this.calculateRoundoffValue()
     }, 2000);
-    
+
     this.calculateTotalLandingCostEveryIndex(index)
     setTimeout(() => {
       this.calculateTotalEveryIndex(index)
@@ -601,10 +621,10 @@ export class UpdateDebitnotesComponent implements OnInit {
         const deductionPercentage = +deductionPercentageControl.value || 0;
         const taxPercentage = +taxPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
-        console.log(this.originalPrice[index] ,'this.originalPrice[index] ');
+        console.log(this.originalPrice[index], 'this.originalPrice[index] ');
         if (this.costPrice[index] > 0) {
           // landing cost
-          if (this.isPercentage[index]==true) {
+          if (this.isPercentage[index] == true) {
             let getDiscountPrice = (this.costPrice[index] * deductionPercentage) / 100
             let getCoastPrice = this.costPrice[index] - getDiscountPrice;
             // cost price 
@@ -623,9 +643,9 @@ export class UpdateDebitnotesComponent implements OnInit {
           }
         } else {
           // landing cost
-          if (this.isPercentage[index]==true) {
-            let getDiscountPrice = (this.originalPrice[index]  * deductionPercentage) / 100
-            let getCoastPrice = this.originalPrice[index]  - getDiscountPrice;
+          if (this.isPercentage[index] == true) {
+            let getDiscountPrice = (this.originalPrice[index] * deductionPercentage) / 100
+            let getCoastPrice = this.originalPrice[index] - getDiscountPrice;
             // cost price 
             let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
             this.taxIntoRupees[index] = taxprice || 0;
@@ -633,7 +653,7 @@ export class UpdateDebitnotesComponent implements OnInit {
             return purchasePrice;
           } else if (this.isAmount[index] == true) {
             // let getDiscountPrice = (purchaseRate * discountPercentage) / 100
-            let getCoastPrice = this.originalPrice[index]  - deductionPercentage;
+            let getCoastPrice = this.originalPrice[index] - deductionPercentage;
             // cost price 
             let taxprice = getCoastPrice - (getCoastPrice * (100 / (100 + taxPercentage))) || 0
             this.taxIntoRupees[index] = taxprice || 0;
@@ -674,7 +694,7 @@ export class UpdateDebitnotesComponent implements OnInit {
         const taxPercentage = +taxPercentageControl.value || 0;
         const purchaseRate = +purchaseRateControl.value || 0;
         // landing cost
-        if (this.isPercentage[index]==true) {
+        if (this.isPercentage[index] == true) {
           let getDiscountPrice = (purchaseRate * deductionPercentage) / 100
           let getCoastPrice = purchaseRate - getDiscountPrice;
           // cost price 
@@ -731,7 +751,7 @@ export class UpdateDebitnotesComponent implements OnInit {
             this.TotalWithoutTax[index] = afterDiscountAmount * qty || 0
             const landingCost = afterDiscountAmount || 0
             console.log(landingCost);
-            
+
             // without tax price 
             const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
             barcode.patchValue({
@@ -844,9 +864,9 @@ export class UpdateDebitnotesComponent implements OnInit {
   getRes: any;
   loader = false;
   loaderCreate = false;
-  loaderPrint=false;
-  loaderDraft=false;
-  formId:any;
+  loaderPrint = false;
+  loaderDraft = false;
+  formId: any;
   submit(type: any) {
     // console.log(this.debitNotesForm.value);
     if (this.debitNotesForm.valid) {
@@ -854,21 +874,21 @@ export class UpdateDebitnotesComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
-      }else if(type=='print'){
-        this.loaderPrint=true;
-      }else if(type=='draft'){
-        this.loaderDraft=true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
-          
+
       let formdata: any = new FormData();
       formdata.append('party', this.debitNotesForm.get('party')?.value);
       formdata.append('purchase_return_date', this.debitNotesForm.get('purchase_return_date')?.value);
       // formdata.append('purchase_return_no', this.debitNotesForm.get('purchase_return_no')?.value);
-         // 21-5
-         if(this.isStatusDraft){
-          formdata.append('purchase_return_no', this.debitNotesForm.get('purchase_return_no')?.value);
-        }
-        // end
+      // 21-5
+      if (this.isStatusDraft) {
+        formdata.append('purchase_return_no', this.debitNotesForm.get('purchase_return_no')?.value);
+      }
+      // end
       formdata.append('refrence_bill_no', this.debitNotesForm.get('refrence_bill_no')?.value);
       // formdata.append('related_name', this.debitNotesForm.get('related_name')?.value);
       formdata.append('reverse_charge', this.debitNotesForm.get('reverse_charge')?.value);
@@ -912,19 +932,19 @@ export class UpdateDebitnotesComponent implements OnInit {
             this.debitNotesForm.reset()
             this.supplierControl.reset()
             this.ngOnInit()
-          } 
+          }
           else if (type == 'print') {
             this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
-            this.loaderPrint=false;
-             this.router.navigate(['//purchase/details-purchaseReturn/'+this.id])
+            this.loaderPrint = false;
+            this.router.navigate(['//purchase/details-purchaseReturn/' + this.id])
             // setTimeout(() => {
             //   // this.materialForm.reset()
             //   // this.ngOnInit()
             //   this.supplierControl.reset();
             // }, 3000);
-          } 
-          else if(type=='draft'){
-            this.loaderDraft=false;
+          }
+          else if (type == 'draft') {
+            this.loaderDraft = false;
             this.toastrService.success(this.getRes.msg, '', { timeOut: 1000, });
             this.router.navigate(['//purchase/purchaseReturn-list'])
           }
@@ -938,10 +958,10 @@ export class UpdateDebitnotesComponent implements OnInit {
             this.loaderCreate = false;
           } else if (type == 'save') {
             this.loader = false;
-          }else if(type=='print'){
-            this.loaderPrint=false;
-          }else if(type=='draft'){
-            this.loaderDraft=false;
+          } else if (type == 'print') {
+            this.loaderPrint = false;
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
           }
         }
       }, err => {
@@ -949,10 +969,10 @@ export class UpdateDebitnotesComponent implements OnInit {
           this.loaderCreate = false;
         } else if (type == 'save') {
           this.loader = false;
-        }else if(type=='print'){
-          this.loaderPrint=false;
-        }else if(type=='draft'){
-          this.loaderDraft=false;
+        } else if (type == 'print') {
+          this.loaderPrint = false;
+        } else if (type == 'draft') {
+          this.loaderDraft = false;
         }
       })
     } else {
@@ -1028,21 +1048,21 @@ export class UpdateDebitnotesComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
   staticValue: string = 'Static Value';
   searchs: any[] = []; productName: any[] = [];
   isProduct = true;
-  isSearch=false;
+  isSearch = false;
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
-    this.isSearch=true;
+    this.isSearch = true;
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
-        this.isSearch=false;
+        this.isSearch = false;
         this.productOption = res;
         // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
@@ -1278,7 +1298,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     const totalForItem = landingCost * qty;
     this.totalCost[index] = totalForItem;
     console.log(totalForItem);
-    
+
     const barcode = (this.debitNotesForm.get('cart') as FormArray).at(index) as FormGroup;
     barcode.patchValue({
       total: totalForItem.toFixed(2)
@@ -1338,8 +1358,8 @@ export class UpdateDebitnotesComponent implements OnInit {
   searc: any;
   myControls: FormArray;
   variantList: any[] = [];
-  getVariant(search: any, index: any,barcode:any) {
-    this.isSearch=true;
+  getVariant(search: any, index: any, barcode: any) {
+    this.isSearch = true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -1355,7 +1375,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1380,7 +1400,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1426,7 +1446,7 @@ export class UpdateDebitnotesComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -1452,7 +1472,7 @@ export class UpdateDebitnotesComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -1464,7 +1484,7 @@ export class UpdateDebitnotesComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   //dropdown auto close stop
   onLabelClick(event: Event) {

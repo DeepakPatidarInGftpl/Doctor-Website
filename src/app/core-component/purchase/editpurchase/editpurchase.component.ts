@@ -51,7 +51,8 @@ export class EditpurchaseComponent implements OnInit {
   variants: any[] = [];
   filteredVariants: Observable<any[]>;
   getresbyId: any;
-  isStatusDraft=false; //21-5
+  isStatusDraft = false; //21-5
+  companyName!: string;
 
   ngOnInit(): void {
     this.id = this.Arout.snapshot.paramMap.get('id');
@@ -79,21 +80,22 @@ export class EditpurchaseComponent implements OnInit {
     this.purchaseService.getPurchaseById(this.id).subscribe(res => {
       // console.log(res);
       this.getresbyId = res;
+      this.companyName = res.party?.company_name;
       this.purchaseForm.patchValue(res);
       this.purchaseForm.get('party')?.patchValue(res.party.id)
       // this.purchaseForm.get('order_no')?.patchValue(res.party) //20-5
 
-      
-      if(res?.cart.length>0){
+
+      if (res?.cart.length > 0) {
         this.purchaseForm.setControl('purchase_cart', this.udateCart(res?.cart));
-      }else{
-        this.isCart=true;
+      } else {
+        this.isCart = true;
       }
       //21-5
-      if(res.status=='Draft' || res.status==null){
-        this.isStatusDraft=true;
+      if (res.status == 'Draft' || res.status == null) {
+        this.isStatusDraft = true;
         this.getprefix();
-      }else{
+      } else {
         this.purchaseForm.get('order_no').patchValue(res?.order_no) // 21-5
       }
       //21-5
@@ -110,7 +112,7 @@ export class EditpurchaseComponent implements OnInit {
 
 
       this.supplierId = res.party.id
-      this.getVariant('', '','')
+      this.getVariant('', '', '')
 
       //call detail api
       this.contactService.getSupplierById(res.party.id).subscribe(res => {
@@ -138,6 +140,20 @@ export class EditpurchaseComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    this.supplierControl.valueChanges.subscribe((res) => {
+      const isFieldChanged = res !== this.companyName;
+      if (res.length >= 3 && isFieldChanged) {
+        this.getSuuplier(res);
+      } else {
+        this.suppliers = [];
+        this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, true))
+        );
+      }
+    })
+
     this.filteredVariants = this.variantControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filtr(value, true))
@@ -167,7 +183,7 @@ export class EditpurchaseComponent implements OnInit {
   SubcategoryList: any[] = [];
   filteredSubCategoryList: any[] = [];
   searchSubCategory: string = '';
-  getSubCategory(val:any) {
+  getSubCategory(val: any) {
     this.coreService.getSubcategoryByCategory(val).subscribe((res: any) => {
       this.SubcategoryList = res;
       this.filteredSubCategoryList = [...this.SubcategoryList];
@@ -302,15 +318,15 @@ export class EditpurchaseComponent implements OnInit {
   getCart(): FormArray {
     return this.purchaseForm.get('purchase_cart') as FormArray;
   }
-  isCart=false;
+  isCart = false;
   addCart() {
     this.getCart().push(this.purchase_cart());
-    this.isCart=false;
+    this.isCart = false;
   }
   removeCart(i: any) {
     this.getCart().removeAt(i);
-    if(this.purchaseForm.value?.purchase_cart?.length==0){
-      this.isCart=true
+    if (this.purchaseForm.value?.purchase_cart?.length == 0) {
+      this.isCart = true
     }
   }
   additional_charges(): FormGroup {
@@ -330,14 +346,16 @@ export class EditpurchaseComponent implements OnInit {
     this.getAdditionalCharge().removeAt(j)
   }
   supplierList: any;
-  getSuuplier() {
-    this.purchaseService.getSupplier().subscribe((res: any) => {
-      // console.log(res);
+
+  getSuuplier(query) {
+    this.purchaseService.getSupplier(query).pipe(debounceTime(2000)).subscribe((res: any) => {
       this.suppliers = res;
-      // console.log(this.suppliers);
+      this.filteredSuppliers = this.supplierControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, true))
+      );
     })
   }
-
 
   supplierAddress: any;
 
@@ -352,7 +370,7 @@ export class EditpurchaseComponent implements OnInit {
     this.supplierId = selectedItemId
     this.contactService.getSupplierById(selectedItemId).subscribe(res => {
       // console.log(res);
-      this.getVariant('', '','')
+      this.getVariant('', '', '')
       this.supplierAddress = res;
       console.log(this.selectedAddressBilling);
       this.supplierAddress.address.map((res: any) => {
@@ -397,9 +415,9 @@ export class EditpurchaseComponent implements OnInit {
       modal.style.display = 'block';
     }
   }
-  batchCartIndex:any;
-  openModalBatch(i:number) {
-    this.batchCartIndex=i
+  batchCartIndex: any;
+  openModalBatch(i: number) {
+    this.batchCartIndex = i
     // Trigger Bootstrap modal using JavaScript
     const modal = document.getElementById('batchModal');
     if (modal) {
@@ -739,9 +757,9 @@ export class EditpurchaseComponent implements OnInit {
   //
   loader = false;
   loaderCreate = false;
-  loaderPrint=false;
-  loaderDraft=false;
-  formId:any;
+  loaderPrint = false;
+  loaderDraft = false;
+  formId: any;
   getRes: any;
   submit(type: any) {
     // console.log(this.purchaseForm.value);
@@ -750,19 +768,19 @@ export class EditpurchaseComponent implements OnInit {
         this.loaderCreate = true;
       } else if (type == 'save') {
         this.loader = true;
-      }else if(type=='print'){
-        this.loaderPrint=true;
-      }else if(type=='draft'){
-        this.loaderDraft=true;
+      } else if (type == 'print') {
+        this.loaderPrint = true;
+      } else if (type == 'draft') {
+        this.loaderDraft = true;
       }
-      
-      
+
+
       let formdata: any = new FormData();
       formdata.append('party', this.purchaseForm.get('party')?.value);
       formdata.append('order_date', this.purchaseForm.get('order_date')?.value);
       // formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
       // 21-5
-      if(this.isStatusDraft){
+      if (this.isStatusDraft) {
         formdata.append('order_no', this.purchaseForm.get('order_no')?.value);
       }
       // end
@@ -826,16 +844,16 @@ export class EditpurchaseComponent implements OnInit {
             this.supplierControl.reset()
           } else if (type == 'print') {
             this.toastrService.success(this.getRes.msg, '', { timeOut: 2000, });
-            this.loaderPrint=false;
-            this.router.navigate(['//purchase/purchaseDetails/'+this.id])
+            this.loaderPrint = false;
+            this.router.navigate(['//purchase/purchaseDetails/' + this.id])
             // setTimeout(() => {
             //   // this.materialForm.reset()
             //   // this.ngOnInit()
             //   this.supplierControl.reset();
             // }, 3000);
-          } 
-          else if(type=='draft'){
-            this.loaderDraft=false;
+          }
+          else if (type == 'draft') {
+            this.loaderDraft = false;
             this.toastrService.success(this.getRes.msg, '', { timeOut: 1000, });
             this.router.navigate(['//purchase/purchaselist'])
           }
@@ -849,10 +867,10 @@ export class EditpurchaseComponent implements OnInit {
             this.loaderCreate = false;
           } else if (type == 'save') {
             this.loader = false;
-          }else if(type=='print'){
-            this.loaderPrint=false;
-          }else if(type=='draft'){
-            this.loaderDraft=false;
+          } else if (type == 'print') {
+            this.loaderPrint = false;
+          } else if (type == 'draft') {
+            this.loaderDraft = false;
           }
         }
       }, err => {
@@ -860,10 +878,10 @@ export class EditpurchaseComponent implements OnInit {
           this.loaderCreate = false;
         } else if (type == 'save') {
           this.loader = false;
-        }else if(type=='print'){
-          this.loaderPrint=false;
-        }else if(type=='draft'){
-          this.loaderDraft=false;
+        } else if (type == 'print') {
+          this.loaderPrint = false;
+        } else if (type == 'draft') {
+          this.loaderDraft = false;
         }
       })
     } else {
@@ -901,8 +919,8 @@ export class EditpurchaseComponent implements OnInit {
     // console.log(value);
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value.toString().toLowerCase();
     const filteredSuppliers = include
-      ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue)||supplier.company_name.toLowerCase().includes(filterValue))
-      : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue)||supplier.company_name.toLowerCase().includes(filterValue));
+      ? this.suppliers.filter(supplier => supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue))
+      : this.suppliers.filter(supplier => !supplier.name.toLowerCase().includes(filterValue) || supplier.company_name.toLowerCase().includes(filterValue));
 
     if (!include && filteredSuppliers.length === 0) {
       // console.log("No results found");
@@ -965,7 +983,7 @@ export class EditpurchaseComponent implements OnInit {
       barcode: value.id
     });
     this.searchProduct('someQuery', '');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   };
 
   searchs: any[] = [];
@@ -973,16 +991,16 @@ export class EditpurchaseComponent implements OnInit {
   productName: any[] = [];
   isProduct = true;
   staticValue: string = 'Static Value';
-  isSearch=false;
+  isSearch = false;
   searchProduct(event: any, index: any) {
     // console.log(event);
     // const searchValue = event.target.value;
     // console.log(searchValue);
-    this.isSearch=true;
+    this.isSearch = true;
     if (event) {
       this.purchaseService.searchProduct(event).subscribe((res: any) => {
         this.searchs = res;
-        this.isSearch=false;
+        this.isSearch = false;
         // this.productOption = res;
         // console.log(this.searchs);
         this.productName[index] = this.searchs[0].product_title;
@@ -1258,8 +1276,8 @@ export class EditpurchaseComponent implements OnInit {
   myControls: FormArray;
   variantList: any[] = [];
 
-  getVariant(search: any, index: any,barcode:any) {
-    this.isSearch=true;
+  getVariant(search: any, index: any, barcode: any) {
+    this.isSearch = true;
     if (this.selectData.length > 0 || this.selectSubCate.length > 0) {
       if (this.selectData.length > 0) {
         this.category = JSON.stringify(this.selectData);
@@ -1275,7 +1293,7 @@ export class EditpurchaseComponent implements OnInit {
       }
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1299,7 +1317,7 @@ export class EditpurchaseComponent implements OnInit {
     else {
       this.purchaseService.filterVariant(this.supplierId, this.category, this.subcategory, search).subscribe((res: any) => {
         console.log(res);
-        this.isSearch=false;
+        this.isSearch = false;
         this.variantList = res;
         console.log(this.variantList);
         if (barcode === 'barcode') {
@@ -1332,7 +1350,7 @@ export class EditpurchaseComponent implements OnInit {
     }
     console.log(this.selectData, 'selected data');
 
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   selectSubCate: any[] = []
   SelectedProductSubCat(variant: any) {
@@ -1344,7 +1362,7 @@ export class EditpurchaseComponent implements OnInit {
       this.selectSubCate.push(variant);
     }
     console.log(this.selectSubCate, 'selected data');
-    this.getVariant('', '','')
+    this.getVariant('', '', '')
   }
   //dropdown auto close stop
   onLabelClick(event: Event) {

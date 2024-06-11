@@ -243,13 +243,13 @@ export class ContactService {
     let url = this.apiUrl + '/pv-api/dealer/?id=';
     return this.http.patch(`${url}${id}`, data);
   }
-  addDealer(data:any) {
+  addDealer(data: any) {
     let url = this.apiUrl + '/pv-api/dealer/';
     return this.http.post(url, data)
   }
   updateDealer(data: any, id: number) {
     let url = this.apiUrl + '/pv-api/dealer/?id=';
-    return this.http.put(`${url}${id}`,data)
+    return this.http.put(`${url}${id}`, data)
   }
   deleteDealer(id: number) {
     let url = this.apiUrl + '/pv-api/dealer/?id=';
@@ -257,12 +257,12 @@ export class ContactService {
   }
 
   //branch
-  getBranch(){
-    let url = this.apiUrl+'/pv-api/branch/';
+  getBranch() {
+    let url = this.apiUrl + '/pv-api/branch/';
     return this.http.get(url)
   }
-  productVariant(){
-    let url = this.apiUrl+'/pv-api/product_variant/';
+  productVariant() {
+    let url = this.apiUrl + '/pv-api/product_variant/';
     return this.http.get(url)
   }
 
@@ -274,7 +274,7 @@ export class ContactService {
 
 
   //terms 
-  
+
   getTerms() {
     let url = this.apiUrl + '/pv-api/terms/';
     return this.http.get(url)
@@ -304,7 +304,7 @@ export class ContactService {
     return this.http.get(url)
   }
 
-// department
+  // department
   getDepartment() {
     let url = this.apiUrl + '/pv-api/department/';
     return this.http.get(url)
@@ -317,13 +317,13 @@ export class ContactService {
     let url = this.apiUrl + '/pv-api/department/?id=';
     return this.http.patch(`${url}${id}`, data);
   }
-  addDepartment(data:any) {
+  addDepartment(data: any) {
     let url = this.apiUrl + '/pv-api/department/';
     return this.http.post(url, data)
   }
   updateDepartment(data: any, id: number) {
     let url = this.apiUrl + '/pv-api/department/?id=';
-    return this.http.put(`${url}${id}`,data)
+    return this.http.put(`${url}${id}`, data)
   }
   deleteDepartment(id: number) {
     let url = this.apiUrl + '/pv-api/department/?id=';

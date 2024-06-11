@@ -625,8 +625,8 @@ export class ReportService {
     return this.http.get(url)
   }
 
-  getSupplier() {
-    let url = this.apiUrl + '/pv-api/supplier/';
+  getSupplier(query) {
+    let url = this.apiUrl + '/pv-api/supplier/?search=' + query;
     return this.http.get(url)
   }
 
