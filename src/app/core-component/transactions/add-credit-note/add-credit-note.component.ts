@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 import { TransactionService } from 'src/app/Services/transactionService/transaction.service';
 
@@ -12,8 +13,11 @@ import { TransactionService } from 'src/app/Services/transactionService/transact
   styleUrls: ['./add-credit-note.component.scss']
 })
 export class AddCreditNoteComponent implements OnInit {
-  constructor(private fb: FormBuilder, private transactionService: TransactionService, private saleService: SalesService, private toastr: ToastrService, private router: Router) { }
+  constructor(private fb: FormBuilder, private transactionService: TransactionService,
+    private saleService: SalesService, private toastr: ToastrService, private router: Router, private commonService: CommonServiceService) { }
   debitNoteForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
 
   get f() {
     return this.debitNoteForm.controls;
@@ -23,12 +27,12 @@ export class AddCreditNoteComponent implements OnInit {
   //salebill
   billControl = new FormControl();
   ngOnInit(): void {
-    const defaultDate = new Date().toISOString().split('T')[0]; 
+    const defaultDate = new Date().toISOString().split('T')[0];
     this.debitNoteForm = this.fb.group({
       account: new FormControl('', [Validators.required]),
       date: new FormControl(defaultDate, [Validators.required]),
       credit_note_no: new FormControl('',),
-      sale_bill_no: new FormControl('',[Validators.required]),
+      sale_bill_no: new FormControl('', [Validators.required]),
       reason: new FormControl(''),
       roundoff: new FormControl(''),
       tax: new FormControl('', [Validators.pattern(/^(100|[0-9]{1,2})$/)]),
@@ -45,6 +49,16 @@ export class AddCreditNoteComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value, true))
     );
+
+    const financialYear = localStorage.getItem('financialYear');
+    this.dateValidation(financialYear);
+  }
+
+  dateValidation(financialYear) {
+    const dateControl = this.debitNoteForm.get('date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;
@@ -53,7 +67,7 @@ export class AddCreditNoteComponent implements OnInit {
       console.log(res);
       if (res.success) {
         // this.prefixNo = res.prefix;
-        this.prefixNo=res?.data;
+        this.prefixNo = res?.data;
         this.debitNoteForm.get('credit_note_no').patchValue(this.prefixNo[0]?.id);
       } else {
         this.toastr.error(res.msg);

@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 import { SalesService } from 'src/app/Services/salesService/sales.service';
 
 @Component({
@@ -29,7 +30,8 @@ export class UpdateSalesReturnComponent implements OnInit {
     private router: Router,
     private toastrService: ToastrService,
     private coreService: CoreService,
-    private Arout: ActivatedRoute) {
+    private Arout: ActivatedRoute,
+    private commonService: CommonServiceService) {
   }
 
   customerControlName = 'customer';
@@ -45,6 +47,8 @@ export class UpdateSalesReturnComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   saleReturnForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
 
   get f() {
     return this.saleReturnForm.controls;
@@ -62,7 +66,7 @@ export class UpdateSalesReturnComponent implements OnInit {
     this.myControl = new FormArray([]);
     this.saleReturnForm = this.fb.group({
       customer: new FormControl('', [Validators.required]),
-      bill_date: new FormControl(defaultDate, [Validators.required]),
+      // bill_date: new FormControl(defaultDate, [Validators.required]),
       sale_bill: new FormControl('', [Validators.required]),
       sale_return_bill_no: new FormControl('', [Validators.required]),
       sale_return_cart: this.fb.array([]),
@@ -113,6 +117,9 @@ export class UpdateSalesReturnComponent implements OnInit {
       map(value => this._filtr(value, true))
     )
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.saleReturnDateValidation(financialYear);
+
     this.userControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
         this.getUser(res);
@@ -126,7 +133,13 @@ export class UpdateSalesReturnComponent implements OnInit {
     })
     this.getCategory();
     this.getsalesBill();
+  }
 
+  saleReturnDateValidation(financialYear) {
+    const dateControl = this.saleReturnForm.get('return_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;
@@ -974,7 +987,7 @@ export class UpdateSalesReturnComponent implements OnInit {
 
       let formdata: any = new FormData();
       formdata.append('customer', this.saleReturnForm.get('customer')?.value);
-      formdata.append('bill_date', this.saleReturnForm.get('bill_date')?.value);
+      // formdata.append('bill_date', this.saleReturnForm.get('bill_date')?.value);
       // formdata.append('sale_return_bill_no', this.saleReturnForm.get('sale_return_bill_no')?.value);
       // 21-5
       if (this.isStatusDraft) {
@@ -1072,9 +1085,9 @@ export class UpdateSalesReturnComponent implements OnInit {
   get sale_return_bill_no() {
     return this.saleReturnForm.get('sale_return_bill_no')
   }
-  get bill_date() {
-    return this.saleReturnForm.get('bill_date')
-  }
+  // get bill_date() {
+  //   return this.saleReturnForm.get('bill_date')
+  // }
   get estimate_expiry_date() {
     return this.saleReturnForm.get('estimate_expiry_date')
   }

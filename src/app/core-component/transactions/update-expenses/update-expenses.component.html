@@ -41,7 +41,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Expense Date<span style="color:red">*</span></label>
-                        <input type="date" formControlName="expense_date"
+                        <input type="date" formControlName="expense_date" [attr.min]="minDate" [attr.max]="maxDate"
                             [ngClass]="{'is-invalid': f['expense_date'].touched && f['expense_date'].invalid}">
                         <span class="text-danger"
                             *ngIf="expense_date && expense_date.invalid && expense_date.touched">Select Expense
@@ -51,10 +51,9 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="form-group">
                         <label>Expence Voucher Series <span style="color:red">*</span></label>
-                        <input type="text" formControlName="expense_no" placeholder="Enter Expence Voucher No."
-                           readonly
+                        <input type="text" formControlName="expense_no" placeholder="Enter Expence Voucher No." readonly
                             [ngClass]="{'is-invalid': f['expense_no'].touched && f['expense_no'].invalid}">
-                            <!-- <select formControlName="expense_no">
+                        <!-- <select formControlName="expense_no">
                                 <option value="" selected disabled>Select Expence Voucher Series
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
@@ -67,7 +66,6 @@
                     <div class="form-group">
                         <label>Refrence Bill No.</label>
                         <input type="text" formControlName="refrence_bill_no" placeholder="Enter Refrence Bill No."
-                           
                             [ngClass]="{'is-invalid': f['refrence_bill_no'].touched && f['refrence_bill_no'].invalid}">
                         <span class="text-danger"
                             *ngIf="refrence_bill_no && refrence_bill_no.invalid && refrence_bill_no.touched">Enter
@@ -84,8 +82,10 @@
                 <div class="col-lg-3 col-sm-3 col-12 d-flex align-items-center">
                     <div class="form-group mt-4">
                         <div class="d-flex ">
-                            <input type="checkbox" formControlName="reverse_charge" [id]="'checkboxTax-'" [ngModel]="true">
-                            <label [for]="'checkboxTax-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Reverse Charge</label>
+                            <input type="checkbox" formControlName="reverse_charge" [id]="'checkboxTax-'"
+                                [ngModel]="true">
+                            <label [for]="'checkboxTax-'" class="d_flex"
+                                style="margin-bottom: 0; margin-left: 5px;">Reverse Charge</label>
                         </div>
                     </div>
                 </div>
@@ -143,63 +143,72 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="form-group" style="margin-bottom:-1%"> 
-                                                        <mat-form-field  class="w-100"
-                                                           style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                                                           <input type="text" placeholder="Search Product"
-                                                               aria-label="Search Products" matInput [formControl]="myControls.at(i)"
-                                                               (input)="getFilter($event.target.value)"
-                                                               [matAutocomplete]="autos" style="box-sizing: border-box;" />
-                                                           <mat-autocomplete #autos="matAutocomplete">
-                                                             <ng-container *ngFor="let option of filterAccount">
-                                                                   <mat-option *ngIf="option?.is_active==true"
-                                                                       [value]="option?.account_id"
-                                                                       (onSelectionChange)="oncheck(option,i)"
-                                                                       style="color:#FF9F43">
-                                                                       {{ option?.account_id}}
-                                                                   </mat-option>
-                                                               </ng-container>
-                                                               <mat-option *ngIf="filterAccount?.length === 0" [value]="'No data found'">
-                                                                   <a routerLink="//account/accountlist" style="color:#FF9F43">+ Add Account</a>
-                                                               </mat-option>
-                                                               <mat-option *ngIf="myControls.at(i)?.value?.length < 1"
-                                                                   class="is-loading">
-                                                                   Please Enter 1 or more characters
-                                                               </mat-option>
-                                                           </mat-autocomplete>
-                                                       </mat-form-field>
-                                                </div>
+                                                    <div class="form-group" style="margin-bottom:-1%">
+                                                        <mat-form-field class="w-100"
+                                                            style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                                                            <input type="text" placeholder="Search Product"
+                                                                aria-label="Search Products" matInput
+                                                                [formControl]="myControls.at(i)"
+                                                                (input)="getFilter($event.target.value)"
+                                                                [matAutocomplete]="autos"
+                                                                style="box-sizing: border-box;" />
+                                                            <mat-autocomplete #autos="matAutocomplete">
+                                                                <ng-container *ngFor="let option of filterAccount">
+                                                                    <mat-option *ngIf="option?.is_active==true"
+                                                                        [value]="option?.account_id"
+                                                                        (onSelectionChange)="oncheck(option,i)"
+                                                                        style="color:#FF9F43">
+                                                                        {{ option?.account_id}}
+                                                                    </mat-option>
+                                                                </ng-container>
+                                                                <mat-option *ngIf="filterAccount?.length === 0"
+                                                                    [value]="'No data found'">
+                                                                    <a routerLink="//account/accountlist"
+                                                                        style="color:#FF9F43">+ Add Account</a>
+                                                                </mat-option>
+                                                                <mat-option *ngIf="myControls.at(i)?.value?.length < 1"
+                                                                    class="is-loading">
+                                                                    Please Enter 1 or more characters
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                        </mat-form-field>
+                                                    </div>
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="account(i) && account(i).invalid && account(i).touched">Select
                                                         Account</span>
                                                 </td>
                                                 <td>
                                                     <select formControlName="service_or_product">
-                                                        <option value="Service" selected >Service</option>
+                                                        <option value="Service" selected>Service</option>
                                                         <option value="Product">Product</option>
                                                     </select>
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="service_or_product(i) && service_or_product(i).invalid && service_or_product(i).touched">Select
                                                         Amount Type</span>
                                                 </td>
-                                                <td><input type="text" formControlName="description" placeholder="Enter Note" class="input"></td>
-                                                <td><input type="number" formControlName="amount" class="input" (blur)="calculateTotalEveryIndex(i)">
+                                                <td><input type="text" formControlName="description"
+                                                        placeholder="Enter Note" class="input"></td>
+                                                <td><input type="number" formControlName="amount" class="input"
+                                                        (blur)="calculateTotalEveryIndex(i)">
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="amount(i) && amount(i).invalid && amount(i).touched">Enter
                                                         Amount</span>
                                                 </td>
-                                                <td><input type="number" formControlName="discount" class="input" (blur)="calculateTotalEveryIndex(i)">
+                                                <td><input type="number" formControlName="discount" class="input"
+                                                        (blur)="calculateTotalEveryIndex(i)">
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="discount(i) && discount(i).invalid && discount(i).touched">Enter
                                                         Discount (ex:1-100)</span>
                                                 </td>
 
-                                                <td><input type="number" formControlName="tax" class="input" (blur)="calculateTotalEveryIndex(i)">
+                                                <td><input type="number" formControlName="tax" class="input"
+                                                        (blur)="calculateTotalEveryIndex(i)">
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="tax(i) && tax(i).invalid && tax(i).touched">Enter Tax
                                                         (ex:1-100)</span>
                                                 </td>
-                                                <td><input type="number" formControlName="tax_value" class="input" readonly>
+                                                <td><input type="number" formControlName="tax_value" class="input"
+                                                        readonly>
                                                     <span class="text-danger" style="display: block;"
                                                         *ngIf="tax_value(i) && tax_value(i).invalid && tax_value(i).touched">Enter
                                                         Tax Value</span>
@@ -250,8 +259,8 @@
                                 <li>
                                     <h4>Tax Amount</h4>
                                     <h5>{{totalTaxValue().toFixed(2) | currency:'INR'}}</h5>
-                                    <input type="text" formControlName="tax_amount" [ngModel]="totalTaxValue().toFixed(2)"
-                                        class="input" style="display: none;">
+                                    <input type="text" formControlName="tax_amount"
+                                        [ngModel]="totalTaxValue().toFixed(2)" class="input" style="display: none;">
 
                                 </li>
                                 <li>
@@ -270,16 +279,24 @@
                                     <h4>Round Off</h4>
                                     <h5>
                                         <span style="display:inline-grid;">
-                                            <i data-bs-toggle="tooltip" title="ion-plus-circled" class="ion-plus-circled mx-1" [ngStyle]="{'color': !isMinus ? '#FF9F43' : 'gray'}" (click)="updateValue('+')"></i>
-                                            <i data-bs-toggle="tooltip" title="ion-minus-circled" class="ion-minus-circled mx-1" [ngStyle]="{'color': isMinus ? '#FF9F43' : 'gray'}" (click)="updateValue('-')"></i>
+                                            <i data-bs-toggle="tooltip" title="ion-plus-circled"
+                                                class="ion-plus-circled mx-1"
+                                                [ngStyle]="{'color': !isMinus ? '#FF9F43' : 'gray'}"
+                                                (click)="updateValue('+')"></i>
+                                            <i data-bs-toggle="tooltip" title="ion-minus-circled"
+                                                class="ion-minus-circled mx-1"
+                                                [ngStyle]="{'color': isMinus ? '#FF9F43' : 'gray'}"
+                                                (click)="updateValue('-')"></i>
                                         </span>
-                                        <input type="text" class="input" [value]="roundOff| number:'1.2-2'" (blur)="changeValue($event.target.value)" style="width: 34%;">
+                                        <input type="text" class="input" [value]="roundOff| number:'1.2-2'"
+                                            (blur)="changeValue($event.target.value)" style="width: 34%;">
                                     </h5>
                                 </li>
                                 <li class="total">
                                     <h4>Total Amount</h4>
                                     <h5> {{calculateTotal() | currency:'INR'}}</h5>
-                                    <input type="text" formControlName="total_amount" [ngModel]="calculateTotal()" class="input" style="display: none;">
+                                    <input type="text" formControlName="total_amount" [ngModel]="calculateTotal()"
+                                        class="input" style="display: none;">
                                 </li>
                             </ul>
                         </div>

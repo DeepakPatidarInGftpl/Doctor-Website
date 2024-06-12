@@ -6,6 +6,7 @@ import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-update-debitnotes',
@@ -28,7 +29,8 @@ export class UpdateDebitnotesComponent implements OnInit {
     private toastrService: ToastrService,
     private contactService: ContactService,
     private Arout: ActivatedRoute,
-    private coreService: CoreService) {
+    private coreService: CoreService,
+    private commonService: CommonServiceService) {
   }
 
   supplierControlName = 'party';
@@ -46,6 +48,8 @@ export class UpdateDebitnotesComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   debitNotesForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
   get f() {
     return this.debitNotesForm.controls;
   }
@@ -137,6 +141,9 @@ export class UpdateDebitnotesComponent implements OnInit {
       map(value => this._filter(value, true))
     );
 
+    const financialYear = localStorage.getItem('financialYear');
+    this.purchaseReturnDateValidation(financialYear);
+
     this.supplierControl.valueChanges.subscribe((res) => {
       const isFieldChanged = res !== this.companyName;
       if (res.length >= 3 && isFieldChanged) {
@@ -159,6 +166,13 @@ export class UpdateDebitnotesComponent implements OnInit {
     this.getPurchaseBill();
     this.getCategory();
     // this.getPaymentTerms()
+  }
+
+  purchaseReturnDateValidation(financialYear) {
+    const dateControl = this.debitNotesForm.get('purchase_return_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDatesForDateTime(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
   }
 
   prefixNo: any;

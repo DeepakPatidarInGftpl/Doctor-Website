@@ -18,27 +18,33 @@
                         </select> -->
 
                         <mat-form-field class="w-100" style="padding: 0;width: 100%;min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Select From Account" aria-label="from_account" matInput [formControl]="fromAccountControl" [matAutocomplete]="auto" style="box-sizing: border-box;">
+                            <input type="text" placeholder="Select From Account" aria-label="from_account" matInput
+                                [formControl]="fromAccountControl" [matAutocomplete]="auto"
+                                style="box-sizing: border-box;">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <ng-container *ngFor="let account of filteredFromAccount | async">
-                                    <mat-option *ngIf="account.is_active==true" [value]="account?.account_id" (onSelectionChange)="oncheck(account)" style="color:#FF9F43">{{account?.account_id }}</mat-option>
+                                    <mat-option *ngIf="account.is_active==true" [value]="account?.account_id"
+                                        (onSelectionChange)="oncheck(account)"
+                                        style="color:#FF9F43">{{account?.account_id }}</mat-option>
                                 </ng-container>
                                 <ng-container *ngIf="(filteredFromAccount | async) as accounts">
                                     <mat-option *ngIf="accounts.length === 0" [value]="'No data found'">
                                         <a routerLink="//account/accountlist" style="color:#FF9F43">+ Add Account</a>
                                     </mat-option>
-                                    <mat-option *ngIf="fromAccountControl.value?.length < 3" class="is-loading">Please Enter 1 or more characters</mat-option>
+                                    <mat-option *ngIf="fromAccountControl.value?.length < 3" class="is-loading">Please
+                                        Enter 1 or more characters</mat-option>
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="account && account.invalid && account.touched">Select Account </span>
+                        <span class="text-danger" *ngIf="account && account.invalid && account.touched">Select Account
+                        </span>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Credit Note Date*</label>
-                        <input type="date" formControlName="date" id="date"
+                        <input type="date" formControlName="date" id="date" [attr.min]="minDate" [attr.max]="maxDate"
                             [ngClass]="{'is-invalid': f['date'].touched && f['date'].invalid}">
                         <span class="text-danger" *ngIf="date && date.invalid && date.touched">Select Date </span>
                     </div>
@@ -52,7 +58,9 @@
                             <option value="" selected disabled>Select Credit Note Series</option>
                             <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
                         </select>
-                        <span class="text-danger" *ngIf="credit_note_no && credit_note_no.invalid && credit_note_no.touched">Enter Credit Note Series</span>
+                        <span class="text-danger"
+                            *ngIf="credit_note_no && credit_note_no.invalid && credit_note_no.touched">Enter Credit Note
+                            Series</span>
                     </div>
                 </div>
 
@@ -64,23 +72,25 @@
                             <option value="{{purchasebill?.id}}" *ngFor="let purchasebill of accountList"> {{purchasebill?.refrence_bill_no}}</option>
                         </select> -->
 
-                        <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
-                        <input type="text" placeholder="Search Sale Bill" aria-label="Search sale Bills" matInput [formControl]="billControl"
-                            (input)="getFilterBill($event.target.value)"
-                            [matAutocomplete]="autos"
-                            style="box-sizing: border-box;" />
-                        <mat-autocomplete #autos="matAutocomplete">
-                            <ng-container *ngFor="let option of FiltersaleBillList">
-                                <mat-option *ngIf="option?.is_active==true" [value]="option?.customer_bill_no" (onSelectionChange)="oncheck2(option)" style="color:#FF9F43">
-                                    {{ option?.customer_bill_no}}
+                        <mat-form-field class="w-100"
+                            style="padding: 0; width: 100%; min-width: 100%; border-top: none;">
+                            <input type="text" placeholder="Search Sale Bill" aria-label="Search sale Bills" matInput
+                                [formControl]="billControl" (input)="getFilterBill($event.target.value)"
+                                [matAutocomplete]="autos" style="box-sizing: border-box;" />
+                            <mat-autocomplete #autos="matAutocomplete">
+                                <ng-container *ngFor="let option of FiltersaleBillList">
+                                    <mat-option *ngIf="option?.is_active==true" [value]="option?.customer_bill_no"
+                                        (onSelectionChange)="oncheck2(option)" style="color:#FF9F43">
+                                        {{ option?.customer_bill_no}}
+                                    </mat-option>
+                                </ng-container>
+                                <mat-option *ngIf="FiltersaleBillList?.length === 0" [value]="'No data found'">
+                                    <a routerLink="///sales/addsalesbill" style="color:#FF9F43">+ Add sale Bill</a>
                                 </mat-option>
-                            </ng-container>
-                            <mat-option *ngIf="FiltersaleBillList?.length === 0" [value]="'No data found'">
-                                <a routerLink="///sales/addsalesbill" style="color:#FF9F43">+ Add sale Bill</a>
-                            </mat-option>
-                            <mat-option *ngIf="billControl?.value?.length < 1" class="is-loading"> Please Enter 1 or more characters </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
+                                <mat-option *ngIf="billControl?.value?.length < 1" class="is-loading"> Please Enter 1 or
+                                    more characters </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
                         <span class="text-danger"
                             *ngIf="sale_bill_no && sale_bill_no.invalid && sale_bill_no.touched">Select Sale Bill No.
                         </span>
@@ -90,7 +100,8 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Reason</label>
-                        <input type="text" formControlName="reason" placeholder="Enter Reason" [ngClass]="{ 'is-invalid': f['reason'].touched && f['reason'].invalid}">
+                        <input type="text" formControlName="reason" placeholder="Enter Reason"
+                            [ngClass]="{ 'is-invalid': f['reason'].touched && f['reason'].invalid}">
                         <span class="text-danger" *ngIf="reason && reason.invalid && reason.touched">Enter Reason</span>
                     </div>
                 </div>
@@ -98,15 +109,18 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Round Off</label>
-                        <input type="number" formControlName="roundoff" placeholder="Enter Round off" [ngClass]="{ 'is-invalid': f['roundoff'].touched && f['roundoff'].invalid}">
-                        <span class="text-danger" *ngIf="roundoff && roundoff.invalid && roundoff.touched">Enter Round Off</span>
+                        <input type="number" formControlName="roundoff" placeholder="Enter Round off"
+                            [ngClass]="{ 'is-invalid': f['roundoff'].touched && f['roundoff'].invalid}">
+                        <span class="text-danger" *ngIf="roundoff && roundoff.invalid && roundoff.touched">Enter Round
+                            Off</span>
                     </div>
                 </div>
 
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Tax %</label>
-                        <input type="number" formControlName="tax" placeholder="Enter Tax" [ngClass]="{ 'is-invalid': f['tax'].touched && f['tax'].invalid}">
+                        <input type="number" formControlName="tax" placeholder="Enter Tax"
+                            [ngClass]="{ 'is-invalid': f['tax'].touched && f['tax'].invalid}">
                         <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Tax ex: (1-100)</span>
                     </div>
                 </div>
@@ -114,8 +128,8 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Total</label>
-                        <input type="number" formControlName="total" placeholder="Enter Total"
-                            id="total" [ngClass]="{ 'is-invalid': f['total'].touched && f['total'].invalid}">
+                        <input type="number" formControlName="total" placeholder="Enter Total" id="total"
+                            [ngClass]="{ 'is-invalid': f['total'].touched && f['total'].invalid}">
                         <span class="text-danger" *ngIf="total && total.invalid && total.touched">Enter Total</span>
                     </div>
                 </div>
@@ -123,7 +137,8 @@
                 <div class="col-lg-4 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Note</label>
-                        <textarea formControlName="note" placeholder="Enter Note" [ngClass]="{ 'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
+                        <textarea formControlName="note" placeholder="Enter Note"
+                            [ngClass]="{ 'is-invalid': f['note'].touched && f['note'].invalid}"></textarea>
                         <span class="text-danger" *ngIf="tax && tax.invalid && tax.touched">Enter Note</span>
                     </div>
                 </div>
@@ -131,7 +146,8 @@
                 <div class="col-lg-12">
                     <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Submit</button>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;
+                        Submit</button>
                     <a routerLink="//transaction/creditnoteList" class="btn btn-cancel text-white">Cancel</a>
                 </div>
             </div>

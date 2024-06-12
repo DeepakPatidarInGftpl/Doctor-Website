@@ -6,6 +6,7 @@ import { Observable, debounceTime, map, startWith } from 'rxjs';
 import { ContactService } from 'src/app/Services/ContactService/contact.service';
 import { CoreService } from 'src/app/Services/CoreService/core.service';
 import { PurchaseServiceService } from 'src/app/Services/Purchase/purchase-service.service';
+import { CommonServiceService } from 'src/app/Services/commonService/common-service.service';
 
 @Component({
   selector: 'app-addpurchase',
@@ -27,7 +28,8 @@ export class AddpurchaseComponent implements OnInit {
   constructor(private purchaseService: PurchaseServiceService, private coreService: CoreService, private fb: FormBuilder,
     private router: Router,
     private toastrService: ToastrService,
-    private contactService: ContactService) {
+    private contactService: ContactService,
+    private commonService: CommonServiceService) {
   }
 
   supplierControlName = 'party';
@@ -43,6 +45,10 @@ export class AddpurchaseComponent implements OnInit {
   filteredVariants: Observable<any[]>;
 
   purchaseForm!: FormGroup;
+  minDate: string = '';
+  maxDate: string = '';
+  shippingMinDate: string = '';
+  shippingMaxDate: string = '';
 
   get f() {
     return this.purchaseForm.controls;
@@ -87,6 +93,15 @@ export class AddpurchaseComponent implements OnInit {
       map(value => this._filter(value, true))
     );
 
+    const financialYear = localStorage.getItem('financialYear');
+
+    this.shippingDateValidation(financialYear);
+    this.orderDateValidation(financialYear);
+
+    this.purchaseForm.get('order_date').valueChanges.subscribe((date) => {
+      this.updateShippingDateMin(date, financialYear);
+    });
+
     this.supplierControl.valueChanges.subscribe((res) => {
       if (res.length >= 3) {
         this.getSuuplier(res);
@@ -114,8 +129,32 @@ export class AddpurchaseComponent implements OnInit {
     console.log(uniqueData);
     const formArray = this.getCart();
     this.userInputEntered = new Array(formArray.length).fill(false);
-
   }
+
+  updateShippingDateMin(selectedDate: string, financialYear) {
+    const dateControl = this.purchaseForm.get('shipping_date');
+    if (selectedDate) {
+      const minDate = new Date(selectedDate);
+      const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear, minDate);
+      this.shippingMinDate = formattedMinDate;
+      this.shippingMaxDate = formattedMaxDate;
+    }
+  }
+
+  shippingDateValidation(financialYear) {
+    const dateControl = this.purchaseForm.get('shipping_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.shippingMinDate = formattedMinDate;
+    this.shippingMaxDate = formattedMaxDate;
+  }
+
+  orderDateValidation(financialYear) {
+    const dateControl = this.purchaseForm.get('order_date');
+    const { formattedMinDate, formattedMaxDate } = this.commonService.setMinMaxDates(dateControl, financialYear);
+    this.minDate = formattedMinDate;
+    this.maxDate = formattedMaxDate;
+  }
+
   prefixNo: any;
   getprefix() {
     this.purchaseService.getPurchaseOrderPrefix().subscribe((res: any) => {

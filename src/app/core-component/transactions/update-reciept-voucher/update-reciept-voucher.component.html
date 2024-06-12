@@ -13,12 +13,15 @@
         <form [formGroup]="recieptVoucherForm" (ngSubmit)="onSubmit()">
             <div class="d-flex mb-5">
                 <div class="d-flex mx-3">
-                    <input type="radio" formControlName="receipt_type" [id]="'checkboxCash'" (click)="toggleCash()" [value]="'Cash'">
-                    <label [for]="'checkboxCash'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Cash</label>
+                    <input type="radio" formControlName="receipt_type" [id]="'checkboxCash'" (click)="toggleCash()"
+                        [value]="'Cash'">
+                    <label [for]="'checkboxCash'" class="d_flex"
+                        style="margin-bottom: 0; margin-left: 5px;">Cash</label>
                 </div>
                 <div class="d-flex mx-3">
                     <input type="radio" [id]="'checkbox-Bnak'" (click)="toggleBank()" [value]="'Bank'">
-                    <label [for]="'checkbox-Bnak'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Bank</label>
+                    <label [for]="'checkbox-Bnak'" class="d_flex"
+                        style="margin-bottom: 0; margin-left: 5px;">Bank</label>
                 </div>
             </div>
             <div class="row">
@@ -28,8 +31,9 @@
                         <mat-form-field class="w-100" style="padding: 0;
                                     width: 100%;
                                     min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Payment Account" aria-label="Payment Account" matInput
-                                [formControl]="customerControl" [matAutocomplete]="auto" style="box-sizing: border-box;">
+                            <input type="text" placeholder="Search Payment Account" aria-label="Payment Account"
+                                matInput [formControl]="customerControl" [matAutocomplete]="auto"
+                                style="box-sizing: border-box;">
                             <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let customer of filteredCustomer | async"
                                     [value]="customer.account_id" (onSelectionChange)="oncheck(customer)"
@@ -45,7 +49,8 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="payment_account && payment_account.invalid && payment_account.touched">Select
+                        <span class="text-danger"
+                            *ngIf="payment_account && payment_account.invalid && payment_account.touched">Select
                             Payment Account
                         </span>
                     </div>
@@ -53,7 +58,7 @@
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Date*</label>
-                        <input type="date" formControlName="date" id="date"
+                        <input type="date" formControlName="date" id="date" [attr.min]="minDate" [attr.max]="maxDate"
                             [ngClass]="{'is-invalid': h['date'].touched && h['date'].invalid}">
                         <span class="text-danger" *ngIf="date && date.invalid && date.touched">Enter Date</span>
                     </div>
@@ -65,8 +70,10 @@
                                 <div class="card" (click)="setRadioValue('On Account')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'On Account'"id="on-account-radio">
-                                            <label for="on-account-radio" class="d_flex" style="margin-bottom: 0; margin-left: 15px;">On Account</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'On Account'"
+                                                id="on-account-radio">
+                                            <label for="on-account-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">On Account</label>
                                         </div>
                                         <span style="margin-left: 33px;font-size: 12px;">Upfront Payment</span>
                                     </div>
@@ -76,10 +83,13 @@
                                 <div class="card" (click)="setRadioValue('Advance Payment')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'Advance Payment'" id="advance-payment-radio">
-                                            <label for="advance-payment-radio" class="d_flex" style="margin-bottom: 0; margin-left: 15px;">Advance Payment</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'Advance Payment'"
+                                                id="advance-payment-radio">
+                                            <label for="advance-payment-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">Advance Payment</label>
                                         </div>
-                                        <span style="margin-left: 33px;font-size: 12px;">Will be offset by upcoming bills</span>
+                                        <span style="margin-left: 33px;font-size: 12px;">Will be offset by upcoming
+                                            bills</span>
                                     </div>
                                 </div>
                             </div>
@@ -87,15 +97,19 @@
                                 <div class="card" (click)="setRadioValue('Against Bill')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'Against Bill'" id="against-bill-radio">
-                                            <label for="against-bill-radio" class="d_flex" style="margin-bottom: 0; margin-left: 15px;">Against Bill</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'Against Bill'"
+                                                id="against-bill-radio">
+                                            <label for="against-bill-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">Against Bill</label>
                                         </div>
-                                        <span style="margin-left: 33px;font-size: 12px;">Offset against Current Bills</span>
+                                        <span style="margin-left: 33px;font-size: 12px;">Offset against Current
+                                            Bills</span>
                                     </div>
                                 </div>
                             </div>
                             <span class="text-danger" *ngIf="modeError">Select Mode Type</span>
-                            <span class="text-danger" *ngIf="mode_type && mode_type.invalid && mode_type.touched">Select Mode Type</span>
+                            <span class="text-danger" *ngIf="mode_type && mode_type.invalid && mode_type.touched">Select
+                                Mode Type</span>
                         </div>
                     </div>
                 </div>
@@ -104,7 +118,7 @@
                         <label>Receipt Voucher Series*</label>
                         <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no" readonly
                             [ngClass]="{'is-invalid': h['receipt_voucher_no'].touched && h['receipt_voucher_no'].invalid}">
-                            <!-- <select formControlName="receipt_voucher_no">
+                        <!-- <select formControlName="receipt_voucher_no">
                                 <option value="" selected disabled>Select Receipt Voucher Series
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
@@ -180,7 +194,8 @@
                                             <!-- <th></th> -->
                                         </tr>
                                         <tr>
-                                            <th colspan="3"> <span (click)="addCart()" class="debitIntoCart" *ngIf="isCart">Add Cart+</span></th>
+                                            <th colspan="3"> <span (click)="addCart()" class="debitIntoCart"
+                                                    *ngIf="isCart">Add Cart+</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -289,8 +304,9 @@
                     <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                       &nbsp; Submit</button>
-                    <button routerLink="//transaction/recieptVoucherList" type="button"  class="btn btn-cancel">Cancel</button>
+                        &nbsp; Submit</button>
+                    <button routerLink="//transaction/recieptVoucherList" type="button"
+                        class="btn btn-cancel">Cancel</button>
                 </div>
             </div>
         </form>
@@ -304,20 +320,24 @@
             <div class="d-flex mb-5">
                 <div class="d-flex mx-3">
                     <input type="radio" [id]="'checkboxCash'" (click)="toggleCash()">
-                    <label [for]="'checkboxCash'" class="d_flex" style="margin-bottom: 0; margin-left: 7px;">Cash</label>
+                    <label [for]="'checkboxCash'" class="d_flex"
+                        style="margin-bottom: 0; margin-left: 7px;">Cash</label>
                 </div>
                 <div class="d-flex mx-3">
-                    <input type="radio" formControlName="receipt_type" [id]="'checkbox-Bnak'" (click)="toggleBank()" [value]="'Bank'">
-                    <label [for]="'checkbox-Bnak'" class="d_flex" style="margin-bottom: 0; margin-left: 7px;">Bank</label>
+                    <input type="radio" formControlName="receipt_type" [id]="'checkbox-Bnak'" (click)="toggleBank()"
+                        [value]="'Bank'">
+                    <label [for]="'checkbox-Bnak'" class="d_flex"
+                        style="margin-bottom: 0; margin-left: 7px;">Bank</label>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
                     <div class="form-group">
                         <label>Payment Account*</label>
-                        <mat-form-field class="w-100" style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
-                            <input type="text" placeholder="Search Payment Account" aria-label="Payment Account" matInput
-                                [formControl]="customerControl" [matAutocomplete]="autobank"
+                        <mat-form-field class="w-100"
+                            style="padding: 0; width: 100%; min-width: 100%;border-top: none;">
+                            <input type="text" placeholder="Search Payment Account" aria-label="Payment Account"
+                                matInput [formControl]="customerControl" [matAutocomplete]="autobank"
                                 style="box-sizing: border-box;">
                             <mat-autocomplete #autobank="matAutocomplete">
                                 <mat-option *ngFor="let customer of filteredCustomer | async"
@@ -332,35 +352,47 @@
                                 </ng-container>
                             </mat-autocomplete>
                         </mat-form-field>
-                        <span class="text-danger" *ngIf="payment_account && payment_account.invalid && payment_account.touched">Select Payment Account </span>
+                        <span class="text-danger"
+                            *ngIf="payment_account && payment_account.invalid && payment_account.touched">Select Payment
+                            Account </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Date</label>
-                        <input type="date" formControlName="date" id="date" [ngClass]="{'is-invalid': g['date'].touched && g['date'].invalid}">
+                        <input type="date" formControlName="date" id="date" [attr.min]="bankMinDate"
+                            [attr.max]="bankMaxDate" [ngClass]="{'is-invalid': g['date'].touched && g['date'].invalid}">
                         <span class="text-danger" *ngIf="date1 && date1.invalid && date1.touched">Enter Date</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Transaction Date</label>
-                        <input type="date" formControlName="transaction_date" id="transaction_date"[ngClass]="{'is-invalid': g['transaction_date'].touched && g['transaction_date'].invalid}">
-                        <span class="text-danger" *ngIf="transaction_date && transaction_date.invalid && transaction_date.touched">Select Transaction Date</span>
+                        <input type="date" formControlName="transaction_date" [attr.min]="transactionMinDate"
+                            [attr.max]="transactionMaxDate" id="transaction_date"
+                            [ngClass]="{'is-invalid': g['transaction_date'].touched && g['transaction_date'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="transaction_date && transaction_date.invalid && transaction_date.touched">Select
+                            Transaction Date</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Transaction Id</label>
-                        <input type="text" formControlName="transaction_id" id="transaction_id" [ngClass]="{'is-invalid': g['transaction_id'].touched && g['transaction_id'].invalid}">
-                        <span class="text-danger" *ngIf="transaction_id && transaction_id.invalid && transaction_id.touched">Enter Receipt Voucher no.</span>
+                        <input type="text" formControlName="transaction_id" id="transaction_id"
+                            [ngClass]="{'is-invalid': g['transaction_id'].touched && g['transaction_id'].invalid}">
+                        <span class="text-danger"
+                            *ngIf="transaction_id && transaction_id.invalid && transaction_id.touched">Enter Receipt
+                            Voucher no.</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <div class="d-flex mt-4">
-                            <input type="radio" formControlName="bank_payment" [id]="'checkboxMeasure-'" [value]="'Online'">
-                            <label [for]="'checkboxMeasure-'" class="d_flex" style="margin-bottom: 0; margin-left: 5px;">Online</label>
+                            <input type="radio" formControlName="bank_payment" [id]="'checkboxMeasure-'"
+                                [value]="'Online'">
+                            <label [for]="'checkboxMeasure-'" class="d_flex"
+                                style="margin-bottom: 0; margin-left: 5px;">Online</label>
                         </div>
                     </div>
                 </div>
@@ -384,10 +416,13 @@
                                 <div class="card" (click)="setRadioValue1('Advance Payment')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'Advance Payment'" id="advance-payment-radio">
-                                            <label for="advance-payment-radio" class="d_flex" style="margin-bottom: 0; margin-left: 15px;">Advance Payment</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'Advance Payment'"
+                                                id="advance-payment-radio">
+                                            <label for="advance-payment-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">Advance Payment</label>
                                         </div>
-                                        <span style="margin-left: 33px;font-size: 12px;">Will be offset by upcoming bills</span>
+                                        <span style="margin-left: 33px;font-size: 12px;">Will be offset by upcoming
+                                            bills</span>
                                     </div>
                                 </div>
                             </div>
@@ -395,24 +430,28 @@
                                 <div class="card" (click)="setRadioValue1('Against Bill')">
                                     <div class="card-body">
                                         <div class="d-flex">
-                                            <input type="radio" formControlName="mode_type" [value]="'Against Bill'" id="against-bill-radio">
-                                            <label for="against-bill-radio" class="d_flex" style="margin-bottom: 0; margin-left: 15px;">Against Bill</label>
+                                            <input type="radio" formControlName="mode_type" [value]="'Against Bill'"
+                                                id="against-bill-radio">
+                                            <label for="against-bill-radio" class="d_flex"
+                                                style="margin-bottom: 0; margin-left: 15px;">Against Bill</label>
                                         </div>
-                                        <span style="margin-left: 33px;font-size: 12px;">Offset against Current Bills</span>
+                                        <span style="margin-left: 33px;font-size: 12px;">Offset against Current
+                                            Bills</span>
                                     </div>
                                 </div>
                             </div>
                             <span class="text-danger" *ngIf="modeError">Select Mode Type</span>
-                            <span class="text-danger" *ngIf="mode_type1 && mode_type1.invalid && mode_type1.touched">Enter Mode Type</span>
+                            <span class="text-danger"
+                                *ngIf="mode_type1 && mode_type1.invalid && mode_type1.touched">Enter Mode Type</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-4 col-12">
                     <div class="form-group">
                         <label>Receipt Voucher Series</label>
-                        <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no"
-                          readonly  [ngClass]="{'is-invalid': g['receipt_voucher_no'].touched && g['receipt_voucher_no'].invalid}">
-                            <!-- <select formControlName="receipt_voucher_no1">
+                        <input type="text" formControlName="receipt_voucher_no" id="receipt_voucher_no" readonly
+                            [ngClass]="{'is-invalid': g['receipt_voucher_no'].touched && g['receipt_voucher_no'].invalid}">
+                        <!-- <select formControlName="receipt_voucher_no1">
                                 <option value="" selected disabled>Select Receipt Voucher Series
                                 </option>
                                 <option value="{{prefix.id}}" *ngFor="let prefix of prefixNo">{{prefix.prefix}}</option>
@@ -486,7 +525,8 @@
                                             <th>Payment</th>
                                         </tr>
                                         <tr>
-                                            <th colspan="3"> <span (click)="addCartBank()" class="debitIntoCart" *ngIf="isCartBank">Add Cart+</span></th>
+                                            <th colspan="3"> <span (click)="addCartBank()" class="debitIntoCart"
+                                                    *ngIf="isCartBank">Add Cart+</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -595,8 +635,9 @@
                     <button class="btn btn-submit me-2" *ngIf="!loaders">Submit</button>
                     <button class="btn btn-submit me-2" type="submit" *ngIf="loaders" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                       &nbsp; Submit</button>
-                    <button routerLink="//transaction/recieptVoucherList" type="button" class="btn btn-cancel">Cancel</button>
+                        &nbsp; Submit</button>
+                    <button routerLink="//transaction/recieptVoucherList" type="button"
+                        class="btn btn-cancel">Cancel</button>
                 </div>
             </div>
         </form>
